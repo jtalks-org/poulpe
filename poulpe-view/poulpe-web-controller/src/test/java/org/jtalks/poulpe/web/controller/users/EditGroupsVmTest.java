@@ -129,10 +129,6 @@ public class EditGroupsVmTest {
     }
 
     @Test
-    public void colorChangeTest() {
-    }
-
-    @Test
     public void saveChangesTest() throws NotFoundException {
         int expectedSizeAllGroups = allGroups.size();
         int expectedSizeUserGroups = 3;
@@ -176,5 +172,10 @@ public class EditGroupsVmTest {
 
     }
 
-
+    @Test
+    public void executeMethodsWithoutLogic() {
+        vm.colorChange();
+        vm.isChosen();
+        vm.isNotChosen();
+    }
 }
