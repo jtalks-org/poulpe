@@ -29,7 +29,7 @@ public class AbstractDialogVm {
      *
      * @return this
      */
-    public AbstractDialogVm showDialog() {
+    protected AbstractDialogVm showDialog() {
         showDialog = true;
         return this;
     }

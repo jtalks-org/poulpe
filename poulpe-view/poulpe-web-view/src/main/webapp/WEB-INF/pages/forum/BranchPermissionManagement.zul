@@ -20,6 +20,7 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
     <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
             viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" 
             border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
@@ -28,7 +29,6 @@
 		<box pack="center" height="40px">
 			<label value="@load(c:cat5(labels.branches.label.moderatorsgroup.moderators,': [&quot;',branchPermissionManagementVm.branch.moderatorsGroup.name, '&quot;] ', labels.branches.label.moderatorsgroup.group))" sclass="info-label"/>
 		</box>	
-        <style src="/resources/css/all.css"/>
         <vlayout children="@load(branchPermissionManagementVm.blocks) @template('blockTemplate')">
             <template name="blockTemplate" var="bt">
                 <groupbox>

@@ -23,10 +23,10 @@
 }
 
 .dialog-window-position {
-    position:absolute;
-    top:10%;
-    left:50%;
-    margin-left:-175px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -175px;
 }
 
 .simple-grid {
@@ -46,7 +46,6 @@
     font-weight: bold;
 }
 
-
 .manage-permissions-added-group-label {
     display: block;
     padding: 1px 2px;
@@ -54,18 +53,20 @@
     -webkit-border-radius: 3px;
     -moz-border-radius: 3px;
     border-radius: 3px;
-    float:left;
-    line-height:18px;
-    white-space:nowrap;
-    margin:0 3px 3px 0;
-    } 
+    float: left;
+    line-height: 18px;
+    white-space: nowrap;
+    margin: 0 3px 3px 0;
+}
+
 .add-group-button {
     float: right;
-    }
+}
+
 .empty-div-in-add-group {
-    float:left;
-    margin:1px;
-    }
+    float: left;
+    margin: 1px;
+}
 
 .top-right-system-menu {
     float: right;
@@ -96,18 +97,28 @@
     color: Blue;
 }
 
-.popup-notification{
-    background:#F5C1C9 url(/poulpe/resources/img/notification16.png) 6px center no-repeat;
-    color:#222222;
-    text-align:center;
+.popup-notification {
+    background: #F5C1C9 url(/poulpe/resources/img/notification16.png) 6px center no-repeat;
+    color: #222222;
+    text-align: center;
 }
 
 .z-popup .z-popup-cnt {
-    padding:0 0 0 0;
+    padding: 0 0 0 0;
 }
 
-.popup-notification-ok > *{
-    background:#D1FCBF;
-    color:#222222;
-    text-align:center;
+.popup-notification-ok > * {
+    background: #D1FCBF;
+    color: #222222;
+    text-align: center;
 }
+
+/* Edit user groups */
+#groupsListbox {
+    max-height: 450px;
+}
+
+.changedListItem {
+    background: #EFDCE4
+}
+

@@ -2,38 +2,38 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
     <window id="editGroupsDialog" viewModel="@id('editGroupsVm') @init(editGroupsVm)"
-            title="Edit User Groups"
+            title="${labels.users.grouplist.title}"
             apply="org.zkoss.bind.BindComposer"
             border="normal" onCancel="self.visible=false" onClose="self.visible=false;event.stopPropagation();"
             forward="onOK=confirmSaveButton.onClick" closable="true" mode="modal"
             visible="@load(editGroupsVm.showDialog)" width="386px" height="auto">
         <vbox>
             <hbox>
-                <label value="User"/>
+                <label value="${labels.users.grouplist.user}"/>
                 <label value="@load(editGroupsVm.userToEdit.username)"/>
             </hbox>
 
             <hbox>
-                <checkbox label="Chosen" checked="@bind(editGroupsVm.chosen)" onCheck="@global-command('filterGroups')"/>
-                <checkbox label="Not chosen" checked="@bind(editGroupsVm.notChosen)" onCheck="@global-command('filterGroups')"/>
+                <checkbox label="${labels.users.grouplist.table.filter.chosen}" checked="@bind(editGroupsVm.chosen)" onCheck="@global-command('filterGroups')"/>
+                <checkbox label="${labels.users.grouplist.table.filter.notChosen}" checked="@bind(editGroupsVm.notChosen)" onCheck="@global-command('filterGroups')"/>
             </hbox>
             <hbox>
-                <listbox id="listbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true" height="auto" width="auto">
+                <listbox id="groupsListbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true" height="auto" width="auto">
                     <listhead sizable="true">
-                        <listheader label="Groups"/>
+                        <listheader width="80%" label="${labels.users.grouplist.table.header.groups}"/>
+                        <listheader width="20%" label="${labels.users.grouplist.table.header.status}"/>
                     </listhead>
                     <template name="model" var="groupBooleanPair">
-                        <listitem if="${groupBooleanPair.changed == true}" style="background:#EFDCE4">
+                        <listitem class="changedListItem" if="${groupBooleanPair.changed == true}">
                             <listcell label="@load(groupBooleanPair.group.name)"/>
-                            <listcell/>
-                            <listcell>
+                            <listcell >
                                 <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
                             </listcell>
                         </listitem>
                         <listitem if="${groupBooleanPair.changed == false}">
                             <listcell label="@load(groupBooleanPair.group.name)"/>
-                            <listcell/>
                             <listcell>
                                 <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
                             </listcell>
