@@ -33,11 +33,14 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     }
 
     /**
+     * Sets group enable status, also keep actual state of changed status by changing it on enable change.
      * @param enable status to set
      */
     public void setEnable(boolean enable) {
+        if (this.enable != enable) {
+            changed = !changed;
+        }
         this.enable = enable;
-        changed = !changed;
     }
 
     /**
