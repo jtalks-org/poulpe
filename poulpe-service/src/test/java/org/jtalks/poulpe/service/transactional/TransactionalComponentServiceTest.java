@@ -49,7 +49,9 @@ public class TransactionalComponentServiceTest {
 
         List<Component> actualList = instance.getAll();
 
-        assertEquals(expectedList, actualList);
+        // TODO actual and expected objects were confused here.
+        // Maybe not only here, we should find out if there are other confusions.
+        assertEquals(actualList, expectedList);
         verify(dao).getAll();
     }
 

@@ -18,7 +18,7 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.hibernate.Session;
 import org.jtalks.poulpe.model.dao.Dao;
 import org.jtalks.poulpe.model.entity.Persistent;
 

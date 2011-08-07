@@ -36,7 +36,7 @@ public interface Dao<T extends Persistent> {
     void saveOrUpdate(T persistent);
 
     /**
-     * Delete the object by it's id.
+     * Delete the object by its id.
      *
      * @param id the id
      * @return {@code true} if entity deleted successfully
@@ -52,10 +52,10 @@ public interface Dao<T extends Persistent> {
     T get(Long id);
 
     /**
-     * Check entity existance by id.
+     * Check entity existence by id.
      *
      * @param id entity id
-     * @return {@code true} if entity exist
+     * @return {@code true} if entity exists
      */
     boolean isExist(Long id);
 }

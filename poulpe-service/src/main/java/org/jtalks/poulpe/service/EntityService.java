@@ -20,6 +20,8 @@ package org.jtalks.poulpe.service;
 import org.jtalks.poulpe.model.entity.Persistent;
 import org.jtalks.poulpe.service.exceptions.NotFoundException;
 
+// TODO: change javadocs. "all base method declarationS" - I see only one method declaration.
+// "or null if row with primary id = id is absent." in this case NFE is thrown, isn't it?
 /**
  * This is generic interface for services which would interact with database entities via DAO object.
  * This interface include all base method declaration which straightly based on database CRUD operations.

@@ -17,8 +17,6 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Forum branch that contains topics related to branch theme.
