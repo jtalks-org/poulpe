@@ -15,42 +15,13 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-package org.jtalks.poulpe.service.exceptions;
+package org.jtalks.poulpe.model.dao;
 
-// FIXME: as far as NotUniqueFieldsException appeared this one is useless. Delete it
-// as soon as others get rid of it in their code.
 /**
- * Exception for cases when some entity field should be unique but it isn't.
- * @author Pavel Vervenko
+ * The common interface for the enumerations of fields which cannot be duplicated.
+ * @author Dmitriy Sukharev
  */
-public class NotUniqueException extends Exception {
-
-    /**
-     * Generated uid
-     */
-    private static final long serialVersionUID = -1301487402231289042L;
-
-    /**
-     * Default constructor.
-     *
-     * {@link Exception}
-     */
-    public NotUniqueException() {
-    }
-
-    /**
-     * Create exception with specific message.
-     *
-     * @param message exception message
-     */
-    public NotUniqueException(String message) {
-        super(message);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public NotUniqueException(Throwable cause) {
-        super(cause);
-    }
+public interface DuplicatedField {
+    // if it is necessary you I can add constructors and methods here to get some reflection for
+    // the fields.
 }

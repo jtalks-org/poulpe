@@ -17,40 +17,30 @@
  */
 package org.jtalks.poulpe.service.exceptions;
 
-// FIXME: as far as NotUniqueFieldsException appeared this one is useless. Delete it
-// as soon as others get rid of it in their code.
+import java.util.Set;
+
+import org.jtalks.poulpe.model.dao.DuplicatedField;
+
 /**
- * Exception for cases when some entity field should be unique but it isn't.
- * @author Pavel Vervenko
+ * The exception which is thrown when saving entity to the date source violates DB constraints.
+ * It also holds a set of fields that herewith are duplicated.
+ * @author Dmitriy Sukharev
  */
-public class NotUniqueException extends Exception {
+public class NotUniqueFieldsException extends Exception {
+
+    private Set<DuplicatedField> duplicates;
 
     /**
-     * Generated uid
+     * The only constructor which stores duplicated fields.
+     * @param set the set of duplicated fields
      */
-    private static final long serialVersionUID = -1301487402231289042L;
-
-    /**
-     * Default constructor.
-     *
-     * {@link Exception}
-     */
-    public NotUniqueException() {
+    public NotUniqueFieldsException(Set<DuplicatedField> set) {
+        duplicates = set;
     }
 
-    /**
-     * Create exception with specific message.
-     *
-     * @param message exception message
-     */
-    public NotUniqueException(String message) {
-        super(message);
+    public Set<DuplicatedField> getDuplicates() {
+        return duplicates;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public NotUniqueException(Throwable cause) {
-        super(cause);
-    }
+    private static final long serialVersionUID = -7924104333502563898L;
 }

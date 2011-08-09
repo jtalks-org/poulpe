@@ -20,6 +20,7 @@ package org.jtalks.poulpe.web.controller.component;
 import java.util.Map;
 import java.util.Set;
 
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
 /**
@@ -93,7 +94,8 @@ public interface ItemView {
     /**
      * Notifies user about wrong value of component name.
      * @param string the message to be shown to user
+     * @param set 
      */
-    void wrongName(String string);
+    void wrongFields(String string, Set<DuplicatedField> set);
 
 }

@@ -17,16 +17,24 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.poulpe.model.entity.Component;
-import java.util.List;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.never;
+import static org.testng.Assert.assertEquals;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
+import java.util.List;
+
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.DuplicatedField;
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  *
@@ -56,12 +64,23 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    public void testSaveComponent() {
+    public void testSaveComponent() throws NotUniqueFieldsException {
         Component component = new Component();
-
+        when(dao.getDuplicateFieldsFor(component)).thenReturn(null);
+        
         instance.saveComponent(component);
 
         verify(dao).saveOrUpdate(component);
+    }
+    
+    @Test (expectedExceptions = NotUniqueFieldsException.class)
+    public void testSaveComponentException() throws NotUniqueFieldsException {
+        Component component = new Component();
+        when(dao.getDuplicateFieldsFor(component)).thenReturn(new HashSet<DuplicatedField>());
+        
+        instance.saveComponent(component);
+
+        verify(dao, never()).saveOrUpdate(component);
     }
 
     @Test

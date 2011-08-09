@@ -17,12 +17,14 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -110,24 +112,22 @@ public class ItemPresenter extends AbstractPresenter {
 
     /** Saves the created or edited component in component list. */
     public void saveComponent() {
-        long pos = getCidByName(view.getName());
-        if (pos == -1 || pos == view.getCid()) {
-            Component newbie = view2Model(view);
+        Component newbie = view2Model(view);
+        try {
             getComponentService().saveComponent(newbie);
             getWindowManager().closeWindow(view);
-        } else {
-            LOGGER.warn("Attempt to create item ({}) with duplicate title.", view.getName());
-            view.wrongName("item.already.exist");
+        } catch (NotUniqueFieldsException e) {
+            view.wrongFields("item.already.exist", e.getDuplicates());
         }
     }
 
     /** Checks if name of created or edited component is a duplicate. Invokes notification if it is. */
     public void checkComponent() {
-        long pos = getCidByName(view.getName());
-        if (pos != -1 && pos != view.getCid()) {
-            view.wrongName("item.already.exist");
-        }
-        
+        Component component = view2Model(view);
+        Set<DuplicatedField> set = getComponentService().getDuplicateFieldsFor(component);
+        if (set != null) {
+            view.wrongFields("item.already.exist", set);
+        }        
     }
 
     /**
@@ -138,33 +138,17 @@ public class ItemPresenter extends AbstractPresenter {
      *            the view representation of the component
      * @return the component in model representation
      */
-    private Component view2Model(ItemView view) {
+    protected Component view2Model(ItemView view) {
         Component model = new Component();
         model.setId(view.getCid());
         model.setName(view.getName());
         model.setDescription(view.getDescription());
-        model.setComponentType(ComponentType.valueOf(view.getComponentType()));
+        if (view.getComponentType().isEmpty()) {
+            model.setComponentType(null);
+        } else {
+            model.setComponentType(ComponentType.valueOf(view.getComponentType()));
+        }
         return model;
-    }
-
-    /**
-     * Delegates to the View searching the component's id by its name.
-     * 
-     * @param name
-     *            the component's name
-     * @return the component's id whose name is {@code name}
-     */
-    public long getCidByName(String name) {
-        if (name == null || name.isEmpty()) {
-            throw new IllegalArgumentException("Component's name can't be empty");
-        }
-        List<Component> list = getComponentService().getAll();
-        for (Component component : list) {
-            if (name.equals(component.getName())) {
-                return component.getId();
-            }
-        }
-        return -1;
     }
 
 }

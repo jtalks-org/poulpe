@@ -17,14 +17,18 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
+import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.WrongValueException;
+import org.zkoss.zk.ui.WrongValuesException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Longbox;
@@ -164,8 +168,15 @@ public class ItemViewImpl extends Window implements ItemView, AfterCompose {
 
     /** {@inheritDoc} */
     @Override
-    public void wrongName(String error) {
-        throw new WrongValueException(name, Labels.getLabel(error));
+    public void wrongFields(String error, Set<DuplicatedField> set) {
+        ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
+        if (set.contains(ComponentDuplicateField.NAME)) {
+            exceptions.add(new WrongValueException(name, Labels.getLabel(error)));
+        }
+        if (set.contains(ComponentDuplicateField.TYPE)) {
+            exceptions.add(new WrongValueException(componentType, Labels.getLabel(error)));
+        }
+        throw new WrongValuesException(exceptions.toArray(new WrongValueException[1]));
     }
 
 }

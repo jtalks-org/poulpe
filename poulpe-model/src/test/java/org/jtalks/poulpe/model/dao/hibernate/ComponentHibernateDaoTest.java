@@ -17,10 +17,14 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
 import java.util.Arrays;
-import java.util.Set;
-import org.testng.annotations.BeforeMethod;
 import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -31,8 +35,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
 
 /**
  *
@@ -56,9 +60,9 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @Test
     public void testGetAll() {
-        Component cmp1 = getComponent("name1", "desc1", ComponentType.ARTICLE);
+        Component cmp1 = ObjectsFactory.createComponent(ComponentType.ARTICLE);
         session.save(cmp1);
-        Component cmp2 = getComponent("name2", "desc2", ComponentType.FORUM);
+        Component cmp2 = ObjectsFactory.createComponent(ComponentType.FORUM);
         session.save(cmp2);
 
         List<Component> cList = dao.getAll();
@@ -77,17 +81,54 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testGetAvailableTypesAfterInsert() {
         ComponentType usedType = ComponentType.FORUM;
-        session.save(getComponent("name", "desc", usedType));
+        session.save(ObjectsFactory.createComponent(usedType));
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
 
         assertFalse(availableTypes.contains(usedType));
     }
 
-    private Component getComponent(String name, String desc, ComponentType componentType) {
-        Component component = new Component();
-        component.setName(name);
-        component.setDescription(desc);
-        component.setComponentType(componentType);
-        return component;
+    @Test
+    public void getDuplicateNameTest() {
+        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
+        dao.saveOrUpdate(component);
+        
+        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
+        assertEquals(dao.getDuplicateFieldsFor(dude), null);
+        dude.setName(component.getName());
+        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+    }
+    
+    @Test
+    public void getDuplicateNameWithNullTypeTest() {
+        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
+        dao.saveOrUpdate(component);
+        
+        Component dude = ObjectsFactory.createComponent(null);
+        assertEquals(dao.getDuplicateFieldsFor(dude), null);
+        dude.setName(component.getName());
+        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+    }
+
+    @Test
+    public void getDuplicateComponentTypeTest() {
+        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
+        dao.saveOrUpdate(component);
+        
+        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
+        assertEquals(dao.getDuplicateFieldsFor(dude), null);
+        dude.setComponentType(component.getComponentType());
+        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+    }
+
+    @Test
+    public void getDuplicateLoginAndComponentTypeTest() {
+        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
+        dao.saveOrUpdate(component);
+        
+        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
+        assertEquals(dao.getDuplicateFieldsFor(dude), null);
+        dude.setName(component.getName());
+        dude.setComponentType(component.getComponentType());
+        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 2);        
     }
 }

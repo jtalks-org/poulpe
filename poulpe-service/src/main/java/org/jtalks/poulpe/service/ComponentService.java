@@ -19,8 +19,11 @@ package org.jtalks.poulpe.service;
 
 import java.util.List;
 import java.util.Set;
+
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 
 /**
  * Service for some operations with {@link Component}.
@@ -44,12 +47,22 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Save new or update existent component.
      * @param component component to save
+     * @throws NotUniqueFieldsException when saving entity to the date source cause violations of DB constraints
      */
-    void saveComponent(Component component);
+    void saveComponent(Component component) throws NotUniqueFieldsException;
 
     /**
      * Get the set of unoccupied ComponentType.
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
+    
+    /**
+     * Obtains the set of such fields which ought to be unique and whose uniqueness will be violated
+     * after adding {@code component} to the data source.
+     * @param component the component object
+     * @return the set of fields whose uniqueness will be violated after adding {@code component}
+     *         to the data source
+     */
+    Set<DuplicatedField> getDuplicateFieldsFor(Component component);
 }

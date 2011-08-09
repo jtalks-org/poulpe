@@ -20,6 +20,8 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.Session;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -57,5 +59,12 @@ public final class ObjectsFactory {
         topicType.setTitle(randomTitle);
         topicType.setDescription("topic type description");
         return topicType;
+    }
+    
+    public static Component createComponent(ComponentType type) {
+        Component component = new Component();
+        component.setName(RandomStringUtils.random(10));
+        component.setComponentType(type);
+        return component;
     }
 }

@@ -19,10 +19,13 @@ package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
 import java.util.Set;
+
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 
 /**
  *
@@ -55,11 +58,13 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         dao.delete(component.getId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
-    public void saveComponent(Component component) {
+    public void saveComponent(Component component) throws NotUniqueFieldsException {
+        Set<DuplicatedField> set = dao.getDuplicateFieldsFor(component);
+        if (set != null) {
+            throw new NotUniqueFieldsException(set);
+        }
         dao.saveOrUpdate(component);
     }
 
@@ -69,5 +74,11 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public Set<ComponentType> getAvailableTypes() {
         return dao.getAvailableTypes();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Set<DuplicatedField> getDuplicateFieldsFor(Component component) {
+        return dao.getDuplicateFieldsFor(component);
     }
 }
