@@ -1,4 +1,4 @@
-<?page title="EditComponentList" contentType="text/html;charset=UTF-8"?>
+<?page id="editCompPage" title="EditComponentList" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
     <window id="editCompWindow" title="${labels.componentedit.title}" border="normal" width="430px"

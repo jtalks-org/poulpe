@@ -1,4 +1,4 @@
-<?page title="ComponentList" contentType="text/html;charset=UTF-8"?>
+<?page title="Component List" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
