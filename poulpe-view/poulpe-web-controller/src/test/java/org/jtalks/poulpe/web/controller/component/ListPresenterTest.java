@@ -31,7 +31,6 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.ListPresenter.DeletePerformable;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeTest;
@@ -61,35 +60,6 @@ public class ListPresenterTest {
         when(componentService.getAll()).thenReturn(fake);
         presenter.initView(view);
         verify(view).createModel(argThat(new ComponentListMatcher(fake)));
-    }
-
-    @Test public void addComponentTest() {
-        ListView view = mock(ListView.class);
-        WindowManager wm = mock(WindowManager.class);
-        ComponentService componentService = mock(ComponentService.class);
-        presenter.setComponentService(componentService);
-        presenter.initView(view);
-        presenter.setWindowManager(wm);
-        ArgumentCaptor<Long> argument1 = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Object> argument2 = ArgumentCaptor.forClass(Object.class);
-
-        presenter.addComponent();
-        verify(wm).showEditComponentWindow(argument1.capture(), argument2.capture());
-        assertEquals(argument1.getValue(), new Long(-1L));
-    }
-
-    @Test public void editComponentTest() {
-        ListView view = mock(ListView.class);
-        WindowManager wm = mock(WindowManager.class);
-        presenter.initView(view);
-        presenter.setWindowManager(wm);
-        ArgumentCaptor<Long> argument1 = ArgumentCaptor.forClass(Long.class);
-        ArgumentCaptor<Object> argument2 = ArgumentCaptor.forClass(Object.class);
-        Component fake = getFakeComponent(10L, "Fake1", "Desc1", ComponentType.ARTICLE);
-
-        presenter.editComponent(fake);
-        verify(wm).showEditComponentWindow(argument1.capture(), argument2.capture());
-        assertEquals(argument1.getValue(), new Long(fake.getId()));
     }
 
     @Test public void deleteComponentTest() {

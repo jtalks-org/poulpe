@@ -1,4 +1,4 @@
-<?page title="Component List" contentType="text/html;charset=UTF-8"?>
+<?page id="componentListPage" title="Component List" contentType="text/html;charset=UTF-8"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
@@ -21,4 +21,6 @@
             </div>
         </vlayout>
     </window>
+    
+<include src="/WEB-INF/pages/edit_component.zul" mode="defer"/>
 </zk>

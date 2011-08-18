@@ -21,14 +21,12 @@
     <property name="branchService" ref="branchService" />
   </bean>
  
-  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.ItemPresenter" scope="prototype">
+  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.ItemPresenter" scope="session">
     <property name="componentService" ref="componentService" />
-    <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
   <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
-    <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
 

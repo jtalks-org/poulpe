@@ -19,81 +19,46 @@ package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.WindowManager;
 
 /**
- * The abstract class which contains common fields and methods for
- * {@link ItemPresenter} and {@link ListPresenter} classes.
- * 
+ * The abstract class which contains common fields and methods for {@link ItemPresenter} and
+ * {@link ListPresenter} classes.
  * @author Dmitriy Sukharev
- * 
  */
 public class AbstractPresenter {
+
     /** The service instance to manipulate with stored components. */
     private ComponentService componentService;
-
-    private WindowManager windowManager;
 
     private DialogManager dialogManager;
 
     /**
-     * Returns the service instance which is used for manipulating with stored
-     * components.
-     * 
-     * @return the service instance which is used for manipulating with stored
-     *         components
+     * Returns the service instance which is used for manipulating with stored components.
+     * @return the service instance which is used for manipulating with stored components
      */
     public ComponentService getComponentService() {
         return componentService;
     }
 
     /**
-     * Returns the window manager which is used for showing and closing windows.
-     * 
-     * @return the window manager which is used for showing and closing windows
-     */
-    public WindowManager getWindowManager() {
-        return windowManager;
-    }
-
-    /**
-     * Returns the dialog manager which is used for showing different types of
-     * dialog messages.
-     * 
-     * @return the dialog manager which is used for showing different types of
-     *         dialog messages
+     * Returns the dialog manager which is used for showing different types of dialog messages.
+     * @return the dialog manager which is used for showing different types of dialog messages
      */
     public DialogManager getDialogManager() {
         return dialogManager;
     }
 
     /**
-     * Sets the service instance which is used for manipulating with stored
-     * components.
-     * 
-     * @param componentService
-     *            the new value of the service instance
+     * Sets the service instance which is used for manipulating with stored components.
+     * @param componentService the new value of the service instance
      */
     public void setComponentService(ComponentService componentService) {
         this.componentService = componentService;
     }
 
     /**
-     * Sets the window manager which is used for showing and closing windows.
-     * 
-     * @param windowManager
-     *            the new value of the window manager
-     */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
-
-    /**
-     * Sets the dialog manager which is used for showing different types of
-     * dialog messages.
-     * 
-     * @param dialogManager
-     *            the new value of the dialog manager
+     * Sets the dialog manager which is used for showing different types of dialog messages.
+     * @param dialogManager the new value of the dialog manager
      */
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;

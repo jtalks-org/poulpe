@@ -35,21 +35,21 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
 
 /**
- * The class which manages actions and represents information about components
- * displayed in administrator panel.
- * 
+ * The class which manages actions and represents information about components displayed in
+ * administrator panel.
  * @author Dmitriy Sukharev
- * 
  */
 public class ListViewImpl extends Window implements ListView, AfterCompose {
 
     private static final long serialVersionUID = -5891403019261284676L;
 
+    /*
+     * Important! If we are going to serialize/deserialize this class, this field must be
+     * initialised explicitly during deserialization
+     */
+    private transient ListPresenter presenter;
     private ListModelList model;
     private Listbox listbox;
-    /* Important! If we are going to serialize/deserialize this class, this
-     * field must be initialised explicitly during deserialization */
-    private transient ListPresenter presenter;
 
     /** {@inheritDoc} */
     @Override
@@ -59,7 +59,8 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
         presenter.initView(this);
         listbox.setItemRenderer(new ListitemRenderer() {
             /** {@inheritDoc} */
-            @Override public void render(Listitem arg0, Object arg1) {
+            @Override
+            public void render(Listitem arg0, Object arg1) {
                 final Component item = (Component) arg1;
                 Listcell cell = new Listcell();
                 Label nameLabel = new Label(item.getName());
@@ -72,10 +73,11 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
                     /** {@inheritDoc} */
                     @Override
                     public void onEvent(@SuppressWarnings("unused") Event event) {
-                        presenter.editComponent(item);
+                        ItemView editor = (ItemView) getDesktop().getPage("editCompPage").getFellow("editCompWindow");
+                        editor.show(getSelectedItem().getId());
                     }
                 });
-            }            
+            }
         });
     }
 
@@ -87,38 +89,25 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
     }
 
     /**
-     * Returns the presenter which is linked with this window.
-     * 
-     * @return the presenter which is linked with this window
-     */
-    public ListPresenter getPresenter() {
-        return presenter;
-    }
-
-    /**
      * Sets the presenter which is linked with this window.
-     * 
-     * @param presenter
-     *            new value of the presenter which is linked with this window
+     * @param presenter new value of the presenter which is linked with this window
      */
     public void setPresenter(ListPresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
-     * Tells to presenter that the window for adding new component must be
-     * shown.
-     * 
+     * Tells to presenter that the window for adding new component must be shown.
      * @see ListPresenter
      */
     public void onClick$addCompButton() {
-        presenter.addComponent();
+        ItemView editor = (ItemView) getDesktop().getPage("editCompPage").getFellow(
+                "editCompWindow");
+        editor.show(null);
     }
 
     /**
-     * Tells to presenter to delete selected component (it knows which one it
-     * is).
-     * 
+     * Tells to presenter to delete selected component (it knows which one it is).
      * @see ListPresenter
      */
     public void onClick$delCompButton() {
@@ -146,23 +135,8 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
 
     /** {@inheritDoc} */
     @Override
-    public EditListListener getUpdater() {
-        return new EditListListener();
-    }
-
-    /**
-     * The class for listening changing of components and updating
-     * {@link ListView} in accordance with this changes.
-     * 
-     * @author Dmitriy Sukharev
-     * 
-     */
-    public class EditListListener implements EventListener {
-        /** {@inheritDoc} */
-        @Override
-        public void onEvent(@SuppressWarnings("unused") Event event) {
-            presenter.updateList();
-        }
+    public void updateList() {
+        presenter.updateList();
     }
 
 }

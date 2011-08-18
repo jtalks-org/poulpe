@@ -17,7 +17,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.dao.DuplicatedField;
@@ -30,37 +29,35 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The class for mediating between model and view representation of components.
- * 
  * @author Dmitriy Sukharev
- * 
  */
 public class ItemPresenter extends AbstractPresenter {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ItemPresenter.class);
 
     /**
-     * The object that is responsible for storing and updating view of the added
-     * or edited component item.
+     * The object that is responsible for storing and updating view of the added or edited component
+     * item.
      */
     private ItemView view;
 
     /**
-     * Initialises the object that is responsible for storing and updating view
-     * of the added or edited component item.
-     * 
-     * @param view
-     *            the object that is responsible for storing and updating view
-     *            of the added or edited component item
+     * Initialises the object that is responsible for storing and updating view of the added or
+     * edited component item.
+     * @param view the object that is responsible for storing and updating view of the added or
+     *            edited component item
+     * @param id the edited component id, null if new component wanted
      */
-    public void initView(ItemView view) {
+    public void initView(ItemView view, Long id) {
         this.view = view;
-        initArgs();
+        initArgs(id);
     }
 
-    /** Initialises this window using received arguments. */
-    private void initArgs() {
-        Map<String, Object> args = view.getArgs();
-        long id = (Long) args.get("componentId");
+    /**
+     * Initialises this window using received arguments.
+     * @param id the edited component id, null if new component wanted
+     */
+    private void initArgs(Long id) {
         Component component = obtainComponent(id);
         if (component != null) {
             view.setCid(component.getId());
@@ -72,15 +69,13 @@ public class ItemPresenter extends AbstractPresenter {
 
     /**
      * Obtains the component by its ID.
-     * 
-     * @param id
-     *            the ID of the component, {@code -1L} to return new instance
-     * @return the component by its ID, new instance if {@code id} is equal to
-     *         {@code -1L}, and null if there is no component with such ID.
+     * @param id the ID of the component, {@code null} or {@code -1L} to return new instance
+     * @return the component by its ID, new instance if {@code id} is equal to {@code -1L}, and null
+     *         if there is no component with such ID
      */
-    private Component obtainComponent(long id) {
+    private Component obtainComponent(Long id) {
         Component component = null;
-        if (id == -1L) {
+        if (id == null || id == -1L) {
             component = new Component();
         } else {
             try {
@@ -88,7 +83,7 @@ public class ItemPresenter extends AbstractPresenter {
             } catch (NotFoundException e) {
                 LOGGER.warn("Attempt to change non-existing item.", e);
                 getDialogManager().notify("item.doesnt.exist");
-                getWindowManager().closeWindow(view);
+                view.hide();
                 // component will never be returned here
             }
         }
@@ -97,9 +92,7 @@ public class ItemPresenter extends AbstractPresenter {
 
     /**
      * Initialises the list of possible types for the specified component.
-     * 
-     * @param component
-     *            the component whose types are being determined.
+     * @param component the component whose types are being determined.
      */
     private void initTypes(Component component) {
         if (component.getComponentType() == null) {
@@ -115,9 +108,9 @@ public class ItemPresenter extends AbstractPresenter {
         Component newbie = view2Model(view);
         try {
             getComponentService().saveComponent(newbie);
-            getWindowManager().closeWindow(view);
+            view.hide();
         } catch (NotUniqueFieldsException e) {
-            view.wrongFields("item.already.exist", e.getDuplicates());
+            view.wrongFields(e.getDuplicates());
         }
     }
 
@@ -126,16 +119,13 @@ public class ItemPresenter extends AbstractPresenter {
         Component component = view2Model(view);
         Set<DuplicatedField> set = getComponentService().getDuplicateFieldsFor(component);
         if (set != null) {
-            view.wrongFields("item.already.exist", set);
-        }        
+            view.wrongFields(set);
+        }
     }
 
     /**
-     * Converts the component from the view representation to the model
-     * representation.
-     * 
-     * @param view
-     *            the view representation of the component
+     * Converts the component from the view representation to the model representation.
+     * @param view the view representation of the component
      * @return the component in model representation
      */
     protected Component view2Model(ItemView view) {

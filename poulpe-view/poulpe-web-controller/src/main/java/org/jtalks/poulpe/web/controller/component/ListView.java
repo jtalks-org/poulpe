@@ -22,52 +22,37 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Component;
 
 /**
- * The interface for managing actions and represents information about
- * components displayed in administrator panel.
- * 
+ * The interface for managing actions and represents information about components displayed in
+ * administrator panel.
  * @author Dmitriy Sukharev
- * 
  */
 public interface ListView {
 
     /**
      * Returns the selected component from the list of the visible components.
-     * 
      * @return the selected component from the list of the visible components
      */
     Component getSelectedItem();
 
     /**
      * Updates the list of the components.
-     * 
-     * @param list
-     *            the new list of the components
+     * @param list the new list of the components
      */
     void updateList(List<Component> list);
 
     /**
      * Initialises model (content of list-box) by component.
-     * 
-     * @param list
-     *            new list of components to be shown
+     * @param list new list of components to be shown
      */
     void createModel(List<Component> list);
 
     /**
      * Determines if there is selected item in the component list.
-     * 
-     * @return true if there is selected item in the component list, false
-     *         otherwise
+     * @return true if there is selected item in the component list, false otherwise
      */
     boolean hasSelectedItem();
 
-    /**
-     * Returns the object to be used for updating this view after some action
-     * happen.
-     * 
-     * @return the object to be used for updating this view after some action
-     *         happen
-     */
-    Object getUpdater();
+    /** Asks presenter to update component list. */
+    void updateList();
 
 }

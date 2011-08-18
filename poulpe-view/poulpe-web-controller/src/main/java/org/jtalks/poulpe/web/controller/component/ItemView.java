@@ -17,7 +17,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.dao.DuplicatedField;
@@ -25,9 +24,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 
 /**
  * Interface which represents information about component displayed in admin panel.
- * 
  * @author Dmitriy Sukharev
- * 
  */
 public interface ItemView {
 
@@ -80,22 +77,24 @@ public interface ItemView {
     void setComponentType(String type);
 
     /**
-     * Returns the arguments given to this window.
-     * @return the arguments given to this window
-     */
-    Map<String, Object> getArgs();
-
-    /**
      * Sets the list of available component types for the current item.
      * @param types the list of available component types for the current item
      */
     void setComponentTypes(Set<ComponentType> types);
 
     /**
-     * Notifies user about wrong value of component name.
-     * @param string the message to be shown to user
-     * @param set 
+     * Notifies user about wrong values of input fields which violates uniqueness of these fields.
+     * @param set the set of the fields whose uniqueness was violated
      */
-    void wrongFields(String string, Set<DuplicatedField> set);
+    void wrongFields(Set<DuplicatedField> set);
 
+    /**
+     * Shows editing window for the component.
+     * @param componentId the component's identifier, {@code null} or {@code -1} to open adding
+     *            window
+     */
+    void show(Long componentId);
+
+    /** Hides editing window. */
+    void hide();
 }
