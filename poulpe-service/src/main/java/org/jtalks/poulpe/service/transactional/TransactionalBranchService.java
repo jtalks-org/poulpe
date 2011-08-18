@@ -22,7 +22,6 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 
 import java.util.List;
-import org.hibernate.exception.ConstraintViolationException;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
@@ -64,18 +63,12 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void saveBranch(Branch selectedBranch) throws NotUniqueException {
-        try {
-            dao.saveOrUpdate(selectedBranch);
-        } catch (ConstraintViolationException e) {
-            throw new NotUniqueException(e);
+        if(dao.isBranchDuplicated(selectedBranch)){
+            throw new NotUniqueException();
         }
+        
+        dao.saveOrUpdate(selectedBranch);
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isBranchNameExists(String branchName) {
-        return dao.isBranchNameExists(branchName);
-    }
+
 }

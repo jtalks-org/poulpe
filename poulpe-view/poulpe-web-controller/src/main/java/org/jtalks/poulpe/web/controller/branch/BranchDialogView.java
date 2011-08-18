@@ -15,38 +15,45 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-package org.jtalks.poulpe.model.dao.hibernate;
+package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
-
-import java.util.List;
+import org.zkoss.zk.ui.WrongValueException;
 
 /**
- * @author Vitaliy Kravchenko
- * @author Pavel Vervenko
- */
-public class BranchHibernateDao extends AbstractHibernateDao<Branch> implements
-        BranchDao {
+ * Interface for representation view single branch
+ * 
+ * @author Bekrenev Dmitry
+ * */
+public interface BranchDialogView {
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Branch> getAll() {
-        return getSession().createQuery("from Branch").list();
-    }
+     * Get new or edited branch from view
+     * 
+     * @return Branch new or edited branch
+     * */
+    Branch getBranch();
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isBranchDuplicated(Branch branch) {
-        return ((Number) getSession()
-                .createQuery(
-                        "select count(*) from Branch b where b.name = ? and b.id != ?")
-                .setString(0, branch.getName()).setLong(1, branch.getId())
-                .uniqueResult()).intValue() != 0;
-    }
+     * Cause hiding current dialog
+     * */
+    void hide();
+
+    /**
+     * Show dialog and fill fields name and description
+     * 
+     * @param branch
+     *            name and description current branch will fill dialog fields
+     * */
+    void show(Branch branch);
+
+    /**
+     * Show dialog
+     * */
+    void show();
+
+    /**
+     * Cause throw exception for popup error message
+     * */
+    void notUniqueBranchName() throws WrongValueException;
 }

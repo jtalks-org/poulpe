@@ -48,10 +48,4 @@ public interface BranchService extends EntityService<Branch> {
      */
     void saveBranch(Branch selectedBranch) throws NotUniqueException;
     
-    /**
-     * Check if branch with given name exists.
-     * @param branchName
-     * @return true if exists
-     */
-    boolean isBranchNameExists(String branchName);
 }

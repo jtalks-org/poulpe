@@ -15,26 +15,22 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-
 package org.jtalks.poulpe.web.controller.branch;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
- * This class is implementation the presenter in pattern Model-View-Presenter
+ * This class is implementation the branch presenter in pattern
+ * Model-View-Presenter
  * 
  * @author Bekrenev Dmitry
  * */
-
 public class BranchPresenter {
 
-    private BranchView view;
     private BranchService branchService;
+    private BranchDialogView view;
 
     /**
      * Sets the service instance which is used for manipulating with stored
@@ -48,89 +44,27 @@ public class BranchPresenter {
     }
 
     /**
-     * Initialize view instance before first rendering
+     * Sets the view instance which represent User interface
      * 
      * @param view
-     *            The instance view
+     *            The instance BranchEditorView
      * */
-    public void initView(BranchView view) {
+    public void setView(BranchDialogView view) {
         this.view = view;
-        view.showBranches(branchService.getAll());
-        view.closeDialogs();
     }
 
     /**
-     * Use for store new branch from dialog window
+     * Save new or edited branch in db In case when branch with equal name
+     * exists, cause open error popup in view.
      * */
-    public void addNewBranch() {
-        String name = view.getNewBranchName();
-        String desc = view.getNewBranchDescription();
-
-        if (!branchService.isBranchNameExists(name)) {
-            Branch branch = new Branch();
-            branch.setName(name);
-            branch.setDescription(desc);
-            try {
-                branchService.saveBranch(branch);
-            } catch (NotUniqueException ex) {
-                // TODO: add processing here
-                Logger.getLogger(BranchPresenter.class.getName()).log(
-                        Level.SEVERE, null, ex);
-            }
-
-            view.showBranch(branch);
-            view.closeNewBranchDialog();
-        } else {
-            view.openErrorPopupInNewBranchDialog();
+    public void saveBranch() {
+        Branch branch = view.getBranch();
+        try {
+            branchService.saveBranch(branch);
+        } catch (NotUniqueException e) {
+            view.notUniqueBranchName();
         }
-    }
-
-    /**
-     * Open modal dialog window for editing selected branch
-     * */
-    public void openEditDialog() {
-        Branch branch = view.getSelectedBranch();
-
-        view.setEditBranchName(branch.getName());
-        view.setEditBranchDescription(branch.getDescription());
-        view.openEditBranchDialog();
-    }
-
-    /**
-     * Use for store edited branch from dialog window
-     * */
-    public void editBranch() {
-
-        Branch branch = view.getSelectedBranch();
-        if (!branchService.isBranchNameExists(view.getEditBranchName())) {
-            branch.setName(view.getEditBranchName());
-            branch.setDescription(view.getEditBranchDescription());
-            try {
-                branchService.saveBranch(branch);
-            } catch (NotUniqueException ex) {
-                // TODO: add processing here
-                Logger.getLogger(BranchPresenter.class.getName()).log(
-                        Level.SEVERE, null, ex);
-            }
-
-            view.updateBranch(branch);
-            view.closeEditBranchDialog();
-        } else {
-            view.openErrorPopupInEditBranchDialog();
-        }
-    }
-
-    /**
-     * Delete branch
-     * */
-    public void deleteBranch() {
-
-        Branch branch = view.getSelectedBranch();
-
-        if (branch != null) {
-            branchService.deleteBranch(branch);
-            view.removeBranch(branch);
-        }
+        view.hide();
     }
 
 }

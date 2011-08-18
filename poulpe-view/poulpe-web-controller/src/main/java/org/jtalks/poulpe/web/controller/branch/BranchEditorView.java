@@ -15,38 +15,28 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.entity.Branch;
+package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
 
+import org.jtalks.poulpe.model.entity.Branch;
+
 /**
- * @author Vitaliy Kravchenko
- * @author Pavel Vervenko
- */
-public class BranchHibernateDao extends AbstractHibernateDao<Branch> implements
-        BranchDao {
+ * Interface for representation view branches list
+ * 
+ * @author Bekrenev Dmitry
+ * */
+public interface BranchEditorView {
+
+    /**Show branch list
+     * @param branches List branches for showing
+     * */
+    void showBranches(List<Branch> branches);
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    @SuppressWarnings("unchecked")
-    public List<Branch> getAll() {
-        return getSession().createQuery("from Branch").list();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isBranchDuplicated(Branch branch) {
-        return ((Number) getSession()
-                .createQuery(
-                        "select count(*) from Branch b where b.name = ? and b.id != ?")
-                .setString(0, branch.getName()).setLong(1, branch.getId())
-                .uniqueResult()).intValue() != 0;
-    }
+     * Get selected branch from branch list
+     * @return Branch selected branch
+     * */
+    Branch getSelectedBranch();
 }

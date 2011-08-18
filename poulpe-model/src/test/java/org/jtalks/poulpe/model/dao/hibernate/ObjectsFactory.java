@@ -17,6 +17,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import java.util.UUID;
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.Session;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -42,7 +43,9 @@ public final class ObjectsFactory {
 
     public static Branch getDefaultBranch() {
         Branch newBranch = new Branch();
-        newBranch.setName("branch name");
+        
+        String uniqueName = "branch name " + UUID.randomUUID();
+        newBranch.setName(uniqueName);
         newBranch.setDescription("branch description");
         return newBranch;
     }

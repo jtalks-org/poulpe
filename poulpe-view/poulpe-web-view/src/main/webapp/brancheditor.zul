@@ -1,0 +1,30 @@
+<?page id="branchEditor" title="Branch Editor" contentType="text/html;charset=UTF-8"?>
+<?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
+<zk>
+<window presenter="${branchEditorPresenter}" use="org.jtalks.poulpe.web.controller.branch.BranchEditorViewImpl" 
+        title="${labels.branches.brancheditor.title}" width="30%"  border="normal"  position="center,top" id="editorWindow">
+   <style>
+    .branch-name {
+        font-size: 15pt;
+        font-weight: bold;
+    }
+    .branch-description {
+        font-size: 10pt;
+        font-style: italic;
+        color: #808080;
+    }
+   </style>
+   <vbox width="100%">
+        <listbox sizedByContent="true" id="branchesList" />
+        <span>
+            <button id="addBranchButton" label="+" />
+            <button id="delBranchButton" label="-" />
+        </span>              
+    </vbox>
+</window>
+
+<include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer"/>  
+</zk>   
+

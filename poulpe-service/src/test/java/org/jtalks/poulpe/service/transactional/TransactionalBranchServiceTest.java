@@ -21,6 +21,8 @@ import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -88,15 +90,28 @@ public class TransactionalBranchServiceTest {
 
         verify(branchDao).delete(branch.getId());
     }
-
+    
     @Test
-    public void testIsBranchNameExists() {
-        String branchName = "name";
-        when(branchDao.isBranchNameExists(branchName)).thenReturn(true);
+    public void testSaveBranchWitoutException() throws NotUniqueException{
+        Branch branch = new Branch();
+        branch.setName("new branch");
+        branch.setDescription("new description");
+        ArgumentCaptor<Branch> branchCaptor = ArgumentCaptor.forClass(Branch.class);
         
-        boolean result = branchService.isBranchNameExists(branchName);
+        branchService.saveBranch(branch);
         
-        assertTrue(result);
-        verify(branchDao).isBranchNameExists(branchName);
+        verify(branchDao).saveOrUpdate(branchCaptor.capture());
+        assertEquals(branchCaptor.getValue().getName(), "new branch");
+    }
+    
+    @Test(expectedExceptions=NotUniqueException.class)
+    public void testSaveBranchWithException() throws NotUniqueException{
+        Branch branch = new Branch();
+        branch.setName("not unique name");
+        branch.setDescription("new description");
+        
+        when(branchDao.isBranchDuplicated(branch)).thenReturn(true);
+        
+        branchService.saveBranch(branch);
     }
 }
