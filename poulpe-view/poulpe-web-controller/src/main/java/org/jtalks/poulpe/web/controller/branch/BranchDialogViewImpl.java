@@ -64,8 +64,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         presenter.setView(this);
-        branchName
-                .setConstraint("/[а-яА-ЯёЁ\\w][а-яА-ЯёЁ\\w\\s\\pL]+/: no valid");
+        branchName.setConstraint("no empty");
     }
 
     /**
@@ -143,7 +142,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void notUniqueBranchName() throws WrongValueException {
-        throw new WrongValueException(branchName, "Not unique name");
+        throw new WrongValueException(branchName, Labels.getLabel("branches.error.branch_name_already_exists"));
     }
 
 }
