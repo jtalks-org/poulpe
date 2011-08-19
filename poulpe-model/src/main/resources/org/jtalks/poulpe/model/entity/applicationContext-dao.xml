@@ -21,7 +21,9 @@
   <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao"
         parent="abstractHibernateDao"/>  
    <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao"
-        parent="abstractHibernateDao"/>        
+        parent="abstractHibernateDao"/> 
+   <bean id="SectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao"
+        parent="abstractHibernateDao"/>      
   <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way
     resolves a problem of multiple DAO beans definition -->
   <bean id="abstractHibernateDao"
@@ -46,6 +48,7 @@
         <value>/org/jtalks/poulpe/model/entity/Branch.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Component.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/TopicType.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
       </list>
     </property>
     <property name="hibernateProperties">
@@ -57,6 +60,9 @@
         <prop key="hibernate.connection.charset">${encoding}</prop>
         <prop key="hibernate.connection.provider_class">${hibernate.connection.provider_class}</prop>
         <prop key="hibernate.connection.release_mode">auto</prop>
+        
+        <prop key="hibernate.cache.use_query_cache">${hibernate.use_query_cache}</prop>
+        <prop key="hibernate.cache.use_second_level_cache">${hibernate.use_second_level_cache}</prop>
       </props>
     </property>
   </bean>
