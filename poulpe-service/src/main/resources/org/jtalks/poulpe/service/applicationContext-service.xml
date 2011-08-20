@@ -32,6 +32,7 @@
   <bean id="componentService"
         class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao"/>
+  </bean>
   <bean id="sectionService"
         class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao"/>
