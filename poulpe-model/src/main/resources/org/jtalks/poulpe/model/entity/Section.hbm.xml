@@ -8,7 +8,7 @@
 		<property column="UUID" name="uuid" not-null="true" unique="true" />
 		<property column="NAME" name="name" not-null="true" />
 		<property column="DESCRIPTION" name="description" />
-		<property column="POSITION" name="position" />
+		<property column="POSITION_" name="position" />
 
 		<!--<list name="branches" cascade="all-delete-orphan">
 			<cache usage="nonstrict-read-write" />
