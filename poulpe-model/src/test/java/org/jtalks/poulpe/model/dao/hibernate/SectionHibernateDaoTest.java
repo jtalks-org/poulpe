@@ -59,10 +59,9 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 //        Section section = ObjectsFactory.createSection();
 //        session.save(section);
 //        dao.deleteRecursively(section.getId());
-//        // let's say due to rollback we don't have any branches but section's, but it would be
-//        // better if I had list of branches.
-//        // TODO Finish this test when Section#getBranches method will be public
-//        Long actualAmount = (Long) session.createQuery("SELECT count(*) FROM Branch").uniqueResult();
+//        Long actualAmount = (Long) session
+//                .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
+//                .setLong("id", section.getId()).uniqueResult();
 //        assertEquals(actualAmount, (Long) 0L);
 //    }
 

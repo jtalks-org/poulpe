@@ -56,18 +56,19 @@ public interface SectionService extends EntityService<Section> {
 
     /**
      * Removes the section and all its branches.
-     * @param id the identifier of the removed section
+     * @param victim the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    public boolean deleteRecursively(Long id);
+    public boolean deleteRecursively(Section victim);
 
     /**
      * Removes the section and move all its branches to another section.
-     * @param victimId the identifier of the removed section
-     * @param recipientId the identifier of the section that will take branches
+     * @param victim the removed section
+     * @param recipient the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
-     * @throws IllegalArgumentException when {@code victimId} equals to {@code recipientId}
+     * @throws IllegalArgumentException when {@code victim}'s ID equals to {@code recipient}'s one
+     *             (victim and recipient can't be the same section)
      */
-    public boolean deleteAndMoveBranchesTo(Long victimId, Long recipientId);
+    public boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
 
 }

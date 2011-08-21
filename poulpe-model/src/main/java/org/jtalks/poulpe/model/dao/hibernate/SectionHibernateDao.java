@@ -52,18 +52,20 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(Long id) {
-        final String queryBranch = "DELETE FROM Branch WHERE id IN "
-                + "(SELECT b.id FROM Section s JOIN s.branches b WHERE s.id=:id)";
-        final String querySection = "DELETE FROM Section WHERE id = :id";
-        getSession().createQuery(queryBranch).setLong("id", id).executeUpdate();
-        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
+// TODO   Uncomment me when Section#getBranches method will be public
+//        final String secectQuery = "FROM Section WHERE id=:id";
+//        Section victim = (Section) getSession().createQuery(secectQuery).setLong("id", id).uniqueResult();
+//        victim.getBranches().clear();
+//        final String querySection = "DELETE FROM Section WHERE id = :id";
+//        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
+        return false;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean deleteAndMoveBranchesTo(Long id, Long recipientId) {
 // TODO   Uncomment me when Section#getBranches method will be public
-//        String query = "FROM Section WHERE id=:id";
+//        final String query = "FROM Section WHERE id=:id";
 //        Section victim = (Section) getSession().createQuery(query).setLong("id", id).uniqueResult();
 //        Section recipient = (Section) getSession().createQuery(query ).setLong("id", recipientId).uniqueResult();
 //        recipient.getBranches().addAll(victim.getBranches());

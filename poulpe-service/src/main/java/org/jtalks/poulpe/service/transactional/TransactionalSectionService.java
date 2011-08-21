@@ -80,17 +80,17 @@ public class TransactionalSectionService extends
 
 	/** {@inheritDoc} */
     @Override
-    public boolean deleteRecursively(Long id) {
-        return dao.deleteRecursively(id);
+    public boolean deleteRecursively(Section victim) {
+        return dao.deleteRecursively(victim.getId());
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteAndMoveBranchesTo(Long victimId, Long recipientId) {
-        if (victimId == null || victimId.equals(recipientId)) {
-            throw new IllegalArgumentException();
+    public boolean deleteAndMoveBranchesTo(Section victim, Section recipient) {
+        if (victim.getId() == recipient.getId()) {
+            throw new IllegalArgumentException("Victim and recipient can't be the same section");
         }
-        return dao.deleteAndMoveBranchesTo(victimId, recipientId);
+        return dao.deleteAndMoveBranchesTo(victim.getId(), recipient.getId());
     }
 
 }

@@ -17,20 +17,16 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 /**
  * The test for {@link TransactionalSectionService}.
@@ -51,8 +47,10 @@ public class TransactionalSectionServiceTest {
     @Test
     public void deleteRecursivelyTest() {
         boolean expected = true;
+        Section victim = mock(Section.class);
+        when(victim.getId()).thenReturn(SECTION_ID);
         when(sectionDao.deleteRecursively(SECTION_ID)).thenReturn(expected);
-        boolean actual = sectionService.deleteRecursively(SECTION_ID);
+        boolean actual = sectionService.deleteRecursively(victim);
         verify(sectionDao).deleteRecursively(SECTION_ID);
         assertEquals(actual, expected);
     }
@@ -61,9 +59,13 @@ public class TransactionalSectionServiceTest {
     public void deleteAndMoveBranchesToTest() {
         final long victimId = SECTION_ID;
         final long recipientId = SECTION_ID + 1;
+        Section victim = mock(Section.class);
+        Section recipient = mock(Section.class);
+        when(victim.getId()).thenReturn(victimId);
+        when(recipient.getId()).thenReturn(recipientId);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victimId, recipientId)).thenReturn(expected);
-        boolean actual = sectionService.deleteAndMoveBranchesTo(victimId, recipientId);
+        boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
         verify(sectionDao).deleteAndMoveBranchesTo(victimId, recipientId);
         assertEquals(actual, expected);
     }
@@ -72,9 +74,13 @@ public class TransactionalSectionServiceTest {
     public void deleteAndMoveBranchesToExceptionTest() {
         final long victimId = SECTION_ID;
         final long recipientId = victimId;
+        Section victim = mock(Section.class);
+        Section recipient = mock(Section.class);
+        when(victim.getId()).thenReturn(victimId);
+        when(recipient.getId()).thenReturn(recipientId);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victimId, recipientId)).thenReturn(expected);
-        boolean actual = sectionService.deleteAndMoveBranchesTo(victimId, recipientId);
+        boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
         verify(sectionDao).deleteAndMoveBranchesTo(victimId, recipientId);
         assertEquals(actual, expected);
     }
