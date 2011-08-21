@@ -17,12 +17,15 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.Session;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -51,8 +54,8 @@ public final class ObjectsFactory {
     }
 
     /**
-     * Create type of topic with random title, it may be usefull when need to
-     * persist mаny object in testing.
+     * Create type of topic with random title, it may be useful when need to
+     * persist many object in testing.
      * 
      * @return type of topic
      */
@@ -69,5 +72,16 @@ public final class ObjectsFactory {
         component.setName(RandomStringUtils.random(10));
         component.setComponentType(type);
         return component;
+    }
+    
+    public static Section createSection() {
+        Section section = new Section();
+        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
+        int branchesAmount = new Random().nextInt(10);
+        for (int i = 0; i < branchesAmount ; i++) {
+            Branch branch = ObjectsFactory.getDefaultBranch();
+            section.addBranch(branch);
+        }
+        return section;
     }
 }
