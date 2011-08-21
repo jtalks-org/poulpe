@@ -61,14 +61,14 @@ public class Section extends Persistent {
     /**
      * @return list of branches
      */
-    protected List<Branch> getBranches() {
+    public List<Branch> getBranches() {
         return branches;
     }
     
     /**
      * @param branches set  list of branches
      */
-    protected void setBranches(List<Branch> branches) {
+    public void setBranches(List<Branch> branches) {
         this.branches = branches;
     }
 
