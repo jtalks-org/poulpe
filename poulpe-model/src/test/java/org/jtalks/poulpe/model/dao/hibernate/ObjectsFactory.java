@@ -17,9 +17,10 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.List;
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
+
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.Session;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -77,6 +78,7 @@ public final class ObjectsFactory {
     public static Section createSection() {
         Section section = new Section();
         section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
+        section.setBranches(new ArrayList<Branch>());
         int branchesAmount = new Random().nextInt(10);
         for (int i = 0; i < branchesAmount ; i++) {
             Branch branch = ObjectsFactory.getDefaultBranch();

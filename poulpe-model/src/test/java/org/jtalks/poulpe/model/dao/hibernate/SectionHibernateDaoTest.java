@@ -53,35 +53,31 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         ObjectsFactory.setSession(session);
     }
 
-// TODO Uncomment me when Section#getBranches method will be public
-//    @Test
-//    public void deleteRecursevelyTest() {
-//        Section section = ObjectsFactory.createSection();
-//        session.save(section);
-//        dao.deleteRecursively(section.getId());
-//        Long actualAmount = (Long) session
-//                .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
-//                .setLong("id", section.getId()).uniqueResult();
-//        assertEquals(actualAmount, (Long) 0L);
-//    }
+    @Test
+    public void deleteRecursevelyTest() {
+        Section section = ObjectsFactory.createSection();
+        session.save(section);
+        dao.deleteRecursively(section.getId());
+        Long actualAmount = (Long) session
+                .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
+                .setLong("id", section.getId()).uniqueResult();
+        assertEquals(actualAmount, (Long) 0L);
+    }
 
-// TODO Uncomment me when Section#getBranches method will be public
-//    @Test
-//    public void deleteAndMoveBranchesToTest() {
-//        Section victim = ObjectsFactory.createSection();
-//        Section recipient = ObjectsFactory.createSection();
-//        Long victimBranchesAmount = (long) victim.getBranches().size();
-//        recipient.getBranches().clear();
-//        session.save(victim);
-//        session.save(recipient);
-//        
-//        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim.getId(), recipient.getId());
-//        assertTrue(isDeleted);
-//        // let's say due to rollback we don't have any branches but section's, but it would be
-//        // better if I had list of branches.
-//        Long actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",victim.getId()).uniqueResult();
-//        assertEquals(actualAmount, (Long)0L);
-//        actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",recipient.getId()).uniqueResult();
-//        assertEquals(actualAmount, victimBranchesAmount);
-//    }
+    @Test
+    public void deleteAndMoveBranchesToTest() {
+        Section victim = ObjectsFactory.createSection();
+        Section recipient = ObjectsFactory.createSection();
+        Long victimBranchesAmount = (long) victim.getBranches().size();
+        recipient.getBranches().clear();
+        session.save(victim);
+        session.save(recipient);
+        
+        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim.getId(), recipient.getId());
+        assertTrue(isDeleted);
+        Long actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",victim.getId()).uniqueResult();
+        assertEquals(actualAmount, (Long)0L);
+        actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",recipient.getId()).uniqueResult();
+        assertEquals(actualAmount, victimBranchesAmount);
+    }
 }

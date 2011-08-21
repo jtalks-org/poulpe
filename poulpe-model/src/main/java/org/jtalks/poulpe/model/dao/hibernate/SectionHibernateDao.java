@@ -52,27 +52,23 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(Long id) {
-// TODO   Uncomment me when Section#getBranches method will be public
-//        final String secectQuery = "FROM Section WHERE id=:id";
-//        Section victim = (Section) getSession().createQuery(secectQuery).setLong("id", id).uniqueResult();
-//        victim.getBranches().clear();
-//        final String querySection = "DELETE FROM Section WHERE id = :id";
-//        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
-        return false;
+        final String secectQuery = "FROM Section WHERE id=:id";
+        Section victim = (Section) getSession().createQuery(secectQuery).setLong("id", id).uniqueResult();
+        victim.getBranches().clear();
+        final String querySection = "DELETE FROM Section WHERE id = :id";
+        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean deleteAndMoveBranchesTo(Long id, Long recipientId) {
-// TODO   Uncomment me when Section#getBranches method will be public
-//        final String query = "FROM Section WHERE id=:id";
-//        Section victim = (Section) getSession().createQuery(query).setLong("id", id).uniqueResult();
-//        Section recipient = (Section) getSession().createQuery(query ).setLong("id", recipientId).uniqueResult();
-//        recipient.getBranches().addAll(victim.getBranches());
-//        saveOrUpdate(recipient);
-//        final String querySection = "DELETE FROM Section WHERE id = :id";
-//        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
-        return false;
+        final String query = "FROM Section WHERE id=:id";
+        Section victim = (Section) getSession().createQuery(query).setLong("id", id).uniqueResult();
+        Section recipient = (Section) getSession().createQuery(query ).setLong("id", recipientId).uniqueResult();
+        recipient.getBranches().addAll(victim.getBranches());
+        saveOrUpdate(recipient);
+        final String querySection = "DELETE FROM Section WHERE id = :id";
+        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
 
 }
