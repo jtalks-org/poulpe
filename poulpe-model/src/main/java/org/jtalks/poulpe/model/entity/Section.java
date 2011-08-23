@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.model.entity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -69,6 +70,8 @@ public class Section extends Persistent {
      * @param branches set  list of branches
      */
     public void setBranches(List<Branch> branches) {
+    	if (branches == null)
+    		branches = new ArrayList <Branch> ();
         this.branches = branches;
     }
 
@@ -79,6 +82,8 @@ public class Section extends Persistent {
      * @param branch branch
      */
     public void addBranch(Branch branch) {
+    	if (branches == null)
+    		branches = new ArrayList <Branch> ();
        branches.add(branch);
     }
 
