@@ -30,7 +30,6 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -64,7 +63,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 
     @Test
     public void deleteRecursevelyTest() {
-        Section section = ObjectsFactory.createSection();
+        Section section = ObjectsFactory.createSectionWithBranches();
         session.save(section);
         dao.deleteRecursively(section.getId());
         Long actualAmount = (Long) session
@@ -75,8 +74,8 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 
     @Test
     public void deleteAndMoveBranchesToTest() {
-        Section victim = ObjectsFactory.createSection();
-        Section recipient = ObjectsFactory.createSection();
+        Section victim = ObjectsFactory.createSectionWithBranches();
+        Section recipient = ObjectsFactory.createSectionWithBranches();
         Long victimBranchesAmount = (long) victim.getBranches().size();
         recipient.getBranches().clear();
         session.save(victim);

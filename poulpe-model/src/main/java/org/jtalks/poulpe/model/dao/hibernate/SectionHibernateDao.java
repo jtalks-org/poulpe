@@ -20,6 +20,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.util.List;
 
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
@@ -52,21 +53,56 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(Long id) {
-        final String secectQuery = "FROM Section WHERE id=:id";
-        Section victim = (Section) getSession().createQuery(secectQuery).setLong("id", id).uniqueResult();
+        Section victim = (Section) getSession().load(Section.class, id);
         victim.getBranches().clear();
         final String querySection = "DELETE FROM Section WHERE id = :id";
         return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
 
+//    Section section = new Section();
+//    section.setName("section");
+//    section.setBranches(new ArrayList<Branch>());
+//    try {
+//        sectionService.saveSection(section);
+//    } catch (NotUniqueException e) {
+//        e.printStackTrace();
+//    }
+//    Branch branch = new Branch();
+//    branch.setName("branch");
+//    branch.setSection(section);
+//    section.getBranches().add(branch);
+//    try {
+//        branchService.saveBranch(branch);
+//        sectionService.saveSection(section);    // to save indexes
+//    } catch (NotUniqueException e) {
+//        e.printStackTrace();
+//    }
+    
     /** {@inheritDoc} */
     @Override
     public boolean deleteAndMoveBranchesTo(Long id, Long recipientId) {
-        final String query = "FROM Section WHERE id=:id";
-        Section victim = (Section) getSession().createQuery(query).setLong("id", id).uniqueResult();
-        Section recipient = (Section) getSession().createQuery(query ).setLong("id", recipientId).uniqueResult();
+        Section victim = (Section) getSession().load(Section.class, id);
+        Section recipient = (Section) getSession().load(Section.class, recipientId);
+//        final String updateQuery = "UPDATE Branch SET section = :recipient WHERE section = :victim";
+//        getSession().createQuery(updateQuery).setEntity("recipient", recipient).setEntity("victim", victim).executeUpdate();
+        for (Branch branch : victim.getBranches()) {
+            branch.setSection(recipient);
+            getSession().save(branch);
+        }
         recipient.getBranches().addAll(victim.getBranches());
         saveOrUpdate(recipient);
+        victim.getBranches().clear();
+//        try {
+//            getSession().delete(victim);
+//            return true;
+//        } catch (HibernateException e) {
+//            // TODO: handle exception
+//            return false;
+//        }
+//        recipient.getBranches().addAll(victim.getBranches());
+//        saveOrUpdate(recipient);
+//        victim.getBranches().clear();
+//        saveOrUpdate(victim);
         final String querySection = "DELETE FROM Section WHERE id = :id";
         return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }

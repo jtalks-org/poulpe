@@ -28,6 +28,7 @@ public class Branch extends Persistent {
     private String name;
     private String description;
     private boolean deleted;
+    private Section section;
 
     /**
      * Set branch name which briefly describes the topics contained in it.
@@ -80,4 +81,21 @@ public class Branch extends Persistent {
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
     }
+
+    /**
+     * Returns the section in which this branch is.
+     * @return the parent section
+     */
+    public Section getSection() {
+        return section;
+    }
+
+    /**
+     * Sets the section in which this branch is.
+     * @param section the parent section
+     */
+    public void setSection(Section section) {
+        this.section = section;
+    }    
+    
 }

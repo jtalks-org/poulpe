@@ -19,11 +19,21 @@ package org.jtalks.poulpe.model.dao.hibernate;
  */
 
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.dao.BranchDao;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.List;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-
+import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -32,11 +42,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.List;
-
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author Kirill Afonin
@@ -63,7 +68,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testSave() {
         Branch branch = ObjectsFactory.getDefaultBranch();
-
+        session.save(branch.getSection());
         dao.saveOrUpdate(branch);
 
         assertNotSame(branch.getId(), 0, "Id not created");
@@ -85,6 +90,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testGet() {
         Branch branch = ObjectsFactory.getDefaultBranch();
+        session.save(branch.getSection());
         session.save(branch);
 
         Branch result = dao.get(branch.getId());
@@ -104,6 +110,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testUpdate() {
         String newName = "new name";
         Branch branch = ObjectsFactory.getDefaultBranch();
+        session.save(branch.getSection());
         session.save(branch);
         branch.setName(newName);
 
@@ -117,6 +124,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void testUpdateNotNullViolation() {
         Branch branch = ObjectsFactory.getDefaultBranch();
+        session.save(branch.getSection());
         session.save(branch);
         branch.setName(null);
 
@@ -126,6 +134,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testDelete() {
         Branch branch = ObjectsFactory.getDefaultBranch();
+        session.save(branch.getSection());
         session.save(branch);
 
         boolean result = dao.delete(branch.getId());
@@ -145,8 +154,10 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testGetAll() {
         Branch branch1 = ObjectsFactory.getDefaultBranch();
+        session.save(branch1.getSection());
         session.save(branch1);
         Branch branch2 = ObjectsFactory.getDefaultBranch();
+        session.save(branch2.getSection());
         session.save(branch2);
 
         List<Branch> branches = dao.getAll();
@@ -164,6 +175,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testIsExist() {
         Branch branch = ObjectsFactory.getDefaultBranch();
+        session.save(branch.getSection());
         session.save(branch);
 
         assertTrue(dao.isExist(branch.getId()));
@@ -175,6 +187,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         branch1.setName("not unique");
         Branch branch2 = ObjectsFactory.getDefaultBranch();
         branch2.setName("not unique");
+        session.save(branch1.getSection());
         session.save(branch1);
 
         boolean result = dao.isBranchDuplicated(branch2);
@@ -189,5 +202,22 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
     private int getCount() {
         return ((Number) session.createQuery("select count(*) from Branch").uniqueResult()).intValue();
+    }
+    
+    /** Tests if Hibernate mapping allows to save branches adding them to the section. */
+    @Test
+    public void branchSectionBidirectionalTest() {
+        Branch branch = ObjectsFactory.getDefaultBranch();
+        Section section = ObjectsFactory.createSection();
+        session.save(section);
+        section = (Section) session.load(Section.class, section.getId());
+        branch.setSection(section);
+        section.getBranches().add(branch);
+        session.save(branch);
+        assertTrue(branch.getId() != 0);
+//        session.evict(section);
+        section = (Section) session.load(Section.class, section.getId());
+        assertEquals(section.getBranches().size(), 1);
+        assertReflectionEquals(branch, section.getBranches().get(0));
     }
 }
