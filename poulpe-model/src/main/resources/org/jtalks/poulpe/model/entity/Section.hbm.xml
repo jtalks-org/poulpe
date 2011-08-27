@@ -17,8 +17,14 @@
 			<index column="LIST_INDEX" />
 
 		</list>-->
-		
-    <list name="branches" cascade="all-delete-orphan">
+
+
+    <!-- inverse is false because otherwise indexes are saved as null -->
+    <!-- (even if you save branch and just after that section). -->
+
+    <!-- cacade is delete because I don't really think we need more. -->
+    <!-- inverse=true&cascade=all don't lead to saving index -->
+    <list name="branches" cascade="delete" inverse="false">
       <cache usage="nonstrict-read-write"/>
       <key column="SECTION_ID" foreign-key="FK_SECTION"/>
       <index column="BRANCHES_INDEX"/>

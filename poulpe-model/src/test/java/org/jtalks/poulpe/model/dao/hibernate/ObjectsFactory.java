@@ -51,6 +51,7 @@ public final class ObjectsFactory {
         String uniqueName = "branch name " + UUID.randomUUID();
         newBranch.setName(uniqueName);
         newBranch.setDescription("branch description");
+        newBranch.setSection(createSection());
         return newBranch;
     }
 
@@ -75,15 +76,23 @@ public final class ObjectsFactory {
         return component;
     }
     
+    public static Section createSectionWithBranches() {
+        Section section = new Section();
+        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
+        section.setBranches(new ArrayList<Branch>());
+        int branchesAmount = new Random().nextInt(10) + 1;
+        for (int i = 0; i < branchesAmount ; i++) {
+            Branch branch = getDefaultBranch();
+            branch.setSection(section);
+            section.addBranch(branch);
+        }
+        return section;
+    }
+    
     public static Section createSection() {
         Section section = new Section();
         section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
         section.setBranches(new ArrayList<Branch>());
-        int branchesAmount = new Random().nextInt(10);
-        for (int i = 0; i < branchesAmount ; i++) {
-            Branch branch = ObjectsFactory.getDefaultBranch();
-            section.addBranch(branch);
-        }
         return section;
     }
 }

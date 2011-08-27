@@ -9,5 +9,6 @@
     <property column="NAME" name="name" not-null="true"/>
     <property column="DESCRIPTION" name="description"/>
     <property column="DELETED" name="deleted"/>
+    <many-to-one column="SECTION_ID" name="section" class="Section" not-null="true" />
   </class>
 </hibernate-mapping>
