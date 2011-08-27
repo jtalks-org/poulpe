@@ -38,6 +38,7 @@ public interface BranchService extends EntityService<Branch> {
     /**
      * Mark the branch as deleted.
      * @param selectedBranch branch to delete
+     * @deprecated because there are two other delete methods
      */
     void deleteBranch(Branch selectedBranch);
 
@@ -48,4 +49,16 @@ public interface BranchService extends EntityService<Branch> {
      */
     void saveBranch(Branch selectedBranch) throws NotUniqueException;
     
+    /**
+     * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
+     * @param victim the branch to be removed
+     */
+    void deleteBranchRecursively(Branch victim);
+
+    /**
+     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim} branch.
+     * @param victim the branch to be removed
+     * @param recipient the branch to take topics of {@code victim}
+     */
+    void deleteBranchMovingTopics(Branch victim, Branch recipient);
 }
