@@ -59,11 +59,32 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
         return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
 
+//    Section section = new Section();
+//    section.setName("section");
+//    section.setBranches(new ArrayList<Branch>());
+//    try {
+//        sectionService.saveSection(section);
+//    } catch (NotUniqueException e) {
+//        e.printStackTrace();
+//    }
+//    Branch branch = new Branch();
+//    branch.setName("branch");
+//    branch.setSection(section);
+//    section.getBranches().add(branch);
+//    try {
+//        branchService.saveBranch(branch);
+//        sectionService.saveSection(section);    // to save indexes
+//    } catch (NotUniqueException e) {
+//        e.printStackTrace();
+//    }
+    
     /** {@inheritDoc} */
     @Override
     public boolean deleteAndMoveBranchesTo(Long id, Long recipientId) {
         Section victim = (Section) getSession().load(Section.class, id);
         Section recipient = (Section) getSession().load(Section.class, recipientId);
+//        final String updateQuery = "UPDATE Branch SET section = :recipient WHERE section = :victim";
+//        getSession().createQuery(updateQuery).setEntity("recipient", recipient).setEntity("victim", victim).executeUpdate();
         for (Branch branch : victim.getBranches()) {
             branch.setSection(recipient);
             getSession().save(branch);
@@ -71,6 +92,17 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
         recipient.getBranches().addAll(victim.getBranches());
         saveOrUpdate(recipient);
         victim.getBranches().clear();
+//        try {
+//            getSession().delete(victim);
+//            return true;
+//        } catch (HibernateException e) {
+//            // TODO: handle exception
+//            return false;
+//        }
+//        recipient.getBranches().addAll(victim.getBranches());
+//        saveOrUpdate(recipient);
+//        victim.getBranches().clear();
+//        saveOrUpdate(victim);
         final String querySection = "DELETE FROM Section WHERE id = :id";
         return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
