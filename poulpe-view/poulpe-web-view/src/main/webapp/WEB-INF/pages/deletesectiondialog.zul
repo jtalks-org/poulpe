@@ -1,0 +1,19 @@
+<?page id="SectionDeleteDialog" title="Delete Section" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<window   id="deleteWindow" border="normal" mode="modal" visible="false" 
+         presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogViewImpl">
+        <vbox>
+            There are branches related to this section. What do you whant do?
+            <radiogroup id="deleteMode">
+            <vbox>
+                <radio id="deleteAllMode" value="deleteAll" label="Delete all"/>
+                <radio id="removeAndMoveMode" value="deleteSectionMoveBranches" label="Remove section only"/>
+                </vbox>
+            </radiogroup>
+            <combobox id="selectedSection" visible="false"/>
+            <hbox>
+                <button id="confirmButton" label="ok" />
+                <button id="rejectButton"  label="cancel" />
+            </hbox>
+        </vbox>
+</window>
