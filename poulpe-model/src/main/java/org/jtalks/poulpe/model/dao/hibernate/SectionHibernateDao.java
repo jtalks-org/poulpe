@@ -24,13 +24,12 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
- *  @author tanya birina
- *  @author Dmitriy Sukharev
+ * @author tanya birina
+ * @author Dmitriy Sukharev
  */
-public class SectionHibernateDao extends AbstractHibernateDao<Section> implements
-		SectionDao {
+public class SectionHibernateDao extends AbstractHibernateDao<Section> implements SectionDao {
 
-	/**
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -46,17 +45,19 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
     public boolean isSectionNameExists(String section) {
         return ((Number) getSession()
                 .createQuery("select count(*) from Section s where s.name = ?")
-                .setString(0, section)
-                .uniqueResult()).intValue() != 0;
+                .setString(0, section).uniqueResult()).intValue() != 0;
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(Long id) {
         Section victim = (Section) getSession().load(Section.class, id);
-        victim.getBranches().clear();
-        final String querySection = "DELETE FROM Section WHERE id = :id";
-        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
+        getSession().delete(victim);
+        // There's no use catching HibernateException to get to know if any section was deleted. I
+        // read source code of Hibernate delete method, such case just is logged (in trace
+        // level) and ignored there. So there is no way we can get to know if any section was
+        // deleted. I can't use HQL here as well. So I'm just returning true.
+        return true;
     }
 
     /** {@inheritDoc} */
@@ -66,13 +67,16 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
         Section recipient = (Section) getSession().load(Section.class, recipientId);
         for (Branch branch : victim.getBranches()) {
             branch.setSection(recipient);
-            getSession().save(branch);
         }
         recipient.getBranches().addAll(victim.getBranches());
-        saveOrUpdate(recipient);
         victim.getBranches().clear();
-        final String querySection = "DELETE FROM Section WHERE id = :id";
-        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
+        getSession().saveOrUpdate(recipient);
+        getSession().delete(victim);
+        // There's no use catching HibernateException to get to know if any section was deleted. I
+        // read source code of Hibernate delete method, such case just is logged (in trace
+        // level) and ignored there. So there is no way we can get to know if any section was
+        // deleted. I can't use HQL here as well. So I'm just returning true.
+        return true;
     }
 
 }
