@@ -147,15 +147,15 @@ public class SectionViewImpl extends Window implements SectionView,
 	 * DeleteSectionDialog
 	 */
 	public void onClick$deleteButton$deleteSectionDialog() {
-		if (deleteSectionDialog$deleteAll.isChecked()) {
-			presenter.deleteSection(null);
-		} else if (deleteSectionDialog$transferAll.isChecked()) {
-			Object selectedObject = deleteSectionDialog$sectionsCombobox
-					.getModel().getElementAt(
-							deleteSectionDialog$sectionsCombobox
-									.getSelectedIndex());
-			presenter.deleteSection((Section) selectedObject);
-		}
+//		if (deleteSectionDialog$deleteAll.isChecked()) {
+//			presenter.deleteSection(null);
+//		} else if (deleteSectionDialog$transferAll.isChecked()) {
+//			Object selectedObject = deleteSectionDialog$sectionsCombobox
+//					.getModel().getElementAt(
+//							deleteSectionDialog$sectionsCombobox
+//									.getSelectedIndex());
+//			presenter.deleteSection((Section) selectedObject);
+//		}
 	}
 
 	/**
