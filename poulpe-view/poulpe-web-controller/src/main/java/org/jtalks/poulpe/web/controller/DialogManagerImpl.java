@@ -54,37 +54,9 @@ public class DialogManagerImpl implements DialogManager {
         final String text = String.format(Labels.getLabel("dialogmanager.delete.question"), victim);
         try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION,
-                    Messagebox.NO, new DialogActionListener(confirmable));
+                    Messagebox.NO, new DialogDeleteListener(confirmable));
         } catch (InterruptedException e) {
             LOGGER.error("Problem with showing deleting messagebox.", e);
-            throw new AssertionError(e);    // it's unlikely to happen
-        }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public void confirmCreation(final String target, final DialogManager.Performable confirmable) {
-        final String title = String.format(Labels.getLabel("dialogmanager.create.title"), target);
-        final String text = String.format(Labels.getLabel("dialogmanager.create.question"), target);
-        try {
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION,
-                    Messagebox.NO, new DialogActionListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing creation messagebox.", e);
-            throw new AssertionError(e);    // it's unlikely to happen
-        }
-    }
-    
-    /** {@inheritDoc} */
-    @Override
-    public void confirmEdition(final String target, final DialogManager.Performable confirmable) {
-        final String title = String.format(Labels.getLabel("dialogmanager.edit.title"), target);
-        final String text = String.format(Labels.getLabel("dialogmanager.edit.question"), target);
-        try {
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION,
-                    Messagebox.NO, new DialogActionListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing creation messagebox.", e);
             throw new AssertionError(e);    // it's unlikely to happen
         }
     }
@@ -96,7 +68,7 @@ public class DialogManagerImpl implements DialogManager {
      * @author Dmitriy Sukharev
      * 
      */
-    private static class DialogActionListener implements EventListener {
+    private static class DialogDeleteListener implements EventListener {
 
         private Performable confirmable;
 
@@ -107,7 +79,7 @@ public class DialogManagerImpl implements DialogManager {
          * @param confirmable
          *            the object whose {@code execute} method will be invoked
          */
-        public DialogActionListener(Performable confirmable) {
+        public DialogDeleteListener(Performable confirmable) {
             this.confirmable = confirmable;
         }
 

@@ -14,21 +14,19 @@
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
 
   <!--Declaration of presenters -->
-  <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="session">
+  <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter" scope="prototype">
     <property name="branchService" ref="branchService" />
   </bean>
-   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
-    <property name="sectionService" ref="sectionService" />
+    <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="prototype">
+    <property name="branchService" ref="branchService" />
   </bean>
-
+ 
   <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.ItemPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
-    <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
   <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
-    <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
 

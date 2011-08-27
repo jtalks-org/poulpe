@@ -47,26 +47,6 @@ public interface DialogManager {
      *            the action to be performed when user confirms item deletion
      */
     void confirmDeletion(String victim, Performable performable);
-    
-    /**
-     * Asks user if they want to create item
-     * 
-     * @param victim
-     *            the item to be created
-     * @param performable
-     *            the action to be performed when user confirms item deletion
-     */
-    void confirmCreation(String target, Performable performable);
-    
-    /**
-     * Asks user if they want to edit item
-     * 
-     * @param victim
-     *            the item to be edit
-     * @param performable
-     *            the action to be performed when user confirms item deletion
-     */
-    void confirmEdition(String target, Performable performable);
 
     /**
      * The interface for storing some actions that ought to be performed when
