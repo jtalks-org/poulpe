@@ -41,7 +41,8 @@ public final class WindowManagerImpl implements WindowManager {
         Map<String, Object> args = new HashMap<String, Object>();
         args.put("componentId", componentId);
         Window win = (Window) Executions.createComponents(EDIT_COMPONENT_URL, null, args);
-        win.setAttribute("CLOSE_LISTENER", listener);
+        win.setAttribute("CLOSE_LISTENER", listener);        
+        
         try {
             win.doModal();
         } catch (Exception e) {
