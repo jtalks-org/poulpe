@@ -70,5 +70,18 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
         dao.saveOrUpdate(selectedBranch);
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public void deleteBranchRecursively(Branch victim) {
+        // topicDao.deleteTopicsFromBranch(victim); // TopicDao#deleteTopicsFromBranch(Branch from)
+        dao.delete(victim.getId());
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void deleteBranchMovingTopics(Branch victim, Branch recipient) {
+        // topicDao.moveTopics(victim, recipient); // TopicDao#moveTopics(Branch from, Branch to);
+        dao.delete(victim.getId());
+    }
 
 }
