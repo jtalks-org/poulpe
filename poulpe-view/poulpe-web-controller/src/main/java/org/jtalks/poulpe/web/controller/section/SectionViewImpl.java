@@ -147,15 +147,15 @@ public class SectionViewImpl extends Window implements SectionView,
 	 * DeleteSectionDialog
 	 */
 	public void onClick$deleteButton$deleteSectionDialog() {
-//		if (deleteSectionDialog$deleteAll.isChecked()) {
-//			presenter.deleteSection(null);
-//		} else if (deleteSectionDialog$transferAll.isChecked()) {
-//			Object selectedObject = deleteSectionDialog$sectionsCombobox
-//					.getModel().getElementAt(
-//							deleteSectionDialog$sectionsCombobox
-//									.getSelectedIndex());
-//			presenter.deleteSection((Section) selectedObject);
-//		}
+		// if (deleteSectionDialog$deleteAll.isChecked()) {
+		// presenter.deleteSection(null);
+		// } else if (deleteSectionDialog$transferAll.isChecked()) {
+		// Object selectedObject = deleteSectionDialog$sectionsCombobox
+		// .getModel().getElementAt(
+		// deleteSectionDialog$sectionsCombobox
+		// .getSelectedIndex());
+		// presenter.deleteSection((Section) selectedObject);
+		// }
 	}
 
 	/**
@@ -185,7 +185,6 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	}
 
-	
 	public void onClick$deleteAll$deleteSectionDialog() {
 		if (deleteSectionDialog$deleteAll.isChecked()) {
 			deleteSectionDialog$sectionsCombobox.setDisabled(true);
@@ -225,18 +224,18 @@ public class SectionViewImpl extends Window implements SectionView,
 	/** {@inheritDoc} */
 	@Override
 	public void openDeleteSectionDialog(List<Section> sections) {
-		 ListModelList listModel = new ListModelList(sections);
-		 deleteSectionDialog$sectionsCombobox.setModel(listModel);
-		 deleteSectionDialog$sectionsCombobox
-		 .setItemRenderer(new ComboitemRenderer() {
-		
-		 @Override
-		 public void render(Comboitem item, Object data)
-		 throws Exception {
-		 Section sec = (Section) data;
-		 item.setLabel(sec.getName());
-		 }
-		 });
+		ListModelList listModel = new ListModelList(sections);
+		deleteSectionDialog$sectionsCombobox.setModel(listModel);
+		deleteSectionDialog$sectionsCombobox
+				.setItemRenderer(new ComboitemRenderer() {
+
+					@Override
+					public void render(Comboitem item, Object data)
+							throws Exception {
+						Section sec = (Section) data;
+						item.setLabel(sec.getName());
+					}
+				});
 
 		deleteSectionDialog.setVisible(true);
 	}
@@ -329,14 +328,30 @@ public class SectionViewImpl extends Window implements SectionView,
 	public void closeNewBranchDialog() {
 		// TODO : implement
 	}
-	
+
 	@Override
-	public void openEditBranchDialog(){
-		
+	public void openEditBranchDialog() {
+
 	}
+
 	@Override
-	public void closeEditBranchDialog(){
-		
+	public void closeEditBranchDialog() {
+
+	}
+
+	@Override
+	public boolean isDeleteDialogOpen() {
+		return deleteSectionDialog.isVisible();
+	}
+
+	@Override
+	public boolean isEditDialogOpen() {
+		return editSectionDialog.isVisible();
+	}
+
+	@Override
+	public boolean isNewDialogOpen() {
+		return newSectionDialog.isVisible();
 	}
 
 }
