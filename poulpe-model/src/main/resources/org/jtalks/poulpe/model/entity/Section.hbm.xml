@@ -21,7 +21,7 @@
 
     <!-- inverse is false because otherwise indexes are saved as null -->
     <!-- (even if you save branch and just after that section). -->
-    <list name="branches" cascade="all" inverse="false">
+    <list name="branches" cascade="all-delete-orphan" inverse="false">
       <cache usage="nonstrict-read-write" />
       <key column="SECTION_ID" foreign-key="FK_SECTION" />
       <index column="BRANCHES_INDEX" />

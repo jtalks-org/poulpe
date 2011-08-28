@@ -69,14 +69,12 @@ public class SectionHibernateDao extends AbstractHibernateDao<Section> implement
             branch.setSection(recipient);
         }
         recipient.getBranches().addAll(victim.getBranches());
-        victim.getBranches().clear();
         getSession().saveOrUpdate(recipient);
-        getSession().delete(victim);
-        // There's no use catching HibernateException to get to know if any section was deleted. I
-        // read source code of Hibernate delete method, such case just is logged (in trace
-        // level) and ignored there. So there is no way we can get to know if any section was
-        // deleted. I can't use HQL here as well. So I'm just returning true.
-        return true;
+        // The reason for flush and evict: https://forum.hibernate.org/viewtopic.php?f=1&t=1012422
+        getSession().flush();
+        getSession().evict(victim);
+        final String querySection = "DELETE FROM Section WHERE id = :id";
+        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
     }
 
 }
