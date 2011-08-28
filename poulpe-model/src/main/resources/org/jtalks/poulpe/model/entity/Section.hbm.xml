@@ -1,34 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
-	<class name="Section" table="SECTION">
-		<id column="SECTION_ID" name="id" unsaved-value="0">
-			<generator class="native" />
-		</id>
-		<property column="UUID" name="uuid" not-null="true" unique="true" />
-		<property column="NAME" name="name" not-null="true" />
-		<property column="DESCRIPTION" name="description" />
-		<property column="POSITION_" name="position" />
+  <class name="Section" table="SECTION">
+    <id column="SECTION_ID" name="id" unsaved-value="0">
+      <generator class="native" />
+    </id>
+    <property column="UUID" name="uuid" not-null="true" unique="true" />
+    <property column="NAME" name="name" not-null="true" />
+    <property column="DESCRIPTION" name="description" />
+    <property column="POSITION_" name="position" />
 
-		<!--<list name="branches" cascade="all-delete-orphan">
-			<cache usage="nonstrict-read-write" />
-			<one-to-many class="Branch" />
-			<key column="BRANCH_ID" />
-			<index column="LIST_INDEX" />
-
-		</list>-->
-
+<!--
+     <list name="branches" cascade="all-delete-orphan">
+      <cache usage="nonstrict-read-write" />
+      <one-to-many class="Branch" />
+      <key column="BRANCH_ID" />
+      <index column="LIST_INDEX" />
+    </list>
+-->
 
     <!-- inverse is false because otherwise indexes are saved as null -->
     <!-- (even if you save branch and just after that section). -->
-
-    <!-- cacade is delete because I don't really think we need more. -->
-    <!-- inverse=true&cascade=all don't lead to saving index -->
-    <list name="branches" cascade="delete" inverse="false">
-      <cache usage="nonstrict-read-write"/>
-      <key column="SECTION_ID" foreign-key="FK_SECTION"/>
-      <index column="BRANCHES_INDEX"/>
-      <one-to-many class="Branch"/>
+    <list name="branches" cascade="all" inverse="false">
+      <cache usage="nonstrict-read-write" />
+      <key column="SECTION_ID" foreign-key="FK_SECTION" />
+      <index column="BRANCHES_INDEX" />
+      <one-to-many class="Branch" />
     </list>
-	</class>
+  </class>
 </hibernate-mapping>
