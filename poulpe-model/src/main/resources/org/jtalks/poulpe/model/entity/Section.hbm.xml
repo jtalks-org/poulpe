@@ -21,11 +21,11 @@
 
     <!-- inverse is false because otherwise indexes are saved as null -->
     <!-- (even if you save branch and just after that section). -->
-    <list name="branches" cascade="all-delete-orphan" inverse="false">
+    <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false" >
       <cache usage="nonstrict-read-write" />
       <key column="SECTION_ID" foreign-key="FK_SECTION" />
       <index column="BRANCHES_INDEX" />
-      <one-to-many class="Branch" />
+      <one-to-many class="Branch"  />
     </list>
   </class>
 </hibernate-mapping>
