@@ -84,7 +84,16 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	@Override
 	public void showSections(List<Section> sections) {
+		List childredToSave = new ArrayList();
+		for(Object obj : getChildren()){
+			if(!(obj instanceof SectionTreeComponent)){
+				childredToSave.add(obj);
+			}
+		}
 		getChildren().clear();
+		for(Object obj : childredToSave){
+			getChildren().add(obj);
+		}
 		for (Section section : sections) {
 			// TODO move SectionTreeComponent creation to external factory
 			// method
