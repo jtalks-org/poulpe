@@ -17,7 +17,10 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
@@ -25,6 +28,10 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
+import org.zkoss.zul.Combobox;
+import org.zkoss.zul.Comboitem;
+import org.zkoss.zul.ComboitemRenderer;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
@@ -44,6 +51,31 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Button confirmButton;
     private Button rejectButton;
     private Branch branch;
+    private Combobox sectionList;
+    
+    private void setDefaultSection(Section section){
+        ListModelList model = (ListModelList) sectionList.getModel();
+        model.clearSelection();
+        if(section != null) {
+            model.addSelection(section);
+        }else {
+            model.addSelection(model.get(0));
+        }
+        sectionList.setModel(model);
+                
+    }
+    /**
+     * This class render items Combobox list
+     * */
+    private static ComboitemRenderer sectionItemRenderer = new ComboitemRenderer() {
+
+        @Override
+        public void render(Comboitem item, Object data) {
+            Section section = (Section) data;
+            item.setLabel(section.getName());
+            item.setDescription(section.getDescription());
+        }
+    };
 
     /**
      * Set presenter
@@ -64,7 +96,10 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         presenter.setView(this);
+        presenter.initView();
+
         branchName.setConstraint("no empty");
+        sectionList.setItemRenderer(sectionItemRenderer);
     }
 
     /**
@@ -88,14 +123,33 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branchName.clearErrorMessage();
     }
 
+
+    /**
+     * Handle event from main window for open add new branch dialog
+     * */
+    public void onOpenAddDialog() {
+        show();
+    }
+
+    /**
+     * Handle event from main window for open edit branch dialog
+     * */
+    public void onOpenEditDialog(Event event) {
+        show((Branch) event.getData());
+    }
+
     /**
      * {@inheritDoc}
      * */
     @Override
-    public Branch getBranch() {
+    public Section getSection() {
+        Section section = (Section) sectionList.getModel().getElementAt(
+                sectionList.getSelectedIndex());
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
-        return branch;
+        branch.setSection(section);
+        section.addBranch(branch);
+        return section;
     }
 
     /**
@@ -105,7 +159,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     public void hide() {
         setVisible(false);
         Events.postEvent(new Event("onHideDialog", getDesktop().getPage(
-                "branchEditor").getFellow("editorWindow")));
+                "mainPage").getFellow("mainWindow")));
     }
 
     /**
@@ -119,6 +173,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branchName.setRawValue("");
         branchDescription.setText("");
         branch = new Branch();
+        setDefaultSection(null);
         setVisible(true);
     }
 
@@ -130,10 +185,12 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         setTitle(Labels.getLabel("branches.editdialog.title"));
         confirmButton.setLabel(Labels.getLabel("branches.button.edit"));
         rejectButton.setLabel(Labels.getLabel("branches.button.cancel"));
-
+        Section section = branch.getSection();
+        setDefaultSection(section);
         branchName.setText(branch.getName());
         branchDescription.setText(branch.getDescription());
         this.branch = branch;
+
         setVisible(true);
     }
 
@@ -142,7 +199,16 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void notUniqueBranchName() throws WrongValueException {
-        throw new WrongValueException(branchName, Labels.getLabel("branches.error.branch_name_already_exists"));
+        throw new WrongValueException(branchName,
+                Labels.getLabel("branches.error.branch_name_already_exists"));
+    }
+
+    /**
+     * {@inheritDoc}
+     * */
+    @Override
+    public void initSectionList(List<Section> sections) {
+        sectionList.setModel( new ListModelList(sections));
     }
 
 }

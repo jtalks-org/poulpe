@@ -17,7 +17,10 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.WrongValueException;
 
 /**
@@ -32,7 +35,7 @@ public interface BranchDialogView {
      * 
      * @return Branch new or edited branch
      * */
-    Branch getBranch();
+    Section getSection();
 
     /**
      * Cause hiding current dialog
@@ -56,4 +59,9 @@ public interface BranchDialogView {
      * Cause throw exception for popup error message
      * */
     void notUniqueBranchName() throws WrongValueException;
+    
+    /**
+     * Init Section combobox list
+     * */
+    void initSectionList(List<Section> sections);
 }

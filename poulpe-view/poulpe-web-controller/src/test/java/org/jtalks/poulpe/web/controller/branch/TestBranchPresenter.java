@@ -21,7 +21,8 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -33,44 +34,34 @@ import org.testng.annotations.Test;
 public class TestBranchPresenter {
 
     @Mock
-    BranchService service;
+    SectionService service;
     @Mock
     BranchDialogView view;
 
     @Captor
-    ArgumentCaptor<Branch> branchCaptor;
+    ArgumentCaptor<Section> sectionCaptor;
 
     BranchPresenter presenter = new BranchPresenter();
 
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        presenter.setBranchService(service);
+        presenter.setSectionService(service);
         presenter.setView(view);
     }
 
     @Test
-    public void testSaveUniqueBranch() throws NotUniqueException {
-        Branch branch = new Branch();
-        branch.setName("getted branch");
-        when(view.getBranch()).thenReturn(branch);
+    public void testSaveBranch() throws NotUniqueException {
+        Section section = new Section();
+        section.addBranch(new Branch());
+        section.setName("getted section");
+        when(view.getSection()).thenReturn(section);
 
         presenter.saveBranch();
 
-        verify(service).saveBranch(branchCaptor.capture());
-        assertEquals(branchCaptor.getValue().getName(), "getted branch");
+        verify(service).saveSection(sectionCaptor.capture());
+        assertEquals(sectionCaptor.getValue().getName(), "getted section");
+        assertEquals(sectionCaptor.getValue().getBranches().size(), 1);
     }
 
-    @Test
-    public void testSaveNotUniqueBranch() throws NotUniqueException {
-        Branch branch = new Branch();
-        branch.setName("getted branch");
-        when(view.getBranch()).thenReturn(branch);
-
-        doThrow(new NotUniqueException()).when(service).saveBranch(branch);
-
-        presenter.saveBranch();
-        verify(view).notUniqueBranchName();
-
-    }
 }

@@ -17,9 +17,11 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.service.BranchService;
+
+import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+
 
 /**
  * This class is implementation the branch presenter in pattern
@@ -29,18 +31,16 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
  * */
 public class BranchPresenter {
 
-    private BranchService branchService;
+    private SectionService sectionService;
     private BranchDialogView view;
 
+    
     /**
-     * Sets the service instance which is used for manipulating with stored
-     * branches
-     * 
-     * @param service
-     *            The instance branch service
+     * Sets the Section instance
+     * @param service The instance section service
      * */
-    public void setBranchService(BranchService service) {
-        branchService = service;
+    public void setSectionService(SectionService service){
+        sectionService = service;
     }
 
     /**
@@ -52,15 +52,22 @@ public class BranchPresenter {
     public void setView(BranchDialogView view) {
         this.view = view;
     }
+    
+    /**
+     * Init view initial data
+     * */
+    public void initView() {        
+        view.initSectionList( sectionService.getAll() );
+    }
 
     /**
      * Save new or edited branch in db In case when branch with equal name
      * exists, cause open error popup in view.
      * */
     public void saveBranch() {
-        Branch branch = view.getBranch();
+        Section section = view.getSection();       
         try {
-            branchService.saveBranch(branch);
+            sectionService.saveSection(section);
         } catch (NotUniqueException e) {
             view.notUniqueBranchName();
         }

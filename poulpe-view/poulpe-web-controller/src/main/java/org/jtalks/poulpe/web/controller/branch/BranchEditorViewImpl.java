@@ -24,6 +24,8 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManagerImpl;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Label;
 import org.zkoss.zul.ListModelList;
@@ -119,11 +121,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
      * Handle click on add button
      * */
     public void onClick$addBranchButton() {
-
-        BranchDialogView dialog = (BranchDialogView) getDesktop().getPage(
-                "BranchDialog").getFellow("editWindow");
-        dialog.show();
-
+        Events.postEvent( new Event("onOpenAddDialog",getDesktop().getPage("BranchDialog").getFellow("editWindow")));       
     }
 
     /**
@@ -149,9 +147,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
      * Handle double click on branch list
      * */
     public void onDoubleClick$branchesList() {
-        BranchDialogView dialog = (BranchDialogView) getDesktop().getPage(
-                "BranchDialog").getFellow("editWindow");
-        dialog.show(getSelectedBranch());
+        Events.postEvent( new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"), getSelectedBranch()));        
     }
 
     /**

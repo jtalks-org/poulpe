@@ -4,6 +4,9 @@
          presenter="${branchPresenter}" use="org.jtalks.poulpe.web.controller.branch.BranchDialogViewImpl">
         <vbox>
             <hbox>
+            Секция: <combobox id="sectionList" value="select..." readonly="true"/>
+            </hbox>
+            <hbox>
                 ${labels.branches.label.name} <textbox id="branchName" />
             </hbox>
             <hbox>
