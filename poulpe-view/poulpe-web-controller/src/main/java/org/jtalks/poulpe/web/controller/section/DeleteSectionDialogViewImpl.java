@@ -21,6 +21,8 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
@@ -84,11 +86,13 @@ public class DeleteSectionDialogViewImpl extends Window implements
     @Override
     public void closeDialog() {
         setVisible(false);
+        Events.postEvent(new Event("onHideDialog", getDesktop().getPage("mainPage").getFellow("mainWindow")));
     }
 
     @Override
     public void showDialog() {
         setDefaultSection();
+        deleteMode.setSelectedIndex(-1);
         setVisible(true);
     }
 
@@ -97,6 +101,11 @@ public class DeleteSectionDialogViewImpl extends Window implements
         model.clearSelection();
         model.addSelection(model.get(0));
         selectedSection.setModel(model);
+    }
+    
+    public void onOpenDeleteSectionDialog(Event event){
+        deletedSection = (Section)event.getData();
+        showDialog();
     }
 
     public void onClick$confirmButton() {
