@@ -1,4 +1,4 @@
-<?page id="SectionDeleteDialog" title="Delete Section" contentType="text/html;charset=UTF-8"?>
+<?page id="sectionDeleteDialog" title="Delete Section" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <window   id="deleteWindow" border="normal" mode="modal" visible="false" 
          presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogViewImpl">
@@ -7,10 +7,10 @@
             <radiogroup id="deleteMode">
             <vbox>
                 <radio id="deleteAllMode" value="deleteAll" label="Delete all"/>
-                <radio id="removeAndMoveMode" value="deleteSectionMoveBranches" label="Remove section only"/>
+                <radio id="removeAndMoveMode" value="deleteSectionMoveBranches" label="Remove section only and move child branches to"/>
                 </vbox>
             </radiogroup>
-            <combobox id="selectedSection" visible="false"/>
+            <combobox id="selectedSection" readonly="true"/>
             <hbox>
                 <button id="confirmButton" label="ok" />
                 <button id="rejectButton"  label="cancel" />

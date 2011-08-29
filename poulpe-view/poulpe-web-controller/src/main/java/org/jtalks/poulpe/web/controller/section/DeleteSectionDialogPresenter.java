@@ -32,6 +32,10 @@ public class DeleteSectionDialogPresenter {
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
     }
+    
+    public void initView(){
+        view.initSectionList(sectionService.getAll());
+    }
 
     
     public void delete() {

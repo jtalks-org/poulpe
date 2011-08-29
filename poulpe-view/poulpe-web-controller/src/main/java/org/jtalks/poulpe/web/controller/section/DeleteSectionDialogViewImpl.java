@@ -17,7 +17,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
@@ -30,40 +29,41 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.api.Radiogroup;
 
-public class DeleteSectionDialogViewImpl extends Window implements DeleteSectionDialogView, AfterCompose {
+public class DeleteSectionDialogViewImpl extends Window implements
+        DeleteSectionDialogView, AfterCompose {
 
     /**
      * 
      */
     private static final long serialVersionUID = -4999382692611273729L;
     private Radiogroup deleteMode;
-    private Combobox   selectedSection;
-    private Section    deletedSection;
+    private Combobox selectedSection;
+    private Section deletedSection;
     private DeleteSectionDialogPresenter presenter;
-    
-    public void setPresenter(DeleteSectionDialogPresenter presenter){
-      this.presenter = presenter;      
+
+    public void setPresenter(DeleteSectionDialogPresenter presenter) {
+        this.presenter = presenter;
     }
-    
+
     @Override
     public void afterCompose() {
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
-        
+
         presenter.setView(this);
-      
-       selectedSection.setItemRenderer(new ComboitemRenderer() {
-       
-        @Override
-        public void render(Comboitem item, Object data) throws Exception {
-            Section section = (Section)data;
-            item.setLabel(section.getName());
-        }
-    });
-       
+        presenter.initView();
+        selectedSection.setItemRenderer(new ComboitemRenderer() {
+
+            @Override
+            public void render(Comboitem item, Object data) throws Exception {
+                Section section = (Section) data;
+                item.setLabel(section.getName());
+                item.setDescription(section.getDescription());
+            }
+        });
+
     }
-    
-    
+
     @Override
     public Section getDeleteSection() {
         return deletedSection;
@@ -71,12 +71,14 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     @Override
     public Section getSelectedSection() {
-        return (Section)selectedSection.getModel().getElementAt( selectedSection.getSelectedIndex());
+        return (Section) selectedSection.getModel().getElementAt(
+                selectedSection.getSelectedIndex());
     }
 
     @Override
     public String getDeleteMode() {
-        return deleteMode.getItemAtIndexApi( deleteMode.getSelectedIndex() ).getValue();
+        return deleteMode.getItemAtIndexApi(deleteMode.getSelectedIndex())
+                .getValue();
     }
 
     @Override
@@ -85,27 +87,29 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     }
 
     @Override
-    public void showDialog(List<Section> selectableSections) {
-        selectedSection.setModel(new ListModelList( selectableSections ));
+    public void showDialog() {
+        setDefaultSection();
         setVisible(true);
     }
 
-    public void onClick$confirmButton(){
+    private void setDefaultSection() {
+        ListModelList model = (ListModelList) selectedSection.getModel();
+        model.clearSelection();
+        model.addSelection(model.get(0));
+        selectedSection.setModel(model);
+    }
+
+    public void onClick$confirmButton() {
         presenter.delete();
     }
-    
-    public void onClick$rejectButton(){
+
+    public void onClick$rejectButton() {
         closeDialog();
     }
-    
-    public void onCheck$removeAndMoveMode(){
-        selectedSection.setVisible(true);
-        selectedSection.setSelectedIndex(0);
-    }
-    
-    public void onCheck$deleteAllMode(){
-        selectedSection.setVisible(false);
-        selectedSection.setSelectedIndex(-1);
+
+    @Override
+    public void initSectionList(List<Section> selectableSections) {
+        selectedSection.setModel(new ListModelList(selectableSections));
     }
 
 }

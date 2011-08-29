@@ -18,7 +18,7 @@
     <property name="branchService" ref="branchService" />
   </bean>
     <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="prototype">
-    <property name="branchService" ref="branchService" />
+    <property name="sectionService" ref="sectionService"/>
   </bean>
   
   <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.ItemPresenter" scope="prototype">

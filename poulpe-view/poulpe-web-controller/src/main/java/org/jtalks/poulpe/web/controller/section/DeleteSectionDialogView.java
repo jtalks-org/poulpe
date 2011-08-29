@@ -25,6 +25,7 @@ public interface DeleteSectionDialogView {
     Section getDeleteSection();
     Section getSelectedSection();
     String  getDeleteMode();
-    void showDialog(List<Section> selectableSections);
+    void showDialog();
     void closeDialog();
+    void initSectionList(List<Section> selectableSections);
 }
