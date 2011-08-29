@@ -94,6 +94,8 @@ public interface SectionView {
 	//TODO realize to create edit a branch
 	void closeEditBranchDialog();
 	
+	void openDeleteBranchDialog(Branch branch);
+	
 	
 	boolean isEditDialogOpen();
 	boolean isNewDialogOpen();

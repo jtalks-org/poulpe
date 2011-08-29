@@ -312,7 +312,8 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	@Override
 	public void openNewBranchDialog() {
-		Events.postEvent( new Event("onOpenAddDialog",getDesktop().getPage("BranchDialog").getFellow("editWindow")));
+		Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage(
+				"BranchDialog").getFellow("editWindow")));
 	}
 
 	@Override
@@ -324,6 +325,10 @@ public class SectionViewImpl extends Window implements SectionView,
 	public void openEditBranchDialog(Branch branch) {
 		Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
 				"BranchDialog").getFellow("editWindow"), branch));
+	}
+
+	public void openDeleteBranchDialog(Branch branch) {
+
 	}
 
 	@Override

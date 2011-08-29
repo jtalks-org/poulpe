@@ -45,8 +45,8 @@ public class SectionPresenter {
 		this.sectionView = view;
 		updateView();
 	}
-	
-	public void updateView(){
+
+	public void updateView() {
 		List<Section> sections = sectionService.getAll();
 		sectionView.showSections(sections);
 		sectionView.closeDialogs();
@@ -75,21 +75,43 @@ public class SectionPresenter {
 		}
 		this.currentSectionTreeComponent = currentSectionTreeComponent;
 		if (object instanceof Section) {
-			Section section = (Section) object;			
-			sectionView.openEditSectionDialog(section.getName(), section.getDescription());
+			Section section = (Section) object;
+			sectionView.openEditSectionDialog(section.getName(),
+					section.getDescription());
 		} else if (object instanceof Branch) {
-			
-			sectionView.openEditBranchDialog((Branch)object);
+
+			sectionView.openEditBranchDialog((Branch) object);
 		}
 
 	}
 
 	public void openDeleteDialog(Object object) {
-		if (!(object instanceof Section)) {
+		if (!(object instanceof Section) && !(object instanceof Branch)) {
 			return;
 		}
-		Section section = (Section) object;
-		sectionView.openDeleteSectionDialog(section);
+		if (object instanceof Section) {
+			Section section = (Section) object;
+			sectionView.openDeleteSectionDialog(section);
+		} else if (object instanceof Branch) {
+			final Branch branch = (Branch) object;
+			DialogManager dm = new DialogManagerImpl();
+			dm.confirmDeletion(branch.getName(),
+					new DialogManager.Performable() {
+
+						@Override
+						public void execute() {
+							Section section = branch.getSection();
+							section.getBranches().remove(branch);
+							try {
+								sectionService.saveSection(section);
+							} catch (NotUniqueException e) {
+
+							}
+							updateView();
+						}
+					});
+		}
+
 	}
 
 	/**
@@ -105,10 +127,10 @@ public class SectionPresenter {
 
 	public void addNewBranch(String name, String description) {
 		// TODO process branch data
-//		Branch tmpBranch = new Branch();
-//		tmpBranch.setName("TEST BRANCH");
-//		this.currentSectionTreeComponent.addBranchToView(tmpBranch);
-//		sectionView.closeNewBranchDialog();
+		// Branch tmpBranch = new Branch();
+		// tmpBranch.setName("TEST BRANCH");
+		// this.currentSectionTreeComponent.addBranchToView(tmpBranch);
+		// sectionView.closeNewBranchDialog();
 	}
 
 	/**
@@ -130,7 +152,6 @@ public class SectionPresenter {
 	 * This method is invoked when the user saves editions and push edit button
 	 */
 	public void editSection(final String name, final String description) {
-		
 
 		final Section section = (Section) this.currentSectionTreeComponent
 				.getSelectedObject();
@@ -157,7 +178,8 @@ public class SectionPresenter {
 							.openErrorPopupInEditSectionDialog("sections.error.exeption_during_saving_process");
 				}
 
-				// its not necessary here because of section was transferred as a reference
+				// its not necessary here because of section was transferred as
+				// a reference
 				SectionPresenter.this.currentSectionTreeComponent
 						.updateSectionInView(section);
 				sectionView.closeEditSectionDialog();
@@ -224,13 +246,14 @@ public class SectionPresenter {
 	 */
 	public void deleteSection(final Section recipient) {
 		DialogManager dm = new DialogManagerImpl();
-		Object selectedObject = this.currentSectionTreeComponent.getSelectedObject();
+		Object selectedObject = this.currentSectionTreeComponent
+				.getSelectedObject();
 		if (!(selectedObject instanceof Section)) {
 			return;
 		}
-		
+
 		final Section victim = (Section) selectedObject;
-		
+
 		dm.confirmDeletion(victim.getName(), new DialogManager.Performable() {
 
 			@Override
