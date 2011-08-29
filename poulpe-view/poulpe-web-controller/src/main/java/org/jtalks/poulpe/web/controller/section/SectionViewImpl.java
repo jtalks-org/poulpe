@@ -18,6 +18,7 @@ import org.zkoss.zk.ui.AbstractComponent;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
@@ -61,10 +62,10 @@ public class SectionViewImpl extends Window implements SectionView,
 	private Textbox editSectionDialog$sectionName;
 	private Textbox editSectionDialog$sectionDescription;
 
-	private Window deleteSectionDialog;
-	private Combobox deleteSectionDialog$sectionsCombobox;
-	private Radio deleteSectionDialog$deleteAll;
-	private Radio deleteSectionDialog$transferAll;
+	// private Window deleteSectionDialog;
+	// private Combobox deleteSectionDialog$sectionsCombobox;
+	// private Radio deleteSectionDialog$deleteAll;
+	// private Radio deleteSectionDialog$transferAll;
 
 	@Override
 	public void afterCompose() {
@@ -83,6 +84,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	@Override
 	public void showSections(List<Section> sections) {
+		getChildren().clear();
 		for (Section section : sections) {
 			// TODO move SectionTreeComponent creation to external factory
 			// method
@@ -185,17 +187,17 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	}
 
-	public void onClick$deleteAll$deleteSectionDialog() {
-		if (deleteSectionDialog$deleteAll.isChecked()) {
-			deleteSectionDialog$sectionsCombobox.setDisabled(true);
-		}
-	}
-
-	public void onClick$transferAll$deleteSectionDialog() {
-		if (deleteSectionDialog$transferAll.isChecked()) {
-			deleteSectionDialog$sectionsCombobox.setDisabled(false);
-		}
-	}
+	// public void onClick$deleteAll$deleteSectionDialog() {
+	// if (deleteSectionDialog$deleteAll.isChecked()) {
+	// deleteSectionDialog$sectionsCombobox.setDisabled(true);
+	// }
+	// }
+	//
+	// public void onClick$transferAll$deleteSectionDialog() {
+	// if (deleteSectionDialog$transferAll.isChecked()) {
+	// deleteSectionDialog$sectionsCombobox.setDisabled(false);
+	// }
+	// }
 
 	/** {@inheritDoc} */
 	@Override
@@ -216,28 +218,17 @@ public class SectionViewImpl extends Window implements SectionView,
 	/** {@inheritDoc} */
 	@Override
 	public void closeDeleteSectionDialog() {
-		deleteSectionDialog$transferAll.setChecked(true);
-		deleteSectionDialog$sectionsCombobox.setModel(new ListModelList());
-		deleteSectionDialog.setVisible(false);
+		// deleteSectionDialog$transferAll.setChecked(true);
+		// deleteSectionDialog$sectionsCombobox.setModel(new ListModelList());
+		// deleteSectionDialog.setVisible(false);
 	}
 
 	/** {@inheritDoc} */
 	@Override
-	public void openDeleteSectionDialog(List<Section> sections) {
-		ListModelList listModel = new ListModelList(sections);
-		deleteSectionDialog$sectionsCombobox.setModel(listModel);
-		deleteSectionDialog$sectionsCombobox
-				.setItemRenderer(new ComboitemRenderer() {
-
-					@Override
-					public void render(Comboitem item, Object data)
-							throws Exception {
-						Section sec = (Section) data;
-						item.setLabel(sec.getName());
-					}
-				});
-
-		deleteSectionDialog.setVisible(true);
+	public void openDeleteSectionDialog(Section victim) {
+		Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop()
+				.getPage("sectionDeleteDialog").getFellow("deleteWindow"),
+				victim));
 	}
 
 	/** Open new branch dialog */
@@ -321,7 +312,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	@Override
 	public void openNewBranchDialog() {
-		// TODO : implement
+		Events.postEvent( new Event("onOpenAddDialog",getDesktop().getPage("BranchDialog").getFellow("editWindow")));
 	}
 
 	@Override
@@ -330,8 +321,9 @@ public class SectionViewImpl extends Window implements SectionView,
 	}
 
 	@Override
-	public void openEditBranchDialog() {
-
+	public void openEditBranchDialog(Branch branch) {
+		Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
+				"BranchDialog").getFellow("editWindow"), branch));
 	}
 
 	@Override
@@ -341,7 +333,8 @@ public class SectionViewImpl extends Window implements SectionView,
 
 	@Override
 	public boolean isDeleteDialogOpen() {
-		return deleteSectionDialog.isVisible();
+		return false;
+		// return deleteSectionDialog.isVisible();
 	}
 
 	@Override
@@ -352,6 +345,13 @@ public class SectionViewImpl extends Window implements SectionView,
 	@Override
 	public boolean isNewDialogOpen() {
 		return newSectionDialog.isVisible();
+	}
+
+	/**
+	 * Handle event when child dialog was hiding
+	 * */
+	public void onHideDialog() {
+		presenter.updateView();
 	}
 
 }

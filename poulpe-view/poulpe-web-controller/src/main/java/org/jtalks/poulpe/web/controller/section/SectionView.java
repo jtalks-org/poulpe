@@ -81,7 +81,7 @@ public interface SectionView {
 	 *            list of sections that might take branches of the section being
 	 *            deleted
 	 */
-	void openDeleteSectionDialog(List<Section> sections);
+	void openDeleteSectionDialog(Section victim);
 
 	// TODO realize to create new branch
 	void openNewBranchDialog();
@@ -90,7 +90,7 @@ public interface SectionView {
 	void closeNewBranchDialog();
 	
 	//TODO realize to create edit a branch
-	void openEditBranchDialog();
+	void openEditBranchDialog(Branch branch);
 	//TODO realize to create edit a branch
 	void closeEditBranchDialog();
 	

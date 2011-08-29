@@ -43,8 +43,12 @@ public class SectionPresenter {
 	 */
 	public void initView(SectionView view) {
 		this.sectionView = view;
+		updateView();
+	}
+	
+	public void updateView(){
 		List<Section> sections = sectionService.getAll();
-		view.showSections(sections);
+		sectionView.showSections(sections);
 		sectionView.closeDialogs();
 	}
 
@@ -71,11 +75,11 @@ public class SectionPresenter {
 		}
 		this.currentSectionTreeComponent = currentSectionTreeComponent;
 		if (object instanceof Section) {
-			Section section = (Section) object;
-			
+			Section section = (Section) object;			
 			sectionView.openEditSectionDialog(section.getName(), section.getDescription());
 		} else if (object instanceof Branch) {
-			// TODO implement openEditBranchDialog
+			
+			sectionView.openEditBranchDialog((Branch)object);
 		}
 
 	}
@@ -85,9 +89,7 @@ public class SectionPresenter {
 			return;
 		}
 		Section section = (Section) object;
-		List<Section> sections = sectionService.getAll();
-		sections.remove(object);
-		sectionView.openDeleteSectionDialog(sections);
+		sectionView.openDeleteSectionDialog(section);
 	}
 
 	/**
@@ -103,10 +105,10 @@ public class SectionPresenter {
 
 	public void addNewBranch(String name, String description) {
 		// TODO process branch data
-		Branch tmpBranch = new Branch();
-		tmpBranch.setName("TEST BRANCH");
-		this.currentSectionTreeComponent.addBranchToView(tmpBranch);
-		sectionView.closeNewBranchDialog();
+//		Branch tmpBranch = new Branch();
+//		tmpBranch.setName("TEST BRANCH");
+//		this.currentSectionTreeComponent.addBranchToView(tmpBranch);
+//		sectionView.closeNewBranchDialog();
 	}
 
 	/**

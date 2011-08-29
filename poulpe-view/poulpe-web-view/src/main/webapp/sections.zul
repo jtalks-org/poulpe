@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?page title="Test page" contentType="text/html;charset=UTF-8"?>
+<?page id="mainPage" title="Sections" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-
+<zk>
 <window title="Sections" presenter="${sectionPresenter}"
-	use="org.jtalks.poulpe.web.controller.section.SectionViewImpl">	
+	use="org.jtalks.poulpe.web.controller.section.SectionViewImpl" id="mainWindow">	
 	
 	<!-- <tree id="sectionsTree" width="830px">
         <treecols>
@@ -45,19 +45,10 @@
     </window>
     
     <!-- Delete section -->
-     <window title="${labels.sections.deletesectiondialog.title}" id="deleteSectionDialog" border="normal" visible="false" mode="modal">
-        <vbox>
-        	<radiogroup id="deleteActionGroup" onCheck="choice1.value = self.selectedItem.label" />
-        	<radio id="deleteAll" label="Delete with all branches" radiogroup="deleteActionGroup" />
-            <radio id="transferAll" label="Add all branches to section" radiogroup="deleteActionGroup"  selected="true"/>
-            <combobox id="sectionsCombobox" width="150px" mold="rounded" readonly="true" disabled="false" />
-            <hbox>
-                <button id="deleteButton" label="${labels.sections.button.delete}"/>
-                <button id="closeButton" label="${labels.sections.button.cancel}" />                
-            </hbox>
-        </vbox>
-    </window>
     
     
 </window>
+<include src="/WEB-INF/pages/deletesectiondialog.zul" mode="defer"/>
+<include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer"/>  
+</zk>
 
