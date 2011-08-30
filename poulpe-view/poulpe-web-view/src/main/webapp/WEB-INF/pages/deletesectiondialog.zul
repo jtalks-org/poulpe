@@ -1,19 +1,19 @@
 <?page id="sectionDeleteDialog" title="Delete Section" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window   id="deleteWindow" border="normal" mode="modal" visible="false" 
+<window   id="deleteWindow" border="normal" mode="modal" title="${labels.sections.deletesectiondialog.title}" visible="false" 
          presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogViewImpl">
         <vbox>
-            There are branches related to this section. What do you whant do?
+            ${labels.sections.deletedialog.message}
             <radiogroup id="deleteMode">
             <vbox>
-                <radio id="deleteAllMode" value="deleteAll" label="Delete all"/>
-                <radio id="removeAndMoveMode" value="deleteSectionMoveBranches" label="Remove section only and move child branches to"/>
+                <radio id="deleteAllMode" value="deleteAll" label="${labels.sections.deletedialog.deletemode.deleteall}" selected="true"/>
+                <radio id="removeAndMoveMode" value="deleteSectionMoveBranches" label="${labels.sections.deletedialog.deletemode.delete_and_move}"/>
                 </vbox>
             </radiogroup>
             <combobox id="selectedSection" readonly="true"/>
             <hbox>
-                <button id="confirmButton" label="ok" />
-                <button id="rejectButton"  label="cancel" />
+                <button id="confirmButton" label="${labels.sections.button.ok}" />
+                <button id="rejectButton"  label="${labels.sections.button.cancel}" />
             </hbox>
         </vbox>
 </window>
