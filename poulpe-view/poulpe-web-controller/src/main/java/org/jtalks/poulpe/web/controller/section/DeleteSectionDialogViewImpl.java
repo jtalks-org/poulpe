@@ -91,6 +91,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
 
     @Override
     public void showDialog() {
+        presenter.initView();
         setDefaultSection();
         deleteMode.setSelectedIndex(-1);
         setVisible(true);
@@ -118,6 +119,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
 
     @Override
     public void initSectionList(List<Section> selectableSections) {
+        selectableSections.remove(deletedSection);
         selectedSection.setModel(new ListModelList(selectableSections));
     }
 

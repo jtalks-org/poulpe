@@ -148,7 +148,9 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
         branch.setSection(section);
-        section.addBranch(branch);
+        // that quick fix 
+        if(!section.getBranches().contains(branch))
+         section.addBranch(branch);
         return section;
     }
 
@@ -167,13 +169,14 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void show() {
+        presenter.initView();
         setTitle(Labels.getLabel("branches.newbranchedialog.title"));
         confirmButton.setLabel(Labels.getLabel("branches.button.add"));
         rejectButton.setLabel(Labels.getLabel("branches.button.cancel"));
         branchName.setRawValue("");
         branchDescription.setText("");
         branch = new Branch();
-        setDefaultSection(null);
+        setDefaultSection(null);        
         setVisible(true);
     }
 
@@ -182,6 +185,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void show(Branch branch) {
+        presenter.initView();
         setTitle(Labels.getLabel("branches.editdialog.title"));
         confirmButton.setLabel(Labels.getLabel("branches.button.edit"));
         rejectButton.setLabel(Labels.getLabel("branches.button.cancel"));
@@ -189,8 +193,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         setDefaultSection(section);
         branchName.setText(branch.getName());
         branchDescription.setText(branch.getDescription());
-        this.branch = branch;
-
+        this.branch = branch;       
         setVisible(true);
     }
 
