@@ -63,7 +63,6 @@ public class DeleteSectionDialogViewImpl extends Window implements
                 item.setDescription(section.getDescription());
             }
         });
-
     }
 
     @Override
@@ -86,14 +85,15 @@ public class DeleteSectionDialogViewImpl extends Window implements
     @Override
     public void closeDialog() {
         setVisible(false);
-        Events.postEvent(new Event("onHideDialog", getDesktop().getPage("mainPage").getFellow("mainWindow")));
+        Events.postEvent(new Event("onHideDialog", getDesktop().getPage(
+                "mainPage").getFellow("mainWindow")));
     }
 
     @Override
     public void showDialog() {
         presenter.initView();
         setDefaultSection();
-        deleteMode.setSelectedIndex(-1);
+        deleteMode.setSelectedIndex(0);
         setVisible(true);
     }
 
@@ -103,9 +103,9 @@ public class DeleteSectionDialogViewImpl extends Window implements
         model.addSelection(model.get(0));
         selectedSection.setModel(model);
     }
-    
-    public void onOpenDeleteSectionDialog(Event event){
-        deletedSection = (Section)event.getData();
+
+    public void onOpenDeleteSectionDialog(Event event) {
+        deletedSection = (Section) event.getData();
         showDialog();
     }
 
