@@ -148,14 +148,9 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
         branch.setSection(section);
-        // TODO: FIX THAT it's Ugly!  
-        if(section.getBranches().contains(branch)) {
-            List<Branch> branches = section.getBranches();
-            branches.get( branches.indexOf(branch) ).setName( branch.getName());
-            branches.get( branches.indexOf(branch)).setDescription( branch.getDescription());
-        } else {
-                   section.addBranch(branch);
-        }
+        // that quick fix 
+        if(!section.getBranches().contains(branch))
+         section.addBranch(branch);
         return section;
     }
 
