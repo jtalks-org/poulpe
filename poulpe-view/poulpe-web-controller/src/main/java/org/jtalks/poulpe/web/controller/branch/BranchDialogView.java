@@ -58,10 +58,13 @@ public interface BranchDialogView {
     /**
      * Cause throw exception for popup error message
      * */
-    void notUniqueBranchName() throws WrongValueException;
-    
+    void notUniqueBranchName();
+
     /**
      * Init Section combobox list
+     * 
+     * @param sections
+     *            list sections
      * */
     void initSectionList(List<Section> sections);
 }

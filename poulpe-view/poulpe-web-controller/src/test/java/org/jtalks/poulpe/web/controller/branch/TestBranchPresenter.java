@@ -20,6 +20,9 @@ package org.jtalks.poulpe.web.controller.branch;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
@@ -31,6 +34,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * @author Bekrenev Dmitry
+ * */
 public class TestBranchPresenter {
 
     @Mock
@@ -40,6 +46,8 @@ public class TestBranchPresenter {
 
     @Captor
     ArgumentCaptor<Section> sectionCaptor;
+    @Captor
+    ArgumentCaptor<List<Section>> initSectionCaptor;
 
     BranchPresenter presenter = new BranchPresenter();
 
@@ -48,6 +56,24 @@ public class TestBranchPresenter {
         MockitoAnnotations.initMocks(this);
         presenter.setSectionService(service);
         presenter.setView(view);
+    }
+
+    @Test
+    public void testInitView() {
+        List<Section> sections = new ArrayList<Section>();
+
+        sections.add(new Section());
+        sections.add(new Section());
+        sections.add(new Section());
+        sections.add(new Section());
+
+        when(service.getAll()).thenReturn(sections);
+
+        presenter.initView();
+
+        verify(view).initSectionList(initSectionCaptor.capture());
+        assertEquals(initSectionCaptor.getValue().size(), 4);
+
     }
 
     @Test
@@ -62,6 +88,19 @@ public class TestBranchPresenter {
         verify(service).saveSection(sectionCaptor.capture());
         assertEquals(sectionCaptor.getValue().getName(), "getted section");
         assertEquals(sectionCaptor.getValue().getBranches().size(), 1);
+    }
+
+    @Test
+    public void testSaveBranchWhenExceptionHappen() throws NotUniqueException {
+        Section section = new Section();
+        section.setName("not unique");
+
+        when(view.getSection()).thenReturn(section);
+        doThrow(new NotUniqueException()).when(service).saveSection(section);
+
+        presenter.saveBranch();
+
+        verify(view).notUniqueBranchName();
     }
 
 }

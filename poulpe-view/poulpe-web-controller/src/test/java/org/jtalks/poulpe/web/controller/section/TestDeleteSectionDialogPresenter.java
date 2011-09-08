@@ -20,6 +20,9 @@ package org.jtalks.poulpe.web.controller.section;
 import static org.testng.Assert.*;
 import static org.mockito.Mockito.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
@@ -30,7 +33,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-
+/**
+ * @author Bekrenev Dmitry
+ * */
 
 public class TestDeleteSectionDialogPresenter {
     
@@ -41,12 +46,31 @@ public class TestDeleteSectionDialogPresenter {
     
     @Captor ArgumentCaptor<Section> deleteSectionCaptor;
     @Captor ArgumentCaptor<Section> selectedSectionCaptor;
+    @Captor ArgumentCaptor<List<Section>> initSectionCaptor;
     
     @BeforeMethod
     public void setUp(){
         MockitoAnnotations.initMocks(this); 
         presenter.setView(view);
         presenter.setSectionService(sectionService);
+    }
+    
+    @Test
+    public void testInitView(){
+      List<Section> sections = new ArrayList<Section>();
+      
+      sections.add(new Section());
+      sections.add(new Section());
+      sections.add(new Section());
+      sections.add(new Section());
+      
+      when(sectionService.getAll()).thenReturn(sections);
+      
+      presenter.initView();
+      
+      verify(view).initSectionList(initSectionCaptor.capture());
+      assertEquals(initSectionCaptor.getValue().size(), 4);
+      
     }
     
     @Test

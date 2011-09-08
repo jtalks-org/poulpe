@@ -20,41 +20,63 @@ package org.jtalks.poulpe.web.controller.section;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
 
+/**
+ * @author Bekrenev Dmitry
+ * 
+ *         This class is implementation the dialog section presenter in pattern
+ *         Model-View-Presenter
+ * 
+ * */
 public class DeleteSectionDialogPresenter {
 
-    private SectionService          sectionService;
+    private SectionService sectionService;
     private DeleteSectionDialogView view;
-    
+
+    /**
+     * Sets the view instance which represent User interface
+     * 
+     * @param view
+     *            The instance DeleteSectionDialogView
+     * */
     public void setView(DeleteSectionDialogView view) {
-        this.view = view;        
+        this.view = view;
     }
-    
+
+    /**
+     * Sets section service for manipulating sections
+     * 
+     * @param sectionService
+     *            The instance SectionService
+     * */
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
     }
-    
-    public void initView(){
+
+    /**
+     * Use for initialize combobox which contains sections
+     * */
+    public void initView() {
         view.initSectionList(sectionService.getAll());
     }
 
-    
+    /**
+     * In depend user choice delete section recursively or with moving victim's
+     * branches
+     * */
     public void delete() {
-        
-        if(view.getDeleteMode().equals("deleteAll")){
+
+        if (view.getDeleteMode().equals("deleteAll")) {
             sectionService.deleteRecursively(view.getDeleteSection());
         } else {
-            
+
             Section deleteSection = view.getDeleteSection();
             Section selectedSection = view.getSelectedSection();
-            sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
-            
+            sectionService.deleteAndMoveBranchesTo(deleteSection,
+                    selectedSection);
+
         }
-        
+
         view.closeDialog();
     }
 
-
-
-
-    
 }

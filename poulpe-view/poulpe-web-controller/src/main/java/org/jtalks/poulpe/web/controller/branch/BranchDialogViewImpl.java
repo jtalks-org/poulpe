@@ -18,7 +18,6 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
-
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.util.resource.Labels;
@@ -52,18 +51,26 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Button rejectButton;
     private Branch branch;
     private Combobox sectionList;
-    
-    private void setDefaultSection(Section section){
+
+    /**
+     * set default section in combobox for select section when branch will be
+     * stored
+     * 
+     * @param section
+     *            default section
+     * */
+    private void setDefaultSection(Section section) {
         ListModelList model = (ListModelList) sectionList.getModel();
         model.clearSelection();
-        if(section != null) {
+        if (section != null) {
             model.addSelection(section);
-        }else {
+        } else {
             model.addSelection(model.get(0));
         }
         sectionList.setModel(model);
-                
+
     }
+
     /**
      * This class render items Combobox list
      * */
@@ -123,7 +130,6 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branchName.clearErrorMessage();
     }
 
-
     /**
      * Handle event from main window for open add new branch dialog
      * */
@@ -133,6 +139,9 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * Handle event from main window for open edit branch dialog
+     * 
+     * @param event
+     *            information about event
      * */
     public void onOpenEditDialog(Event event) {
         show((Branch) event.getData());
@@ -148,9 +157,20 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
         branch.setSection(section);
-        // that quick fix 
-        if(!section.getBranches().contains(branch))
-         section.addBranch(branch);
+        /*
+         * FIXME: This ugly code i know, but without it edit branch for not
+         * correct because section service for not as expected. When we decide
+         * who services should work this code should be fix
+         */
+        if (section.getBranches().contains(branch)) {
+            List<Branch> branches = section.getBranches();
+            branches.get(branches.indexOf(branch)).setName(branch.getName());
+            branches.get(branches.indexOf(branch)).setDescription(
+                    branch.getDescription());
+        } else {
+
+            section.addBranch(branch);
+        }
         return section;
     }
 
@@ -176,7 +196,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branchName.setRawValue("");
         branchDescription.setText("");
         branch = new Branch();
-        setDefaultSection(null);        
+        setDefaultSection(null);
         setVisible(true);
     }
 
@@ -193,7 +213,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         setDefaultSection(section);
         branchName.setText(branch.getName());
         branchDescription.setText(branch.getDescription());
-        this.branch = branch;       
+        this.branch = branch;
         setVisible(true);
     }
 
@@ -201,7 +221,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * {@inheritDoc}
      * */
     @Override
-    public void notUniqueBranchName() throws WrongValueException {
+    public void notUniqueBranchName() {
         throw new WrongValueException(branchName,
                 Labels.getLabel("branches.error.branch_name_already_exists"));
     }
@@ -211,7 +231,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void initSectionList(List<Section> sections) {
-        sectionList.setModel( new ListModelList(sections));
+        sectionList.setModel(new ListModelList(sections));
     }
 
 }
