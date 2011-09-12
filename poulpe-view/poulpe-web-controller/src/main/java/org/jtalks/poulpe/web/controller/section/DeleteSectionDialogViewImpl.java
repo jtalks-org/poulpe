@@ -28,6 +28,7 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Radio;
 import org.zkoss.zul.Window;
 import org.zkoss.zul.api.Radiogroup;
 
@@ -41,6 +42,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
 
     private static final long serialVersionUID = -4999382692611273729L;
     private Radiogroup deleteMode;
+    private Radio removeAndMoveMode;
     private Combobox selectedSection;
     private Section deletedSection;
     private DeleteSectionDialogPresenter presenter;
@@ -74,7 +76,6 @@ public class DeleteSectionDialogViewImpl extends Window implements
         Components.addForwards(this, this);
 
         presenter.setView(this);
-        presenter.initView();
         selectedSection.setItemRenderer(itemRenderer);
     }
 
@@ -132,6 +133,15 @@ public class DeleteSectionDialogViewImpl extends Window implements
     public void initSectionList(List<Section> selectableSections) {
         selectableSections.remove(deletedSection);
         selectedSection.setModel(new ListModelList(selectableSections));
+        selectedSection.setRawValue(null);
+        if (!selectableSections.isEmpty()) {
+            selectedSection.setDisabled(false);
+            removeAndMoveMode.setDisabled(false);
+        } else {
+            selectedSection.setDisabled(true);
+            removeAndMoveMode.setDisabled(true);
+        }
+
     }
 
     /**
@@ -141,7 +151,12 @@ public class DeleteSectionDialogViewImpl extends Window implements
     private void setDefaultSection() {
         ListModelList model = (ListModelList) selectedSection.getModel();
         model.clearSelection();
-        model.addSelection(model.get(0));
+
+        if (!model.isEmpty()) {
+            model.addSelection(model.get(0));
+        } else
+            model.addSelection(null);
+
         selectedSection.setModel(model);
     }
 
