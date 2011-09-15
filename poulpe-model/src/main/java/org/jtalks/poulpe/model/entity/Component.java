@@ -17,12 +17,14 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Entity;
+
 /**
  * Represent jtalks engine component.
  * 
  * @author Pavel Vervenko
  */
-public class Component extends Persistent {
+public class Component extends Entity {
 
     private String name;
     private String description;

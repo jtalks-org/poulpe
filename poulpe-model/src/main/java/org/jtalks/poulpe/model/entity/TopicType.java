@@ -17,12 +17,14 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Entity;
+
 /**
  * Represent topic types on the page of general configuration
  * 
  * @author Pavel Vervenko
  */
-public class TopicType extends Persistent {
+public class TopicType extends Entity {
 
     private String title;
     private String description;

@@ -17,10 +17,10 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;

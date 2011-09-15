@@ -12,7 +12,7 @@
   <!--Declaration of AOP Config -->
   <aop:config>
     <aop:advisor advice-ref="exceptionTranslationInterceptor"
-                 pointcut="execution(* org.jtalks.poulpe.model.dao.Dao+.* (*))"/>
+                 pointcut="execution(* org.jtalks.common.model.dao.ParentRepository+.* (*))"/>
   </aop:config>
 
   <!--Declaration of DAO beans -->

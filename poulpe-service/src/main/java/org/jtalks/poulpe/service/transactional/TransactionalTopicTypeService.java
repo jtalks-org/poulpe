@@ -3,6 +3,7 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.Collection;
 import java.util.List;
 
+import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
@@ -10,6 +11,15 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 public class TransactionalTopicTypeService extends
         AbstractTransactionalEntityService<TopicType, TopicTypeDao> implements TopicTypeService {
+    
+    /**
+     * Create an instance of entity based service
+     *
+     * @param topicDao - data access object, which should be able do all CRUD operations.
+     */
+    public TransactionalTopicTypeService(TopicTypeDao topicDao){
+        dao = topicDao;
+    }
 
     @Override
     public List<TopicType> getAll() {

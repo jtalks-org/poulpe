@@ -17,13 +17,14 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Entity;
 
 /**
  * Forum branch that contains topics related to branch theme.
  *
  * @author Pavel Vervenko
  */
-public class Branch extends Persistent {
+public class Branch extends Entity {
 
     private String name;
     private String description;

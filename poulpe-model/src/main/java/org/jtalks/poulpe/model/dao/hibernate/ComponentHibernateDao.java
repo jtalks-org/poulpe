@@ -23,6 +23,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.dao.hibernate.DefaultParentRepository;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
@@ -33,7 +34,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
  * superclass.
  * @author Pavel Vervenko
  */
-public class ComponentHibernateDao extends AbstractHibernateDao<Component> implements ComponentDao {
+public class ComponentHibernateDao extends DefaultParentRepository<Component> implements ComponentDao {
 
     /**
      * {@inheritDoc}

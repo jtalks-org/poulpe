@@ -17,6 +17,7 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.model.entity.Branch;
 

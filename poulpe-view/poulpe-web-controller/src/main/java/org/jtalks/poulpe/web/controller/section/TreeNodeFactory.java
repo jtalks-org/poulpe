@@ -4,8 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Persistent;
+
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zul.DefaultTreeNode;
 
@@ -28,7 +29,7 @@ public class TreeNodeFactory {
 	 * @param entity
 	 * @return
 	 */
-	public static ExtendedTreeNode getTreeNode(Persistent entity) {
+	public static ExtendedTreeNode getTreeNode(Entity entity) {
 		if (entity == null)
 			return null;
 		if (entity instanceof Section) {
@@ -47,16 +48,16 @@ public class TreeNodeFactory {
 	 * @return
 	 */
 	public static List<ExtendedTreeNode> getTreeNodes(
-			List<? extends Persistent> entities) {
+			List<? extends Entity> entities) {
 		List<ExtendedTreeNode> list = new ArrayList<ExtendedTreeNode>();
 		if (entities == null) {
 			return list;
 		}
-		for (Persistent persistent : entities) {
-			if (persistent == null) {
+		for (Entity entity : entities) {
+			if (entity == null) {
 				continue;
 			}
-			list.add(getTreeNode(persistent));
+			list.add(getTreeNode(entity));
 		}
 		return list;
 	}

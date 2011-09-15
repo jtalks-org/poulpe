@@ -2,6 +2,7 @@ package org.jtalks.poulpe.model.dao;
 
 import java.util.List;
 
+import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -10,7 +11,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
  * @author Vladimir Bukhtoyarov 
  *
  */
-public interface TopicTypeDao extends Dao<TopicType> {
+public interface TopicTypeDao extends ParentRepository<TopicType> {
 	
 	/**
      * Get all topic types.

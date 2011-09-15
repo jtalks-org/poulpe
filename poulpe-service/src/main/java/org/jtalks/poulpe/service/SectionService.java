@@ -19,6 +19,7 @@ package org.jtalks.poulpe.service;
 
 import java.util.List;
 
+import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 

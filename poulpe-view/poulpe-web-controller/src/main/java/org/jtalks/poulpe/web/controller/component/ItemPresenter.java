@@ -19,10 +19,10 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.Set;
 
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

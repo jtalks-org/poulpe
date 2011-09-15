@@ -20,6 +20,7 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;

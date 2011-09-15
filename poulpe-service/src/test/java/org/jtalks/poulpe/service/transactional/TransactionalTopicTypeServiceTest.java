@@ -28,8 +28,7 @@ public class TransactionalTopicTypeServiceTest extends TestCase {
     @BeforeMethod
 	public void setUp() throws Exception {
 		MockitoAnnotations.initMocks(this);
-		service = new TransactionalTopicTypeService();
-		service.setDao(dao);
+		service = new TransactionalTopicTypeService(dao);
 	}
 
 	@Test

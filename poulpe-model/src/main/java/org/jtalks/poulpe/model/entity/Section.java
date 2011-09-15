@@ -3,12 +3,14 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Entity;
+
 /**
  * forum section 
  * @author tanya birina
  *
  */
-public class Section extends Persistent {
+public class Section extends Entity {
 
 	private String name;
 	private Integer position;

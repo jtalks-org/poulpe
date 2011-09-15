@@ -38,6 +38,11 @@
       <type>jar</type>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>org.jtalks.common</groupId>
+    	<artifactId>jtalks-common-service</artifactId>
+    	<version>0.5.3</version>
+     </dependency>
   </dependencies>
 
   <properties>

@@ -3,8 +3,8 @@ package org.jtalks.poulpe.web.controller.section;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Persistent;
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
@@ -34,7 +34,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace,
 
 			ExtendedTreeNode curNode = (ExtendedTreeNode) node;
 
-			final Persistent data = (Persistent) curNode.getData();
+			final Entity data = (Entity) curNode.getData();
 			treeItem.setOpen(curNode.isExpanded());// Whether open the node
 			treeItem.setValue(data);
 			Iterator iter = treeItem.getChildren().iterator();

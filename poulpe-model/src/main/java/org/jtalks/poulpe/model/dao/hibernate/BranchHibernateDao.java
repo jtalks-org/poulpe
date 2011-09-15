@@ -17,6 +17,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import org.jtalks.common.model.dao.hibernate.DefaultParentRepository;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class BranchHibernateDao extends AbstractHibernateDao<Branch> implements
+public class BranchHibernateDao extends DefaultParentRepository<Branch> implements
         BranchDao {
 
     /**

@@ -2,8 +2,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Persistent;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.model.entity.Entity;
 import org.zkoss.zul.DefaultTreeNode;
 
 public class ExtendedTreeNode extends DefaultTreeNode {
@@ -14,15 +13,15 @@ public class ExtendedTreeNode extends DefaultTreeNode {
 	 */
 	private boolean isExpanded = true;
 
-	public ExtendedTreeNode(Persistent entity, ExtendedTreeNode[] children) {
+	public ExtendedTreeNode(Entity entity, ExtendedTreeNode[] children) {
 		super(entity, children);
 	}
 
-	public ExtendedTreeNode(Persistent entity, List<ExtendedTreeNode> children) {
+	public ExtendedTreeNode(Entity entity, List<ExtendedTreeNode> children) {
 		super(entity, children);
 	}
 
-	public ExtendedTreeNode(Persistent entity) {
+	public ExtendedTreeNode(Entity entity) {
 		super(entity);
 	}
 

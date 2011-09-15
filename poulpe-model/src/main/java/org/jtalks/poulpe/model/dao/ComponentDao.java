@@ -20,6 +20,7 @@ package org.jtalks.poulpe.model.dao;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
@@ -28,7 +29,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
  * 
  * @author Pavel Vervenko
  */
-public interface ComponentDao extends Dao<Component> {
+public interface ComponentDao extends ParentRepository<Component> {
 
     /**
      * The enumeration of the fields which ought to be unique in the DB for the User.
