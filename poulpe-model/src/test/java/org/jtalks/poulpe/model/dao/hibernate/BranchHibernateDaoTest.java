@@ -60,7 +60,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        ObjectsFactory.setSession(session);
     }
 
     /*===== Common methods =====*/

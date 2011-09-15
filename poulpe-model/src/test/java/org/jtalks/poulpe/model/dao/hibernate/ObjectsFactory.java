@@ -22,7 +22,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.hibernate.Session;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -34,16 +33,6 @@ import org.jtalks.poulpe.model.entity.TopicType;
  */
 // TODO: split this class on 2: objects factory and persisted objects factory
 public final class ObjectsFactory {
-    private ObjectsFactory() {
-    }
-
-    public static void setSession(Session session) {
-        ObjectsFactory.session = session;
-    }
-
-    // XXX: why is it injected if it is not used? 
-    // someone forgot to add something into this class?
-    private static Session session;
 
     public static Branch getDefaultBranch() {
         Branch newBranch = new Branch();

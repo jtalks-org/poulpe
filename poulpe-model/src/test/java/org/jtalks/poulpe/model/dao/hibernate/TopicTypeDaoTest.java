@@ -42,7 +42,6 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        ObjectsFactory.setSession(session);
     }
 
     @Test
