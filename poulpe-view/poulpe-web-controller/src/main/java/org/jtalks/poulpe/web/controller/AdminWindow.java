@@ -28,7 +28,7 @@ public class AdminWindow extends GenericForwardComposer {
      * Show the Branches list View
      */
     public void onShowBranches() {
-        show("branches.zul");
+        show("brancheditor.zul");
     }
     
     /**
