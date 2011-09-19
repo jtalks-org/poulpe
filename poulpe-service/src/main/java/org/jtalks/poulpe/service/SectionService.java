@@ -27,49 +27,62 @@ public interface SectionService extends EntityService<Section> {
 
     /**
      * Get list of all Sections.
+     * 
      * @return - list of Sections.
      */
     List<Section> getAll();
 
-    // TODO WTF It doesn't work when has child branches, so why is it here? Remove it or describe
+    // TODO WTF It doesn't work when has child branches, so why is it here?
+    // Remove it or describe
     // why it is necessary.
     // Marked as deprecated meanwhile. (sukharevd, 2011/08/21 02:49)
     /**
      * Mark the section as deleted.
-     * @param section section to delete
+     * 
+     * @param section
+     *            section to delete
      * @deprecated use other two delete methods instead
+     * @return true if section delete successfully
      */
     boolean deleteSection(Section section);
 
     /**
      * Save or update section.
-     * @param section instance to save
-     * @throws NotUniqueException if section with the same name already exists
+     * 
+     * @param section
+     *            instance to save
+     * @throws NotUniqueException
+     *             if section with the same name already exists
      */
     void saveSection(Section section) throws NotUniqueException;
 
     /**
      * Check if section with given name exists.
+     * 
      * @param section
+     *            name for check
      * @return true if exists
      */
     boolean isSectionExists(String section);
 
     /**
      * Removes the section and all its branches.
-     * @param victim the removed section
+     * 
+     * @param victim
+     *            the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    public boolean deleteRecursively(Section victim);
+    boolean deleteRecursively(Section victim);
 
     /**
      * Removes the section and move all its branches to another section.
-     * @param victim the removed section
-     * @param recipient the section that will take orphan branches
+     * 
+     * @param victim
+     *            the removed section
+     * @param recipient
+     *            the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
-     * @throws IllegalArgumentException when {@code victim}'s ID equals to {@code recipient}'s one
-     *             (victim and recipient can't be the same section)
      */
-    public boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
+    boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
 
 }
