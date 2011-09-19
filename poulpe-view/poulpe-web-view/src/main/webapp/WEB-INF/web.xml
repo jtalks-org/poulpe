@@ -69,7 +69,7 @@
 	</servlet-mapping>
 
 	<welcome-file-list>
-		<welcome-file>brancheditor.zul</welcome-file>
+		<welcome-file>admin.zul</welcome-file>
 	</welcome-file-list>
 </web-app>
 
