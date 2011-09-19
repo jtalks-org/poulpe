@@ -18,24 +18,31 @@ public class AdminWindow extends GenericForwardComposer {
     private Component currentComponent;
     
     /**
-     * Show the Component list View
+     * Show the component list view
      */
     public void onShowComponents() {
         show("components.zul");
     }
 
     /**
-     * Show the Branches list View
+     * Show the branches list view
      */
     public void onShowBranches() {
         show("brancheditor.zul");
     }
     
     /**
-     * Show the topic type list View
+     * Show the topic type list view
      */
     public void onShowTopicTypes() {
         show("topictypelist.zul");
+    }
+    
+    /**
+     * Show the sections list view
+     */
+    public void onShowSections() {
+    	show("sections.zul");
     }
     
     private void show(String pathToZulFile) {
