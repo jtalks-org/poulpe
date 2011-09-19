@@ -45,10 +45,9 @@ public class Section extends Entity {
     }
 
     /**
-     * Get section name.
-     * 
-     * @param name
-     *            section name
+     * Set section name.
+     *
+     * @param name section name
      */
     public void setName(String name) {
         this.name = name;
@@ -72,24 +71,29 @@ public class Section extends Entity {
      */
     public void setDescription(String description) {
         this.description = description;
+    } 
+    
+    /*
+     * Get section position.
+     * 
+     * @return section position
+     */
+    public Integer getPosition () {
+    	return position;
+    }
+    
+    /*
+     * Set section position.
+     * 
+     * @param position section position
+     */
+    public void setPosition (Integer position) {
+    	this.position = position;
     }
 
     /**
-     * @return position section in list
-     * */
-    public Integer getPosition() {
-        return position;
-    }
-
-    /**
-     * set section position
-     * @param position new position
-     * */
-    public void setPosition(Integer position) {
-        this.position = position;
-    }
-
-    /**
+     * Get section branches
+     * 
      * @return list of branches
      */
     public List<Branch> getBranches() {
@@ -97,8 +101,9 @@ public class Section extends Entity {
     }
 
     /**
-     * @param branches
-     *            set list of branches
+     * Set section branches
+     * 
+     * @param branches set  list of branches
      */
     public void setBranches(List<Branch> branches) {
         if (branches == null) {
@@ -108,10 +113,9 @@ public class Section extends Entity {
     }
 
     /**
-     * Add branch to section.
-     * 
-     * @param branch
-     *            branch
+     * Add branch to the section.
+     *
+     * @param branch branch
      */
     public void addBranch(Branch branch) {
         if (branches == null) {
@@ -121,10 +125,9 @@ public class Section extends Entity {
     }
 
     /**
-     * Delete branch from section.
-     * 
-     * @param branch
-     *            branch
+     * Delete branch from the section.
+     *
+     * @param branch branch
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);

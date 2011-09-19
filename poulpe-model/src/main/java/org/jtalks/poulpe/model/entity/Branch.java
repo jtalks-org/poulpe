@@ -32,7 +32,7 @@ public class Branch extends Entity {
     private Section section;
 
     /**
-     * Set branch name which briefly describes the topics contained in it.
+     * Get branch name which briefly describes the topics contained in it.
      *
      * @return branch name
      */
@@ -41,7 +41,7 @@ public class Branch extends Entity {
     }
 
     /**
-     * Get branch name.
+     * Set branch name.
      *
      * @param name branch name
      */
