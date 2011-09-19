@@ -15,40 +15,32 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-package org.jtalks.poulpe.web.controller;
+package org.jtalks.poulpe.web.controller.topictype;
 
-import org.zkoss.zk.ui.Components;
-import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Window;
+import org.jtalks.poulpe.service.TopicTypeService;
 
 /**
- *
+ * Presenter of TopicType list page.
  * @author Pavel Vervenko
  */
-public class TopicTypeViewImpl extends Window implements TopicTypeView, AfterCompose {
+public class TopicTypePresenter {
+
+    private TopicTypeService topicTypeService;
+    private TopicTypeView view;
 
     /**
-     * Generated uid
+     * Save and init view.
+     * @param view view
      */
-    private static final long serialVersionUID = 1657959037954482623L;
-    
-    private TopicTypePresenter presenter;
-
-    /**
-     * Setter for MVP Presenter.
-     * @param presenter the presenter
-     */
-    public void setPresenter(TopicTypePresenter presenter) {
-        this.presenter = presenter;
+    public void initView(TopicTypeView view) {
+        this.view = view;
     }
 
     /**
-     * {@inheritDoc}
+     * Set the TopicTypeService implementation.
+     * @param topicTypeService impl of TopicTypeService
      */
-    @Override
-    public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
-        presenter.initView(this);
+    public void setTopicTypeService(TopicTypeService topicTypeService) {
+        this.topicTypeService = topicTypeService;
     }
 }

@@ -18,6 +18,8 @@
 package org.jtalks.poulpe.web.controller;
 
 import org.jtalks.poulpe.service.TopicTypeService;
+import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
+import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
