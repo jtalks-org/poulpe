@@ -17,16 +17,35 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.EditListener;
+import org.jtalks.poulpe.web.controller.WindowManager;
 
 /**
  * Presenter of TopicType list page.
  * @author Pavel Vervenko
  */
 public class TopicTypePresenter {
+    
+    public interface TopicTypeView {
 
-    private TopicTypeService topicTypeService;
-    private TopicTypeView view;
+        void showTypeTitle(String title);
+
+        void showTypeDescription(String description);
+
+        String getTypeTitle();
+        
+        String getTypeDescription();
+        
+        void hideEditAction();
+        
+        void hideCreateAction();
+
+    }
 
     /**
      * Save and init view.
@@ -35,6 +54,13 @@ public class TopicTypePresenter {
     public void initView(TopicTypeView view) {
         this.view = view;
     }
+    
+    private DialogManager dialogManager;
+    private WindowManager windowManager;
+    private TopicTypeService topicTypeService;
+    private TopicTypeView view;
+    private TopicType topicType;
+    private EditListener<TopicType> listener;
 
     /**
      * Set the TopicTypeService implementation.
@@ -43,4 +69,77 @@ public class TopicTypePresenter {
     public void setTopicTypeService(TopicTypeService topicTypeService) {
         this.topicTypeService = topicTypeService;
     }
+    
+    public void setDialogManager(DialogManager dialogManager) {
+        this.dialogManager = dialogManager;
+    }
+    
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+    
+    public void initializeForCreate(TopicTypeView view, EditListener<TopicType> listener) {
+        this.view = view;
+        this.listener = listener;
+        view.hideEditAction();
+        this.topicType = new TopicType();
+    }
+
+    public void initializeForEdit(TopicTypeView view, TopicType topicType, EditListener<TopicType> listener) {
+        this.view = view;
+        this.listener = listener;
+        view.hideCreateAction();
+        try {
+            this.topicType = topicTypeService.get(topicType.getId());
+        } catch (NotFoundException e) {
+            dialogManager.notify("item.doesnt.exist");
+            closeView();
+            return;
+        }
+        view.showTypeTitle(this.topicType.getTitle());
+        view.showTypeDescription(this.topicType.getDescription());
+    }
+    
+    public void onTitleLoseFocus() {
+        String title = view.getTypeTitle();
+        if (topicTypeService.isTopicTypeNameExists(title)) {
+            dialogManager.notify("item.already.exist");  
+        } 
+    }
+    
+    public void onCreateAction() {
+        if (save()) {
+            closeView();
+            listener.onCreate(topicType);
+        }
+    }
+    
+    public void onUpdateAction() {
+        if (save()) {
+            closeView();
+            listener.onUpdate(topicType);
+        }
+    }
+    
+    public void onCancelEditAction() {
+        closeView();
+        listener.onCloseEditorWithoutChanges();
+    }
+    
+    private void closeView() {
+        windowManager.closeWindow(view);
+    }
+
+    private boolean save() {
+        topicType.setTitle(view.getTypeTitle());
+        topicType.setDescription(view.getTypeDescription());
+        try {
+            topicTypeService.saveTopicType(topicType);
+            return true;
+        } catch (NotUniqueException e) {
+            dialogManager.notify("item.already.exist");
+            return false;
+        }
+    }
+    
 }

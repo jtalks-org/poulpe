@@ -17,6 +17,8 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.model.entity.TopicType;
+
 /**
  * The interface for creation and closing application windows.
  * 
@@ -45,4 +47,9 @@ public interface WindowManager {
      *            the window to be closed
      */
     void closeWindow(Object window);
+    
+    void openTopicTypeWindowForCreate(EditListener<TopicType> listener);
+    
+    void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
+    
 }

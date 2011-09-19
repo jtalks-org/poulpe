@@ -37,4 +37,17 @@
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter" scope="prototype">
     <property name="sectionService" ref="sectionService" />
   </bean>
+  
+  <bean id="topicTypeListPresenter" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeListPresenter" scope="prototype">
+    <property name="topicTypeService" ref="topicTypeService" />
+    <property name="windowManager" ref="windowManager" />
+    <property name="dialogManager" ref="dialogManager" />
+  </bean>
+
+  <bean id="topicTypePresenter" class="org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter" scope="prototype">
+    <property name="topicTypeService" ref="topicTypeService" />
+    <property name="windowManager" ref="windowManager" />
+    <property name="dialogManager" ref="dialogManager" />
+  </bean>
+  
 </beans>

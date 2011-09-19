@@ -36,5 +36,9 @@
   <bean id="sectionService"
         class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao"/>
-  </bean>  
+  </bean>
+  <bean id="topicTypeService"
+        class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
+    <constructor-arg index="0" ref="topicTypeDao"/>
+  </bean> 
 </beans>

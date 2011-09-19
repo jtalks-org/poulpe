@@ -17,38 +17,54 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import org.zkoss.zk.ui.Components;
-import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Button;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
  *
  * @author Pavel Vervenko
  */
-public class TopicTypeViewImpl extends Window implements TopicTypeView, AfterCompose {
+public class TopicTypeViewImpl extends Window implements TopicTypePresenter.TopicTypeView {
 
     /**
      * Generated uid
      */
     private static final long serialVersionUID = 1657959037954482623L;
     
-    private TopicTypePresenter presenter;
+    private Textbox titleTextbox;
+    private Textbox descriptionTextbox;
+    private Button editButton;
+    private Button createButton;
 
-    /**
-     * Setter for MVP Presenter.
-     * @param presenter the presenter
-     */
-    public void setPresenter(TopicTypePresenter presenter) {
-        this.presenter = presenter;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
-        presenter.initView(this);
+    public void showTypeTitle(String title) {
+        titleTextbox.setText(title);
     }
+    
+    @Override
+    public String getTypeTitle() {
+        return titleTextbox.getText();
+    }
+
+    @Override
+    public void showTypeDescription(String description) {
+        descriptionTextbox.setText(description);
+    }
+
+    @Override
+    public String getTypeDescription() {
+        return descriptionTextbox.getText();
+    }
+
+    @Override
+    public void hideEditAction() {
+        editButton.setVisible(false);
+    }
+
+    @Override
+    public void hideCreateAction() {
+        createButton.setVisible(false);
+    }
+    
 }

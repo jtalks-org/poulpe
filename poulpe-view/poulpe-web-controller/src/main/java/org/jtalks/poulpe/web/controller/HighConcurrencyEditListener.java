@@ -17,31 +17,34 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter.TopicTypeView;
-
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-
 /**
+ * The listener which should be used in case of a high probability of concurrent data modifications by several users
+ * @author Vladimir Bukhtoyarov
  *
- * @author Pavel Vervenko
+ * @param <T>
  */
-public class TopicTypePresenterTest {
+public abstract class HighConcurrencyEditListener<T> implements EditListener<T> {
 
-    private TopicTypePresenter presenter = new TopicTypePresenter();
-    @Mock
-    private TopicTypeView view;
-    @Mock
-    private TopicTypeService topicTypeService;
+    @Override
+    public void onCreate(T entity) {
+        refreshData();
+    }
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
-        presenter.setTopicTypeService(topicTypeService);
-        presenter.initView(view);
+    @Override
+    public void onDelete(T entity) {
+        refreshData();
+    }
+
+    @Override
+    public void onUpdate(T entity) {
+        refreshData();
+    }
+
+    @Override
+    public void onCloseEditorWithoutChanges() {
+        refreshData();
     }
     
+    protected abstract void refreshData();
+
 }

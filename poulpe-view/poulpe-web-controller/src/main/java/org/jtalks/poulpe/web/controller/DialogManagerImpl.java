@@ -17,6 +17,9 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import java.util.List;
+
+import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.util.resource.Labels;
@@ -55,6 +58,32 @@ public class DialogManagerImpl implements DialogManager {
         try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION,
                     Messagebox.NO, new DialogActionListener(confirmable));
+        } catch (InterruptedException e) {
+            LOGGER.error("Problem with showing deleting messagebox.", e);
+            throw new AssertionError(e);    // it's unlikely to happen
+        }
+    }
+    
+    @Override
+    public void confirmDeletion(List<String> victimList, Performable confirmable) {
+        if (victimList.size() == 1) {
+            confirmDeletion(victimList.get(0), confirmable);
+            return;
+        }
+        String title = Labels.getLabel("item.delete.$") + "?";
+        StringBuilder builder = new StringBuilder(Labels.getLabel("item.delete.question"));
+        for (String victim : victimList) {
+            builder.append("\n");
+            builder.append(victim);
+        }
+        showConfirmDeleteDialog(confirmable, title, builder.toString());
+    }
+
+    private void showConfirmDeleteDialog(final DialogManager.Performable confirmable, final String title,
+            final String text) throws AssertionError {
+        try {
+            Messagebox.show(text, title, Messagebox.YES | Messagebox.CANCEL, Messagebox.QUESTION,
+                    Messagebox.CANCEL, new DialogDeleteListener(confirmable));
         } catch (InterruptedException e) {
             LOGGER.error("Problem with showing deleting messagebox.", e);
             throw new AssertionError(e);    // it's unlikely to happen
@@ -120,4 +149,34 @@ public class DialogManagerImpl implements DialogManager {
         }
     }
 
+    /**
+     * The class for deciding if the item ought to be deleted in accordance with
+     * the message button user clicked on.
+     * 
+     * @author Dmitriy Sukharev
+     * 
+     */
+    private static class DialogDeleteListener implements EventListener {
+
+        private Performable confirmable;
+
+        /**
+         * Constructor of the listener which initialises the object whose
+         * {@code execute} method will be invoked.
+         * 
+         * @param confirmable
+         *            the object whose {@code execute} method will be invoked
+         */
+        public DialogDeleteListener(Performable confirmable) {
+            this.confirmable = confirmable;
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void onEvent(Event event) {
+            if ((Integer) event.getData() == Messagebox.YES) {
+                confirmable.execute();
+            }
+        }
+    }
 }

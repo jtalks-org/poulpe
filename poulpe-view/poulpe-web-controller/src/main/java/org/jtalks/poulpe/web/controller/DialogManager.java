@@ -17,6 +17,8 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import java.util.List;
+
 
 /**
  * The interface represents the manager for showing different types of dialog
@@ -68,6 +70,16 @@ public interface DialogManager {
      */
     void confirmEdition(String target, Performable performable);
 
+    /**
+     * Asks user if they want to delete list items.
+     * 
+     * @param victimList
+     *            the list items to be deleted
+     * @param performable
+     *            the action to be performed when user confirms item deletion
+     */
+    void confirmDeletion(List<String> victimList, Performable performable);
+    
     /**
      * The interface for storing some actions that ought to be performed when
      * user confirms them.

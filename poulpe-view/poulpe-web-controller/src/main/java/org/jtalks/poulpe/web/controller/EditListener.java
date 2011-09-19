@@ -15,12 +15,42 @@
  * Creation date: Apr 12, 2011 / 8:05:19 PM
  * The jtalks.org Project
  */
-package org.jtalks.poulpe.web.controller.topictype;
+package org.jtalks.poulpe.web.controller;
+
 
 /**
- *
- * @author Pavel Vervenko
+ * An event listener that will be notified when CRUD or cancelled event occurs
+ * 
+ * @author Vladimir Bukhtoyarov
+ * 
+ * @param <T>
  */
-public interface TopicTypeView {
-    
+public interface EditListener<T> {
+
+    /**
+     * Event occurring during the creating of entity.
+     * 
+     * @param entity created persistent object
+     */
+    void onCreate(T entity);
+
+    /**
+     * Event occurring during the removal of entity.
+     * 
+     * @param entity deleted persistent object
+     */
+    void onDelete(T entity);
+
+    /**
+     * Event occurring during the updating of entity.
+     * 
+     * @param entity
+     */
+    void onUpdate(T entity);
+
+    /**
+     * Events occurs when the user canceled editing
+     */
+    void onCloseEditorWithoutChanges();
+
 }
