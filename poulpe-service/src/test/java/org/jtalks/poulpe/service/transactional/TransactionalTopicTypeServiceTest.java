@@ -19,48 +19,48 @@ import org.testng.annotations.Test;
 
 public class TransactionalTopicTypeServiceTest extends TestCase {
 
-	private TransactionalTopicTypeService service;
+    private TransactionalTopicTypeService service;
 
-	@Mock
-	private TopicTypeDao dao;
+    @Mock
+    private TopicTypeDao dao;
 
-	@Override
+    @Override
     @BeforeMethod
-	public void setUp() throws Exception {
-		MockitoAnnotations.initMocks(this);
-		service = new TransactionalTopicTypeService(dao);
-	}
+    public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        service = new TransactionalTopicTypeService(dao);
+    }
 
-	@Test
-	public void testGetAll() {
-		List<TopicType> expectedList = new ArrayList<TopicType>();
-		when(dao.getAll()).thenReturn(expectedList);
+    @Test
+    public void testGetAll() {
+        List<TopicType> expectedList = new ArrayList<TopicType>();
+        when(dao.getAll()).thenReturn(expectedList);
 
-		List<TopicType> actualList = service.getAll();
+        List<TopicType> actualList = service.getAll();
 
-		assertEquals(expectedList, actualList);
-		verify(dao).getAll();
-	}
+        assertEquals(expectedList, actualList);
+        verify(dao).getAll();
+    }
 
-	@Test
-	public void testSaveTopicType() throws NotUniqueException {
-	    TopicType topicType = new TopicType();
-	    try {
-		    topicType.setTitle(null);
-		    service.saveTopicType(topicType);
-		    fail("null name not allowed");
-		} catch (IllegalArgumentException e) {
-		    // ok
-		}
-		
-		try {
+    @Test
+    public void testSaveTopicType() throws NotUniqueException {
+        TopicType topicType = new TopicType();
+        try {
+            topicType.setTitle(null);
+            service.saveTopicType(topicType);
+            fail("null name not allowed");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+        
+        try {
             topicType.setTitle("");
             service.saveTopicType(topicType);
             fail("null name not allowed");
         } catch (IllegalArgumentException e) {
             // ok
         }
-		
+        
         when(dao.isTopicTypeNameExists(anyString())).thenReturn(true);
         try {
             topicType.setTitle("some type");
@@ -69,29 +69,29 @@ public class TransactionalTopicTypeServiceTest extends TestCase {
         } catch (NotUniqueException e) {
             verify(dao).isTopicTypeNameExists("some type");
         }
-		
+        
         // test successful
         reset(dao);
         when(dao.isTopicTypeNameExists(anyString())).thenReturn(false);
         service.saveTopicType(topicType);
         verify(dao).isTopicTypeNameExists("some type");
         verify(dao).saveOrUpdate(topicType);
-	}
+    }
 
-	@Test
-	public void testDeleteTopicType() {
-		TopicType topicType = new TopicType();
-		Long testId = 12L;
-		topicType.setId(testId);
-		service.deleteTopicType(topicType);
-		verify(dao).delete(testId);
-	}
-	
-	@Test
+    @Test
+    public void testDeleteTopicType() {
+        TopicType topicType = new TopicType();
+        Long testId = 12L;
+        topicType.setId(testId);
+        service.deleteTopicType(topicType);
+        verify(dao).delete(testId);
+    }
+    
+    @Test
     public void testDeleteTopicTypes() {
-	    TopicType topicType1 = new TopicType();
-	    topicType1.setId(12L);
-	    TopicType topicType2 = new TopicType();
+        TopicType topicType1 = new TopicType();
+        topicType1.setId(12L);
+        TopicType topicType2 = new TopicType();
         topicType2.setId(13L);
         List<TopicType> list = Arrays.asList(topicType1, topicType2);
         service.deleteTopicTypes(list);

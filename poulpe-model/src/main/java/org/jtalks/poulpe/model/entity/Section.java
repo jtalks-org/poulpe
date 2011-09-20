@@ -79,7 +79,7 @@ public class Section extends Entity {
      * @return section position
      */
     public Integer getPosition () {
-    	return position;
+        return position;
     }
     
     /*
@@ -88,7 +88,7 @@ public class Section extends Entity {
      * @param position section position
      */
     public void setPosition (Integer position) {
-    	this.position = position;
+        this.position = position;
     }
 
     /**

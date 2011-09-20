@@ -42,7 +42,7 @@ public class AdminWindow extends GenericForwardComposer {
      * Show the sections list view
      */
     public void onShowSections() {
-    	show("sections.zul");
+        show("sections.zul");
     }
     
     private void show(String pathToZulFile) {

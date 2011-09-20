@@ -3,18 +3,18 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
 <window title="Sections" presenter="${sectionPresenter}"
-	use="org.jtalks.poulpe.web.controller.section.SectionViewImpl" id="mainWindow">	
-	
-	<!-- <tree id="sectionsTree" width="830px">
+    use="org.jtalks.poulpe.web.controller.section.SectionViewImpl" id="mainWindow">    
+    
+    <!-- <tree id="sectionsTree" width="830px">
         <treecols>
             <treecol hflex="3" />                             
         </treecols>        
     </tree> -->
      <button id="addSectionButton" label="+" />
-	
-	
-	<!-- "New Section dialog" -->
-	<window title="${labels.sections.newsectiondialog.title}" id="newSectionDialog" border="normal" visible="false" mode="modal">
+    
+    
+    <!-- "New Section dialog" -->
+    <window title="${labels.sections.newsectiondialog.title}" id="newSectionDialog" border="normal" visible="false" mode="modal">
         <vbox>
             <hbox>
                 ${labels.sections.label.name} <textbox id="sectionName"/>

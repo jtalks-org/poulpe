@@ -21,176 +21,176 @@ import org.testng.annotations.Test;
 
 public class SectionPresenterTest extends SectionPresenter {
 
-	private SectionPresenter presenter;
+    private SectionPresenter presenter;
 
-	@Mock
-	private SectionService service;
+    @Mock
+    private SectionService service;
 
-	@Mock
-	SectionView view;
+    @Mock
+    SectionView view;
 
-	@BeforeTest
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		presenter = new SectionPresenter();
-		presenter.setSectionService(service);
-//		view = mock(SectionViewImpl.class);
-	}
+    @BeforeTest
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        presenter = new SectionPresenter();
+        presenter.setSectionService(service);
+//        view = mock(SectionViewImpl.class);
+    }
 
-	@Test
-	public void validateSectionTest() {
+    @Test
+    public void validateSectionTest() {
 
-		when(service.isSectionExists(anyString())).thenReturn(true).thenReturn(
-				false);
+        when(service.isSectionExists(anyString())).thenReturn(true).thenReturn(
+                false);
 
-		String testName = "Test name";
-		String testDescription = "Test name";
-		assertNotNull(presenter.validateSection("", testDescription));
-		assertNotNull(presenter.validateSection(testName, testDescription));
-		assertNull(presenter.validateSection(testName, testDescription));
-	}
+        String testName = "Test name";
+        String testDescription = "Test name";
+        assertNotNull(presenter.validateSection("", testDescription));
+        assertNotNull(presenter.validateSection(testName, testDescription));
+        assertNull(presenter.validateSection(testName, testDescription));
+    }
 
-	@Test
-	public void initViewTest() {
+    @Test
+    public void initViewTest() {
 
-		List<Section> fakeSections = getFakeSections(3);
-		when(service.getAll()).thenReturn(fakeSections);
+        List<Section> fakeSections = getFakeSections(3);
+        when(service.getAll()).thenReturn(fakeSections);
 
-		presenter.initView(view);
+        presenter.initView(view);
 
-//		verify(view).showSections(
-//				argThat(new SectionsListMatcher(fakeSections)));
-//		verify(view).closeDialogs();
-	}
+//        verify(view).showSections(
+//                argThat(new SectionsListMatcher(fakeSections)));
+//        verify(view).closeDialogs();
+    }
 
-	@Test
-	public void openDeleteDialogTest() {
+    @Test
+    public void openDeleteDialogTest() {
 
-		List<Section> fakeSections = getFakeSections(9);
-		List<Section> cloneOfFakeSections = new ArrayList<Section>();
-		for (int i = 0; i < fakeSections.size(); i++) {
-			if (i != 3) {
-				cloneOfFakeSections.add(fakeSections.get(i));
-			}
-		}
+        List<Section> fakeSections = getFakeSections(9);
+        List<Section> cloneOfFakeSections = new ArrayList<Section>();
+        for (int i = 0; i < fakeSections.size(); i++) {
+            if (i != 3) {
+                cloneOfFakeSections.add(fakeSections.get(i));
+            }
+        }
 
-		when(service.getAll()).thenReturn(fakeSections);
-		presenter.initView(view);
-		presenter.openDeleteDialog(fakeSections.get(3));
+        when(service.getAll()).thenReturn(fakeSections);
+        presenter.initView(view);
+        presenter.openDeleteDialog(fakeSections.get(3));
 
-		// deleteSectionDialog should be invoked with a list of sections
-		// the being deleted section shouldn't presence in this list
-//		verify(view).openDeleteSectionDialog(
-//				argThat(new SectionMatcher(fakeSections.get(3).getName(),fakeSections.get(3).getDescription())));
-	}
+        // deleteSectionDialog should be invoked with a list of sections
+        // the being deleted section shouldn't presence in this list
+//        verify(view).openDeleteSectionDialog(
+//                argThat(new SectionMatcher(fakeSections.get(3).getName(),fakeSections.get(3).getDescription())));
+    }
 
-	@Test
-	public void openEditDialogTest() {
-		List<Section> fakeSections = getFakeSections(9);
-		when(service.getAll()).thenReturn(fakeSections);
-		presenter.initView(view);
+    @Test
+    public void openEditDialogTest() {
+        List<Section> fakeSections = getFakeSections(9);
+        when(service.getAll()).thenReturn(fakeSections);
+        presenter.initView(view);
 
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
-		when(sectionTreeComponent.getSelectedObject())
-				.thenReturn(fakeSections.get(3)).thenReturn(new Branch())
-				.thenReturn(null);
+        SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+        when(sectionTreeComponent.getSelectedObject())
+                .thenReturn(fakeSections.get(3)).thenReturn(new Branch())
+                .thenReturn(null);
 
-		// section
-		presenter.openEditDialog(sectionTreeComponent);
-		verify(view).openEditSectionDialog(fakeSections.get(3).getName(),
-				fakeSections.get(3).getDescription());
+        // section
+        presenter.openEditDialog(sectionTreeComponent);
+        verify(view).openEditSectionDialog(fakeSections.get(3).getName(),
+                fakeSections.get(3).getDescription());
 
-		// branch
-//		presenter.openEditDialog(sectionTreeComponent);
-//		verify(view, never()).openEditBranchDialog();
+        // branch
+//        presenter.openEditDialog(sectionTreeComponent);
+//        verify(view, never()).openEditBranchDialog();
 
-		// null
-//		presenter.openEditDialog(sectionTreeComponent);
-//		verify(view, never()).openEditBranchDialog();
+        // null
+//        presenter.openEditDialog(sectionTreeComponent);
+//        verify(view, never()).openEditBranchDialog();
 
-	}
+    }
 
-	@Test
-	public void openNewDialogTest() {
-		List<Section> fakeSections = getFakeSections(9);
-		when(service.getAll()).thenReturn(fakeSections);
-		presenter.initView(view);
+    @Test
+    public void openNewDialogTest() {
+        List<Section> fakeSections = getFakeSections(9);
+        when(service.getAll()).thenReturn(fakeSections);
+        presenter.initView(view);
 
-		presenter.openNewSectionDialog();
-		verify(view).openNewSectionDialog();
+        presenter.openNewSectionDialog();
+        verify(view).openNewSectionDialog();
 
-	}
+    }
 
-//	@Test
-//	public void editSectionFailsTest() {
-//		List<Section> fakeSections = getFakeSections(9);
-//		when(service.getAll()).thenReturn(fakeSections);
-//		when(service.isSectionExists("1")).thenReturn(true);
+//    @Test
+//    public void editSectionFailsTest() {
+//        List<Section> fakeSections = getFakeSections(9);
+//        when(service.getAll()).thenReturn(fakeSections);
+//        when(service.isSectionExists("1")).thenReturn(true);
 //
-//		presenter.initView(view);
+//        presenter.initView(view);
 //
-//		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
-//		when(sectionTreeComponent.getSelectedObject()).thenReturn(
-//				fakeSections.get(3));
+//        SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+//        when(sectionTreeComponent.getSelectedObject()).thenReturn(
+//                fakeSections.get(3));
 //
-//		presenter.openEditDialog(sectionTreeComponent);
-//		presenter.editSection("1", "2");
-//		verify(view).openErrorPopupInEditSectionDialog(
-//				"sections.error.section_name_already_exists");
-//		presenter.editSection("", "2");
-//		verify(view).openErrorPopupInEditSectionDialog(
-//				"sections.error.section_name_cant_be_void");
-//		presenter.editSection(null, "2");
-//		verify(view).openErrorPopupInEditSectionDialog(
-//				"sections.error.section_name_cant_be_void");
+//        presenter.openEditDialog(sectionTreeComponent);
+//        presenter.editSection("1", "2");
+//        verify(view).openErrorPopupInEditSectionDialog(
+//                "sections.error.section_name_already_exists");
+//        presenter.editSection("", "2");
+//        verify(view).openErrorPopupInEditSectionDialog(
+//                "sections.error.section_name_cant_be_void");
+//        presenter.editSection(null, "2");
+//        verify(view).openErrorPopupInEditSectionDialog(
+//                "sections.error.section_name_cant_be_void");
 //
-//		try {
-//			doThrow(new NotUniqueException()).when(service).saveSection(
-//					any(Section.class));
-//			presenter.editSection("2", "2");
-//			verify(view).openErrorPopupInEditSectionDialog(
-//					"sections.error.exeption_during_saving_process");
+//        try {
+//            doThrow(new NotUniqueException()).when(service).saveSection(
+//                    any(Section.class));
+//            presenter.editSection("2", "2");
+//            verify(view).openErrorPopupInEditSectionDialog(
+//                    "sections.error.exeption_during_saving_process");
 //
-//		} catch (NotUniqueException e) {
+//        } catch (NotUniqueException e) {
 //
-//		}
-//	}
+//        }
+//    }
 //
-//	@Test
-//	public void editSectionTest() {
-//		List<Section> fakeSections = getFakeSections(9);
-//		when(service.getAll()).thenReturn(fakeSections);
-//		when(service.isSectionExists("1")).thenReturn(false);
+//    @Test
+//    public void editSectionTest() {
+//        List<Section> fakeSections = getFakeSections(9);
+//        when(service.getAll()).thenReturn(fakeSections);
+//        when(service.isSectionExists("1")).thenReturn(false);
 //
-//		presenter.initView(view);
+//        presenter.initView(view);
 //
-//		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
-//		when(sectionTreeComponent.getSelectedObject()).thenReturn(
-//				fakeSections.get(3));
+//        SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+//        when(sectionTreeComponent.getSelectedObject()).thenReturn(
+//                fakeSections.get(3));
 //
-//		presenter.openEditDialog(sectionTreeComponent);
-//		presenter.editSection("1", "2");		
-//		try {
-//			verify(service).saveSection(argThat(new SectionMatcher("1", "2")));
-//		} catch (NotUniqueException e) {
-//			assertFalse(true);
-//		}
+//        presenter.openEditDialog(sectionTreeComponent);
+//        presenter.editSection("1", "2");        
+//        try {
+//            verify(service).saveSection(argThat(new SectionMatcher("1", "2")));
+//        } catch (NotUniqueException e) {
+//            assertFalse(true);
+//        }
 //
-//	}
+//    }
 
-	private List<Section> getFakeSections(int sizeOfCollection) {
-		List<Section> sections = new ArrayList<Section>();
-		for (int i = 0; i < sizeOfCollection; i++) {
-			sections.add(getFakeSection("fake " + i, "description " + i));
-		}
-		return sections;
-	}
+    private List<Section> getFakeSections(int sizeOfCollection) {
+        List<Section> sections = new ArrayList<Section>();
+        for (int i = 0; i < sizeOfCollection; i++) {
+            sections.add(getFakeSection("fake " + i, "description " + i));
+        }
+        return sections;
+    }
 
-	private Section getFakeSection(String name, String description) {
-		Section section = new Section();
-		section.setName(name);
-		section.setDescription(description);
-		return section;
-	}
+    private Section getFakeSection(String name, String description) {
+        Section section = new Section();
+        section.setName(name);
+        section.setDescription(description);
+        return section;
+    }
 
 }

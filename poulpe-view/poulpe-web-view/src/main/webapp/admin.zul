@@ -2,24 +2,24 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <zk>
-	<window apply="org.jtalks.poulpe.web.controller.AdminWindow" 
-		width="100%" height="100%">
-		<borderlayout>
-			<north>
-				<label style="font-size=24px" value="Admin Panel"/>
-			</north>
-			<west splittable="true" collapsible="true">
-				<vbox>
-					<a label="Branches" forward="onClick=onShowBranches" />
-					<a label="Components"
-						forward="onClick=onShowComponents" />
-					<a label="Topic Types"
-						forward="onClick=onShowTopicTypes" />
-					<a label="Sections"
-						forward="onClick=onShowSections" />
-				</vbox>
-			</west>
-			<center id="workArea"  border="0"/>
-		</borderlayout>
-	</window>
+    <window apply="org.jtalks.poulpe.web.controller.AdminWindow" 
+        width="100%" height="100%">
+        <borderlayout>
+            <north>
+                <label style="font-size=24px" value="Admin Panel"/>
+            </north>
+            <west splittable="true" collapsible="true">
+                <vbox>
+                    <a label="Branches" forward="onClick=onShowBranches" />
+                    <a label="Components"
+                        forward="onClick=onShowComponents" />
+                    <a label="Topic Types"
+                        forward="onClick=onShowTopicTypes" />
+                    <a label="Sections"
+                        forward="onClick=onShowSections" />
+                </vbox>
+            </west>
+            <center id="workArea"  border="0"/>
+        </borderlayout>
+    </window>
 </zk>

@@ -1,21 +1,21 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-	
-	<window width="30%" title="Topic type list editor"
-		use="org.jtalks.poulpe.web.controller.topictype.TopicTypeListViewImpl"
-		presenter="${topicTypeListPresenter}">
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    
+    <window width="30%" title="Topic type list editor"
+        use="org.jtalks.poulpe.web.controller.topictype.TopicTypeListViewImpl"
+        presenter="${topicTypeListPresenter}">
 
-		<listbox sizedByContent="true" id="topicTypeListbox">
-			<listfoot>
-				<listfooter>
-					<!-- TODO: attach icons to buttons -->
-					<button label="+" forward="onClick=onAddAction"/>
-					<button label="-" forward="onClick=onDeleteAction"/>
-				</listfooter>
-			</listfoot>
-		</listbox>
-	</window>
+        <listbox sizedByContent="true" id="topicTypeListbox">
+            <listfoot>
+                <listfooter>
+                    <!-- TODO: attach icons to buttons -->
+                    <button label="+" forward="onClick=onAddAction"/>
+                    <button label="-" forward="onClick=onDeleteAction"/>
+                </listfooter>
+            </listfoot>
+        </listbox>
+    </window>
 
 </zk>

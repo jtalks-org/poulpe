@@ -28,8 +28,8 @@ import org.jtalks.poulpe.model.entity.TopicType;
  *
  */
 public interface TopicTypeDao extends ParentRepository<TopicType> {
-	
-	/**
+
+    /**
      * Get all topic types.
      * @return the list of the TopicType
      */
