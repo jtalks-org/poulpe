@@ -70,8 +70,7 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
                     /** {@inheritDoc} */
                     @Override
                     public void onEvent(@SuppressWarnings("unused") Event event) {
-                        ItemView editor = (ItemView) getDesktop().getPage("editCompPage").getFellow("editCompWindow");
-                        editor.show(getSelectedItem().getId());
+                        showEditor(getSelectedItem().getId());
                     }
                 });
             }
@@ -98,9 +97,17 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
      * @see ListPresenter
      */
     public void onClick$addCompButton() {
-        ItemView editor = (ItemView) getDesktop().getPage("editCompPage").getFellow(
+        showEditor(null);
+    }
+
+    /**
+     * Shows the component editor window
+     */
+    private void showEditor(Long componentId) {
+        org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow(
                 "editCompWindow");
-        editor.show(null);
+        comp.setAttribute("backWin", this);
+        ((ItemView) comp).show(componentId);
     }
 
     /**

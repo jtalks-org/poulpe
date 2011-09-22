@@ -24,8 +24,6 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.WrongValuesException;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Longbox;
@@ -187,8 +185,10 @@ public class ItemViewImpl extends Window implements ItemView, AfterCompose {
     public void hide() {
         setValidationConstraints(null);
         setVisible(false);
-        Events.postEvent(new Event("updateList", getDesktop().getPage("componentListPage")
-                .getFellow("componentWindow")));
+        ListView listView = ((ListView) getAttribute("backWin"));
+        if (null != listView) {
+            listView.updateList();
+        }
     }
 
     /**
