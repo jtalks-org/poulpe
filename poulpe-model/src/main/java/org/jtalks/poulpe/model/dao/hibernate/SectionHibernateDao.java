@@ -16,7 +16,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.List;
 
-import org.jtalks.common.model.dao.hibernate.DefaultParentRepository;
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -25,7 +25,7 @@ import org.jtalks.poulpe.model.entity.Section;
  * @author tanya birina
  * @author Dmitriy Sukharev
  */
-public class SectionHibernateDao extends DefaultParentRepository<Section> implements SectionDao {
+public class SectionHibernateDao extends AbstractHibernateParentRepository<Section> implements SectionDao {
 
     /**
      * {@inheritDoc}

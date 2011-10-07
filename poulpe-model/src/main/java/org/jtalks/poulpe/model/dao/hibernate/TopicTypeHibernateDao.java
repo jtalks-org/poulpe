@@ -17,13 +17,13 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.util.List;
 
 import org.hibernate.Query;
-import org.jtalks.common.model.dao.hibernate.DefaultParentRepository;
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
  * @author Vladimir Bukhtoyarov
  */
-public class TopicTypeHibernateDao extends DefaultParentRepository<TopicType>
+public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<TopicType>
         implements org.jtalks.poulpe.model.dao.TopicTypeDao {
 
     @SuppressWarnings("unchecked")
