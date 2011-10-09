@@ -79,7 +79,7 @@ public class TransactionalTopicTypeServiceTest extends TestCase {
         try {
             topicType.setTitle("some type");
             service.saveTopicType(topicType);
-            fail();
+            
         } catch (NotUniqueException e) {
             verify(dao).isTopicTypeNameExists("some type");
         }
@@ -89,6 +89,43 @@ public class TransactionalTopicTypeServiceTest extends TestCase {
         when(dao.isTopicTypeNameExists(anyString())).thenReturn(false);
         service.saveTopicType(topicType);
         verify(dao).isTopicTypeNameExists("some type");
+        verify(dao).saveOrUpdate(topicType);
+    }
+    
+    @Test
+    public void testUpdateTopicType() throws NotUniqueException {
+        TopicType topicType = new TopicType();
+        try {
+            topicType.setTitle(null);
+            service.updateTopicType(topicType);
+            fail("null name not allowed");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+        
+        try {
+            topicType.setTitle("");
+            service.updateTopicType(topicType);
+            fail("null name not allowed");
+        } catch (IllegalArgumentException e) {
+            // ok
+        }
+        
+        when(dao.isTopicTypeNameExists(anyString(), anyLong())).thenReturn(true);
+        try {
+            topicType.setTitle("some type");
+            topicType.setId(123);
+            service.updateTopicType(topicType);
+            fail();
+        } catch (NotUniqueException e) {
+            verify(dao).isTopicTypeNameExists("some type", 123);
+        }
+
+        // test successful
+        reset(dao);
+        when(dao.isTopicTypeNameExists(anyString(), anyLong())).thenReturn(false);
+        service.updateTopicType(topicType);
+        verify(dao).isTopicTypeNameExists("some type", 123);
         verify(dao).saveOrUpdate(topicType);
     }
 

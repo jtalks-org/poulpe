@@ -99,7 +99,7 @@ public class TopicTypePresenter {
     
     public void onTitleLoseFocus() {
         String title = view.getTypeTitle();
-        if (topicTypeService.isTopicTypeNameExists(title)) {
+        if (topicTypeService.isTopicTypeNameExists(title, topicType.getId())) {
             dialogManager.notify("item.already.exist");  
         } 
     }
@@ -112,7 +112,7 @@ public class TopicTypePresenter {
     }
     
     public void onUpdateAction() {
-        if (save()) {
+        if (update()) {
             closeView();
             listener.onUpdate(topicType);
         }
@@ -139,4 +139,15 @@ public class TopicTypePresenter {
         }
     }
     
+    private boolean update() {
+    	topicType.setTitle(view.getTypeTitle());
+        topicType.setDescription(view.getTypeDescription());
+        try {
+            topicTypeService.updateTopicType(topicType);
+            return true;
+        } catch (NotUniqueException e) {
+            dialogManager.notify("item.already.exist");
+            return false;
+        }
+    }    
 }

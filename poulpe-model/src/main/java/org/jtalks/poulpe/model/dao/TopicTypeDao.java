@@ -39,5 +39,12 @@ public interface TopicTypeDao extends ParentRepository<TopicType> {
      * @return true if exists
      */
     boolean isTopicTypeNameExists(String topicTypeName);
-
+    
+    /**
+     * Check if type of topic with given name exists.
+     * @param topicTypeName
+     * @param ignorableTopicTypeID
+     * @return true if exists
+     */
+    boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID);
 }

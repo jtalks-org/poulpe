@@ -47,16 +47,24 @@ public interface TopicTypeService extends EntityService<TopicType> {
     void deleteTopicTypes(Collection<TopicType> topicType);
 
     /**
-     * Save new or update TopicType.
+     * Save new TopicType.
      * @param topicType topicType to save
      * @throws NotUniqueException 
      */
     void saveTopicType(TopicType topicType) throws NotUniqueException;
     
     /**
+     * Update TopicType.
+     * @param topicType topicType to save
+     * @throws NotUniqueException 
+     */
+    void updateTopicType(TopicType topicType) throws NotUniqueException;
+    
+    /**
      * Check if type of topic with given name exists.
      * @param topicTypeName
+     * @param ignorableTopicTypeID
      * @return true if exists
      */
-    boolean isTopicTypeNameExists(String topicTypeName);
+    boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID);
 }

@@ -58,10 +58,24 @@ public class TransactionalTopicTypeService extends
         
         dao.saveOrUpdate(topicType);
     }
+    
+    @Override
+    public void updateTopicType(TopicType topicType) throws NotUniqueException {
+    	String title = topicType.getTitle(); 
+        if (title == null || title.isEmpty()) {
+            throw new IllegalArgumentException();
+        }
+        
+        if (dao.isTopicTypeNameExists(title, topicType.getId())) {
+            throw new NotUniqueException("Not unique title of topic type: " + title);
+        }
+        
+        dao.saveOrUpdate(topicType);
+    }
 
     @Override
-    public boolean isTopicTypeNameExists(String topicTypeName) {
-        return dao.isTopicTypeNameExists(topicTypeName);
+    public boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID) {
+        return dao.isTopicTypeNameExists(topicTypeName, ignorableTopicTypeID);
     }
 
     @Override
