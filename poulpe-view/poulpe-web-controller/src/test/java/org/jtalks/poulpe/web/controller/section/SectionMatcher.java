@@ -19,23 +19,29 @@ import org.mockito.ArgumentMatcher;
 
 public class SectionMatcher extends ArgumentMatcher<Section> {
 
-    String name;
-    String description;
+	Section section;
 
-    public SectionMatcher(String name, String description) {
-        this.name = name;
-        this.description = description;
-    }
+	String name;
+	String description;
 
-    @Override
-    public boolean matches(Object argument) {
-        if (!(argument instanceof Section))
-            return false;
-        Section arg = (Section) argument;
-        if (!arg.getName().equals(name)
-                || !arg.getDescription().equals(description)) {
-            return false;
-        }
-        return true;
-    }
+	public SectionMatcher(Section section) {
+		this.section = section;
+	}
+
+	public SectionMatcher(String name, String description) {
+		this.name = name;
+		this.description = description;
+	}
+
+	@Override
+	public boolean matches(Object argument) {
+		if (!(argument instanceof Section))
+			return false;
+		Section arg = (Section) argument;
+		if (this.section != null) {
+			return arg.equals(section);
+		} else {
+			return arg.getName().equals(name) && arg.getDescription().equals(description);
+		}
+	}
 }

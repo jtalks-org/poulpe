@@ -32,6 +32,7 @@
   
   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
     <property name="sectionService" ref="sectionService" />
+    <property name="dialogManager" ref="dialogManager"/>
   </bean>
 
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter" scope="prototype">

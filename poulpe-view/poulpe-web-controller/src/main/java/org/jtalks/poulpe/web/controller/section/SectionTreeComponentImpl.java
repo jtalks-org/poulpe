@@ -42,44 +42,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     private Tree sectionTree;
     private SectionPresenter presenter;
 
-    private static TreeitemRenderer treeRenderer = new TreeitemRenderer() {
-        @Override
-        public void render(final Treeitem treeItem, Object node) throws Exception {
-
-            ExtendedTreeNode curNode = (ExtendedTreeNode) node;
-
-            final Entity data = (Entity) curNode.getData();
-            treeItem.setOpen(curNode.isExpanded());// Whether open the node
-            treeItem.setValue(data);
-            Iterator iter = treeItem.getChildren().iterator();
-
-            while (iter.hasNext()) {
-                Object child = iter.next();
-                if (child instanceof Treerow) {
-                    for (Object oCell : ((Treerow) child).getChildren()) {
-                        if (oCell instanceof Treecell) {
-                            if (data instanceof Section) {
-                                ((Treecell) oCell).setLabel(((Section) data).getName());
-                            } else if (data instanceof Branch) {
-                                ((Treecell) oCell).setLabel(((Branch) data).getName());
-                            }
-                        }
-                    }
-                    return;
-                }
-            }
-
-            Treerow treeRow = new Treerow();
-            treeItem.appendChild(treeRow);
-            if (data instanceof Section) {
-                treeRow.appendChild(new Treecell(((Section) data).getName()));
-            } else if (data instanceof Branch) {
-                treeRow.appendChild(new Treecell(((Branch) data).getName()));
-
-            }
-
-        }
-    };
+    private TreeitemRenderer treeRenderer = new SectionBranchTreeitemRendere(); 
 
     /**
      * @param section
@@ -97,7 +60,6 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         DefaultTreeModel model = new DefaultTreeModel(new DefaultTreeNode(null, new DefaultTreeNode[] { child }));
         sectionTree.setModel(model);
         sectionTree.setItemRenderer(treeRenderer);
-
     }
 
     /**
@@ -178,5 +140,52 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
 
         presenter.openDeleteDialog(selectedObject);
 
+    }
+    
+    public class SectionBranchTreeitemRendere implements TreeitemRenderer {
+        @Override
+        public void render(final Treeitem treeItem, Object node) throws Exception {
+
+            ExtendedTreeNode curNode = (ExtendedTreeNode) node;
+
+            final Entity data = (Entity) curNode.getData();
+            treeItem.setOpen(curNode.isExpanded());// Whether open the node
+            treeItem.setValue(data);
+            Iterator iter = treeItem.getChildren().iterator();
+
+            while (iter.hasNext()) {
+                Object child = iter.next();
+                if (child instanceof Treerow) {
+                    for (Object oCell : ((Treerow) child).getChildren()) {
+                        if (oCell instanceof Treecell) {
+                            if (data instanceof Section) {
+                                ((Treecell) oCell).setLabel(((Section) data).getName());
+                            } else if (data instanceof Branch) {
+                                ((Treecell) oCell).setLabel(((Branch) data).getName());
+                            }
+                        }
+                    }
+                    return;
+                }
+            }
+
+            Treerow treeRow = new Treerow();
+            treeItem.appendChild(treeRow);
+            if (data instanceof Section) {
+                treeRow.appendChild(new Treecell(((Section) data).getName()));
+            } else if (data instanceof Branch) {
+                treeRow.appendChild(new Treecell(((Branch) data).getName()));
+
+            }
+
+        }
+    };
+    
+    /**
+     * to make it injectable
+     * @param tree
+     */
+    public void setSectionTree(Tree tree){
+    	this.sectionTree = tree;    	
     }
 }

@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.TopicType;
 import org.testng.annotations.Test;
 
 /**
@@ -88,6 +90,12 @@ public class TreeNodeFactoryTest {
         assertEquals(testNode.getChildren(),null);
         assertEquals(testNode.isExpanded(), true);
         assertEquals(testNode.isLeaf(), true);
+        
+        testNode = TreeNodeFactory.getTreeNode(null);
+        assertNull(testNode);
+        
+        testNode = TreeNodeFactory.getTreeNode(new TopicType());
+        assertNull(testNode);
     }
 
     /**
@@ -109,7 +117,7 @@ public class TreeNodeFactoryTest {
     }
 
     @Test
-    public void getTreeNodes() {
+    public void getTreeNodesTest() {
         List<Section> sections = new ArrayList<Section>();
         sections.add(createTestSectionWithBranches());
         sections.add(createTestSectionWithBranches());
@@ -118,6 +126,30 @@ public class TreeNodeFactoryTest {
 
         List<ExtendedTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
         assertEquals(nodes.size(), sections.size());
+        for (ExtendedTreeNode node : nodes) {
+            assertTrue(node.getData() instanceof Section);
+            assertEquals(node.getChildCount(), ((Section) node.getData())
+                    .getBranches().size());
+            for (Object obj : node.getChildren()) {
+                assertTrue(obj instanceof ExtendedTreeNode);
+                ExtendedTreeNode subnode = (ExtendedTreeNode) obj;
+                assertTrue(subnode.getData() instanceof Branch);
+                assertTrue(subnode.isLeaf());
+            }
+        }
+
+    }
+    
+    @Test
+    public void getTreeNodesWithNullsTest() {
+        List<Section> sections = new ArrayList<Section>();
+        sections.add(createTestSectionWithBranches());
+        sections.add(null);
+        sections.add(null);
+        sections.add(createTestSectionWithBranches());
+
+        List<ExtendedTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
+        assertEquals(nodes.size(), 2);
         for (ExtendedTreeNode node : nodes) {
             assertTrue(node.getData() instanceof Section);
             assertEquals(node.getChildCount(), ((Section) node.getData())

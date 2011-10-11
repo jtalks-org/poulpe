@@ -33,12 +33,7 @@ import org.jtalks.poulpe.model.entity.Section;
  * 
  */
 class TreeNodeFactory {
-
-    /**
-     * this utility class
-     * */
-    private TreeNodeFactory() {
-    }
+    
 
     /**
      * Wrap single entity to DefaultTreeNode. If this entity has some related
