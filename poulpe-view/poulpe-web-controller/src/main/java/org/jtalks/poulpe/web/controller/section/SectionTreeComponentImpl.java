@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.util.Iterator;
+
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -38,11 +39,13 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
      * 
      */
     private static final long serialVersionUID = -1083425488934932487L;
+    /**
+     * Reference to a corresponding ZUL file
+     */
     private static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
     private Tree sectionTree;
     private SectionPresenter presenter;
-
-    private TreeitemRenderer treeRenderer = new SectionBranchTreeitemRendere(); 
+    
 
     /**
      * @param section
@@ -59,7 +62,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         DefaultTreeNode child = TreeNodeFactory.getTreeNode(section);
         DefaultTreeModel model = new DefaultTreeModel(new DefaultTreeNode(null, new DefaultTreeNode[] { child }));
         sectionTree.setModel(model);
-        sectionTree.setItemRenderer(treeRenderer);
+        sectionTree.setItemRenderer(new SectionBranchTreeitemRendere());
     }
 
     /**

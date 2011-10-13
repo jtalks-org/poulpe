@@ -19,7 +19,6 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
-
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
