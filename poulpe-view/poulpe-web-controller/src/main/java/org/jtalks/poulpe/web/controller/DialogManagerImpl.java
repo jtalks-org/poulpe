@@ -16,7 +16,6 @@ package org.jtalks.poulpe.web.controller;
 
 import java.util.List;
 
-import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.util.resource.Labels;
@@ -67,7 +66,7 @@ public class DialogManagerImpl implements DialogManager {
             confirmDeletion(victimList.get(0), confirmable);
             return;
         }
-        String title = Labels.getLabel("item.delete.$") + "?";
+        String title = Labels.getLabel("dialogmanager.delete.multiple.title");
         StringBuilder builder = new StringBuilder(Labels.getLabel("item.delete.question"));
         for (String victim : victimList) {
             builder.append("\n");
@@ -79,7 +78,7 @@ public class DialogManagerImpl implements DialogManager {
     private void showConfirmDeleteDialog(final DialogManager.Performable confirmable, final String title,
             final String text) throws AssertionError {
         try {
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.CANCEL, Messagebox.QUESTION,
+            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION,
                     Messagebox.CANCEL, new DialogDeleteListener(confirmable));
         } catch (InterruptedException e) {
             LOGGER.error("Problem with showing deleting messagebox.", e);
