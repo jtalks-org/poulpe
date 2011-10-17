@@ -1,0 +1,42 @@
+<?page title="Users" contentType="text/html;charset=UTF-8"?>
+<zk>
+	<window title="Users" border="normal">
+		New Content Here!
+		
+		Paging can be supported to locate at three position: Top, Bottom, and Both.
+	
+	<!-- 
+	<radiogroup onCheck="tree.pagingPosition = self.selectedItem.label;listbox.pagingPosition = self.selectedItem.label">
+		<radio label="top" />
+		<radio label="bottom" checked="true" />
+		<radio label="both" />
+	</radiogroup>
+	<separator/>
+	<button label="Change Paging Mold">
+		<attribute name="onClick">
+		listbox.pagingChild.mold = "os".equals(listbox.pagingChild.mold) ? "default" : "os";
+		</attribute>
+	</button>	
+	-->
+	
+	<zscript>
+		List items = new org.jtalks.poulpe.web.controller.utils.BigList(1000); //a big list of Integer
+	</zscript>
+	<listbox id="listbox" mold="paging">
+		<listhead>
+			<listheader width="150px" sort="auto(Username)" label="Username" />
+		    <listheader width="150px" sort="auto(Email)" label="E-mail" />
+		    <listheader width="150px" sort="auto(Role)" label="Role" />
+		       
+		    <!-- <listheader sort="auto(Quantity)" label="Quantity" /> -->
+		</listhead>
+			
+		<listitem forEach="&#36;{items}">
+			<listcell label="&#36;{each}-1"/>
+			<listcell label="&#36;{each}-2"/>
+			<listcell label="&#36;{each}-3"/>
+		</listitem>
+	</listbox>
+	
+	</window>
+</zk>

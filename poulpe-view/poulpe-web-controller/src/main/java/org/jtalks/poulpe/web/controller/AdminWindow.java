@@ -59,6 +59,13 @@ public class AdminWindow extends GenericForwardComposer {
         show("sections.zul");
     }
     
+    /**
+     * Show the users list view
+     */
+    public void onShowUsers() {
+        show("users.zul");
+    }
+    
     private void show(String pathToZulFile) {
         if (currentComponent != null) {
             currentComponent.detach();
@@ -66,7 +73,5 @@ public class AdminWindow extends GenericForwardComposer {
         currentComponent = Executions.createComponents(pathToZulFile, null, null);
         currentComponent.setParent(workArea);
         currentComponent.setVisible(true);
-    }
-    
-
+    }  
 }
