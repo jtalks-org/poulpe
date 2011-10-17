@@ -8,7 +8,7 @@ import java.util.Collection;
 import org.joda.time.DateTime;
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.common.service.SecurityService;
+import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.service.UserService;
 
 /**
@@ -18,8 +18,8 @@ import org.jtalks.poulpe.service.UserService;
  * @author Guram Savinov
  */
 public class TransactionalUserService extends
-        org.jtalks.common.service.transactional.TransactionalUserService
-        implements UserService {
+        AbstractTransactionalEntityService<User, UserDao> implements
+        UserService {
 
     /**
      * Create an instance of user entity based service.
@@ -29,8 +29,8 @@ public class TransactionalUserService extends
      * @param securityService
      *            the security service
      */
-    public TransactionalUserService(UserDao dao, SecurityService securityService) {
-        super(dao, securityService);
+    public TransactionalUserService(UserDao userDao) {
+        this.dao = userDao;
     }
 
     @Override

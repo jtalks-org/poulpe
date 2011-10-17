@@ -22,7 +22,6 @@ import java.util.Collection;
 
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.common.service.SecurityService;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -39,7 +38,6 @@ public class TransactionalUserServiceTest {
 
     private UserDao userDao;
     private UserService userService;
-    private SecurityService securityService;
 
     private static final String EMAIL = "username@mail.com";
     private static final String PASSWORD = "password";
@@ -49,9 +47,8 @@ public class TransactionalUserServiceTest {
     @BeforeMethod
     public void setUp() {
         userDao = mock(UserDao.class);
-        securityService = mock(SecurityService.class);
 
-        userService = new TransactionalUserService(userDao, securityService);
+        userService = new TransactionalUserService(userDao);
 
         users = new ArrayList<User>();
         users.add(getUser("tony"));

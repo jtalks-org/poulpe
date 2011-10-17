@@ -17,13 +17,14 @@ package org.jtalks.poulpe.service;
 import java.util.Collection;
 
 import org.jtalks.common.model.entity.User;
+import org.jtalks.common.service.EntityService;
 
 /**
  * Service interface for operations with {@code User} persistent entity.
  * 
  * @author Guram Savinov
  */
-public interface UserService extends org.jtalks.common.service.UserService {
+public interface UserService extends EntityService<User> {
 
     /**
      * Sets permanent ban status for the user list.
