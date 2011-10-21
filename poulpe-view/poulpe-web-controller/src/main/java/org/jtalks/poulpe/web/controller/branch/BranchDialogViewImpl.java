@@ -175,8 +175,12 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     @Override
     public void hide() {
         setVisible(false);
-        Events.postEvent(new Event("onHideDialog", getDesktop().getPage(
-                "mainPage").getFellow("mainWindow")));
+        BranchEditorView view = (BranchEditorView) getAttribute("backWin");
+        if (view == null) {
+            return;
+        }
+        BranchEditorPresenter presenter = (BranchEditorPresenter) getAttribute("presenter");
+        presenter.updateView();
     }
 
     /**

@@ -19,6 +19,7 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManagerImpl;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -117,7 +118,9 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
      * Handle click on add button
      * */
     public void onClick$addBranchButton() {
-        Events.postEvent( new Event("onOpenAddDialog",getDesktop().getPage("BranchDialog").getFellow("editWindow")));       
+        Component component = getDesktop().getPage("BranchDialog").getFellow("editWindow");
+        component.setAttribute("presenter", presenter);
+        Events.postEvent( new Event("onOpenAddDialog", component));       
     }
 
     /**
