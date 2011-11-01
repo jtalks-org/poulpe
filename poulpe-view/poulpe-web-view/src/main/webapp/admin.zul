@@ -11,12 +11,10 @@
             <west splittable="true" collapsible="true">
                 <vbox>
                     <a label="Branches" forward="onClick=onShowBranches" />
-                    <a label="Components"
-                        forward="onClick=onShowComponents" />
-                    <a label="Topic Types"
-                        forward="onClick=onShowTopicTypes" />
-                    <a label="Sections"
-                        forward="onClick=onShowSections" />
+                    <a label="Components" forward="onClick=onShowComponents" />
+                    <a label="Topic Types" forward="onClick=onShowTopicTypes" />
+                    <a label="Sections" forward="onClick=onShowSections" />
+                    <a label="Users" forward="onClick=onShowUsers" />
                 </vbox>
             </west>
             <center id="workArea"  border="0"/>
