@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -49,4 +50,5 @@ public interface WindowManager {
     
     void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
     
+    void openUserWindowForEdit(User user, EditListener<User> listener);
 }

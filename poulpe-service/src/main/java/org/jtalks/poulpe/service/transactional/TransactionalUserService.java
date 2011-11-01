@@ -4,6 +4,7 @@
 package org.jtalks.poulpe.service.transactional;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.joda.time.DateTime;
 import org.jtalks.common.model.dao.UserDao;
@@ -70,4 +71,18 @@ public class TransactionalUserService extends
         }
     }
 
+	@Override
+	public List<User> getAll() {
+		return dao.getAll();
+	}
+
+	@Override
+	public List<User> getUsersByUsernameWord(String word) {
+		return dao.getByUsernameWord(word);
+	}
+
+	@Override
+	public void updateUser(User user) {
+		dao.update(user);
+	}
 }

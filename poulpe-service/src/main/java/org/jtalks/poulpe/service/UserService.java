@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service;
 
 import java.util.Collection;
+import java.util.List;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.EntityService;
@@ -51,5 +52,26 @@ public interface UserService extends EntityService<User> {
      */
     public void setTemporaryBanStatus(Collection<User> users, int days,
             String banReason);
+    
+    /**
+     * Gets all Users from the database
+     * 
+     * @return <code>List<User></code>
+     */
+    public List<User> getAll();
+    
+    /**
+     * Gets Users with corresponding word in user name
+     * 
+     * @return <code>List<User></code>
+     */
+    public List<User> getUsersByUsernameWord(String word);
+    
+    /**
+     * Update corresponding user
+     * 
+     * @param <code>User</code>
+     */
+    public void updateUser(User user);
 
 }

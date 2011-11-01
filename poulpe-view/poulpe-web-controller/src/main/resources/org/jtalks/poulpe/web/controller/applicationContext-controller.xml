@@ -51,4 +51,15 @@
     <property name="dialogManager" ref="dialogManager" />
   </bean>
   
+  <bean id="usersListPresenter" class="org.jtalks.poulpe.web.controller.users.UsersListPresenter" scope="prototype">
+    <property name="userService" ref="userService" />
+    <property name="windowManager" ref="windowManager" />
+  </bean>
+  
+   <bean id="userPresenter" class="org.jtalks.poulpe.web.controller.users.UserPresenter" scope="prototype">
+    <property name="userService" ref="userService" />
+    <property name="windowManager" ref="windowManager" />
+    <property name="dialogManager" ref="dialogManager" />
+  </bean>
+  
 </beans>
