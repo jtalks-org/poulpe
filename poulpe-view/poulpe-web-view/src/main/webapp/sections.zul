@@ -4,12 +4,8 @@
 <zk>
 <window title="Sections" presenter="${sectionPresenter}"
     use="org.jtalks.poulpe.web.controller.section.SectionViewImpl" id="mainWindow">    
-    
-    <!-- <tree id="sectionsTree" width="830px">
-        <treecols>
-            <treecol hflex="3" />                             
-        </treecols>        
-    </tree> -->
+   
+   
      <button id="addSectionButton" label="+" />
     
     
@@ -49,6 +45,7 @@
     
 </window>
 <include src="/WEB-INF/pages/deletesectiondialog.zul" mode="defer"/>
-<include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer"/>  
+<include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer"/>
+<include src="/WEB-INF/pages/moderatordialog.zul" mode="defer"/>  
 </zk>
 

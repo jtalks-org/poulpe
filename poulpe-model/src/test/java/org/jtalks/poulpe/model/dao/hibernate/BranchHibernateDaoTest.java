@@ -45,6 +45,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -233,4 +234,24 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         assertEquals(section.getBranches().size(), 1);
         assertReflectionEquals(branch, section.getBranches().get(0));
     }
+    
+//    @Test
+//    public void branchUserTest(){
+////        Section section = ObjectsFactory.createSection();
+////        session.save(section);        
+////        Branch branch = ObjectsFactory.getDefaultBranch();
+////        branch.setSection(section);
+//        User user = ObjectsFactory.createUser();
+////        session.save(branch);
+////        assertTrue(branch.getId() != 0);
+//        session.save(user);
+////        assertTrue(user.getId() != 0);
+////        branch.getModerators().add(user);
+////        session.saveOrUpdate(branch);
+////        
+////        branch = (Branch)session.load(Branch.class, branch.getId());
+////        assertEquals(branch.getModerators().size(), 1);
+////        assertReflectionEquals(user, branch.getModerators().get(0));
+//        
+//    }
 }

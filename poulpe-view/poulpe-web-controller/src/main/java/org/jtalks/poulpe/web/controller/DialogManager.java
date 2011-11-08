@@ -16,6 +16,8 @@ package org.jtalks.poulpe.web.controller;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.User;
+
 
 /**
  * The interface represents the manager for showing different types of dialog
@@ -76,6 +78,12 @@ public interface DialogManager {
      *            the action to be performed when user confirms item deletion
      */
     void confirmDeletion(List<String> victimList, Performable performable);
+    
+    /**
+     * Asks to ban specified users
+     */
+    void confirmBan(List<User> usersToBan, String reason, Performable performable);
+
     
     /**
      * The interface for storing some actions that ought to be performed when

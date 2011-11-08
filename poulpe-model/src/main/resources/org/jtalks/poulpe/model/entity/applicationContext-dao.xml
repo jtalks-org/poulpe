@@ -25,11 +25,17 @@
    <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao"
         parent="abstractHibernateDao"/>
    <bean id="userDao" class="org.jtalks.common.model.dao.hibernate.UserHibernateDao"
-        parent="abstractHibernateDao"/>
+        parent="abstractCommonsHibernateDao"/>
   <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way
     resolves a problem of multiple DAO beans definition -->
   <bean id="abstractHibernateDao"
         class="org.jtalks.poulpe.model.dao.hibernate.AbstractHibernateDao"
+        abstract="true">
+    <property name="sessionFactory" ref="sessionFactory"/>
+  </bean>
+  
+  <bean id="abstractCommonsHibernateDao"
+        class="org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository"
         abstract="true">
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>

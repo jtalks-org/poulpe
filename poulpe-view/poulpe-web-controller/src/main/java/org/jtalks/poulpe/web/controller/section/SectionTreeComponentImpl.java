@@ -127,6 +127,13 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         ExtendedTreeNode sectionNode = (ExtendedTreeNode) root.getChildAt(0);
         sectionNode.setData(section);
     }
+    
+    /**
+     * Click on '*' button
+     */
+    public void onClick$moderatorButton(){
+            presenter.openModeratorDialog(getSelectedObject());
+    }
 
     /**
      * Event which happen when user click on '-' button after it selected

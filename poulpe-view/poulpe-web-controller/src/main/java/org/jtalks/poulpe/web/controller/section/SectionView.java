@@ -142,5 +142,15 @@ public interface SectionView {
      * @return always return false
      */
     boolean isDeleteDialogOpen();
+    
+    /**
+     * Open the moderator dialog
+     * @param branch
+     */
+    void openModeratorDialog(Branch branch);
+    /**
+     * Close the moderator dialog
+     */
+    void closeModeratorDialog();    
 
 }

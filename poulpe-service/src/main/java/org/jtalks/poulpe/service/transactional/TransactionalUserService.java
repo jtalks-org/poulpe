@@ -30,8 +30,8 @@ public class TransactionalUserService extends
      * @param securityService
      *            the security service
      */
-    public TransactionalUserService(UserDao userDao) {
-        this.dao = userDao;
+    public TransactionalUserService(UserDao userDao) {        
+        this.dao = userDao; 
     }
 
     @Override
@@ -72,13 +72,13 @@ public class TransactionalUserService extends
     }
 
 	@Override
-	public List<User> getAll() {
+	public List<User> getAll() {    
 		return dao.getAll();
 	}
 
 	@Override
 	public List<User> getUsersByUsernameWord(String word) {
-		return dao.getByUsernameWord(word);
+		return dao.getByUsernamePart(word);
 	}
 
 	@Override

@@ -59,6 +59,11 @@ public class AdminWindow extends GenericForwardComposer {
         show("sections.zul");
     }
     
+    public void onShowUserBanning(){
+        show("userbanning.zul");
+    }    
+    
+    
     /**
      * Show the users list view
      */

@@ -282,6 +282,18 @@ public class SectionPresenter {
             SectionTreeComponent currentSectionTreeComponent) {
         this.currentSectionTreeComponent = currentSectionTreeComponent;
     }
+    
+    /**
+     * Method used to manage moderation dialog 
+     * @param branch
+     */
+    public void openModeratorDialog(Object selectedObject){
+        if(!(selectedObject instanceof Branch)){
+            return;
+        }
+        sectionView.openModeratorDialog((Branch)selectedObject);
+                
+    }
 
     public class CreateUpdatePerformable implements DialogManager.Performable {
 

@@ -14,7 +14,10 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import java.util.List;
+
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.model.entity.User;
 
 /**
  * Forum branch that contains topics related to branch theme.
@@ -27,6 +30,7 @@ public class Branch extends Entity {
     private String description;
     private boolean deleted;
     private Section section;
+    private List<User> moderators;
 
     /**
      * Get branch name which briefly describes the topics contained in it.
@@ -94,6 +98,22 @@ public class Branch extends Entity {
      */
     public void setSection(Section section) {
         this.section = section;
-    }    
+    }
+
+    /**
+     * @return get a list of {@link User} which are signed to moderate this branch
+     */
+    public List<User> getModerators() {
+        return moderators;
+    }
+
+    /**
+     * @param moderators a list of {@link User} which will be signed to moderate this branch
+     */
+    public void setModerators(List<User> moderators) {
+        this.moderators = moderators;
+    }
+    
+    
     
 }

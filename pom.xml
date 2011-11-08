@@ -208,6 +208,16 @@
         <type>jar</type>
         <scope>test</scope>
       </dependency>
+      <dependency>
+      	<groupId>org.jtalks.common</groupId>
+      	<artifactId>jtalks-common-model</artifactId>
+      	<version>0.8-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+      	<groupId>org.jtalks.common</groupId>
+      	<artifactId>jtalks-common-service</artifactId>
+      	<version>0.8-SNAPSHOT</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -227,6 +237,14 @@
     <dependency>
       <groupId>log4j</groupId>
       <artifactId>apache-log4j-extras</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>org.jtalks.common</groupId>
+    	<artifactId>jtalks-common-model</artifactId>
+    </dependency>
+    <dependency>
+    	<groupId>org.jtalks.common</groupId>
+    	<artifactId>jtalks-common-service</artifactId>
     </dependency>
   </dependencies>
 

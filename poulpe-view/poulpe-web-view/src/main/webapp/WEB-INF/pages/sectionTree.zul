@@ -6,6 +6,7 @@ http://www.zkoss.org/2005/zul/zul.xsd">
             <treecol hflex="3" />                                                             
         </treecols>        
     </tree>
+    <button id="moderatorButton" label="*"/>
     <button id="addBranchButton" label="+" />
     <button id="delButton" label="-" />    
 </zk>

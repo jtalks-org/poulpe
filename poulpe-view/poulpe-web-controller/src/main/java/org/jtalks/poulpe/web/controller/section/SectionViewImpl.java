@@ -28,7 +28,8 @@ import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-public class SectionViewImpl extends Window implements SectionView, AfterCompose {
+public class SectionViewImpl extends Window implements SectionView,
+        AfterCompose {
 
     private static final long serialVersionUID = -2745900622179593542L;
     private transient SectionPresenter presenter;
@@ -163,7 +164,8 @@ public class SectionViewImpl extends Window implements SectionView, AfterCompose
      * window this cause save new branch
      * */
     public void onClick$addButton$newSectionDialog() {
-        presenter.addNewSection(getNewSectionName(), getNewSectionDescription());
+        presenter
+                .addNewSection(getNewSectionName(), getNewSectionDescription());
     }
 
     /**
@@ -179,7 +181,8 @@ public class SectionViewImpl extends Window implements SectionView, AfterCompose
      * window this cause save new branch
      * */
     public void onClick$editButton$editSectionDialog() {
-        presenter.editSection(getEditSectionName(), getEditSectionDescription());
+        presenter
+                .editSection(getEditSectionName(), getEditSectionDescription());
 
     }
 
@@ -222,8 +225,9 @@ public class SectionViewImpl extends Window implements SectionView, AfterCompose
     /** {@inheritDoc} */
     @Override
     public void openDeleteSectionDialog(Section victim) {
-        Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop().getPage("sectionDeleteDialog").getFellow(
-                "deleteWindow"), victim));
+        Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop()
+                .getPage("sectionDeleteDialog").getFellow("deleteWindow"),
+                victim));
     }
 
     /**
@@ -334,7 +338,8 @@ public class SectionViewImpl extends Window implements SectionView, AfterCompose
      * */
     @Override
     public void openNewBranchDialog() {
-        Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow")));
+        Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage(
+                "BranchDialog").getFellow("editWindow")));
     }
 
     /**
@@ -350,9 +355,23 @@ public class SectionViewImpl extends Window implements SectionView, AfterCompose
      * */
     @Override
     public void openEditBranchDialog(Branch branch) {
-        Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
+        Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
+                "BranchDialog").getFellow("editWindow"), branch));
+    }
+
+    @Override
+    public void openModeratorDialog(Branch branch) {
+        Events.postEvent(new Event("onOpen", getDesktop()
+                .getPage("moderatorDialog").getFellow("moderatorWindow"),
                 branch));
     }
+    
+    @Override
+    public void closeModeratorDialog() {
+        Events.postEvent(new Event("onCloseModeratorDialog", getDesktop()
+                .getPage("moderatorDialog").getFellow("moderatorWindow")));
+    }
+   
 
     /**
      * {@inheritDoc}

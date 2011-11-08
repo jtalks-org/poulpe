@@ -62,4 +62,13 @@
     <property name="dialogManager" ref="dialogManager" />
   </bean>
   
+  <bean id="userBanningPresenter" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningPresenter">
+  <property name="userService" ref="userService" />
+  <property name="dialogManager" ref="dialogManager" />
+  </bean>
+  
+  <bean id="moderationDialogPresenter" class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
+  <property name="branchService" ref="branchService" />
+  </bean>
+  
 </beans>

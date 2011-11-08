@@ -19,6 +19,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -80,5 +81,10 @@ public final class ObjectsFactory {
         section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
         section.setBranches(new ArrayList<Branch>());
         return section;
+    }
+    
+    public static User createUser(){
+        User user = new User("User" + UUID.randomUUID(), "User" + UUID.randomUUID(), "User" + UUID.randomUUID());
+        return user;
     }
 }

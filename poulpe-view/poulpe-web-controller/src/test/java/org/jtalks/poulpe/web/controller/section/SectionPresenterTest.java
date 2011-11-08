@@ -28,7 +28,7 @@ import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
-import static org.jtalks.poulpe.web.controller.section.ObjectCreator.*;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.*;
 
 import java.util.ArrayList;
 import java.util.List;

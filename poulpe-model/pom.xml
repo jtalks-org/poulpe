@@ -75,9 +75,8 @@
       <artifactId>hibernate-annotations</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jtalks.common</groupId>
-      <artifactId>jtalks-common-model</artifactId>
-      <version>0.7-SNAPSHOT</version>
+    	<groupId>org.jtalks.common</groupId>
+    	<artifactId>jtalks-common-model</artifactId>
     </dependency>
   </dependencies>
 

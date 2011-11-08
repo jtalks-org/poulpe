@@ -15,6 +15,7 @@
                     <a label="Topic Types" forward="onClick=onShowTopicTypes" />
                     <a label="Sections" forward="onClick=onShowSections" />
                     <a label="Users" forward="onClick=onShowUsers" />
+                    <a label="Ban users" forward="onClick=onShowUserBanning" />
                 </vbox>
             </west>
             <center id="workArea"  border="0"/>
