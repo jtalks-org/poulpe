@@ -7,6 +7,7 @@ import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.web.controller.section.SectionPresenter;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -57,8 +58,7 @@ public class ModerationDialogViewImpl extends Window implements
                 item.appendChild(cell_3);
                 item.appendChild(cell_4);
             }
-        });
-        presenter.initView(this);
+        });        
     }
 
     public void setPresenter(ModerationDialogPresenter presenter) {
@@ -74,6 +74,7 @@ public class ModerationDialogViewImpl extends Window implements
     public void onOpen(Event event) {
         Branch branch = (Branch) event.getData();
         presenter.setBranch(branch);
+        presenter.initView(this);
         showDialog(true);        
     }
 
@@ -110,7 +111,18 @@ public class ModerationDialogViewImpl extends Window implements
     public void onClick$rejectButton(){
         presenter.onReject();
     }
+    public void onClick$deleteButton(){
+        if(users.getSelectedIndex()<0)
+            return;
+        
+        presenter.onDelete((User)users.getModel().getElementAt(users.getSelectedIndex()));
+    }
     public void onClick$addButton(){        
         presenter.onAdd((User)userCombobox.getSelectedItem().getValue());
+    }
+    
+    @Override
+    public void showComboboxErrorMessage(String message) {
+        userCombobox.setErrorMessage(Labels.getLabel(message));        
     }
 }

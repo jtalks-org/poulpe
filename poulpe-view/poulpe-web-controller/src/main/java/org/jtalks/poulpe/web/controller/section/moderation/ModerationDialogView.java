@@ -3,6 +3,7 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.Branch;
 
 public interface ModerationDialogView {
     
@@ -16,6 +17,9 @@ public interface ModerationDialogView {
      * Show or hide dialog
      * @param show
      */
-    public void showDialog(boolean show);
+    public void showDialog(boolean show);   
+    
+    public void showComboboxErrorMessage(String message);
+
 
 }

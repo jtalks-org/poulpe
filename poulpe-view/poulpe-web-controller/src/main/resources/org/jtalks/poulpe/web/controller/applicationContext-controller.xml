@@ -69,6 +69,7 @@
   
   <bean id="moderationDialogPresenter" class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
   <property name="branchService" ref="branchService" />
+  <property name="userService" ref="userService" />
   </bean>
   
 </beans>

@@ -1,26 +1,28 @@
 <?page id="moderatorDialog" title="Moderator dialog" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window id="moderatorWindow" border="normal" mode="modal" title="***TITLE***"
+<window width="50%" id="moderatorWindow" border="normal" mode="modal" title="${labels.moderationdialog.title}"
 	visible="false" presenter="${moderationDialogPresenter}"
 	use="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogViewImpl">
 	<vbox>
 		<hbox>
 			<combobox id="userCombobox" autodrop="true" buttonVisible="false" />
-			<button id="addButton" label="***ADD***" />
+			<button id="addButton" label="${labels.moderationdialog.add}" />
 		</hbox>
 		<listbox id="users">
 			<listhead sizable="true">
-				<listheader align="center" label="***NAME***"
+				<listheader align="center" label="${labels.moderationdialog.name}"
 					sclass="boldstyle" />
-				<listheader align="center" label="***EMAIL***" />
-				<listheader align="center" label="***POSTS***" />
+				<listheader align="center" label="${labels.moderationdialog.email}" />
+				<listheader align="center" label="${labels.moderationdialog.posts}" />
 				<listheader align="center"
-					label="***Registration date***" />
+					label="${labels.moderationdialog.registration_date}" />					
 			</listhead>
+			
 		</listbox>
 		<hbox>
+			<button id="deleteButton" label="${labels.sections.button.delete}" />
 			<button id="confirmButton" label="${labels.sections.button.ok}" />
-			<button id="rejectButton" label="${labels.sections.button.cancel}" />
+			<button id="rejectButton" label="${labels.sections.button.cancel}" />			
 		</hbox>
 	</vbox>
 </window>

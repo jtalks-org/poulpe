@@ -6,34 +6,23 @@ import java.util.List;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 public class ModerationDialogPresenter {
 
     private ModerationDialogView view;
     private Branch branch;
-    private List<User> moderators;
     private BranchService branchService;
+    private UserService userService;
 
     public void initView(ModerationDialogView view) {
         this.view = view;
-        moderators = new ArrayList<User>() {
-            {
-                add(new User("test", "test", "test"));
-            }
-        };
-        updateView(moderators, new ArrayList<User>() {
-            {
-                add(new User("A", "A", "A"));
-                add(new User("A1", "A1", "A1"));
-                add(new User("A2", "A2", "A2"));
-            }
-        });
+        updateView(branch.getModerators(), userService.getAll());
     }
 
     public void setBranch(Branch branch) {
         this.branch = branch;
-        moderators = branch.getModerators();
     }
 
     public void updateView(List<User> users, List<User> usersInCombo) {
@@ -41,13 +30,7 @@ public class ModerationDialogPresenter {
     }
 
     public void refreshView() {
-        updateView(moderators, new ArrayList<User>() {
-            {
-                add(new User("A", "A", "A"));
-                add(new User("A1", "A1", "A1"));
-                add(new User("A2", "A2", "A2"));
-            }
-        });
+        updateView(branch.getModerators(), userService.getAll());
     }
 
     public void onConfirm() {
@@ -65,23 +48,43 @@ public class ModerationDialogPresenter {
     }
 
     public void onAdd(final User user) {
-        moderators.add(user);
-        updateView(moderators, new ArrayList<User>() {
-            {
-                add(new User("A", "A", "A"));
-                add(new User("A1", "A1", "A1"));
-                add(new User("A2", "A2", "A2"));
-            }
-        });
+        String validationMessage = validateUser(user);
+        if (validationMessage == null) {
+            branch.getModerators().add(user);
+            updateView(branch.getModerators(), userService.getAll());
+        } else {
+            view.showComboboxErrorMessage(validationMessage);
+        }
+    }
+    
+    public void onDelete(final User user) {
+            branch.getModerators().remove(user);
+            updateView(branch.getModerators(), userService.getAll());        
+    }
+
+    public String validateUser(User user) {
+        if (branch.getModerators().contains(user)) {
+            return "moderatedialog.validation.user_already_in_list";
+        }
+        return null;
     }
 
     /**
-     * Accessor to set the {@link BranchService} for this presenter Used by
-     * spring DI
+     * Accessor to set the {@link BranchService} for this presenter
      * 
      * @param service
      */
     public void setBranchService(BranchService service) {
         this.branchService = service;
     }
+
+    /**
+     * Accessor to set the {@link UserService} for this presenter
+     * 
+     * @param service
+     */
+    public void setUserService(UserService service) {
+        this.userService = service;
+    }
+
 }

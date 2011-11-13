@@ -11,10 +11,10 @@
     <property column="DELETED" name="deleted"/>
     <many-to-one column="SECTION_ID" name="section" class="Section" not-null="true" lazy="false"/>    
     
-    <!-- <set name="moderators" cascade="all-delete-orphan" table="BRANCH_USER_REF" inverse="false" lazy="false"  >
+    <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false"  >
       <cache usage="nonstrict-read-write" />  
       <key column="BRANCH_ID" foreign-key="FK_BRANCH" />      
       <many-to-many class="org.jtalks.common.model.entity.User"  column="USER_ID"/>
-    </set> -->
+    </bag>
   </class>
 </hibernate-mapping>
