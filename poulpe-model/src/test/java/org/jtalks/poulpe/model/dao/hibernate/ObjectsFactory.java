@@ -39,6 +39,7 @@ public final class ObjectsFactory {
         newBranch.setName(uniqueName);
         newBranch.setDescription("branch description");
         newBranch.setSection(createSection());
+        newBranch.setModerators(new ArrayList<User>());
         return newBranch;
     }
 

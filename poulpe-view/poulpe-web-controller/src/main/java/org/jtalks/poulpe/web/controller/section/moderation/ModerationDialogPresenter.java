@@ -2,19 +2,29 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 
 public class ModerationDialogPresenter {
 
+    public static final String MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST = "moderatedialog.validation.user_already_in_list";
     private ModerationDialogView view;
     private Branch branch;
     private BranchService branchService;
     private UserService userService;
+    private DialogManager dialogManager;
+
+    public void setDialogManager(DialogManager dialogManager) {
+        this.dialogManager = dialogManager;
+    }
 
     public void initView(ModerationDialogView view) {
         this.view = view;
@@ -37,7 +47,9 @@ public class ModerationDialogPresenter {
         try {
             branchService.saveBranch(branch);
         } catch (NotUniqueException e) {
-
+            Logger.getLogger(BranchPresenter.class.getName()).log(
+                    Level.SEVERE, null, e);
+            dialogManager.notify("item.already.exist");
         }
         view.showDialog(false);
     }
@@ -64,7 +76,7 @@ public class ModerationDialogPresenter {
 
     public String validateUser(User user) {
         if (branch.getModerators().contains(user)) {
-            return "moderatedialog.validation.user_already_in_list";
+            return MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST;
         }
         return null;
     }
