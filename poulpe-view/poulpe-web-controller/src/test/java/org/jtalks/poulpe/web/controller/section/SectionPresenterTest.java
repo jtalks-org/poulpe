@@ -14,21 +14,22 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeBranch;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeSection;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeSections;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,6 +49,7 @@ import org.testng.annotations.Test;
 /**
  * 
  * @author costa
+ * @author Vahluev Vyacheslav
  * 
  */
 public class SectionPresenterTest extends SectionPresenter {
@@ -84,8 +86,8 @@ public class SectionPresenterTest extends SectionPresenter {
 
 	@Test
 	public void testCheckSectionUniqueness() {
-
-		when(service.isSectionExists(anyString())).thenReturn(true).thenReturn(
+		Section section = getFakeSection(anyString(), "");
+		when(service.isSectionExists(section)).thenReturn(true).thenReturn(
 				false);
 
 		String testName = "Test name";
@@ -249,8 +251,9 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testEditSection() {
 		List<Section> fakeSections = getFakeSections(9);
+		Section section1 = getFakeSection("1", "");
 		when(service.getAll()).thenReturn(fakeSections);
-		when(service.isSectionExists("1")).thenReturn(true);
+		when(service.isSectionExists(section1)).thenReturn(true);
 		presenter.initView(view);
 
 		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
@@ -274,23 +277,23 @@ public class SectionPresenterTest extends SectionPresenter {
 		presenter.editSection(null, "2");
 		verify(view, times(2)).openErrorPopupInEditSectionDialog(
 				SectionPresenter.ERROR_LABEL_SECTION_NAME_CANT_BE_VOID);
-
 	}
 
 	@Test
 	public void testAddNewSection() {
+		
 		List<Section> fakeSections = getFakeSections(9);
+		//Section section = getFakeSection(anyString(), "BBB");
 		when(service.getAll()).thenReturn(fakeSections);
-		presenter.initView(view);
-		when(service.isSectionExists(anyString())).thenReturn(true).thenReturn(
+		presenter.initView(view);		
+		when(service.isSectionExists(any(Section.class))).thenReturn(true).thenReturn(
 				false);
 
 		try {
 			presenter.addNewSection(null, null);
 			verify(view).openErrorPopupInNewSectionDialog(
 					SectionPresenter.ERROR_LABEL_SECTION_NAME_CANT_BE_VOID);
-			verify(service, never()).saveSection(
-					argThat(new SectionMatcher(new Section())));
+			 verify(service, never()).saveSection(any(Section.class));
 		} catch (NotUniqueException e) {
 			fail("Can't be thrown because saveSection should not has been invoked");
 		}
@@ -319,8 +322,7 @@ public class SectionPresenterTest extends SectionPresenter {
 					@Override
 					public void execute() {
 					}
-				})));
-
+				})));		 
 	}
 
 	@Test
@@ -391,8 +393,9 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testCreateUpdatePerformableCreateSection() {
 		List<Section> fakeSections = getFakeSections(9);
+		Section test = getFakeSection("test", "");
 		when(service.getAll()).thenReturn(fakeSections);
-		when(service.isSectionExists("test")).thenReturn(false);
+		when(service.isSectionExists(test)).thenReturn(false);
 		presenter.initView(view);
 		CreateUpdatePerformable perf = presenter.new CreateUpdatePerformable(
 				null, "test", "test");

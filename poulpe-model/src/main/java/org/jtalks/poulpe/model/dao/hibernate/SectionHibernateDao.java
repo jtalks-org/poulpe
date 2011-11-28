@@ -40,16 +40,16 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Secti
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionNameExists(String section) {
+    public boolean isSectionNameExists(Section section) {    	
         return ((Number) getSession()
                 .createQuery("select count(*) from Section s where s.name = ?")
-                .setString(0, section).uniqueResult()).intValue() != 0;
+                .setString(0, section.getName()).uniqueResult()).intValue() != 0;
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteRecursively(Long id) {
-        Section victim = (Section) getSession().load(Section.class, id);
+    public boolean deleteRecursively(Section section) {
+        Section victim = (Section) getSession().load(Section.class, section.getId());
         getSession().delete(victim);
         // There's no use catching HibernateException to get to know if any section was deleted. I
         // read source code of Hibernate delete method, such case just is logged (in trace
@@ -60,9 +60,9 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Secti
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteAndMoveBranchesTo(Long id, Long recipientId) {
-        Section victim = (Section) getSession().load(Section.class, id);
-        Section recipient = (Section) getSession().load(Section.class, recipientId);
+    public boolean deleteAndMoveBranchesTo(Section victimSection, Section recipientSection) {
+        Section victim = (Section) getSession().load(Section.class, victimSection.getId());
+        Section recipient = (Section) getSession().load(Section.class, recipientSection.getId());
         for (Branch branch : victim.getBranches()) {
             branch.setSection(recipient);
         }
@@ -72,7 +72,7 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Secti
         getSession().flush();
         getSession().evict(victim);
         final String querySection = "DELETE FROM Section WHERE id = :id";
-        return getSession().createQuery(querySection).setLong("id", id).executeUpdate() == 1;
+        return getSession().createQuery(querySection).setLong("id", victim.getId()).executeUpdate() == 1;
     }
 
 }

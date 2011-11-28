@@ -40,6 +40,7 @@ import org.testng.annotations.Test;
 /**
  * The test for {@link SectionHibernateDao}.
  * @author Dmitriy Sukharev
+ * @author Vahluev Vyacheslav
  */
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -61,7 +62,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     public void deleteRecursevelyTest() {
         Section section = ObjectsFactory.createSectionWithBranches();
         session.save(section);
-        dao.deleteRecursively(section.getId());
+        dao.deleteRecursively(section);
         Long actualAmount = (Long) session
                 .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
                 .setLong("id", section.getId()).uniqueResult();
@@ -77,7 +78,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         session.save(victim);
         session.save(recipient);
         
-        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim.getId(), recipient.getId());
+        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim, recipient);
         assertTrue(isDeleted);
         Long actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",victim.getId()).uniqueResult();
         assertEquals(actualAmount, (Long)0L);

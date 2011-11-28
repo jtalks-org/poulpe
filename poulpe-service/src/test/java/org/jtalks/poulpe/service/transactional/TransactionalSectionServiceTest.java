@@ -28,6 +28,7 @@ import org.testng.annotations.Test;
 /**
  * The test for {@link TransactionalSectionService}.
  * @author Dmitriy Sukharev
+ * @author Vahluev Vyacheslav
  */
 public class TransactionalSectionServiceTest {
 
@@ -46,9 +47,9 @@ public class TransactionalSectionServiceTest {
         boolean expected = true;
         Section victim = mock(Section.class);
         when(victim.getId()).thenReturn(SECTION_ID);
-        when(sectionDao.deleteRecursively(SECTION_ID)).thenReturn(expected);
+        when(sectionDao.deleteRecursively(victim)).thenReturn(expected);
         boolean actual = sectionService.deleteRecursively(victim);
-        verify(sectionDao).deleteRecursively(SECTION_ID);
+        verify(sectionDao).deleteRecursively(victim);
         assertEquals(actual, expected);
     }
 
@@ -61,9 +62,9 @@ public class TransactionalSectionServiceTest {
         when(victim.getId()).thenReturn(victimId);
         when(recipient.getId()).thenReturn(recipientId);
         boolean expected = true;
-        when(sectionDao.deleteAndMoveBranchesTo(victimId, recipientId)).thenReturn(expected);
+        when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
-        verify(sectionDao).deleteAndMoveBranchesTo(victimId, recipientId);
+        verify(sectionDao).deleteAndMoveBranchesTo(victim, recipient);
         assertEquals(actual, expected);
     }
 
@@ -76,9 +77,9 @@ public class TransactionalSectionServiceTest {
         when(victim.getId()).thenReturn(victimId);
         when(recipient.getId()).thenReturn(recipientId);
         boolean expected = true;
-        when(sectionDao.deleteAndMoveBranchesTo(victimId, recipientId)).thenReturn(expected);
+        when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
-        verify(sectionDao).deleteAndMoveBranchesTo(victimId, recipientId);
+        verify(sectionDao).deleteAndMoveBranchesTo(victim, recipient);
         assertEquals(actual, expected);
     }
 }

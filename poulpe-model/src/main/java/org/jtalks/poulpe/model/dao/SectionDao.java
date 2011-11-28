@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.Section;
 /**
  * @author tanya birina
  * @author Dmitriy Sukharev
+ * @author Vahluev Vyacheslav
  */
 public interface SectionDao extends ParentRepository<Section> {
     /**
@@ -38,7 +39,7 @@ public interface SectionDao extends ParentRepository<Section> {
      *            name for check
      * @return true if section with such name already exists
      */
-    boolean isSectionNameExists(String section);
+    boolean isSectionNameExists(Section section);
 
     /**
      * Removes the section and all its branches.
@@ -47,7 +48,7 @@ public interface SectionDao extends ParentRepository<Section> {
      *            the identifier of the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteRecursively(Long id);
+    boolean deleteRecursively(Section section);
 
     /**
      * Removes the section and move all its branches to another section.
@@ -58,6 +59,6 @@ public interface SectionDao extends ParentRepository<Section> {
      *            the identifier of the section that will take branches
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteAndMoveBranchesTo(Long victimId, Long recipientId);
+    boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
 
 }

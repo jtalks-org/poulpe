@@ -30,6 +30,7 @@ import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
  * managing Section entities
  * 
  * @author Konstantin Akimov
+ * @author Vahluev Vyacheslav
  * 
  */
 public class SectionPresenter {
@@ -205,9 +206,12 @@ public class SectionPresenter {
      * */
     protected String checkSectionUniqueness(String name, String description) {
         String result = validateSection(name, description);
+        Section section = new Section();
+        section.setName(name);
+        section.setDescription(description);
         if (result != null) {
             return result;
-        } else if (sectionService.isSectionExists(name)) {
+        } else if (sectionService.isSectionExists(section)) {
             return ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS;
         }
         return null;

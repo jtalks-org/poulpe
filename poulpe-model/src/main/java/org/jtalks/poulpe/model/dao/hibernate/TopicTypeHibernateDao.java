@@ -36,7 +36,7 @@ public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<Top
     public boolean isTopicTypeNameExists(String topicTypeName) {
         String hql = "select count(*) from TopicType t where t.title = ?";
         Query query = getSession().createQuery(hql);
-        query.setString(0, topicTypeName);
+        query.setString(0, topicTypeName);        
         Number count = (Number) query.uniqueResult();
         return count.intValue() != 0;
     }

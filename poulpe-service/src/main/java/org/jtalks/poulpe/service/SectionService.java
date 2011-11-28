@@ -60,7 +60,7 @@ public interface SectionService extends EntityService<Section> {
      *            name for check
      * @return true if exists
      */
-    boolean isSectionExists(String section);
+    boolean isSectionExists(Section section);
 
     /**
      * Removes the section and all its branches.

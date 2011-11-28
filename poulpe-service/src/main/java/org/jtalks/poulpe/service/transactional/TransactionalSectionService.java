@@ -44,7 +44,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionExists(String section) {
+    public boolean isSectionExists(Section section) {
         return dao.isSectionNameExists(section);
     }
 
@@ -80,7 +80,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(Section victim) {
-        return dao.deleteRecursively(victim.getId());
+        return dao.deleteRecursively(victim);
     }
 
     /** {@inheritDoc} */
@@ -89,7 +89,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
         if (victim.getId() == recipient.getId()) {
             throw new IllegalArgumentException("Victim and recipient can't be the same section");
         }
-        return dao.deleteAndMoveBranchesTo(victim.getId(), recipient.getId());
+        return dao.deleteAndMoveBranchesTo(victim, recipient);
     }
 
 }
