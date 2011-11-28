@@ -13,6 +13,17 @@
     <module>poulpe-view</module>
   </modules>
   <repositories>
+        <repository>
+   <id>jtalks.org</id>
+   <name>jtalks.org nexus</name>
+   <url>http://repo.jtalks.org/nexus/content/groups/public</url>
+   <releases>
+    <enabled>true</enabled>
+   </releases>
+   <snapshots>
+    <enabled>true</enabled>
+   </snapshots>
+  </repository>
     <repository>
       <id>ZK CE</id>
       <url>http://mavensync.zkoss.org/maven2</url>
