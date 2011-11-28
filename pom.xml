@@ -5,7 +5,7 @@
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
-  <version>0.7-SNAPSHOT</version>
+  <version>0.9-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <modules>
     <module>poulpe-model</module>
@@ -266,6 +266,11 @@
         <version>2.7</version>
 
       </plugin>
+           <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>1.2</version>
+            </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
