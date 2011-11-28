@@ -5,7 +5,7 @@
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
-  <version>0.7-SNAPSHOT</version>
+  <version>0.9-SNAPSHOT</version>
   <name>${project.artifactId}</name>
   <modules>
     <module>poulpe-model</module>
@@ -13,6 +13,17 @@
     <module>poulpe-view</module>
   </modules>
   <repositories>
+        <repository>
+   <id>jtalks.org</id>
+   <name>jtalks.org nexus</name>
+   <url>http://repo.jtalks.org/nexus/content/groups/public</url>
+   <releases>
+    <enabled>true</enabled>
+   </releases>
+   <snapshots>
+    <enabled>true</enabled>
+   </snapshots>
+  </repository>
     <repository>
       <id>ZK CE</id>
       <url>http://mavensync.zkoss.org/maven2</url>
@@ -266,6 +277,11 @@
         <version>2.7</version>
 
       </plugin>
+           <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>1.2</version>
+            </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>

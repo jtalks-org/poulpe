@@ -20,3 +20,6 @@ nbproject
 # Always ignore these directories/files
 target
 logs
+
+#Maven version-plugin backup-files ignore
+*.versionsBackup
