@@ -38,6 +38,9 @@ public class TopicType extends Entity {
      * @param description description 
      */
     public TopicType(String title, String description) {
+        if (title == null){
+            throw new IllegalArgumentException();
+        }
         this.title = title;
         this.description = description;
     }

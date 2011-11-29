@@ -112,6 +112,20 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
     }
 
     @Test
+    public void testTopicTypeConstructor(){
+        String title = "Title";
+        String description = "Description";
+        TopicType topicType = new TopicType(title,description);
+        assertEquals(title,topicType.getTitle());
+        assertEquals(description,topicType.getDescription());
+    }
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void testTopicTypeVoidTitle(){
+        TopicType topicType;
+        topicType = new TopicType("","descr");
+    }
+
+    @Test
     public void testDelete() {
         TopicType topicType = ObjectsFactory.createTopicTypeWithRandomTitle();
         session.save(topicType);
