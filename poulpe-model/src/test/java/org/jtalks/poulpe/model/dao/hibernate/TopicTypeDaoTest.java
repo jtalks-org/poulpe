@@ -123,6 +123,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
     public void testTopicTypeVoidTitle(){
         TopicType topicType;
         topicType = new TopicType("","descr");
+        topicType = new TopicType(null,"descr");
     }
 
     @Test

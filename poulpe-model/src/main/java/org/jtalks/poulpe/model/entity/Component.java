@@ -34,12 +34,14 @@ public class Component extends Entity {
     public String getDescription() {
         return description;
     }
-
     /**
      * Set components description.
      * @param description 
      */
     public void setDescription(String description) {
+        if (description == null){
+            throw new IllegalArgumentException();
+        }
         this.description = description;
     }
 
@@ -56,6 +58,9 @@ public class Component extends Entity {
      * @param name 
      */
     public void setName(String name) {
+        if (name == null){
+            throw new IllegalArgumentException();
+        }
         this.name = name;
     }
 
