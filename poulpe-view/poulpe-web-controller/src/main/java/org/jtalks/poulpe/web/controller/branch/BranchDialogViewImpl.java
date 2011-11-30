@@ -151,22 +151,14 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     public Section getSection() {
         Section section = (Section) sectionList.getModel().getElementAt(
                 sectionList.getSelectedIndex());
+        return section;
+    }
+
+    public Branch getBranch(Section section) {
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
         branch.setSection(section);
-        /*
-         * FIXME: This ugly code i know, but without it edit branch for not
-         * correct because section service for not as expected. When we decide
-         * who services should work this code should be fix
-         */
-        if (section.getBranches().contains(branch)) {
-            List<Branch> branches = section.getBranches();
-            branches.set(branches.indexOf(branch), branch);
-        } else {
-
-            section.addBranch(branch);
-        }
-        return section;
+        return branch;
     }
 
     /**
@@ -231,6 +223,10 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     @Override
     public void initSectionList(List<Section> sections) {
         sectionList.setModel(new ListModelList(sections));
+    }
+
+    Branch createBranch() {
+        return branch = new Branch();
     }
 
 }

@@ -83,4 +83,9 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
         dao.delete(victim.getId());
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public boolean isDuplicated(Branch branch) {
+        return dao.isBranchDuplicated(branch);
+    }
 }

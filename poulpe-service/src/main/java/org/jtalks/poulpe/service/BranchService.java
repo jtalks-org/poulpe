@@ -59,4 +59,13 @@ public interface BranchService extends EntityService<Branch> {
      * @param recipient the branch to take topics of {@code victim}
      */
     void deleteBranchMovingTopics(Branch victim, Branch recipient);
+    
+    /**
+     * Checks if the branch is duplicated.
+     * 
+     * @param branch
+     *            branch to check
+     * 
+     */
+    boolean isDuplicated(Branch branch);
 }

@@ -64,4 +64,11 @@ public interface BranchDialogView {
      *            list sections
      * */
     void initSectionList(List<Section> sections);
+    
+    /**
+     * Get branch from view
+     * 
+     * @return Branch branch
+     * */
+    Branch getBranch (Section section);
 }

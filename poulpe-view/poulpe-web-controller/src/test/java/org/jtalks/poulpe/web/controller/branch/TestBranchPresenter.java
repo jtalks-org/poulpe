@@ -22,6 +22,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.mockito.ArgumentCaptor;
@@ -40,7 +41,8 @@ public class TestBranchPresenter {
     SectionService service;
     @Mock
     BranchDialogView view;
-
+    @Mock
+    BranchService branchService;
     @Captor
     ArgumentCaptor<Section> sectionCaptor;
     @Captor
@@ -53,6 +55,7 @@ public class TestBranchPresenter {
         MockitoAnnotations.initMocks(this);
         presenter.setSectionService(service);
         presenter.setView(view);
+        presenter.setBranchService(branchService);
     }
 
     @Test
@@ -76,11 +79,12 @@ public class TestBranchPresenter {
     @Test
     public void testSaveBranch() throws NotUniqueException {
         Section section = new Section();
-        section.addBranch(new Branch());
+        Branch branch = new Branch();
+
         section.setName("getted section");
         when(view.getSection()).thenReturn(section);
 
-        presenter.saveBranch();
+        presenter.saveBranch(section, branch);
 
         verify(service).saveSection(sectionCaptor.capture());
         assertEquals(sectionCaptor.getValue().getName(), "getted section");
