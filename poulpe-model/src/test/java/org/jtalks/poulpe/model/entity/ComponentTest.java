@@ -6,53 +6,49 @@ import junit.framework.TestCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Necros
- * Date: 29.11.11
- * Time: 13:51
- * To change this template use File | Settings | File Templates.
- */
-
-public class ComponentTest extends TestCase{
+public class ComponentTest {
     Component component;
-
+    @BeforeMethod
     public void setUp(){
         component = new Component();
     }
+    @Test
     public void testGetDescription(){
         String description =  "blahblahblah";
         component.setDescription(description);
-        assertEquals(component.getDescription(),description);
+        assertEquals(component.getDescription(), description);
     }
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetDescription(){
         String description =  "blahblahblah";
         component.setDescription(description);
-        assertEquals(component.getDescription(),description);
-        try{
+        assertEquals(component.getDescription(), description);
         component.setDescription(null);
-            fail("No exception");
-        }catch (IllegalArgumentException ex){}
         }
+    @Test
     public void testGetName(){
          String name = "blahblahblah";
         component.setDescription(name);
-        assertEquals(component.getDescription(),name);
+        assertEquals(component.getDescription(), name);
     }
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetName(){
-        try{
-            component.setName(null);
-            fail("No exception");
-        } catch (IllegalArgumentException ex){}
+        component.setName(null);
     }
-    public void testGetComponentType(){
+    @Test
+    public void testGetComponentTypeArticle(){
         assertNull(component.getComponentType());
         component.setComponentType(ComponentType.ARTICLE);
-        assertEquals(ComponentType.ARTICLE,component.getComponentType());
-        assertNotSame(ComponentType.FORUM,component.getComponentType());
+        assertEquals(ComponentType.ARTICLE, component.getComponentType());
+        assertNotSame(ComponentType.FORUM, component.getComponentType());
+    }
+
+    @Test
+    public void testGetComponentTypeForum(){
+        assertNull(component.getComponentType());
         component.setComponentType(ComponentType.FORUM);
-        assertEquals(ComponentType.FORUM,component.getComponentType());
-        assertNotSame(ComponentType.ARTICLE,component.getComponentType());
+        assertEquals(ComponentType.FORUM, component.getComponentType());
+        assertNotSame(ComponentType.ARTICLE, component.getComponentType());
     }
 
 }
