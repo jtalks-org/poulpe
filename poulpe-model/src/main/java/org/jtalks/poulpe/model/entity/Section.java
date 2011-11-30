@@ -30,7 +30,7 @@ public class Section extends Entity {
     private String name;
     private Integer position;
     private String description;
-    private List<Branch> branches;
+    private List<Branch> branches = new ArrayList<Branch>();
 
     /**
      * Set section name which briefly describes the topics contained in it.
@@ -103,9 +103,6 @@ public class Section extends Entity {
      * @param branches set  list of branches
      */
     public void setBranches(List<Branch> branches) {
-        if (branches == null) {
-            branches = new ArrayList<Branch>();
-        }
         this.branches = branches;
     }
 
@@ -115,9 +112,6 @@ public class Section extends Entity {
      * @param branch branch
      */
     public void addBranch(Branch branch) {
-        if (branches == null) {
-            branches = new ArrayList<Branch>();
-        }
         branches.add(branch);
     }
 

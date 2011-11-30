@@ -16,7 +16,7 @@
         <repository>
    <id>jtalks.org</id>
    <name>jtalks.org nexus</name>
-   <url>http://repo.jtalks.org/nexus/content/groups/public</url>
+   <url>http://repo.jtalks.org/content/groups/public</url>
    <releases>
     <enabled>true</enabled>
    </releases>
