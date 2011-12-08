@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -21,6 +22,7 @@ import org.zkoss.zul.Window;
 /**
  *
  * @author Pavel Vervenko
+ * @author Vahluev Vyacheslav
  */
 public class TopicTypeViewImpl extends Window implements TopicTypePresenter.TopicTypeView {
 
@@ -62,6 +64,12 @@ public class TopicTypeViewImpl extends Window implements TopicTypePresenter.Topi
     @Override
     public void hideCreateAction() {
         createButton.setVisible(false);
+    }
+
+    @Override
+    public void openErrorPopupInTopicTypeDialog(String label) {
+        final String message = Labels.getLabel(label);
+        titleTextbox.setErrorMessage(message);
     }
     
 }

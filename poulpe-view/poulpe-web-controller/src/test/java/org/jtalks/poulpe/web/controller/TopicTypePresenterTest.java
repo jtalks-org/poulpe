@@ -14,17 +14,20 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter.TopicTypeView;
-
 import org.mockito.Mock;
+import static org.testng.Assert.assertEquals;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  *
  * @author Pavel Vervenko
+ * @author Vahluev Vyacheslav
  */
 public class TopicTypePresenterTest {
 
@@ -33,12 +36,37 @@ public class TopicTypePresenterTest {
     private TopicTypeView view;
     @Mock
     private TopicTypeService topicTypeService;
-
+    
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         presenter.setTopicTypeService(topicTypeService);
         presenter.initView(view);
+    }
+    
+    @Test
+    public void validateTopicTypeEmptyTitleTest() {
+    	TopicType topicType = new TopicType("", "");
+    	
+    	assertEquals(presenter.validateTopicType(topicType),
+    			presenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
+    }
+    
+    @Test
+    public void validateTopicTypeNullTitleTest() {
+    	TopicType topicType = new TopicType();
+    	topicType.setTitle(null);
+    	
+    	assertEquals(presenter.validateTopicType(topicType),
+    			presenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
+    }
+    
+    @Test
+    public void validateTopicTypeCorrectTitleTest() {
+    	TopicType topicType = new TopicType("Title","Desc");    	
+    	
+    	assertEquals(presenter.validateTopicType(topicType),
+    			null);    	
     }
     
 }

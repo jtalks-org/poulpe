@@ -21,13 +21,15 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.zkoss.util.resource.Labels;
 
 /**
  * Presenter of TopicType list page.
  * @author Pavel Vervenko
+ * @author Vahluev Vyacheslav
  */
 public class TopicTypePresenter {
-    
+	    
     public interface TopicTypeView {
 
         void showTypeTitle(String title);
@@ -41,7 +43,8 @@ public class TopicTypePresenter {
         void hideEditAction();
         
         void hideCreateAction();
-
+        
+        void openErrorPopupInTopicTypeDialog(String label);
     }
 
     /**
@@ -51,6 +54,9 @@ public class TopicTypePresenter {
     public void initView(TopicTypeView view) {
         this.view = view;
     }
+    
+    public static final String ERROR_TOPICTYPE_TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
+    public static final String ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
     
     private DialogManager dialogManager;
     private WindowManager windowManager;
@@ -100,7 +106,8 @@ public class TopicTypePresenter {
     public void onTitleLoseFocus() {
         String title = view.getTypeTitle();
         if (topicTypeService.isTopicTypeNameExists(title, topicType.getId())) {
-            dialogManager.notify("item.already.exist");  
+//            dialogManager.notify("item.already.exist");
+        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
         } 
     }
     
@@ -127,14 +134,20 @@ public class TopicTypePresenter {
         windowManager.closeWindow(view);
     }
 
-    private boolean save() {
+    private boolean save() {    	
         topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());
         try {
+        	String errorLabel = validateTopicType(topicType);
+        	if (errorLabel != null) {
+        		view.openErrorPopupInTopicTypeDialog(errorLabel);
+        		return false;
+        	}
             topicTypeService.saveTopicType(topicType);
             return true;
         } catch (NotUniqueException e) {
-            dialogManager.notify("item.already.exist");
+//            dialogManager.notify("item.already.exist");
+        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
             return false;
         }
     }
@@ -143,11 +156,29 @@ public class TopicTypePresenter {
     	topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());
         try {
+        	String errorLabel = validateTopicType(topicType);        	
+        	if (errorLabel != null) {
+        		view.openErrorPopupInTopicTypeDialog(errorLabel);
+        		return false;
+        	}
             topicTypeService.updateTopicType(topicType);
             return true;
         } catch (NotUniqueException e) {
-            dialogManager.notify("item.already.exist");
+//            dialogManager.notify("item.already.exist");
+        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
             return false;
         }
     }    
+
+    /**
+     * 
+     * @param topicType topicType we want to validate
+     * @return null if TopicType has a valid title or error message otherwise 
+     */
+    public String validateTopicType(TopicType topicType) {
+        if (topicType.getTitle() == null || topicType.getTitle().equals("")) {
+            return ERROR_TOPICTYPE_TITLE_CANT_BE_VOID;
+        }
+        return null;
+    }
 }
