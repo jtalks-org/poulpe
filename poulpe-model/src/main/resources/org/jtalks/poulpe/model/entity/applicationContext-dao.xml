@@ -26,6 +26,9 @@
         parent="abstractHibernateDao"/>
    <bean id="userDao" class="org.jtalks.common.model.dao.hibernate.UserHibernateDao"
         parent="abstractCommonsHibernateDao"/>
+        
+   <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao"
+        parent="abstractHibernateDao"/>
   <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way
     resolves a problem of multiple DAO beans definition -->
   <bean id="abstractHibernateDao"
@@ -56,7 +59,8 @@
         <value>/org/jtalks/poulpe/model/entity/Branch.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Component.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/TopicType.hbm.xml</value>
-        <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>        
+        <value>/org/jtalks/poulpe/model/entity/Group.hbm.xml</value>
         <value>/org/jtalks/common/model/entity/User.hbm.xml</value>
       </list>
     </property>

@@ -19,17 +19,17 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
-*
-* @author Vytautas Kashchuk
-*/
+ * 
+ * @author Vytautas Kashchuk
+ */
 public class UserViewImpl extends Window implements UserPresenter.UserView {
-	
-	private static final long serialVersionUID = 1L;
-	
-	private Textbox firstnameTextbox;
-	private Textbox lastnameTextbox;
-	private Textbox emailTextbox;
-	private Textbox passwordTextbox;
+
+    private static final long serialVersionUID = 1L;
+
+    private Textbox firstnameTextbox;
+    private Textbox lastnameTextbox;
+    private Textbox emailTextbox;
+    private Textbox passwordTextbox;
     private Button editButton;
 
     @Override
@@ -37,43 +37,43 @@ public class UserViewImpl extends Window implements UserPresenter.UserView {
         editButton.setVisible(false);
     }
 
-	@Override
-	public void showFirstname(String firstname) {
-		this.firstnameTextbox.setText(firstname);		
-	}
+    @Override
+    public void showFirstname(String firstname) {
+        this.firstnameTextbox.setText(firstname);
+    }
 
-	@Override
-	public void showLastname(String lastname) {
-		this.lastnameTextbox.setText(lastname);		
-	}
+    @Override
+    public void showLastname(String lastname) {
+        this.lastnameTextbox.setText(lastname);
+    }
 
-	@Override
-	public void showEmail(String email) {
-		this.emailTextbox.setText(email);
-	}
+    @Override
+    public void showEmail(String email) {
+        this.emailTextbox.setText(email);
+    }
 
-	@Override
-	public void showPassword(String password) {
-		this.passwordTextbox.setText(password);
-	}
+    @Override
+    public void showPassword(String password) {
+        this.passwordTextbox.setText(password);
+    }
 
-	@Override
-	public String getFirstname() {
-		return this.firstnameTextbox.getText();
-	}
+    @Override
+    public String getFirstname() {
+        return this.firstnameTextbox.getText();
+    }
 
-	@Override
-	public String getLastname() {
-		return this.lastnameTextbox.getText();
-	}
+    @Override
+    public String getLastname() {
+        return this.lastnameTextbox.getText();
+    }
 
-	@Override
-	public String getEmail() {
-		return this.emailTextbox.getText();
-	}
+    @Override
+    public String getEmail() {
+        return this.emailTextbox.getText();
+    }
 
-	@Override
-	public String getPassword() {
-		return this.passwordTextbox.getText();
-	}
+    @Override
+    public String getPassword() {
+        return this.passwordTextbox.getText();
+    }
 }

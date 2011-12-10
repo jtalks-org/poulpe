@@ -23,6 +23,7 @@ import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
 
@@ -87,5 +88,10 @@ public final class ObjectsFactory {
     public static User createUser(){
         User user = new User("User" + UUID.randomUUID(), "User" + UUID.randomUUID(), "User" + UUID.randomUUID());
         return user;
+    }
+    
+    public static Group createGroup(){
+        Group group = new Group("Group" + UUID.randomUUID(), "Group" + UUID.randomUUID());
+        return group;
     }
 }
