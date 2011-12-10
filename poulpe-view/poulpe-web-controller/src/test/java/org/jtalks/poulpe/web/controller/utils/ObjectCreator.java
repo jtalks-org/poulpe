@@ -6,6 +6,7 @@ import java.util.List;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.TopicType;
 
 public class ObjectCreator {
     public static List<Section> getFakeSections(int sizeOfCollection) {
@@ -37,6 +38,15 @@ public class ObjectCreator {
             users.add(user);
         }
         return users;
+    }
+    
+    public static TopicType getFakeTopicType(long id, String title, String description) {
+    	TopicType topicType = new TopicType();
+    	topicType.setId(id);
+    	topicType.setTitle(title);
+    	topicType.setDescription(description);
+    	
+    	return topicType;
     }
 
 }

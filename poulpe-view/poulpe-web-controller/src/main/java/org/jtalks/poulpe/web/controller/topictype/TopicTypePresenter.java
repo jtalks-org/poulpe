@@ -57,13 +57,14 @@ public class TopicTypePresenter {
     
     public static final String ERROR_TOPICTYPE_TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
     public static final String ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
+    public static final String ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
     
-    private DialogManager dialogManager;
-    private WindowManager windowManager;
-    private TopicTypeService topicTypeService;
-    private TopicTypeView view;
-    private TopicType topicType;
-    private EditListener<TopicType> listener;
+    protected DialogManager dialogManager;
+    protected WindowManager windowManager;
+    protected TopicTypeService topicTypeService;
+    protected TopicTypeView view;
+    protected TopicType topicType;
+    protected EditListener<TopicType> listener;
 
     /**
      * Set the TopicTypeService implementation.
@@ -81,6 +82,10 @@ public class TopicTypePresenter {
         this.windowManager = windowManager;
     }
     
+    public void setListener(EditListener<TopicType> listener) {
+        this.listener = listener;
+    }
+    
     public void initializeForCreate(TopicTypeView view, EditListener<TopicType> listener) {
         this.view = view;
         this.listener = listener;
@@ -92,11 +97,10 @@ public class TopicTypePresenter {
         this.view = view;
         this.listener = listener;
         view.hideCreateAction();
-        try {
-            this.topicType = topicTypeService.get(topicType.getId());
-        } catch (NotFoundException e) {
-            dialogManager.notify("item.doesnt.exist");
-            closeView();
+        try {        	
+            this.topicType = topicTypeService.get(topicType.getId());            
+        } catch (NotFoundException e) {       	        	
+        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS);
             return;
         }
         view.showTypeTitle(this.topicType.getTitle());
@@ -106,9 +110,8 @@ public class TopicTypePresenter {
     public void onTitleLoseFocus() {
         String title = view.getTypeTitle();
         if (topicTypeService.isTopicTypeNameExists(title, topicType.getId())) {
-//            dialogManager.notify("item.already.exist");
         	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
-        } 
+        }    	
     }
     
     public void onCreateAction() {
@@ -130,29 +133,28 @@ public class TopicTypePresenter {
         listener.onCloseEditorWithoutChanges();
     }
     
-    private void closeView() {
+    public void closeView() {
         windowManager.closeWindow(view);
     }
 
-    private boolean save() {    	
+    public boolean save() {    	
         topicType.setTitle(view.getTypeTitle());
-        topicType.setDescription(view.getTypeDescription());
+        topicType.setDescription(view.getTypeDescription());        
         try {
         	String errorLabel = validateTopicType(topicType);
         	if (errorLabel != null) {
         		view.openErrorPopupInTopicTypeDialog(errorLabel);
         		return false;
         	}
-            topicTypeService.saveTopicType(topicType);
+            topicTypeService.saveTopicType(topicType);            
             return true;
         } catch (NotUniqueException e) {
-//            dialogManager.notify("item.already.exist");
         	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
             return false;
         }
     }
     
-    private boolean update() {
+    public boolean update() {
     	topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());
         try {
@@ -164,7 +166,6 @@ public class TopicTypePresenter {
             topicTypeService.updateTopicType(topicType);
             return true;
         } catch (NotUniqueException e) {
-//            dialogManager.notify("item.already.exist");
         	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
             return false;
         }
