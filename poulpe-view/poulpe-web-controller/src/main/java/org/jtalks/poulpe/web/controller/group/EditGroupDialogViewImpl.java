@@ -122,9 +122,13 @@ public class EditGroupDialogViewImpl extends Window implements
      * */
     @Override
     public void hide() {
-        setVisible(false);      
-        Events.postEvent(new Event("onHideDialog", getDesktop().getPage(
-                "mainPage").getFellow("mainWindow")));
+        setVisible(false);
+        GroupView view = (GroupView) getAttribute("backWindow");
+        if (view == null) {
+            return;
+        }
+        GroupPresenter presenter = (GroupPresenter) getAttribute("presenter");
+        presenter.updateView();
     }
 
     /**

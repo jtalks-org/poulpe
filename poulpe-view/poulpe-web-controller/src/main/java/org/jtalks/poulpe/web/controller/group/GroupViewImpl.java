@@ -3,6 +3,7 @@ package org.jtalks.poulpe.web.controller.group;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.web.controller.branch.BranchDialogViewImpl;
 import org.jtalks.poulpe.web.controller.section.SectionView;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
@@ -75,11 +76,12 @@ public class GroupViewImpl extends Window implements GroupView, AfterCompose {
 
     @Override
     public void openNewDialog() {
-        Component component = getDesktop().getPage("GroupDialog").getFellow(
-                "editWindow");
+        EditGroupDialogViewImpl component = (EditGroupDialogViewImpl) getDesktop().
+                getPage("GroupDialog").getFellow("editWindow");
         component.setAttribute("presenter", presenter);
-        Events.postEvent(new Event("onOpenAddDialog", component));
-    }    
+        component.setAttribute("backWindow", this);
+        component.show();
+    }
     
     @Override
     public void openEditDialog(Group group) {

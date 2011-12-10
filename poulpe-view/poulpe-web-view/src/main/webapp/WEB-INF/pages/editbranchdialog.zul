@@ -1,20 +1,23 @@
 <?page id="BranchDialog" title="Branch" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<window   id="editWindow" border="normal" mode="modal" visible="false" 
-         presenter="${branchPresenter}" use="org.jtalks.poulpe.web.controller.branch.BranchDialogViewImpl">
-        <vbox>
-            <hbox>
-             ${labels.branches.label.combobox} <combobox id="sectionList" value="select..." readonly="true"/>
-            </hbox>
-            <hbox>
-                ${labels.branches.label.name} <textbox id="branchName" />
-            </hbox>
-            <hbox>
-                ${labels.branches.label.description} <textbox id="branchDescription"/>
-            </hbox>
-            <hbox>
-                <button id="confirmButton"  />
-                <button id="rejectButton"   />
-            </hbox>
-        </vbox>
+<window id="editWindow" border="normal" mode="modal" visible="false"
+        presenter="${branchPresenter}" use="org.jtalks.poulpe.web.controller.branch.BranchDialogViewImpl">
+  <vbox>
+    <hbox>
+      ${labels.branches.label.combobox}
+      <combobox id="sectionList" value="select..." readonly="true"/>
+    </hbox>
+    <hbox>
+      ${labels.branches.label.name}
+      <textbox id="branchName"/>
+    </hbox>
+    <hbox>
+      ${labels.branches.label.description}
+      <textbox id="branchDescription"/>
+    </hbox>
+    <hbox>
+      <button id="confirmButton"/>
+      <button id="rejectButton"/>
+    </hbox>
+  </vbox>
 </window>

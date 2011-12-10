@@ -51,6 +51,9 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListPresen
         topicTypeListbox.setModel(new ListModelList(list));
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TopicType> getSelectedTopicType() {
         Set<Listitem> items = topicTypeListbox.getSelectedItems();

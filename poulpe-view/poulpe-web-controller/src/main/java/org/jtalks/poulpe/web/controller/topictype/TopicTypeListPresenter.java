@@ -64,10 +64,9 @@ public class TopicTypeListPresenter {
         void showTopicTypeList(List<TopicType> list);
 
         /**
-         * Returns the selected topic types or
-         * <code>null<code> or empty list if nothing selected.
+         * Returns the selected topic types or empty list if nothing is selected.
          * 
-         * @return of topic or <code>null<code>
+         * @return a list of selected topic types or empty list
          */
         List<TopicType> getSelectedTopicType();
 
@@ -82,7 +81,7 @@ public class TopicTypeListPresenter {
         @Override
         protected void refreshData() {
             refreshTopicTypeList();
-        };
+        }
     };
 
     /**
@@ -108,7 +107,7 @@ public class TopicTypeListPresenter {
 
     public void onDeleteAction() {
         final List<TopicType> topicTypes = view.getSelectedTopicType();
-        if (topicTypes == null || topicTypes.isEmpty()) {
+        if (topicTypes.isEmpty()) {
             dialogManager.notify("item.no.selected.item");
             return;
         }

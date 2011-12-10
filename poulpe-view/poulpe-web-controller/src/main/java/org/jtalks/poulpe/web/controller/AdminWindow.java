@@ -61,9 +61,15 @@ public class AdminWindow extends GenericForwardComposer {
     
     public void onShowUserBanning(){
         show("userbanning.zul");
-    }    
-    
-    
+    }
+
+    /**
+     * Shows User Groups window that allows admins to CRUD groups.
+     */
+    public void onShowUserGroups(){
+        show("groups.zul");
+    }
+
     /**
      * Show the users list view
      */
