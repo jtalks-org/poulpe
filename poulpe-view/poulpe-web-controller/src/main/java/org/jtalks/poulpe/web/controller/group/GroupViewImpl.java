@@ -19,7 +19,7 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-public class GroupViewImpl extends Window implements GroupView, AfterCompose {
+public class GroupViewImpl extends Window implements AfterCompose {
 
     private GroupPresenter presenter;
 
@@ -51,7 +51,6 @@ public class GroupViewImpl extends Window implements GroupView, AfterCompose {
         presenter.initView(this);
     }
 
-    @Override
     public void updateView(List<Group> groups) {
         groupsListboxModel = new ListModelList(groups);
         groupsListbox.setModel(groupsListboxModel);
@@ -74,7 +73,6 @@ public class GroupViewImpl extends Window implements GroupView, AfterCompose {
         presenter.doSearch(searchTextbox.getText());
     }
 
-    @Override
     public void openNewDialog() {
         EditGroupDialogViewImpl component = (EditGroupDialogViewImpl) getDesktop().
                 getPage("GroupDialog").getFellow("editWindow");
@@ -83,7 +81,6 @@ public class GroupViewImpl extends Window implements GroupView, AfterCompose {
         component.show();
     }
     
-    @Override
     public void openEditDialog(Group group) {
         Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
                 "GroupDialog").getFellow("editWindow"),group));
@@ -92,12 +89,6 @@ public class GroupViewImpl extends Window implements GroupView, AfterCompose {
     
     public void onHideDialog() {
         presenter.updateView();
-    }
-
-    @Override
-    public void showConfirmDialog() {
-        // TODO Auto-generated method stub
-
     }
 
     public Group getSelectedGroup() {

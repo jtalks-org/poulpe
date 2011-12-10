@@ -1,78 +1,50 @@
 package org.jtalks.poulpe.web.controller.group;
 
+import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.testng.annotations.BeforeTest;
+
+import java.util.LinkedList;
+import java.util.List;
+
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class GroupPresenterTest {
-    
-    private GroupPresenter presenter;
-    
+    GroupPresenter presenter;
     @Mock
-    private DialogManager dialogManager;
+    DialogManager dialogManager;
     @Mock
-    private GroupService service;
-    
+    GroupService service;
     @Mock
-    private GroupView view;
+    GroupViewImpl viewMock;
     
-    
-  @BeforeMethod
-  public void beforeMethod() {
-      MockitoAnnotations.initMocks(this);
-      presenter = new GroupPresenter();
-      presenter.setDialogManager(dialogManager);
-      presenter.setGroupService(service);
-  }
+    @Test(dataProvider = "emptyListProvider")
+    public void testInitView(List<Group> returnedGroups) throws Exception {
+        when(service.getAllMatchedByName(null)).thenReturn(returnedGroups);
 
-//
-//  @Test
-//  public void deleteGroup() {
-//     presenter.initView(view);
-//  }
-//
-//  @Test
-//  public void doSearch() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void initView() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void onAddGroup() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void onEditGroup() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void setDialogManager() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void setGroupService() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void updateViewString() {
-//    throw new RuntimeException("Test not implemented");
-//  }
-//
-//  @Test
-//  public void updateView() {
-//    throw new RuntimeException("Test not implemented");
-//  }
+        presenter.initView(viewMock);
+        verify(viewMock).updateView(returnedGroups);
+    }
+
+    @DataProvider(name = "emptyListProvider")
+    public Object[][] testData(){
+        return new Object[][]{{new LinkedList()}};
+    }
+    
+    @BeforeMethod
+    public void beforeMethod() {
+        MockitoAnnotations.initMocks(this);
+        presenter = new GroupPresenter();
+        presenter.setDialogManager(dialogManager);
+        presenter.setGroupService(service);
+    }
+
 }

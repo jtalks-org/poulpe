@@ -123,7 +123,7 @@ public class EditGroupDialogViewImpl extends Window implements
     @Override
     public void hide() {
         setVisible(false);
-        GroupView view = (GroupView) getAttribute("backWindow");
+        GroupViewImpl view = (GroupViewImpl) getAttribute("backWindow");
         if (view == null) {
             return;
         }

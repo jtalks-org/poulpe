@@ -14,7 +14,7 @@ import org.zkoss.zk.ui.event.Events;
  */
 public class GroupPresenter {
 
-    private GroupView view;
+    private GroupViewImpl view;
     private GroupService groupService;
     private DialogManager dialogManager;
     private String searchRestrictions;
@@ -27,7 +27,7 @@ public class GroupPresenter {
         this.dialogManager = dialogManager;
     }
 
-    public void initView(GroupView view) {
+    public void initView(GroupViewImpl view) {
         this.view = view;        
         updateView(null);
     }
