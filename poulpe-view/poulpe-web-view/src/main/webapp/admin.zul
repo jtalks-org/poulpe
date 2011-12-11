@@ -15,22 +15,34 @@
           </columns>
           <rows>
             <row>
-              <a label="Components" forward="onClick=onShowComponents"/>
+              <cell>
+                <a label="Components" forward="onClick=onShowComponents"/>
+              </cell>
             </row>
             <row>
-              <a label="Topic Types" forward="onClick=onShowTopicTypes"/>
+              <cell>
+                <a label="Topic Types" forward="onClick=onShowTopicTypes"/>
+              </cell>
             </row>
             <row>
-              <a label="Sections" forward="onClick=onShowSections"/>
+              <cell>
+                <a label="Sections" forward="onClick=onShowSections"/>
+              </cell>
             </row>
             <row>
-              <a label="Users" forward="onClick=onShowUsers"/>
+              <cell>
+                <a label="Users" forward="onClick=onShowUsers"/>
+              </cell>
             </row>
             <row>
-              <a label="Ban users" forward="onClick=onShowUserBanning"/>
+              <cell>
+                <a label="Ban users" forward="onClick=onShowUserBanning"/>
+              </cell>
             </row>
             <row>
-              <a label="User Groups" forward="onClick=onShowUserGroups"/>
+              <cell>
+                <a label="User Groups" forward="onClick=onShowUserGroups"/>
+              </cell>
             </row>
           </rows>
         </grid>

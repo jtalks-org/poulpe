@@ -21,7 +21,6 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.util.resource.Labels;
 
 /**
  * Presenter of TopicType list page.
