@@ -22,6 +22,7 @@ import static org.testng.Assert.assertTrue;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
@@ -80,7 +81,7 @@ public class TreeNodeFactoryTest {
                 .getTreeNode(sectionWithOutChildren);
 
         assertEquals(testNode.getData(), sectionWithOutChildren);
-        assertEquals(testNode.getChildren(), null);
+        assertEquals(testNode.getChildren(), new ArrayList());
         assertEquals(testNode.isExpanded(), true);
 
         Branch testBranch = createTestBranch();
@@ -91,7 +92,7 @@ public class TreeNodeFactoryTest {
         assertEquals(testNode.isExpanded(), true);
         assertEquals(testNode.isLeaf(), true);
         
-        testNode = TreeNodeFactory.getTreeNode(null);
+        testNode = TreeNodeFactory.getTreeNode((Entity) null);
         assertNull(testNode);
         
         testNode = TreeNodeFactory.getTreeNode(new TopicType());
