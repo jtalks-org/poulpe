@@ -6,46 +6,18 @@
   <window apply="org.jtalks.poulpe.web.controller.AdminWindow" width="100%" height="100%">
     <borderlayout>
       <north>
-        <label style="font-size=24px" value="Admin Panel"/>
+        <label style="font-size=30px" value="Admin Panel"/>
       </north>
       <west splittable="true" collapsible="true">
-        <grid hflex="true">
-          <columns>
-            <column width="120px"/>
-          </columns>
-          <rows>
-            <row>
-              <cell>
-                <a label="Components" forward="onClick=onShowComponents"/>
-              </cell>
-            </row>
-            <row>
-              <cell>
-                <a label="Topic Types" forward="onClick=onShowTopicTypes"/>
-              </cell>
-            </row>
-            <row>
-              <cell>
-                <a label="Sections" forward="onClick=onShowSections"/>
-              </cell>
-            </row>
-            <row>
-              <cell>
-                <a label="Users" forward="onClick=onShowUsers"/>
-              </cell>
-            </row>
-            <row>
-              <cell>
-                <a label="Ban users" forward="onClick=onShowUserBanning"/>
-              </cell>
-            </row>
-            <row>
-              <cell>
-                <a label="User Groups" forward="onClick=onShowUserGroups"/>
-              </cell>
-            </row>
-          </rows>
-        </grid>
+        <listbox width="150px">
+          <listitem label="Components" forward="onClick=onShowComponents"/>
+          <listitem label="Topic Types" forward="onClick=onShowTopicTypes"/>
+          <listitem label="Sections" forward="onClick=onShowSections"/>
+          <listitem label="Users" forward="onClick=onShowUsers"/>
+          <listitem label="Ban users" forward="onClick=onShowUserBanning"/>
+          <listitem label="User Groups" forward="onClick=onShowUserGroups"/>
+          <listfoot/>
+        </listbox>
       </west>
       <center id="workArea" border="0"/>
     </borderlayout>
