@@ -124,7 +124,7 @@ public class TreeNodeFactoryTest {
         sections.add(createTestSectionWithBranches());
         sections.add(createTestSectionWithBranches());
 
-        List<ExtendedTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
+        List<ExtendedTreeNode<Section>> nodes = TreeNodeFactory.getTreeNodes(sections);
         assertEquals(nodes.size(), sections.size());
         for (ExtendedTreeNode node : nodes) {
             assertTrue(node.getData() instanceof Section);
@@ -148,7 +148,7 @@ public class TreeNodeFactoryTest {
         sections.add(null);
         sections.add(createTestSectionWithBranches());
 
-        List<ExtendedTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
+        List<ExtendedTreeNode<Section>> nodes = TreeNodeFactory.getTreeNodes(sections);
         assertEquals(nodes.size(), 2);
         for (ExtendedTreeNode node : nodes) {
             assertTrue(node.getData() instanceof Section);

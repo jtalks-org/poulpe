@@ -39,14 +39,9 @@ public class DialogManagerImpl implements DialogManager {
     /** {@inheritDoc} */
     @Override
     public void notify(String str) {
-        try {
             Messagebox.show(Labels.getLabel(str),
                     Labels.getLabel("dialogmanager.warning"), Messagebox.OK,
                     Messagebox.EXCLAMATION);
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     /** {@inheritDoc} */
@@ -57,14 +52,9 @@ public class DialogManagerImpl implements DialogManager {
                 Labels.getLabel("dialogmanager.delete.title"), victim);
         final String text = String.format(
                 Labels.getLabel("dialogmanager.delete.question"), victim);
-        try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
                     Messagebox.QUESTION, Messagebox.NO,
                     new DialogActionListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing deleting messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     @Override
@@ -86,14 +76,9 @@ public class DialogManagerImpl implements DialogManager {
     private void showConfirmDeleteDialog(
             final DialogManager.Performable confirmable, final String title,
             final String text) throws AssertionError {
-        try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
                     Messagebox.QUESTION, Messagebox.CANCEL,
                     new DialogDeleteListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing deleting messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     /** {@inheritDoc} */
@@ -104,14 +89,9 @@ public class DialogManagerImpl implements DialogManager {
                 Labels.getLabel("dialogmanager.create.title"), target);
         final String text = String.format(
                 Labels.getLabel("dialogmanager.create.question"), target);
-        try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
                     Messagebox.QUESTION, Messagebox.NO,
                     new DialogActionListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing creation messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     /** {@inheritDoc} */
@@ -122,14 +102,9 @@ public class DialogManagerImpl implements DialogManager {
                 Labels.getLabel("dialogmanager.edit.title"), target);
         final String text = String.format(
                 Labels.getLabel("dialogmanager.edit.question"), target);
-        try {
             Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
                     Messagebox.QUESTION, Messagebox.NO,
                     new DialogActionListener(confirmable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing creation messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     @Override
@@ -152,14 +127,9 @@ public class DialogManagerImpl implements DialogManager {
         final String text = String.format(
                 Labels.getLabel("dialogmanager.userbanning.question"),
                 sb.toString());
-        try {
             Messagebox.show(text.toString(), title, Messagebox.YES
                     | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
                     new DialogActionListener(performable));
-        } catch (InterruptedException e) {
-            LOGGER.error("Problem with showing creation messagebox.", e);
-            throw new AssertionError(e); // it's unlikely to happen
-        }
     }
 
     /**

@@ -21,6 +21,7 @@
     </repository>
   </repositories>
   <dependencies>
+    <!--poulpe-->
     <dependency>
       <groupId>org.jtalks.poulpe</groupId>
       <artifactId>poulpe-service</artifactId>
@@ -41,6 +42,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
     </dependency>
+    <!--zk-->
     <dependency>
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zk</artifactId>
@@ -48,6 +50,15 @@
     <dependency>
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zkplus</artifactId>
+    </dependency>
+    <!--utils-->
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
     </dependency>
   </dependencies>
 

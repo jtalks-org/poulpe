@@ -27,7 +27,7 @@ import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Radio;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.api.Radiogroup;
+import org.zkoss.zul.Radiogroup;
 
 /**
  * @author Bekrenev Dmitry
@@ -98,8 +98,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
      * */
     @Override
     public String getDeleteMode() {
-        return deleteMode.getItemAtIndexApi(deleteMode.getSelectedIndex())
-                .getValue();
+        return deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
     }
 
     /**

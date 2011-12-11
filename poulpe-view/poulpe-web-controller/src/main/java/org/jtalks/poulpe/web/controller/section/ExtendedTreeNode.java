@@ -14,15 +14,17 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.TreeNode;
 
 /**
  * @author Konstantin Akimov
  * */
-public class ExtendedTreeNode extends DefaultTreeNode {
+public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
 
     /**
      * 
@@ -41,7 +43,7 @@ public class ExtendedTreeNode extends DefaultTreeNode {
      *            list of childrens for node
      * @see DefaultTreeNode
      * */
-    public ExtendedTreeNode(Entity entity, ExtendedTreeNode[] children) {
+    public ExtendedTreeNode(T entity, ExtendedTreeNode<T>[] children) {
         super(entity, children);
     }
 
@@ -52,7 +54,7 @@ public class ExtendedTreeNode extends DefaultTreeNode {
      *            list of childrens for node
      * @see DefaultTreeNode
      * */
-    public ExtendedTreeNode(Entity entity, List<ExtendedTreeNode> children) {
+    public ExtendedTreeNode(T entity, List<ExtendedTreeNode<T>> children) {
         super(entity, children);
     }
 
@@ -61,7 +63,7 @@ public class ExtendedTreeNode extends DefaultTreeNode {
      *            data for leaf node
      * @see DefaultTreeNode
      * */
-    public ExtendedTreeNode(Entity entity) {
+    public ExtendedTreeNode(T entity) {
         super(entity);
     }
 

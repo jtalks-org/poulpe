@@ -21,6 +21,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -72,15 +73,15 @@ public class SectionViewImpl extends Window implements SectionView,
      * */
     @Override
     public void showSections(List<Section> sections) {
-        List childredToSave = new ArrayList();
+        List childrenToSave = new ArrayList();
         for (Object obj : getChildren()) {
             if (!(obj instanceof SectionTreeComponent)) {
-                childredToSave.add(obj);
+                childrenToSave.add(obj);
             }
         }
         getChildren().clear();
-        for (Object obj : childredToSave) {
-            getChildren().add(obj);
+        for (Object obj : childrenToSave) {
+            getChildren().add((Component) obj);
         }
         for (Section section : sections) {
             // TODO move SectionTreeComponent creation to external factory

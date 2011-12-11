@@ -22,11 +22,8 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
- * This class should be used to wrap one-to-many related persistent entities
- * into ExtendedTreeNode structures.
- * 
- * To be able to handle entity it should be described within
- * getTreeNode(Persistent) method
+ * This class should be used to wrap one-to-many related persistent entities into ExtendedTreeNode structures.
+ * To be able to handle entity it should be described within getTreeNode(Entity) method.
  * 
  * @author Konstantin Akimov
  * 
@@ -38,18 +35,18 @@ class TreeNodeFactory {
      * Wrap single entity to DefaultTreeNode. If this entity has some related
      * object in one-to-many relation them can be either be wrapped
      * 
-     * @param entity
-     *            section or branch instance
+     * @param entity section or branch instance
      * @return node
      */
-    public static ExtendedTreeNode getTreeNode(Entity entity) {
+    public static <T extends Entity> ExtendedTreeNode<T> getTreeNode(T entity) {
         if (entity == null) {
             return null;
         }
         if (entity instanceof Section) {
-            return new ExtendedTreeNode(entity, getTreeNodes(((Section) entity).getBranches()));
+            List<T> branches = (List<T>) ((Section) entity).getBranches();
+            return new ExtendedTreeNode<T>(entity, getTreeNodes(branches));
         } else if (entity instanceof Branch) {
-            return new ExtendedTreeNode(entity);
+            return new ExtendedTreeNode<T>(entity);
         }
         return null;
     }
@@ -61,12 +58,12 @@ class TreeNodeFactory {
      *            list of entities
      * @return list of nodes
      */
-    public static List<ExtendedTreeNode> getTreeNodes(List<? extends Entity> entities) {
-        List<ExtendedTreeNode> list = new ArrayList<ExtendedTreeNode>();
+    public static <T extends Entity> List<ExtendedTreeNode<T>> getTreeNodes(List<T> entities) {
+        List<ExtendedTreeNode<T>> list = new ArrayList<ExtendedTreeNode<T>>();
         if (entities == null) {
             return list;
         }
-        for (Entity entity : entities) {
+        for (T entity : entities) {
             if (entity == null) {
                 continue;
             }

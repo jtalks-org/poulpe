@@ -15,7 +15,9 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.util.Iterator;
+import java.util.List;
 
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -59,8 +61,10 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
 
-        DefaultTreeNode child = TreeNodeFactory.getTreeNode(section);
-        DefaultTreeModel model = new DefaultTreeModel(new DefaultTreeNode(null, new DefaultTreeNode[] { child }));
+        DefaultTreeNode<Section> child = TreeNodeFactory.getTreeNode(section);
+        List<DefaultTreeNode<Section>> defaultTreeNodes = Lists.newArrayList(child);
+        DefaultTreeNode<Section> root = new DefaultTreeNode(null, defaultTreeNodes);
+        DefaultTreeModel<Section> model = new DefaultTreeModel<Section>(root);
         sectionTree.setModel(model);
         sectionTree.setItemRenderer(new SectionBranchTreeitemRendere());
     }
