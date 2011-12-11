@@ -13,8 +13,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 /**
- *
- * Entities package for poulpe. Contains all classes that should be persists into the database.
- *
+ * Entities package for Poulpe. Contains classes that should be persists into the database. There are also other similar
+ * class, that are in JTALKS-COMMON modules, they also might be the model of Poulpe and can be used by other projects
+ * as well.
  */
 package org.jtalks.poulpe.model.entity;
