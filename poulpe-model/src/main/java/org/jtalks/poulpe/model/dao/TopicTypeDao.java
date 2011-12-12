@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
  * DAO for persistent operations with {@link TopicType}
  * 
  * @author Vladimir Bukhtoyarov 
+ * @author Vyacheslav Zhivaev
  *
  */
 public interface TopicTypeDao extends ParentRepository<TopicType> {
@@ -35,15 +36,15 @@ public interface TopicTypeDao extends ParentRepository<TopicType> {
 
     /**
      * Check if type of topic with given name exists.
-     * @param topicTypeName
+     * @param topicTypeName name of type that will be checked
      * @return true if exists
      */
     boolean isTopicTypeNameExists(String topicTypeName);
     
     /**
      * Check if type of topic with given name exists.
-     * @param topicTypeName
-     * @param ignorableTopicTypeID
+     * @param topicTypeName name of type that will be checked
+     * @param ignorableTopicTypeID id of topic that will be ignored during check
      * @return true if exists
      */
     boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID);

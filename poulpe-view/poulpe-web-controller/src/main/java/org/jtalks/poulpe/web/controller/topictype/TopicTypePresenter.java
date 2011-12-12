@@ -26,23 +26,56 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  * Presenter of TopicType list page.
  * @author Pavel Vervenko
  * @author Vahluev Vyacheslav
+ * @author Vyacheslav Zhivaev
+ * 
  */
 public class TopicTypePresenter {
 	    
     public interface TopicTypeView {
 
+        /**
+         * Shows type title
+         * 
+         * @param title the title
+         */
         void showTypeTitle(String title);
 
+        /**
+         * Shows type description
+         * 
+         * @param description the description
+         */
         void showTypeDescription(String description);
 
+        /**
+         * Gets type title
+         * 
+         * @return type title
+         */
         String getTypeTitle();
         
+        /**
+         * Gets type description
+         * 
+         * @return type description
+         */
         String getTypeDescription();
         
+        /**
+         * Hide edit action
+         */
         void hideEditAction();
         
+        /**
+         * Hide create action
+         */
         void hideCreateAction();
         
+        /**
+         * Show error popup dialog
+         * 
+         * @param label for dialog
+         */
         void openErrorPopupInTopicTypeDialog(String label);
     }
 
@@ -73,10 +106,20 @@ public class TopicTypePresenter {
         this.topicTypeService = topicTypeService;
     }
     
-    public void setDialogManager(DialogManager dialogManager) {
+    /**
+     * Sets the dialog manager
+     * 
+     * @param dialogManager is dialog manager
+     */
+     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
     
+     /**
+      * Sets the window manager
+      * 
+      * @param windowManager is window manager
+      */
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
     }
@@ -85,6 +128,12 @@ public class TopicTypePresenter {
         this.listener = listener;
     }
     
+    /**
+     * Initialize presenter for create topic type
+     * 
+     * @param view new view
+     * @param listener event listener
+     */
     public void initializeForCreate(TopicTypeView view, EditListener<TopicType> listener) {
         this.view = view;
         this.listener = listener;
@@ -92,6 +141,13 @@ public class TopicTypePresenter {
         this.topicType = new TopicType();
     }
 
+    /**
+     * Initialize presenter for edit topic type
+     * 
+     * @param view new view
+     * @param topicType target topic type
+     * @param listener event listener
+     */
     public void initializeForEdit(TopicTypeView view, TopicType topicType, EditListener<TopicType> listener) {
         this.view = view;
         this.listener = listener;
@@ -106,6 +162,9 @@ public class TopicTypePresenter {
         view.showTypeDescription(this.topicType.getDescription());
     }
     
+    /**
+     * Action handler on title loose focus
+     */
     public void onTitleLoseFocus() {
         String title = view.getTypeTitle();
         if (topicTypeService.isTopicTypeNameExists(title, topicType.getId())) {
@@ -113,6 +172,9 @@ public class TopicTypePresenter {
         }    	
     }
     
+    /**
+     * Action handler on create action
+     */
     public void onCreateAction() {
         if (save()) {
             closeView();
@@ -120,6 +182,9 @@ public class TopicTypePresenter {
         }
     }
     
+    /**
+     * Action handler on update action
+     */
     public void onUpdateAction() {
         if (update()) {
             closeView();
@@ -127,15 +192,26 @@ public class TopicTypePresenter {
         }
     }
     
+    /**
+     * Action handler on cancel edit action
+     */
     public void onCancelEditAction() {
         closeView();
         listener.onCloseEditorWithoutChanges();
     }
     
+    /**
+     * Close view
+     */
     public void closeView() {
         windowManager.closeWindow(view);
     }
 
+    /**
+     * Save action
+     * 
+     * @return <code>true</code> if saving done and none errors occurred, <code>false</code> in otherwise
+     */
     public boolean save() {    	
         topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());        
@@ -153,6 +229,11 @@ public class TopicTypePresenter {
         }
     }
     
+    /**
+     * Update action
+     * 
+     * @return <code>true</code> if updating done and none errors occurred, <code>false</code> in otherwise
+     */
     public boolean update() {
     	topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());
@@ -171,6 +252,7 @@ public class TopicTypePresenter {
     }    
 
     /**
+     * Validate topic type
      * 
      * @param topicType topicType we want to validate
      * @return null if TopicType has a valid title or error message otherwise 

@@ -25,6 +25,7 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
  * Service for operations with {@link TopicType}
  * 
  * @author Pavel Vervenko
+ * @author Vyacheslav Zhivaev
  */
 public interface TopicTypeService extends EntityService<TopicType> {
 
@@ -62,8 +63,8 @@ public interface TopicTypeService extends EntityService<TopicType> {
     
     /**
      * Check if type of topic with given name exists.
-     * @param topicTypeName
-     * @param ignorableTopicTypeID
+     * @param topicTypeName name of type that will be checked
+     * @param ignorableTopicTypeID id of topic that will be ignored during check
      * @return true if exists
      */
     boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID);
