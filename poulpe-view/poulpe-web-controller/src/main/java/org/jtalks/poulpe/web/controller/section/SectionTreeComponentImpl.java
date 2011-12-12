@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -28,6 +28,7 @@ import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Div;
 import org.zkoss.zul.Tree;
+import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treeitem;
 import org.zkoss.zul.TreeitemRenderer;
@@ -47,7 +48,6 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     private static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
     private Tree sectionTree;
     private SectionPresenter presenter;
-    
 
     /**
      * @param section
@@ -62,8 +62,9 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         Components.addForwards(this, this);
 
         DefaultTreeNode<Section> child = TreeNodeFactory.getTreeNode(section);
-        List<DefaultTreeNode<Section>> defaultTreeNodes = Lists.newArrayList(child);
-        DefaultTreeNode<Section> root = new DefaultTreeNode(null, defaultTreeNodes);
+        List<DefaultTreeNode<Section>> defaultTreeNodes = Collections.singletonList(child);
+
+        DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
         DefaultTreeModel<Section> model = new DefaultTreeModel<Section>(root);
         sectionTree.setModel(model);
         sectionTree.setItemRenderer(new SectionBranchTreeitemRendere());
@@ -127,16 +128,16 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
      * */
     @Override
     public void updateSectionInView(Section section) {
-        DefaultTreeNode root = (DefaultTreeNode) sectionTree.getModel().getRoot();
-        ExtendedTreeNode sectionNode = (ExtendedTreeNode) root.getChildAt(0);
+        DefaultTreeNode<Section> root = (DefaultTreeNode<Section>) sectionTree.getModel().getRoot();
+        ExtendedTreeNode<Section> sectionNode = (ExtendedTreeNode<Section>) root.getChildAt(0);
         sectionNode.setData(section);
     }
-    
+
     /**
      * Click on '*' button
      */
-    public void onClick$moderatorButton(){
-            presenter.openModeratorDialog(getSelectedObject());
+    public void onClick$moderatorButton() {
+        presenter.openModeratorDialog(getSelectedObject());
     }
 
     /**
@@ -148,18 +149,19 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
         if (selectedObject == null) {
             // if the there no selected object
             // we should consider this event as a try to remove section
-            selectedObject = ((ExtendedTreeNode) ((DefaultTreeNode) sectionTree.getModel().getRoot()).getChildAt(0))
-                    .getData();
+            TreeModel<DefaultTreeNode> model = sectionTree.getModel();
+            DefaultTreeNode root = model.getRoot();
+            ExtendedTreeNode child = (ExtendedTreeNode) root.getChildAt(0);
+            selectedObject = child.getData();
         }
 
         presenter.openDeleteDialog(selectedObject);
 
     }
-    
+
     public class SectionBranchTreeitemRendere implements TreeitemRenderer {
         @Override
         public void render(final Treeitem treeItem, Object node) throws Exception {
-
             ExtendedTreeNode curNode = (ExtendedTreeNode) node;
 
             final Entity data = (Entity) curNode.getData();
@@ -194,12 +196,13 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
 
         }
     };
-    
+
     /**
      * to make it injectable
+     * 
      * @param tree
      */
-    public void setSectionTree(Tree tree){
-    	this.sectionTree = tree;    	
+    public void setSectionTree(Tree tree) {
+        this.sectionTree = tree;
     }
 }

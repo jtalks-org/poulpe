@@ -38,17 +38,17 @@ import org.zkoss.zul.Window;
 public class TopicTypeListViewImpl extends Window implements TopicTypeListPresenter.TopicTypeListView, AfterCompose {
 
     private static final long serialVersionUID = 1L;
-    
+
     private Listbox topicTypeListbox;
     private TopicTypeListPresenter presenter;
-    
+
     public void setPresenter(TopicTypeListPresenter presenter) {
         this.presenter = presenter;
     }
 
     @Override
     public void showTopicTypeList(List<TopicType> list) {
-        topicTypeListbox.setModel(new ListModelList(list));
+        topicTypeListbox.setModel(new ListModelList<TopicType>(list));
     }
 
     /**
@@ -58,7 +58,7 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListPresen
     public List<TopicType> getSelectedTopicType() {
         Set<Listitem> items = topicTypeListbox.getSelectedItems();
         List<TopicType> selectedTopicTypes = new ArrayList<TopicType>();
-        for (Listitem listitem: items) {
+        for (Listitem listitem : items) {
             selectedTopicTypes.add((TopicType) listitem.getValue());
         }
         return selectedTopicTypes;
@@ -73,20 +73,20 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListPresen
     }
 
     private void initializeTopicTypeListbox() {
-        topicTypeListbox.setItemRenderer(new ListitemRenderer() {
+        topicTypeListbox.setItemRenderer(new ListitemRenderer<TopicType>() {
             @Override
-            public void render(Listitem item, Object data) throws Exception {
-                final TopicType topicType = (TopicType) data;
+            public void render(Listitem item, final TopicType topicType) throws Exception {
                 item.setValue(topicType);
                 item.setLabel(topicType.getTitle());
                 item.setTooltiptext(topicType.getDescription());
-                item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener() {
+                item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
                     @Override
                     public void onEvent(Event event) throws Exception {
                         presenter.onEditAction(topicType);
                     }
                 });
-            }});
+            }
+        });
         topicTypeListbox.setMultiple(true);
     }
 

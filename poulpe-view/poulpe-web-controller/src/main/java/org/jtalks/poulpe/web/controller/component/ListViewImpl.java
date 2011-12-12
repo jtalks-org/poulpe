@@ -32,8 +32,9 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
 
 /**
- * The class which manages actions and represents information about components displayed in
- * administrator panel.
+ * The class which manages actions and represents information about components
+ * displayed in administrator panel.
+ * 
  * @author Dmitriy Sukharev
  */
 public class ListViewImpl extends Window implements ListView, AfterCompose {
@@ -41,11 +42,11 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
     private static final long serialVersionUID = -5891403019261284676L;
 
     /*
-     * Important! If we are going to serialize/deserialize this class, this field must be
-     * initialised explicitly during deserialization
+     * Important! If we are going to serialize/deserialize this class, this
+     * field must be initialised explicitly during deserialization
      */
     private transient ListPresenter presenter;
-    private ListModelList model;
+    private ListModelList<Component> model;
     private Listbox listbox;
 
     /** {@inheritDoc} */
@@ -54,30 +55,33 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
         presenter.initView(this);
-        listbox.setItemRenderer(new ListitemRenderer() {
+        
+        listbox.setItemRenderer(new ListitemRenderer<Component>() {
             /** {@inheritDoc} */
             @Override
-            public void render(Listitem arg0, Object arg1) {
-                final Component item = (Component) arg1;
+            public void render(Listitem listItem, Component component) {
                 Listcell cell = new Listcell();
-                Label nameLabel = new Label(item.getName());
+                Label nameLabel = new Label(component.getName());
                 cell.appendChild(nameLabel);
                 nameLabel.setSclass("boldstyle");
-                arg0.appendChild(cell);
-                arg0.appendChild(new Listcell(item.getDescription()));
-                arg0.appendChild(new Listcell(item.getComponentType().toString()));
-                arg0.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener() {
+                listItem.appendChild(cell);
+                listItem.appendChild(new Listcell(component.getDescription()));
+                listItem.appendChild(new Listcell(component.getComponentType().toString()));
+                
+                listItem.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
                     /** {@inheritDoc} */
                     @Override
-                    public void onEvent(@SuppressWarnings("unused") Event event) {
+                    public void onEvent(Event event) {
                         showEditor(getSelectedItem().getId());
                     }
                 });
+                
             }
         });
     }
 
     /** {@inheritDoc} */
+    @SuppressWarnings("unchecked") // Suppressed because BindingListModelList has no generic param
     @Override
     public void createModel(List<Component> list) {
         model = new BindingListModelList(list, true);
@@ -86,14 +90,18 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
 
     /**
      * Sets the presenter which is linked with this window.
-     * @param presenter new value of the presenter which is linked with this window
+     * 
+     * @param presenter
+     *            new value of the presenter which is linked with this window
      */
     public void setPresenter(ListPresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
-     * Tells to presenter that the window for adding new component must be shown.
+     * Tells to presenter that the window for adding new component must be
+     * shown.
+     * 
      * @see ListPresenter
      */
     public void onClick$addCompButton() {
@@ -104,14 +112,15 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
      * Shows the component editor window
      */
     private void showEditor(Long componentId) {
-        org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow(
-                "editCompWindow");
+        org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow("editCompWindow");
         comp.setAttribute("backWin", this);
         ((ItemView) comp).show(componentId);
     }
 
     /**
-     * Tells to presenter to delete selected component (it knows which one it is).
+     * Tells to presenter to delete selected component (it knows which one it
+     * is).
+     * 
      * @see ListPresenter
      */
     public void onClick$delCompButton() {
@@ -134,7 +143,7 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
     /** {@inheritDoc} */
     @Override
     public Component getSelectedItem() {
-        return (Component) model.get(listbox.getSelectedIndex());
+        return model.get(listbox.getSelectedIndex());
     }
 
     /** {@inheritDoc} */

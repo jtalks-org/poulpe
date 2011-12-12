@@ -15,13 +15,13 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
@@ -57,7 +57,8 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      *            default section
      * */
     private void setDefaultSection(Section section) {
-        ListModelList model = (ListModelList) sectionList.getModel();
+        @SuppressWarnings("unchecked")
+        ListModelList<Section> model = (ListModelList<Section>) sectionList.getModel();
         model.clearSelection();
         if (section != null) {
             model.addSelection(section);
@@ -71,11 +72,10 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     /**
      * This class render items Combobox list
      * */
-    private static ComboitemRenderer sectionItemRenderer = new ComboitemRenderer() {
+    private static ComboitemRenderer<Section> sectionItemRenderer = new ComboitemRenderer<Section>() {
 
         @Override
-        public void render(Comboitem item, Object data) {
-            Section section = (Section) data;
+        public void render(Comboitem item, Section section) {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }
@@ -222,7 +222,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     @Override
     public void initSectionList(List<Section> sections) {
-        sectionList.setModel(new ListModelList(sections));
+        sectionList.setModel(new ListModelList<Section>(sections));
     }
 
     Branch createBranch() {

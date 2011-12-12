@@ -42,11 +42,6 @@ public class SectionViewImpl extends Window implements SectionView,
     private Textbox editSectionDialog$sectionName;
     private Textbox editSectionDialog$sectionDescription;
 
-    // private Window deleteSectionDialog;
-    // private Combobox deleteSectionDialog$sectionsCombobox;
-    // private Radio deleteSectionDialog$deleteAll;
-    // private Radio deleteSectionDialog$transferAll;
-
     /**
      * {@inheritDoc}
      * */
@@ -73,20 +68,26 @@ public class SectionViewImpl extends Window implements SectionView,
      * */
     @Override
     public void showSections(List<Section> sections) {
-        List childrenToSave = new ArrayList();
-        for (Object obj : getChildren()) {
+        List<SectionTreeComponent> childrenToSave = new ArrayList<SectionTreeComponent>();
+        List<Component> children = getChildren();
+        
+        for (Component obj : children) {
             if (!(obj instanceof SectionTreeComponent)) {
-                childrenToSave.add(obj);
+                SectionTreeComponent sessionTreeComponent = (SectionTreeComponent)obj;
+                childrenToSave.add(sessionTreeComponent);
             }
         }
-        getChildren().clear();
+        
+        children.clear();
+        
         for (Object obj : childrenToSave) {
-            getChildren().add((Component) obj);
+            children.add((Component) obj);
         }
+        
         for (Section section : sections) {
             // TODO move SectionTreeComponent creation to external factory
             // method
-            getChildren().add(new SectionTreeComponentImpl(section, presenter));
+            children.add(new SectionTreeComponentImpl(section, presenter));
         }
     }
 

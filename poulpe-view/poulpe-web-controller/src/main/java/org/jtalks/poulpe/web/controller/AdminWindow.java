@@ -25,7 +25,7 @@ import org.zkoss.zul.Center;
  * @author Vladimir Bukhoyarov
  *
  */
-public class AdminWindow extends GenericForwardComposer {
+public class AdminWindow extends GenericForwardComposer<Component> {
     
     private static final long serialVersionUID = 1L;
     private Center workArea;

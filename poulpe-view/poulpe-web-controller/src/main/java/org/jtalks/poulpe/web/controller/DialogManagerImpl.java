@@ -17,8 +17,6 @@ package org.jtalks.poulpe.web.controller;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -32,9 +30,6 @@ import org.zkoss.zul.Messagebox;
  * 
  */
 public class DialogManagerImpl implements DialogManager {
-
-    private static final Logger LOGGER = LoggerFactory
-            .getLogger(DialogManagerImpl.class);
 
     /** {@inheritDoc} */
     @Override
@@ -139,7 +134,7 @@ public class DialogManagerImpl implements DialogManager {
      * @author Dmitriy Sukharev
      * 
      */
-    private static class DialogActionListener implements EventListener {
+    private static class DialogActionListener implements EventListener<Event> {
 
         private Performable confirmable;
 
@@ -170,7 +165,7 @@ public class DialogManagerImpl implements DialogManager {
      * @author Dmitriy Sukharev
      * 
      */
-    private static class DialogDeleteListener implements EventListener {
+    private static class DialogDeleteListener implements EventListener<Event> {
 
         private Performable confirmable;
 

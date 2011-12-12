@@ -14,12 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Entity;
 import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.TreeNode;
 
 /**
  * @author Konstantin Akimov

@@ -1,6 +1,5 @@
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;

@@ -34,8 +34,7 @@ import org.zkoss.zul.Radiogroup;
  * 
  *         This class implementation for Delete section dialog
  * */
-public class DeleteSectionDialogViewImpl extends Window implements
-        DeleteSectionDialogView, AfterCompose {
+public class DeleteSectionDialogViewImpl extends Window implements DeleteSectionDialogView, AfterCompose {
 
     private static final long serialVersionUID = -4999382692611273729L;
     private Radiogroup deleteMode;
@@ -44,11 +43,10 @@ public class DeleteSectionDialogViewImpl extends Window implements
     private Section deletedSection;
     private DeleteSectionDialogPresenter presenter;
 
-    private static ComboitemRenderer itemRenderer = new ComboitemRenderer() {
+    private static ComboitemRenderer<Section> itemRenderer = new ComboitemRenderer<Section>() {
 
         @Override
-        public void render(Comboitem item, Object data) {
-            Section section = (Section) data;
+        public void render(Comboitem item, Section section) {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }
@@ -89,8 +87,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
      * */
     @Override
     public Section getSelectedSection() {
-        return (Section) selectedSection.getModel().getElementAt(
-                selectedSection.getSelectedIndex());
+        return (Section) selectedSection.getModel().getElementAt(selectedSection.getSelectedIndex());
     }
 
     /**
@@ -107,8 +104,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
     @Override
     public void closeDialog() {
         setVisible(false);
-        Events.postEvent(new Event("onHideDialog", getDesktop().getPage(
-                "mainPage").getFellow("mainWindow")));
+        Events.postEvent(new Event("onHideDialog", getDesktop().getPage("mainPage").getFellow("mainWindow")));
     }
 
     /**
@@ -128,7 +124,7 @@ public class DeleteSectionDialogViewImpl extends Window implements
     @Override
     public void initSectionList(List<Section> selectableSections) {
         selectableSections.remove(deletedSection);
-        selectedSection.setModel(new ListModelList(selectableSections));
+        selectedSection.setModel(new ListModelList<Section>(selectableSections));
         selectedSection.setRawValue(null);
         if (!selectableSections.isEmpty()) {
             selectedSection.setDisabled(false);
@@ -145,7 +141,8 @@ public class DeleteSectionDialogViewImpl extends Window implements
      * 
      * */
     private void setDefaultSection() {
-        ListModelList model = (ListModelList) selectedSection.getModel();
+        @SuppressWarnings("unchecked")
+        ListModelList<Section> model = (ListModelList<Section>) selectedSection.getModel();
         model.clearSelection();
 
         if (!model.isEmpty()) {

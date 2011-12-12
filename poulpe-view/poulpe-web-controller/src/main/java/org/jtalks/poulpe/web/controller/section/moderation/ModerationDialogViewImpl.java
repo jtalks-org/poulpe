@@ -1,17 +1,13 @@
 package org.jtalks.poulpe.web.controller.section.moderation;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
@@ -22,12 +18,12 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
 
-public class ModerationDialogViewImpl extends Window implements
-        ModerationDialogView, AfterCompose {
+@SuppressWarnings("serial")
+public class ModerationDialogViewImpl extends Window implements ModerationDialogView, AfterCompose {
 
     private ModerationDialogPresenter presenter;
 
-    private ListModelList modelUsers;
+    private ListModelList<User> modelUsers;
 
     // COMPONENTS
     private Combobox userCombobox;
@@ -37,20 +33,20 @@ public class ModerationDialogViewImpl extends Window implements
     public void afterCompose() {
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
-        userCombobox.setItemRenderer(new ComboitemRenderer() {
 
+        userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
             @Override
-            public void render(Comboitem item, Object data) throws Exception {
-                item.setLabel(((User) data).getUsername());
-                item.setValue(data);
+            public void render(Comboitem item, User user) throws Exception {
+                item.setLabel(user.getUsername());
+                item.setValue(user);
             }
         });
-        users.setItemRenderer(new ListitemRenderer() {
+
+        users.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, Object data) throws Exception {
-                User curUser = (User) data;
-                Listcell cell_1 = new Listcell(curUser.getUsername());
-                Listcell cell_2 = new Listcell(curUser.getEmail());
+            public void render(Listitem item, User user) throws Exception {
+                Listcell cell_1 = new Listcell(user.getUsername());
+                Listcell cell_2 = new Listcell(user.getEmail());
                 Listcell cell_3 = new Listcell("NOT IMPLEMENTED YET");
                 Listcell cell_4 = new Listcell("NOT IMPLEMENTED YET");
                 item.appendChild(cell_1);
@@ -58,7 +54,7 @@ public class ModerationDialogViewImpl extends Window implements
                 item.appendChild(cell_3);
                 item.appendChild(cell_4);
             }
-        });        
+        });
     }
 
     public void setPresenter(ModerationDialogPresenter presenter) {
@@ -75,7 +71,7 @@ public class ModerationDialogViewImpl extends Window implements
         Branch branch = (Branch) event.getData();
         presenter.setBranch(branch);
         presenter.initView(this);
-        showDialog(true);        
+        showDialog(true);
     }
 
     public void onClose(Event event) {
@@ -87,9 +83,9 @@ public class ModerationDialogViewImpl extends Window implements
     }
 
     @Override
-    public void updateView(List<User> users,List<User> usersInCombo) {        
-        this.users.setModel(new ListModelList(users));        
-        userCombobox.setModel(new ListModelList(usersInCombo));
+    public void updateView(List<User> users, List<User> usersInCombo) {
+        this.users.setModel(new ListModelList<User>(users));
+        userCombobox.setModel(new ListModelList<User>(usersInCombo));
     }
 
     public void setUserCombobox(Combobox combo) {
@@ -99,30 +95,33 @@ public class ModerationDialogViewImpl extends Window implements
     public void setUsers(Listbox list) {
         this.users = list;
     }
-    
+
     public void refreshView() {
         modelUsers.clear();
         presenter.refreshView();
     }
-    
-    public void onClick$confirmButton(){
+
+    public void onClick$confirmButton() {
         presenter.onConfirm();
     }
-    public void onClick$rejectButton(){
+
+    public void onClick$rejectButton() {
         presenter.onReject();
     }
-    public void onClick$deleteButton(){
-        if(users.getSelectedIndex()<0)
+
+    public void onClick$deleteButton() {
+        if (users.getSelectedIndex() < 0)
             return;
-        
-        presenter.onDelete((User)users.getModel().getElementAt(users.getSelectedIndex()));
+
+        presenter.onDelete((User) users.getModel().getElementAt(users.getSelectedIndex()));
     }
-    public void onClick$addButton(){        
-        presenter.onAdd((User)userCombobox.getSelectedItem().getValue());
+
+    public void onClick$addButton() {
+        presenter.onAdd((User) userCombobox.getSelectedItem().getValue());
     }
-    
+
     @Override
     public void showComboboxErrorMessage(String message) {
-        userCombobox.setErrorMessage(Labels.getLabel(message));        
+        userCombobox.setErrorMessage(Labels.getLabel(message));
     }
 }

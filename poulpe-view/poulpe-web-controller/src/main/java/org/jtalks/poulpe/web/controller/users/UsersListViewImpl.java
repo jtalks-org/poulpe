@@ -60,7 +60,7 @@ private static final long serialVersionUID = 1L;
 
     @Override
     public void showUsersList(List<User> list) {
-    	usersListbox.setModel(new ListModelList(list));
+    	usersListbox.setModel(new ListModelList<User>(list));
     }
 
     @Override
@@ -72,17 +72,16 @@ private static final long serialVersionUID = 1L;
     }
 
     private void initializeUsersListbox() {
-        usersListbox.setItemRenderer(new ListitemRenderer() {
+        usersListbox.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, Object data) throws Exception {
-                final User user = (User) data;
+            public void render(Listitem item, final User user) throws Exception {
                 item.setValue(user);
                 new Listcell(user.getUsername()).setParent(item);
                 new Listcell(user.getEmail()).setParent(item);
                 new Listcell(user.getFirstName()).setParent(item);
                 new Listcell(user.getLastName()).setParent(item);
                 new Listcell(user.getRole()).setParent(item);   
-                item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener() {
+                item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
                     @Override
                     public void onEvent(Event event) throws Exception {
                         presenter.onEditAction(user);

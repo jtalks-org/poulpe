@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
-import org.zkoss.zk.ui.WrongValueException;
 
 /**
  * Interface for representation view single branch

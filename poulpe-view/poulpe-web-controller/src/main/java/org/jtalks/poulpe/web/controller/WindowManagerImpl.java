@@ -30,6 +30,7 @@ import org.springframework.util.Assert;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Window;
@@ -61,11 +62,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         try {
             win.doModal();
         } catch (Exception e) {
-            // It's extremely incredible that this exception will appear,
-            // on the other hand it's bad to throw the Exception instance,
-            // plus it complicates API. Therefore it's wrapped with
-            // uncontrolled error.
-            throw new AssertionError(e);
+            throw new AssertionError(e); // can't happen
         }
     }
     
@@ -78,11 +75,11 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         Object attr = win.getAttribute("CLOSE_LISTENER");
         if (attr instanceof EventListener) {
             try {
-                ((EventListener) attr).onEvent(null);
+                @SuppressWarnings("unchecked")
+                EventListener<Event> eventListener = (EventListener<Event>) attr;
+                eventListener.onEvent(null);
             } catch (Exception e) {
-                // This has the same explanation as throwing AssertionError in
-                // the showEditComponentWindow method.
-                throw new AssertionError(e);
+                throw new AssertionError(e); // can't happen
             }
         }
     }
@@ -146,11 +143,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         try {
             win.doModal();
         } catch (Exception e) {
-            // It's extremely incredible that this exception will appear,
-            // on the other hand it's bad to throw the Exception instance,
-            // plus it complicates API. Therefore it's wrapped with
-            // uncontrolled error.
-            throw new AssertionError(e);
+            throw new AssertionError(e); // can't happen
         }
     }
 

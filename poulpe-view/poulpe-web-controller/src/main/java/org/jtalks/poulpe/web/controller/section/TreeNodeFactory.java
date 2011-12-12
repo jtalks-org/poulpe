@@ -22,22 +22,24 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
- * This class should be used to wrap one-to-many related persistent entities into ExtendedTreeNode structures.
- * To be able to handle entity it should be described within getTreeNode(Entity) method.
+ * This class should be used to wrap one-to-many related persistent entities
+ * into ExtendedTreeNode structures. To be able to handle entity it should be
+ * described within getTreeNode(Entity) method.
  * 
  * @author Konstantin Akimov
  * 
  */
 class TreeNodeFactory {
-    
 
     /**
      * Wrap single entity to DefaultTreeNode. If this entity has some related
      * object in one-to-many relation them can be either be wrapped
      * 
-     * @param entity section or branch instance
+     * @param entity
+     *            section or branch instance
      * @return node
      */
+    // TODO: it's strange and unclear, refactoring is needed
     public static <T extends Entity> ExtendedTreeNode<T> getTreeNode(T entity) {
         if (entity == null) {
             return null;

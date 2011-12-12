@@ -39,8 +39,7 @@ import org.zkoss.zul.Window;
  * @author Bekrenev Dmitry
  * */
 
-public class BranchEditorViewImpl extends Window implements BranchEditorView,
-        AfterCompose {
+public class BranchEditorViewImpl extends Window implements BranchEditorView, AfterCompose {
 
     private static final long serialVersionUID = -7175904766962858866L;
     private Listbox branchesList;
@@ -51,18 +50,16 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
      */
     private transient BranchEditorPresenter presenter;
 
-    private ListModelList branchesListModel;
+    private ListModelList<Branch> branchesListModel;
 
     /**
      * Use for render ListItem This class draws two labels for branch name and
      * description for change view attributes branch list item use css classes:
      * .branch-name and .branch-description
      * */
-    private static ListitemRenderer branchRenderer = new ListitemRenderer() {
+    private static ListitemRenderer<Branch> branchRenderer = new ListitemRenderer<Branch>() {
         @Override
-        public void render(Listitem item, Object data) {
-            Branch branch = (Branch) data;
-
+        public void render(Listitem item, Branch branch) {
             Listcell cell = new Listcell();
             Label name = new Label(branch.getName());
             Label desc = new Label(branch.getDescription());
@@ -86,7 +83,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
 
-        branchesListModel = new ListModelList();
+        branchesListModel = new ListModelList<Branch>();
         branchesList.setModel(branchesListModel);
         branchesList.setItemRenderer(branchRenderer);
 
@@ -120,7 +117,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
     public void onClick$addBranchButton() {
         Component component = getDesktop().getPage("BranchDialog").getFellow("editWindow");
         component.setAttribute("presenter", presenter);
-        Events.postEvent( new Event("onOpenAddDialog", component));       
+        Events.postEvent(new Event("onOpenAddDialog", component));
     }
 
     /**
@@ -130,15 +127,14 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
         if (branchesList.getSelectedCount() == 1) {
             Branch branch = getSelectedBranch();
             DialogManager dmanager = new DialogManagerImpl();
-            dmanager.confirmDeletion(branch.getName(),
-                    new DialogManager.Performable() {
+            dmanager.confirmDeletion(branch.getName(), new DialogManager.Performable() {
 
-                        @Override
-                        public void execute() {
-                            presenter.deleteBranch();
-                            presenter.updateView();
-                        }
-                    });
+                @Override
+                public void execute() {
+                    presenter.deleteBranch();
+                    presenter.updateView();
+                }
+            });
         }
     }
 
@@ -146,7 +142,8 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView,
      * Handle double click on branch list
      * */
     public void onDoubleClick$branchesList() {
-        Events.postEvent( new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"), getSelectedBranch()));        
+        Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
+                getSelectedBranch()));
     }
 
     /**

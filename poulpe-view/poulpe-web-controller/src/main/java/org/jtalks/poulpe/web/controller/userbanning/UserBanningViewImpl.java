@@ -14,17 +14,15 @@ import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.Intbox;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
-import org.zkoss.zul.SimpleListModel;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.event.ListDataListener;
 
+@SuppressWarnings("serial")
 public class UserBanningViewImpl extends Window implements UserBanningView,
         AfterCompose {
 
@@ -38,7 +36,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     private Button submitButton;
     private Button resetButton;
 
-    private ListModelList modelUserBanning;
+    private ListModelList<User> modelUserBanning;
 
     private List<User> usersToBanList;
 
@@ -47,20 +45,20 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         usersToBanList = new ArrayList<User>();
-        userCombobox.setItemRenderer(new ComboitemRenderer() {
-
+        
+        userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
             @Override
-            public void render(Comboitem item, Object data) throws Exception {
-                item.setLabel(((User) data).getUsername());
-                item.setValue(data);
+            public void render(Comboitem item, User user) throws Exception {
+                item.setLabel(user.getUsername());
+                item.setValue(user);
             }
         });
-        usersToBan.setItemRenderer(new ListitemRenderer() {
+        
+        usersToBan.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, Object data) throws Exception {
-                User curUser = (User) data;
-                Listcell cell_1 = new Listcell(curUser.getUsername());
-                Listcell cell_2 = new Listcell(curUser.getEmail());
+            public void render(Listitem item, User user) throws Exception {
+                Listcell cell_1 = new Listcell(user.getUsername());
+                Listcell cell_2 = new Listcell(user.getEmail());
                 Listcell cell_3 = new Listcell("NOT IMPLEMENTED YET");
                 Listcell cell_4 = new Listcell("NOT IMPLEMENTED YET");
                 item.appendChild(cell_1);
@@ -75,7 +73,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     @Override
     public void updateView(final List<User> users) {
         userCombobox.setModel(new BindingListModelList(users, false));        
-        modelUserBanning = new ListModelList(usersToBanList);
+        modelUserBanning = new ListModelList<User>(usersToBanList);
         usersToBan.setModel(modelUserBanning);
         addButton.setDisabled(true);
         manageButtons();
