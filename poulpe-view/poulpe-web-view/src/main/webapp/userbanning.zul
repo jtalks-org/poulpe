@@ -1,31 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?page id="mainPage" title="User banning" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
 <zk>
-	<window title="User banning" presenter="${userBanningPresenter}"
-		use="org.jtalks.poulpe.web.controller.userbanning.UserBanningViewImpl"
-		id="mainWindow">
-		<vlayout>
-			<hbox>
-			<combobox id="userCombobox" autodrop="true" buttonVisible="false" /><button id="addButton" label="${labels.userbanning.add}"/>
-			</hbox>
-			<listbox id="usersToBan">
-				<listhead sizable="true">
-					<listheader align="center" label="${labels.userbanning.username}"
-						sclass="boldstyle" />
-					<listheader align="center" label="${labels.userbanning.email}" />
-					<listheader align="center" label="${labels.userbanning.posts}" />
-					<listheader align="center"
-						label="${labels.userbanning.registrationDate}" />
-				</listhead>
-			</listbox>
-			<checkbox id="permanent" label="${labels.userbanning.permanentBan}" checked="false"/>
-			${labels.userbanning.banPeriod}<intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1"/>
-			${labels.userbanning.banReason}<textbox id="banReason" rows="6" width="370px;">
-			</textbox>
-		</vlayout>
-		<button label="${labels.userbanning.submit}" id="submitButton"/>
-		<button label="${labels.userbanning.reset}" id="resetButton"/>
-	</window>
+  <window title="User banning" presenter="${userBanningPresenter}" use="org.jtalks.poulpe.web.controller.userbanning.UserBanningViewImpl"
+    id="mainWindow">
+    <vlayout>
+      <hbox>
+        <combobox id="userCombobox" autodrop="true" buttonVisible="false" />
+        <button id="addButton" label="${labels.userbanning.add}" />
+      </hbox>
+      <listbox id="usersToBan">
+        <listhead sizable="true">
+          <listheader align="center" label="${labels.userbanning.username}" sclass="boldstyle" />
+          <listheader align="center" label="${labels.userbanning.email}" />
+          <listheader align="center" label="${labels.userbanning.posts}" />
+          <listheader align="center" label="${labels.userbanning.registrationDate}" />
+        </listhead>
+      </listbox>
+      <checkbox id="permanent" label="${labels.userbanning.permanentBan}" checked="false" />
+      ${labels.userbanning.banPeriod}
+      <intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1" />
+      ${labels.userbanning.banReason}
+      <textbox id="banReason" rows="6" width="370px;">
+      </textbox>
+    </vlayout>
+    
+    <button label="${labels.userbanning.submit}" id="submitButton" />
+    <button label="${labels.userbanning.reset}" id="resetButton" />
+  </window>
 </zk>
 

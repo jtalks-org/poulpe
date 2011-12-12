@@ -2,51 +2,54 @@
 <?page id="mainPage" title="Sections" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-<window title="Sections" presenter="${sectionPresenter}"
-    use="org.jtalks.poulpe.web.controller.section.SectionViewImpl" id="mainWindow">    
-   
-   
-     <button id="addSectionButton" label="+" />
-    
-    
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window title="Sections" presenter="${sectionPresenter}" use="org.jtalks.poulpe.web.controller.section.SectionViewImpl"
+    id="mainWindow">
+
+    <button id="addSectionButton" label="+" />
+
     <!-- "New Section dialog" -->
-    <window title="${labels.sections.newsectiondialog.title}" id="newSectionDialog" border="normal" visible="false" mode="modal">
-        <vbox>
-            <hbox>
-                ${labels.sections.label.name} <textbox id="sectionName"/>
-            </hbox>
-            <hbox>
-                ${labels.sections.label.description} <textbox id="sectionDescription"/>
-            </hbox>
-            <hbox>
-                <button id="addButton" label="${labels.sections.button.add}" />
-                <button id="closeButton" label="${labels.sections.button.cancel}" />
-            </hbox>
-        </vbox>
+    <window title="${labels.sections.newsectiondialog.title}" id="newSectionDialog" border="normal" visible="false"
+      mode="modal">
+      <vbox>
+        <hbox>
+          ${labels.sections.label.name}
+          <textbox id="sectionName" />
+        </hbox>
+        <hbox>
+          ${labels.sections.label.description}
+          <textbox id="sectionDescription" />
+        </hbox>
+        <hbox>
+          <button id="addButton" label="${labels.sections.button.add}" />
+          <button id="closeButton" label="${labels.sections.button.cancel}" />
+        </hbox>
+      </vbox>
     </window>
+    
     <!-- Edit Section dialog -->
-    <window title="${labels.sections.editsectiondialog.title}" id="editSectionDialog" border="normal" visible="false" mode="modal">
-        <vbox>
-            <hbox>
-                ${labels.sections.label.name} <textbox id="sectionName" width="200px"/>
-            </hbox>
-            <hbox>
-                ${labels.sections.label.description} <textbox id="sectionDescription" width="200px"/>
-            </hbox>
-            <hbox>
-                <button id="editButton" label="${labels.sections.button.edit}" />
-                <button id="closeButton" label="${labels.sections.button.cancel}" />                
-            </hbox>
-        </vbox>
+    <window title="${labels.sections.editsectiondialog.title}" id="editSectionDialog" border="normal" visible="false"
+      mode="modal">
+      <vbox>
+        <hbox>
+          ${labels.sections.label.name}
+          <textbox id="sectionName" width="200px" />
+        </hbox>
+        <hbox>
+          ${labels.sections.label.description}
+          <textbox id="sectionDescription" width="200px" />
+        </hbox>
+        <hbox>
+          <button id="editButton" label="${labels.sections.button.edit}" />
+          <button id="closeButton" label="${labels.sections.button.cancel}" />
+        </hbox>
+      </vbox>
     </window>
-    
-    <!-- Delete section -->
-    
-    
-</window>
-<include src="/WEB-INF/pages/deletesectiondialog.zul" mode="defer"/>
-<include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer"/>
-<include src="/WEB-INF/pages/moderatordialog.zul" mode="defer"/>  
+
+  </window>
+  
+  <include src="/WEB-INF/pages/deletesectiondialog.zul" mode="defer" />
+  <include src="/WEB-INF/pages/editbranchdialog.zul" mode="defer" />
+  <include src="/WEB-INF/pages/moderatordialog.zul" mode="defer" />
 </zk>
 

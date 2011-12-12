@@ -1,41 +1,36 @@
 <?page title="Edit User" contentType="text/html;charset=UTF-8"?>
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk>
-	<window title="${labels.users.edituserdialog.title}" closable="true" border="normal" width="345px"
-            use="org.jtalks.poulpe.web.controller.users.UserViewImpl"
-            forward="onClose=onCancelEditAction">
-	
-		<grid>
-            <columns>
-                <column label="${labels.field.description}"
-                    width="100px" hflex="min"/>
-                <column label="${labels.field.input}" width="245px" />
-            </columns>
-            <rows>
-                <row>
-                    <label value="${labels.users.label.firstname}" />
-                    <textbox id="firstnameTextbox" width="230px" focus="true" />
-                </row>
-                <row>
-                    <label value="${labels.users.label.lastname}" />
-                    <textbox id="lastnameTextbox" width="230px" />
-                </row>
-                <row>
-                    <label value="${labels.users.label.email}" />
-                    <textbox id="emailTextbox" width="230px"
-                     	constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
-                </row>
-                <row>
-                    <label value="${labels.users.label.password}" />
-                    <textbox id="passwordTextbox" width="230px"  type="password" 
-                    	constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
-                </row>
-            </rows>
-        </grid>
-        <hbox align="end">
-            <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction"/>
-            <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction"/>
-        </hbox>
-	
-	</window>
+  <window title="${labels.users.edituserdialog.title}" closable="true" border="normal" width="345px"
+    use="org.jtalks.poulpe.web.controller.users.UserViewImpl" forward="onClose=onCancelEditAction">
+    <grid>
+      <columns>
+        <column label="${labels.field.description}" width="100px" hflex="min" />
+        <column label="${labels.field.input}" width="245px" />
+      </columns>
+      <rows>
+        <row>
+          <label value="${labels.users.label.firstname}" />
+          <textbox id="firstnameTextbox" width="230px" focus="true" />
+        </row>
+        <row>
+          <label value="${labels.users.label.lastname}" />
+          <textbox id="lastnameTextbox" width="230px" />
+        </row>
+        <row>
+          <label value="${labels.users.label.email}" />
+          <textbox id="emailTextbox" width="230px"
+            constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
+        </row>
+        <row>
+          <label value="${labels.users.label.password}" />
+          <textbox id="passwordTextbox" width="230px" type="password" constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
+        </row>
+      </rows>
+    </grid>
+    <hbox align="end">
+      <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" />
+      <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" />
+    </hbox>
+  </window>
 </zk>

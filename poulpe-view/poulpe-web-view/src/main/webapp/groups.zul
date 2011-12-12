@@ -1,27 +1,26 @@
 <?page id="mainPage" title="Groups" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+
 <zk>
-	<window title="Groups" border="normal"
-		use="org.jtalks.poulpe.web.controller.group.GroupViewImpl" presenter="${groupPresenter}"
-		id="mainWindow">
+  <window title="Groups" border="normal" use="org.jtalks.poulpe.web.controller.group.GroupViewImpl" presenter="${groupPresenter}"
+    id="mainWindow">
 
-		<hbox>
-			<label value="Filter" />
-			:
-			<textbox id="searchTextbox" width="150px" multiline="false"
-				maxlength="20" />
-			<button label="Search" forward="onClick=onSearchAction" />
-		</hbox>
+    <hbox>
+      <label value="Filter" />
+      :
+      <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
+      <button label="Search" forward="onClick=onSearchAction" />
+    </hbox>
 
-		<listbox  id="groupsListbox">
-			<listhead sizable="true">
-				<listheader align="center" label="Name" sclass="boldstyle" />
-				<listheader align="center" label="Members" />
-			</listhead>
-		</listbox>
-		<button id="addButton" label="+" />
-		<button id="removeButton" label="-" />
-	</window>
-	<include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer"/> 
+    <listbox id="groupsListbox">
+      <listhead sizable="true">
+        <listheader align="center" label="Name" sclass="boldstyle" />
+        <listheader align="center" label="Members" />
+      </listhead>
+    </listbox>
+    <button id="addButton" label="+" />
+    <button id="removeButton" label="-" />
+  </window>
+  <include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer" />
 
 </zk>

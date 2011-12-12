@@ -2,24 +2,24 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window apply="org.jtalks.poulpe.web.controller.AdminWindow" width="100%" height="100%">
     <borderlayout>
       <north>
-        <label style="font-size=30px" value="Admin Panel"/>
+        <label style="font-size=30px" value="Admin Panel" />
       </north>
       <west splittable="true" collapsible="true">
         <listbox width="150px">
-          <listitem label="Components" forward="onClick=onShowComponents"/>
-          <listitem label="Topic Types" forward="onClick=onShowTopicTypes"/>
-          <listitem label="Sections" forward="onClick=onShowSections"/>
-          <listitem label="Users" forward="onClick=onShowUsers"/>
-          <listitem label="Ban users" forward="onClick=onShowUserBanning"/>
-          <listitem label="User Groups" forward="onClick=onShowUserGroups"/>
-          <listfoot/>
+          <listitem label="Components" forward="onClick=onShowComponents" />
+          <listitem label="Topic Types" forward="onClick=onShowTopicTypes" />
+          <listitem label="Sections" forward="onClick=onShowSections" />
+          <listitem label="Users" forward="onClick=onShowUsers" />
+          <listitem label="Ban users" forward="onClick=onShowUserBanning" />
+          <listitem label="User Groups" forward="onClick=onShowUserGroups" />
+          <listfoot />
         </listbox>
       </west>
-      <center id="workArea" border="0"/>
+      <center id="workArea" border="0" />
     </borderlayout>
   </window>
 </zk>

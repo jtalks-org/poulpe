@@ -4,16 +4,17 @@
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
   <class name="Component" table="COMPONENT">
     <id column="CMP_ID" name="id" unsaved-value="0">
-      <generator class="native"/>
+      <generator class="native" />
     </id>
-    <property column="UUID" name="uuid" not-null="true" unique="true"/>
-    <property column="NAME" name="name" not-null="true" unique="true"/>
-    <property column="DESCRIPTION" name="description"/>
+    
+    <property column="UUID" name="uuid" not-null="true" unique="true" />
+    <property column="NAME" name="name" not-null="true" unique="true" />
+    <property column="DESCRIPTION" name="description" />
+    
     <property name="componentType" column="C_TYPE" unique="true">
       <type name="org.hibernate.type.EnumType">
         <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
-      </type>       
+      </type>
     </property>
-
   </class>
 </hibernate-mapping>

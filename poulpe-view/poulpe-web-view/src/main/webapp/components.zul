@@ -1,24 +1,23 @@
 <?page id="componentListPage" title="Component List" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
-    <window id="componentWindow" title="${labels.componentlist.title}" border="none"
-        width="800px" position="center,top" presenter="${componentListPresenter}"
-        use="org.jtalks.poulpe.web.controller.component.ListViewImpl">
-        <style>.boldstyle { font-weight: bold; font-size: 14pt; }</style>
-        <vlayout>
-            <listbox id="listbox">
-                <listhead sizable="true">
-                    <listheader align="center" label="${labels.component.title}" sclass="boldstyle" />
-                    <listheader align="center" label="${labels.component.description}" />
-                    <listheader align="center" label="${labels.component.type}" />
-                </listhead>
-            </listbox>
-            <div>
-                <button id="addCompButton" label="${labels.componentlist.add}" />
-                <button id="delCompButton" label="${labels.componentlist.delete}" />
-            </div>
-        </vlayout>
-    </window>
-    
-<include src="/WEB-INF/pages/edit_component.zul" mode="defer"/>
+  <window id="componentWindow" title="${labels.componentlist.title}" border="none" width="800px" position="center,top"
+    presenter="${componentListPresenter}" use="org.jtalks.poulpe.web.controller.component.ListViewImpl">
+    <style>.boldstyle { font-weight: bold; font-size: 14pt; }</style>
+    <vlayout>
+      <listbox id="listbox">
+        <listhead sizable="true">
+          <listheader align="center" label="${labels.component.title}" sclass="boldstyle" />
+          <listheader align="center" label="${labels.component.description}" />
+          <listheader align="center" label="${labels.component.type}" />
+        </listhead>
+      </listbox>
+      <div>
+        <button id="addCompButton" label="${labels.componentlist.add}" />
+        <button id="delCompButton" label="${labels.componentlist.delete}" />
+      </div>
+    </vlayout>
+  </window>
+
+  <include src="/WEB-INF/pages/edit_component.zul" mode="defer" />
 </zk>

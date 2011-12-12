@@ -1,23 +1,23 @@
 <?page title="Users" contentType="text/html;charset=UTF-8"?>
-<zk>
-	<window title="${labels.users.list.title}" border="normal" 
-		use="org.jtalks.poulpe.web.controller.users.UsersListViewImpl"
-        presenter="${usersListPresenter}">
-        
-        <label value="${labels.users.label.search}" />:
-        <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
-        
-		<button label="${labels.users.label.button.search}" forward="onClick=onSearchAction"/>
 
-		<listbox sizedByContent="true" id="usersListbox" mold="paging" pageSize="20">
-			<listhead>        
-		           <listheader label="Username" sort="auto(username)" />
-		           <listheader label="E-mail" sort="auto(email)" />
-		           <listheader label="First name" sort="auto(firstName)" />
-		           <listheader label="Last name" sort="auto(lastName)" />
-		           <listheader label="Role" sort="auto(role)" />              
-		       </listhead>
-		</listbox>
-		
-	</window>
+<zk>
+  <window title="${labels.users.list.title}" border="normal" use="org.jtalks.poulpe.web.controller.users.UsersListViewImpl"
+    presenter="${usersListPresenter}">
+
+    <label value="${labels.users.label.search}" />
+    :
+    <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
+
+    <button label="${labels.users.label.button.search}" forward="onClick=onSearchAction" />
+
+    <listbox sizedByContent="true" id="usersListbox" mold="paging" pageSize="20">
+      <listhead>
+        <listheader label="Username" sort="auto(username)" />
+        <listheader label="E-mail" sort="auto(email)" />
+        <listheader label="First name" sort="auto(firstName)" />
+        <listheader label="Last name" sort="auto(lastName)" />
+        <listheader label="Role" sort="auto(role)" />
+      </listhead>
+    </listbox>
+  </window>
 </zk>

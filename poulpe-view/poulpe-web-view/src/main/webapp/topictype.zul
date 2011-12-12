@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<zk xmlns="http://www.zkoss.org/2005/zul"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  
   <window width="50%" closable="true" border="normal" title="${labels.topictypes.editor.title}"
-          use="org.jtalks.poulpe.web.controller.topictype.TopicTypeViewImpl"
-          forward="onClose=onCancelEditAction">
+    use="org.jtalks.poulpe.web.controller.topictype.TopicTypeViewImpl" forward="onClose=onCancelEditAction">
     <grid>
       <columns width="310px">
-        <column label="${labels.field.description}"/>
-        <column label="${labels.field.input}"/>
+        <column label="${labels.field.description}" />
+        <column label="${labels.field.input}" />
       </columns>
       <rows>
         <row>
           <cell>
             <label value="${labels.title}" width="300px" />
-            <textbox id="titleTextbox" focus="true" forward="onBlur=onTitleLoseFocus"/>
+            <textbox id="titleTextbox" focus="true" forward="onBlur=onTitleLoseFocus" />
           </cell>
         </row>
         <row width="300px">
           <cell>
             <label value="${labels.description}" />
-            <textbox id="descriptionTextbox"  multiline="true" rows="5"/>
+            <textbox id="descriptionTextbox" multiline="true" rows="5" />
           </cell>
         </row>
       </rows>
     </grid>
+    
     <hbox align="end">
       <cell>
-        <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction"/>
+        <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" />
       </cell>
       <cell>
-        <button id="createButton" label="${labels.item.save}" forward="onClick=onCreateAction"/>
+        <button id="createButton" label="${labels.item.save}" forward="onClick=onCreateAction" />
       </cell>
       <cell>
-        <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction"/>
+        <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" />
       </cell>
     </hbox>
   </window>

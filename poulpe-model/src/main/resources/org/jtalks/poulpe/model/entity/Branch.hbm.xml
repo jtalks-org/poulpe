@@ -3,18 +3,18 @@
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
   <class name="Branch" table="BRANCH">
     <id column="BRANCH_ID" name="id" unsaved-value="0">
-      <generator class="native"/>
+      <generator class="native" />
     </id>
-    <property column="UUID" name="uuid" not-null="true" unique="true"/>
-    <property column="NAME" name="name" not-null="true"/>
-    <property column="DESCRIPTION" name="description"/>
-    <property column="DELETED" name="deleted"/>
-    <many-to-one column="SECTION_ID" name="section" class="Section" not-null="true" lazy="false"/>    
-    
-    <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false"  >
-      <cache usage="nonstrict-read-write" />  
-      <key column="BRANCH_ID" foreign-key="FK_BRANCH" />      
-      <many-to-many class="org.jtalks.common.model.entity.User"  column="USER_ID"/>
+    <property column="UUID" name="uuid" not-null="true" unique="true" />
+    <property column="NAME" name="name" not-null="true" />
+    <property column="DESCRIPTION" name="description" />
+    <property column="DELETED" name="deleted" />
+    <many-to-one column="SECTION_ID" name="section" class="Section" not-null="true" lazy="false" />
+
+    <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
+      <cache usage="nonstrict-read-write" />
+      <key column="BRANCH_ID" foreign-key="FK_BRANCH" />
+      <many-to-many class="org.jtalks.common.model.entity.User" column="USER_ID" />
     </bag>
   </class>
 </hibernate-mapping>
