@@ -5,7 +5,7 @@
   <parent>
     <artifactId>poulpe-view</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
-    <version>0.9</version>
+    <version>0.9-SNAPSHOT</version>
   </parent>
   
   <artifactId>poulpe-web-view</artifactId>
