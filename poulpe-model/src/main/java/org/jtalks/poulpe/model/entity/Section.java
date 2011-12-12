@@ -17,12 +17,10 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jtalks.common.model.entity.Entity;
 
 /**
- * forum section
+ * Forum section that contains branches. 
  * 
  * @author tanya birina
  * 
@@ -116,16 +114,6 @@ public class Section extends Entity {
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);
-    }
-    
-    @Override
-    public int hashCode() {
-        return HashCodeBuilder.reflectionHashCode(this);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
 }
