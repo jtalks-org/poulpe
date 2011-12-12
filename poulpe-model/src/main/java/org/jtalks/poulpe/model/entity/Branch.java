@@ -32,10 +32,20 @@ public class Branch extends Entity {
     private Section section;
     private List<User> moderators;
 
+    public Branch() {
+    }
+    
+    public Branch(String name) {
+        this.name = name;
+    }
+    
+    public Branch(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
+
     /**
      * Get branch name which briefly describes the topics contained in it.
-     *
-     * @return branch name
      */
     public String getName() {
         return name;
@@ -43,8 +53,6 @@ public class Branch extends Entity {
 
     /**
      * Set branch name.
-     *
-     * @param name branch name
      */
     public void setName(String name) {
         this.name = name;
@@ -52,8 +60,6 @@ public class Branch extends Entity {
 
     /**
      * Get branch description.
-     *
-     * @return branch description
      */
     public String getDescription() {
         return description;
@@ -61,8 +67,6 @@ public class Branch extends Entity {
 
     /**
      * Set branch description which contains additional information about the branch.
-     *
-     * @param description branch description
      */
     public void setDescription(String description) {
         this.description = description;
@@ -70,15 +74,14 @@ public class Branch extends Entity {
 
     /**
      * Check if branch marked is deleted.
-     * @return deleted
+     * @return true if is deleted, false otherwise
      */
     public boolean getDeleted() {
         return deleted;
     }
 
     /**
-     * Mark branch as deleted.
-     * @param deleted 
+     * Mark branch as deleted. True means that branch is deleted.
      */
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
@@ -113,7 +116,6 @@ public class Branch extends Entity {
     public void setModerators(List<User> moderators) {
         this.moderators = moderators;
     }
-    
     
     
 }

@@ -14,10 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
@@ -37,6 +39,8 @@ import org.testng.annotations.Test;
  * */
 public class TestBranchPresenter {
 
+    BranchPresenter presenter = new BranchPresenter();
+
     @Mock
     SectionService service;
     @Mock
@@ -45,10 +49,10 @@ public class TestBranchPresenter {
     BranchService branchService;
     @Captor
     ArgumentCaptor<Section> sectionCaptor;
-    @Captor
-    ArgumentCaptor<List<Section>> initSectionCaptor;
 
-    BranchPresenter presenter = new BranchPresenter();
+    private static final String sectionName = "sectionName";
+    private static final String sectionDescription = "sectionDescription";
+    private Section section = new Section(sectionName, sectionDescription);
 
     @BeforeMethod
     public void setUp() {
@@ -60,42 +64,29 @@ public class TestBranchPresenter {
 
     @Test
     public void testInitView() {
-        List<Section> sections = new ArrayList<Section>();
-
-        sections.add(new Section());
-        sections.add(new Section());
-        sections.add(new Section());
-        sections.add(new Section());
-
+        List<Section> sections = Collections.nCopies(4, section);
         when(service.getAll()).thenReturn(sections);
 
         presenter.initView();
 
-        verify(view).initSectionList(initSectionCaptor.capture());
-        assertEquals(initSectionCaptor.getValue().size(), 4);
-
+        verify(view).initSectionList(sections);
     }
 
     @Test
     public void testSaveBranch() throws NotUniqueException {
-        Section section = new Section();
-        Branch branch = new Branch();
-
-        section.setName("getted section");
         when(view.getSection()).thenReturn(section);
+        presenter.saveBranch(section, new Branch());
+        assertBranchAddedToSection();
+    }
 
-        presenter.saveBranch(section, branch);
-
+    private void assertBranchAddedToSection() throws NotUniqueException {
         verify(service).saveSection(sectionCaptor.capture());
-        assertEquals(sectionCaptor.getValue().getName(), "getted section");
-        assertEquals(sectionCaptor.getValue().getBranches().size(), 1);
+        Section capturedSection = sectionCaptor.getValue();
+        assertEquals(capturedSection.getBranches().size(), 1);
     }
 
     @Test
     public void testSaveBranchWhenExceptionHappen() throws NotUniqueException {
-        Section section = new Section();
-        section.setName("not unique");
-
         when(view.getSection()).thenReturn(section);
         doThrow(new NotUniqueException()).when(service).saveSection(section);
 

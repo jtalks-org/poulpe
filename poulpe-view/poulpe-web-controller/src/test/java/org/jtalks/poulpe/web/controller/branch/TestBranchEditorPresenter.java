@@ -14,18 +14,19 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import java.util.ArrayList;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
+import java.util.Arrays;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.mockito.ArgumentCaptor;
-import org.mockito.ArgumentMatcher;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -36,12 +37,16 @@ public class TestBranchEditorPresenter {
     BranchService service;
     @Mock
     BranchEditorView view;
-
     @Captor
     ArgumentCaptor<Branch> branchCaptor;
-
+    
+    private static final String branchName = "branch";
+    private static final String description = "decs";
+    
+    private final Branch branch = new Branch(branchName, description);
+    
     @BeforeTest
-    public void tearUp() {
+    public void setUp() {
         MockitoAnnotations.initMocks(this);
         presenter.setBranchService(service);
         presenter.setView(view);
@@ -49,50 +54,23 @@ public class TestBranchEditorPresenter {
 
     @Test
     public void testUpdateView() {
-
-        when(service.getAll()).thenReturn(getDefaultBranches());
+        List<Branch> listOfTwoBranches = Arrays.asList(branch, branch);
+        when(service.getAll()).thenReturn(listOfTwoBranches);
 
         presenter.updateView();
 
-        verify(view).showBranches(argThat(new isListOfTooBranches()));
+        verify(view).showBranches(listOfTwoBranches);
         verify(service).getAll();
     }
-
+    
     @Test
     public void testDeleteBranch() {
-        Branch branch = new Branch();
-        branch.setName("delete branch");
-
         when(view.getSelectedBranch()).thenReturn(branch);
 
         presenter.deleteBranch();
 
+        // TODO: is it used?? the method marked as deprecated
         verify(service).deleteBranch(branchCaptor.capture());
-        assertEquals(branchCaptor.getValue().getName(), "delete branch");
+        assertEquals(branchCaptor.getValue(), branch);
     }
-
-    public List<Branch> getDefaultBranches() {
-        List<Branch> branches = new ArrayList<Branch>();
-
-        Branch branch = new Branch();
-        branch.setName("branch 1");
-        branch.setDescription("desc 1");
-
-        branch.setName("branch 2");
-        branch.setDescription("desc 2");
-
-        branches.add(branch);
-        branches.add(branch);
-        return branches;
-    }
-}
-
-class isListOfTooBranches extends ArgumentMatcher<List<Branch>> {
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public boolean matches(Object argument) {
-        return ((List<Branch>) argument).size() == 2;
-    }
-
 }

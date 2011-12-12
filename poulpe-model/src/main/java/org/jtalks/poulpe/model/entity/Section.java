@@ -17,6 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jtalks.common.model.entity.Entity;
 
 /**
@@ -28,14 +30,25 @@ import org.jtalks.common.model.entity.Entity;
 public class Section extends Entity {
 
     private String name;
-    private Integer position;
     private String description;
+    private Integer position;
     private List<Branch> branches = new ArrayList<Branch>();
+
+    
+    public Section() {
+    }
+    
+    public Section(String name) {
+        this.name = name;
+    }
+
+    public Section(String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     /**
      * Set section name which briefly describes the topics contained in it.
-     * 
-     * @return section name
      */
     public String getName() {
         return name;
@@ -43,8 +56,6 @@ public class Section extends Entity {
 
     /**
      * Set section name.
-     *
-     * @param name section name
      */
     public void setName(String name) {
         this.name = name;
@@ -52,8 +63,6 @@ public class Section extends Entity {
 
     /**
      * Get section description.
-     * 
-     * @return section description
      */
     public String getDescription() {
         return description;
@@ -62,27 +71,20 @@ public class Section extends Entity {
     /**
      * Set section description which contains additional information about the
      * section.
-     * 
-     * @param description
-     *            section description
      */
     public void setDescription(String description) {
         this.description = description;
     } 
     
-    /*
+    /**
      * Get section position.
-     * 
-     * @return section position
      */
     public Integer getPosition () {
         return position;
     }
     
-    /*
+    /**
      * Set section position.
-     * 
-     * @param position section position
      */
     public void setPosition (Integer position) {
         this.position = position;
@@ -90,8 +92,6 @@ public class Section extends Entity {
 
     /**
      * Get section branches
-     * 
-     * @return list of branches
      */
     public List<Branch> getBranches() {
         return branches;
@@ -99,8 +99,6 @@ public class Section extends Entity {
 
     /**
      * Set section branches
-     * 
-     * @param branches set  list of branches
      */
     public void setBranches(List<Branch> branches) {
         this.branches = branches;
@@ -108,8 +106,6 @@ public class Section extends Entity {
 
     /**
      * Add branch to the section.
-     *
-     * @param branch branch
      */
     public void addBranch(Branch branch) {
         branches.add(branch);
@@ -117,11 +113,19 @@ public class Section extends Entity {
 
     /**
      * Delete branch from the section.
-     *
-     * @param branch branch
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);
+    }
+    
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this);
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj);
     }
 
 }
