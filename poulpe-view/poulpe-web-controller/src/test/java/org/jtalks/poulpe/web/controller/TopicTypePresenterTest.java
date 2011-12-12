@@ -62,7 +62,7 @@ public class TopicTypePresenterTest extends TopicTypePresenter {
     	TopicType topicType = new TopicType("", "");
     	
     	assertEquals(presenter.validateTopicType(topicType),
-    			presenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
+    	        TopicTypePresenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
     }
     
     @Test
@@ -71,7 +71,7 @@ public class TopicTypePresenterTest extends TopicTypePresenter {
     	topicType.setTitle(null);
     	
     	assertEquals(presenter.validateTopicType(topicType),
-    			presenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
+    	        TopicTypePresenter.ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);    	
     }
     
     @Test

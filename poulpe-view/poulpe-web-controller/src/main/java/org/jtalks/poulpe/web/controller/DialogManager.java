@@ -27,9 +27,6 @@ import org.jtalks.common.model.entity.User;
  * 
  */
 public interface DialogManager {
-    // It's just 2 methods I need right now. I don't mind if somebody change
-    // this interface.
-    // But it looks like all our current user stories need this two methods.
 
     /**
      * Notifies user using {@code localeMessage} message.

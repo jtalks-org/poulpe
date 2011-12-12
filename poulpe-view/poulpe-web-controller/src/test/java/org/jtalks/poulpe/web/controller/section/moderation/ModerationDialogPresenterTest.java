@@ -180,16 +180,6 @@ public class ModerationDialogPresenterTest {
          verify(view,times(1)).updateView(argThat(new UserListMatcher(newBranch.getModerators())), argThat(new UserListMatcher(fakeUsers)));
      }
     
-    // @Test
-    // public void setBranchService() {
-    // throw new RuntimeException("Test not implemented");
-    // }
-    //
-    // @Test
-    // public void setUserService() {
-    // throw new RuntimeException("Test not implemented");
-    // }
-    //
      @Test
      public void updateView() {
          presenter.updateView(fakeUsers, fakeUsers);

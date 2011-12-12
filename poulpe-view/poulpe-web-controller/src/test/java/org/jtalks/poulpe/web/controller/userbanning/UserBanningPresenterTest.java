@@ -72,34 +72,6 @@ public class UserBanningPresenterTest {
         verify(view, times(1)).clearView();
     }
     
-//     @Test
-//     public void getDialogManager() {
-//         presenter.getDialogManager();
-//     }
-    
-    // @Test
-    // public void getUserService() {
-    // throw new RuntimeException("Test not implemented");
-    // }
-    //
-//     @Test
-//     public void initView() {
-////         when(service.)
-//         presenter.initView(view);
-//         Li
-//         verify(view,times(1)).updateView(users)
-//     }
-    //
-    // @Test
-    // public void setDialogManager() {
-    // throw new RuntimeException("Test not implemented");
-    // }
-    //
-    // @Test
-    // public void setUserService() {
-    // throw new RuntimeException("Test not implemented");
-    // }
-    //
      @Test
      public void updateView() {
          List<User> fakeUsers = ObjectCreator.getFakeUsers(10);
