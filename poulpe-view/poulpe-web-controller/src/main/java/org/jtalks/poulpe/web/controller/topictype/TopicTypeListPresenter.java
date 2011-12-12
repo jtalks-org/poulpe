@@ -30,6 +30,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  * {@link org.jtalks.poulpe.model.entity.TopicType}
  * 
  * @author Vladimir Bukhtoyarov
+ * @author Vyacheslav Zhivaev
  * 
  */
 public class TopicTypeListPresenter {
@@ -87,7 +88,7 @@ public class TopicTypeListPresenter {
     /**
      * Initialize view instance before first rendering
      * 
-     * @param view
+     * @param view is view for topic type
      */
     public void initView(TopicTypeListView view) {
         this.view = view;
@@ -95,16 +96,24 @@ public class TopicTypeListPresenter {
     }
 
     /**
-     * 
+     * Action handler on add
      */
     public void onAddAction() {
         windowManager.openTopicTypeWindowForCreate(editListener);
     }
 
+    /**
+     * Action handler on edit
+     * 
+     * @param topicType is topic type that would be edited
+     */
     public void onEditAction(TopicType topicType) {
         windowManager.openTopicTypeWindowForEdit(topicType, editListener);
     }
 
+    /**
+     * Action handler on delete
+     */
     public void onDeleteAction() {
         final List<TopicType> topicTypes = view.getSelectedTopicType();
         if (topicTypes.isEmpty()) {
@@ -126,18 +135,36 @@ public class TopicTypeListPresenter {
         });
     }
 
+    /**
+     * Sets window manager
+     * 
+     * @param windowManager is new window manager
+     */
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
     }
 
+    /**
+     * Sets dialog manager
+     * 
+     * @param dialogManager is new dialog manager
+     */
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
 
+    /**
+     * Sets topic type service
+     * 
+     * @param topicTypeService is new topic type service
+     */
     public void setTopicTypeService(TopicTypeService topicTypeService) {
         this.topicTypeService = topicTypeService;
     }
 
+    /**
+     * Refresh topic type list
+     */
     private void refreshTopicTypeList() {
         List<TopicType> list = topicTypeService.getAll();
         view.showTopicTypeList(list);
