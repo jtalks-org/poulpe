@@ -248,12 +248,12 @@
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-model</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>${common.version}</version>
       </dependency>
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-service</artifactId>
-        <version>0.8-SNAPSHOT</version>
+        <version>${common.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
@@ -355,6 +355,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zk.version>6.0.0-RC2</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <common.version>0.8</common.version>
   </properties>
 
   <distributionManagement>
