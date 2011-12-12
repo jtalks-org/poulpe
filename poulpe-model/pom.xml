@@ -81,6 +81,10 @@
       <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-model</artifactId>
     </dependency>
+    <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

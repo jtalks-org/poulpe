@@ -41,11 +41,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-service</artifactId>
     </dependency>
