@@ -23,3 +23,7 @@ logs
 
 #Maven version-plugin backup-files ignore
 *.versionsBackup
+
+# Maven release plugin files
+release.properties
+pom.xml.releaseBackup

@@ -338,6 +338,15 @@
           </execution>
         </executions>
       </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <autoVersionSubmodules>true</autoVersionSubmodules>
+        </configuration>
+      </plugin>
+      
     </plugins>
   </build>
 
@@ -347,4 +356,24 @@
     <zk.version>6.0.0-RC2</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>jtalks-nexus</id>
+      <name>jtalks nexus</name>
+      <url>http://repo.jtalks.org/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>jtalks-nexus</id>
+      <name>jtalks nexus</name>
+      <url>http://repo.jtalks.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+   
+  <scm>
+    <connection>scm:git:git@jtalks.org:poulpe</connection>
+    <developerConnection>scm:git:git@jtalks.org:poulpe</developerConnection>
+    <url>scm:git:git@jtalks.org:poulpe</url>
+  </scm>
+  
 </project>
