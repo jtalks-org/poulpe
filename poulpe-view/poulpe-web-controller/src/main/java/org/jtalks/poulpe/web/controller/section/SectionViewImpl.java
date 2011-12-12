@@ -51,7 +51,6 @@ public class SectionViewImpl extends Window implements SectionView,
         Components.wireVariables(this, this);
 
         presenter.initView(this);
-
     }
 
     /**
@@ -68,26 +67,21 @@ public class SectionViewImpl extends Window implements SectionView,
      * */
     @Override
     public void showSections(List<Section> sections) {
-        List<SectionTreeComponent> childrenToSave = new ArrayList<SectionTreeComponent>();
-        List<Component> children = getChildren();
-        
-        for (Component obj : children) {
+        //TODO: Find out what's happening here.
+        List<Object> childrenToSave = new ArrayList<Object>();
+        for (Object obj : getChildren()) {
             if (!(obj instanceof SectionTreeComponent)) {
-                SectionTreeComponent sessionTreeComponent = (SectionTreeComponent)obj;
-                childrenToSave.add(sessionTreeComponent);
+                childrenToSave.add(obj);
             }
         }
-        
-        children.clear();
-        
+        getChildren().clear();
         for (Object obj : childrenToSave) {
-            children.add((Component) obj);
+            getChildren().add((Component) obj);
         }
-        
         for (Section section : sections) {
             // TODO move SectionTreeComponent creation to external factory
             // method
-            children.add(new SectionTreeComponentImpl(section, presenter));
+            getChildren().add(new SectionTreeComponentImpl(section, presenter));
         }
     }
 
