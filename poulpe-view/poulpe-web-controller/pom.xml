@@ -1,27 +1,31 @@
 <?xml version="1.0"?>
-<project
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <artifactId>poulpe-view</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
     <version>0.9-SNAPSHOT</version>
   </parent>
+  
   <artifactId>poulpe-web-controller</artifactId>
   <name>${project.artifactId}</name>
   <url>wwww.jtalks.org</url>
+  
   <description>
     This module is responsible for event handling of the web-view module.
   </description>
+  
   <repositories>
     <repository>
       <id>ZK CE</id>
       <url>http://mavensync.zkoss.org/maven2</url>
     </repository>
   </repositories>
+  
   <dependencies>
-    <!--poulpe-->
+    <!--poulpe -->
     <dependency>
       <groupId>org.jtalks.poulpe</groupId>
       <artifactId>poulpe-service</artifactId>
@@ -42,7 +46,7 @@
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
     </dependency>
-    <!--zk-->
+    <!--zk -->
     <dependency>
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zk</artifactId>
@@ -51,7 +55,7 @@
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zkplus</artifactId>
     </dependency>
-    <!--utils-->
+    <!--utils -->
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-collections</artifactId>

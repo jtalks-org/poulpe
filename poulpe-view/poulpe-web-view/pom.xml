@@ -1,21 +1,24 @@
 <?xml version="1.0"?>
-<project
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
   xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <artifactId>poulpe-view</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
     <version>0.9-SNAPSHOT</version>
   </parent>
+  
   <artifactId>poulpe-web-view</artifactId>
   <packaging>war</packaging>
   <name>${project.artifactId}</name>
   <url>www.jtalks.org</url>
+  
   <description>
     This module contains web resources (images, js, html, jsp, etc) and other
     web related resources, like web.xml.
   </description>
+  
   <dependencies>
     <dependency>
       <groupId>org.jtalks.poulpe</groupId>
@@ -32,10 +35,12 @@
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jsp-api</artifactId>
-    </dependency>         
+    </dependency>
   </dependencies>
 
   <build>
+    <finalName>poulpe</finalName>
+  
     <plugins>
       <plugin>
         <groupId>org.codehaus.cargo</groupId>
@@ -65,8 +70,6 @@
         </configuration>
       </plugin>
     </plugins>
-
-    <finalName>poulpe</finalName>
   </build>
 
 </project>

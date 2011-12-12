@@ -1,16 +1,18 @@
 <?xml version="1.0"?>
-<project
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+  xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <modelVersion>4.0.0</modelVersion>
+  
   <parent>
     <artifactId>poulpe</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
     <version>0.9-SNAPSHOT</version>
   </parent>
+  
   <artifactId>poulpe-model</artifactId>
   <name>${project.artifactId}</name>
   <url>www.jtalks.org</url>
+  
   <description>
     This module contains domain model of the project, and also - persistence layer.
   </description>
@@ -23,7 +25,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-    </dependency>       
+    </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-core</artifactId>
@@ -76,8 +78,8 @@
       <artifactId>hibernate-annotations</artifactId>
     </dependency>
     <dependency>
-    	<groupId>org.jtalks.common</groupId>
-    	<artifactId>jtalks-common-model</artifactId>
+      <groupId>org.jtalks.common</groupId>
+      <artifactId>jtalks-common-model</artifactId>
     </dependency>
   </dependencies>
 
@@ -91,9 +93,9 @@
         </includes>
       </resource>
       <resource>
-        <directory>src/main/resources</directory>        
+        <directory>src/main/resources</directory>
         <includes>
-          <include>**/*.xml</include>                  
+          <include>**/*.xml</include>
         </includes>
       </resource>
     </resources>
