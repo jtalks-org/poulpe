@@ -14,6 +14,9 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
@@ -30,7 +33,7 @@ public class Branch extends Entity {
     private String description;
     private boolean deleted;
     private Section section;
-    private List<User> moderators;
+    private List<User> moderators = new ArrayList<User>();
 
     public Branch() {
     }
@@ -104,18 +107,64 @@ public class Branch extends Entity {
     }
 
     /**
-     * @return get a list of {@link User} which are signed to moderate this branch
+     * @return an unmodifiable list of {@link User} which are signed to moderate this branch
      */
-    public List<User> getModerators() {
-        return moderators;
+    public List<User> getModeratorsList() {
+        return Collections.unmodifiableList(moderators);
     }
 
     /**
-     * @param moderators a list of {@link User} which will be signed to moderate this branch
+     * Protected for using only by hibernate.
+     * @return the list of moderators.
      */
-    public void setModerators(List<User> moderators) {
+    protected List<User> getModerators() {
+        return moderators;
+    }
+    
+    /**
+     * Sets the list of users which will be signed to moderate this branch. 
+     * Protected for using only by hibernate.
+     * @param moderators a list of {@link User} 
+     */
+    protected void setModerators(List<User> moderators) {
         this.moderators = moderators;
     }
     
+    /**
+     * Assigns {@link User} to moderate this branch
+     */
+    public void addModerator(User user) {
+        this.moderators.add(user);
+    }
+
+    /**
+     * Assigns a list of {@link User} to moderate this branch
+     */
+    public void addModerators(List<User> users) {
+        this.moderators.addAll(users);
+    }
+
+    /**
+     * Assigns a list of {@link User} to moderate this branch.
+     * This method mainly for using in test.
+     */
+    public void addModerators(User... users) {
+        this.addModerators(Arrays.asList(users));
+    }
+    
+    /**
+     * Removes an assignment for {@link User} to moderate this branch
+     */
+    public void removeModerator(User user) {
+        this.moderators.remove(user);
+    }
+
+    /**
+     * Checks if {@link User} is assigned to moderate this branch
+     * @return {@code true} if assigned, {@code false} otherwise
+     */
+    public boolean isModeratedBy(User user) {
+        return this.moderators.contains(user);
+    }
     
 }

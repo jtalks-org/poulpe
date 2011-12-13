@@ -71,15 +71,26 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
         Branch branch = (Branch) event.getData();
         presenter.setBranch(branch);
         presenter.initView(this);
-        showDialog(true);
+        showDialog();
     }
 
     public void onClose(Event event) {
-        showDialog(false);
+        hideDialog();
     }
 
+    @Override
     public void showDialog(boolean showIt) {
         setVisible(showIt);
+    }
+    
+    @Override
+    public void showDialog() {
+        showDialog(true);
+    }
+
+    @Override
+    public void hideDialog() {
+        showDialog(false);
     }
 
     @Override
@@ -124,4 +135,5 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     public void showComboboxErrorMessage(String message) {
         userCombobox.setErrorMessage(Labels.getLabel(message));
     }
+
 }

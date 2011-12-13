@@ -1,16 +1,9 @@
 package org.jtalks.poulpe.web.controller.section.moderation;
 
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.fail;
+import static org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;
@@ -19,9 +12,7 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.utils.BranchMatcher;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
-import org.jtalks.poulpe.web.controller.utils.UserListMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -29,167 +20,142 @@ import org.testng.annotations.Test;
 
 public class ModerationDialogPresenterTest {
 
+    private ModerationDialogPresenter presenter;
+
     @Mock
     private ModerationDialogView view;
-    private ModerationDialogPresenter presenter;
     @Mock
     private UserService userService;
     @Mock
     private BranchService branchService;
-
     @Mock
     private DialogManager dialogManager;
 
     private Branch branch;
 
-    private List<User> fakeUsers;
+    private List<User> allUsers;
+    private User user1, user2;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
 
-        branch = ObjectCreator.getFakeBranch("test", "test");
-        branch.setModerators(new ArrayList<User>());
+        branch = new Branch("name", "description");
+
         presenter = new ModerationDialogPresenter();
+        
         presenter.setBranchService(branchService);
         presenter.setUserService(userService);
         presenter.setDialogManager(dialogManager);
         presenter.setBranch(branch);
         presenter.initView(view);
-        fakeUsers = ObjectCreator.getFakeUsers(5);
-
+        
+        allUsers = ObjectCreator.getFakeUsers(5);
+        when(userService.getAll()).thenReturn(allUsers);
+        
+        user1 = allUsers.get(1);
+        user2 = allUsers.get(2);
     }
 
     @Test
     public void initView() {
-        when(userService.getAll()).thenReturn(fakeUsers);
         presenter.initView(view);
-        verify(view, times(1)).updateView(
-                argThat(new UserListMatcher(branch.getModerators())),
-                argThat(new UserListMatcher(fakeUsers)));
+        verify(view).updateView(branch.getModeratorsList(), allUsers);
     }
 
     @Test
     public void onAddWithoutErrors() {
-        when(userService.getAll()).thenReturn(fakeUsers);
-        presenter.onAdd(fakeUsers.get(2));
-
-        // a list of branch's moderators
-        List<User> moderators = new ArrayList<User>() {
-            {
-                add(fakeUsers.get(2));
-            }
-        };
-        verify(view, times(1)).updateView(
-                argThat(new UserListMatcher(moderators)),
-                argThat(new UserListMatcher(fakeUsers)));
-
+        presenter.onAdd(user1);
+        assertTrue(branch.isModeratedBy(user1));
     }
 
     @Test
-    public void onAddWithError() {
-        when(userService.getAll()).thenReturn(fakeUsers);
-        branch.setModerators(new ArrayList<User>() {
-            {
-                add(fakeUsers.get(2));
-            }
-        });
-        presenter.onAdd(fakeUsers.get(2));
-        // a list of branch's moderators
-        List<User> moderators = new ArrayList<User>() {
-            {
-                add(fakeUsers.get(2));
-            }
-        };
-        verify(view, never()).updateView(
-                argThat(new UserListMatcher(moderators)),
-                argThat(new UserListMatcher(fakeUsers)));
-        verify(view, times(1))
-                .showComboboxErrorMessage(
-                        ModerationDialogPresenter.MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST);
+    public void onAddUserIsAlreadyModerator() {
+        branch.addModerator(user1);
 
+        presenter.onAdd(user1);
+
+        verify(view, never()).updateView(branch.getModeratorsList(), allUsers);
+        verify(view).showComboboxErrorMessage(USER_ALREADY_MODERATOR);
     }
 
     @Test
-    public void onConfirm() {
+    public void onConfirm() throws Exception {
         presenter.onConfirm();
-        try {
-            verify(branchService, times(1)).saveBranch(
-                    argThat(new BranchMatcher(branch)));
-        } catch (NotUniqueException e) {
-            fail("Saved branch must be unique");
-        }
+        verify(branchService).saveBranch(branch);
     }
 
     @Test
-    public void onConfirmWithError() {
-
-        try {
-            doThrow(new NotUniqueException()).when(branchService).saveBranch(
-                    branch);
-            presenter.onConfirm();
-            verify(branchService, times(1)).saveBranch(
-                    argThat(new BranchMatcher(branch)));
-
-            verify(dialogManager, times(1)).notify(eq("item.already.exist"));
-        } catch (NotUniqueException e) {
-            fail("unreachable");
-        }
-
+    public void onConfirmWithError() throws Exception {
+        doThrow(new NotUniqueException()).when(branchService).saveBranch(branch);
+        
+        presenter.onConfirm();
+        
+        verify(branchService).saveBranch(branch);
+        verify(dialogManager).notify("item.already.exist");
     }
 
     @Test
-    public void onDelete() {
-        when(userService.getAll()).thenReturn(fakeUsers);
-        branch.setModerators(new ArrayList<User>() {
-            {
-                add(fakeUsers.get(1));
-                add(fakeUsers.get(2));
-            }
-        });
-        presenter.onDelete(fakeUsers.get(2));
-        assertEquals(branch.getModerators().size(), 1);
-        assertEquals(branch.getModerators().get(0), fakeUsers.get(1));
-        verify(view, times(1)).updateView(
-                argThat(new UserListMatcher(branch.getModerators())),
-                argThat(new UserListMatcher(fakeUsers)));
+    public void onDeleteModeratorRemovedFromBranch() {
+        branch.addModerators(user1, user2);
+
+        presenter.onDelete(user2);
+
+        List<User> moderators = branch.getModeratorsList();
+        
+        assertEquals(moderators.size(), 1);
+        assertEquals(moderators.get(0), user1);
+    }
+    
+    @Test
+    public void onDeleteViewGetsUpdated() {
+        branch.addModerator(user1);
+        presenter.onDelete(user1);
+        verify(view).updateView(branch.getModeratorsList(), allUsers);
     }
 
     @Test
     public void onReject() {
         presenter.onReject();
-        verify(view, times(1)).showDialog(eq(false));
+        verify(view).hideDialog();
     }
 
     @Test
-     public void refreshView() {
-        when(userService.getAll()).thenReturn(fakeUsers);
-         branch.setModerators(fakeUsers);
-     presenter.refreshView();
-     verify(view,times(1)).updateView(argThat(new UserListMatcher(branch.getModerators())), argThat(new UserListMatcher(fakeUsers)));
-     }
+    public void refreshView() {
+        branch.addModerators(allUsers);
+        presenter.refreshView();
+        verify(view).updateView(branch.getModeratorsList(), allUsers);
+    }
+
+    @Test
+    public void setBranch() {
+        branch.addModerators(allUsers);
+        Branch newBranch = new Branch("tt", "ttt");
+
+        presenter.setBranch(newBranch);
+        presenter.refreshView();
+
+        verify(view).updateView(newBranch.getModeratorsList(), allUsers);
+    }
+
+    @Test
+    public void updateView() {
+        presenter.updateView(allUsers, allUsers);
+        verify(view).updateView(allUsers, allUsers);
+    }
+
+    @Test
+    public void validateUserWhenUserIsAlreadyModerator() {
+        branch.addModerator(user1);
+        UserValidator validator = presenter.validateUser(user1);
+        assertEquals(validator.getError(), USER_ALREADY_MODERATOR);
+    }
+       
+    @Test
+    public void validateUserWhenUserIsNotAModerator() {
+        branch.addModerator(user1);
+        UserValidator validator = presenter.validateUser(user2);
+        assertFalse(validator.hasError());
+    }
     
-     @Test
-     public void setBranch() {
-         when(userService.getAll()).thenReturn(fakeUsers);
-         branch.setModerators(fakeUsers);
-         Branch newBranch = ObjectCreator.getFakeBranch("tt", "ttt");
-         newBranch.setModerators(new ArrayList<User>());
-         presenter.setBranch(newBranch);
-         presenter.refreshView();
-         verify(view,times(1)).updateView(argThat(new UserListMatcher(newBranch.getModerators())), argThat(new UserListMatcher(fakeUsers)));
-     }
-    
-     @Test
-     public void updateView() {
-         presenter.updateView(fakeUsers, fakeUsers);
-         verify(view,times(1)).updateView(argThat(new UserListMatcher(fakeUsers)), argThat(new UserListMatcher(fakeUsers)));
-     }
-    
-     @Test
-     public void validateUser() {
-         branch.setModerators(fakeUsers);
-         assertEquals(presenter.validateUser(fakeUsers.get(1)), ModerationDialogPresenter.MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST);
-         assertEquals(presenter.validateUser(new User("AA", "CC", "DD")), null);
-     }
 }

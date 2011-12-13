@@ -32,7 +32,6 @@ public class Section extends Entity {
     private Integer position;
     private List<Branch> branches = new ArrayList<Branch>();
 
-    
     public Section() {
     }
     

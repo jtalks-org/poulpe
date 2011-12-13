@@ -16,14 +16,22 @@ public class ObjectCreator {
         }
         return sections;
     }
-
+    
+    /**
+     * @deprecated use {@link Section#Section(String, String)} constructor instead
+     */
+    @Deprecated
     public static Section getFakeSection(String name, String description) {
         Section section = new Section();
         section.setName(name);
         section.setDescription(description);
         return section;
     }
-
+    
+    /**
+     * @deprecated use {@link Branch#Branch(String, String)} constructor instead
+     */
+    @Deprecated
     public static Branch getFakeBranch(String name, String description) {
         Branch branch = new Branch();
         branch.setName(name);

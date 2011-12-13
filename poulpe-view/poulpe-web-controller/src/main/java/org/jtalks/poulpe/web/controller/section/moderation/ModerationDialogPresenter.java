@@ -1,8 +1,6 @@
 package org.jtalks.poulpe.web.controller.section.moderation;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -10,11 +8,10 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 
 public class ModerationDialogPresenter {
 
-    public static final String MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST = "moderatedialog.validation.user_already_in_list";
+    public static final String USER_ALREADY_MODERATOR = "moderatedialog.validation.user_already_in_list";
     private ModerationDialogView view;
     private Branch branch;
     private BranchService branchService;
@@ -27,11 +24,7 @@ public class ModerationDialogPresenter {
 
     public void initView(ModerationDialogView view) {
         this.view = view;
-        updateView(branch.getModerators(), userService.getAll());
-    }
-
-    public void setBranch(Branch branch) {
-        this.branch = branch;
+        refreshView();
     }
 
     public void updateView(List<User> users, List<User> usersInCombo) {
@@ -39,51 +32,47 @@ public class ModerationDialogPresenter {
     }
 
     public void refreshView() {
-        updateView(branch.getModerators(), userService.getAll());
+        updateView(branch.getModeratorsList(), userService.getAll());
     }
 
     public void onConfirm() {
         try {
             branchService.saveBranch(branch);
         } catch (NotUniqueException e) {
-            Logger.getLogger(BranchPresenter.class.getName()).log(
-                    Level.SEVERE, null, e);
             dialogManager.notify("item.already.exist");
         }
-        view.showDialog(false);
+        
+        view.hideDialog();
     }
 
     public void onReject() {
-        view.showDialog(false);
-
+        view.hideDialog();
     }
 
     public void onAdd(final User user) {
-        String validationMessage = validateUser(user);
-        if (validationMessage == null) {
-            branch.getModerators().add(user);
-            updateView(branch.getModerators(), userService.getAll());
+        UserValidator validator = validateUser(user);
+        
+        if (validator.hasError()) {
+            view.showComboboxErrorMessage(validator.getError());
         } else {
-            view.showComboboxErrorMessage(validationMessage);
+            branch.addModerator(user);
+            refreshView();
         }
+    }
+
+    public void onDelete(final User user) {
+        branch.removeModerator(user);
+        refreshView();
+    }
+
+    public UserValidator validateUser(User user) {
+        UserValidator validator = new UserValidator(branch);
+        validator.validate(user);
+        return validator;
     }
     
-    public void onDelete(final User user) {
-            branch.getModerators().remove(user);
-            updateView(branch.getModerators(), userService.getAll());        
-    }
-
-    public String validateUser(User user) {
-        if (branch.getModerators().contains(user)) {
-            return MODERATEDIALOG_VALIDATION_USER_ALREADY_IN_LIST;
-        }
-        return null;
-    }
-
     /**
      * Accessor to set the {@link BranchService} for this presenter
-     * 
-     * @param service
      */
     public void setBranchService(BranchService service) {
         this.branchService = service;
@@ -91,11 +80,14 @@ public class ModerationDialogPresenter {
 
     /**
      * Accessor to set the {@link UserService} for this presenter
-     * 
-     * @param service
      */
     public void setUserService(UserService service) {
         this.userService = service;
     }
+    
+    public void setBranch(Branch branch) {
+        this.branch = branch;
+    }
 
 }
+
