@@ -23,8 +23,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 @SuppressWarnings("serial")
-public class UserBanningViewImpl extends Window implements UserBanningView,
-        AfterCompose {
+public class UserBanningViewImpl extends Window implements UserBanningView, AfterCompose {
 
     private UserBanningPresenter presenter;
     private Combobox userCombobox;
@@ -45,7 +44,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         usersToBanList = new ArrayList<User>();
-        
+
         userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
             @Override
             public void render(Comboitem item, User user) throws Exception {
@@ -53,7 +52,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
                 item.setValue(user);
             }
         });
-        
+
         usersToBan.setItemRenderer(new ListitemRenderer<User>() {
             @Override
             public void render(Listitem item, User user) throws Exception {
@@ -72,7 +71,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
 
     @Override
     public void updateView(final List<User> users) {
-        userCombobox.setModel(new BindingListModelList(users, false));        
+        userCombobox.setModel(new BindingListModelList(users, false));
         modelUserBanning = new ListModelList<User>(usersToBanList);
         usersToBan.setModel(modelUserBanning);
         addButton.setDisabled(true);
@@ -86,20 +85,19 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         modelUserBanning.addAll(usersToBanList);
         manageButtons();
     }
-    
-    public void manageButtons(){
-        if(usersToBanList.isEmpty()){
+
+    public void manageButtons() {
+        if (usersToBanList.isEmpty()) {
             submitButton.setDisabled(true);
             resetButton.setDisabled(true);
-        }else{
+        } else {
             submitButton.setDisabled(false);
             resetButton.setDisabled(false);
         }
     }
 
     public void onClick$addButton() {
-        Object selectedInCombo = userCombobox.getModel().getElementAt(
-                userCombobox.getSelectedIndex());
+        Object selectedInCombo = userCombobox.getModel().getElementAt(userCombobox.getSelectedIndex());
         if (validateComboboxValue(selectedInCombo)) {
             usersToBanList.add((User) selectedInCombo);
             refreshView();
@@ -107,7 +105,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     }
 
     public void onClick$permanent() {
-//        banLength.setValue(null);
+        // banLength.setValue(null);
         if (permanent.isChecked()) {
             banLength.setDisabled(true);
         } else {
@@ -115,12 +113,11 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         }
     }
 
-    public void onClick$submitButton() {         
+    public void onClick$submitButton() {
         if (validateBanForm()) {
-            presenter.banBasters(usersToBanList, permanent.isChecked(),
-                    banLength.getValue(), banReason.getValue());
-        }else{
-            
+            presenter.banBasters(usersToBanList, permanent.isChecked(), banLength.getValue(), banReason.getValue());
+        } else {
+
         }
     }
 
@@ -129,14 +126,14 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     }
 
     public void clearView() {
-        usersToBanList.clear();        
+        usersToBanList.clear();
         refreshView();
     }
 
     public void onSelect$userCombobox() {
-        if(userCombobox.getSelectedIndex() <0) return;
-        Object selectedInCombo = userCombobox.getModel().getElementAt(
-                userCombobox.getSelectedIndex());
+        if (userCombobox.getSelectedIndex() < 0)
+            return;
+        Object selectedInCombo = userCombobox.getModel().getElementAt(userCombobox.getSelectedIndex());
         if (validateComboboxValue(selectedInCombo)) {
             addButton.setDisabled(false);
         }
@@ -150,7 +147,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         if (permanent.isChecked()) {
             return true;
         } else if (banLength.getValue() == null || banLength.getValue() == 0) {
-            banLength.setErrorMessage(Labels.getLabel("userbanning.validation.wrong_ban_length"))          ;  
+            banLength.setErrorMessage(Labels.getLabel("userbanning.validation.wrong_ban_length"));
             return false;
         }
         return true;
@@ -161,11 +158,11 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
             return false;
         if (!(value instanceof User))
             return false;
-        if (((User) value).isPermanentBan()){
+        if (((User) value).isPermanentBan()) {
             userCombobox.setErrorMessage(Labels.getLabel("userbanning.validation.user_already_banned"));
             return false;
         }
-        if (usersToBanList.contains(value)){
+        if (usersToBanList.contains(value)) {
             userCombobox.setErrorMessage(Labels.getLabel("userbanning.validation.user_already_within_ban_list"));
             return false;
         }

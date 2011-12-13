@@ -77,20 +77,15 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     public void onClose(Event event) {
         hideDialog();
     }
-
-    @Override
-    public void showDialog(boolean showIt) {
-        setVisible(showIt);
-    }
     
     @Override
     public void showDialog() {
-        showDialog(true);
+        setVisible(true);
     }
 
     @Override
     public void hideDialog() {
-        showDialog(false);
+        setVisible(false);
     }
 
     @Override

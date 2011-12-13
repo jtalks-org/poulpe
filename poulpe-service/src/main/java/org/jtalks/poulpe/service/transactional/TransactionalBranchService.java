@@ -22,19 +22,16 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 import java.util.List;
 
-
 /**
  * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao>
-        implements BranchService {
+public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao> implements
+        BranchService {
 
     /**
      * Create an instance of entity based service
-     *
-     * @param branchDao - data access object, which should be able do all CRUD operations.
      */
     public TransactionalBranchService(BranchDao branchDao) {
         this.dao = branchDao;
@@ -53,8 +50,8 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void deleteBranch(Branch selectedBranch) {
-          // TODO: check returned value? 
-          dao.delete(selectedBranch.getId());
+        // TODO: check returned value?
+        dao.delete(selectedBranch.getId());
     }
 
     /**
@@ -62,24 +59,22 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void saveBranch(Branch selectedBranch) throws NotUniqueException {
-        if(dao.isBranchDuplicated(selectedBranch)){
+        if (dao.isBranchDuplicated(selectedBranch)) {
             throw new NotUniqueException();
         }
-        
+
         dao.saveOrUpdate(selectedBranch);
     }
 
     /** {@inheritDoc} */
     @Override
     public void deleteBranchRecursively(Branch victim) {
-        // topicDao.deleteTopicsFromBranch(victim); // TopicDao#deleteTopicsFromBranch(Branch from)
         dao.delete(victim.getId());
     }
 
     /** {@inheritDoc} */
     @Override
     public void deleteBranchMovingTopics(Branch victim, Branch recipient) {
-        // topicDao.moveTopics(victim, recipient); // TopicDao#moveTopics(Branch from, Branch to);
         dao.delete(victim.getId());
     }
 

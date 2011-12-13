@@ -1,5 +1,16 @@
 /**
- * 
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.jtalks.poulpe.service.transactional;
 
@@ -18,28 +29,18 @@ import org.jtalks.poulpe.service.UserService;
  * 
  * @author Guram Savinov
  */
-public class TransactionalUserService extends
-        AbstractTransactionalEntityService<User, UserDao> implements
-        UserService {
+public class TransactionalUserService extends AbstractTransactionalEntityService<User, UserDao> implements UserService {
 
     /**
      * Create an instance of user entity based service.
-     * 
-     * @param dao
-     *            the user DAO
-     * @param securityService
-     *            the security service
      */
-    public TransactionalUserService(UserDao userDao) {        
-        this.dao = userDao; 
+    public TransactionalUserService(UserDao userDao) {
+        this.dao = userDao;
     }
 
     @Override
-    public void setPermanentBanStatus(Collection<User> users,
-            boolean permanentBan, String banReason) {
-        if (users == null) {
-            throw new NullPointerException();
-        }
+    public void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason) {
+        checkUsers(users);
 
         for (User user : users) {
             user.setPermanentBan(permanentBan);
@@ -50,15 +51,16 @@ public class TransactionalUserService extends
         }
     }
 
-    @Override
-    public void setTemporaryBanStatus(Collection<User> users, int days,
-            String banReason) {
+    private void checkUsers(Collection<User> users) {
         if (users == null) {
-            throw new NullPointerException();
+            throw new IllegalArgumentException("Users can't be null");
         }
-        if (days <= 0) {
-            throw new IllegalArgumentException();
-        }
+    }
+
+    @Override
+    public void setTemporaryBanStatus(Collection<User> users, int days, String banReason) {
+        checkUsers(users);
+        checkDays(days);
 
         DateTime banExpirationDate = DateTime.now().plusDays(days);
 
@@ -71,18 +73,24 @@ public class TransactionalUserService extends
         }
     }
 
-	@Override
-	public List<User> getAll() {    
-		return dao.getAll();
-	}
+    private void checkDays(int days) {
+        if (days <= 0) {
+            throw new IllegalArgumentException("Days must be positive");
+        }
+    }
 
-	@Override
-	public List<User> getUsersByUsernameWord(String word) {
-		return dao.getByUsernamePart(word);
-	}
+    @Override
+    public List<User> getAll() {
+        return dao.getAll();
+    }
 
-	@Override
-	public void updateUser(User user) {
-		dao.update(user);
-	}
+    @Override
+    public List<User> getUsersByUsernameWord(String word) {
+        return dao.getByUsernamePart(word);
+    }
+
+    @Override
+    public void updateUser(User user) {
+        dao.update(user);
+    }
 }

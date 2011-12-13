@@ -27,27 +27,6 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  */
 public class UserPresenter {
 
-	 public interface UserView {
-		 
-	 	void showFirstname(String firstname);
-
-        void showLastname(String lastname);
-
-        void showEmail(String email);
-
-        void showPassword(String password);
-
-        String getFirstname();
-        
-        String getLastname();
-        
-        String getEmail();
-        
-        String getPassword();
-        
-        void hideEditAction();
-    }
-
     /**
      * Save and init view.
      * @param UserView
@@ -55,7 +34,7 @@ public class UserPresenter {
     public void initView(UserView view) {
         this.view = view;
     }
-    
+
     private DialogManager dialogManager;
     private WindowManager windowManager;
     private UserService userService;
@@ -68,17 +47,17 @@ public class UserPresenter {
      * @param userService impl of UserService
      */
     public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-    
+        this.userService = userService;
+    }
+
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
-    
+
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
     }
-    
+
     public void initializeForEdit(UserView view, User user, EditListener<User> listener) {
         this.view = view;
         this.listener = listener;
@@ -92,7 +71,7 @@ public class UserPresenter {
         view.showFirstname(this.user.getFirstName());
         view.showLastname(this.user.getLastName());
         view.showEmail(this.user.getEmail());
-        view.showPassword(this.user.getPassword());        
+        view.showPassword(this.user.getPassword());
     }
 
     public void onUpdateAction() {
@@ -100,12 +79,12 @@ public class UserPresenter {
         closeView();
         listener.onUpdate(user);
     }
-    
+
     public void onCancelEditAction() {
         closeView();
         listener.onCloseEditorWithoutChanges();
     }
-    
+
     private void closeView() {
         windowManager.closeWindow(view);
     }

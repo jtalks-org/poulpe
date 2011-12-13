@@ -56,12 +56,12 @@ public class TransactionalUserServiceTest {
         users.add(getUser("jack"));
     }
 
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetPermanentBanStatusUsersNull() {
         userService.setPermanentBanStatus(null, true, BAN_REASON);
     }
 
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetTemporaryBanStatusUsersNull() {
         userService.setTemporaryBanStatus(null, 1, BAN_REASON);
     }

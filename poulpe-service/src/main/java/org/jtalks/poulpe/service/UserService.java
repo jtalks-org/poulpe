@@ -1,14 +1,14 @@
 /**
  * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
+ * modify it under the terms of the GNU Lesser General 
  * License as published by the Free Software Foundation; either
  * version 2.1 of the License, or (at your option) any later version.
  * This library is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public
+ * Lesser General  License for more details.
+ * You should have received a copy of the GNU Lesser General 
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
@@ -30,48 +30,34 @@ public interface UserService extends EntityService<User> {
     /**
      * Sets permanent ban status for the user list.
      * 
-     * @param users
-     *            the users to update ban status
-     * @param permanentBan
-     *            the permanent ban status
-     * @param banReason
-     *            the ban reason description
+     * @param users the users to update ban status
+     * @param permanentBan the permanent ban status
+     * @param banReason the ban reason description
      */
-    public void setPermanentBanStatus(Collection<User> users, boolean permanentBan,
-            String banReason);
+    void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason);
 
     /**
      * Sets temporary ban status for the user list.
      * 
-     * @param users
-     *            the users to update ban status
-     * @param days
-     *            the length of the temporary ban status in days
-     * @param banReason
-     *            the ban reason description
+     * @param users the users to update ban status
+     * @param days the length of the temporary ban status in days
+     * @param banReason the ban reason description
      */
-    public void setTemporaryBanStatus(Collection<User> users, int days,
-            String banReason);
-    
+    void setTemporaryBanStatus(Collection<User> users, int days, String banReason);
+
     /**
      * Gets all Users from the database
-     * 
-     * @return <code>List<User></code>
      */
-    public List<User> getAll();
-    
+    List<User> getAll();
+
     /**
      * Gets Users with corresponding word in user name
-     * 
-     * @return <code>List<User></code>
      */
-    public List<User> getUsersByUsernameWord(String word);
-    
+    List<User> getUsersByUsernameWord(String word);
+
     /**
      * Update corresponding user
-     * 
-     * @param <code>User</code>
      */
-    public void updateUser(User user);
+    void updateUser(User user);
 
 }

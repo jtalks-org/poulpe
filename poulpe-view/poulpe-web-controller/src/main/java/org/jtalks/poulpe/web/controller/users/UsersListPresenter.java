@@ -26,38 +26,9 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  * Presenter manager displaying a list of
  * {@link org.jtalks.common.model.entity.User}
  * 
- * @author Vytautas Kashchuk 
+ * @author Vytautas Kashchuk
  */
 public class UsersListPresenter {
-
-	/**
-     * View to display a list of
-     * {@link org.jtalks.common.model.entity.User}
-     * 
-     * @author Vytautas Kashchuk 
-     */
-    public interface UsersListView {
-
-        /**
-         * Show users list.
-         * <ul>
-         * <li>
-         * Each row should show username, email, first name, last name and role of User .</li>
-         * <li>
-         * If user double click on the existing user event should be directed to
-         * the presenter</li>
-         * <li>
-         * Multiple selections should be prohibited.</li>
-         * </ul>
-         * 
-         * @param list of #{@link org.jtalks.common.model.entity.User}
-         */
-        void showUsersList(List<User> list);
-        
-        void showSearchString(String searchString);
-
-        String getSearchString();
-    }
 
     private UserService userService;
     private WindowManager windowManager;
@@ -78,39 +49,39 @@ public class UsersListPresenter {
     public void initView(UsersListView view) {
         this.view = view;
         // Potential low performance.
-        refreshUsersList();	 
+        refreshUsersList();
     }
 
     public void onEditAction(User user) {
-    	this.windowManager.openUserWindowForEdit(user, editListener);
+        this.windowManager.openUserWindowForEdit(user, editListener);
     }
 
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
     }
 
-	public void setUserService(UserService userService) {
-		this.userService = userService;
-	}
-    
-    public void onSearchAction() {    	
-    	String searchString = view.getSearchString();
-    	List<User> users = null;
-    	if (searchString == null || searchString.trim().isEmpty()) {
-        	// Potentially low performance
-    		users = userService.getAll();
-    	} else {
-    		users = userService.getUsersByUsernameWord(searchString);
-    	}    	
-    	refreshUsersList(users);
+    public void setUserService(UserService userService) {
+        this.userService = userService;
+    }
+
+    public void onSearchAction() {
+        String searchString = view.getSearchString();
+        List<User> users = null;
+        if (searchString == null || searchString.trim().isEmpty()) {
+            // Potentially low performance
+            users = userService.getAll();
+        } else {
+            users = userService.getUsersByUsernameWord(searchString);
+        }
+        refreshUsersList(users);
     }
 
     private void refreshUsersList() {
-    	List<User> list = userService.getAll();
-    	refreshUsersList(list);
+        List<User> list = userService.getAll();
+        refreshUsersList(list);
     }
-    
-    private void refreshUsersList(List<User> users) { 
+
+    private void refreshUsersList(List<User> users) {
         view.showUsersList(users);
     }
 }

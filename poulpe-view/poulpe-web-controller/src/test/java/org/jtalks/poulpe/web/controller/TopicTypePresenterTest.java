@@ -29,7 +29,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter.TopicTypeView;
+import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -70,14 +70,14 @@ public class TopicTypePresenterTest {
     public void validateTopicTypeEmptyTitleTest() {
         TopicType topicType = new TopicType("", "");
 
-        assertEquals(presenter.validateTopicType(topicType), ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
+        assertEquals(presenter.validateTopicType(topicType), TITLE_CANT_BE_VOID);
     }
 
     @Test
     public void validateTopicTypeNullTitleTest() {
         TopicType topicType = new TopicType(); // title is null
 
-        assertEquals(presenter.validateTopicType(topicType), ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
+        assertEquals(presenter.validateTopicType(topicType), TITLE_CANT_BE_VOID);
     }
 
     @Test
@@ -113,7 +113,7 @@ public class TopicTypePresenterTest {
         presenter.initializeForEdit(view, fake, listener);
 
         verify(view).hideCreateAction();
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS);
+        verify(view).openErrorPopupInTopicTypeDialog(TITLE_DOESNT_EXISTS);
         verify(view, never()).showTypeTitle(fake.getTitle());
         verify(view, never()).showTypeTitle(fake.getDescription());
     }
@@ -125,7 +125,7 @@ public class TopicTypePresenterTest {
 
         presenter.onTitleLoseFocus();
 
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
+        verify(view).openErrorPopupInTopicTypeDialog(TITLE_ALREADY_EXISTS);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class TopicTypePresenterTest {
 
         presenter.onTitleLoseFocus();
 
-        verify(view, never()).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
+        verify(view, never()).openErrorPopupInTopicTypeDialog(TITLE_ALREADY_EXISTS);
     }
 
     @Test
@@ -209,7 +209,7 @@ public class TopicTypePresenterTest {
 
         presenter.save();
 
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
+        verify(view).openErrorPopupInTopicTypeDialog(TITLE_CANT_BE_VOID);
         verify(topicTypeService, never()).saveTopicType(any(TopicType.class));
     }
 
@@ -229,7 +229,7 @@ public class TopicTypePresenterTest {
 
         presenter.update();
 
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
+        verify(view).openErrorPopupInTopicTypeDialog(TITLE_CANT_BE_VOID);
         verify(topicTypeService, never()).updateTopicType(any(TopicType.class));
     }
 

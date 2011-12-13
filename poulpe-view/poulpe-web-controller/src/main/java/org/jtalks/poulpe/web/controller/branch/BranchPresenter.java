@@ -25,73 +25,65 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
  * Model-View-Presenter
  * 
  * @author Bekrenev Dmitry
- * */
+ */
 public class BranchPresenter {
 
-	private SectionService sectionService;
-	private BranchDialogView view;
-	private BranchService branchService;
+    private SectionService sectionService;
+    private BranchDialogView view;
+    private BranchService branchService;
 
-	/**
-	 * Sets the Branch instance
-	 * 
-	 * @param service
-	 *            The instance branch service
-	 * */
-	public void setBranchService(BranchService service) {
-		branchService = service;
-	}
+    /**
+     * Sets the Branch instance
+     */
+    public void setBranchService(BranchService service) {
+        branchService = service;
+    }
 
-	/**
-	 * Sets the Section instance
-	 * 
-	 * @param service
-	 *            The instance section service
-	 * */
-	public void setSectionService(SectionService service) {
-		sectionService = service;
-	}
+    /**
+     * Sets the Section instance
+     */
+    public void setSectionService(SectionService service) {
+        sectionService = service;
+    }
 
-	/**
-	 * Sets the view instance which represent User interface
-	 * 
-	 * @param view
-	 *            The instance BranchEditorView
-	 * */
-	public void setView(BranchDialogView view) {
-		this.view = view;
-	}
+    /**
+     * Sets the view instance which represent User interface
+     */
+    public void setView(BranchDialogView view) {
+        this.view = view;
+    }
 
-	/**
-	 * Init view initial data
-	 * */
-	public void initView() {
-		view.initSectionList(sectionService.getAll());
-	}
+    /**
+     * Init view initial data
+     */
+    public void initView() {
+        view.initSectionList(sectionService.getAll());
+    }
 
-	/**
-	 * Save new or edited branch in db In case when branch with equal name
-	 * exists, cause open error popup in view.
-	 * */
-	public void saveBranch() {
-		Section section = view.getSection();
-		Branch branch = view.getBranch(section);
-		saveBranch(section, branch);
-	}
+    /**
+     * Save new or edited branch in db In case when branch with equal name
+     * exists, cause open error popup in view.
+     */
+    public void saveBranch() {
+        Section section = view.getSection();
+        Branch branch = view.getBranch(section);
+        saveBranch(section, branch);
+    }
 
-	public void saveBranch(Section section, Branch branch) {
-		boolean isDuplicated = branchService.isDuplicated(branch);
-		if (!isDuplicated) {
-			section.addBranch(branch);
-			try {
+    public void saveBranch(Section section, Branch branch) {
+        boolean isDuplicated = branchService.isDuplicated(branch);
+        if (!isDuplicated) {
+            section.addBranch(branch);
+            try {
                 sectionService.saveSection(section);
-			} catch (NotUniqueException e) {
-				view.notUniqueBranchName();
-			}
-		} else
-			view.notUniqueBranchName();
+            } catch (NotUniqueException e) {
+                view.notUniqueBranchName();
+            }
+        } else {
+            view.notUniqueBranchName();
+        }
 
-		view.hide();
-	}
+        view.hide();
+    }
 
 }

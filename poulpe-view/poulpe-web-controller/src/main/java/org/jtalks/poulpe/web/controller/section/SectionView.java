@@ -25,7 +25,9 @@ import org.jtalks.poulpe.model.entity.Section;
 public interface SectionView {
 
     /**
-     * Remove specified section from view TODO the implied way to remove section
+     * Remove specified section from view 
+     * 
+     * TODO the implied way to remove section
      * from view is to find proper SectionTreeComponent and remove it from
      * SectionView children
      * 
@@ -57,7 +59,7 @@ public interface SectionView {
     /**
      * Ask view to hide EditSectionDialog
      */
-   void closeEditSectionDialog();
+    void closeEditSectionDialog();
 
     /**
      * Ask view to show NewSectionDialog
@@ -78,13 +80,13 @@ public interface SectionView {
      * Show error message in the NewSectionDialog
      * @param error description
      */
-   void openErrorPopupInNewSectionDialog(String error);
+    void openErrorPopupInNewSectionDialog(String error);
 
     /**
-     * Show error message in the EditSectionDialog  
-     * @param error description 
+     * Show error message in the EditSectionDialog
+     * @param error description
      */
-    public void openErrorPopupInEditSectionDialog(String error);
+    void openErrorPopupInEditSectionDialog(String error);
 
     /**
      * Close delete dialog for section
@@ -94,9 +96,8 @@ public interface SectionView {
     /**
      * Show delete section dialog
      * 
-     * @param victim
-     *            list of sections that might take branches of the section being
-     *            deleted
+     * @param victim list of sections that might take branches of the section
+     * being deleted
      */
     void openDeleteSectionDialog(Section victim);
 
@@ -129,28 +130,31 @@ public interface SectionView {
 
     /**
      * Check edit section dialog opened
-     * @return true if dialog open and false otherwise 
+     * @return true if dialog open and false otherwise
      */
     boolean isEditDialogOpen();
+
     /**
      * Check new section dialog opened
-     * @return true if dialog open and false otherwise 
+     * @return true if dialog open and false otherwise
      */
     boolean isNewDialogOpen();
+
     /**
      * Check edit dialog opened
      * @return always return false
      */
     boolean isDeleteDialogOpen();
-    
+
     /**
      * Open the moderator dialog
      * @param branch
      */
     void openModeratorDialog(Branch branch);
+
     /**
      * Close the moderator dialog
      */
-    void closeModeratorDialog();    
+    void closeModeratorDialog();
 
 }

@@ -35,7 +35,7 @@ import org.zkoss.zul.Window;
  * 
  * @author Vytautas Kashchuk
  */
-public class UsersListViewImpl extends Window implements UsersListPresenter.UsersListView, AfterCompose {
+public class UsersListViewImpl extends Window implements UsersListView, AfterCompose {
 
 private static final long serialVersionUID = 1L;
     

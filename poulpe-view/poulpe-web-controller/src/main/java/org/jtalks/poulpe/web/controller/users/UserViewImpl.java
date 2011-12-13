@@ -22,7 +22,7 @@ import org.zkoss.zul.Window;
  * 
  * @author Vytautas Kashchuk
  */
-public class UserViewImpl extends Window implements UserPresenter.UserView {
+public class UserViewImpl extends Window implements UserView {
 
     private static final long serialVersionUID = 1L;
 

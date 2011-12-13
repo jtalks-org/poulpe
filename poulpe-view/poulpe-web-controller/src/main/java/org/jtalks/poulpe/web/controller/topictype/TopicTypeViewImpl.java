@@ -24,7 +24,7 @@ import org.zkoss.zul.Window;
  * @author Pavel Vervenko
  * @author Vahluev Vyacheslav
  */
-public class TopicTypeViewImpl extends Window implements TopicTypePresenter.TopicTypeView {
+public class TopicTypeViewImpl extends Window implements TopicTypeView {
 
     /**
      * Generated uid
