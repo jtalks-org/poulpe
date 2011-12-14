@@ -67,10 +67,10 @@ public class BranchPresenter {
 	public void saveBranch() {
 		Section section = view.getSection();
 		Branch branch = view.getBranch(section);
-		saveBranch(section, branch);
+		saveBranch(branch);
 	}
 
-	public void saveBranch(Section section, Branch branch) {
+	public void saveBranch(Branch branch) {
 		try {
 			branchService.saveBranch(branch);
 		} catch (NotUniqueException e) {

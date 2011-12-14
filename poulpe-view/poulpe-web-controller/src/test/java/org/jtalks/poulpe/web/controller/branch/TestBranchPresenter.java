@@ -74,24 +74,19 @@ public class TestBranchPresenter {
 
     @Test
     public void testSaveBranch() throws NotUniqueException {
-        when(view.getSection()).thenReturn(section);
-        presenter.saveBranch(section, new Branch());
-        assertBranchAddedToSection();
+        Branch branch = new Branch();
+        presenter.saveBranch(branch);
+        verify(branchService).saveBranch(branch);
     }
 
-    private void assertBranchAddedToSection() throws NotUniqueException {
-        verify(service).saveSection(sectionCaptor.capture());
-        Section capturedSection = sectionCaptor.getValue();
-        assertEquals(capturedSection.getBranches().size(), 1);
-    }
-
-    @Test
+   @Test
     public void testSaveBranchWhenExceptionHappen() throws NotUniqueException {
-        when(view.getSection()).thenReturn(section);
-        doThrow(new NotUniqueException()).when(service).saveSection(section);
-
+	   Branch branch = new Branch();
+        doThrow(new NotUniqueException()).when(branchService).saveBranch(branch);
         presenter.saveBranch();
-
+        Branch branch_clone = new Branch();
+        branch_clone.setUuid(branch.getUuid());
+        presenter.saveBranch(branch_clone);
         verify(view).notUniqueBranchName();
     }
 
