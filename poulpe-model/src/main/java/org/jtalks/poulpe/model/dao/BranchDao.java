@@ -31,10 +31,10 @@ public interface BranchDao extends ParentRepository<Branch> {
      * @return list of branches
      */
     List<Branch> getAll();
-    
+
     /**
      * Method to check is branch used.
-     * @param branch
+     * @param branch branch to check
      * @return true if branch with such name already exists and branch id not equal
      */
     boolean isBranchDuplicated(Branch branch);
