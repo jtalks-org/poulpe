@@ -37,22 +37,15 @@ import org.testng.annotations.Test;
 /**
  * @author Bekrenev Dmitry
  * */
-public class TestBranchPresenter {
-
-    BranchPresenter presenter = new BranchPresenter();
-
+public class BranchPresenterTest {
     @Mock
     SectionService service;
     @Mock
     BranchDialogView view;
     @Mock
     BranchService branchService;
-    @Captor
-    ArgumentCaptor<Section> sectionCaptor;
-
-    private static final String sectionName = "sectionName";
-    private static final String sectionDescription = "sectionDescription";
-    private Section section = new Section(sectionName, sectionDescription);
+    private Section section = new Section("sectionName", "sectionDescription");
+    BranchPresenter presenter = new BranchPresenter();
 
     @BeforeMethod
     public void setUp() {
