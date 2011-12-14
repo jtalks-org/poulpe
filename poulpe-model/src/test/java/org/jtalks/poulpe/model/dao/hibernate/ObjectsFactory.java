@@ -24,6 +24,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
 
@@ -93,5 +94,15 @@ public final class ObjectsFactory {
     public static Group createGroup(){
         Group group = new Group("Group" + UUID.randomUUID(), "Group" + UUID.randomUUID());
         return group;
+    }
+    
+    /**
+     * Create rank with random name and postCount.
+     * @return new rank
+     */
+    public static Rank createRank() {
+        int randNum = new Random().nextInt();
+        Rank rank = new Rank("Rank" + randNum, randNum);
+        return rank;
     }
 }
