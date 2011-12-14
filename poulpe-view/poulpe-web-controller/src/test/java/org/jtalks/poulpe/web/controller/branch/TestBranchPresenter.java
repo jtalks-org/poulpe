@@ -83,10 +83,7 @@ public class TestBranchPresenter {
     public void testSaveBranchWhenExceptionHappen() throws NotUniqueException {
 	   Branch branch = new Branch();
         doThrow(new NotUniqueException()).when(branchService).saveBranch(branch);
-        presenter.saveBranch();
-        Branch branch_clone = new Branch();
-        branch_clone.setUuid(branch.getUuid());
-        presenter.saveBranch(branch_clone);
+        presenter.saveBranch(branch);
         verify(view).notUniqueBranchName();
     }
 
