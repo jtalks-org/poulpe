@@ -84,6 +84,10 @@
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
+    <dependency>
+      <groupId>ru.javatalks.utils</groupId>
+      <artifactId>core-utils</artifactId>
+    </dependency>
   </dependencies>
 
   <build>

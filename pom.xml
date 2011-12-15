@@ -254,6 +254,11 @@
         <artifactId>jtalks-common-service</artifactId>
         <version>${common.version}</version>
       </dependency>
+      <dependency>
+        <groupId>ru.javatalks.utils</groupId>
+        <artifactId>core-utils</artifactId>
+        <version>0.1</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
