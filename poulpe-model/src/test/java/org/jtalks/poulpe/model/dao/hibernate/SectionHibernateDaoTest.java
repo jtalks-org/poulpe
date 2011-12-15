@@ -16,7 +16,6 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
@@ -39,8 +38,10 @@ import org.testng.annotations.Test;
 
 /**
  * The test for {@link SectionHibernateDao}.
+ * 
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
+ * @author Alexey Grigorev
  */
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -51,134 +52,106 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     private SessionFactory sessionFactory;
     @Autowired
     private SectionDao dao;
+    
     private Session session;
-
+    private Section section;
+    
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
+        section = ObjectsFactory.createSection();
     }
 
-    @Test
-    public void deleteRecursevelyTest() {
-        Section section = ObjectsFactory.createSectionWithBranches();
-        session.save(section);
-        dao.deleteRecursively(section);
-        Long actualAmount = (Long) session
-                .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
-                .setLong("id", section.getId()).uniqueResult();
-        assertEquals(actualAmount, (Long) 0L);
-    }
-
-    @Test
-    public void deleteAndMoveBranchesToTest() {
-        Section victim = ObjectsFactory.createSectionWithBranches();
-        Section recipient = ObjectsFactory.createSectionWithBranches();
-        Long victimBranchesAmount = (long) victim.getBranches().size();
-        recipient.getBranches().clear();
-        session.save(victim);
-        session.save(recipient);
-        
-        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim, recipient);
-        assertTrue(isDeleted);
-        Long actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",victim.getId()).uniqueResult();
-        assertEquals(actualAmount, (Long)0L);
-        actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",recipient.getId()).uniqueResult();
-        assertEquals(actualAmount, victimBranchesAmount);
-    }
-    
-    
     @Test
     public void saveSectionTest() {
-        Section section = ObjectsFactory.createSection();
-
         dao.saveOrUpdate(section);
+        assertSectionSaved();
+    }
 
+    private void assertSectionSaved() {
         assertNotSame(section.getId(), 0, "Id not created");
-
-        session.evict(section);
-        Section result = (Section) session.get(Section.class, section.getId());
-
-        assertReflectionEquals(section, result);
+        Section actual = retrieveActualSection();
+        assertReflectionEquals(section, actual);
     }
     
+    private Section retrieveActualSection() {
+        session.evict(section);
+        return (Section) session.get(Section.class, section.getId());
+    }
+
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void saveSectionWithNameNotNullViolationTest() {
-        Section section = new Section();
-
-        dao.saveOrUpdate(section);
+        Section nullTitleSection = new Section();
+        dao.saveOrUpdate(nullTitleSection);
     }
-    
+
     @Test
     public void getTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
-
-        Section result = dao.get(section.getId());
-
-        assertNotNull(result);
-        assertEquals(result.getId(), section.getId());
+        givenSection();
+        Section actual = dao.get(section.getId());
+        assertReflectionEquals(section, actual);
     }
-    
+
+    private void givenSection() {
+        session.save(section);
+    }
+
     @Test
     public void getInvalidIdTest() {
         Section result = dao.get(-567890L);
-
         assertNull(result);
     }
-    
+
     @Test
     public void updateTest() {
+        givenSection();
+
         String newName = "new section name";
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
         section.setName(newName);
 
         dao.saveOrUpdate(section);
-        session.evict(section);
-        Section result = (Section) session.get(Section.class, section.getId());
-
-        assertEquals(result.getName(), newName);
+        
+        assertNameChanged(newName);
     }
-    
+
+    private void assertNameChanged(String newName) {
+        Section actual = retrieveActualSection();
+        assertEquals(actual.getName(), newName);
+    }
+
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void UpdateNotNullViolationTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
+        givenSection();
         section.setName(null);
-
         dao.saveOrUpdate(section);
     }
-    
+
     @Test
     public void getAllTest() {
-        Section section1 = ObjectsFactory.createSection();
-        session.save(section1);
-        Section section2 = ObjectsFactory.createSection();
-        session.save(section2);
-
+        givenTwoSections();
         List<Section> sections = dao.getAll();
-
         assertEquals(sections.size(), 2);
     }
-    
+
+    private void givenTwoSections() {
+        session.save(ObjectsFactory.createSection());
+        session.save(ObjectsFactory.createSection());
+    }
+
     @Test
     public void GetAllWhenTableIsEmptyTest() {
         List<Section> sections = dao.getAll();
-
         assertTrue(sections.isEmpty());
     }
 
     @Test
     public void isSectionExistTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
-
+        givenSection();
         assertTrue(dao.isExist(section.getId()));
     }
 
-      
     @Test
-    public void NotExistingSectionTest() {
-     assertFalse(dao.isExist(99999L));
+    public void notExistingSectionTest() {
+        assertFalse(dao.isExist(99999L));
     }
 }

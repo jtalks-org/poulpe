@@ -14,11 +14,9 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
@@ -29,69 +27,60 @@ import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
  * @author Kirill Afonin
+ * @author Alexey Grigorev
  */
-// TODO: split this class on 2: objects factory and persisted objects factory
 public final class ObjectsFactory {
 
     public static Branch getDefaultBranch() {
-        Branch newBranch = new Branch();
-        
-        String uniqueName = "branch name " + UUID.randomUUID();
-        newBranch.setName(uniqueName);
-        newBranch.setDescription("branch description");
+        Branch newBranch = new Branch(random(), "desc");
         newBranch.setSection(createSection());
-        
         return newBranch;
     }
 
-    /**
-     * Create type of topic with random title, it may be useful when need to
-     * persist many object in testing.
-     * 
-     * @return type of topic
-     */
     public static TopicType createTopicTypeWithRandomTitle() {
-        TopicType topicType = new TopicType();
-        String randomTitle = "topic type title" + RandomStringUtils.random(10);
-        topicType.setTitle(randomTitle);
-        topicType.setDescription("topic type description");
-        return topicType;
+        return new TopicType(random(), "desc");
     }
     
     public static Component createComponent(ComponentType type) {
         Component component = new Component();
-        component.setName(RandomStringUtils.random(10));
+        component.setName(random());
         component.setComponentType(type);
         return component;
     }
     
     public static Section createSectionWithBranches() {
-        Section section = new Section();
-        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
-        section.setBranches(new ArrayList<Branch>());
-        int branchesAmount = new Random().nextInt(10) + 1;
+        return createSectionWithBranches(randomInt());
+    }
+
+    public static Section createSectionWithBranches(int branchesAmount) {
+        Section section = new Section(random());
+        
         for (int i = 0; i < branchesAmount ; i++) {
             Branch branch = getDefaultBranch();
             branch.setSection(section);
             section.addBranch(branch);
         }
+        
         return section;
     }
     
     public static Section createSection() {
-        Section section = new Section();
-        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
-        section.setBranches(new ArrayList<Branch>());
-        return section;
+        return new Section(random());
+    }
+
+    public static User createUser() {
+        return new User(random(), random(), random());
     }
     
-    public static User createUser(){
-        User user = new User("User" + UUID.randomUUID(), "User" + UUID.randomUUID(), "User" + UUID.randomUUID());
-        return user;
+    public static Group createGroup() {
+        return new Group(random(), "desc");
     }
     
-    public static Group createGroup(){
-        Group group = new Group("Group" + UUID.randomUUID(), "Group" + UUID.randomUUID());
-        return group;
+    private static String random() {
+        return UUID.randomUUID().toString();
+    }
+    
+    private static int randomInt() {
+        return new Random().nextInt(10) + 1;
     }
 }
