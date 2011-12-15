@@ -85,15 +85,15 @@ public class AclBuilderImpl implements AclBuilder {
         return this;
     }
 
-    /**
-     * Restricts
-     * @return
-     * @see BranchPermissions.RESTRICT
-     */
-    public AclBuilder restrict() {
-        permissions.add(BranchPermissions.RESTRICT);
-        return this;
-    }
+//    /**
+//     * Restricts
+//     * @return
+//     * @see BranchPermissions.RESTRICT
+//     */
+//    public AclBuilder restrict() {
+//        permissions.add(BranchPermissions.RESTRICT);
+//        return this;
+//    }
 
     /**
      * {@inheritDoc}
