@@ -16,6 +16,8 @@ package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Entity;
 
+import ru.javatalks.utils.general.Assert;
+
 /**
  * Represent jtalks engine component.
  * 
@@ -34,14 +36,14 @@ public class Component extends Entity {
     public String getDescription() {
         return description;
     }
+    
     /**
      * Set components description.
      * @param description 
+     * @exception IllegalArgumentException if the description is null
      */
     public void setDescription(String description) {
-        if (description == null){
-            throw new IllegalArgumentException();
-        }
+        Assert.throwIfNull(description, "description");
         this.description = description;
     }
 
@@ -56,11 +58,10 @@ public class Component extends Entity {
     /**
      * Set the name of the component.
      * @param name 
+     * @exception IllegalArgumentException if the name is null
      */
     public void setName(String name) {
-        if (name == null){
-            throw new IllegalArgumentException();
-        }
+        Assert.throwIfNull(name, "name");
         this.name = name;
     }
 

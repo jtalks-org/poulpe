@@ -1,25 +1,32 @@
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
-import org.testng.annotations.Test;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 public class SectionTest {
     private Section section;
-    private List<Branch> branches = new ArrayList<Branch>();
+    private Branch branch = new Branch();
 
+    @BeforeMethod
+    public void setUp() {
+        section = ObjectsFactory.createSection();
+    }
+    
+    @Test
+    public void testAddBranch() {
+        section.addBranch(branch);
+        assertEquals(section.getBranches().size(), 1);
+    }
+    
     @Test
     public void testDeleteBranch(){
-        section = ObjectsFactory.createSection();
-        assertEquals(section.getBranches().size(), 0);
-        section.addBranch(new Branch());
-        section.addBranch(new Branch());
-        assertEquals(section.getBranches().size(), 2);
-        section.deleteBranch(section.getBranches().get(1));
-        assertEquals(section.getBranches().size(), 1);
-
+        section.addBranch(branch);
+        section.deleteBranch(branch);
+        
+        assertTrue(section.getBranches().isEmpty());
     }
 }

@@ -14,25 +14,6 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-/**
- * Copyright (C) 2011  jtalks.org Team
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- * Also add information on how to contact you by electronic and paper mail.
- * Creation date: Apr 12, 2011 / 8:05:19 PM
- * The jtalks.org Project
- */
-
-
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotNull;
@@ -45,7 +26,6 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -229,29 +209,9 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         section.getBranches().add(branch);
         session.save(branch);
         assertTrue(branch.getId() != 0);
-//        session.evict(section);
         section = (Section) session.load(Section.class, section.getId());
         assertEquals(section.getBranches().size(), 1);
         assertReflectionEquals(branch, section.getBranches().get(0));
     }
     
-//    @Test
-//    public void branchUserTest(){
-////        Section section = ObjectsFactory.createSection();
-////        session.save(section);        
-////        Branch branch = ObjectsFactory.getDefaultBranch();
-////        branch.setSection(section);
-//        User user = ObjectsFactory.createUser();
-////        session.save(branch);
-////        assertTrue(branch.getId() != 0);
-//        session.save(user);
-////        assertTrue(user.getId() != 0);
-////        branch.getModerators().add(user);
-////        session.saveOrUpdate(branch);
-////        
-////        branch = (Branch)session.load(Branch.class, branch.getId());
-////        assertEquals(branch.getModerators().size(), 1);
-////        assertReflectionEquals(user, branch.getModerators().get(0));
-//        
-//    }
 }
