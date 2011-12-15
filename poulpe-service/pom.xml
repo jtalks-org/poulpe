@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>poulpe</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
     <version>0.10-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>poulpe-service</artifactId>
   <name>${project.artifactId}</name>
   <url>www.jtalks.org</url>
-  
+
   <description>
     This is the module that contains all the business logic of the project, also - transactions
     are implemented on this level.
@@ -42,6 +43,22 @@
     <dependency>
       <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-service</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.findbugs</groupId>
+      <artifactId>jsr305</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.lambdaj</groupId>
+      <artifactId>lambdaj</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>ru.javatalks.utils</groupId>
+      <artifactId>core-utils</artifactId>
     </dependency>
   </dependencies>
 
