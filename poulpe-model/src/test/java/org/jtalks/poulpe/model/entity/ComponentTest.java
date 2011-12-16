@@ -1,42 +1,50 @@
 package org.jtalks.poulpe.model.entity;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertNull;
 
-import junit.framework.TestCase;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+// TODO: Do we really need get-set test? 
 public class ComponentTest {
     Component component;
+
     @BeforeMethod
-    public void setUp(){
+    public void setUp() {
         component = new Component();
     }
+
     @Test
-    public void testGetDescription(){
-        String description =  "blahblahblah";
+    public void testGetDescription() {
+        String description = "blahblahblah";
         component.setDescription(description);
         assertEquals(component.getDescription(), description);
     }
+
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSetDescription(){
-        String description =  "blahblahblah";
+    public void testSetDescription() {
+        String description = "blahblahblah";
         component.setDescription(description);
         assertEquals(component.getDescription(), description);
         component.setDescription(null);
-        }
+    }
+
     @Test
-    public void testGetName(){
-         String name = "blahblahblah";
+    public void testGetName() {
+        String name = "blahblahblah";
         component.setDescription(name);
         assertEquals(component.getDescription(), name);
     }
+
     @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSetName(){
+    public void testSetName() {
         component.setName(null);
     }
+
     @Test
-    public void testGetComponentTypeArticle(){
+    public void testGetComponentTypeArticle() {
         assertNull(component.getComponentType());
         component.setComponentType(ComponentType.ARTICLE);
         assertEquals(ComponentType.ARTICLE, component.getComponentType());
@@ -44,7 +52,7 @@ public class ComponentTest {
     }
 
     @Test
-    public void testGetComponentTypeForum(){
+    public void testGetComponentTypeForum() {
         assertNull(component.getComponentType());
         component.setComponentType(ComponentType.FORUM);
         assertEquals(ComponentType.FORUM, component.getComponentType());
