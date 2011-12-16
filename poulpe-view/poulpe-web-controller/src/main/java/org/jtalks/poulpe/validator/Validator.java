@@ -38,8 +38,7 @@ public interface Validator<E> {
     /**
      * Should be called only after {@link #validate(Object)}. Before calling,
      * make sure that there is a error by invoking {@link #hasError()}.
-     * @return specified error message
-     * @exception IllegalStateException if actually there is no error
+     * @return specified error message or null if there's none
      */
     String getError();
 }

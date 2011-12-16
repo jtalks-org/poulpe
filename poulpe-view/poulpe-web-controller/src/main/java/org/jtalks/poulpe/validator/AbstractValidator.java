@@ -40,10 +40,6 @@ public abstract class AbstractValidator<E> implements Validator<E> {
 
     @Override
     public String getError() {
-        if (!error) {
-            throw new IllegalStateException("Validator has no errors");
-        }
-        
         return errorMessage;
     }
     

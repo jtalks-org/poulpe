@@ -75,8 +75,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     }
     
     private Section retrieveActualSection() {
-        session.evict(section);
-        return (Section) session.get(Section.class, section.getId());
+        return ObjectRetriever.retrieveUpdated(section, session);
     }
 
     @Test(expectedExceptions = DataIntegrityViolationException.class)
