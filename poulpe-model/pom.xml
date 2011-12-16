@@ -88,6 +88,14 @@
       <groupId>ru.javatalks.utils</groupId>
       <artifactId>core-utils</artifactId>
     </dependency>
+        <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava-collections</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.lambdaj</groupId>
+      <artifactId>lambdaj</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
