@@ -23,6 +23,9 @@ import javax.annotation.concurrent.ThreadSafe;
  */
 @ThreadSafe
 public class JtalksPermission extends BasePermission {
+    /**
+     * This prefix is added to the permission names when the are to be reverted.
+     */
     private final static String RESTRICTED_PREFIX = "RESTRICTED_";
     private final String name;
     /**
@@ -95,6 +98,14 @@ public class JtalksPermission extends BasePermission {
         Assert.throwIfNull(name, "The name can't be null");
     }
 
+    /**
+     * If the permission name was specified, then {@link #RESTRICTED_PREFIX} will be added to the start of the string,
+     * if restriction name was specified (and it already has the prefix), then prefix will be removed.
+     *
+     * @param name a name of permission or restriction to invert it
+     * @return a new name with {@link #RESTRICTED_PREFIX} to be added or removed depending on whether it was in the
+     *         specified parameter
+     */
     private String getInvertedName(@Nonnull String name) {
         if (name.startsWith(RESTRICTED_PREFIX)) {
             return name.replaceFirst(RESTRICTED_PREFIX, "");
