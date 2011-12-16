@@ -23,10 +23,14 @@ public class JtalksPermissionTest {
     }
 
     @Test
-    public void testGetInverted() throws Exception {
+    public void testGetInvertedForPermission() throws Exception {
         JtalksPermission permission = new JtalksPermission(10, "permission");
         assertEquals(permission.getInverted().getMask(), -11);
         assertEquals(permission.getInverted().getName(), "RESTRICTED_permission");
+    }
+
+    @Test
+    public void testGetInvertedForRestriction() {
         JtalksPermission restriction = new JtalksPermission(-100, "RESTRICTED_permission");
         assertEquals(restriction.getInverted().getMask(), 99);
         assertEquals(restriction.getInverted().getName(), "permission");
@@ -66,6 +70,14 @@ public class JtalksPermissionTest {
         }
     }
 
+    /**
+     * This method looks at all the classes that contain {@link JtalksPermission}, looks up for its declared fields,
+     * then filters out those that are not of type {@link JtalksPermission} and returns only permissions. If you
+     * implement another such class which contains permissions, then you should add it to this method so that your class
+     * will be tested as well.
+     *
+     * @return all the instances-constants of {@link JtalksPermission} from all the classes in the project
+     */
     @DataProvider(name = "allProjectPermissions")
     protected Object[][] getAllProjectPermissions() {
         ArrayList<Field> fields = Lists.newArrayList(JtalksPermission.class.getDeclaredFields());
