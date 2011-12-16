@@ -32,7 +32,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
  */
 public final class ObjectsFactory {
 
-    public static Branch getDefaultBranch() {
+    public static Branch createBranch() {
         Branch newBranch = new Branch(random(), "desc");
         newBranch.setSection(createSection());
         return newBranch;
@@ -57,7 +57,7 @@ public final class ObjectsFactory {
         Section section = new Section(random());
         
         for (int i = 0; i < branchesAmount ; i++) {
-            Branch branch = getDefaultBranch();
+            Branch branch = createBranch();
             branch.setSection(section);
             section.addBranch(branch);
         }

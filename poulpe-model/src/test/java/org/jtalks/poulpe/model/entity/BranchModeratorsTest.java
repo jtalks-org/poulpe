@@ -1,27 +1,26 @@
 package org.jtalks.poulpe.model.entity;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import com.google.common.collect.Lists;
 
 public class BranchModeratorsTest {
     
     private Branch branch = new Branch();
     
-    private User user1 = new User("username1", "email1", "password1");
-    private User user2 = new User("username2", "email2", "password2");
-    private User user3 = new User("username3", "email3", "password3");
+    private User user1 = ObjectsFactory.createUser();
+    private User user2 = ObjectsFactory.createUser();
+    private User user3 = ObjectsFactory.createUser();
     
     @BeforeMethod
     public void setUp() {
-        List<User> users = new ArrayList<User>(Arrays.asList(user1));
-        branch.setModerators(users);
+        branch.setModerators(Lists.newArrayList(user1));
     }
     
     @Test
