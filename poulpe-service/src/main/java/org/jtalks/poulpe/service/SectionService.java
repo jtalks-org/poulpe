@@ -29,19 +29,6 @@ public interface SectionService extends EntityService<Section> {
      */
     List<Section> getAll();
 
-    // TODO WTF It doesn't work when has child branches, so why is it here?
-    // Remove it or describe
-    // why it is necessary.
-    // Marked as deprecated meanwhile. (sukharevd, 2011/08/21 02:49)
-    /**
-     * Mark the section as deleted.
-     * 
-     * @param section
-     *            section to delete
-     * @deprecated use other two delete methods instead
-     * @return true if section delete successfully
-     */
-    boolean deleteSection(Section section);
 
     /**
      * Save or update section.

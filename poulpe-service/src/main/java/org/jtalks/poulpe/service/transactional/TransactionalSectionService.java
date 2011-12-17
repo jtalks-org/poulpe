@@ -56,14 +56,6 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
         return dao.getAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean deleteSection(Section section) {
-        return dao.delete(section.getId());
-
-    }
 
     /**
      * {@inheritDoc}
