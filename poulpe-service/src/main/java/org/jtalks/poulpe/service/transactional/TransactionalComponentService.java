@@ -60,7 +60,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void saveComponent(Component component) throws NotUniqueFieldsException {
         Set<DuplicatedField> set = dao.getDuplicateFieldsFor(component);
-        if (set != null) {
+        if (!set.isEmpty()) {
             throw new NotUniqueFieldsException(set);
         }
         dao.saveOrUpdate(component);

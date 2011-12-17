@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -64,13 +65,15 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
                 .setInteger("type", figureOutType(component))
                 .setLong("id", component.getId())
                 .list();
+        
         if (!list.isEmpty()) {
             Set<DuplicatedField> duplicates = new HashSet<DuplicatedField>();
             addAsDuplicationIfName(duplicates, list, component);
             addAsDuplicationIfType(duplicates, list, component);
             return duplicates;
         }
-        return null;
+        
+        return Collections.emptySet();
     }
 
     /**

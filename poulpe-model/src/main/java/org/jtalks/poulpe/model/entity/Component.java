@@ -30,6 +30,18 @@ public class Component extends Entity {
     private ComponentType componentType;
 
     /**
+     * Default constructor, sets nothing
+     */
+    public Component() {
+    }
+    
+    public Component(String name, String description, ComponentType componentType) {
+        this.name = name;
+        this.description = description;
+        this.componentType = componentType;
+    }
+
+    /**
      * Get the component description.
      * @return description
      */

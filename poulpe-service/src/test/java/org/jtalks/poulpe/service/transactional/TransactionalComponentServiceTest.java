@@ -15,17 +15,19 @@
 package org.jtalks.poulpe.service.transactional;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
 import static org.testng.Assert.assertEquals;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -63,7 +65,9 @@ public class TransactionalComponentServiceTest {
     @Test
     public void testSaveComponent() throws NotUniqueFieldsException {
         Component component = new Component();
-        when(dao.getDuplicateFieldsFor(component)).thenReturn(null);
+        
+        Set<DuplicatedField> empty = Collections.emptySet();
+        when(dao.getDuplicateFieldsFor(component)).thenReturn(empty);
         
         instance.saveComponent(component);
 
@@ -73,7 +77,9 @@ public class TransactionalComponentServiceTest {
     @Test (expectedExceptions = NotUniqueFieldsException.class)
     public void testSaveComponentException() throws NotUniqueFieldsException {
         Component component = new Component();
-        when(dao.getDuplicateFieldsFor(component)).thenReturn(new HashSet<DuplicatedField>());
+        
+        Set<DuplicatedField> name = Collections.<DuplicatedField>singleton(ComponentDuplicateField.NAME);
+        when(dao.getDuplicateFieldsFor(component)).thenReturn(name);
         
         instance.saveComponent(component);
 

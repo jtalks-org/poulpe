@@ -25,12 +25,14 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
+import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -248,29 +250,31 @@ public class ItemPresenterTest {
         presenter.setComponentService(componentService);
         ItemViewImpl view = mock(ItemViewImpl.class);
 
-        HashSet<DuplicatedField> set = new HashSet<DuplicatedField>();
-
+        Set<DuplicatedField> name = Collections.<DuplicatedField>singleton(ComponentDuplicateField.NAME);
+        
+        Set<DuplicatedField> empty = Collections.emptySet();
+        
         // new component
         Component fake = getFakeComponent(0, "extraordinary", "new", ComponentType.ARTICLE);
         initView(view, fake);
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(null);
+        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(empty);
         presenter.checkComponent();
-        verify(view, never()).wrongFields(set);
+        verify(view, never()).wrongFields(name);
 
         // existing
         fake = fakeList.get(ID);
         initView(view, fake);
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(null);
+        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(empty);
         presenter.checkComponent();
-        verify(view, never()).wrongFields(set);
+        verify(view, never()).wrongFields(name);
 
         // duplicate
         fake = getFakeComponent(0, fakeList.get(ID).getName(), "new", ComponentType.ARTICLE);
         initView(view, fake);
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(set);
+        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
         // when(componentService.getDuplicateFieldsFor(fake)).thenReturn(set);
         presenter.checkComponent();
-        verify(view, times(1)).wrongFields(set);
+        verify(view, times(1)).wrongFields(name);
     }
 
     private void initView(ItemViewImpl view, Component fake) throws SecurityException,

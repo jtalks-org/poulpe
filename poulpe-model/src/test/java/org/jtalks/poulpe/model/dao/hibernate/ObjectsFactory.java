@@ -43,10 +43,7 @@ public final class ObjectsFactory {
     }
     
     public static Component createComponent(ComponentType type) {
-        Component component = new Component();
-        component.setName(random());
-        component.setComponentType(type);
-        return component;
+        return new Component(random(), "desc", type);
     }
     
     public static Section createSectionWithBranches() {

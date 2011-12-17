@@ -24,7 +24,8 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,96 +37,149 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- *
+ * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
-@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
+@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory;
-    @Autowired
-    private ComponentDao dao;
+
+    private ComponentHibernateDao dao;
     private Session session;
+
+    private Component forum;
 
     @BeforeMethod
     public void setUp() throws Exception {
+        dao = new ComponentHibernateDao();
+        dao.setSessionFactory(sessionFactory);
+
         session = sessionFactory.getCurrentSession();
     }
 
     @Test
     public void testGetAll() {
-        Component cmp1 = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        session.save(cmp1);
-        Component cmp2 = ObjectsFactory.createComponent(ComponentType.FORUM);
-        session.save(cmp2);
+        givenTwoComponents();
 
         List<Component> cList = dao.getAll();
 
         assertEquals(cList.size(), 2);
     }
 
+    private void givenTwoComponents() {
+        givenForum();
+        givenArticle();
+    }
+
+    private void givenForum() {
+        forum = createForum();
+        session.save(forum);
+    }
+
+    private void givenArticle() {
+        session.save(createArticle());
+    }
+
+    private Component createForum() {
+        return ObjectsFactory.createComponent(ComponentType.FORUM);
+    }
+
+    private Component createArticle() {
+        return ObjectsFactory.createComponent(ComponentType.ARTICLE);
+    }
+
     @Test
     public void testGetAvailableTypes() {
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
 
-        assertEquals(availableTypes.size(), ComponentType.values().length);
-        assertTrue(availableTypes.containsAll(Arrays.asList(ComponentType.values())));
+        assertAllTypesAvailable(availableTypes);
+    }
+
+    private void assertAllTypesAvailable(Set<ComponentType> availableTypes) {
+        List<ComponentType> allActualTypes = Arrays.asList(ComponentType.values());
+        assertEquals(availableTypes.size(), allActualTypes.size());
+        assertTrue(availableTypes.containsAll(allActualTypes));
     }
 
     @Test
     public void testGetAvailableTypesAfterInsert() {
-        ComponentType usedType = ComponentType.FORUM;
-        session.save(ObjectsFactory.createComponent(usedType));
+        givenForum();
+
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
 
-        assertFalse(availableTypes.contains(usedType));
+        assertForumUnavailable(availableTypes);
+    }
+
+    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
+        assertFalse(availableTypes.contains(forum.getComponentType()));
+    }
+
+    @Test
+    public void noDuplicatesTest() {
+        givenForum();
+
+        Component article = createArticle();
+        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(article);
+
+        assertTrue(duplicates.isEmpty());
     }
 
     @Test
     public void getDuplicateNameTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+        givenForum();
+
+        Component article = createArticle();
+        article.setName(forum.getName());
+
+        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(article);
+
+        assertNameDuplicated(duplicates);
     }
-    
-    @Test
-    public void getDuplicateNameWithNullTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(null);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+
+    private void assertNameDuplicated(Set<DuplicatedField> duplicates) {
+        assertFieldsDuplicated(duplicates, ComponentDuplicateField.NAME);
+    }
+
+    private void assertFieldsDuplicated(Set<DuplicatedField> duplicates, DuplicatedField... fields) {
+        assertEquals(duplicates.size(), fields.length);
+
+        for (DuplicatedField field : fields) {
+            assertTrue(duplicates.contains(field));
+        }
     }
 
     @Test
     public void getDuplicateComponentTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setComponentType(component.getComponentType());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+        givenForum();
+
+        Component anotherForum = createForum();
+        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(anotherForum);
+
+        assertComponentTypeDuplicated(duplicates);
+    }
+
+    private void assertComponentTypeDuplicated(Set<DuplicatedField> duplicates) {
+        assertFieldsDuplicated(duplicates, ComponentDuplicateField.TYPE);
     }
 
     @Test
     public void getDuplicateLoginAndComponentTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        dude.setComponentType(component.getComponentType());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 2);        
+        givenForum();
+
+        Component anotherForum = createForum();
+        anotherForum.setName(forum.getName());
+
+        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(anotherForum);
+
+        assertNameAndTypeDuplicated(duplicates);
+    }
+
+    private void assertNameAndTypeDuplicated(Set<DuplicatedField> duplicates) {
+        assertFieldsDuplicated(duplicates, ComponentDuplicateField.TYPE, ComponentDuplicateField.NAME);
     }
 }

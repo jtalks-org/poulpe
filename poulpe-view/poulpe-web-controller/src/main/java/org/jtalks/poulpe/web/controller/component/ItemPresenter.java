@@ -115,7 +115,7 @@ public class ItemPresenter extends AbstractPresenter {
     public void checkComponent() {
         Component component = view2Model(view);
         Set<DuplicatedField> set = getComponentService().getDuplicateFieldsFor(component);
-        if (set != null) {
+        if (!set.isEmpty()) {
             view.wrongFields(set);
         }
     }
