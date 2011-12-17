@@ -6,6 +6,10 @@
   <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="singleton" />
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
 
+  <bean id="branchPermissionManagementVm" scope="request"
+        class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
+
+  </bean>
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter" scope="prototype">
     <property name="branchService" ref="branchService" />
