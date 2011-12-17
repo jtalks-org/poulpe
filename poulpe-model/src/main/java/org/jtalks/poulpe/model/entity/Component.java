@@ -34,7 +34,7 @@ public class Component extends Entity {
      */
     public Component() {
     }
-    
+
     public Component(String name, String description, ComponentType componentType) {
         this.name = name;
         this.description = description;
@@ -48,10 +48,10 @@ public class Component extends Entity {
     public String getDescription() {
         return description;
     }
-    
+
     /**
      * Set components description.
-     * @param description 
+     * @param description
      * @exception IllegalArgumentException if the description is null
      */
     public void setDescription(String description) {
@@ -69,7 +69,7 @@ public class Component extends Entity {
 
     /**
      * Set the name of the component.
-     * @param name 
+     * @param name
      * @exception IllegalArgumentException if the name is null
      */
     public void setName(String name) {
@@ -87,9 +87,16 @@ public class Component extends Entity {
 
     /**
      * Set component's type.
-     * @param type 
+     * @param type
      */
     public void setComponentType(ComponentType type) {
         this.componentType = type;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public String toString() {
+        return "Component [id=" + getId() + ", name=" + name + ", description=" + description + ", componentType="
+                + componentType + "]";
     }
 }
