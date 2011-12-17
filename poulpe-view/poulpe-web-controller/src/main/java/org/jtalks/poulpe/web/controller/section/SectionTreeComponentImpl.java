@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -138,6 +139,10 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
      */
     public void onClick$moderatorButton() {
         presenter.openModeratorDialog(getSelectedObject());
+    }
+
+    public void onClick$permissionsButton() throws IOException {
+        Executions.sendRedirect("/sections/BranchPermissionManagement.zul");
     }
 
     /**

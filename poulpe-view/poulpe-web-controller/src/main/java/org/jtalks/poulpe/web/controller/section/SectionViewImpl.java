@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -222,8 +224,7 @@ public class SectionViewImpl extends Window implements SectionView,
     @Override
     public void openDeleteSectionDialog(Section victim) {
         Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop()
-                .getPage("sectionDeleteDialog").getFellow("deleteWindow"),
-                victim));
+                .getPage("sectionDeleteDialog").getFellow("deleteWindow"), victim));
     }
 
     /**
@@ -361,7 +362,11 @@ public class SectionViewImpl extends Window implements SectionView,
                 .getPage("moderatorDialog").getFellow("moderatorWindow"),
                 branch));
     }
-    
+
+    public void forwardToBranchPermissionManagement(Branch branch) throws IOException {
+
+    }
+
     @Override
     public void closeModeratorDialog() {
         Events.postEvent(new Event("onCloseModeratorDialog", getDesktop()
