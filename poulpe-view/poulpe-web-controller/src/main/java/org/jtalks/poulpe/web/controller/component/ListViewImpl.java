@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.component;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.web.controller.component.items.ItemView;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -72,7 +73,7 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
                     /** {@inheritDoc} */
                     @Override
                     public void onEvent(Event event) {
-                        showEditor(getSelectedItem().getId());
+                        showEditor(getSelectedItem());
                     }
                 });
                 
@@ -105,18 +106,22 @@ public class ListViewImpl extends Window implements ListView, AfterCompose {
      * @see ListPresenter
      */
     public void onClick$addCompButton() {
-        showEditor(null);
+        showEditor();
     }
 
-    /**
-     * Shows the component editor window
-     */
-    private void showEditor(Long componentId) {
+    private void showEditor() {
         org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow("editCompWindow");
         comp.setAttribute("backWin", this);
-        ((ItemView) comp).show(componentId);
+        ((ItemView) comp).showEmpty();
     }
-
+    
+    
+    private void showEditor(Component component) {
+        org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow("editCompWindow");
+        comp.setAttribute("backWin", this);
+        ((ItemView) comp).show(component);
+    }
+    
     /**
      * Tells to presenter to delete selected component (it knows which one it
      * is).

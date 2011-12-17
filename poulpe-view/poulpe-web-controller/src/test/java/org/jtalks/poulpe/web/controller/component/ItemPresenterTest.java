@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import static org.testng.Assert.*;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeComponents;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -22,13 +23,15 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.component.items.ItemPresenter;
+import org.jtalks.poulpe.web.controller.component.items.ItemView;
+import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -68,11 +71,11 @@ public class ItemPresenterTest {
     public void initViewCorrectTest() throws Exception  {
 
         when(componentService.getAll()).thenReturn(components);
-        when(componentService.get(Long.valueOf(componentId))).thenReturn(component);
+        //when(componentService.get(Long.valueOf(componentId))).thenReturn(component);
 
-        presenter.initView(view, Long.valueOf(componentId));
+        presenter.initForEditing(view, component);
 
-        verify(view).setCid(component.getId());
+        verify(view).setComponentId(component.getId());
         verify(view).setName(component.getName());
         verify(view).setDescription(component.getDescription());
         verify(view).setComponentType(component.getComponentType().toString());
@@ -80,19 +83,9 @@ public class ItemPresenterTest {
 
     @Test
     public void initViewNewNullTest() {
-        presenter.initView(view, null);
+        presenter.initForCreating(view);
 
-        verify(view).setCid(0);
-        verify(view).setName(null);
-        verify(view).setDescription(null);
-        verify(view).setComponentType(null);
-    }
-
-    @Test
-    public void initViewNewDefaultTest() {
-        presenter.initView(view, -1L);
-
-        verify(view).setCid(0);
+        verify(view).setComponentId(0);
         verify(view).setName(null);
         verify(view).setDescription(null);
         verify(view).setComponentType(null);
@@ -102,7 +95,7 @@ public class ItemPresenterTest {
     /**
      * Tests view initialisation in case if there is no such object
      */
-    @Test
+    /*@Test(enabled = false) // seems that this test is unneeded
     public void initViewRemovedTest() throws NotFoundException {
         when(componentService.getAll()).thenReturn(components);
         when(componentService.get((long) componentId)).thenThrow(new NotFoundException());
@@ -111,7 +104,7 @@ public class ItemPresenterTest {
 
         verify(dialogManager).notify("item.doesnt.exist");
         verify(view).hide();
-    }
+    }*/
 
     Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
     Set<DuplicatedField> empty = Collections.emptySet();
@@ -121,12 +114,31 @@ public class ItemPresenterTest {
      */
     @Test
     public void saveComponentNewTest() throws Exception {
-        compPreparation(empty);
+        
+        initViewNew();
+        presenter.initForCreating(view);
+        
+        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
 
         presenter.saveComponent();
 
-        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(component)));
+        ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
+        verify(presenter.getComponentService()).saveComponent(captor.capture());
+        Component value = captor.getValue();
+        assertEquals(value.getName(), component.getName());
+        assertEquals(value.getComponentType(), component.getComponentType());
+        
         verify(view).hide();
+    }
+
+    private void initViewNew() {
+        when(componentService.getAll()).thenReturn(components);
+
+        when(view.getName()).thenReturn(component.getName());
+        when(view.getComponentId()).thenReturn(component.getId());
+        when(view.getDescription()).thenReturn(component.getDescription());
+        when(view.getComponentType()).thenReturn(component.getComponentType().toString());
+
     }
 
     /**
@@ -135,30 +147,17 @@ public class ItemPresenterTest {
      */
     @Test
     public void saveComponentExistingTest() throws Exception {
-        compPreparation(empty);
-
+        initViewNew();
+        presenter.initForEditing(view, component);
+        
+        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
+        
         presenter.saveComponent();
-
-        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(component)));
+        
+        verify(presenter.getComponentService()).saveComponent(component);
         verify(view).hide();
     }
     
-    
-    /**
-     * Initialises view preparing the component {@code fake} to be saved.
-     * @return initialised view (and changed presenter)
-     */
-    public void compPreparation(Set<DuplicatedField> dupSet)
-            throws Exception {
-        when(componentService.getAll()).thenReturn(components);
-        when(componentService.get((long) componentId)).thenReturn(component);
-
-        presenter.initView(view, (long) componentId);
-
-        initView();
-
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(dupSet);
-    }
     
     @Test
     public void saveComponentDuplicateTest() throws Exception {
@@ -196,7 +195,7 @@ public class ItemPresenterTest {
         presenter.setView(view);
 
         when(view.getName()).thenReturn(component.getName());
-        when(view.getCid()).thenReturn(component.getId());
+        when(view.getComponentId()).thenReturn(component.getId());
         when(view.getDescription()).thenReturn(component.getDescription());
         when(view.getComponentType()).thenReturn(component.getComponentType().toString());
     }

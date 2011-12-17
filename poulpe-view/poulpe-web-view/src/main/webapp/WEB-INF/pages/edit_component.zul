@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <window id="editCompWindow" title="${labels.componentedit.title}" border="normal" width="430px"
-  presenter="${componentItemPresenter}" mode="modal" visible="false" use="org.jtalks.poulpe.web.controller.component.ItemViewImpl">
+  presenter="${componentItemPresenter}" mode="modal" visible="false" use="org.jtalks.poulpe.web.controller.component.items.ItemViewImpl">
   <longbox id="cid" visible="false" />
   <grid>
     <columns>
