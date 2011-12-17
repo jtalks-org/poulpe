@@ -10,3 +10,7 @@
 .usergroup-button:hover {
     background: rgb(204, 204, 204);
 }
+.east-container-for-add-group-button {
+    border: none;
+    width: 100px;
+}
