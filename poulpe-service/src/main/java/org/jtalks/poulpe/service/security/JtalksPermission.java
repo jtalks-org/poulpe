@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.movetocommon;
+package org.jtalks.poulpe.service.security;
 
 import org.springframework.security.acls.domain.BasePermission;
 import ru.javatalks.utils.general.Assert;
@@ -28,14 +28,6 @@ public class JtalksPermission extends BasePermission {
      */
     private final static String RESTRICTED_PREFIX = "RESTRICTED_";
     private final String name;
-    /**
-     * The ability of user group or user to create new topics in the branch.
-     */
-    public static final JtalksPermission CREATE_TOPICS = new JtalksPermission("11", "CREATE_TOPICS");
-    /**
-     * The ability of user group or user to view the branch (to see its topics).
-     */
-    public static final JtalksPermission VIEW_TOPICS = new JtalksPermission("110", "VIEW_TOPICS");
 
     /**
      * Constructs the whole object without symbol.
@@ -63,7 +55,7 @@ public class JtalksPermission extends BasePermission {
      * @see JtalksPermission#JtalksPermission(int, String)
      * @see BasePermission
      */
-    protected JtalksPermission(@Nonnull String mask, @Nonnull String name) throws NumberFormatException {
+    protected JtalksPermission(@Nonnull String mask, @Nonnull String name) {
         super(Integer.parseInt(mask, 2));
         throwIfNameNotValid(name);
         this.name = name;

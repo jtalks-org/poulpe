@@ -1,8 +1,9 @@
-package org.jtalks.poulpe.service.movetocommon;
+package org.jtalks.poulpe.service.security;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -57,7 +58,7 @@ public class JtalksPermissionTest {
 
     /**
      * The permission's mask are allowed to be anything, but they can't have '1' in the last bit (the sign). This bit is
-     * for restrictions ({@link org.jtalks.poulpe.service.movetocommon.JtalksPermission#getInverted}.
+     * for restrictions ({@link org.jtalks.poulpe.service.security.JtalksPermission#getInverted}.
      *
      * @param permissions all the permissions in the project to check their first bit
      * @throws Exception who cares about exceptions in tests?
