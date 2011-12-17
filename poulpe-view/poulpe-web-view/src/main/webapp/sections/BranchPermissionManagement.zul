@@ -1,16 +1,16 @@
 <?page id="BranchPermissionManagement" title="Branch Permission Management" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<?component name="usergroups" macroURI="/WEB-INF/zkmacros/add-usergroups-row.zul"?>
+<?component name="user-groups-block" macroURI="/WEB-INF/zkmacros/add-usergroups-block.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <style src="/resources/css/all.css" />
   <window id="branchPermissionManagementWindow" border="normal" apply="org.zkoss.bind.BindComposer"
           viewModel="@id('vm') @init(branchPermissionManagementVm)">
-    <listbox forEach="${branchPermissionManagementVm.rows}" width="100%" height="100%">
+    <listbox forEach="${branchPermissionManagementVm.blocks}" width="100%" height="100%">
       <listhead width="100%" height="100%" />
       <listitem>
         <listcell>
-          <usergroups row="${each}" />
+          <user-groups-block block="${each}" />
         </listcell>
       </listitem>
     </listbox>
