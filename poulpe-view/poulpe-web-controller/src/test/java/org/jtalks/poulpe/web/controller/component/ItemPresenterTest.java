@@ -38,157 +38,42 @@ import org.testng.annotations.Test;
 /**
  * The test for {@link ItemPresenter} class.
  * @author Dmitriy Sukharev
+ * @author Alexey Grigorev
  */
 public class ItemPresenterTest {
 
     private ItemPresenter presenter;
 
-    private static final int componentId = 1;
     private ComponentService componentService;
     private ItemView view;
     private List<Component> components;
     private Component component;
     private DialogManager dialogManager;
 
-    @BeforeMethod
-    public void setUp() {
-        presenter = new ItemPresenter();
-        
-        components = getFakeComponents();
-        component = components.get(0);
-        component.setId(componentId);
-        
-        view = mock(ItemView.class);
-        
-        componentService = mock(ComponentService.class);
-        presenter.setComponentService(componentService);
-        
-        dialogManager = mock(DialogManager.class);
-        presenter.setDialogManager(dialogManager);
-    }
-
-    @Test
-    public void initViewCorrectTest() throws Exception  {
-
-        when(componentService.getAll()).thenReturn(components);
-        //when(componentService.get(Long.valueOf(componentId))).thenReturn(component);
-
-        presenter.initForEditing(view, component);
-
-        verify(view).setComponentId(component.getId());
-        verify(view).setName(component.getName());
-        verify(view).setDescription(component.getDescription());
-        verify(view).setComponentType(component.getComponentType().toString());
-    }
-
-    @Test
-    public void initViewNewNullTest() {
-        presenter.initForCreating(view);
-
-        verify(view).setComponentId(0);
-        verify(view).setName(null);
-        verify(view).setDescription(null);
-        verify(view).setComponentType(null);
-    }
-
-
-    /**
-     * Tests view initialisation in case if there is no such object
-     */
-    /*@Test(enabled = false) // seems that this test is unneeded
-    public void initViewRemovedTest() throws NotFoundException {
-        when(componentService.getAll()).thenReturn(components);
-        when(componentService.get((long) componentId)).thenThrow(new NotFoundException());
-
-        presenter.initView(view, Long.valueOf(componentId));
-
-        verify(dialogManager).notify("item.doesnt.exist");
-        verify(view).hide();
-    }*/
-
     Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
     Set<DuplicatedField> empty = Collections.emptySet();
 
-    /**
-     * Tests component saving in case if it's new (extraordinary) one.
-     */
-    @Test
-    public void saveComponentNewTest() throws Exception {
-        
-        initViewNew();
-        presenter.initForCreating(view);
-        
-        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
+    @BeforeMethod
+    public void setUp() {
+        presenter = new ItemPresenter();
 
-        presenter.saveComponent();
+        componentService = mock(ComponentService.class);
+        presenter.setComponentService(componentService);
 
-        ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
-        verify(presenter.getComponentService()).saveComponent(captor.capture());
-        Component value = captor.getValue();
-        assertEquals(value.getName(), component.getName());
-        assertEquals(value.getComponentType(), component.getComponentType());
-        
-        verify(view).hide();
-    }
+        dialogManager = mock(DialogManager.class);
+        presenter.setDialogManager(dialogManager);
 
-    private void initViewNew() {
-        when(componentService.getAll()).thenReturn(components);
+        view = mock(ItemView.class);
 
-        when(view.getName()).thenReturn(component.getName());
-        when(view.getComponentId()).thenReturn(component.getId());
-        when(view.getDescription()).thenReturn(component.getDescription());
-        when(view.getComponentType()).thenReturn(component.getComponentType().toString());
-
-    }
-
-    /**
-     * Tests component saving in case if it's existing one (from the component
-     * list).
-     */
-    @Test
-    public void saveComponentExistingTest() throws Exception {
-        initViewNew();
-        presenter.initForEditing(view, component);
-        
-        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
-        
-        presenter.saveComponent();
-        
-        verify(presenter.getComponentService()).saveComponent(component);
-        verify(view).hide();
-    }
-    
-    
-    @Test
-    public void saveComponentDuplicateTest() throws Exception {
+        prepareComponents();
         initView();
-        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(any(Component.class));
-        presenter.saveComponent();
-        verify(view).wrongFields(name);
     }
 
-    @Test
-    public void checkComponentTestNewComponent() {
-        initView();
-        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
-        presenter.checkComponent();
-        verify(view, never()).wrongFields(name);
-    }
-    
-    @Test
-    public void checkComponentTestExistingComponent() {
-        initView();
-        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
-        presenter.checkComponent();
-        verify(view, never()).wrongFields(name);
-    }
-    
-    @Test
-    public void checkComponentDiplicate() {
-        initView();
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
-        presenter.checkComponent();
-        verify(view).wrongFields(name);
+    private void prepareComponents() {
+        components = getFakeComponents();
+        component = components.get(0);
+        int someRandomId = 12;
+        component.setId(someRandomId);
     }
 
     private void initView() {
@@ -197,7 +82,132 @@ public class ItemPresenterTest {
         when(view.getName()).thenReturn(component.getName());
         when(view.getComponentId()).thenReturn(component.getId());
         when(view.getDescription()).thenReturn(component.getDescription());
-        when(view.getComponentType()).thenReturn(component.getComponentType().toString());
+        when(view.getComponentType()).thenReturn(component.getComponentType());
+
+        when(componentService.getAll()).thenReturn(components);
+    }
+
+    @Test
+    public void editTest() throws Exception {
+        presenter.edit(component);
+        verifyAllDataSet();
+    }
+
+    private void verifyAllDataSet() {
+        verify(view).setComponentId(component.getId());
+        verify(view).setName(component.getName());
+        verify(view).setDescription(component.getDescription());
+        verify(view).setComponentType(component.getComponentType());
+    }
+
+    @Test
+    public void createTest() {
+        presenter.create();
+        verifyBlankWindowShown();
+    }
+
+    private void verifyBlankWindowShown() {
+        verify(view).setComponentId(0);
+        verify(view).setName(null);
+        verify(view).setDescription(null);
+        verify(view).setComponentType(null);
+    }
+
+    @Test
+    public void saveNewComponentTest() throws Exception {
+        presenter.create();
+
+        givenNoDiplicatedFields();
+        presenter.saveComponent();
+
+        assertComponentSaved();
+        verify(view).hide();
+    }
+
+    private void givenNoDiplicatedFields() {
+        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
+    }
+
+    private void assertComponentSaved() throws NotUniqueFieldsException {
+        ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
+
+        verify(presenter.getComponentService()).saveComponent(captor.capture());
+        Component value = captor.getValue();
+
+        assertEquals(value.getName(), component.getName());
+        assertEquals(value.getComponentType(), component.getComponentType());
+    }
+
+    @Test
+    public void saveComponentExistingTest() throws Exception {
+        presenter.edit(component);
+
+        givenNoDiplicatedFields();
+        presenter.saveComponent();
+
+        verify(presenter.getComponentService()).saveComponent(component);
+        verify(view).hide();
+    }
+
+    @Test
+    public void saveComponentDuplicateTest() throws Exception {
+        presenter.create();
+
+        givenNameFieldDuplicated();
+        presenter.saveComponent();
+
+        verify(view).wrongFields(name);
+    }
+
+    private void givenNameFieldDuplicated() throws NotUniqueFieldsException {
+        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(any(Component.class));
+    }
+
+    @Test
+    public void saveComponentDuplicateTestEdit() throws Exception {
+        presenter.edit(component);
+
+        givenFieldNameDuplicatedWhenEditing();
+        presenter.saveComponent();
+
+        verify(view).wrongFields(name);
+    }
+
+    private void givenFieldNameDuplicatedWhenEditing() throws NotUniqueFieldsException {
+        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(component);
+    }
+
+    @Test
+    public void checkComponentTestNewComponent() {
+        presenter.create();
+
+        givenNoDiplicatedFields();
+        presenter.checkComponent();
+
+        verify(view, never()).wrongFields(name);
+    }
+
+    @Test
+    public void checkComponentTestExistingComponent() {
+        presenter.edit(component);
+
+        givenNoDiplicatedFields();
+        presenter.checkComponent();
+
+        verify(view, never()).wrongFields(name);
+    }
+
+    @Test
+    public void checkComponentDiplicate() {
+        presenter.edit(component);
+        givenDuplicatedField();
+        presenter.checkComponent();
+
+        verify(view).wrongFields(name);
+    }
+
+    private void givenDuplicatedField() {
+        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
     }
 
 }

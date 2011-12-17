@@ -36,9 +36,9 @@ public class ItemPresenter extends AbstractPresenter {
      * Initializes this presenter for creating a new component
      * @param view current {@link ItemView} instance
      */
-    public void initForCreating(ItemView view) {
+    public void create() {
         editingStrategy = new NewItemStrategy(view);
-        reinit(view);
+        reinit();
     }
 
     /**
@@ -46,13 +46,12 @@ public class ItemPresenter extends AbstractPresenter {
      * @param view current {@link ItemView} instance
      * @param component to be edited
      */
-    public void initForEditing(ItemView view, Component component) {
+    public void edit(Component component) {
         editingStrategy = new EditItemStrategy(view, component);
-        reinit(view);
+        reinit();
     }
 
-    private void reinit(ItemView view) {
-        setView(view);
+    private void reinit() {
         editingStrategy.init();
         view.setComponentTypes(getComponentService().getAvailableTypes());
     }

@@ -83,14 +83,14 @@ public class ItemViewImpl extends Window implements ItemView, AfterCompose {
     /** {@inheritDoc} */
     @Override
     public void show(Component component) {
-        presenter.initForEditing(this, component);
+        presenter.edit(component);
         showForm();
     }
 
     /** {@inheritDoc} */
     @Override
     public void showEmpty() {
-        presenter.initForCreating(this);
+        presenter.create();
         showForm();
     }
 
