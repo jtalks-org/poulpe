@@ -18,29 +18,66 @@ import org.hibernate.Session;
 import org.jtalks.common.model.entity.Entity;
 
 /**
+ * Class for querying the database and retrieving objects already stored there.
+ * It is used for ensuring that a sequence of actions in a test leads to
+ * expected result - by retrieving an object directly from the database passing
+ * any dao instances.
+ * 
  * @author Alexey Grigorev
  */
 public class ObjectRetriever {
-    
+
     /**
-     * Retrieves the actual object stored in the database, clearing session's cache for 
-     * ensuring the object is brand new.
+     * Retrieves the actual object stored in the database, clearing session's
+     * cache for ensuring the object is brand new.<br>
+     * 
+     * The old object is needed here for 1) evicting it from cache 2) getting
+     * its id for retrieving.<br>
+     * <br>
+     * 
+     * <b>Example of usage:</b><br>
+     * 
+     * 1) Retrieving the branch
+     * 
+     * <pre>
+     * private Branch retrieveActualBranch() {
+     *     return ObjectRetriever.retrieveUpdated(branch, session);
+     * }
+     * </pre>
+     * 
+     * 2) Retrieving the section:
+     * 
+     * <pre>
+     * private Section retrieveActualSection() {
+     *     return ObjectRetriever.retrieveUpdated(section, session);
+     * }
+     * </pre>
+     * 
      * 
      * @param object to retrieve
      * @param session Hibernate session
-     * @return brand new retrieved object for database
+     * @return brand new retrieved object from the database
      */
-    public static <E extends Entity> E retrieveUpdated(E object, Session session) { 
+    public static <E extends Entity> E retrieveUpdated(E object, Session session) {
         session.evict(object);
         return retrieve(object, session);
     }
 
     /**
-     * Retrieves the actual object stored in the database
+     * Retrieves the actual object stored in the database.<br>
+     * <br>
+     * 
+     * <b>Note</b>: it's not guaranteed that a retrieved object will be
+     * retrieved from the database, it may be retrieved from hibernate's cache.
+     * Consider using {@link #retrieveUpdated(Entity, Session)} for it clears
+     * cache before retrieving.
+     * 
+     * @param object to retrieve
+     * @param session Hibernate session
      */
     @SuppressWarnings("unchecked")
-    public static <E extends Entity> E retrieve(E object, Session session) { 
+    public static <E extends Entity> E retrieve(E object, Session session) {
         return (E) session.get(object.getClass(), object.getId());
     }
-    
+
 }
