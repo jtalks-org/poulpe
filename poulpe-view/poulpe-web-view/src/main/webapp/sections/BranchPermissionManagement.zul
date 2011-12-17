@@ -19,11 +19,11 @@
           </hbox>
         </center>
         <east border="none">
-          <button label="Add Group" height="25px" sclass="add-group-button" />
+          <button label="Add Group" sclass="add-group-button" />
         </east>
       </borderlayout>
       <borderlayout height="30px">
-        <west border="none" width="60px">
+        <west border="none" width="100px">
           <label value="Restricted" />
         </west>
         <center border="none">
