@@ -138,4 +138,18 @@ public class ItemPresenter extends AbstractPresenter {
         return model;
     }
 
+    /**
+     * @return the view
+     */
+    public ItemView getView() {
+        return view;
+    }
+
+    /**
+     * @param view the view to set
+     */
+    public void setView(ItemView view) {
+        this.view = view;
+    }
+
 }

@@ -14,31 +14,22 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeComponents;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
+import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -49,73 +40,47 @@ public class ItemPresenterTest {
 
     private ItemPresenter presenter;
 
-    private static final int ID = 1;
+    private static final int componentId = 1;
+    private ComponentService componentService;
+    private ItemView view;
+    private List<Component> components;
+    private Component component;
+    private DialogManager dialogManager;
 
-    @BeforeTest
+    @BeforeMethod
     public void setUp() {
         presenter = new ItemPresenter();
-    }
-
-    private Component getFakeComponent(long id, String name, String description, ComponentType type) {
-        Component comp = new Component();
-        comp.setId(id);
-        comp.setName(name);
-        comp.setDescription(description);
-        comp.setComponentType(type);
-        return comp;
-    }
-
-    private List<Component> getFakeComponents() {
-        List<Component> list = new ArrayList<Component>();
-        ComponentType[] types = ComponentType.values();
-        for (int i = 0; i < types.length; i++) {
-            list.add(getFakeComponent(i, "Fake" + i, "Desc" + i, types[i]));
-        }
-        return list;
-    }
-
-    /**
-     * Tests view initialisation in case if the componentId is existing (correct) id.
-     * @throws NotFoundException
-     */
-    @Test
-    public void initViewCorrectTest() throws NotFoundException {
-        ComponentService componentService = mock(ComponentService.class);
-        ItemViewImpl view = mock(ItemViewImpl.class);
+        
+        components = getFakeComponents();
+        component = components.get(0);
+        component.setId(componentId);
+        
+        view = mock(ItemView.class);
+        
+        componentService = mock(ComponentService.class);
         presenter.setComponentService(componentService);
+        
+        dialogManager = mock(DialogManager.class);
+        presenter.setDialogManager(dialogManager);
+    }
 
-        final int id = 0;
-        List<Component> fake = getFakeComponents();
+    @Test
+    public void initViewCorrectTest() throws Exception  {
 
-        when(componentService.getAll()).thenReturn(fake);
-        when(componentService.get((long) id)).thenReturn(fake.get(id));
-        presenter.initView(view, (long) id);
+        when(componentService.getAll()).thenReturn(components);
+        when(componentService.get(Long.valueOf(componentId))).thenReturn(component);
 
-        verify(view).setCid(fake.get(id).getId());
-        verify(view).setName(fake.get(id).getName());
-        verify(view).setDescription(fake.get(id).getDescription());
-        verify(view).setComponentType(fake.get(id).getComponentType().toString());
+        presenter.initView(view, Long.valueOf(componentId));
+
+        verify(view).setCid(component.getId());
+        verify(view).setName(component.getName());
+        verify(view).setDescription(component.getDescription());
+        verify(view).setComponentType(component.getComponentType().toString());
     }
 
     @Test
     public void initViewNewNullTest() {
-        initViewNew(null);
-    }
-    
-    @Test
-    public void initViewNewDefaultTest() {
-        initViewNew(-1L);
-    }
-    
-    /** Tests view initialisation in case if componentId is null (new element) */
-    public void initViewNew(Long id) {
-        ComponentService componentService = mock(ComponentService.class);
-        ItemViewImpl view = mock(ItemViewImpl.class);
-        DialogManager dm = mock(DialogManager.class);
-        presenter.setComponentService(componentService);
-        presenter.setDialogManager(dm);
-
-        presenter.initView(view, id);
+        presenter.initView(view, null);
 
         verify(view).setCid(0);
         verify(view).setName(null);
@@ -123,169 +88,117 @@ public class ItemPresenterTest {
         verify(view).setComponentType(null);
     }
 
+    @Test
+    public void initViewNewDefaultTest() {
+        presenter.initView(view, -1L);
+
+        verify(view).setCid(0);
+        verify(view).setName(null);
+        verify(view).setDescription(null);
+        verify(view).setComponentType(null);
+    }
+
+
     /**
      * Tests view initialisation in case if there is no such object
-     * @throws NotFoundException
      */
     @Test
     public void initViewRemovedTest() throws NotFoundException {
-        ComponentService componentService = mock(ComponentService.class);
-        ItemViewImpl view = mock(ItemViewImpl.class);
-        DialogManager dm = mock(DialogManager.class);
-        presenter.setComponentService(componentService);
-        presenter.setDialogManager(dm);
+        when(componentService.getAll()).thenReturn(components);
+        when(componentService.get((long) componentId)).thenThrow(new NotFoundException());
 
-        final Long id = 9999L;
-        List<Component> fake = getFakeComponents();
-        when(componentService.getAll()).thenReturn(fake);
-        when(componentService.get((long) id)).thenThrow(new NotFoundException());
+        presenter.initView(view, Long.valueOf(componentId));
 
-        presenter.initView(view, id);
-
-        verify(dm).notify("item.doesnt.exist");
+        verify(dialogManager).notify("item.doesnt.exist");
         verify(view).hide();
     }
 
-    /**
-     * Initialises view preparing the component {@code fake} to be saved.
-     * @param fake the component to be saved
-     * @param fakeList the list of component required to decide if {@code fake} is a new, duplicate
-     *            or existing component
-     * @return initialised view (and changed presenter)
-     * @throws NotFoundException
-     */
-    @Test
-    private ItemView compPreparation(Component fake, List<Component> fakeList,
-            Set<DuplicatedField> dupSet) throws NotFoundException {
-        ComponentService componentService = mock(ComponentService.class);
-        ItemViewImpl view = mock(ItemViewImpl.class);
-        presenter.setComponentService(componentService);
-
-        when(componentService.getAll()).thenReturn(fakeList);
-        when(componentService.get((long) ID)).thenReturn(fakeList.get(ID));
-
-        presenter.initView(view, (long) ID);
-
-        when(view.getName()).thenReturn(fake.getName());
-        when(view.getCid()).thenReturn(fake.getId());
-        when(view.getDescription()).thenReturn(fake.getDescription());
-        when(view.getComponentType()).thenReturn(fake.getComponentType().toString());
-
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(dupSet);
-
-        return view;
-    }
+    Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
+    Set<DuplicatedField> empty = Collections.emptySet();
 
     /**
      * Tests component saving in case if it's new (extraordinary) one.
-     * @throws NotFoundException
-     * @throws NotUniqueFieldsException
      */
     @Test
-    public void saveComponentNewTest() throws NotFoundException, NotUniqueFieldsException {
-        List<Component> fakeList = getFakeComponents();
-        Component fake = getFakeComponent(0, "extraordinary", "new", ComponentType.ARTICLE);
-        ItemView view = compPreparation(fake, fakeList, null);
+    public void saveComponentNewTest() throws Exception {
+        compPreparation(empty);
 
         presenter.saveComponent();
 
-        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(fake)));
+        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(component)));
         verify(view).hide();
     }
 
     /**
-     * Tests component saving in case if it's existing one (from the component list).
-     * @throws NotFoundException
-     * @throws NotUniqueFieldsException
+     * Tests component saving in case if it's existing one (from the component
+     * list).
      */
     @Test
-    public void saveComponentExistingTest() throws NotFoundException, NotUniqueFieldsException {
-        List<Component> fakeList = getFakeComponents();
-        final Component fake = fakeList.get(ID);
-        ItemView view = compPreparation(fake, fakeList, null);
+    public void saveComponentExistingTest() throws Exception {
+        compPreparation(empty);
 
         presenter.saveComponent();
 
-        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(fake)));
+        verify(presenter.getComponentService()).saveComponent(argThat(new ComponentMatcher(component)));
         verify(view).hide();
     }
-
+    
+    
     /**
-     * Tests component saving in case if it's duplicate one (new, but with duplicate name).
-     * @throws IllegalAccessException
-     * @throws NoSuchFieldException
-     * @throws IllegalArgumentException
-     * @throws SecurityException
-     * @throws NotUniqueFieldsException
+     * Initialises view preparing the component {@code fake} to be saved.
+     * @return initialised view (and changed presenter)
      */
+    public void compPreparation(Set<DuplicatedField> dupSet)
+            throws Exception {
+        when(componentService.getAll()).thenReturn(components);
+        when(componentService.get((long) componentId)).thenReturn(component);
+
+        presenter.initView(view, (long) componentId);
+
+        initView();
+
+        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(dupSet);
+    }
+    
     @Test
-    public void saveComponentDuplicateTest() throws SecurityException, IllegalArgumentException,
-            NoSuchFieldException, IllegalAccessException, NotUniqueFieldsException {
-        ComponentService componentService = mock(ComponentService.class);
-        presenter.setComponentService(componentService);
-        ItemViewImpl view = mock(ItemViewImpl.class);
-
-        Component fake = getFakeComponent(0, "duplicate", "new", ComponentType.ARTICLE);
-        initView(view, fake);
-        HashSet<DuplicatedField> set = new HashSet<DuplicatedField>();
-        doThrow(new NotUniqueFieldsException(set)).when(componentService).saveComponent(any(Component.class));
-
+    public void saveComponentDuplicateTest() throws Exception {
+        initView();
+        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(any(Component.class));
         presenter.saveComponent();
-
-        verify(view).wrongFields(set);
+        verify(view).wrongFields(name);
     }
 
-    /**
-     * Tests checking component (checking if component name isn't duplicate).
-     * @throws NoSuchFieldException
-     * @throws SecurityException
-     * @throws IllegalAccessException
-     * @throws IllegalArgumentException
-     */
     @Test
-    public void checkComponent() throws SecurityException, NoSuchFieldException,
-            IllegalArgumentException, IllegalAccessException {
-        List<Component> fakeList = getFakeComponents();
-        ComponentService componentService = mock(ComponentService.class);
-        presenter.setComponentService(componentService);
-        ItemViewImpl view = mock(ItemViewImpl.class);
-
-        Set<DuplicatedField> name = Collections.<DuplicatedField>singleton(ComponentDuplicateField.NAME);
-        
-        Set<DuplicatedField> empty = Collections.emptySet();
-        
-        // new component
-        Component fake = getFakeComponent(0, "extraordinary", "new", ComponentType.ARTICLE);
-        initView(view, fake);
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(empty);
+    public void checkComponentTestNewComponent() {
+        initView();
+        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
         presenter.checkComponent();
         verify(view, never()).wrongFields(name);
-
-        // existing
-        fake = fakeList.get(ID);
-        initView(view, fake);
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(empty);
+    }
+    
+    @Test
+    public void checkComponentTestExistingComponent() {
+        initView();
+        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
         presenter.checkComponent();
         verify(view, never()).wrongFields(name);
-
-        // duplicate
-        fake = getFakeComponent(0, fakeList.get(ID).getName(), "new", ComponentType.ARTICLE);
-        initView(view, fake);
+    }
+    
+    @Test
+    public void checkComponentDiplicate() {
+        initView();
         when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
-        // when(componentService.getDuplicateFieldsFor(fake)).thenReturn(set);
         presenter.checkComponent();
-        verify(view, times(1)).wrongFields(name);
+        verify(view).wrongFields(name);
     }
 
-    private void initView(ItemViewImpl view, Component fake) throws SecurityException,
-            NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
-        Field field = ItemPresenter.class.getDeclaredField("view");
-        field.setAccessible(true);
-        field.set(presenter, view);
-        when(view.getName()).thenReturn(fake.getName());
-        when(view.getCid()).thenReturn(fake.getId());
-        when(view.getDescription()).thenReturn(fake.getDescription());
-        when(view.getComponentType()).thenReturn(fake.getComponentType().toString());
+    private void initView() {
+        presenter.setView(view);
+
+        when(view.getName()).thenReturn(component.getName());
+        when(view.getCid()).thenReturn(component.getId());
+        when(view.getDescription()).thenReturn(component.getDescription());
+        when(view.getComponentType()).thenReturn(component.getComponentType().toString());
     }
 
 }

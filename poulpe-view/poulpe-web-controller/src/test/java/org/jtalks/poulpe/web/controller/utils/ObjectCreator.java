@@ -2,23 +2,43 @@ package org.jtalks.poulpe.web.controller.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 public class ObjectCreator {
+    public static Component getFakeComponent(long id, String name, String description, ComponentType type) {
+        Component comp = new Component(name, description, type);
+        comp.setId(id);
+        return comp;
+    }
+
+    public static List<Component> getFakeComponents() {
+        List<Component> list = new ArrayList<Component>();
+        
+        for (ComponentType type : ComponentType.values()) {
+            list.add(new Component(random(), random(), type));
+        }
+        
+        return list;
+    }
+
     public static List<Section> getFakeSections(int sizeOfCollection) {
         List<Section> sections = new ArrayList<Section>();
         for (int i = 0; i < sizeOfCollection; i++) {
-            sections.add(getFakeSection("fake " + i, "description " + i));
+            sections.add(new Section(random(), "description "));
         }
         return sections;
     }
-    
+
     /**
-     * @deprecated use {@link Section#Section(String, String)} constructor instead
+     * @deprecated use {@link Section#Section(String, String)} constructor
+     * instead
      */
     @Deprecated
     public static Section getFakeSection(String name, String description) {
@@ -27,7 +47,7 @@ public class ObjectCreator {
         section.setDescription(description);
         return section;
     }
-    
+
     /**
      * @deprecated use {@link Branch#Branch(String, String)} constructor instead
      */
@@ -41,20 +61,20 @@ public class ObjectCreator {
 
     public static List<User> getFakeUsers(int size) {
         List<User> users = new ArrayList<User>();
-        for(int i = 0 ; i < size ; i++){
-            User user = new User("user " + i, "email " + i, "password " + i);
-            users.add(user);
+        for (int i = 0; i < size; i++) {
+            users.add(new User(random(), random(), random()));
         }
         return users;
     }
-    
+
     public static TopicType getFakeTopicType(long id, String title, String description) {
-    	TopicType topicType = new TopicType();
-    	topicType.setId(id);
-    	topicType.setTitle(title);
-    	topicType.setDescription(description);
-    	
-    	return topicType;
+        TopicType topicType = new TopicType(title, description);
+        topicType.setId(id);
+        return topicType;
+    }
+
+    private static String random() {
+        return UUID.randomUUID().toString();
     }
 
 }
