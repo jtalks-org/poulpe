@@ -23,7 +23,7 @@
         </east>
       </borderlayout>
       <borderlayout height="30px">
-        <west border="none" width="100px">
+        <west border="none" width="60px">
           <label value="Restricted" />
         </west>
         <center border="none">
@@ -32,7 +32,7 @@
             <button label="Banned Users" sclass="usergroup-button" />
           </hbox>
         </center>
-        <east border="none">
+        <east sclass="east-container-for-add-group-button">
           <button label="Add Group" sclass="add-group-button" />
         </east>
       </borderlayout>
