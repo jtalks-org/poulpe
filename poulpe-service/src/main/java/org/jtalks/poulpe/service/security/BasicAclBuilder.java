@@ -1,6 +1,8 @@
 package org.jtalks.poulpe.service.security;
 
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.movetocommon.AclManager;
 import org.jtalks.poulpe.service.movetocommon.JtalksPermission;
 import org.springframework.security.acls.domain.GrantedAuthoritySid;
@@ -8,6 +10,7 @@ import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +43,16 @@ public class BasicAclBuilder {
     public BasicAclBuilder(AclManager aclManager, Action action) {
         this.aclManager = aclManager;
         this.action = action;
+    }
+
+    public BasicAclBuilder setOwner(@Nonnull User owner){
+        sids.add(new PrincipalSid(owner.getUsername()));
+        return this;
+    }
+
+    public BasicAclBuilder setOwner(@Nonnull Group owner){
+        sids.add((new UserGroupSid(owner)));
+        return this;
     }
 
     public BasicAclBuilder on(Entity object) {
