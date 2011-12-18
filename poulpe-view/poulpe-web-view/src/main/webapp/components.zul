@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
   <window id="componentWindow" title="${labels.componentlist.title}" border="none" width="800px" position="center,top"
-    presenter="${componentListPresenter}" use="org.jtalks.poulpe.web.controller.component.ListViewImpl">
+    presenter="${componentListPresenter}" use="org.jtalks.poulpe.web.controller.component.ZkListView">
     <style>.boldstyle { font-weight: bold; font-size: 14pt; }</style>
     <vlayout>
       <listbox id="listbox">

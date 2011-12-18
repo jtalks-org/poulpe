@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import static org.testng.Assert.*;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeComponents;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.createComponents;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 
@@ -70,7 +70,7 @@ public class ItemPresenterTest {
     }
 
     private void prepareComponents() {
-        components = getFakeComponents();
+        components = createComponents();
         component = components.get(0);
         int someRandomId = 12;
         component.setId(someRandomId);

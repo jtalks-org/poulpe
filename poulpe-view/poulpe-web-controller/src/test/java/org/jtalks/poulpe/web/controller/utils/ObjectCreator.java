@@ -2,8 +2,8 @@ package org.jtalks.poulpe.web.controller.utils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
+import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
@@ -12,13 +12,13 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 public class ObjectCreator {
-    public static Component getFakeComponent(long id, String name, String description, ComponentType type) {
+    public static Component createComponent(long id, String name, String description, ComponentType type) {
         Component comp = new Component(name, description, type);
         comp.setId(id);
         return comp;
     }
 
-    public static List<Component> getFakeComponents() {
+    public static List<Component> createComponents() {
         List<Component> list = new ArrayList<Component>();
         
         for (ComponentType type : ComponentType.values()) {
@@ -31,7 +31,7 @@ public class ObjectCreator {
     public static List<Section> getFakeSections(int sizeOfCollection) {
         List<Section> sections = new ArrayList<Section>();
         for (int i = 0; i < sizeOfCollection; i++) {
-            sections.add(new Section(random(), "description "));
+            sections.add(new Section(random(), "desc"));
         }
         return sections;
     }
@@ -74,7 +74,7 @@ public class ObjectCreator {
     }
 
     private static String random() {
-        return UUID.randomUUID().toString();
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 
 }

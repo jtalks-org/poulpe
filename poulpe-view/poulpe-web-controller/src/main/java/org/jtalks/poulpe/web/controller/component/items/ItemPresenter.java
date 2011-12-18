@@ -19,7 +19,7 @@ import java.util.Set;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
-import org.jtalks.poulpe.web.controller.component.AbstractPresenter;
+import org.jtalks.poulpe.web.controller.component.AbstractComponentPresenter;
 
 /**
  * The class for mediating between model and view representation of components.
@@ -27,7 +27,7 @@ import org.jtalks.poulpe.web.controller.component.AbstractPresenter;
  * @author Dmitriy Sukharev
  * @author Alexey Grigorev
  */
-public class ItemPresenter extends AbstractPresenter {
+public class ItemPresenter extends AbstractComponentPresenter {
 
     private ItemView view;
     private ItemStrategy editingStrategy = DoNothingItemStrategy.instance;

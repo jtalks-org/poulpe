@@ -23,18 +23,22 @@ import org.jtalks.poulpe.web.controller.DialogManager;
  * The class for mediating between model and view representation of components.
  * @author Dmitriy Sukharev
  */
-public class ListPresenter extends AbstractPresenter {
+public class ListPresenter extends AbstractComponentPresenter {
 
+    private static final String NO_SELECTED_ITEM = "item.no.selected.item";
+    
     /** The object that is responsible for updating view of the component list. */
     private ListView view;
 
     /**
-     * Initialises the object that is responsible for updating view of the component list.
-     * @param listView the object that is responsible for updating view of the component list
+     * Initialises the object that is responsible for updating view of the
+     * component list.
+     * @param listView the object that is responsible for updating view of the
+     * component list
      */
     public void initView(ListView listView) {
-        this.view = listView;
-        listView.createModel(getComponents());
+        view = listView;
+        view.createModel(getComponents());
     }
 
     /**
@@ -45,25 +49,31 @@ public class ListPresenter extends AbstractPresenter {
         return getComponentService().getAll();
     }
 
-    /** Removes the selected component from the component list. */
+    /**
+     * Removes the selected component from the component list.
+     */
     public void deleteComponent() {
-        if (!view.hasSelectedItem()) {
-            getDialogManager().notify("item.no.selected.item");
-        } else {
+        if (view.hasSelectedItem()) {
+            // TODO: view.getSelectedItem() is invoked twice, one time here
+            // and the second - in DeletePerformable#execute().
+            // get rid of it
             Component victim = view.getSelectedItem();
-            DeletePerformable dc = new DeletePerformable();
-            getDialogManager().confirmDeletion(victim.getName(), dc);
+            getDialogManager().confirmDeletion(victim.getName(), new DeletePerformable());
+        } else {
+            getDialogManager().notify(NO_SELECTED_ITEM);
         }
     }
 
-    /** Updates the list of components. */
+    /**
+     * Updates the list of components.
+     */
     public void updateList() {
         view.updateList(getComponents());
     }
 
     /**
-     * The class for executing deletion of the selected item, delegates this task to the component
-     * service and view.
+     * The class for executing deletion of the selected item, delegates this
+     * task to the component service and view.
      * @author Dmitriy Sukharev
      */
     class DeletePerformable implements DialogManager.Performable {

@@ -14,117 +14,100 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.component.ListPresenter.DeletePerformable;
-import org.mockito.ArgumentCaptor;
-import org.testng.annotations.BeforeTest;
+import org.jtalks.poulpe.web.controller.DialogManager.Performable;
+import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
  * The test for {@link ListPresenter} class.
  * 
  * @author Dmitriy Sukharev
- * 
+ * @author Alexey Grigorev
  */
 public class ListPresenterTest {
 
+    // SUT
     private ListPresenter presenter;
+    
+    // dependencies
+    private ComponentService componentService;
+    private ListView view;
+    private DialogManager dialogManager;
 
-    @BeforeTest public void setUp() {
+    // test data
+    private List<Component> components;
+    private Component component;
+
+    @BeforeMethod
+    public void setUp() {
         presenter = new ListPresenter();
+
+        componentService = mock(ComponentService.class);
+        presenter.setComponentService(componentService);
+
+        dialogManager = mock(DialogManager.class);
+        presenter.setDialogManager(dialogManager);
+
+        prepareTestData();
+        
+        view = mock(ListView.class);
+        presenter.initView(view);
     }
 
-    /** Tests view initialisation. */
-    @Test public void initListViewTest() {
-        ComponentService componentService = mock(ComponentService.class);
-        ListView view = mock(ListView.class);
-        presenter.setComponentService(componentService);
-        List<Component> fake = getFakeComponents();
-
-        when(componentService.getAll()).thenReturn(fake);
-        presenter.initView(view);
-        verify(view).createModel(argThat(new ComponentListMatcher(fake)));
+    private void prepareTestData() {
+        components = ObjectCreator.createComponents();
+        when(componentService.getAll()).thenReturn(components);
+        component = components.get(0);
     }
 
-    @Test public void deleteComponentTest() {
-        ComponentService componentService = mock(ComponentService.class);
-        ListView view = mock(ListView.class);
-        DialogManager dm = mock(DialogManager.class);
-        presenter.setDialogManager(dm);
-        presenter.setComponentService(componentService);
-        presenter.initView(view);
-        Component fake = getFakeComponent(1L, "Fake1", "Desc1", ComponentType.ARTICLE);
+    @Test
+    public void initListViewTest() {
+        verify(view).createModel(components);
+    }
 
-        ArgumentCaptor<String> argument1 = ArgumentCaptor.forClass(String.class);
-        ArgumentCaptor<DialogManager.Performable> argument2 = ArgumentCaptor
-                .forClass(DialogManager.Performable.class);
+    @Test
+    public void deleteComponentTest() {
+        givenSelectedElement();
+        presenter.deleteComponent();
+        verifyComfirmDialogShown();
+    }
 
-        when(view.getSelectedItem()).thenReturn(fake);
+    private void givenSelectedElement() {
         when(view.hasSelectedItem()).thenReturn(true);
-
+        when(view.getSelectedItem()).thenReturn(component);
+    }
+    
+    private void verifyComfirmDialogShown() {
+        verify(dialogManager).confirmDeletion(eq(component.getName()), any(Performable.class));
+    }
+    
+    @Test
+    public void deleteComponentNoSelectedItemTest() {
+        givenNoSelectedElement();
         presenter.deleteComponent();
-
-        verify(dm).confirmDeletion(argument1.capture(), argument2.capture());
-        assertEquals(argument1.getValue(), fake.getName());
-        assertNotNull(argument2.getValue());
-
-        // and another check
-        when(view.hasSelectedItem()).thenReturn(false);
-        presenter.deleteComponent();
-        verify(dm).notify("item.no.selected.item");
+        verify(dialogManager).notify("item.no.selected.item");
     }
 
-    /** Tests executed method of the {@link DeletePerformable} inner class. */
-    @SuppressWarnings("unchecked")
-    @Test public void executeDcTest() {
-        ComponentService componentService = mock(ComponentService.class);
-        ListView view = mock(ListView.class);
-        presenter.setComponentService(componentService);
-        presenter.initView(view);
+    private void givenNoSelectedElement() {
+        when(view.hasSelectedItem()).thenReturn(false);
+    }
 
-        final int id = 1;
-        List<Component> fakeList = getFakeComponents();
-        Component fake = fakeList.get(id);
+    @Test
+    public void executeDcTest() {
+        givenSelectedElement();
 
-        when(componentService.getAll()).thenReturn(fakeList);
-        when(view.getSelectedItem()).thenReturn(fake);
-
-        @SuppressWarnings("rawtypes")
-        ArgumentCaptor<List> argument = ArgumentCaptor.forClass(List.class);
         presenter.new DeletePerformable().execute();
 
-        verify(componentService).deleteComponent(fake);
-        verify(view).updateList(argument.capture());
+        verify(componentService).deleteComponent(component);
+        verify(view).updateList(components);
     }
 
-    private Component getFakeComponent(long id, String name, String description, ComponentType type) {
-        Component comp = new Component();
-        comp.setId(id);
-        comp.setName(name);
-        comp.setDescription(description);
-        comp.setComponentType(type);
-        return comp;
-    }
-
-    private List<Component> getFakeComponents() {
-        List<Component> list = new ArrayList<Component>();
-        ComponentType[] types = ComponentType.values();
-        for (int i = 0; i < types.length; i++) {
-            list.add(getFakeComponent(i, "Fake" + i, "Desc" + i, types[i]));
-        }
-        return list;
-    }
 }
