@@ -196,7 +196,11 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     /** {@inheritDoc} */
     @Override
     public void setComponentType(ComponentType type) {
-        this.componentType.setText(type.toString());
+        if (type == null) {
+            this.componentType.setText(null);
+        } else {
+            this.componentType.setText(type.toString());
+        }
     }
 
     /** {@inheritDoc} */
