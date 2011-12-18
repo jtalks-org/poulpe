@@ -1,0 +1,9 @@
+<?page title="Edit User" contentType="text/html;charset=UTF-8"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window title="${labels.users.edituserdialog.title}" closable="true" border="normal" width="345px"
+          forward="onClose=onCancelEditAction">
+    label
+  </window>
+</zk>

@@ -7,7 +7,11 @@ import org.jtalks.poulpe.service.security.BranchPermission;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
+import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zkplus.databind.BindingListModelList;
+import org.zkoss.zul.ListModel;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +33,15 @@ public class BranchPermissionManagementVm {
                 ("Moderators", ""), new Group("Registered Users", ""), new Group("Activated Users", ""))));
         blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
         blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
+    }
+    @Command
+    public void showGroupsDialog(){
+//        Executions.createComponents()
+        Executions.createComponents("/sections/ManageGroupsDialog.zul", null,null);
+    }
+
+    public ListModel getBlocksListModel() {
+        return new BindingListModelList(blocks, true);
     }
 
     public List<BranchPermissionManagementBlock> getBlocks() {
