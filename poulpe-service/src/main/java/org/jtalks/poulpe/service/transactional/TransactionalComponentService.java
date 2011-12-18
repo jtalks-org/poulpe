@@ -26,15 +26,17 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 
 /**
- *
+ * Transactional implementation of {@link ComponentService}. Transactions are
+ * provided by AOP.
+ * 
  * @author Pavel Vervenko
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
 
     /**
-     * Create new instance of the service.
-     * @param dao need it for CRUD operations
+     * Creates new instance of the service
+     * @param dao
      */
     public TransactionalComponentService(ComponentDao dao) {
         this.dao = dao;
@@ -60,9 +62,11 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void saveComponent(Component component) throws NotUniqueFieldsException {
         Set<DuplicatedField> set = dao.getDuplicateFieldsFor(component);
-        if (set != null) {
+
+        if (!set.isEmpty()) {
             throw new NotUniqueFieldsException(set);
         }
+
         dao.saveOrUpdate(component);
     }
 

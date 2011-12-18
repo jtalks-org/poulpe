@@ -12,28 +12,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.items;
 
 import org.jtalks.poulpe.model.entity.Component;
-import org.mockito.ArgumentMatcher;
 
 /**
- * The class for matching the {@link Component} items.
- * @author Dmitriy Sukharev
+ * Strategy used in {@link ItemPresenter} when showing view.<br><br>
+ * 
+ * There are two main implementations:<br> 
+ * {@link EditItemStrategy} for editing an existent {@link Component} entity;<br>
+ * {@link NewItemStrategy} for creating a new entity object.
+ * 
+ * @author Alexey Grigorev
  */
-class ComponentMatcher extends ArgumentMatcher<Component> {
-    private Component comp;
-
-    public ComponentMatcher(Component comp) {
-        this.comp = comp;
-    }
-
-    @Override
-    public boolean matches(Object item) {
-        Component comp2 = (Component) item;
-        return comp.getId() == comp2.getId() && comp.getName().equals(comp2.getName())
-                && comp.getDescription().equals(comp2.getDescription())
-                && comp.getComponentType().equals(comp2.getComponentType());
-    }
-
+interface ItemStrategy {
+    /**
+     * Initializes a displayed view for showing entity
+     */
+    void init();
+    
+    /**
+     * Retrieves the item from the view
+     * @return the item appropriate for saving
+     */
+    Component itemForSaving();
 }

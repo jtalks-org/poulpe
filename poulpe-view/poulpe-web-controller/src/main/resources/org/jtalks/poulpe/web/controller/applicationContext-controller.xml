@@ -20,7 +20,7 @@
     <property name="branchService" ref="branchService" />
   </bean>
 
-  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.ItemPresenter" scope="prototype">
+  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>

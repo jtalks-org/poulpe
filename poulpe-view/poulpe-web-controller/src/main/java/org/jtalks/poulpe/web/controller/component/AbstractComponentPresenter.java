@@ -16,13 +16,14 @@ package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.component.items.ItemPresenter;
 
 /**
  * The abstract class which contains common fields and methods for {@link ItemPresenter} and
  * {@link ListPresenter} classes.
  * @author Dmitriy Sukharev
  */
-public class AbstractPresenter {
+public abstract class AbstractComponentPresenter {
 
     /** The service instance to manipulate with stored components. */
     private ComponentService componentService;

@@ -17,84 +17,73 @@ package org.jtalks.poulpe.service.transactional;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.never;
-import static org.testng.Assert.assertEquals;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.util.Collections;
+import java.util.Set;
 
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- *
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
 public class TransactionalComponentServiceTest {
 
-    private ComponentDao dao;
-    private TransactionalComponentService instance;
+    private ComponentDao componentDao;
+    private TransactionalComponentService conponentService;
+
+    Component component = new Component();
+    Set<DuplicatedField> empty = Collections.emptySet();
+    Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
+
     @BeforeMethod
     public void setUp() throws Exception {
-        dao = mock(ComponentDao.class);
-        instance = new TransactionalComponentService(dao);
+        componentDao = mock(ComponentDao.class);
+        conponentService = new TransactionalComponentService(componentDao);
     }
 
     @Test
     public void testGetAll() {
-        List<Component> expectedList = new ArrayList<Component>();
-        when(dao.getAll()).thenReturn(expectedList);
-
-        List<Component> actualList = instance.getAll();
-
-        // TODO actual and expected objects were confused here.
-        // Maybe not only here, we should find out if there are other confusions.
-        assertEquals(actualList, expectedList);
-        verify(dao).getAll();
+        conponentService.getAll();
+        verify(componentDao).getAll();
     }
 
     @Test
     public void testSaveComponent() throws NotUniqueFieldsException {
-        Component component = new Component();
-        when(dao.getDuplicateFieldsFor(component)).thenReturn(null);
-        
-        instance.saveComponent(component);
-
-        verify(dao).saveOrUpdate(component);
+        givenNoDuplicatedFields();
+        conponentService.saveComponent(component);
+        verify(componentDao).saveOrUpdate(component);
     }
-    
-    @Test (expectedExceptions = NotUniqueFieldsException.class)
-    public void testSaveComponentException() throws NotUniqueFieldsException {
-        Component component = new Component();
-        when(dao.getDuplicateFieldsFor(component)).thenReturn(new HashSet<DuplicatedField>());
-        
-        instance.saveComponent(component);
 
-        verify(dao, never()).saveOrUpdate(component);
+    private void givenNoDuplicatedFields() {
+        when(componentDao.getDuplicateFieldsFor(component)).thenReturn(empty);
+    }
+
+    @Test(expectedExceptions = NotUniqueFieldsException.class)
+    public void testSaveComponentException() throws NotUniqueFieldsException {
+        givenNameFieldDuplicated();
+        conponentService.saveComponent(component);
+    }
+
+    private void givenNameFieldDuplicated() {
+        when(componentDao.getDuplicateFieldsFor(component)).thenReturn(name);
     }
 
     @Test
     public void testDeleteComponent() {
-        Component component = new Component();
-
-        instance.deleteComponent(component);
-
-        verify(dao).delete(component.getId());
+        conponentService.deleteComponent(component);
+        verify(componentDao).delete(component.getId());
     }
 
     @Test
     void testGetAvailableTypes() {
-        when(dao.getAvailableTypes()).thenReturn(new LinkedHashSet<ComponentType>());
-
-        instance.getAvailableTypes();
-
-        verify(dao).getAvailableTypes();
+        conponentService.getAvailableTypes();
+        verify(componentDao).getAvailableTypes();
     }
 }
