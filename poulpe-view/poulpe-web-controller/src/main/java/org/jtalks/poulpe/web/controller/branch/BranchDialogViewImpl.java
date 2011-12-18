@@ -111,6 +111,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     public void onClick$confirmButton() {
         presenter.saveBranch();
+        presenter.updateView();
     }
 
     /**

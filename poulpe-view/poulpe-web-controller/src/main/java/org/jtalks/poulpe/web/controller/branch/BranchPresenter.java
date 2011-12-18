@@ -19,6 +19,7 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 
 /**
  * This class is implementation the branch presenter in pattern
@@ -31,6 +32,15 @@ public class BranchPresenter {
 	private SectionService sectionService;
 	private BranchDialogView view;
 	private BranchService branchService;
+	private SectionPresenter sectionPresenter;
+
+	public SectionPresenter getSectionPresenter() {
+		return sectionPresenter;
+	}
+
+	public void setSectionPresenter(SectionPresenter sectionPresenter) {
+		this.sectionPresenter = sectionPresenter;
+	}
 
 	/**
 	 * Sets the Branch instance
@@ -44,6 +54,9 @@ public class BranchPresenter {
 	 */
 	public void setSectionService(SectionService service) {
 		sectionService = service;
+	}
+	public void updateView(){
+		sectionPresenter.updateView();
 	}
 
 	/**
