@@ -229,5 +229,12 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     Branch createBranch() {
         return branch = new Branch();
     }
+    
+    @Override
+    public void openErrorPopupInNewSectionDialog(String label) {
+    	final String message = Labels.getLabel(label);
+    	branchName.setErrorMessage(message);
+    	
+    }
 
 }

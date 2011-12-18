@@ -33,6 +33,7 @@ public class BranchPresenter {
 	private BranchDialogView view;
 	private BranchService branchService;
 	private SectionPresenter sectionPresenter;
+	public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
 	public SectionPresenter getSectionPresenter() {
 		return sectionPresenter;
@@ -72,6 +73,13 @@ public class BranchPresenter {
 	public void initView() {
 		view.initSectionList(sectionService.getAll());
 	}
+	
+	public String validateLongName(String name){
+		if (name != null && name.length() > 254){
+			return ERROR_LABEL_SECTION_NAME_VERY_LONG;
+		}
+		return null;
+	}
 
 	/**
 	 * Save new or edited branch in db In case when branch with equal name
@@ -80,7 +88,12 @@ public class BranchPresenter {
 	public void saveBranch() {
 		Section section = view.getSection();
 		Branch branch = view.getBranch(section);
+		String result = validateLongName(branch.getName());
+		if (result == null){
 		saveBranch(branch);
+		}else{
+			view.openErrorPopupInNewSectionDialog(result);
+		}
 	}
 
 	public void saveBranch(Branch branch) {

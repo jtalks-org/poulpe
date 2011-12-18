@@ -45,6 +45,7 @@ public interface BranchDialogView {
      *            name and description current branch will fill dialog fields
      * */
     void show(Branch branch);
+    void openErrorPopupInNewSectionDialog(String label);
 
     /**
      * Show dialog
