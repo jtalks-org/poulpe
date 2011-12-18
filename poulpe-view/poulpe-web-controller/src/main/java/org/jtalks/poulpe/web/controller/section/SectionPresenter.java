@@ -45,6 +45,7 @@ public class SectionPresenter {
 
     public static final String ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS = "sections.error.section_name_already_exists";
     public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
+    public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
     /**
      * @param service
@@ -194,6 +195,14 @@ public class SectionPresenter {
         }
         return null;
     }
+    private String validateNameLength(String name){
+    	if(name.length() > 254){
+    		return ERROR_LABEL_SECTION_NAME_VERY_LONG;
+    	}
+    	return null;
+    }
+    
+
 
     /**
      * Method check uniqueness of the section's name and the description.
@@ -230,6 +239,9 @@ public class SectionPresenter {
     public void addNewSection(final String name, final String description) {
 
         String errorLabel = checkSectionUniqueness(name, description);
+        if (errorLabel == null){
+        	errorLabel=validateNameLength(name);
+        }
         if (errorLabel != null) {
             sectionView.openErrorPopupInNewSectionDialog(errorLabel);
             return;
