@@ -4,78 +4,8 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <style src="/resources/css/all.css" />
-  <window id="branchPermissionManagementWindow" border="normal" apply="org.zkoss.bind.BindComposer"
-          viewModel="@id('vm') @init(branchPermissionManagementVm)">
-    <listbox forEach="${branchPermissionManagementVm.blocks}" width="100%" height="100%">
-      <listhead width="100%" height="100%" />
-      <listitem>
-        <listcell>
-          <user-groups-block block="${each}" />
-        </listcell>
-      </listitem>
-    </listbox>
-    <caption label="Edit Branch Permissions" />
-    <groupbox width="100%">
-      <caption label="View Topics" />
-      <borderlayout height="30px">
-        <west border="none" width="60px">
-          <label value="Allowed" />
-        </west>
-        <center border="none">
-          <hbox>
-            <button label="Activated Users" sclass="usergroup-button" />
-            <button label="Moderators" sclass="usergroup-button" />
-          </hbox>
-        </center>
-        <east border="none">
-          <button label="Add Group" sclass="add-group-button" />
-        </east>
-      </borderlayout>
-      <borderlayout height="30px">
-        <west border="none" width="60px">
-          <label value="Restricted" />
-        </west>
-        <center border="none">
-          <hbox>
-            <button label="Registered Users" sclass="usergroup-button" />
-            <button label="Banned Users" sclass="usergroup-button" />
-          </hbox>
-        </center>
-        <east sclass="east-container-for-add-group-button">
-          <button label="Add Group" sclass="add-group-button" />
-        </east>
-      </borderlayout>
-    </groupbox>
-    <groupbox width="100%">
-      <caption label="Post Topics" />
-      <borderlayout height="30px">
-        <west border="none" width="60px">
-          <label value="Allowed" />
-        </west>
-        <center border="none">
-          <hbox>
-            <button label="Activated Users" sclass="usergroup-button" />
-            <button label="Moderators" sclass="usergroup-button" />
-          </hbox>
-        </center>
-        <east border="none">
-          <button label="Add Group" sclass="add-group-button" />
-        </east>
-      </borderlayout>
-      <borderlayout height="30px">
-        <west border="none" width="60px">
-          <label value="Restricted" />
-        </west>
-        <center border="none">
-          <hbox>
-            <button label="Registered Users" sclass="usergroup-button" />
-            <button label="Banned Users" sclass="usergroup-button" />
-          </hbox>
-        </center>
-        <east border="none">
-          <button label="Add Group" sclass="add-group-button" />
-        </east>
-      </borderlayout>
-    </groupbox>
+  <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
+          viewModel="@id('vm') @init(branchPermissionManagementVm)" border="normal">
+    <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}" />
   </window>
 </zk>

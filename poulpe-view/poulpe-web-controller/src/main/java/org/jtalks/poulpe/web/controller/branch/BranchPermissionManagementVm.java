@@ -20,15 +20,14 @@ import java.util.List;
  */
 public class BranchPermissionManagementVm {
     private List<BranchPermissionManagementBlock> blocks = new LinkedList<BranchPermissionManagementBlock>();
-    private String prop = "prop";
     private Branch branch;
-    private String test = "test";
 
     public BranchPermissionManagementVm() {
         List<BranchPermissionManagementRow> rows = new LinkedList<BranchPermissionManagementRow>();
         rows.add(new BranchPermissionManagementRow("Allowed", Lists.newArrayList(new Group("Moderators", ""))));
         rows.add(new BranchPermissionManagementRow("Restricted", Lists.newArrayList(new Group
                 ("Moderators", ""), new Group("Registered Users", ""), new Group("Activated Users", ""))));
+        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
         blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
     }
 
@@ -38,22 +37,6 @@ public class BranchPermissionManagementVm {
 
     public void setBlocks(List<BranchPermissionManagementBlock> blocks) {
         this.blocks = blocks;
-    }
-
-    public String getProp() {
-        return prop;
-    }
-
-    public void setProp(String prop) {
-        this.prop = prop;
-    }
-
-    public String getTest() {
-        return test;
-    }
-    @NotifyChange
-    public void setTest(String test) {
-        this.test = test;
     }
 }
 
