@@ -3,30 +3,32 @@
        xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
-  <zksp:zk-config/>
+  <zksp:zk-config />
   <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="singleton" />
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
 
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-
   </bean>
+
   <!--Declaration of presenters -->
-  <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter" scope="prototype">
+  <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
+        scope="prototype">
     <property name="branchService" ref="branchService" />
   </bean>
-  
+
   <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="prototype">
     <property name="sectionService" ref="sectionService" />
     <property name="branchService" ref="branchService" />
     <property name="sectionPresenter" ref="sectionPresenter"/>
   </bean>
 
-  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter" scope="prototype">
+  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter"
+        scope="prototype">
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
-  
+
   <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
@@ -38,12 +40,12 @@
   </bean>
 
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter"
-    scope="prototype">
+        scope="prototype">
     <property name="sectionService" ref="sectionService" />
   </bean>
 
   <bean id="topicTypeListPresenter" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeListPresenter"
-    scope="prototype">
+        scope="prototype">
     <property name="topicTypeService" ref="topicTypeService" />
     <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
@@ -71,7 +73,8 @@
     <property name="dialogManager" ref="dialogManager" />
   </bean>
 
-  <bean id="moderationDialogPresenter" class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
+  <bean id="moderationDialogPresenter"
+        class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
     <property name="branchService" ref="branchService" />
     <property name="userService" ref="userService" />
     <property name="dialogManager" ref="dialogManager"></property>
@@ -83,7 +86,7 @@
   </bean>
 
   <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
-    scope="prototype">
+        scope="prototype">
     <property name="groupService" ref="groupService" />
   </bean>
 
