@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.group;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 
 /**
  * 
@@ -39,7 +40,7 @@ public class GroupPresenter {
     }
 
     public void initView(GroupViewImpl view) {
-        this.view = view;        
+        this.view = view;
         updateView(null);
     }
 
@@ -66,16 +67,13 @@ public class GroupPresenter {
     }
 
     public void deleteGroup(final Group groupToDelete) {
-        dialogManager.confirmDeletion(groupToDelete.getName(),
-                new DialogManager.Performable() {
-
-                    @Override
-                    public void execute() {
-                        groupService.deleteGroup(groupToDelete);
-                        updateView();
-                    }
-                });
-        
+        dialogManager.confirmDeletion(groupToDelete.getName(), new Performable() {
+            @Override
+            public void execute() {
+                groupService.deleteGroup(groupToDelete);
+                updateView();
+            }
+        });
     }
 
 }

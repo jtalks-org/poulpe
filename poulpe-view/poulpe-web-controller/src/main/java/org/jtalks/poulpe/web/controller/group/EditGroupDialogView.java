@@ -22,23 +22,17 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.WrongValueException;
 
 /**
- * Interface for representation view single branch
  * 
- * @author Bekrenev Dmitry
- * */
+ */
 public interface EditGroupDialogView {
 
     /**
      * Cause hiding current dialog
-     * */
+     */
     void hide();
 
     /**
-     * Show dialog and fill fields name and description
-     * 
-     * @param branch
-     *            name and description current branch will fill dialog fields
-     * */
+     */
     void show(Group group);
 
     /**
@@ -48,7 +42,7 @@ public interface EditGroupDialogView {
 
     /**
      * Cause throw exception for popup error message
-     * */
+     */
     void notUniqueGroupName();
 
 }

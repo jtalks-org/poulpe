@@ -40,8 +40,7 @@ import org.zkoss.zul.Window;
  * 
  * @author Bekrenev Dmitry
  * */
-public class EditGroupDialogViewImpl extends Window implements
-        EditGroupDialogView, AfterCompose {
+public class EditGroupDialogViewImpl extends Window implements EditGroupDialogView, AfterCompose {
 
     private static final long serialVersionUID = 7388638074018815713L;
 
@@ -52,15 +51,11 @@ public class EditGroupDialogViewImpl extends Window implements
     private Button rejectButton;
     private Combobox sectionList;
 
-  
-  
-
     /**
      * Set presenter
      * 
      * @see BranchEditorPresenter
-     * @param presenter
-     *            instance presenter for view
+     * @param presenter instance presenter for view
      * */
     public void setPresenter(EditGroupDialogPresenter presenter) {
         this.presenter = presenter;
@@ -73,8 +68,8 @@ public class EditGroupDialogViewImpl extends Window implements
     public void afterCompose() {
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
-        presenter.initView(this,null);
-        groupName.setConstraint("no empty");     
+        presenter.initView(this, null);
+        groupName.setConstraint("no empty");
     }
 
     /**
@@ -82,7 +77,7 @@ public class EditGroupDialogViewImpl extends Window implements
      * */
     public void onClick$confirmButton() {
         presenter.saveOrUpdateGroup(groupName.getText(), groupDescription.getText());
-        
+
         hide();
     }
 
@@ -110,9 +105,8 @@ public class EditGroupDialogViewImpl extends Window implements
     /**
      * Handle event from main window for open edit branch dialog
      * 
-     * @param event
-     *            information about event
-     * */
+     * @param event information about event
+     */
     public void onOpenEditDialog(Event event) {
         show((Group) event.getData());
     }
@@ -136,12 +130,12 @@ public class EditGroupDialogViewImpl extends Window implements
      * */
     @Override
     public void show() {
-        presenter.initView(this,null);
+        presenter.initView(this, null);
         setTitle(Labels.getLabel("groups.newbranchedialog.title"));
         confirmButton.setLabel(Labels.getLabel("groups.button.add"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
         groupName.setRawValue("");
-        groupDescription.setText("");        
+        groupDescription.setText("");
         setVisible(true);
     }
 
@@ -150,7 +144,7 @@ public class EditGroupDialogViewImpl extends Window implements
      * */
     @Override
     public void show(Group group) {
-        presenter.initView(this,group);
+        presenter.initView(this, group);
         setTitle(Labels.getLabel("groups.editdialog.title"));
         confirmButton.setLabel(Labels.getLabel("groups.button.edit"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
