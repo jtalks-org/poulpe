@@ -44,5 +44,10 @@ public interface EditGroupDialogView {
      * Cause throw exception for popup error message
      */
     void notUniqueGroupName();
+    
+    /**
+     * Show popup window with error text
+     */
+    public void openErrorPopupInEditGroupDialog(String label);
 
 }

@@ -40,124 +40,143 @@ import org.zkoss.zul.Window;
  * 
  * @author Bekrenev Dmitry
  * */
-public class EditGroupDialogViewImpl extends Window implements EditGroupDialogView, AfterCompose {
+public class EditGroupDialogViewImpl extends Window implements
+		EditGroupDialogView, AfterCompose {
 
-    private static final long serialVersionUID = 7388638074018815713L;
+	private static final long serialVersionUID = 7388638074018815713L;
 
-    private EditGroupDialogPresenter presenter;
-    private Textbox groupName;
-    private Textbox groupDescription;
-    private Button confirmButton;
-    private Button rejectButton;
-    private Combobox sectionList;
+	private EditGroupDialogPresenter presenter;
+	private Textbox groupName;
+	private Textbox groupDescription;
+	private Button confirmButton;
+	private Button rejectButton;
+	private Combobox sectionList;
 
-    /**
-     * Set presenter
-     * 
-     * @see BranchEditorPresenter
-     * @param presenter instance presenter for view
-     * */
-    public void setPresenter(EditGroupDialogPresenter presenter) {
-        this.presenter = presenter;
-    }
+	/**
+	 * Set presenter
+	 * 
+	 * @see BranchEditorPresenter
+	 * @param presenter
+	 *            instance presenter for view
+	 * */
+	public void setPresenter(EditGroupDialogPresenter presenter) {
+		this.presenter = presenter;
+	}
 
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
-        presenter.initView(this, null);
-        groupName.setConstraint("no empty");
-    }
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void afterCompose() {
+		Components.addForwards(this, this);
+		Components.wireVariables(this, this);
+		presenter.initView(this, null);
+		groupName.setConstraint("no empty");
+	}
 
-    /**
-     * Handle event when user click on confirm button
-     * */
-    public void onClick$confirmButton() {
-        presenter.saveOrUpdateGroup(groupName.getText(), groupDescription.getText());
+	/**
+	 * Handle event when user click on confirm button
+	 * */
+	public void onClick$confirmButton() {
+		String result = presenter.validate(groupName.getText());
+		if (result != null) {
+			openErrorPopupInEditGroupDialog(result);
+		} else {
+			presenter.saveOrUpdateGroup(groupName.getText(),
+					groupDescription.getText());
+			hide();
+		}
 
-        hide();
-    }
+	}
 
-    /**
-     * Handle event when user click on reject button
-     * */
-    public void onClick$rejectButton() {
-        hide();
-    }
+	/**
+	 * Handle event when user click on reject button
+	 * */
+	public void onClick$rejectButton() {
+		hide();
+	}
 
-    /**
-     * Handle event when branch name field in focus
-     * */
-    public void onFocus$branchName() {
-        groupName.clearErrorMessage();
-    }
+	/**
+	 * Handle event when branch name field in focus
+	 * */
+	public void onFocus$branchName() {
+		groupName.clearErrorMessage();
+	}
 
-    /**
-     * Handle event from main window for open add new branch dialog
-     * */
-    public void onOpenAddDialog() {
-        show();
-    }
+	/**
+	 * Handle event from main window for open add new branch dialog
+	 * */
+	public void onOpenAddDialog() {
+		show();
+	}
 
-    /**
-     * Handle event from main window for open edit branch dialog
-     * 
-     * @param event information about event
-     */
-    public void onOpenEditDialog(Event event) {
-        show((Group) event.getData());
-    }
+	/**
+	 * Handle event from main window for open edit branch dialog
+	 * 
+	 * @param event
+	 *            information about event
+	 */
+	public void onOpenEditDialog(Event event) {
+		show((Group) event.getData());
+	}
 
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void hide() {
-        setVisible(false);
-        GroupViewImpl view = (GroupViewImpl) getAttribute("backWindow");
-        if (view == null) {
-            return;
-        }
-        GroupPresenter presenter = (GroupPresenter) getAttribute("presenter");
-        presenter.updateView();
-    }
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void hide() {
+		setVisible(false);
+		GroupViewImpl view = (GroupViewImpl) getAttribute("backWindow");
+		if (view == null) {
+			return;
+		}
+		GroupPresenter presenter = (GroupPresenter) getAttribute("presenter");
+		presenter.updateView();
+	}
 
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void show() {
-        presenter.initView(this, null);
-        setTitle(Labels.getLabel("groups.newbranchedialog.title"));
-        confirmButton.setLabel(Labels.getLabel("groups.button.add"));
-        rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
-        groupName.setRawValue("");
-        groupDescription.setText("");
-        setVisible(true);
-    }
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void show() {
+		presenter.initView(this, null);
+		setTitle(Labels.getLabel("groups.newbranchedialog.title"));
+		confirmButton.setLabel(Labels.getLabel("groups.button.add"));
+		rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
+		groupName.setRawValue("");
+		groupDescription.setText("");
+		setVisible(true);
+	}
 
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void show(Group group) {
-        presenter.initView(this, group);
-        setTitle(Labels.getLabel("groups.editdialog.title"));
-        confirmButton.setLabel(Labels.getLabel("groups.button.edit"));
-        rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
-        groupName.setText(group.getName());
-        groupDescription.setText(group.getDescription());
-        setVisible(true);
-    }
+	/**
+	 * {@inheritDoc}
+	 * */
+	@Override
+	public void show(Group group) {
+		presenter.initView(this, group);
+		setTitle(Labels.getLabel("groups.editdialog.title"));
+		confirmButton.setLabel(Labels.getLabel("groups.button.edit"));
+		rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
+		groupName.setText(group.getName());
+		groupDescription.setText(group.getDescription());
+		setVisible(true);
+	}
+	
 
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void notUniqueGroupName() {
-        throw new WrongValueException(groupName, Labels.getLabel("groups.validation.not_unique_group_name"));
-    }
+	/**
+	 * {@inheritDoc}
+	 * */
+	
+	@Override
+	public void notUniqueGroupName() {
+		throw new WrongValueException(groupName,
+				Labels.getLabel("groups.validation.not_unique_group_name"));
+	}
+
+	@Override
+	public void openErrorPopupInEditGroupDialog(String label) {
+		final String message = Labels.getLabel(label);
+		groupName.setErrorMessage(message);
+		
+	}
 }

@@ -28,6 +28,7 @@ public class BranchEditorPresenter {
     private BranchEditorView view;
     private BranchService branchService;
 
+
     /**
      * Sets the service instance which is used for manipulating with stored
      * branches
@@ -48,6 +49,7 @@ public class BranchEditorPresenter {
     public void setView(BranchEditorView view) {
         this.view = view;
     }
+
 
     /**
      * Invocation this method makes view update branch list

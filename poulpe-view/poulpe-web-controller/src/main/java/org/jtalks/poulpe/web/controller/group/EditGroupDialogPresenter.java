@@ -23,6 +23,7 @@ public class EditGroupDialogPresenter {
     private EditGroupDialogView view;
     private Group group;
     private GroupService groupService;
+    private final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
 
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
@@ -31,6 +32,12 @@ public class EditGroupDialogPresenter {
     public void initView(EditGroupDialogView view, Group group) {
         this.view = view;
         this.group = group;
+    }
+    public String validate(String name){
+    	if(name!=null && name.length() > 245){
+    		return ERROR_LABEL_SECTION_NAME_WRONG;
+    	}
+    	return null;
     }
 
     public void saveOrUpdateGroup(String name, String description) {

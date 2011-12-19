@@ -41,7 +41,7 @@ public class TopicTypePresenter {
     public static final String TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
     public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
     public static final String TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
-
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
     protected DialogManager dialogManager;
     protected WindowManager windowManager;
     protected TopicTypeService topicTypeService;
@@ -206,6 +206,9 @@ public class TopicTypePresenter {
     public String validateTopicType(TopicType topicType) {
         if (topicType.getTitle() == null || topicType.getTitle().equals("")) {
             return TITLE_CANT_BE_VOID;
+        }
+        if (topicType.getTitle().length() > 254){
+        	return ERROR_LABEL_SECTION_NAME_WRONG;
         }
         return null;
     }

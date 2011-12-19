@@ -40,6 +40,10 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView {
     public void showTypeTitle(String title) {
         titleTextbox.setText(title);
     }
+    public void showErrorMessage(String text){
+    	final String message = Labels.getLabel(text);
+    	titleTextbox.setErrorMessage(message);
+    }
     
     @Override
     public String getTypeTitle() {
