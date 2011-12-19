@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.Unique;
 
 /**
  * Forum branch that contains topics related to branch theme.
@@ -28,7 +29,7 @@ import org.jtalks.common.model.entity.User;
  * @author Pavel Vervenko
  */
 public class Branch extends Entity {
-
+	@Unique (entity = Branch.class, field = "name")
     private String name;
     private String description;
     private boolean deleted;

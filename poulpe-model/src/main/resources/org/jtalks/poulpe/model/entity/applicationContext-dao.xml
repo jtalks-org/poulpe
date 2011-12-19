@@ -26,6 +26,10 @@
   <bean id="abstractHibernateDao" abstract="true">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
+  
+  <bean id="uniqueConstraintValidator" class="org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraintValidator">
+<property name="sessionFactory" ref="sessionFactory" />
+</bean>
 
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
