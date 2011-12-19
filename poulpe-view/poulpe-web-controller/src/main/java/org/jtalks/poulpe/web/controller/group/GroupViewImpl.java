@@ -89,9 +89,6 @@ public class GroupViewImpl extends Window implements AfterCompose {
     }
 
     public void openEditDialog(Group group) {
-//        Component receiver = getDesktop().getPage("GroupDialog").getFellow("editWindow");
-//        Event onOpenEditDialog = new Event("onOpenEditDialog", receiver, group);
-//        Events.postEvent(onOpenEditDialog);
     	EditGroupDialogView component = getEditView();
     	component.show(group);
     }
