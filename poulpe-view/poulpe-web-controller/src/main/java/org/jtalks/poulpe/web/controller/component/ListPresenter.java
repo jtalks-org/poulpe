@@ -21,11 +21,14 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 
 /**
  * The class for mediating between model and view representation of components.
+ * 
  * @author Dmitriy Sukharev
+ * @author Vyacheslav Zhivaev
  */
 public class ListPresenter extends AbstractComponentPresenter {
 
     private static final String NO_SELECTED_ITEM = "item.no.selected.item";
+    private static final String NO_AVAILABLE_TYPES = "component.error.no_available_types";
     
     /** The object that is responsible for updating view of the component list. */
     private ListView view;
@@ -47,6 +50,14 @@ public class ListPresenter extends AbstractComponentPresenter {
      */
     public List<Component> getComponents() {
         return getComponentService().getAll();
+    }
+
+    public void addComponent() {
+        if (getComponentService().getAvailableTypes().size() > 0) {
+            view.showEditor();
+        } else {
+            getDialogManager().notify(NO_AVAILABLE_TYPES);
+        }
     }
 
     /**

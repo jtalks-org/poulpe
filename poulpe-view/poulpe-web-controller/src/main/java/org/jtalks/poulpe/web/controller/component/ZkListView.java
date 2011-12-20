@@ -30,6 +30,7 @@ import org.zkoss.zul.Window;
  * displayed in administrator panel.
  * 
  * @author Dmitriy Sukharev
+ * @author Vyacheslav Zhivaev
  */
 public class ZkListView extends Window implements ListView, AfterCompose {
 
@@ -49,23 +50,6 @@ public class ZkListView extends Window implements ListView, AfterCompose {
         listbox.setItemRenderer(new ZkListItemRenderer(this));
     }
 
-    /**
-     * Shows editor for creating a new {@link Component}
-     */
-    void showEditor() {
-        ItemView comp = getComponentEditor();
-        comp.showEmpty();
-    }
-
-    /**
-     * Shows editor for editing a {@link Component}
-     * @param component being edited
-     */
-    void showEditor(Component component) {
-        ItemView comp = getComponentEditor();
-        comp.show(component);
-    }
-
     private ItemView getComponentEditor() {
         org.zkoss.zk.ui.Component comp = getDesktop().getPage("editCompPage").getFellow("editCompWindow");
         comp.setAttribute("backWin", this);
@@ -73,6 +57,20 @@ public class ZkListView extends Window implements ListView, AfterCompose {
     }
 
     // ==== ListView methods implementation ====
+
+    /** {@inheritDoc} */
+    @Override
+    public void showEditor() {
+        ItemView comp = getComponentEditor();
+        comp.showEmpty();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public void showEditor(Component component) {
+        ItemView comp = getComponentEditor();
+        comp.show(component);
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -116,7 +114,7 @@ public class ZkListView extends Window implements ListView, AfterCompose {
      * {@link Component}
      */
     public void onClick$addCompButton() {
-        showEditor();
+        presenter.addComponent();
     }
 
     /**

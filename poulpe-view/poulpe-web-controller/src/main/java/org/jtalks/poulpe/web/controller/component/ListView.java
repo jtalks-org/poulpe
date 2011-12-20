@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.entity.Component;
  * components displayed in administrator panel.
  * 
  * @author Dmitriy Sukharev
+ * @author Vyacheslav Zhivaev
  */
 public interface ListView {
 
@@ -56,5 +57,16 @@ public interface ListView {
      * @param list with {@link Component} items to be shown
      */
     void createModel(List<Component> list);
+
+    /**
+     * Shows editor for creating a new {@link Component}
+     */
+    void showEditor();
+
+    /**
+     * Shows editor for editing a {@link Component}
+     * @param component being edited
+     */
+    void showEditor(Component component);
 
 }
