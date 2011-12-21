@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.model.entity.Branch;
 
@@ -68,4 +69,6 @@ public interface BranchService extends EntityService<Branch> {
      * 
      */
     boolean isDuplicated(Branch branch);
+
+    GroupAccessList getGroupAccessListFor(Branch branch);
 }

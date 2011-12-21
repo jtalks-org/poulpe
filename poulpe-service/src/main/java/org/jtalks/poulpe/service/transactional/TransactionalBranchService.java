@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
@@ -82,5 +83,10 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
     @Override
     public boolean isDuplicated(Branch branch) {
         return dao.isBranchDuplicated(branch);
+    }
+
+    @Override
+    public GroupAccessList getGroupAccessListFor(Branch branch) {
+        throw new UnsupportedOperationException();
     }
 }

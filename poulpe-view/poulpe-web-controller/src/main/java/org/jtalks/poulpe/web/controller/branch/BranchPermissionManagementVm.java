@@ -1,21 +1,22 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import com.google.common.collect.Lists;
+import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.security.BranchPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ExecutionArgParam;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
+import javax.annotation.Nonnull;
 import java.util.*;
 import java.util.regex.Pattern;
 
@@ -26,22 +27,14 @@ import java.util.regex.Pattern;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManagementVm {
-    private List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
+    private final List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
     private final ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
+    private final BranchService branchService;
     private Branch branch;
 
-    @Init
-    public void init(@ExecutionArgParam("mode") String mode) {
-        System.out.println();
-    }
-
-    public BranchPermissionManagementVm() {
-        List<BranchPermissionManagementRow> rows = new LinkedList<BranchPermissionManagementRow>();
-        rows.add(new BranchPermissionManagementRow("Allowed", Lists.newArrayList(new Group("Moderators", ""))));
-        rows.add(new BranchPermissionManagementRow("Restricted", Lists.newArrayList(new Group
-                ("Moderators", ""), new Group("Registered Users", ""), new Group("Activated Users", ""))));
-        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
-        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
+    public BranchPermissionManagementVm(@Nonnull BranchService branchService) {
+        this.branchService = branchService;
+        initDataForView();
     }
 
     @Command
@@ -54,6 +47,15 @@ public class BranchPermissionManagementVm {
         Window branchDialog = (Window) getComponent("branchPermissionManagementWindow");
         renewDialogData(userGroupsDialogVm, toFillAddedGroupsGrid);
         Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
+    }
+
+    private void initDataForView() {
+        List<BranchPermissionManagementRow> rows = new LinkedList<BranchPermissionManagementRow>();
+        GroupAccessList groupAccessListForCurrentBranch = branchService.getGroupAccessListFor(branch);
+        rows.add(new BranchPermissionManagementRow("Allowed", groupAccessListForCurrentBranch.getAllowed()));
+        rows.add(new BranchPermissionManagementRow("Restricted", groupAccessListForCurrentBranch.getRestricted()));
+        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
+        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
     }
 
     private List<Group> getGroupsDependingOnMode(String mode,
@@ -95,10 +97,6 @@ public class BranchPermissionManagementVm {
 
     public List<BranchPermissionManagementBlock> getBlocks() {
         return blocks;
-    }
-
-    public void setBlocks(List<BranchPermissionManagementBlock> blocks) {
-        this.blocks = blocks;
     }
 }
 

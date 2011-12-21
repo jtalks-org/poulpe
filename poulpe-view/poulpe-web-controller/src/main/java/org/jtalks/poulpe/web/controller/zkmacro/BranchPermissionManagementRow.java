@@ -12,7 +12,6 @@ public class BranchPermissionManagementRow {
     private String rowLabel;
 
     public BranchPermissionManagementRow() {
-        this.groups = groups;
     }
 
     public BranchPermissionManagementRow(String rowLabel, List<Group> groups) {
