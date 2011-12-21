@@ -46,7 +46,7 @@ public final class BranchPermissionManagementBlock {
      * @param permission the permission this block represents
      */
     public BranchPermissionManagementBlock(@Nonnull JtalksPermission permission) {
-        this(permission, new BranchPermissionManagementRow(), new BranchPermissionManagementRow());
+        this(permission, BranchPermissionManagementRow.newAllowRow(), BranchPermissionManagementRow.newRestrictRow());
     }
 
     /**

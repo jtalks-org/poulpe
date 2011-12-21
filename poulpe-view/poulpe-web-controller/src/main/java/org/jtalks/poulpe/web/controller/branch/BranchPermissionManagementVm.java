@@ -1,11 +1,11 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import com.google.common.collect.Lists;
-import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
+import com.google.common.collect.Table;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.security.BranchPermission;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
 import org.zkoss.bind.annotation.BindingParam;
@@ -17,7 +17,10 @@ import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -50,12 +53,19 @@ public class BranchPermissionManagementVm {
     }
 
     private void initDataForView() {
-        List<BranchPermissionManagementRow> rows = new LinkedList<BranchPermissionManagementRow>();
-        GroupAccessList groupAccessListForCurrentBranch = branchService.getGroupAccessListFor(branch);
-        rows.add(new BranchPermissionManagementRow("Allowed", groupAccessListForCurrentBranch.getAllowed()));
-        rows.add(new BranchPermissionManagementRow("Restricted", groupAccessListForCurrentBranch.getRestricted()));
-        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
-        blocks.add(new BranchPermissionManagementBlock(BranchPermission.CREATE_TOPICS, rows.get(0), rows.get(1)));
+        Table<JtalksPermission, Group, Boolean> groupAccessList = branchService.getGroupAccessListFor(branch);
+        for (JtalksPermission permission : groupAccessList.rowKeySet()) {
+            BranchPermissionManagementRow allowRow = BranchPermissionManagementRow.newAllowRow(new ArrayList<Group>());
+            BranchPermissionManagementRow restrictRow = BranchPermissionManagementRow.newRestrictRow(new ArrayList<Group>());
+            for (Map.Entry<Group, Boolean> entry : groupAccessList.row(permission).entrySet()) {
+                if (entry.getValue()) {
+                    allowRow.addGroup(entry.getKey());
+                } else {
+                    restrictRow.addGroup(entry.getKey());
+                }
+            }
+            blocks.add(new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
+        }
     }
 
     private List<Group> getGroupsDependingOnMode(String mode,
