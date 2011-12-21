@@ -22,7 +22,7 @@ import org.jtalks.poulpe.service.RankService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
- *
+ * Transactional Rank Service implementation.
  * @author Pavel Vervenko
  */
 public class TransactionalRankService extends AbstractTransactionalEntityService<Rank, RankDao> implements RankService {
@@ -57,7 +57,7 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
     @Override
     public void saveRank(Rank rank) throws NotUniqueException {
         if (dao.isRankNameExists(rank.getRankName())) {
-            throw new NotUniqueException("Name " + rank.getRankName() + "already exists");
+            throw new NotUniqueException("Name " + rank.getRankName() + " already exists");
         }
         dao.saveOrUpdate(rank);
     }
