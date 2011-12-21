@@ -11,7 +11,7 @@
     </center>
     <east border="none">
       <button id="blockId=${arg.blockId},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
-              onClick="@command('showGroupsDialog', mode=self.getId())" />
+              onClick="@command('showGroupsDialog', params=self.getId())" />
     </east>
   </borderlayout>
 </zk>

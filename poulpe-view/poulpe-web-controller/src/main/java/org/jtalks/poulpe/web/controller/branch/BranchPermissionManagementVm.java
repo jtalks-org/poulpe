@@ -16,8 +16,8 @@ import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.regex.Pattern;
 
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
@@ -26,7 +26,7 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManagementVm {
-    private List<BranchPermissionManagementBlock> blocks = new LinkedList<BranchPermissionManagementBlock>();
+    private List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
     private final ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
     private Branch branch;
 
@@ -45,17 +45,40 @@ public class BranchPermissionManagementVm {
     }
 
     @Command
-    public void showGroupsDialog(@BindingParam("mode") String mode) {
+    public void showGroupsDialog(@BindingParam("params") String params) {
+        Map<String, String> parsedParams = parseParams(params);
+        Integer blockId = Integer.parseInt(parsedParams.get("blockId"));
+        BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(blockId);
+        String mode = parsedParams.get("mode");
+        List<Group> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
         Window branchDialog = (Window) getComponent("branchPermissionManagementWindow");
-        renewDialogData(userGroupsDialogVm);
+        renewDialogData(userGroupsDialogVm, toFillAddedGroupsGrid);
         Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
     }
 
-    private void renewDialogData(ManageUserGroupsDialogVm userGroupsDialogVm1) {
+    private List<Group> getGroupsDependingOnMode(String mode,
+                                                 BranchPermissionManagementBlock branchPermissionManagementBlock) {
+        if ("allow".equalsIgnoreCase(mode)) {
+            return branchPermissionManagementBlock.getAllowRow().getGroups();
+        } else {
+            return branchPermissionManagementBlock.getRestrictRow().getGroups();
+        }
+    }
+
+    private Map<String, String> parseParams(String params) {
+        Map<String, String> parsedParams = new HashMap<String, String>();
+        String[] paramRows = params.split(Pattern.quote(","));
+        for (String nextParam : paramRows) {
+            String[] splitParamRow = nextParam.trim().split(Pattern.quote("="));
+            parsedParams.put(splitParamRow[0], splitParamRow[1]);
+        }
+        return parsedParams;
+    }
+
+    private void renewDialogData(ManageUserGroupsDialogVm userGroupsDialogVm1, List<Group> addedGroups) {
         userGroupsDialogVm1.setAvailableGroups(Lists.newArrayList(new Group
                 ("Moderators", ""), new Group("Registered Users", ""), new Group("Activated Users", "")));
-        userGroupsDialogVm1.setAddedGroups(Lists.newArrayList(new Group
-                ("Banned Users", ""), new Group("Administrators", ""), new Group("Activated Users", "")));
+        userGroupsDialogVm1.setAddedGroups(addedGroups);
     }
 
     private Component getComponent(String id) {
