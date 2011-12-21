@@ -1,17 +1,18 @@
 <?xml version="1.0"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>poulpe</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
     <version>0.10-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>poulpe-model</artifactId>
   <name>${project.artifactId}</name>
   <url>www.jtalks.org</url>
-  
+
   <description>
     This module contains domain model of the project, and also - persistence layer.
   </description>
@@ -88,7 +89,7 @@
       <groupId>ru.javatalks.utils</groupId>
       <artifactId>core-utils</artifactId>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava-collections</artifactId>
     </dependency>
@@ -96,16 +97,18 @@
       <groupId>com.googlecode.lambdaj</groupId>
       <artifactId>lambdaj</artifactId>
     </dependency>
+      <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
     <dependency>
-	<groupId>javax.validation</groupId>
-	<artifactId>validation-api</artifactId>
-	<version>1.0.0.GA</version>
-</dependency>
-	<dependency>
-		<groupId>org.hibernate</groupId>
-		<artifactId>hibernate-validator</artifactId>
-		<version>4.0.2.GA</version>
-	</dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
