@@ -14,6 +14,11 @@
     </constructor-arg>
   </bean>
 
+  <bean id="rankManagementVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
+    <constructor-arg index="0" ref="rankService"/>
+  </bean>
+
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
         scope="prototype">

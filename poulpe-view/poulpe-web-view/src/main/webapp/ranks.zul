@@ -2,8 +2,19 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   
-  <window width="30%">
-UNDER DEVELOPMENT
+  <window width="30%" apply="org.zkoss.bind.BindComposer" 
+  title="Ranks"  viewModel="@id('vm') @init(rankManagementVm)">
+    <listbox model="@load(vm.items)" hflex="true" height="300px">
+      <listhead>
+        <listheader label="Rank Name"/>
+        <listheader label="Post Count"/>
+      </listhead>
+      <template name="model" var="item">
+        <listitem >
+          <listcell label="@load(item.rankName)"/>
+          <listcell label="@load(item.postCount)"/>
+        </listitem>
+      </template>
+    </listbox>
   </window>
-
 </zk>
