@@ -6,10 +6,13 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.mockito.Spy;
+import org.mockito.internal.matchers.AnyVararg;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,26 +28,38 @@ public class GroupPresenterTest {
     GroupService service;
     @Mock
     GroupViewImpl viewMock;
-    
+
     @Test(dataProvider = "emptyListProvider")
     public void testInitView(List<Group> returnedGroups) throws Exception {
         when(service.getAllMatchedByName(null)).thenReturn(returnedGroups);
-
-        presenter.initView(viewMock);
         verify(viewMock).updateView(returnedGroups);
     }
 
     @DataProvider(name = "emptyListProvider")
-    public Object[][] testData(){
-        return new Object[][]{{new LinkedList()}};
+    public Object[][] testData() {
+        return new Object[][] { { new LinkedList() } };
     }
-    
+
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
         presenter = new GroupPresenter();
         presenter.setDialogManager(dialogManager);
         presenter.setGroupService(service);
+        presenter.initView(viewMock);
+    }
+
+    @Test
+    public void testOnEditGroup() {
+        Group group = new Group();
+        presenter.onEditGroup(group);
+        verify(viewMock).openEditDialog(group);
+    }
+
+    @Test
+    public void testOnAddGroup() {
+        presenter.onAddGroup();
+        verify(viewMock).openNewDialog();
     }
 
 }
