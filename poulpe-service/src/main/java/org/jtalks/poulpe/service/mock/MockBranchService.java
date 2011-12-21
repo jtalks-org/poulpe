@@ -1,11 +1,14 @@
 package org.jtalks.poulpe.service.mock;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.service.security.BranchPermission;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 
 import java.util.List;
 
@@ -45,11 +48,15 @@ public class MockBranchService implements BranchService {
     }
 
     @Override
-    public GroupAccessList getGroupAccessListFor(Branch branch) {
-        GroupAccessList accessList = new GroupAccessList();
-        accessList.setAllowed(Group.createGroupsWithNames("Moderators", "Admins", "Activated Users"));
-        accessList.setRestricted(Group.createGroupsWithNames("Banned Users", "Naughty Users", "Trolls"));
-        return accessList;
+    public Table<JtalksPermission, Group, Boolean> getGroupAccessListFor(Branch branch) {
+        Table<JtalksPermission, Group, Boolean> table = HashBasedTable.create();
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Moderator"), true);
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Admins"), true);
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Activated Users"), true);
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Banned Users"), false);
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Naughty Users"), false);
+        table.put(BranchPermission.CREATE_TOPICS, new Group("Trolls"), false);
+        return table;
     }
 
     @Override

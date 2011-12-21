@@ -32,6 +32,10 @@ public class Group extends Entity {
     public Group() {
     }
 
+    public Group(String name) {
+        this.name = name;
+    }
+
     /**
      * @param name        the title of the groups, when saving to DB, can't be empty or {@code null}, it also should be
      *                    unique
