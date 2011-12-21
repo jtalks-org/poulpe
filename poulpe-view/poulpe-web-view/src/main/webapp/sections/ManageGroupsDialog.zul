@@ -2,8 +2,8 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window title="Add/Remove groups" closable="true" border="normal" width="400px" height="400px"
-          forward="onClose=onCancelEditAction" mode="modal" viewModel="@id('vm') @init(branchPermissionManagementVm)">
+  <window title="Add/Remove groups" closable="true" border="normal" width="50%" height="50%"
+          forward="onClose=onCancelEditAction" mode="modal">
     <textbox id="groupNameTextBox" />
     <listbox model="@load(vm.userGroupsDialogVm.availableGroups)">
       <listhead />

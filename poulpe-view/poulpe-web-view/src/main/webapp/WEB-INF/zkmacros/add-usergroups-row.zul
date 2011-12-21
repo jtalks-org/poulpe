@@ -10,7 +10,8 @@
       </hbox>
     </center>
     <east border="none">
-      <button label="Add Group" sclass="add-group-button" onClick="@command('showGroupsDialog')" />
+      <button id="blockId=${arg.blockId},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
+              onClick="@command('showGroupsDialog', mode=self.getId())" />
     </east>
   </borderlayout>
 </zk>

@@ -374,9 +374,9 @@
   <properties>
     <hibernateVersion>3.3.2.GA</hibernateVersion>
     <springVersion>3.0.5.RELEASE</springVersion>
-    <zk.version>6.0.0-RC2</zk.version>
+    <zk.version>6.0.0.FL.20111220</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.8</common.version>
+    <common.version>0.9</common.version>
   </properties>
 
   <distributionManagement>

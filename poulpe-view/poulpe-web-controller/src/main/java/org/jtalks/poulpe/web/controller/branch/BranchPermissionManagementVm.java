@@ -6,7 +6,10 @@ import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.security.BranchPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ExecutionArgParam;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelList;
@@ -27,6 +30,11 @@ public class BranchPermissionManagementVm {
     private final ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
     private Branch branch;
 
+    @Init
+    public void init(@ExecutionArgParam("mode") String mode) {
+        System.out.println();
+    }
+
     public BranchPermissionManagementVm() {
         List<BranchPermissionManagementRow> rows = new LinkedList<BranchPermissionManagementRow>();
         rows.add(new BranchPermissionManagementRow("Allowed", Lists.newArrayList(new Group("Moderators", ""))));
@@ -37,7 +45,7 @@ public class BranchPermissionManagementVm {
     }
 
     @Command
-    public void showGroupsDialog() {
+    public void showGroupsDialog(@BindingParam("mode") String mode) {
         Window branchDialog = (Window) getComponent("branchPermissionManagementWindow");
         renewDialogData(userGroupsDialogVm);
         Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
