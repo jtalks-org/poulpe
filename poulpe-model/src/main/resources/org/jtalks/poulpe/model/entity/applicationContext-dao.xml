@@ -27,15 +27,7 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="uniqueConstraintValidator" class="org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraintValidator">
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
-  
-  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean">
-    <property name="constraintValidatorFactory">
-      <bean class="org.jtalks.poulpe.model.dao.hibernate.constraints.ContextAwareContraintValidationFactory" />
-    </property>
-  </bean>
+  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
 
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">

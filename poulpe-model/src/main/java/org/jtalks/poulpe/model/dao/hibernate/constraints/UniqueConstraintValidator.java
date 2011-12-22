@@ -10,6 +10,7 @@ import org.hibernate.classic.Session;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.entity.Entity;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * TODO: add javadocs
@@ -25,6 +26,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<UniqueFiel
     /**
      * Hibernate SessionFactory
      */
+    @Autowired
     private SessionFactory sessionFactory;
 
     private String[] fields;
