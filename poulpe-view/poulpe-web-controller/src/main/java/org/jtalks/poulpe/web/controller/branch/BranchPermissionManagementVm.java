@@ -52,6 +52,12 @@ public class BranchPermissionManagementVm {
         Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
     }
 
+    @Command
+    public void moveSelectedToAdded(){
+        int[] selectedIndex = userGroupsDialogVm.getSelectedIndex();
+        userGroupsDialogVm.moveFromAvailableToAdded(selectedIndex);
+    }
+
     private void initDataForView() {
         Table<JtalksPermission, Group, Boolean> groupAccessList = branchService.getGroupAccessListFor(branch);
         for (JtalksPermission permission : groupAccessList.rowKeySet()) {

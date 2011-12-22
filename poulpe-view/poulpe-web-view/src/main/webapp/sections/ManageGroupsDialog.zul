@@ -4,18 +4,32 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window title="Add/Remove groups" closable="true" border="normal" width="50%" height="50%"
           forward="onClose=onCancelEditAction" mode="modal">
-    <textbox id="groupNameTextBox" />
-    <listbox model="@load(vm.userGroupsDialogVm.availableGroups)">
-      <listhead />
-      <template name="model" var="group">
-        <listitem label="@load(group.name)" />
-      </template>
-    </listbox>
-    <listbox model="@load(vm.userGroupsDialogVm.addedGroups)">
-      <listhead />
-      <template name="model" var="group">
-        <listitem label="@load(group.name)" />
-      </template>
-    </listbox>
+    <borderlayout width="100%" height="100%">
+      <west width="45%">
+        <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" multiple="true"
+                 selectedIndex="@save(vm.userGroupsDialogVm.selectedIndex) @converter('org.jtalks.poulpe.web.converter.MultipleSelectionConverter')">
+          <listhead />
+          <template name="model" var="group">
+            <listitem label="@load(group.name)" />
+          </template>
+        </listbox>
+      </west>
+      <center>
+        <vlayout sclass="manage-groups-dialog-vertical-buttons">
+          <button label="&gt;" onClick="@command('moveSelectedToAdded')" />
+          <button label="&gt;&gt;" />
+          <button label="&lt;" />
+          <button label="&lt;&lt;" />
+        </vlayout>
+      </center>
+      <east width="45%">
+        <listbox model="@load(vm.userGroupsDialogVm.addedGroups)">
+          <listhead />
+          <template name="model" var="group">
+            <listitem label="@load(group.name)" />
+          </template>
+        </listbox>
+      </east>
+    </borderlayout>
   </window>
 </zk>
