@@ -1,14 +1,13 @@
 package org.jtalks.poulpe.model.dao.hibernate.constraints;
 
+import java.util.Arrays;
+import java.util.List;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.classic.Session;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.entity.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -18,25 +17,29 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @author Tatiana Birina
  * @author Alexey Grigorev
  * 
+ * @see UniqueFields
  * @see <a
- * href="http://stackoverflow.com/questions/1972933/cross-field-validation-with-hibernate-validator-jsr-303">idea</a>
+ * href="http://stackoverflow.com/questions/1972933/cross-field-validation-with-hibernate-validator-jsr-303">initial idea</a>
+ * 
  */
 public class UniqueConstraintValidator implements ConstraintValidator<UniqueFields, Entity> {
 
-    /**
-     * Hibernate SessionFactory
-     */
+    public static final String MESSAGE = "field must be unique";
+
     @Autowired
     private SessionFactory sessionFactory;
 
-    private String[] fields;
+    private List<String> fields;
 
     /**
      * retrieves field to check and Class instance
      */
     @Override
     public void initialize(UniqueFields annotation) {
-        fields = annotation.fields();
+        fields = Arrays.asList(annotation.fields());
+        if (fields.isEmpty()) {
+            throw new IllegalArgumentException("Expected the list of fields to contain at least one element");
+        }
     }
 
     /**
@@ -47,39 +50,8 @@ public class UniqueConstraintValidator implements ConstraintValidator<UniqueFiel
      */
     @Override
     public boolean isValid(Entity entity, ConstraintValidatorContext context) {
-        // TODO: for making test 'validateBranchNameFieldViolated' work,
-        // builder from context may be used, further investigation needed
-        // TODO: the same approach as in ComponentDuplicatesFinder might be used for
-        // building a set of violated fields
-        Number result = retrieveDuplicatesCount(entity);
-        boolean violated = result.intValue() == 0;
-        return violated;
-    }
-
-    private Number retrieveDuplicatesCount(Entity entity) {
-        Criteria criteria = getSession().createCriteria(entity.getClass());
-
-        for (String field : fields) {
-            String property = extractField(entity, field);
-            if (property != null) {
-                criteria.add(Restrictions.eq(field, property));
-            }
-        }
-
-        criteria.add(Restrictions.ne("id", entity.getId()));
-
-        criteria.setProjection(Projections.rowCount());
-
-        Number result = (Number) criteria.uniqueResult();
-        return result;
-    }
-
-    private String extractField(Entity entity, String field) {
-        try {
-            return BeanUtils.getProperty(entity, field);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        UniquenessViolationFinder finder = new UniquenessViolationFinder(entity, fields, context, getSession());
+        return finder.isValid();
     }
 
     /**
@@ -87,7 +59,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<UniqueFiel
      * 
      * @return current Session
      */
-    protected Session getSession() {
+    private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 

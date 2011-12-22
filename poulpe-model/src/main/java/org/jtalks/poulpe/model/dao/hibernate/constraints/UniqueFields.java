@@ -9,7 +9,13 @@ import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
 
-
+/**
+ * TODO: add javadocs
+ * 
+ * @author Tatiana Birina
+ * @author Alexey Grigorev
+ *
+ */
 @Target({ ElementType.TYPE })
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = UniqueConstraintValidator.class)
@@ -20,7 +26,7 @@ public @interface UniqueFields {
 	 * 
 	 * @return error message
 	 */
-	String message() default "field {field} should be unique";
+	String message() default "field must be unique";
 
 	String[] fields();
 	
