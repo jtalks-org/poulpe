@@ -3,11 +3,11 @@
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   
   <window width="30%" apply="org.zkoss.bind.BindComposer" 
-  title="Ranks"  viewModel="@id('vm') @init(rankManagementVm)">
+   title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
     <listbox model="@load(vm.items)" hflex="true" height="300px">
       <listhead>
-        <listheader label="Rank Name"/>
-        <listheader label="Post Count"/>
+        <listheader label="${labels.rank.name}"/>
+        <listheader label="${labels.rank.post_count}"/>
       </listhead>
       <template name="model" var="item">
         <listitem >
