@@ -62,7 +62,7 @@ class UniquenessViolationFinder {
      * manually added via {@link ConstraintViolationBuilder}
      * 
      * @param entity the candidate for violating uniqueness
-     * @param fields whose values are to check for duplications, must no be
+     * @param fields whose values are to check for duplications, must not be
      * empty (in {@link UniqueConstraintValidator} it should be checked)
      * @param context to which possible {@link ConstraintViolation} will be
      * added
@@ -129,14 +129,14 @@ class UniquenessViolationFinder {
      * example, for two fields 'name' and 'type' would be
      * 
      * <pre>
-     * where s.name != :name or s.type <> :type
+     * where s.name = :name or s.type = :type
      * </pre>
      * 
      * Another examples for one and three fields respectively:
      * 
      * <pre>
-     * where s.name != :name
-     * where s.name != :name or s.type != :type or s.whatever != :whatever
+     * where s.name = :name
+     * where s.name = :name or s.type = :type or s.whatever = :whatever
      * </pre>
      * 
      * @return {@link Criterion} ready for using via {@link Criteria}
