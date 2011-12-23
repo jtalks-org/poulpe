@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.zkmacro;
 
 import org.jtalks.poulpe.model.entity.Group;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,11 +12,7 @@ public class BranchPermissionManagementRow {
     private List<Group> groups;
     private String rowLabel;
 
-    public BranchPermissionManagementRow() {
-        this.groups = groups;
-    }
-
-    public BranchPermissionManagementRow(String rowLabel, List<Group> groups) {
+    protected BranchPermissionManagementRow(String rowLabel, List<Group> groups) {
         this.groups = groups;
         this.rowLabel = rowLabel;
     }
@@ -24,15 +21,31 @@ public class BranchPermissionManagementRow {
         return groups;
     }
 
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
-    }
-
+    
     public String getRowLabel() {
         return rowLabel;
     }
 
-    public void setRowLabel(String rowLabel) {
-        this.rowLabel = rowLabel;
+    public BranchPermissionManagementRow addGroup(Group group){
+        groups.add(group);
+        return this;
     }
+
+    public static BranchPermissionManagementRow newAllowRow() {
+        return new BranchPermissionManagementRow("${labels.branch.permissions.allow_label}", new ArrayList<Group>());
+    }
+
+    public static BranchPermissionManagementRow newRestrictRow() {
+        return new BranchPermissionManagementRow("${labels.branch.permissions.restrict_label}",
+                new ArrayList<Group>());
+    }
+
+    public static BranchPermissionManagementRow newAllowRow(List<Group> groups) {
+        return new BranchPermissionManagementRow("${labels.branch.permissions.allow_label}", groups);
+    }
+
+    public static BranchPermissionManagementRow newRestrictRow(List<Group> groups) {
+        return new BranchPermissionManagementRow("${labels.branch.permissions.restrict_label}", groups);
+    }
+
 }

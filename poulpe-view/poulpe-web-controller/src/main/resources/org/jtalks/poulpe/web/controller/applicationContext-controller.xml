@@ -9,6 +9,14 @@
 
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
+    <constructor-arg index="0">
+      <bean class="org.jtalks.poulpe.service.mock.MockBranchService" />
+    </constructor-arg>
+  </bean>
+
+  <bean id="rankManagementVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
+    <constructor-arg index="0" ref="rankService"/>
   </bean>
 
   <!--Declaration of presenters -->
@@ -20,7 +28,7 @@
   <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="prototype">
     <property name="sectionService" ref="sectionService" />
     <property name="branchService" ref="branchService" />
-    <property name="sectionPresenter" ref="sectionPresenter"/>
+    <property name="sectionPresenter" ref="sectionPresenter" />
   </bean>
 
   <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter"

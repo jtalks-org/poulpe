@@ -14,9 +14,13 @@
  */
 package org.jtalks.poulpe.service;
 
+import com.google.common.collect.Table;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
+import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 
 import java.util.List;
 
@@ -68,4 +72,6 @@ public interface BranchService extends EntityService<Branch> {
      * 
      */
     boolean isDuplicated(Branch branch);
+
+    Table<JtalksPermission, Group, Boolean> getGroupAccessListFor(Branch branch);
 }

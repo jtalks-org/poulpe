@@ -77,6 +77,13 @@ public class AdminWindow extends GenericForwardComposer<Component> {
         show("users.zul");
     }
     
+    /**
+     * Show the ranks page.
+     */
+    public void onShowRanks() {
+        show("ranks.zul");
+    }
+    
     private void show(String pathToZulFile) {
         if (currentComponent != null) {
             currentComponent.detach();

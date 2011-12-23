@@ -1,20 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
   <version>0.10-SNAPSHOT</version>
-  
+
   <name>${project.artifactId}</name>
-  
+
   <modules>
     <module>poulpe-model</module>
     <module>poulpe-service</module>
     <module>poulpe-view</module>
   </modules>
-  
+
   <repositories>
     <repository>
       <id>jtalks.org</id>
@@ -32,7 +33,7 @@
       <url>http://mavensync.zkoss.org/maven2</url>
     </repository>
   </repositories>
-  
+
   <dependencyManagement>
     <dependencies>
       <!--Child modules -->
@@ -51,7 +52,7 @@
         <artifactId>poulpe-web-controller</artifactId>
         <version>${project.version}</version>
       </dependency>
-      
+
       <!-- Hibernate -->
       <dependency>
         <groupId>org.hibernate</groupId>
@@ -73,14 +74,14 @@
         <artifactId>javassist</artifactId>
         <version>3.12.1.GA</version>
       </dependency>
-      
+
       <!-- JDBC -->
       <dependency>
         <groupId>mysql</groupId>
         <artifactId>mysql-connector-java</artifactId>
         <version>5.1.15</version>
       </dependency>
-      
+
       <!-- Logging -->
       <dependency>
         <groupId>log4j</groupId>
@@ -102,7 +103,7 @@
         <artifactId>slf4j-log4j12</artifactId>
         <version>1.6.1</version>
       </dependency>
-      
+
       <!-- Spring -->
       <dependency>
         <groupId>org.springframework</groupId>
@@ -139,14 +140,14 @@
         <artifactId>spring-test</artifactId>
         <version>${springVersion}</version>
       </dependency>
-      
+
       <!-- AOP -->
       <dependency>
         <groupId>org.aspectj</groupId>
         <artifactId>aspectjweaver</artifactId>
         <version>1.6.10</version>
       </dependency>
-      
+
       <!-- Joda Time -->
       <dependency>
         <groupId>joda-time</groupId>
@@ -197,13 +198,14 @@
         <version>3.1</version>
         <scope>test</scope>
       </dependency>
-      
+
       <!-- Other -->
       <dependency>
         <groupId>com.google.guava</groupId>
-        <artifactId>guava-collections</artifactId>
-        <version>r03</version>
+        <artifactId>guava</artifactId>
+        <version>10.0.1</version>
       </dependency>
+
       <dependency>
         <groupId>com.googlecode.lambdaj</groupId>
         <artifactId>lambdaj</artifactId>
@@ -249,7 +251,7 @@
         <scope>provided</scope>
         <version>2.0</version>
       </dependency>
-      
+
       <!-- ZK -->
       <dependency>
         <groupId>org.zkoss.zk</groupId>
@@ -276,7 +278,7 @@
         <artifactId>zkspring-core</artifactId>
         <version>3.0</version>
       </dependency>
-      
+
       <!-- Common -->
       <dependency>
         <groupId>org.jtalks.common</groupId>
@@ -313,19 +315,11 @@
       <groupId>log4j</groupId>
       <artifactId>apache-log4j-extras</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.jtalks.common</groupId>
-      <artifactId>jtalks-common-model</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jtalks.common</groupId>
-      <artifactId>jtalks-common-service</artifactId>
-    </dependency>
   </dependencies>
 
   <build>
     <finalName>${project.name}</finalName>
-    
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -336,19 +330,19 @@
           <target>1.6</target>
         </configuration>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.sonar</groupId>
         <artifactId>sonar-maven3-plugin</artifactId>
         <version>2.7</version>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
         <version>1.2</version>
       </plugin>
-      
+
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>cobertura-maven-plugin</artifactId>
@@ -384,16 +378,16 @@
           <autoVersionSubmodules>true</autoVersionSubmodules>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
 
   <properties>
     <hibernateVersion>3.3.2.GA</hibernateVersion>
     <springVersion>3.0.5.RELEASE</springVersion>
-    <zk.version>6.0.0-RC2</zk.version>
+    <zk.version>6.0.0.FL.20111221</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.8</common.version>
+    <common.version>0.9</common.version>
   </properties>
 
   <distributionManagement>
@@ -408,11 +402,11 @@
       <url>http://repo.jtalks.org/content/repositories/snapshots</url>
     </snapshotRepository>
   </distributionManagement>
-   
+
   <scm>
     <connection>scm:git:git@jtalks.org:poulpe</connection>
     <developerConnection>scm:git:git@jtalks.org:poulpe</developerConnection>
     <url>scm:git:git@jtalks.org:poulpe</url>
   </scm>
-  
+
 </project>

@@ -16,11 +16,13 @@ package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * User Groups is the class that can join users into groups. After that
- * permissions can be assigned to the groups and all users in this group will
- * have that permission while browsing components.
- * 
+ * User Groups is the class that can join users into groups. After that permissions can be assigned to the groups and
+ * all users in this group will have that permission while browsing components.
+ *
  * @author Akimov Knostantin
  */
 public class Group extends Entity {
@@ -30,9 +32,13 @@ public class Group extends Entity {
     public Group() {
     }
 
+    public Group(String name) {
+        this.name = name;
+    }
+
     /**
-     * @param name the title of the groups, when saving to DB, can't be empty or
-     * {@code null}, it also should be unique
+     * @param name        the title of the groups, when saving to DB, can't be empty or {@code null}, it also should be
+     *                    unique
      * @param description an optional description of the group
      */
     public Group(String name, String description) {
@@ -41,9 +47,8 @@ public class Group extends Entity {
     }
 
     /**
-     * Gets the title of the group, if it's already in DB, it's unique and not
-     * empty or {@code null}.
-     * 
+     * Gets the title of the group, if it's already in DB, it's unique and not empty or {@code null}.
+     *
      * @return the title of the group
      */
     public String getName() {
@@ -51,9 +56,8 @@ public class Group extends Entity {
     }
 
     /**
-     * Sets the title of the group, when saving to DB, can't be empty or
-     * {@code null}, it also should be unique.
-     * 
+     * Sets the title of the group, when saving to DB, can't be empty or {@code null}, it also should be unique.
+     *
      * @param name the title of the group
      */
     public void setName(String name) {
@@ -62,7 +66,7 @@ public class Group extends Entity {
 
     /**
      * Gets the textual description of the group.
-     * 
+     *
      * @return the optional description of the group
      */
     public String getDescription() {
@@ -71,11 +75,25 @@ public class Group extends Entity {
 
     /**
      * Sets the optional textual description of the group.
-     * 
+     *
      * @param description the description of the group; optional
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * A handy method to create a number of groups with specified names.
+     *
+     * @param names the names you want resulting groups to be with
+     * @return a list of groups with the specified name in the same order
+     */
+    public static List<Group> createGroupsWithNames(String... names) {
+        List<Group> groups = new ArrayList<Group>(names.length);
+        for (String nextName : names) {
+            groups.add(new Group(nextName, ""));
+        }
+        return groups;
     }
 
 }

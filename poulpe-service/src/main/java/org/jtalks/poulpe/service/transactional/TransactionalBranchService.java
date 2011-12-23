@@ -14,11 +14,15 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import com.google.common.collect.Table;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 
 import java.util.List;
 
@@ -82,5 +86,10 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
     @Override
     public boolean isDuplicated(Branch branch) {
         return dao.isBranchDuplicated(branch);
+    }
+
+    @Override
+    public Table<JtalksPermission, Group, Boolean> getGroupAccessListFor(Branch branch) {
+        throw new UnsupportedOperationException();
     }
 }

@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <groupbox width="100%">
     <caption label="${arg.block.permission.name}" />
-    <groups-row row="${arg.block.allowRow}"/>
-    <groups-row row="${arg.block.restrictRow}"/>
+    <groups-row row="${arg.block.allowRow}" mode="allow" blockId="${arg.blockId}" />
+    <groups-row row="${arg.block.restrictRow}" mode="restrict" blockId="${arg.blockId}" />
   </groupbox>
 </zk>

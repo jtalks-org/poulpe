@@ -16,6 +16,7 @@
           <listitem label="Users" forward="onClick=onShowUsers" />
           <listitem label="Ban users" forward="onClick=onShowUserBanning" />
           <listitem label="User Groups" forward="onClick=onShowUserGroups" />
+          <listitem label="Ranks" forward="onClick=onShowRanks" />
           <listfoot />
         </listbox>
       </west>

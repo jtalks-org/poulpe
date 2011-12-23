@@ -10,7 +10,14 @@
       </hbox>
     </center>
     <east border="none">
-      <button label="Add Group" sclass="add-group-button" onClick="@command('showGroupsDialog')" />
+      <!--
+      There is no other way to pass parameters that are evaluated by EL ${}, it simply doesn't work with @command.
+      I raised JIRA for this, but ZK team doesn't seem to be keen implementing this:
+      http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
+      button, and then we can pass the ID to the @command() where we can parse it in Java.
+      -->
+      <button id="blockId=${arg.blockId},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
+              onClick="@command('showGroupsDialog', params=self.getId())" />
     </east>
   </borderlayout>
 </zk>
