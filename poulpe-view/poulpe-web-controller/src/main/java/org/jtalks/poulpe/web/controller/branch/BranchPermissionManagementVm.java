@@ -1,6 +1,5 @@
 package org.jtalks.poulpe.web.controller.branch;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
@@ -57,7 +56,7 @@ public class BranchPermissionManagementVm {
 
     @Command
     public void moveSelectedToAdded(){
-        allGroups.removeAll(userGroupsDialogVm.moveFromAvailableToAdded());
+        allGroups.removeAll(userGroupsDialogVm.moveToAddedAndReturnMoved());
     }
 
     private void initDataForView() {

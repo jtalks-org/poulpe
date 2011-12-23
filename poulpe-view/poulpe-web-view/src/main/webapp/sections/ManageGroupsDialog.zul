@@ -16,9 +16,9 @@
       <center>
         <vlayout sclass="manage-groups-dialog-vertical-buttons">
           <button label="&gt;" onClick="@command('moveSelectedToAdded')" />
-          <button label="&gt;&gt;" />
-          <button label="&lt;" />
-          <button label="&lt;&lt;" />
+          <button label="&gt;&gt;" onClick="@command('moveAllToAdded')" />
+          <button label="&lt;" onClick="@command('moveSelectedFromAdded')" />
+          <button label="&lt;&lt;" onClick="@command('moveAllFromAdded')" />
         </vlayout>
       </center>
       <east width="45%">
