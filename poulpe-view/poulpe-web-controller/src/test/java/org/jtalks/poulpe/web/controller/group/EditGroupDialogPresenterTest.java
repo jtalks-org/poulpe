@@ -13,54 +13,61 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+
 public class EditGroupDialogPresenterTest {
     private EditGroupDialogPresenter dialogPresenter;
     @Mock
     private GroupService mockGroupService;
-    @Mock 
+    @Mock
     private EditGroupDialogView mockView;
-   @Mock
     private Group group;
+
     @BeforeMethod
     public void beforeMethod() {
         dialogPresenter = new EditGroupDialogPresenter();
         MockitoAnnotations.initMocks(this);
-
+        group = new Group();
+        dialogPresenter.setGroupService(mockGroupService);
     }
+
     @Test
-    public void testValidate(){
-        final String nullName=null;
-        final String normalName = "normal";
-        final String longName = new String(new byte[255]);
+    public void testValidateWhenNameIsNull() {
+        String nullName = null;
         assertNotNull(dialogPresenter.validate(nullName));
+    }
+
+    @Test
+    public void testValidateWhenNameIsNormal() {
+        String normalName = "normal";
         assertNull(dialogPresenter.validate(normalName));
+    }
+
+    @Test
+    public void testValidateWhenNameIsLong() {
+        String longName = new String(new byte[255]);
         assertNotNull(dialogPresenter.validate(longName));
     }
-    
+
     @Test
-    public void testSaveOrUpdate(){
+    public void testSaveOrUpdate() throws NotUniqueException {
+        String name = "name";
+        String desc = "description";
+        dialogPresenter.initView(mockView, group);
+        dialogPresenter.saveOrUpdateGroup(name, desc);
+        verify(mockGroupService).saveGroup(group);
+    }
+
+    @Test
+    public void testSaveOrUpdateGroupWithException() throws NotUniqueException {
+        Group nullGroup = new Group();
+        doThrow(new NotUniqueException()).when(mockGroupService).saveGroup(nullGroup);
         final String name = "name";
         final String desc = "description";
-        dialogPresenter.initView(mockView , group);
+
+        dialogPresenter.initView(mockView, nullGroup);
         dialogPresenter.setGroupService(mockGroupService);
-        dialogPresenter.saveOrUpdateGroup(name,desc);
-        try{
-            verify(group).setName(name);
-            verify(group).setDescription(desc);
-            verify(mockGroupService).saveGroup(group);
-        }catch (NotUniqueException ex){}        
+        dialogPresenter.saveOrUpdateGroup(name, desc);
+        verify(mockView).notUniqueGroupName();
     }
-    @Test
-    public void testSaveOrUpdateGroupWithException()throws NotUniqueException{
-        Group nullGroup = new Group();   
-     doThrow(new NotUniqueException()).when(mockGroupService).saveGroup(nullGroup);   
-     final String name = "name";
-     final String desc = "description";
-     
-     dialogPresenter.initView(mockView , nullGroup);
-     dialogPresenter.setGroupService(mockGroupService);
-     dialogPresenter.saveOrUpdateGroup(name,desc);
-     verify(mockView).notUniqueGroupName();
-    }
-    
+
 }

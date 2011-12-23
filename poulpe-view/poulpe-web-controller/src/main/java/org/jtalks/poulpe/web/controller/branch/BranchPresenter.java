@@ -29,80 +29,81 @@ import org.jtalks.poulpe.web.controller.section.SectionPresenter;
  */
 public class BranchPresenter {
 
-	private SectionService sectionService;
-	private BranchDialogView view;
-	private BranchService branchService;
-	private SectionPresenter sectionPresenter;
-	public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
+    private SectionService sectionService;
+    private BranchDialogView view;
+    private BranchService branchService;
+    private SectionPresenter sectionPresenter;
+    public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
-	public SectionPresenter getSectionPresenter() {
-		return sectionPresenter;
-	}
+    public SectionPresenter getSectionPresenter() {
+        return sectionPresenter;
+    }
 
-	public void setSectionPresenter(SectionPresenter sectionPresenter) {
-		this.sectionPresenter = sectionPresenter;
-	}
+    public void setSectionPresenter(SectionPresenter sectionPresenter) {
+        this.sectionPresenter = sectionPresenter;
+    }
 
-	/**
-	 * Sets the Branch instance
-	 */
-	public void setBranchService(BranchService service) {
-		branchService = service;
-	}
+    /**
+     * Sets the Branch instance
+     */
+    public void setBranchService(BranchService service) {
+        branchService = service;
+    }
 
-	/**
-	 * Sets the Section instance
-	 */
-	public void setSectionService(SectionService service) {
-		sectionService = service;
-	}
-	public void updateView(){
-		sectionPresenter.updateView();
-	}
+    /**
+     * Sets the Section instance
+     */
+    public void setSectionService(SectionService service) {
+        sectionService = service;
+    }
 
-	/**
-	 * Sets the view instance which represent User interface
-	 */
-	public void setView(BranchDialogView view) {
-		this.view = view;
-	}
+    public void updateView() {
+        sectionPresenter.updateView();
+    }
 
-	/**
-	 * Init view initial data
-	 */
-	public void initView() {
-		view.initSectionList(sectionService.getAll());
-	}
-	
-	public String validateLongName(String name){
-		if (name != null && name.length() > 254){
-			return ERROR_LABEL_SECTION_NAME_VERY_LONG;
-		}
-		return null;
-	}
+    /**
+     * Sets the view instance which represent User interface
+     */
+    public void setView(BranchDialogView view) {
+        this.view = view;
+    }
 
-	/**
-	 * Save new or edited branch in db In case when branch with equal name
-	 * exists, cause open error popup in view.
-	 */
-	public void saveBranch() {
-		Section section = view.getSection();
-		Branch branch = view.getBranch(section);
-		String result = validateLongName(branch.getName());
-		if (result == null){
-		saveBranch(branch);
-		}else{
-			view.openErrorPopupInNewSectionDialog(result);
-		}
-	}
+    /**
+     * Init view initial data
+     */
+    public void initView() {
+        view.initSectionList(sectionService.getAll());
+    }
 
-	public void saveBranch(Branch branch) {
-		try {
-			branchService.saveBranch(branch);
-		} catch (NotUniqueException e) {
-			view.notUniqueBranchName();
-		}
-		view.hide();
-	}
+    public String validateLongName(String name) {
+        if (name != null && name.length() > 254) {
+            return ERROR_LABEL_SECTION_NAME_VERY_LONG;
+        }
+        return null;
+    }
+
+    /**
+     * Save new or edited branch in db In case when branch with equal name
+     * exists, cause open error popup in view.
+     */
+    public void saveBranch() {
+        Section section = view.getSection();
+        Branch branch = view.getBranch(section);
+        String result = validateLongName(branch.getName());
+        if (result == null) {
+            saveBranch(branch);
+        } else {
+            view.openErrorPopupInNewSectionDialog(result);
+        }
+    }
+
+    public void saveBranch(Branch branch) {
+        try {
+            branchService.saveBranch(branch);
+        } catch (NotUniqueException e) {
+            view.notUniqueBranchName();
+        }
+        view.hide();
+    }
 
 }
