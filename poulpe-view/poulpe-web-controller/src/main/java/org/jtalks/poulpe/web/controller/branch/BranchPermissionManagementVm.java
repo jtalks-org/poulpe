@@ -33,7 +33,7 @@ public class BranchPermissionManagementVm {
     private ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
     private final BranchService branchService;
     private List<Group> allGroups = Group.createGroupsWithNames("Moderator", "Admins", "Registered Users",
-            "Activated Users", "Banned Users", "Naughty Users", "Freaks");
+            "Activated Users", "Banned Users", "Naughty Users", "Freaks", "Idiots", "Perverts", "Elves");
     private Branch branch;
 
     public BranchPermissionManagementVm(@Nonnull BranchService branchService) {
@@ -55,8 +55,23 @@ public class BranchPermissionManagementVm {
     }
 
     @Command
-    public void moveSelectedToAdded(){
-        allGroups.removeAll(userGroupsDialogVm.moveToAddedAndReturnMoved());
+    public void moveSelectedToAdded() {
+        userGroupsDialogVm.moveSelectedToAddedGroups();
+    }
+
+    @Command
+    public void moveSelectedFromAdded() {
+        userGroupsDialogVm.moveSelectedFromAddedGroups();
+    }
+
+    @Command
+    public void moveAllToAdded() {
+        userGroupsDialogVm.moveAllToAddedGroups();
+    }
+
+    @Command
+    public void moveAllFromAdded() {
+        userGroupsDialogVm.moveAllFromAddedGroups();
     }
 
     private void initDataForView() {

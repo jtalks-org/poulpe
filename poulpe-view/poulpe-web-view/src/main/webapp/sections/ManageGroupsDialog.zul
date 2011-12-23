@@ -13,8 +13,8 @@
       <vbox spacing="10px" sclass="manage-groups-dialog-vertical-buttons">
         <image id="chooseBtn" src="/resources/img/rightarrow.png" onClick="@command('moveSelectedToAdded')" />
         <image id="chooseAllBtn" src="/resources/img/rightrightarrow.png" onClick="@command('moveAllToAdded')" />
-        <image id="removeBtn" src="/resources/img/leftarrow.png" />
-        <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" />
+        <image id="removeBtn" src="/resources/img/leftarrow.png" onClick="@command('moveSelectedFromAdded')" />
+        <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" onClick="@command('moveAllFromAdded')" />
       </vbox>
       <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
         <template name="model" var="group">

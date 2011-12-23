@@ -2,7 +2,6 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import org.jtalks.poulpe.model.entity.Group;
 import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
@@ -27,6 +26,67 @@ public class ManageUserGroupsDialogVm {
     private final ListModelList<Group> availableListModel = new BindingListModelList(new ArrayList(), false);
     @SuppressWarnings("unchecked")
     private final ListModelList<Group> addedListModel = new BindingListModelList(new ArrayList(), false);
+    private final Set<Group> movedToAdded = new HashSet<Group>();
+    private final Set<Group> movedFromAdded = new HashSet<Group>();
+
+
+    /**
+     * Searches for the list items that were selected in the list of available groups and removes them from that list;
+     * then it adds those items to the list of already added groups.
+     *
+     * @return the groups that were moved from list of available groups to the list of those that were added
+     */
+    public Set<Group> moveSelectedToAddedGroups() {
+        Set<Group> selection = new HashSet<Group>(availableListModel.getSelection());
+        for (Group nextSelectedItem : selection) {
+            addedListModel.add(nextSelectedItem);
+            availableListModel.remove(nextSelectedItem);
+        }
+        return selection;
+    }
+
+    /**
+     * Searches for the list items that were selected in the list of added groups and removes them from that list; then
+     * it adds those items to the list of available groups.
+     *
+     * @return those selected groups that were moved
+     */
+    public Set<Group> moveSelectedFromAddedGroups() {
+        Set<Group> selection = new HashSet<Group>(addedListModel.getSelection());
+        for (Group nextSelectedItem : selection) {
+            availableListModel.add(nextSelectedItem);
+            addedListModel.remove(nextSelectedItem);
+        }
+        return selection;
+    }
+
+    /**
+     * Moves all the list items from the list of available groups to the list of added.
+     *
+     * @return the groups that were moved
+     */
+    public Set<Group> moveAllToAddedGroups() {
+        Set<Group> innerAvailableList = new HashSet<Group>(availableListModel.getInnerList());
+        for (Group nextSelectedItem : innerAvailableList) {
+            addedListModel.add(nextSelectedItem);
+            availableListModel.remove(nextSelectedItem);
+        }
+        return innerAvailableList;
+    }
+
+    /**
+     * Moves all the list items from the list of added to the list of available groups.
+     *
+     * @return the groups that were moved
+     */
+    public Set<Group> moveAllFromAddedGroups() {
+        Set<Group> innerAddedList = new HashSet<Group>(addedListModel.getInnerList());
+        for (Group nextSelectedItem : innerAddedList) {
+            availableListModel.add(nextSelectedItem);
+            addedListModel.remove(nextSelectedItem);
+        }
+        return innerAddedList;
+    }
 
     /**
      * Clears the previous content of the list of available groups and fills it with the new groups.
@@ -69,21 +129,6 @@ public class ManageUserGroupsDialogVm {
      */
     public ListModelList<Group> getAddedGroups() {
         return addedListModel;
-    }
-
-    /**
-     * Searches for the list items that were selected in the list of available groups and removes them from that list;
-     * then it adds those items to the list of already added groups.
-     *
-     * @return the groups that were moved from list of available groups to the list of those that were added
-     */
-    public Set<Group> moveToAddedAndReturnMoved() {
-        Set<Group> selection = new HashSet<Group>(availableListModel.getSelection());
-        for (Group nextSelectedItem : selection) {
-            addedListModel.add(nextSelectedItem);
-            availableListModel.remove(nextSelectedItem);
-        }
-        return selection;
     }
 
 }
