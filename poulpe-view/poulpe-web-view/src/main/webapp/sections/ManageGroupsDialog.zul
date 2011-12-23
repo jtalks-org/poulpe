@@ -2,33 +2,25 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window title="Add/Remove groups" closable="true" border="normal" width="50%" height="50%"
+  <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
           forward="onClose=onCancelEditAction" mode="modal">
-    <borderlayout width="100%" height="100%">
-      <west width="45%">
-        <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" multiple="true">
-          <listhead />
-          <template name="model" var="group">
-            <listitem label="@load(group.name)" />
-          </template>
-        </listbox>
-      </west>
-      <center>
-        <vlayout sclass="manage-groups-dialog-vertical-buttons">
-          <button label="&gt;" onClick="@command('moveSelectedToAdded')" />
-          <button label="&gt;&gt;" onClick="@command('moveAllToAdded')" />
-          <button label="&lt;" onClick="@command('moveSelectedFromAdded')" />
-          <button label="&lt;&lt;" onClick="@command('moveAllFromAdded')" />
-        </vlayout>
-      </center>
-      <east width="45%">
-        <listbox model="@load(vm.userGroupsDialogVm.addedGroups)">
-          <listhead />
-          <template name="model" var="group">
-            <listitem label="@load(group.name)" />
-          </template>
-        </listbox>
-      </east>
-    </borderlayout>
+    <hlayout height="300px" style="padding:10px">
+      <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
+        <template name="model" var="group">
+          <listitem label="@load(group.name)" />
+        </template>
+      </listbox>
+      <vbox spacing="10px" sclass="manage-groups-dialog-vertical-buttons">
+        <image id="chooseBtn" src="/resources/img/rightarrow.png" onClick="@command('moveSelectedToAdded')" />
+        <image id="chooseAllBtn" src="/resources/img/rightrightarrow.png" onClick="@command('moveAllToAdded')" />
+        <image id="removeBtn" src="/resources/img/leftarrow.png" />
+        <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" />
+      </vbox>
+      <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
+        <template name="model" var="group">
+          <listitem label="@load(group.name)" />
+        </template>
+      </listbox>
+    </hlayout>
   </window>
 </zk>
