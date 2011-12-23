@@ -14,14 +14,49 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jtalks.common.model.entity.Entity;
 
 /**
- * The forum entity.
+ * The central JCommune entity that contains all the configuration for
+ * respective component.
  * 
  * @author Guram Savinov
- *
+ * 
  */
 public class Jcommune extends Entity {
+
+    private List<Section> sections = new ArrayList<Section>();
+
+    /**
+     * Gets the sections.
+     * 
+     * @return the sections
+     */
+    public List<Section> getSections() {
+        return sections;
+    }
+
+    /**
+     * Sets the sections.
+     * 
+     * @param sections
+     *            the sections to set
+     */
+    public void setSections(List<Section> sections) {
+        this.sections = sections;
+    }
+
+    /**
+     * Adds a section to the list.
+     * 
+     * @param section
+     *            the section to add
+     */
+    public void addSection(Section section) {
+        sections.add(section);
+    }
 
 }
