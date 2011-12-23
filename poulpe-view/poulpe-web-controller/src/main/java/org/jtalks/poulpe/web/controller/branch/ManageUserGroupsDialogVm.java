@@ -3,41 +3,29 @@ package org.jtalks.poulpe.web.controller.branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModel;
+import org.zkoss.zul.Listitem;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author stanislav bashkirtsev
  */
 public class ManageUserGroupsDialogVm {
-    private int[] selectedIndex;
-    private final List<Group> availableGroups = new ArrayList<Group>();
-    private final BindingListModelList availableListModel = new BindingListModelList(availableGroups, true);
-    private final List<Group> addedGroups = new ArrayList<Group>();
-    private final BindingListModelList addedListModel = new BindingListModelList(addedGroups, true);
+    private final BindingListModelList availableListModel = new BindingListModelList(new ArrayList(), false);
+    private final BindingListModelList addedListModel = new BindingListModelList(new ArrayList(), false);
     private final List<Group> movedToAddedGroups = new ArrayList<Group>();
     private final List<Group> movedFromAddedGroups = new ArrayList<Group>();
 
     public ManageUserGroupsDialogVm setAvailableGroups(List<Group> availableGroups) {
-        this.availableGroups.clear();
-        this.availableGroups.addAll(availableGroups);
+        this.availableListModel.clear();
+        this.availableListModel.addAll(availableGroups);
         return this;
     }
 
     public ManageUserGroupsDialogVm setAddedGroups(List<Group> addedGroups) {
-        this.addedGroups.clear();
-        this.addedGroups.addAll(addedGroups);
+        this.addedListModel.clear();
+        this.addedListModel.addAll(addedGroups);
         return this;
-    }
-
-    public int[] getSelectedIndex() {
-        return selectedIndex;
-    }
-
-    public void setSelectedIndex(int[] selectedIndex) {
-        this.selectedIndex = selectedIndex;
     }
 
     public ListModel getAvailableGroups() {
@@ -48,13 +36,13 @@ public class ManageUserGroupsDialogVm {
         return addedListModel;
     }
 
-    public void moveFromAvailableToAdded(int... indexes) {
-        List<Group> moved = new LinkedList<Group>();
-        for(int i = 0; i < indexes.length; i++) {
-             moved.add((Group) availableListModel.get(indexes[i] - i));
-            availableListModel.remove(indexes[i] - i);
+    public Set<Group> moveFromAvailableToAdded() {
+        Set<Group> selection = new HashSet<Group> (availableListModel.getSelection());
+        for(Group nextSelectedItem: selection){
+            addedListModel.add(nextSelectedItem);
+            availableListModel.remove(nextSelectedItem);
         }
-        addedListModel.addAll(moved);
+        return selection;
     }
 
 }

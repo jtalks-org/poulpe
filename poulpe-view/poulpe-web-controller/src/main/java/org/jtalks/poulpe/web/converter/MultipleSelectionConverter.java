@@ -1,6 +1,7 @@
 package org.jtalks.poulpe.web.converter;
 
 import org.zkoss.bind.BindContext;
+import org.zkoss.bind.Converter;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listitem;
@@ -12,13 +13,14 @@ import java.util.Set;
  * Created by IntelliJ IDEA. User: ctapobep Date: 12/22/11 Time: 5:27 PM To change this template use File | Settings |
  * File Templates.
  */
-public class MultipleSelectionConverter implements org.zkoss.bind.Converter {
+public class MultipleSelectionConverter implements Converter {
+
     /**
      * Returns empty all the time.
      */
     @Override
     public Object coerceToUi(Object val, Component component, BindContext ctx) {
-        return new int[]{};
+        return null;
     }
 
     /**

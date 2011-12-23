@@ -6,8 +6,7 @@
           forward="onClose=onCancelEditAction" mode="modal">
     <borderlayout width="100%" height="100%">
       <west width="45%">
-        <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" multiple="true"
-                 selectedIndex="@save(vm.userGroupsDialogVm.selectedIndex) @converter('org.jtalks.poulpe.web.converter.MultipleSelectionConverter')">
+        <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" multiple="true">
           <listhead />
           <template name="model" var="group">
             <listitem label="@load(group.name)" />

@@ -31,8 +31,10 @@ import java.util.regex.Pattern;
  */
 public class BranchPermissionManagementVm {
     private final List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
-    private final ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
+    private ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
     private final BranchService branchService;
+    private List<Group> allGroups = Group.createGroupsWithNames("Moderator", "Admins", "Registered Users",
+            "Activated Users", "Banned Users", "Naughty Users", "Freaks");
     private Branch branch;
 
     public BranchPermissionManagementVm(@Nonnull BranchService branchService) {
@@ -42,6 +44,7 @@ public class BranchPermissionManagementVm {
 
     @Command
     public void showGroupsDialog(@BindingParam("params") String params) {
+        userGroupsDialogVm = new ManageUserGroupsDialogVm();
         Map<String, String> parsedParams = parseParams(params);
         Integer blockId = Integer.parseInt(parsedParams.get("blockId"));
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(blockId);
@@ -54,8 +57,7 @@ public class BranchPermissionManagementVm {
 
     @Command
     public void moveSelectedToAdded(){
-        int[] selectedIndex = userGroupsDialogVm.getSelectedIndex();
-        userGroupsDialogVm.moveFromAvailableToAdded(selectedIndex);
+        allGroups.removeAll(userGroupsDialogVm.moveFromAvailableToAdded());
     }
 
     private void initDataForView() {
@@ -94,8 +96,7 @@ public class BranchPermissionManagementVm {
     }
 
     private void renewDialogData(ManageUserGroupsDialogVm userGroupsDialogVm1, List<Group> addedGroups) {
-        userGroupsDialogVm1.setAvailableGroups(Lists.newArrayList(new Group
-                ("Moderators", ""), new Group("Registered Users", ""), new Group("Activated Users", "")));
+        userGroupsDialogVm1.setAvailableGroups(allGroups);
         userGroupsDialogVm1.setAddedGroups(addedGroups);
     }
 
