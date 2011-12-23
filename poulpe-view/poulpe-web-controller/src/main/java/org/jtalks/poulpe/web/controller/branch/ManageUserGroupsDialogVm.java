@@ -6,10 +6,7 @@ import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
@@ -26,8 +23,11 @@ public class ManageUserGroupsDialogVm {
     private final ListModelList<Group> availableListModel = new BindingListModelList(new ArrayList(), false);
     @SuppressWarnings("unchecked")
     private final ListModelList<Group> addedListModel = new BindingListModelList(new ArrayList(), false);
+    private final Comparator<Group> byNameComparator = new Group.ByNameComparator();
     private final Set<Group> movedToAdded = new HashSet<Group>();
     private final Set<Group> movedFromAdded = new HashSet<Group>();
+    private boolean addedListAscendingSorting = true;
+    private boolean availableListAscendingSorting = true;
 
 
     /**
@@ -42,6 +42,7 @@ public class ManageUserGroupsDialogVm {
             addedListModel.add(nextSelectedItem);
             availableListModel.remove(nextSelectedItem);
         }
+        addedListModel.sort(byNameComparator, addedListAscendingSorting);
         return selection;
     }
 
@@ -57,6 +58,7 @@ public class ManageUserGroupsDialogVm {
             availableListModel.add(nextSelectedItem);
             addedListModel.remove(nextSelectedItem);
         }
+        availableListModel.sort(byNameComparator, availableListAscendingSorting);
         return selection;
     }
 
@@ -71,7 +73,16 @@ public class ManageUserGroupsDialogVm {
             addedListModel.add(nextSelectedItem);
             availableListModel.remove(nextSelectedItem);
         }
+        addedListModel.sort(byNameComparator, addedListAscendingSorting);
         return innerAvailableList;
+    }
+
+    /**
+     * Changes the sorting of the list of added groups to the opposite side (e.g. was desc, and will become asc.).
+     */
+    public void revertSortingOfAddedList() {
+        addedListAscendingSorting = !addedListAscendingSorting;
+        addedListModel.sort(byNameComparator, addedListAscendingSorting);
     }
 
     /**
@@ -85,7 +96,16 @@ public class ManageUserGroupsDialogVm {
             availableListModel.add(nextSelectedItem);
             addedListModel.remove(nextSelectedItem);
         }
+        availableListModel.sort(byNameComparator, availableListAscendingSorting);
         return innerAddedList;
+    }
+
+    /**
+     * Changes the sorting of the list of available groups to the opposite side (e.g. was desc, and will become asc.).
+     */
+    public void revertSortingOfAvailableList() {
+        availableListAscendingSorting = !availableListAscendingSorting;
+        availableListModel.sort(byNameComparator, availableListAscendingSorting);
     }
 
     /**

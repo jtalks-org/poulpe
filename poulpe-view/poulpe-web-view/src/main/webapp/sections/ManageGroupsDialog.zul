@@ -6,6 +6,9 @@
           forward="onClose=onCancelEditAction" mode="modal">
     <hlayout height="300px" style="padding:10px">
       <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
+        <listhead>
+          <listheader onClick="@command('sortAvailableList')"  label="Available Groups" sort="auto(name)"  />
+        </listhead>
         <template name="model" var="group">
           <listitem label="@load(group.name)" />
         </template>
@@ -17,6 +20,9 @@
         <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" onClick="@command('moveAllFromAdded')" />
       </vbox>
       <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
+        <listhead>
+          <listheader onClick="@command('sortAddedList')" label="Added Groups" />
+        </listhead>
         <template name="model" var="group">
           <listitem label="@load(group.name)" />
         </template>

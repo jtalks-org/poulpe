@@ -42,6 +42,18 @@ public class BranchPermissionManagementVm {
     }
 
     @Command
+    public void sortAddedList() {
+        userGroupsDialogVm.revertSortingOfAddedList();
+
+    }
+
+    @Command
+    public void sortAvailableList() {
+        userGroupsDialogVm.revertSortingOfAvailableList();
+
+    }
+
+    @Command
     public void showGroupsDialog(@BindingParam("params") String params) {
         userGroupsDialogVm = new ManageUserGroupsDialogVm();
         Map<String, String> parsedParams = parseParams(params);
