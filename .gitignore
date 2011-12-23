@@ -27,3 +27,7 @@ logs
 # Maven release plugin files
 release.properties
 pom.xml.releaseBackup
+
+#test-output
+test-output
+
