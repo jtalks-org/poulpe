@@ -21,19 +21,24 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueFields;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueField;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
 
 /**
  * Forum branch that contains topics related to branch theme.
  * 
  * @author Pavel Vervenko
  */
-@UniqueFields(fields = { "name" })
+@UniqueConstraint
 public class Branch extends Entity {
+    
+    @UniqueField
     private String name;
+    
     private String description;
     private boolean deleted;
     private Section section;
+    
     private List<User> moderators = new ArrayList<User>();
 
     public Branch() {

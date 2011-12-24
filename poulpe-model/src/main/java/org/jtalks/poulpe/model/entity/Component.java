@@ -15,7 +15,8 @@
 package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueFields;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueField;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
 
 import ru.javatalks.utils.general.Assert;
 
@@ -24,15 +25,19 @@ import ru.javatalks.utils.general.Assert;
  * 
  * @author Pavel Vervenko
  */
-@UniqueFields(fields = { "name", "componentType" })
+@UniqueConstraint
 public class Component extends Entity {
 
+    @UniqueField
     private String name;
+    
     private String description;
+    
+    @UniqueField
     private ComponentType componentType;
 
     /**
-     * Default constructor, sets nothing
+     * Default constructor, sets nothing - all values are nulls
      */
     public Component() {
     }
