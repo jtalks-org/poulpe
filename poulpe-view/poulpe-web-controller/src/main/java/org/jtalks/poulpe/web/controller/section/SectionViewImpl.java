@@ -152,7 +152,7 @@ public class SectionViewImpl extends Window implements SectionView,
         // Object selectedObject = deleteSectionDialog$sectionsCombobox
         // .getModel().getElementAt(
         // deleteSectionDialog$sectionsCombobox
-        // .getSelectedIndex());
+        // .getSelectedIndices());
         // presenter.deleteSection((Section) selectedObject);
         // }
     }

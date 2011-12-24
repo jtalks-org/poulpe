@@ -2,20 +2,31 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window title="Add/Remove groups" closable="true" border="normal" width="50%" height="50%"
+  <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
           forward="onClose=onCancelEditAction" mode="modal">
-    <textbox id="groupNameTextBox" />
-    <listbox model="@load(vm.userGroupsDialogVm.availableGroups)">
-      <listhead />
-      <template name="model" var="group">
-        <listitem label="@load(group.name)" />
-      </template>
-    </listbox>
-    <listbox model="@load(vm.userGroupsDialogVm.addedGroups)">
-      <listhead />
-      <template name="model" var="group">
-        <listitem label="@load(group.name)" />
-      </template>
-    </listbox>
+    <hlayout height="300px" style="padding:10px">
+      <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
+        <listhead>
+          <listheader onClick="@command('sortAvailableList')"  label="Available Groups" sort="auto(name)"  />
+        </listhead>
+        <template name="model" var="group">
+          <listitem label="@load(group.name)" />
+        </template>
+      </listbox>
+      <vbox spacing="10px" sclass="manage-groups-dialog-vertical-buttons">
+        <image id="chooseBtn" src="/resources/img/rightarrow.png" onClick="@command('moveSelectedToAdded')" />
+        <image id="chooseAllBtn" src="/resources/img/rightrightarrow.png" onClick="@command('moveAllToAdded')" />
+        <image id="removeBtn" src="/resources/img/leftarrow.png" onClick="@command('moveSelectedFromAdded')" />
+        <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" onClick="@command('moveAllFromAdded')" />
+      </vbox>
+      <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
+        <listhead>
+          <listheader onClick="@command('sortAddedList')" label="Added Groups" />
+        </listhead>
+        <template name="model" var="group">
+          <listitem label="@load(group.name)" />
+        </template>
+      </listbox>
+    </hlayout>
   </window>
 </zk>

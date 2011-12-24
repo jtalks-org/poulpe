@@ -28,6 +28,13 @@
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
+  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean" />
+
+  <!-- Will be autowired to UniqueConstraintValidator -->
+  <bean id="uniquenessViolatorsRetriever" class="org.jtalks.poulpe.model.dao.hibernate.constraints.UniquenessViolatorsRetriever">
+    <property name="sessionFactory" ref="sessionFactory" />
+  </bean>
+
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="${jdbc.driverClassName}" />

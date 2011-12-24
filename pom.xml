@@ -159,7 +159,19 @@
         <artifactId>joda-time-hibernate</artifactId>
         <version>1.2</version>
       </dependency>
-
+      
+      <!-- JSR-303 -->
+      <dependency>
+        <groupId>javax.validation</groupId>
+        <artifactId>validation-api</artifactId>
+        <version>1.0.0.GA</version>
+      </dependency>
+      <dependency>
+        <groupId>org.hibernate</groupId>
+        <artifactId>hibernate-validator</artifactId>
+        <version>4.0.2.GA</version>
+      </dependency>
+      
       <!-- TestNG & Mockito -->
       <dependency>
         <groupId>org.testng</groupId>
@@ -208,6 +220,11 @@
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
         <version>2.6</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>1.8.3</version>
       </dependency>
 
       <!-- Web -->
@@ -368,7 +385,7 @@
   <properties>
     <hibernateVersion>3.3.2.GA</hibernateVersion>
     <springVersion>3.0.5.RELEASE</springVersion>
-    <zk.version>6.0.0.FL.20111220</zk.version>
+    <zk.version>6.0.0.FL.20111221</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <common.version>0.9</common.version>
   </properties>

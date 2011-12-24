@@ -21,27 +21,33 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueField;
+import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
 
 /**
  * Forum branch that contains topics related to branch theme.
- *
+ * 
  * @author Pavel Vervenko
  */
+@UniqueConstraint
 public class Branch extends Entity {
-
+    
+    @UniqueField
     private String name;
+    
     private String description;
     private boolean deleted;
     private Section section;
+    
     private List<User> moderators = new ArrayList<User>();
 
     public Branch() {
     }
-    
+
     public Branch(String name) {
         this.name = name;
     }
-    
+
     public Branch(String name, String description) {
         this.name = name;
         this.description = description;
@@ -69,7 +75,8 @@ public class Branch extends Entity {
     }
 
     /**
-     * Set branch description which contains additional information about the branch.
+     * Set branch description which contains additional information about the
+     * branch.
      */
     public void setDescription(String description) {
         this.description = description;
@@ -107,7 +114,8 @@ public class Branch extends Entity {
     }
 
     /**
-     * @return an unmodifiable list of {@link User} which are signed to moderate this branch
+     * @return an unmodifiable list of {@link User} which are signed to moderate
+     * this branch
      */
     public List<User> getModeratorsList() {
         return Collections.unmodifiableList(moderators);
@@ -120,16 +128,16 @@ public class Branch extends Entity {
     protected List<User> getModerators() {
         return moderators;
     }
-    
+
     /**
-     * Sets the list of users which will be signed to moderate this branch. 
+     * Sets the list of users which will be signed to moderate this branch.
      * Protected for using only by hibernate.
-     * @param moderators a list of {@link User} 
+     * @param moderators a list of {@link User}
      */
     protected void setModerators(List<User> moderators) {
         this.moderators = moderators;
     }
-    
+
     /**
      * Assigns {@link User} to moderate this branch
      */
@@ -145,13 +153,13 @@ public class Branch extends Entity {
     }
 
     /**
-     * Assigns a list of {@link User} to moderate this branch.
-     * This method mainly for using in test.
+     * Assigns a list of {@link User} to moderate this branch. This method
+     * mainly for using in test.
      */
     public void addModerators(User... users) {
         this.addModerators(Arrays.asList(users));
     }
-    
+
     /**
      * Removes an assignment for {@link User} to moderate this branch
      */
@@ -166,5 +174,9 @@ public class Branch extends Entity {
     public boolean isModeratedBy(User user) {
         return this.moderators.contains(user);
     }
-    
+
+    @Override
+    public String toString() {
+        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + "]";
+    }
 }

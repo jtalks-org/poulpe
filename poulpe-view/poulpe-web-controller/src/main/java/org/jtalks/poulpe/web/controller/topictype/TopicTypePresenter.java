@@ -207,8 +207,8 @@ public class TopicTypePresenter {
         if (topicType.getTitle() == null || topicType.getTitle().equals("")) {
             return TITLE_CANT_BE_VOID;
         }
-        if (topicType.getTitle().length() > 254){
-        	return ERROR_LABEL_SECTION_NAME_WRONG;
+        if (topicType.getTitle().length() > 254) {
+            return ERROR_LABEL_SECTION_NAME_WRONG;
         }
         return null;
     }

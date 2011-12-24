@@ -16,7 +16,9 @@ package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Entity;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -94,6 +96,22 @@ public class Group extends Entity {
             groups.add(new Group(nextName, ""));
         }
         return groups;
+    }
+
+    /**
+     * Lets the Group classes be comparable by their names. Throws NPE if anything is {@code null} whether it's a group
+     * itself or its name.
+     *
+     * @author stanislav bashkirtsev
+     */
+    public static class ByNameComparator implements Comparator<Group> {
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public int compare(@Nonnull Group group, @Nonnull Group group1) {
+            return group.getName().compareTo(group1.getName());
+        }
     }
 
 }

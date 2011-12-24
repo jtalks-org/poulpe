@@ -1,16 +1,17 @@
-.add-group-button {
-    /*height: 25px;*/
-    /*width: 75px;*/
-}
 .usergroup-button {
-    border:none;
-    border-radius:25px;
+    border: none;
+    border-radius: 25px;
     background: rgb(204, 204, 204);
 }
+
 .usergroup-button:hover {
     background: rgb(204, 204, 204);
 }
-.east-container-for-add-group-button {
-    border: none;
-    width: 100px;
+
+.manage-groups-dialog-vertical-buttons img {
+    cursor: pointer;
+}
+
+.manage-groups-dialog-vertical-buttons {
+    padding-top: 50px;
 }
