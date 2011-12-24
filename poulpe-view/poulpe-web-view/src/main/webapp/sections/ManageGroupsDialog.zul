@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
-          forward="onClose=onCancelEditAction" mode="modal">
+          forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')">
     <hlayout height="300px" style="padding:10px">
       <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
         <listhead>
@@ -21,7 +21,7 @@
       </vbox>
       <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
         <listhead>
-          <listheader onClick="@command('sortAddedList')" label="Added Groups" />
+          <listheader onClick="@command('sortAddedList')" label="Added Groups" sort="auto(name)" />
         </listhead>
         <template name="model" var="group">
           <listitem label="@load(group.name)" />

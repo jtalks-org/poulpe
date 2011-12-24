@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.web.controller.branch;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.jtalks.poulpe.model.entity.Group;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
@@ -24,8 +25,7 @@ public class ManageUserGroupsDialogVm {
     @SuppressWarnings("unchecked")
     private final ListModelList<Group> addedListModel = new BindingListModelList(new ArrayList(), false);
     private final Comparator<Group> byNameComparator = new Group.ByNameComparator();
-    private final Set<Group> movedToAdded = new HashSet<Group>();
-    private final Set<Group> movedFromAdded = new HashSet<Group>();
+    private final Set<Group> originallyAdded = new HashSet<Group>();
     private boolean addedListAscendingSorting = true;
     private boolean availableListAscendingSorting = true;
 
@@ -78,14 +78,6 @@ public class ManageUserGroupsDialogVm {
     }
 
     /**
-     * Changes the sorting of the list of added groups to the opposite side (e.g. was desc, and will become asc.).
-     */
-    public void revertSortingOfAddedList() {
-        addedListAscendingSorting = !addedListAscendingSorting;
-        addedListModel.sort(byNameComparator, addedListAscendingSorting);
-    }
-
-    /**
      * Moves all the list items from the list of added to the list of available groups.
      *
      * @return the groups that were moved
@@ -98,6 +90,14 @@ public class ManageUserGroupsDialogVm {
         }
         availableListModel.sort(byNameComparator, availableListAscendingSorting);
         return innerAddedList;
+    }
+
+    /**
+     * Changes the sorting of the list of added groups to the opposite side (e.g. was desc, and will become asc.).
+     */
+    public void revertSortingOfAddedList() {
+        addedListAscendingSorting = !addedListAscendingSorting;
+        addedListModel.sort(byNameComparator, addedListAscendingSorting);
     }
 
     /**
@@ -130,7 +130,31 @@ public class ManageUserGroupsDialogVm {
     public ManageUserGroupsDialogVm setAddedGroups(@Nonnull List<Group> addedGroups) {
         this.addedListModel.clear();
         this.addedListModel.addAll(addedGroups);
+        this.originallyAdded.clear();
+        this.originallyAdded.addAll(addedGroups);
         return this;
+    }
+
+    /**
+     * Figures out what elements were removed after all the actions of the user. Let's say he moved 2 elements from the
+     * added list, and then returned one of them back. This will result in 1 element to be removed from the added list.
+     *
+     * @return the elements that were removed by the moment from the added list
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Group> getRemovedFromAdded() {
+        return CollectionUtils.subtract(originallyAdded, addedListModel.getInnerList());
+    }
+
+    /**
+     * Figures out what elements were added after all the actions of the user. Let's say he moved 10 elements from the
+     * available list, and then returned 2 of them back. This will result in 8 elements being new to the added list.
+     *
+     * @return the elements that were added by the moment to the list of added groups
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Group> getNewAdded() {
+        return CollectionUtils.subtract(addedListModel.getInnerList(), originallyAdded);
     }
 
     /**

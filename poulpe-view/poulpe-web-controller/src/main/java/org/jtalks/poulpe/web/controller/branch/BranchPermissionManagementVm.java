@@ -67,6 +67,11 @@ public class BranchPermissionManagementVm {
     }
 
     @Command
+    public void dialogClosed(){
+
+    }
+
+    @Command
     public void moveSelectedToAdded() {
         userGroupsDialogVm.moveSelectedToAddedGroups();
     }
