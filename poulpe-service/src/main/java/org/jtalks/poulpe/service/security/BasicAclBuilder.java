@@ -3,7 +3,6 @@ package org.jtalks.poulpe.service.security;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.common.service.security.AclManager;
 import org.jtalks.poulpe.model.entity.Group;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.Permission;
@@ -21,8 +20,8 @@ import java.util.List;
  * permissions), extend this class.
  *
  * @author stanislav bashkirstsev
- * @see <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/domain-acls.html">Spring
- *      ACL documentation</a>
+ * @see <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/domain-acls.html">Spring ACL
+ *      documentation</a>
  */
 @NotThreadSafe
 public class BasicAclBuilder {
@@ -46,7 +45,7 @@ public class BasicAclBuilder {
     /**
      * Sets the user that will be granted (or revoked from) the permissions.
      *
-     * @param owner the user to grant to/revoke from the permissions
+     * @param owner the user to grant to/restrict from the permissions
      * @return this
      */
     public BasicAclBuilder setOwner(@Nonnull User owner) {
@@ -55,7 +54,7 @@ public class BasicAclBuilder {
     }
 
     /**
-     * Sets the user group that will be granted (or revoke from) the permissions. Thus, all the users in that group will
+     * Sets the user group that will be granted (or restrict from) the permissions. Thus, all the users in that group will
      * be granted as well.
      *
      * @param owner the user group that is the owner of the permissions
@@ -74,8 +73,8 @@ public class BasicAclBuilder {
      * @param permission the permission to grant to the owner ({@link Sid})
      * @return this
      */
-    public BasicAclBuilder grant(@Nonnull JtalksPermission permission) {
-        permissionsToGrant.add(permission);
+    public BasicAclBuilder grant(@Nonnull JtalksPermission... permission) {
+        permissionsToGrant.addAll(Lists.newArrayList(permission));
         return this;
     }
 
@@ -87,8 +86,8 @@ public class BasicAclBuilder {
      * @param permission the permission to grant to the owner ({@link Sid})
      * @return this
      */
-    public BasicAclBuilder revoke(@Nonnull JtalksPermission permission) {
-        permissionsToRevoke.add(permission);
+    public BasicAclBuilder revoke(@Nonnull JtalksPermission... permission) {
+        permissionsToRevoke.addAll(Lists.newArrayList(permission));
         return this;
     }
 
@@ -100,7 +99,7 @@ public class BasicAclBuilder {
      *               this object.
      * @return this
      */
-    public BasicAclBuilder on(Entity object) {
+    public BasicAclBuilder on(@Nonnull Entity object) {
         throwIfPermissionsOrSidsEmpty();
         target = object;
         executeUpdate();

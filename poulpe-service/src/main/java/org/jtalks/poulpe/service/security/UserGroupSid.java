@@ -38,6 +38,15 @@ public class UserGroupSid implements Sid {
     }
 
     /**
+     * Gets the id of the {@link Group} which this SID is actually is.
+     *
+     * @return the id of the {@link Group} which this SID is actually is
+     */
+    public String getGroupId() {
+        return groupId;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
