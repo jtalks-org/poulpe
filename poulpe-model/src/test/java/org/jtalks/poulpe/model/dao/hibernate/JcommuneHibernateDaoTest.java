@@ -75,15 +75,15 @@ public class JcommuneHibernateDaoTest extends
 
     @Test
     public void testUpdate() {
-        String uuid = UUID.randomUUID().toString();
+        String newName = "new Jcommune name";
 
         session.save(jcommune);
-        jcommune.setUuid(uuid);
+        jcommune.setName(newName);
         dao.saveOrUpdate(jcommune);
 
         String actual = ObjectRetriever.retrieveUpdated(jcommune, session)
-                .getUuid();
-        assertEquals(actual, uuid);
+                .getName();
+        assertEquals(actual, newName);
     }
 
 }
