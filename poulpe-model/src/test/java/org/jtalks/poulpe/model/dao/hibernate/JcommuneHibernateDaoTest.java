@@ -14,8 +14,11 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.UUID;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -56,11 +59,31 @@ public class JcommuneHibernateDaoTest extends
     }
 
     @Test
-    public void saveJcommuneTest() {
+    public void testSave() {
         dao.saveOrUpdate(jcommune);
         assertNotSame(jcommune.getId(), 0, "Id not created");
         Jcommune actual = ObjectRetriever.retrieveUpdated(jcommune, session);
         assertReflectionEquals(jcommune, actual);
+    }
+
+    @Test
+    public void testGet() {
+        session.save(jcommune);
+        Jcommune actual = dao.get(jcommune.getId());
+        assertReflectionEquals(jcommune, actual);
+    }
+
+    @Test
+    public void testUpdate() {
+        String uuid = UUID.randomUUID().toString();
+
+        session.save(jcommune);
+        jcommune.setUuid(uuid);
+        dao.saveOrUpdate(jcommune);
+
+        String actual = ObjectRetriever.retrieveUpdated(jcommune, session)
+                .getUuid();
+        assertEquals(actual, uuid);
     }
 
 }
