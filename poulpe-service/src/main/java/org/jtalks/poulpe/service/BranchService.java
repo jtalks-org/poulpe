@@ -16,12 +16,12 @@ package org.jtalks.poulpe.service;
 
 import com.google.common.collect.Table;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.groups.GroupAccessList;
+import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,6 +39,7 @@ public interface BranchService extends EntityService<Branch> {
 
     /**
      * Mark the branch as deleted.
+     *
      * @param selectedBranch branch to delete
      * @deprecated because there are two other delete methods
      */
@@ -46,32 +47,40 @@ public interface BranchService extends EntityService<Branch> {
 
     /**
      * Save or update branch.
+     *
      * @param selectedBranch instance to save
      * @throws NotUniqueException if branch with the same name already exists
      */
     void saveBranch(Branch selectedBranch) throws NotUniqueException;
-    
+
     /**
      * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
+     *
      * @param victim the branch to be removed
      */
     void deleteBranchRecursively(Branch victim);
 
     /**
-     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim} branch.
-     * @param victim the branch to be removed
+     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim}
+     * branch.
+     *
+     * @param victim    the branch to be removed
      * @param recipient the branch to take topics of {@code victim}
      */
     void deleteBranchMovingTopics(Branch victim, Branch recipient);
-    
+
     /**
      * Checks if the branch is duplicated.
-     * 
-     * @param branch
-     *            branch to check
-     * 
+     *
+     * @param branch branch to check
      */
     boolean isDuplicated(Branch branch);
 
     Table<JtalksPermission, Group, Boolean> getGroupAccessListFor(Branch branch);
+
+    void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
+
+    void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
+
+    void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
 }

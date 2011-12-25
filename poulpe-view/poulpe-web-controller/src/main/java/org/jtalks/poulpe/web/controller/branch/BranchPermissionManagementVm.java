@@ -4,6 +4,7 @@ import com.google.common.collect.Table;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
@@ -29,66 +30,77 @@ import java.util.regex.Pattern;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManagementVm {
-    private final List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
-    private ManageUserGroupsDialogVm userGroupsDialogVm = new ManageUserGroupsDialogVm();
+    private final GroupService groupService;
     private final BranchService branchService;
-    private List<Group> allGroups = Group.createGroupsWithNames("Moderator", "Admins", "Registered Users",
-            "Activated Users", "Banned Users", "Naughty Users", "Freaks", "Idiots", "Perverts", "Elves");
+    private final List<BranchPermissionManagementBlock> blocks = new ArrayList<BranchPermissionManagementBlock>();
+    private ManageUserGroupsDialogVm groupsDialogVm;
     private Branch branch;
 
-    public BranchPermissionManagementVm(@Nonnull BranchService branchService) {
+    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService) {
+        this.groupService = groupService;
         this.branchService = branchService;
         initDataForView();
     }
 
     @Command
     public void sortAddedList() {
-        userGroupsDialogVm.revertSortingOfAddedList();
+        groupsDialogVm.revertSortingOfAddedList();
 
     }
 
     @Command
     public void sortAvailableList() {
-        userGroupsDialogVm.revertSortingOfAvailableList();
+        groupsDialogVm.revertSortingOfAvailableList();
 
     }
 
     @Command
     public void showGroupsDialog(@BindingParam("params") String params) {
-        userGroupsDialogVm = new ManageUserGroupsDialogVm();
         Map<String, String> parsedParams = parseParams(params);
         Integer blockId = Integer.parseInt(parsedParams.get("blockId"));
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(blockId);
         String mode = parsedParams.get("mode");
         List<Group> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
         Window branchDialog = (Window) getComponent("branchPermissionManagementWindow");
-        renewDialogData(userGroupsDialogVm, toFillAddedGroupsGrid);
+        groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
+                branchPermissionManagementBlock.getPermission());
         Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
     }
 
     @Command
-    public void dialogClosed(){
+    public void dialogClosed() {
+        groupsDialogVm = null;
+    }
 
+    @Command
+    public void save() {
+        groupsDialogVm.getNewAdded();
+        if (groupsDialogVm.isAllowAccess()) {
+            branchService.grantPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
+        } else {
+            branchService.restrictPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
+        }
+        branchService.deletePermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getRemovedFromAdded());
     }
 
     @Command
     public void moveSelectedToAdded() {
-        userGroupsDialogVm.moveSelectedToAddedGroups();
+        groupsDialogVm.moveSelectedToAddedGroups();
     }
 
     @Command
     public void moveSelectedFromAdded() {
-        userGroupsDialogVm.moveSelectedFromAddedGroups();
+        groupsDialogVm.moveSelectedFromAddedGroups();
     }
 
     @Command
     public void moveAllToAdded() {
-        userGroupsDialogVm.moveAllToAddedGroups();
+        groupsDialogVm.moveAllToAddedGroups();
     }
 
     @Command
     public void moveAllFromAdded() {
-        userGroupsDialogVm.moveAllFromAddedGroups();
+        groupsDialogVm.moveAllFromAddedGroups();
     }
 
     private void initDataForView() {
@@ -126,9 +138,10 @@ public class BranchPermissionManagementVm {
         return parsedParams;
     }
 
-    private void renewDialogData(ManageUserGroupsDialogVm userGroupsDialogVm1, List<Group> addedGroups) {
-        userGroupsDialogVm1.setAvailableGroups(allGroups);
-        userGroupsDialogVm1.setAddedGroups(addedGroups);
+    private ManageUserGroupsDialogVm createDialogData(List<Group> addedGroups, boolean allowAccess,
+                                                      JtalksPermission permission) {
+        return new ManageUserGroupsDialogVm(permission, allowAccess)
+                .setAvailableGroups(groupService.getAll()).setAddedGroups(addedGroups);
     }
 
     private Component getComponent(String id) {
@@ -139,8 +152,8 @@ public class BranchPermissionManagementVm {
         return new BindingListModelList(blocks, true);
     }
 
-    public ManageUserGroupsDialogVm getUserGroupsDialogVm() {
-        return userGroupsDialogVm;
+    public ManageUserGroupsDialogVm getGroupsDialogVm() {
+        return groupsDialogVm;
     }
 
     public List<BranchPermissionManagementBlock> getBlocks() {

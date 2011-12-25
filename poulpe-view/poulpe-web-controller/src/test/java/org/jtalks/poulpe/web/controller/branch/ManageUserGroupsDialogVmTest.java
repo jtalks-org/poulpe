@@ -19,7 +19,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @BeforeMethod
     protected void setUp() throws Exception {
-        vm = new ManageUserGroupsDialogVm();
+        vm = new ManageUserGroupsDialogVm(null, true);
     }
 
     @Test(dataProvider = "testGroups")

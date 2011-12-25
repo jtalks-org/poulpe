@@ -10,6 +10,7 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.service.security.BranchPermission;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -67,5 +68,20 @@ public class MockBranchService implements BranchService {
     @Override
     public boolean isExist(long id) {
         return false;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
+        //To change body of implemented methods use File | Settings | File Templates.
     }
 }

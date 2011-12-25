@@ -1,7 +1,9 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
 
@@ -26,9 +28,15 @@ public class ManageUserGroupsDialogVm {
     private final ListModelList<Group> addedListModel = new BindingListModelList(new ArrayList(), false);
     private final Comparator<Group> byNameComparator = new Group.ByNameComparator();
     private final Set<Group> originallyAdded = new HashSet<Group>();
+    private final JtalksPermission permission;
+    private final boolean allowAccess;
     private boolean addedListAscendingSorting = true;
     private boolean availableListAscendingSorting = true;
 
+    public ManageUserGroupsDialogVm(@Nonnull JtalksPermission permission, boolean allowAccess) {
+        this.permission = permission;
+        this.allowAccess = allowAccess;
+    }
 
     /**
      * Searches for the list items that were selected in the list of available groups and removes them from that list;
@@ -175,4 +183,11 @@ public class ManageUserGroupsDialogVm {
         return addedListModel;
     }
 
+    public JtalksPermission getPermission() {
+        return permission;
+    }
+
+    public boolean isAllowAccess() {
+        return allowAccess;
+    }
 }

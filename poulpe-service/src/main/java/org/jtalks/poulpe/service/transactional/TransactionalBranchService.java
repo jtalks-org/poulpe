@@ -24,6 +24,7 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -90,6 +91,21 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     @Override
     public Table<JtalksPermission, Group, Boolean> getGroupAccessListFor(Branch branch) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
         throw new UnsupportedOperationException();
     }
 }

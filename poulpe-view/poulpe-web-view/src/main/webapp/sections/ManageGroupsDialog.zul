@@ -5,7 +5,7 @@
   <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
           forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')">
     <hlayout height="300px" style="padding:10px">
-      <listbox model="@load(vm.userGroupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
+      <listbox model="@load(vm.groupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
         <listhead>
           <listheader onClick="@command('sortAvailableList')"  label="Available Groups" sort="auto(name)"  />
         </listhead>
@@ -19,7 +19,7 @@
         <image id="removeBtn" src="/resources/img/leftarrow.png" onClick="@command('moveSelectedFromAdded')" />
         <image id="removeAllBtn" src="/resources/img/leftleftarrow.png" onClick="@command('moveAllFromAdded')" />
       </vbox>
-      <listbox model="@load(vm.userGroupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
+      <listbox model="@load(vm.groupsDialogVm.addedGroups)" vflex="true" width="300px" multiple="true">
         <listhead>
           <listheader onClick="@command('sortAddedList')" label="Added Groups" sort="auto(name)" />
         </listhead>
