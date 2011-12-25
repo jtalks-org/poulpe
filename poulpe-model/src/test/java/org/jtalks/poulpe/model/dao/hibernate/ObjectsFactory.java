@@ -97,8 +97,8 @@ public final class ObjectsFactory {
     }
 
     public static Jcommune createJcommune() {
-        Jcommune jcommune = new Jcommune();
-        
+        Jcommune jcommune = new Jcommune(createComponent(ComponentType.FORUM));
+
         for (int i = 0; i < 5; i++) {
             jcommune.addSection(createSectionWithBranches());
         }

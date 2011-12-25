@@ -29,6 +29,24 @@ public class Jcommune extends Component {
     private List<Section> sections = new ArrayList<Section>();
 
     /**
+     * Default constructor, sets nothing.
+     */
+    public Jcommune() {
+
+    }
+
+    /**
+     * Creates {@code Jcommune} from {@code Component}.
+     * 
+     * @param component
+     *            the component from what object creates
+     */
+    public Jcommune(Component component) {
+        super(component.getName(), component.getDescription(), component
+                .getComponentType());
+    }
+
+    /**
      * Gets the sections.
      * 
      * @return the sections
