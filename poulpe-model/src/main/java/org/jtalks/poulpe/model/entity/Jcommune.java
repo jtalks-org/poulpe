@@ -17,8 +17,6 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Entity;
-
 /**
  * The central JCommune entity that contains all the configuration for
  * respective component.
@@ -26,7 +24,7 @@ import org.jtalks.common.model.entity.Entity;
  * @author Guram Savinov
  * 
  */
-public class Jcommune extends Entity {
+public class Jcommune extends Component {
 
     private List<Section> sections = new ArrayList<Section>();
 
