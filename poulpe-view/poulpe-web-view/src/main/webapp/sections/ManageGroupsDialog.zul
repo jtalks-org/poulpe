@@ -4,7 +4,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
           forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')">
-    <hlayout height="300px" style="padding:10px">
+    <hlayout style="padding:10px" height="85%">
       <listbox model="@load(vm.groupsDialogVm.availableGroups)" vflex="true" width="300px" multiple="true">
         <listhead>
           <listheader onClick="@command('sortAvailableList')"  label="Available Groups" sort="auto(name)"  />
@@ -28,5 +28,6 @@
         </template>
       </listbox>
     </hlayout>
+    <button onClick="@command('saveDialogState')" label="Save"/>
   </window>
 </zk>

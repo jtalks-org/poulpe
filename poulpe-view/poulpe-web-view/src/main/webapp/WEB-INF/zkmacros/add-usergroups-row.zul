@@ -16,7 +16,7 @@
       http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
       button, and then we can pass the ID to the @command() where we can parse it in Java.
       -->
-      <button id="blockId=${arg.blockId},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
+      <button id="permissionName=${arg.permissionName},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
               onClick="@command('showGroupsDialog', params=self.getId())" />
     </east>
   </borderlayout>

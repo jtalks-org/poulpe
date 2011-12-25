@@ -22,6 +22,8 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.service.security.AclManager;
+import org.jtalks.poulpe.service.security.BasicAclBuilder;
 import org.jtalks.poulpe.service.security.JtalksPermission;
 
 import java.util.Collection;
@@ -34,6 +36,7 @@ import java.util.List;
  */
 public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao> implements
         BranchService {
+    private final AclManager aclManager = null;
 
     /**
      * Create an instance of entity based service
@@ -96,7 +99,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     @Override
     public void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        throw new UnsupportedOperationException();
+        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager);
     }
 
     @Override
