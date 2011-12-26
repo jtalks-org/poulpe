@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Implementetion of {@link AclManager} interface. Manage ACLs using Spring Security facilities.
  *
  * @author Kirill Afonin
  */
@@ -29,7 +28,7 @@ public class AclManagerImpl implements AclManager {
         this.mutableAclService = mutableAclService;
     }
 
-    public Map<Long, Boolean> getGroups(Branch branch) {
+    public Map<Long, Boolean> getGroups(Branch branch, JtalksPermission permission) {
         Map<Long, Boolean> groupIds = new HashMap<Long, Boolean>();
         ObjectIdentity branchIdentity = createIdentityFor(branch);
         MutableAcl branchAcl = getAclFor(branchIdentity);
