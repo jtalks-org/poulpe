@@ -14,11 +14,10 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-
 import java.util.List;
+
+import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.poulpe.model.entity.Group;
 
 /**
  * @author Konstantin Akimov

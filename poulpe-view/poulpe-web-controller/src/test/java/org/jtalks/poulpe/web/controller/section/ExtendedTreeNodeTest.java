@@ -1,9 +1,9 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.common.model.entity.Entity;
+import static org.testng.Assert.assertTrue;
+
 import org.jtalks.poulpe.model.entity.Section;
 import org.testng.annotations.Test;
-import static org.testng.Assert.assertTrue;
 
 public class ExtendedTreeNodeTest {
 

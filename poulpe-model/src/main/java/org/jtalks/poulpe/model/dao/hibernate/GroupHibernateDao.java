@@ -14,13 +14,11 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
-import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-
 import java.util.List;
+
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.Group;
 
 /**
  * @author Vitaliy Kravchenko

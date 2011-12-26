@@ -22,7 +22,8 @@ public class ObjectCreator {
         List<Component> list = new ArrayList<Component>();
         
         for (ComponentType type : ComponentType.values()) {
-            list.add(new Component(random(), random(), type));
+            String random = random();
+            list.add(new Component(random, random, type));
         }
         
         return list;
@@ -62,7 +63,8 @@ public class ObjectCreator {
     public static List<User> getFakeUsers(int size) {
         List<User> users = new ArrayList<User>();
         for (int i = 0; i < size; i++) {
-            users.add(new User(random(), random(), random()));
+            String random = random();
+            users.add(new User(random, random, random, random));
         }
         return users;
     }

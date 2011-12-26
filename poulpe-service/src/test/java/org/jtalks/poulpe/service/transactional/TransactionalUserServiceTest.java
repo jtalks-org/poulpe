@@ -108,8 +108,7 @@ public class TransactionalUserServiceTest {
      * @return the user entity
      */
     private User getUser(String username) {
-        User user = new User(username, EMAIL, PASSWORD);
-        return user;
+        return new User(username, EMAIL, PASSWORD, "salt");
     }
 
 }

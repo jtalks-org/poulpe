@@ -14,16 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import java.util.List;
+
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-
-import java.util.List;
 
 
 /**
