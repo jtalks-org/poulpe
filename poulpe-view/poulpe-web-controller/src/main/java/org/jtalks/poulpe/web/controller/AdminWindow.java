@@ -49,8 +49,8 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      * Show the topic type list view
      */
     public void onShowTopicTypes() {
-//        show("topictypelist.zul");
-        show("WEB-INF/pages/edit_comp.zul");
+        show("topictypelist.zul");
+//        show("WEB-INF/pages/edit_comp.zul");
     }
     
     /**
