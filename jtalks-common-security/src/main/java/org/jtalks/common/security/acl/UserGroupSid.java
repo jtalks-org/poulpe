@@ -14,7 +14,7 @@ import javax.annotation.Nonnull;
  *
  * @author stanislav bashkirstev
  */
-public class UserGroupSid implements Sid {
+public class UserGroupSid implements IdentifiableSid {
     private final String groupId;
 
     /**
@@ -43,6 +43,14 @@ public class UserGroupSid implements Sid {
      * @return the id of the {@link Group} which this SID is actually is
      */
     public String getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getSidId() {
         return groupId;
     }
 

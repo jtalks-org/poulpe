@@ -20,7 +20,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <!-- Retrieves, modifies and strores access control lists -->
-  <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+  <bean id="aclService" class="org.jtalks.common.security.acl.ExtendedJdbcMutableAclService">
     <constructor-arg ref="dataSource" />
     <constructor-arg ref="lookupStrategy" />
     <constructor-arg ref="aclCache" />
