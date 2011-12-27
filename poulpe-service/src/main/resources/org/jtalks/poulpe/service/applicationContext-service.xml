@@ -20,9 +20,7 @@
   <!--Declaration services bean -->
   <bean id="branchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
     <constructor-arg index="0" ref="branchDao" />
-  </bean>
-  <bean id="topicBranchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
-    <constructor-arg index="0" ref="branchDao" />
+    <constructor-arg index="1" ref="aclManager"/>
   </bean>
   <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao" />
