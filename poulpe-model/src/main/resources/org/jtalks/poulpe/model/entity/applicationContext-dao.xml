@@ -50,8 +50,8 @@
         <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Group.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Rank.hbm.xml</value>
-        <value>/org/jtalks/poulpe/model/entity/Jcommune.hbm.xml</value>
         <value>/org/jtalks/common/model/entity/User.hbm.xml</value>
+		<value>/org/jtalks/poulpe/model/entity/Property.hbm.xml</value>
       </list>
     </property>
     <property name="hibernateProperties">

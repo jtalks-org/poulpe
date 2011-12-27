@@ -18,6 +18,7 @@
       <div>
         <button id="addCompButton" label="${labels.componentlist.add}" />
         <button id="delCompButton" label="${labels.componentlist.delete}" />
+		<button id="confCompButton" label="${labels.componentlist.configure}" />
       </div>
     </vlayout>
   </window>

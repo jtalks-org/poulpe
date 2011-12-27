@@ -17,18 +17,54 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Entity;
-
 /**
  * The central JCommune entity that contains all the configuration for
  * respective component.
  * 
  * @author Guram Savinov
+ * @author Vahluev Vyacheslav
  * 
  */
-public class Jcommune extends Entity {
+public class Jcommune extends Component {
 
     private List<Section> sections = new ArrayList<Section>();
+    private List<Property> properties = new ArrayList<Property>();
+
+    /**
+     * Default constructor, sets nothing.
+     */
+    public Jcommune() {
+
+    }
+
+    /**
+     * Creates {@code Jcommune} from {@code Component}.
+     * 
+     * @param component
+     *            the component from what object creates
+     */
+    public Jcommune(Component component) {
+        super(component.getName(), component.getDescription(), component
+                .getComponentType());
+    }
+    
+    /**
+     * Gets properties which belong to this component
+     * 
+     * @return properties of this component
+     */
+    public List<Property> getProperties() {
+		return properties;
+	}
+
+    /**
+     * Sets properties which belong to this component
+     * 
+     * @param properties to set
+     */
+	public void setProperties(List<Property> properties) {
+		this.properties = properties;
+	}
 
     /**
      * Gets the sections.
@@ -57,6 +93,15 @@ public class Jcommune extends Entity {
      */
     public void addSection(Section section) {
         sections.add(section);
+    }
+    
+    /**
+     * Adds a property to the list of properties.
+     * 
+     * @param property the property to add
+     */
+    public void addProperty(Property property) {
+    	properties.add(property);
     }
 
 }
