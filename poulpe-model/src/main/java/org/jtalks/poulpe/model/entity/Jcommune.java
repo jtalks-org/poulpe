@@ -22,11 +22,13 @@ import java.util.List;
  * respective component.
  * 
  * @author Guram Savinov
+ * @author Vahluev Vyacheslav
  * 
  */
 public class Jcommune extends Component {
 
     private List<Section> sections = new ArrayList<Section>();
+    private List<Property> properties = new ArrayList<Property>();
 
     /**
      * Default constructor, sets nothing.
@@ -45,6 +47,24 @@ public class Jcommune extends Component {
         super(component.getName(), component.getDescription(), component
                 .getComponentType());
     }
+    
+    /**
+     * Gets properties which belong to this component
+     * 
+     * @return properties of this component
+     */
+    public List<Property> getProperties() {
+		return properties;
+	}
+
+    /**
+     * Sets properties which belong to this component
+     * 
+     * @param properties to set
+     */
+	public void setProperties(List<Property> properties) {
+		this.properties = properties;
+	}
 
     /**
      * Gets the sections.
@@ -73,6 +93,15 @@ public class Jcommune extends Component {
      */
     public void addSection(Section section) {
         sections.add(section);
+    }
+    
+    /**
+     * Adds a property to the list of properties.
+     * 
+     * @param property the property to add
+     */
+    public void addProperty(Property property) {
+    	properties.add(property);
     }
 
 }
