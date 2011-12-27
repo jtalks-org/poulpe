@@ -1,7 +1,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
-          forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')">
+          forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')" id="RankEditorWindow">
     <groupbox visible="@load(not empty vm.selected)"  mold="3d">
         <caption label="@load(vm.selected.rankName)"/>
         <grid hflex="true">

@@ -22,6 +22,8 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
 
+import java.awt.*;
+
 /**
  * View Model for rank management page.
  *
@@ -89,6 +91,8 @@ public class RankManagementVM {
     @NotifyChange
     public void save() throws NotUniqueException {
         rankService.saveRank(selected);
+        String windowId = "kNKF0";
+        getCurrentWindow("RankEditorWindow").setVisible(false);
         dialogClosed();
         initData();
     }  
@@ -99,9 +103,9 @@ public class RankManagementVM {
         openEditor();
     }
     
-    private Component getCurrentWindow() {
+    private Component getCurrentWindow(String id) {
         for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
-            if (c.getId().equals("rankManagementWindow")) {
+            if (c.getId().equals(id)) {
                 return c;
             }
         }
@@ -109,6 +113,6 @@ public class RankManagementVM {
     }
 
     private void openEditor() {
-        editor = Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow(), null);
+        editor = Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow("rankManagementWindow"), null);
     }
 }
