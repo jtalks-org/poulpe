@@ -14,12 +14,11 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-
 import java.util.List;
+
+import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
  * @author Vitaliy Kravchenko

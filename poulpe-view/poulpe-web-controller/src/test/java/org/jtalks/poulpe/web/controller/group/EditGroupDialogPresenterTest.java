@@ -1,18 +1,17 @@
 package org.jtalks.poulpe.web.controller.group;
 
-import org.testng.annotations.BeforeMethod;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNull;
+
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import org.mockito.verification.*;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import static org.testng.Assert.*;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 public class EditGroupDialogPresenterTest {
     private EditGroupDialogPresenter dialogPresenter;

@@ -1,0 +1,21 @@
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window title="Add/Remove groups" closable="true" border="normal" width="675px" height="50%"
+          forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')">
+    <groupbox visible="@load(not empty vm.selected)"  mold="3d">
+        <caption label="@load(vm.selected.rankName)"/>
+        <grid hflex="true">
+            <columns>
+            <column width="120px"/>
+            <column/>
+            </columns>
+            <rows>
+            <row>Rank Name <textbox value="@bind(vm.selected.rankName)" /> </row>
+                <row>Auto Assigned <checkbox onCheck="@command('check')" checked="@bind(vm.selected.autoAssigned)" /> </row>
+                <row>Post count <textbox value="@bind(vm.selected.postCount)" /></row>
+            </rows>
+        </grid>
+    </groupbox>
+    <button onClick="@command('save')" label="Save"/>
+  </window>
+</zk>

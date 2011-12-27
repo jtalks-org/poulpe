@@ -6,7 +6,6 @@
   <style src="/resources/css/all.css" />
   <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
           viewModel="@id('vm') @init(branchPermissionManagementVm)" border="normal">
-    <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}"
-                       blockId="${forEachStatus.index}" />
+    <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}" />
   </window>
 </zk>

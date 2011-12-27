@@ -3,7 +3,6 @@ package org.jtalks.poulpe.service.security;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.common.service.security.AclManager;
 import org.jtalks.poulpe.model.entity.Group;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.Permission;
@@ -21,16 +20,17 @@ import java.util.List;
  * permissions), extend this class.
  *
  * @author stanislav bashkirstsev
- * @see <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/domain-acls.html">Spring
- *      ACL documentation</a>
+ * @see <a href="http://static.springsource.org/spring-security/site/docs/3.0.x/reference/domain-acls.html">Spring ACL
+ *      documentation</a>
  */
 @NotThreadSafe
 public class BasicAclBuilder {
-    private final List<Permission> permissionsToRevoke = new ArrayList<Permission>();
+    private final List<Permission> permissionsToDelete = new ArrayList<Permission>();
     private final List<Permission> permissionsToGrant = new ArrayList<Permission>();
+    private final List<Permission> permissionsToRestrict = new ArrayList<Permission>();
     private final AclManager aclManager;
+    private final List<Sid> sids = new ArrayList<Sid>();
     private Entity target;
-    private Sid sid;
 
     /**
      * Constructs the builder with mandatory {@link AclManager}, builder will delegate the saving of its state to the
@@ -46,36 +46,25 @@ public class BasicAclBuilder {
     /**
      * Sets the user that will be granted (or revoked from) the permissions.
      *
-     * @param owner the user to grant to/revoke from the permissions
+     * @param owner the user to grant to/restrict from the permissions
      * @return this
      */
     public BasicAclBuilder setOwner(@Nonnull User owner) {
-        sid = new PrincipalSid(owner.getUsername());
+        sids.add(new PrincipalSid(owner.getUsername()));
         return this;
     }
 
     /**
-     * Sets the user group that will be granted (or revoke from) the permissions. Thus, all the users in that group will
-     * be granted as well.
+     * Sets the user group that will be granted (or restrict from) the permissions. Thus, all the users in that group
+     * will be granted as well.
      *
-     * @param owner the user group that is the owner of the permissions
+     * @param owners the user groups that are the owner of the permissions
      * @return this
      */
-    public BasicAclBuilder setOwner(@Nonnull Group owner) {
-        sid = new UserGroupSid(owner);
-        return this;
-    }
-
-    /**
-     * Adds a permission to the list of {@link Sid}s permissions, in other words grants the permission to the user (even
-     * if it effectively is a restriction, it's still 'granting' since a restriction is described with the same class as
-     * regular permission).
-     *
-     * @param permission the permission to grant to the owner ({@link Sid})
-     * @return this
-     */
-    public BasicAclBuilder grant(@Nonnull JtalksPermission permission) {
-        permissionsToGrant.add(permission);
+    public BasicAclBuilder setOwner(@Nonnull Group... owners) {
+        for (Group group : owners) {
+            sids.add(new UserGroupSid(group));
+        }
         return this;
     }
 
@@ -87,8 +76,41 @@ public class BasicAclBuilder {
      * @param permission the permission to grant to the owner ({@link Sid})
      * @return this
      */
-    public BasicAclBuilder revoke(@Nonnull JtalksPermission permission) {
-        permissionsToRevoke.add(permission);
+    public BasicAclBuilder grant(@Nonnull Permission... permission) {
+        permissionsToGrant.addAll(Lists.newArrayList(permission));
+        return this;
+    }
+
+
+    /**
+     * Restrict the owner (recipient, {@link Sid}) to perform the specified actions (permissions).
+     *
+     * @param permission the permission to restrict to the owner ({@link Sid})
+     * @return this
+     */
+    public BasicAclBuilder restrict(@Nonnull Permission... permission) {
+        permissionsToRestrict.addAll(Lists.newArrayList(permission));
+        return this;
+    }
+
+    /**
+     * Removes the specified permission from the ACL tables.
+     *
+     * @param permission the permission to take away from the owner ({@link Sid})
+     * @return this
+     */
+    public BasicAclBuilder delete(@Nonnull Permission... permission) {
+        permissionsToDelete.addAll(Lists.newArrayList(permission));
+        return this;
+    }
+
+    /**
+     * Flushes all the changes to the manager (which should save everything to DB).
+     *
+     * @return this
+     */
+    public BasicAclBuilder flush() {
+        executeUpdate();
         return this;
     }
 
@@ -100,10 +122,8 @@ public class BasicAclBuilder {
      *               this object.
      * @return this
      */
-    public BasicAclBuilder on(Entity object) {
-        throwIfPermissionsOrSidsEmpty();
+    public BasicAclBuilder on(@Nonnull Entity object) {
         target = object;
-        executeUpdate();
         return this;
     }
 
@@ -112,21 +132,33 @@ public class BasicAclBuilder {
      * state.
      */
     private void executeUpdate() {
+        throwIfPermissionsOrSidsEmpty();
         executeGrant(permissionsToGrant);
-        executeRevoke(permissionsToRevoke);
+        executeDelete(permissionsToDelete);
+        executeRestrict(permissionsToRestrict);
         clearState();
     }
 
-    private void executeRevoke(List<Permission> permissionsToRevoke) {
+    private void executeRestrict(List<Permission> permissionsToRestrict) {
+        if (!permissionsToRestrict.isEmpty()) {
+            aclManager.restrict(clone(sids), clone(permissionsToRestrict), target);
+        }
+    }
+
+    private void executeDelete(List<Permission> permissionsToRevoke) {
         if (!permissionsToRevoke.isEmpty()) {
-            aclManager.delete(Lists.newArrayList(sid), permissionsToRevoke, target);
+            aclManager.delete(clone(sids), clone(permissionsToRevoke), target);
         }
     }
 
     private void executeGrant(List<Permission> permissionsToGrant) {
         if (!permissionsToGrant.isEmpty()) {
-            aclManager.grant(Lists.newArrayList(sid), permissionsToGrant, target);
+            aclManager.grant(clone(sids), clone(permissionsToGrant), target);
         }
+    }
+
+    private <T> List<T> clone(List<T> list) {
+        return new ArrayList<T>(list);
     }
 
     /**
@@ -136,15 +168,26 @@ public class BasicAclBuilder {
      */
     public BasicAclBuilder clearState() {
         permissionsToGrant.clear();
-        permissionsToRevoke.clear();
+        permissionsToDelete.clear();
+        permissionsToRestrict.clear();
+        sids.clear();
         target = null;
-        sid = null;
         return this;
     }
 
     private void throwIfPermissionsOrSidsEmpty() throws IllegalArgumentException {
-        if (sid == null || (permissionsToGrant.isEmpty() || permissionsToRevoke.isEmpty())) {
-            throw new IllegalStateException("You can't grant permissions without sids or permissions");
+        assertAllPermissionsEmpty();
+        if (sids.isEmpty()) {
+            throw new IllegalStateException("You can't grant permissions without sids");
+        }
+        if(target == null){
+            throw new IllegalStateException("The target is null! Set the target before flushing");
+        }
+    }
+
+    private void assertAllPermissionsEmpty() {
+        if (permissionsToDelete.isEmpty() && permissionsToGrant.isEmpty() && permissionsToRestrict.isEmpty()) {
+            throw new IllegalStateException("No permissions to flush! Specify at least one Permission.");
         }
     }
 

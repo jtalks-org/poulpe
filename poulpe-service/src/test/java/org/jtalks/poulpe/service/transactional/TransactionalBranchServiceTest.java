@@ -19,6 +19,8 @@ import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.service.security.AclManager;
+import org.jtalks.poulpe.service.security.AclManagerImpl;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -39,12 +41,14 @@ public class TransactionalBranchServiceTest {
 
     private long BRANCH_ID = 1L;
     private BranchDao branchDao;
+    private AclManagerImpl aclManager;
     private BranchService branchService;
 
     @BeforeMethod
     public void setUp() throws Exception {
         branchDao = mock(BranchDao.class);
-        branchService = new TransactionalBranchService(branchDao);
+        aclManager = mock(AclManagerImpl.class);
+        branchService = new TransactionalBranchService(branchDao, aclManager);
     }
 
     @Test

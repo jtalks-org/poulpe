@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<web-app id="jt-forum" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+<web-app id="jt-forum" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
          http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
   <context-param>
@@ -8,6 +9,7 @@
     <param-value>
       classpath:org/jtalks/poulpe/model/entity/applicationContext-dao.xml
       classpath:org/jtalks/poulpe/service/applicationContext-service.xml
+      classpath:org/jtalks/poulpe/service/applicationContext-service-security.xml
       classpath:org/jtalks/poulpe/web/controller/applicationContext-controller.xml
     </param-value>
   </context-param>
@@ -37,7 +39,7 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  
+
   <servlet-mapping>
     <servlet-name>zkLoader</servlet-name>
     <url-pattern>*.zul</url-pattern>
@@ -71,6 +73,6 @@
   <welcome-file-list>
     <welcome-file>admin.zul</welcome-file>
   </welcome-file-list>
-  
+
 </web-app>
 
