@@ -44,8 +44,7 @@ public class Jcommune extends Component {
      *            the component from what object creates
      */
     public Jcommune(Component component) {
-        super(component.getName(), component.getDescription(), component
-                .getComponentType());
+        super(component);
     }
     
     /**

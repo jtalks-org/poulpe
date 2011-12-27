@@ -51,6 +51,12 @@ public class Component extends Entity {
         this.componentType = componentType;
     }
 
+    public Component(Component component) {
+        this.name = component.getName();
+        this.description = component.getDescription();
+        this.componentType = component.getComponentType();
+    }
+
     /**
      * Get the component description.
      * @return description
