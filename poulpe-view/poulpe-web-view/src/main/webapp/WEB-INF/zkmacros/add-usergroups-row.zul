@@ -6,7 +6,8 @@
     </west>
     <center border="none">
       <hbox>
-        <panel forEach="${arg.row.groups}" title="${each.name}" closable="true" framable="true" onClose='alert("Удален");' /><!-- remove alert -->
+        <panel forEach="${arg.row.groups}" title="${each.name}" closable="true" framable="true"
+               onClose='alert("Удален");' />
       </hbox>
     </center>
     <east border="none">
