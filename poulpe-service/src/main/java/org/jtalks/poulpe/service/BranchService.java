@@ -15,11 +15,11 @@
 package org.jtalks.poulpe.service;
 
 import com.google.common.collect.Table;
+import org.jtalks.common.security.acl.JtalksPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.service.security.JtalksPermission;
 
 import java.util.Collection;
 import java.util.List;

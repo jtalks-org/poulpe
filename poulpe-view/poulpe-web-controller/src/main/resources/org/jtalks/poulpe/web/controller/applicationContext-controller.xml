@@ -9,9 +9,7 @@
 
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-    <constructor-arg index="0">
-      <bean class="org.jtalks.poulpe.service.mock.MockBranchService" />
-    </constructor-arg>
+    <constructor-arg ref="branchService"/>
     <constructor-arg index="1" ref="groupService"/>
   </bean>
 

@@ -1,6 +1,7 @@
 package org.jtalks.poulpe.web.controller.zkmacro;
 
-import org.jtalks.poulpe.service.security.JtalksPermission;
+
+import org.jtalks.common.security.acl.JtalksPermission;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;

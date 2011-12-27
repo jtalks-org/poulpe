@@ -1,9 +1,8 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import com.google.common.base.Function;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
-import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

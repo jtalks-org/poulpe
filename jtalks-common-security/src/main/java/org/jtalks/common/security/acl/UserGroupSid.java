@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import org.jtalks.poulpe.model.entity.Group;
 import org.springframework.security.acls.model.Sid;

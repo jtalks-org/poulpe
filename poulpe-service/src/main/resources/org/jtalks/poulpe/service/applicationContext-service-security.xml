@@ -73,9 +73,11 @@
     </constructor-arg>
   </bean>
 
-  <bean id="securityContextFacade" class="org.jtalks.common.service.security.SecurityContextHolderFacade" />
-
-  <bean id="aclManager" class="org.jtalks.poulpe.service.security.AclManagerImpl">
+  <bean id="aclManager" class="org.jtalks.common.security.acl.AclManagerImpl">
     <constructor-arg ref="aclService" />
+  </bean>
+  <bean id="securityService" class="org.jtalks.common.security.SecurityService">
+    <constructor-arg index="0" ref="userDao"/>
+    <constructor-arg index="1" ref="aclManager"/>
   </bean>
 </beans>

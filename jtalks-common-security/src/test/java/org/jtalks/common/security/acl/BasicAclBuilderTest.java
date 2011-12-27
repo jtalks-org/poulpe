@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
@@ -94,14 +94,14 @@ public class BasicAclBuilderTest {
 
     @DataProvider(name = "onePermissionAndOneGroup")
     public Object[][] provideOnePermissionAndOneGroup() {
-        return new Object[][]{{BranchPermission.CREATE_TOPICS, new Group()}};
+        return new Object[][]{{JtalksPermission.DELETE, new Group()}};
     }
 
     @DataProvider(name = "twoPermissionsAndTwoGroup")
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
     public Object[][] provideTwoPermissionsAndTwoGroup() {
         Group[] arrayWithTwoGroups = Group.createGroupsWithNames("Moderators", "Admins").toArray(new Group[]{});
-        Permission[] arrayWithTwoPermissions = {BranchPermission.CREATE_TOPICS, BranchPermission.VIEW_TOPICS};
+        Permission[] arrayWithTwoPermissions = {JtalksPermission.DELETE, JtalksPermission.CREATE};
 
         return new Object[][]{{arrayWithTwoGroups, arrayWithTwoPermissions}};
     }
@@ -110,10 +110,10 @@ public class BasicAclBuilderTest {
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
     public Object[][] provideGroupsAndPermissions() {
         Group[] arrayWithOneGroup = Group.createGroupsWithNames("Trolls").toArray(new Group[]{});
-        Permission[] arrayWithOnePermission = {BranchPermission.CREATE_TOPICS};
+        Permission[] arrayWithOnePermission = {JtalksPermission.DELETE};
 
         Group[] arrayWithTwoGroups = Group.createGroupsWithNames("Moderators", "Admins").toArray(new Group[]{});
-        Permission[] arrayWithTwoPermissions = {BranchPermission.CREATE_TOPICS, BranchPermission.VIEW_TOPICS};
+        Permission[] arrayWithTwoPermissions = {JtalksPermission.DELETE, JtalksPermission.CREATE};
 
         return new Object[][]{
                 {arrayWithOneGroup, arrayWithOnePermission},

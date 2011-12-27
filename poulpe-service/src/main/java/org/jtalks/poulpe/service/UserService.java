@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.model.entity.User;
+import org.jtalks.common.security.user.LastLoginTimeServiceMixin;
 import org.jtalks.common.service.EntityService;
 
 /**
@@ -25,7 +26,7 @@ import org.jtalks.common.service.EntityService;
  * 
  * @author Guram Savinov
  */
-public interface UserService extends EntityService<User> {
+public interface UserService extends EntityService<User>, LastLoginTimeServiceMixin {
 
     /**
      * Sets permanent ban status for the user list.

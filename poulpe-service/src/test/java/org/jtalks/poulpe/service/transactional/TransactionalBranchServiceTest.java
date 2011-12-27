@@ -14,13 +14,12 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.security.acl.AclManagerImpl;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.service.security.AclManager;
-import org.jtalks.poulpe.service.security.AclManagerImpl;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

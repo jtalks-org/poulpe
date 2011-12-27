@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;

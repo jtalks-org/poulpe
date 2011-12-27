@@ -93,4 +93,10 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
     public void updateUser(User user) {
         dao.update(user);
     }
+
+    @Override
+    public void updateLastLoginTime(User user) {
+        user.updateLastLoginTime();
+        updateUser(user);
+    }
 }

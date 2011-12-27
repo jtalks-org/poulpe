@@ -3,11 +3,11 @@ package org.jtalks.poulpe.web.controller.branch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
+import org.jtalks.common.security.acl.JtalksPermission;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
 import org.zkoss.bind.annotation.BindingParam;
@@ -19,7 +19,10 @@ import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 /**
@@ -63,10 +66,10 @@ public class BranchPermissionManagementVm {
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
         List<Group> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
-        Window branchDialog = (Window) getComponent("branchPermissionManagementWindow");
+        Window branchWindow = (Window) getComponent("branchPermissionManagementWindow");
         groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
                 branchPermissionManagementBlock.getPermission());
-        Executions.createComponents("/sections/ManageGroupsDialog.zul", branchDialog, null);
+        Executions.createComponents("/sections/ManageGroupsDialog.zul", branchWindow, null);
     }
 
     @Command
@@ -81,7 +84,9 @@ public class BranchPermissionManagementVm {
         } else {
             branchService.restrictPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
         }
-        branchService.deletePermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getRemovedFromAdded());
+        if (!groupsDialogVm.getRemovedFromAdded().isEmpty()) {
+            branchService.deletePermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getRemovedFromAdded());
+        }
         dialogClosed();
         Executions.getCurrent().sendRedirect("");//reloading the page, couldn't find a better way yet
     }
@@ -106,17 +111,18 @@ public class BranchPermissionManagementVm {
         groupsDialogVm.moveAllFromAddedGroups();
     }
 
-    private void updateBlock(JtalksPermission permission, boolean allowRow, List<Group> groups){
+    private void updateBlock(JtalksPermission permission, boolean allowRow, List<Group> groups) {
         BranchPermissionManagementBlock block = blocks.get(permission.getName());
-        if(allowRow){
+        if (allowRow) {
             block = block.setAllowRow(BranchPermissionManagementRow.newAllowRow(groups));
         } else {
             block = block.setRestrictRow(BranchPermissionManagementRow.newRestrictRow(groups));
         }
         blocks.put(permission.getName(), block);
     }
-    
+
     private void initDataForView() {
+        branch = branchService.getAll().get(0);
         Table<JtalksPermission, Group, Boolean> groupAccessList = branchService.getGroupAccessListFor(branch);
         for (JtalksPermission permission : groupAccessList.rowKeySet()) {
             BranchPermissionManagementRow allowRow = BranchPermissionManagementRow.newAllowRow(new ArrayList<Group>());
