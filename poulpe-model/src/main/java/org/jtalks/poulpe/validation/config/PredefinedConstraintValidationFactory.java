@@ -22,11 +22,26 @@ import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorFactory;
 
 /**
+ * Factory which returns the same instance of validator, defined via its
+ * {@link PredefinedConstraintValidationFactory#setValidators(List)}<br>
+ * <br>
+ * 
+ * <b>Note</b>: this implementation is <b>NOT THREAD SAFE</b> when used
+ * incorretly. It will return <b>exactly the same instance</b> each time a
+ * validator requested - thus <b>they must not keep any state</b>. For safe
+ * implementation, see {@link ContextAwareConstraintValidatorFactory} or the
+ * default spring's one. The reason why it isn't used is, when creating a bean,
+ * autowiring leads to tons of warnings from zk-beans due to their incorrect
+ * implementation of some specific spring features.
  */
 public class PredefinedConstraintValidationFactory implements ConstraintValidatorFactory {
 
     private Map<Class<?>, ConstraintValidator<?, ?>> validators;
 
+    /**
+     * Returns one of the validators passed via {@link #setValidators(List)} or
+     * null, if there's none appropriate
+     */
     @Override
     @SuppressWarnings("unchecked")
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
@@ -34,7 +49,11 @@ public class PredefinedConstraintValidationFactory implements ConstraintValidato
     }
 
     /**
-     * @param validators the validators to set
+     * Pay attention to the note at
+     * {@link PredefinedConstraintValidationFactory} and don't put in the list
+     * any validators which can have any state.
+     * 
+     * @param validators
      */
     public void setValidators(List<ConstraintValidator<?, ?>> validators) {
         Map<Class<?>, ConstraintValidator<?, ?>> index = new HashMap<Class<?>, ConstraintValidator<?, ?>>();
@@ -44,5 +63,5 @@ public class PredefinedConstraintValidationFactory implements ConstraintValidato
 
         this.validators = index;
     }
-    
+
 }

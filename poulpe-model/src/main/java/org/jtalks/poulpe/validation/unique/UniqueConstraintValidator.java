@@ -4,6 +4,7 @@ import static org.jtalks.poulpe.validation.unique.UniquenessViolationFinder.forE
 
 import java.util.List;
 
+import javax.annotation.concurrent.ThreadSafe;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorFactory;
@@ -39,6 +40,7 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
  * @see UniqueConstraint
  * @see UniqueField
  */
+@ThreadSafe
 public class UniqueConstraintValidator implements ConstraintValidator<UniqueConstraint, Entity> {
 
     private UniquenessViolatorsRetriever uniquenessViolatorsRetriever;

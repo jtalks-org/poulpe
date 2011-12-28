@@ -74,8 +74,6 @@ public class UniquenessViolationFinderTest {
 
     @Test
     public void emptyDuplicates() {
-        forum = forum();
-
         List<EntityWrapper> noDuplicates = Collections.emptyList();
         forEntity(forum).in(noDuplicates).findViolationsAndAddTo(context);
 
@@ -84,7 +82,6 @@ public class UniquenessViolationFinderTest {
 
     @Test
     public void oneDuplicatesType() {
-        forum = forum();
         List<EntityWrapper> duplicates = componentTypeDuplicated();
 
         forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
@@ -105,7 +102,6 @@ public class UniquenessViolationFinderTest {
 
     @Test
     public void oneDuplicatesName() {
-        forum = forum();
         List<EntityWrapper> duplicates = oneNameDuplication();
 
         forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
