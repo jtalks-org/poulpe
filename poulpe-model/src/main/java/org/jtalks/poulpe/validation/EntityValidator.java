@@ -12,15 +12,24 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao;
+package org.jtalks.poulpe.validation;
+
+import org.jtalks.common.model.entity.Entity;
+
 
 /**
- * The common interface for the enumerations of fields which cannot be duplicated.
- * @author Dmitriy Sukharev
- * @deprecated shoulnd't be used, use jsr-303 validator
+ * Class for validating objects.
+ * 
+ * @author Alexey Grigorev
  */
-@Deprecated
-public interface DuplicatedField {
-    // if it is necessary you I can add constructors and methods here to get some reflection for
-    // the fields.
+public interface EntityValidator {
+    /**
+     * Validates given object. If the object is valid, {@link #hasErrors()} returns {@code false}.
+     * Otherwise, {@link #hasErrors()} returns true and error messages can be obtained using
+     * {@link #getErrors()}
+     * 
+     * @param o object to be validated
+     */
+    ValidationResult validate(Entity o);
+    
 }

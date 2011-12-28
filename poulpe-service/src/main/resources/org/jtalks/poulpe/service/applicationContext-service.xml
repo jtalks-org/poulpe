@@ -40,4 +40,5 @@
   <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
     <constructor-arg index="0" ref="rankDao" />
   </bean> 
+  
 </beans>

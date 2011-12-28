@@ -34,6 +34,7 @@
         scope="prototype">
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
   <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">

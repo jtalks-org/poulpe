@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.annotations;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -8,6 +8,8 @@ import java.lang.annotation.Target;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
+
+import org.jtalks.poulpe.validation.unique.UniqueConstraintValidator;
 
 /**
  * Annotation for declaring that in this class there is a constraint on field

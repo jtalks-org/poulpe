@@ -12,35 +12,49 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.validator;
+package org.jtalks.poulpe.validation.util;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 
 /**
- * Base implementation for {@link EntityValidator}. Implements {@link #hasError()} and {@link #getError()}
- * leaving {@link #validate(Object)} for specific implementation.
+ * A pair of field and its annotation
  * 
  * @author Alexey Grigorev
  */
-public abstract class AbstractValidator<E> implements Validator<E> {
-    
-    private boolean error = false;
-    private String errorMessage = null;
-    
+public class AnnotatedField<A extends Annotation> {
+    private final Field field;
+    private final A annotation;
+
     /**
-     * Sets an error message. Should be called from child classes when overriding {@link EntityValidator#validate(Entity)}.
+     * Creates a pair of field and its annotation
+     * 
+     * @param field with annotation
+     * @param annotation
      */
-    protected void setError(String errorMessage) {
-        this.error = true;
-        this.errorMessage = errorMessage;
-    }
-    
-    @Override
-    public boolean hasError() {
-        return error;
+    public AnnotatedField(Field field, A annotation) {
+        this.field = field;
+        this.annotation = annotation;
     }
 
-    @Override
-    public String getError() {
-        return errorMessage;
+    /**
+     * @return the field
+     */
+    public Field getField() {
+        return field;
     }
-    
+
+    /**
+     * @return field name
+     */
+    public String getFieldName() {
+        return field.getName();
+    }
+
+    /**
+     * @return the annotation
+     */
+    public A getAnnotation() {
+        return annotation;
+    }
 }

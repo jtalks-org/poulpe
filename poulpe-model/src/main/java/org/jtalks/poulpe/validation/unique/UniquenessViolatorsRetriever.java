@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.unique;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -27,6 +27,8 @@ import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Class for building queries for retrieving fields whose values are duplicated,
@@ -77,7 +79,7 @@ public class UniquenessViolatorsRetriever {
         return list;
     }
 
-    private List<EntityWrapper> wrap(List<Entity> list) {
+    private static List<EntityWrapper> wrap(List<Entity> list) {
         List<EntityWrapper> wrappers = new ArrayList<EntityWrapper>();
         
         for (Entity entity : list) {
@@ -111,7 +113,8 @@ public class UniquenessViolatorsRetriever {
 
         while (iterator.hasNext()) {
             Entry<String, Object> next = iterator.next();
-            Criterion eq = Restrictions.eq(next.getKey(), next.getValue());
+            Object value = next.getValue();
+            Criterion eq = Restrictions.eq(next.getKey(), value);
             or = Restrictions.or(or, eq);
         }
 

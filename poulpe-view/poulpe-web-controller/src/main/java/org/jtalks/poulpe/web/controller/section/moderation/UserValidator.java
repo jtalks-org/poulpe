@@ -16,11 +16,11 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validator.AbstractValidator;
-import org.jtalks.poulpe.validator.Validator;
 
 /**
- * {@link Validator} implementation for validating {@link User} objects for
+ * {@link EntityValidator} implementation for validating {@link User} objects for
  * {@link ModerationDialogPresenter}
  * 
  * @author Alexey Grigorev

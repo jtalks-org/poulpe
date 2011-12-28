@@ -31,7 +31,9 @@ public interface ComponentDao extends ParentRepository<Component> {
     /**
      * The enumeration of the fields which ought to be unique in the DB for the User.
      * @author Dmitriy Sukharev
+     * @deprecated shoulnd't be used, use jsr-303 validator
      */
+    @Deprecated
     public static enum ComponentDuplicateField implements DuplicatedField { NAME, TYPE }
 
     /**
@@ -53,6 +55,9 @@ public interface ComponentDao extends ParentRepository<Component> {
      * @param component the component object
      * @return the set of fields whose uniqueness will be violated after adding {@code component}
      *         to the data source
+     *         
+     * @deprecated use jsr-303 validator instead
      */
+    @Deprecated
     Set<DuplicatedField> getDuplicateFieldsFor(Component component);
 }

@@ -57,7 +57,7 @@ public class TransactionalComponentServiceTest {
     @Test
     public void testSaveComponent() throws NotUniqueFieldsException {
         givenNoDuplicatedFields();
-        conponentService.saveComponent(component);
+        conponentService.saveComponentCheckUniqueness(component);
         verify(componentDao).saveOrUpdate(component);
     }
 
@@ -68,7 +68,7 @@ public class TransactionalComponentServiceTest {
     @Test(expectedExceptions = NotUniqueFieldsException.class)
     public void testSaveComponentException() throws NotUniqueFieldsException {
         givenNameFieldDuplicated();
-        conponentService.saveComponent(component);
+        conponentService.saveComponentCheckUniqueness(component);
     }
 
     private void givenNameFieldDuplicated() {

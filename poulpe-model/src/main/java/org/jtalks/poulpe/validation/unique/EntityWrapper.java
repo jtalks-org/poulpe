@@ -12,16 +12,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.unique;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
+import org.jtalks.poulpe.validation.util.AnnotatedField;
+import org.jtalks.poulpe.validation.util.Refl;
 
 /**
  * Allows manipulation with entity classes at runtime without knowing object of
@@ -34,6 +39,7 @@ class EntityWrapper {
 
     private final Entity object;
     private final Map<String, Object> properties;
+    private final Map<String, String> errorsMessages;
 
     /**
      * Wraps the given entity, making possible to access to its values at
@@ -45,8 +51,31 @@ class EntityWrapper {
      */
     public EntityWrapper(Entity entity) {
         object = entity;
-        List<Field> fields = Refl.getAccessibleAnnotatedFields(entity.getClass(), UniqueField.class);
+
+        // can be moved away for providing caching (annotations and fields can't
+        // be changed in runtime)
+        List<AnnotatedField<UniqueField>> annotated = Refl.getAccessibleAnnotatedFields(entity.getClass(),
+                UniqueField.class);
+
+        List<Field> fields = new ArrayList<Field>();
+        errorsMessages = new HashMap<String, String>();
+
+        for (AnnotatedField<UniqueField> field : annotated) {
+            fields.add(field.getField());
+            errorsMessages.put(field.getFieldName(), field.getAnnotation().message());
+        }
+        //
+
         properties = Refl.convertToMap(entity, fields);
+        filterNullsInProperties();
+    }
+
+    private void filterNullsInProperties() {
+        for (Entry<String, Object> property : properties.entrySet()) {
+            if (property.getValue() == null) {
+                properties.remove(property.getKey());
+            }
+        }
     }
 
     /**
@@ -55,6 +84,14 @@ class EntityWrapper {
      */
     public Object getValue(String fieldName) {
         return properties.get(fieldName);
+    }
+
+    /**
+     * @param fieldName
+     * @return error message for the violated field
+     */
+    public String getErrorMessage(String fieldName) {
+        return errorsMessages.get(fieldName);
     }
 
     /**

@@ -58,9 +58,17 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         dao.delete(component.getId());
     }
 
+    
     /** {@inheritDoc} */
     @Override
-    public void saveComponent(Component component) throws NotUniqueFieldsException {
+    public void saveComponent(Component component) {
+        dao.saveOrUpdate(component);
+    }
+    
+    /** {@inheritDoc} */
+    @Override
+    @Deprecated
+    public void saveComponentCheckUniqueness(Component component) throws NotUniqueFieldsException {
         Set<DuplicatedField> set = dao.getDuplicateFieldsFor(component);
 
         if (!set.isEmpty()) {
@@ -80,6 +88,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /** {@inheritDoc} */
     @Override
+    @Deprecated
     public Set<DuplicatedField> getDuplicateFieldsFor(Component component) {
         return dao.getDuplicateFieldsFor(component);
     }

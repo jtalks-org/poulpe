@@ -14,11 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import java.util.Set;
-
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.component.AbstractComponentPresenter;
 
 /**
@@ -31,6 +29,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
 
     private ItemView view;
     private ItemStrategy editingStrategy = DoNothingItemStrategy.instance;
+    private EntityValidator entityValidator;
 
     /**
      * Initializes this presenter for creating a new component
@@ -62,11 +61,13 @@ public class ItemPresenter extends AbstractComponentPresenter {
     public void saveComponent() {
         Component component = editingStrategy.itemForSaving();
 
-        try {
+        ValidationResult result = entityValidator.validate(component);
+        
+        if (result.hasErrors()) {
+            view.wrongFields(result);
+        } else {
             getComponentService().saveComponent(component);
             view.hide();
-        } catch (NotUniqueFieldsException e) {
-            view.wrongFields(e.getDuplicates());
         }
     }
 
@@ -76,10 +77,13 @@ public class ItemPresenter extends AbstractComponentPresenter {
      */
     public void checkComponent() {
         Component component = ViewToEntityConverter.view2Model(view);
-        Set<DuplicatedField> set = getComponentService().getDuplicateFieldsFor(component);
-        if (!set.isEmpty()) {
-            view.wrongFields(set);
+
+        ValidationResult result = entityValidator.validate(component);
+        
+        if (result.hasErrors()) {
+            view.wrongFields(result);
         }
+        
     }
 
     /**
@@ -94,6 +98,20 @@ public class ItemPresenter extends AbstractComponentPresenter {
      */
     public void setView(ItemView view) {
         this.view = view;
+    }
+
+    /**
+     * @return the entityValidator
+     */
+    public EntityValidator getEntityValidator() {
+        return entityValidator;
+    }
+
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
     }
 
 }

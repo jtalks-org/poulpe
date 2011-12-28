@@ -21,8 +21,8 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueField;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Forum branch that contains topics related to branch theme.
@@ -32,7 +32,8 @@ import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
 @UniqueConstraint
 public class Branch extends Entity {
     
-    @UniqueField
+    // change it
+    @UniqueField(message="labels.message.not_unique")
     private String name;
     
     private String description;

@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -34,21 +34,6 @@ public class Refl {
     }
 
     /**
-     * Makes all fields accessible by applying
-     * {@link Field#setAccessible(boolean)} with {@code true} to them.
-     * 
-     * @param fields
-     * @return the same fields, only accessible, so they can be used for
-     * retrieving their data
-     */
-    public static List<Field> accessible(List<Field> fields) {
-        for (Field field : fields) {
-            field.setAccessible(true);
-        }
-        return fields;
-    }
-
-    /**
      * Retrieves all fields from the class, including its super classes,
      * filtering out only ones annotated by the given annotation. All fields
      * returned are accessible.
@@ -58,11 +43,22 @@ public class Refl {
      * 
      * @return fields marked by the given annotation
      */
-    public static <A extends Annotation> List<Field> getAccessibleAnnotatedFields(Class<?> beanClass,
+    public static <A extends Annotation> List<AnnotatedField<A>> getAccessibleAnnotatedFields(Class<?> beanClass,
             Class<A> annotation) {
         return accessible(getAnnotatedFields(beanClass, annotation));
     }
 
+    /**
+     * Makes all fields accessible by applying
+     * {@link Field#setAccessible(boolean)} with {@code true} to them.
+     */
+    private static <A extends Annotation> List<AnnotatedField<A>> accessible(List<AnnotatedField<A>> fields) {
+        for (AnnotatedField<A> field : fields) {
+            field.getField().setAccessible(true);
+        }
+        return fields;
+    }
+    
     /**
      * Retrieves all fields from the class, including its super classes,
      * filtering out only ones annotated by the given annotation.
@@ -72,19 +68,22 @@ public class Refl {
      * 
      * @return fields marked by the given annotation
      */
-    public static <A extends Annotation> List<Field> getAnnotatedFields(Class<?> beanClass, Class<A> annotation) {
-        List<Field> fields = new ArrayList<Field>();
-
+    public static <A extends Annotation> List<AnnotatedField<A>> getAnnotatedFields(Class<?> beanClass, Class<A> annotation) {
+        List<AnnotatedField<A>> fields = new ArrayList<AnnotatedField<A>>();
+        
         for (Field field : getAllFields(beanClass)) {
             for (Annotation a : field.getAnnotations()) {
                 if (annotation.isInstance(a)) {
-                    fields.add(field);
+                    @SuppressWarnings("unchecked")
+                    A casted = (A) a;
+                    fields.add(new AnnotatedField<A>(field, casted));
                 }
             }
         }
 
         return fields;
     }
+    
 
     /**
      * Retrieves all fields from the class, including its super classes. <br>
