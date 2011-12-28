@@ -5,6 +5,10 @@
   <window width="30%" title="${labels.topictypes.list.title}" presenter="${topicTypeListPresenter}"
     use="org.jtalks.poulpe.web.controller.topictype.TopicTypeListViewImpl">
     <listbox id="topicTypeListbox">
+    <listhead>
+    <listheader align="center" label="${labels.topictypes.list.name}"/>
+    <listheader align="center" label="${labels.topictypes.list.descr}"/>
+    </listhead>
       <listfoot>
         <listfooter>
           <button label="Add" forward="onClick=onAddAction" />

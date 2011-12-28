@@ -7,10 +7,10 @@
 		</west>
 		<center border="none">
 			<hbox>
-				<listbox sizedByContent="true" autopaging="true">
-					<listitem>
+				<listbox sizedByContent="true">
+					<listitem >
 						<listcell forEach="${arg.row.groups}"
-							label="${each.name}">
+							label="${each.name}" style="	border: none; margin: none">
 							<button label="X"/>
 						</listcell>
 					</listitem>

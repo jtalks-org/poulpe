@@ -257,6 +257,12 @@
         <artifactId>commons-beanutils</artifactId>
         <version>1.8.3</version>
       </dependency>
+      <dependency>
+        <groupId>org.reflections</groupId>
+        <artifactId>reflections</artifactId>
+        <version>0.9.6</version>
+      </dependency>
+      
 
       <!-- Web -->
       <dependency>
@@ -270,12 +276,6 @@
         <version>2.5</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>org.reflections</groupId>
-        <artifactId>reflections</artifactId>
-        <version>0.9.6</version>
-      </dependency>
-
       <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>jsp-api</artifactId>

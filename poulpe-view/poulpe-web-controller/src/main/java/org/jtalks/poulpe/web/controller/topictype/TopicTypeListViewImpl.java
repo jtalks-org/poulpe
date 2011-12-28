@@ -24,8 +24,11 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zkplus.databind.BindingListModelList;
+import org.zkoss.zul.ListModelArray;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
+import org.zkoss.zul.Listcell;
 import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Window;
@@ -48,7 +51,9 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListPresen
 
     @Override
     public void showTopicTypeList(List<TopicType> list) {
-        topicTypeListbox.setModel(new ListModelList<TopicType>(list));
+        ListModelList<TopicType> listModelList = new BindingListModelList(list, true);
+        topicTypeListbox.setModel(listModelList);
+        
     }
 
     /**
@@ -76,8 +81,13 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListPresen
         topicTypeListbox.setItemRenderer(new ListitemRenderer<TopicType>() {
             @Override
             public void render(Listitem item, final TopicType topicType) throws Exception {
+                Listcell cellWithName  = new Listcell();
+                Listcell cellWithDesc  = new Listcell();
+                cellWithName.setLabel(topicType.getTitle());
+                cellWithDesc.setLabel(topicType.getDescription());
                 item.setValue(topicType);
-                item.setLabel(topicType.getTitle());
+                item.appendChild(cellWithName);
+                item.appendChild(cellWithDesc);
                 item.setTooltiptext(topicType.getDescription());
                 item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
                     @Override

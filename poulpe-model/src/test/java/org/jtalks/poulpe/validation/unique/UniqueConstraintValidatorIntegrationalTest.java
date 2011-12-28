@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-public class UniqueConstraintValidatorTest extends AbstractTransactionalTestNGSpringContextTests {
+public class UniqueConstraintValidatorIntegrationalTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Autowired
     private Validator validator;
