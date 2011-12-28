@@ -26,6 +26,7 @@ import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.validation.EntityValidator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -41,11 +42,13 @@ public class TransactionalComponentServiceTest {
     Component component = new Component();
     Set<DuplicatedField> empty = Collections.emptySet();
     Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
+    private EntityValidator validator;
 
     @BeforeMethod
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
-        conponentService = new TransactionalComponentService(componentDao);
+        validator = mock(EntityValidator.class);
+        conponentService = new TransactionalComponentService(componentDao, validator);
     }
 
     @Test

@@ -24,22 +24,30 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationException;
+import org.jtalks.poulpe.validation.ValidationResult;
 
 /**
  * Transactional implementation of {@link ComponentService}. Transactions are
  * provided by AOP.
  * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
 
+    private final EntityValidator validator;
+
     /**
      * Creates new instance of the service
      * @param dao
+     * @param validator TODO
      */
-    public TransactionalComponentService(ComponentDao dao) {
+    public TransactionalComponentService(ComponentDao dao, EntityValidator validator) {
         this.dao = dao;
+        this.validator = validator;
     }
 
     /**
@@ -62,6 +70,12 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     /** {@inheritDoc} */
     @Override
     public void saveComponent(Component component) {
+        ValidationResult result = validator.validate(component);
+        
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+        
         dao.saveOrUpdate(component);
     }
     
