@@ -1,10 +1,11 @@
 package org.jtalks.common.security.acl;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.poulpe.model.entity.Group;
-import org.springframework.security.acls.model.Sid;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.regex.Pattern;
 
 /**
  * This class does the same as {@link org.springframework.security.acls.domain.PrincipalSid} does for users. More
@@ -15,7 +16,12 @@ import javax.annotation.Nonnull;
  * @author stanislav bashkirstev
  */
 public class UserGroupSid implements IdentifiableSid {
+    public final static String SID_PREFIX = "usergroup";
     private final String groupId;
+
+    public UserGroupSid(String sidId) {
+        this.groupId = parseGroupId(sidId);
+    }
 
     /**
      * Constructs SID by the group id.
@@ -37,6 +43,14 @@ public class UserGroupSid implements IdentifiableSid {
         this.groupId = String.valueOf(group.getId());
     }
 
+    private String parseGroupId(String sidId) {
+        String[] splitted = sidId.split(Pattern.quote(":"));
+        if (splitted.length != 2) {
+            throw new WrongFormatException(sidId);
+        }
+        return splitted[1];
+    }
+
     /**
      * Gets the id of the {@link Group} which this SID is actually is.
      *
@@ -51,7 +65,7 @@ public class UserGroupSid implements IdentifiableSid {
      */
     @Override
     public String getSidId() {
-        return groupId;
+        return SID_PREFIX + IdentifiableSid.SID_NAME_SEPARATOR + groupId;
     }
 
     /**

@@ -21,31 +21,30 @@ public class BranchPermissionRow {
         return groups;
     }
 
-    
+
     public String getRowLabel() {
         return rowLabel;
     }
 
-    public BranchPermissionRow addGroup(Group group){
+    public BranchPermissionRow addGroup(Group group) {
         groups.add(group);
         return this;
     }
 
     public static BranchPermissionRow newAllowRow() {
-        return new BranchPermissionRow("${labels.branch.permissions.allow_label}", new ArrayList<Group>());
+        return newAllowRow(new ArrayList<Group>());
     }
 
     public static BranchPermissionRow newRestrictRow() {
-        return new BranchPermissionRow("${labels.branch.permissions.restrict_label}",
-                new ArrayList<Group>());
+        return newRestrictRow(new ArrayList<Group>());
     }
 
     public static BranchPermissionRow newAllowRow(List<Group> groups) {
-        return new BranchPermissionRow("${labels.branch.permissions.allow_label}", groups);
+        return new BranchPermissionRow("Allow", groups);
     }
 
     public static BranchPermissionRow newRestrictRow(List<Group> groups) {
-        return new BranchPermissionRow("${labels.branch.permissions.restrict_label}", groups);
+        return new BranchPermissionRow("Restrict", groups);
     }
 
 }

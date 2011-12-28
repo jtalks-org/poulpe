@@ -29,7 +29,7 @@
   </bean>
   <bean id="dtoMapper" class="org.jtalks.common.service.security.DtoMapper" />
 
-  <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+  <bean id="baseLookupStrategy" class="org.jtalks.common.security.ExtendedBasicLookupStrategy">
     <constructor-arg ref="dataSource" />
     <constructor-arg ref="aclCache" />
     <constructor-arg ref="aclAuthorizationStrategy" />

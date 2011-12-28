@@ -36,7 +36,7 @@ public class AclManagerImpl implements AclManager {
         ObjectIdentity branchIdentity = createIdentityFor(branch);
         MutableAcl branchAcl = getAclFor(branchIdentity);
         for (AccessControlEntry entry : branchAcl.getEntries()) {
-            String groupId = ((PrincipalSid) entry.getSid()).getPrincipal();//Spring doesn't know about UserGroupSid
+            String groupId = ((UserGroupSid) entry.getSid()).getGroupId();
             int mask = entry.getPermission().getMask();
             groupIds.put(mask, Long.parseLong(groupId), entry.isGranting());
         }
