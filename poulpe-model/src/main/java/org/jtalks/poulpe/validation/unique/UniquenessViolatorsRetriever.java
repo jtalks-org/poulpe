@@ -79,7 +79,7 @@ public class UniquenessViolatorsRetriever {
         return list;
     }
 
-    private List<EntityWrapper> wrap(List<Entity> list) {
+    private static List<EntityWrapper> wrap(List<Entity> list) {
         List<EntityWrapper> wrappers = new ArrayList<EntityWrapper>();
         
         for (Entity entity : list) {
