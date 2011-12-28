@@ -17,24 +17,41 @@ package org.jtalks.poulpe.validation;
 import java.util.Set;
 
 /**
- * @author Алексей
+ * Used for indicating that validation failed and that the entity being
+ * validates has some constraint violations. To be used in services when saving
+ * objects and to be thrown then premature validation somehow failed.<br>
+ * <br>
  * 
+ * Unchecked for not making noisy interfaces and services - and is to be handled
+ * to by some exception handling dispatcher.
+ * 
+ * @author Alexey Grigorev
  */
 public class ValidationException extends RuntimeException {
 
     private static final long serialVersionUID = 692674710150875334L;
-    
+
     private final Set<ValidationError> errors;
 
+    /**
+     * @param errorMessage
+     * @param errors violated constraints
+     */
     public ValidationException(String errorMessage, Set<ValidationError> errors) {
         super(errorMessage);
         this.errors = errors;
     }
 
+    /**
+     * @param errors violated constraints
+     */
     public ValidationException(Set<ValidationError> errors) {
         this.errors = errors;
     }
 
+    /**
+     * @param result from which violated constraints is retrieved
+     */
     public ValidationException(ValidationResult result) {
         this.errors = result.getErrors();
     }
@@ -45,5 +62,4 @@ public class ValidationException extends RuntimeException {
     public Set<ValidationError> getErrors() {
         return errors;
     }
-
 }
