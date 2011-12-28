@@ -1,10 +1,14 @@
 package org.jtalks.common.security.acl;
 
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
+import com.google.common.collect.Tables;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
+import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;
 
 import java.util.HashMap;
@@ -12,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- *
  * @author Kirill Afonin
  */
 public class AclManagerImpl implements AclManager {
@@ -28,13 +31,14 @@ public class AclManagerImpl implements AclManager {
         this.mutableAclService = mutableAclService;
     }
 
-    public Map<Long, Boolean> getGroups(Branch branch, JtalksPermission permission) {
-        Map<Long, Boolean> groupIds = new HashMap<Long, Boolean>();
+    public Table<Integer, Long, Boolean> getBranchPermissions(Branch branch) {
+        Table<Integer, Long, Boolean> groupIds = HashBasedTable.create();
         ObjectIdentity branchIdentity = createIdentityFor(branch);
         MutableAcl branchAcl = getAclFor(branchIdentity);
         for (AccessControlEntry entry : branchAcl.getEntries()) {
-            String groupId = ((UserGroupSid) entry.getSid()).getGroupId();
-            groupIds.put(Long.parseLong(groupId), entry.isGranting());
+            String groupId = ((PrincipalSid) entry.getSid()).getPrincipal();//Spring doesn't know about UserGroupSid
+            int mask = entry.getPermission().getMask();
+            groupIds.put(mask, Long.parseLong(groupId), entry.isGranting());
         }
         return groupIds;
     }
