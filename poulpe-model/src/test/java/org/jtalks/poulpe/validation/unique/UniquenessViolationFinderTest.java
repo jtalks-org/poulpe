@@ -116,6 +116,14 @@ public class UniquenessViolationFinderTest {
         verify(context).buildConstraintViolationWithTemplate(errorMessage);
         verify(nameNode).addConstraintViolation();
     }
+    
+    @Test
+    public void defaultViolationDisabled() {
+        List<EntityWrapper> duplicates = oneNameDuplicationList();
+        forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
+
+        verify(context).disableDefaultConstraintViolation();
+    }
 
     @Test
     public void twoDuplicates() {
