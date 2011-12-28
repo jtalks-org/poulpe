@@ -1,4 +1,6 @@
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.unique;
+
+import static org.jtalks.poulpe.validation.unique.UniquenessViolationFinder.forEntity;
 
 import java.util.List;
 
@@ -7,9 +9,8 @@ import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorFactory;
 
 import org.jtalks.common.model.entity.Entity;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import static org.jtalks.poulpe.model.dao.hibernate.constraints.UniquenessViolationFinder.forEntity;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Class for verifying using JSR-303 that a given object (the instance with
@@ -40,10 +41,7 @@ import static org.jtalks.poulpe.model.dao.hibernate.constraints.UniquenessViolat
  */
 public class UniqueConstraintValidator implements ConstraintValidator<UniqueConstraint, Entity> {
 
-    public static final String MESSAGE = "field must be unique";
-
-    @Autowired
-    private UniquenessViolatorsRetriever retriever;
+    private UniquenessViolatorsRetriever uniquenessViolatorsRetriever;
 
     /**
      * Does nothing
@@ -63,7 +61,7 @@ public class UniqueConstraintValidator implements ConstraintValidator<UniqueCons
     public boolean isValid(Entity bean, ConstraintValidatorContext context) {
         EntityWrapper entity = new EntityWrapper(bean);
 
-        List<EntityWrapper> duplicates = retriever.duplicatesFor(entity);
+        List<EntityWrapper> duplicates = uniquenessViolatorsRetriever.duplicatesFor(entity);
         if (duplicates.isEmpty()) {
             return true;
         }
@@ -73,16 +71,17 @@ public class UniqueConstraintValidator implements ConstraintValidator<UniqueCons
     }
 
     /**
-     * @return the retriever
+     * @return the uniquenessViolatorsRetriever
      */
-    public UniquenessViolatorsRetriever getRetriever() {
-        return retriever;
+    public UniquenessViolatorsRetriever getUniquenessViolatorsRetriever() {
+        return uniquenessViolatorsRetriever;
     }
 
     /**
-     * @param retriever the retriever to set
+     * @param uniquenessViolatorsRetriever
      */
-    public void setRetriever(UniquenessViolatorsRetriever retriever) {
-        this.retriever = retriever;
+    public void setUniquenessViolatorsRetriever(UniquenessViolatorsRetriever uniquenessViolatorsRetriever) {
+        this.uniquenessViolatorsRetriever = uniquenessViolatorsRetriever;
     }
+
 }

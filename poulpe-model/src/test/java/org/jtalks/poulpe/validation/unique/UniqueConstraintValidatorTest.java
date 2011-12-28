@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.unique;
 
 import static ch.lambdaj.Lambda.collect;
 import static ch.lambdaj.Lambda.on;
@@ -115,6 +115,19 @@ public class UniqueConstraintValidatorTest extends AbstractTransactionalTestNGSp
         assertTrue(fields.contains("name"));
         assertTrue(fields.contains("componentType"));
     }
+    
+    @Test
+    public void validateWhenOnlyOneFieldIsSet() {
+        Component forum = forum();
+        Component anotherForum = new Component(forum.getName(), "desc", null);
+
+        Set<ConstraintViolation<Component>> constraints = validator.validate(anotherForum);
+
+        Collection<String> fields = extractFieldNames(constraints);
+
+        assertTrue(fields.contains("name"));
+        assertFalse(fields.contains("componentType"));
+    }
 
     @Test
     public void validateTwoFieldsTwoSavedObjects() {
@@ -130,8 +143,24 @@ public class UniqueConstraintValidatorTest extends AbstractTransactionalTestNGSp
         assertTrue(fields.contains("name"));
         assertTrue(fields.contains("componentType"));
     }
-
+    
     public static <T> Collection<String> extractFieldNames(Set<ConstraintViolation<T>> set) {
         return collect(set, on(ConstraintViolation.class).getPropertyPath().toString());
+    }
+    
+    @Test
+    public void validateTwoFieldsOneSavedObjectGetMessages() {
+        Component forum = forum();
+        Component anotherForum = new Component(forum.getName(), "desc", forum.getComponentType());
+
+        Set<ConstraintViolation<Component>> constraints = validator.validate(anotherForum);
+        
+        Collection<String> messages = extractMessages(constraints);
+        assertTrue(messages.contains(Component.NOT_UNIQUE_NAME));
+        assertTrue(messages.contains(Component.NOT_UNIQUE_TYPE));
+    }
+    
+    public static <T> Collection<String> extractMessages(Set<ConstraintViolation<T>> set) {
+        return collect(set, on(ConstraintViolation.class).getMessage());
     }
 }

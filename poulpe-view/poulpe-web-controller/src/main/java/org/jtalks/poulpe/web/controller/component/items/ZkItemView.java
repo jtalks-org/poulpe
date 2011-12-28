@@ -15,12 +15,16 @@
 package org.jtalks.poulpe.web.controller.component.items;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang.StringUtils;
 import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
 import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
 import org.zkoss.util.resource.Labels;
@@ -33,6 +37,8 @@ import org.zkoss.zul.Longbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import com.google.common.collect.ImmutableMap;
+
 /**
  * The class which manages actions and represents information about component
  * displayed in administrator panel.
@@ -42,6 +48,7 @@ import org.zkoss.zul.Window;
  */
 public class ZkItemView extends Window implements ItemView, AfterCompose {
 
+    @Deprecated
     public final static String ITEM_ALREADY_EXISTS = "item.already.exist";
 
     private static final long serialVersionUID = -3927090308078350369L;
@@ -58,26 +65,52 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
         presenter.setView(this);
+
     }
 
     // ==== ItemView methods ====
 
     /** {@inheritDoc} */
     @Override
-    public void wrongFields(Set<DuplicatedField> set) {
+    @Deprecated
+    public void wrongFieldsDuplicatedFieldSet(Set<DuplicatedField> set) {
         // TODO: or not TODO? Let it be for a while
-        
+
         ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
-        
+
         if (set.contains(ComponentDuplicateField.NAME)) {
             exceptions.add(new WrongValueException(name, Labels.getLabel(ITEM_ALREADY_EXISTS)));
         }
-        
+
         if (set.contains(ComponentDuplicateField.TYPE)) {
             exceptions.add(new WrongValueException(componentType, Labels.getLabel(ITEM_ALREADY_EXISTS)));
         }
 
         throw new WrongValuesException(exceptions.toArray(new WrongValueException[1]));
+    }
+
+    @Override
+    public void wrongFields(ValidationResult result) {
+        ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
+
+        // fields which may be violated
+        Map<String, Textbox> components = ImmutableMap.of("name", name, "componentType", componentType);
+
+        Set<ValidationError> errors = result.getErrors();
+        
+        for (ValidationError error : errors) {
+            String voilatedField = error.getFieldName();
+            
+            if (components.containsKey(voilatedField)) {
+                Textbox component = components.get(voilatedField);
+                String messageCode = error.getErrorMessageCode();
+                
+                exceptions.add(new WrongValueException(component, Labels.getLabel(messageCode)));
+            }
+            
+        }
+        
+        throw new WrongValuesException(exceptions.toArray(new WrongValueException[0]));
     }
 
     /** {@inheritDoc} */
@@ -102,12 +135,16 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     /** {@inheritDoc} */
     @Override
     public void hide() {
-        setValidationConstraints(null); // TODO: null vs "no empty" ???
+        permitAnyInput();
         setVisible(false);
         ListView listView = (ListView) getAttribute("backWin");
         if (null != listView) {
             listView.updateList();
         }
+    }
+
+    private void permitAnyInput() {
+        setValidationConstraints(null);
     }
 
     /**
@@ -118,16 +155,15 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
         componentType.setConstraint(constraints);
         name.setConstraint(constraints);
     }
-    
-    
+
     // ==== UI events ====
-    
+
     /**
      * Performs validation and tells to presenter that user want to save created
      * or edited component in the component list.
      */
     public void onClick$saveCompButton() {
-        setValidationConstraints("no empty"); // TODO: find out what "no empty" means
+        setValidationConstraints("no empty");
         presenter.saveComponent();
     }
 
@@ -147,7 +183,6 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
         name.setConstraint("no empty");
         presenter.checkComponent();
     }
-    
 
     // ==== ItemDataView methods ====
 
@@ -190,7 +225,12 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     /** {@inheritDoc} */
     @Override
     public ComponentType getComponentType() {
-        return ComponentType.valueOf(componentType.getText());
+        String componentTypeValue = componentType.getText();
+        if (StringUtils.isEmpty(componentTypeValue)) {
+            return null;
+        }
+        
+        return ComponentType.valueOf(componentTypeValue);
     }
 
     /** {@inheritDoc} */
@@ -228,4 +268,5 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     public void setPresenter(ItemPresenter presenter) {
         this.presenter = presenter;
     }
+
 }

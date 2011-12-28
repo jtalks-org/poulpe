@@ -50,7 +50,9 @@ public class ItemPresenterTest {
     private Component component;
     private DialogManager dialogManager;
 
+    @Deprecated
     Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
+    @Deprecated
     Set<DuplicatedField> empty = Collections.emptySet();
 
     @BeforeMethod
@@ -113,7 +115,8 @@ public class ItemPresenterTest {
         verify(view).setComponentType(null);
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void saveNewComponentTest() throws Exception {
         presenter.create();
 
@@ -124,88 +127,99 @@ public class ItemPresenterTest {
         verify(view).hide();
     }
 
+    @Deprecated
     private void givenNoDiplicatedFields() {
         when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
     }
 
+    @Deprecated
     private void assertComponentSaved() throws NotUniqueFieldsException {
         ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
 
-        verify(presenter.getComponentService()).saveComponent(captor.capture());
+        verify(presenter.getComponentService()).saveComponentCheckUniqueness(captor.capture());
         Component value = captor.getValue();
 
         assertEquals(value.getName(), component.getName());
         assertEquals(value.getComponentType(), component.getComponentType());
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void saveComponentExistingTest() throws Exception {
         presenter.edit(component);
 
         givenNoDiplicatedFields();
         presenter.saveComponent();
 
-        verify(presenter.getComponentService()).saveComponent(component);
+        verify(presenter.getComponentService()).saveComponentCheckUniqueness(component);
         verify(view).hide();
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void saveComponentDuplicateTest() throws Exception {
         presenter.create();
 
         givenNameFieldDuplicated();
         presenter.saveComponent();
 
-        verify(view).wrongFields(name);
+        verify(view).wrongFieldsDuplicatedFieldSet(name);
     }
 
+    @Deprecated
     private void givenNameFieldDuplicated() throws NotUniqueFieldsException {
-        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(any(Component.class));
+        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponentCheckUniqueness(any(Component.class));
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void saveComponentDuplicateTestEdit() throws Exception {
         presenter.edit(component);
 
         givenFieldNameDuplicatedWhenEditing();
         presenter.saveComponent();
 
-        verify(view).wrongFields(name);
+        verify(view).wrongFieldsDuplicatedFieldSet(name);
     }
 
+    @Deprecated
     private void givenFieldNameDuplicatedWhenEditing() throws NotUniqueFieldsException {
-        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponent(component);
+        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponentCheckUniqueness(component);
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void checkComponentTestNewComponent() {
         presenter.create();
 
         givenNoDiplicatedFields();
         presenter.checkComponent();
 
-        verify(view, never()).wrongFields(name);
+        verify(view, never()).wrongFieldsDuplicatedFieldSet(name);
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void checkComponentTestExistingComponent() {
         presenter.edit(component);
 
         givenNoDiplicatedFields();
         presenter.checkComponent();
 
-        verify(view, never()).wrongFields(name);
+        verify(view, never()).wrongFieldsDuplicatedFieldSet(name);
     }
 
-    @Test
+    @Test(enabled = false)
+    @Deprecated
     public void checkComponentDiplicate() {
         presenter.edit(component);
         givenDuplicatedField();
         presenter.checkComponent();
 
-        verify(view).wrongFields(name);
+        verify(view).wrongFieldsDuplicatedFieldSet(name);
     }
 
+    @Deprecated
     private void givenDuplicatedField() {
         when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
     }

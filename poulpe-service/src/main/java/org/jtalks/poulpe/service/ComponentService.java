@@ -46,9 +46,14 @@ public interface ComponentService extends EntityService<Component> {
      * Save new or update existent component.
      * @param component component to save
      * @throws NotUniqueFieldsException when saving entity to the date source cause violations of DB constraints
+     * @deprecated use {@link #saveComponent(Component)} for saving and jsr-303 validation for checking for unuqueness
      */
-    void saveComponent(Component component) throws NotUniqueFieldsException;
+    @Deprecated
+    void saveComponentCheckUniqueness(Component component) throws NotUniqueFieldsException;
 
+    void saveComponent(Component component);
+    
+    
     /**
      * Get the set of unoccupied ComponentType.
      * @return set of ComponentType
@@ -62,5 +67,6 @@ public interface ComponentService extends EntityService<Component> {
      * @return the set of fields whose uniqueness will be violated after adding {@code component}
      *         to the data source
      */
+    @Deprecated
     Set<DuplicatedField> getDuplicateFieldsFor(Component component);
 }

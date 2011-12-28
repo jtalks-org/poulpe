@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao.hibernate.constraints;
+package org.jtalks.poulpe.validation.unique;
 
 import java.util.Collections;
 import java.util.List;
@@ -21,6 +21,9 @@ import java.util.Map.Entry;
 import javax.validation.ConstraintValidatorContext;
 import javax.validation.ConstraintValidatorContext.ConstraintViolationBuilder;
 import javax.validation.ConstraintViolation;
+
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Helper class for using in {@link UniqueConstraintValidator}. It was extracted
@@ -101,9 +104,6 @@ class UniquenessViolationFinder {
     public void findViolationsAndAddTo(ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation();
 
-        ConstraintViolationBuilder builder = context
-                .buildConstraintViolationWithTemplate(UniqueConstraintValidator.MESSAGE);
-
         for (Entry<String, Object> entry : bean.getProperties()) {
             String fieldName = entry.getKey();
             Object value = entry.getValue();
@@ -112,11 +112,17 @@ class UniquenessViolationFinder {
                 Object toCompare = duplicate.getValue(fieldName);
 
                 if (value.equals(toCompare)) {
-                    builder.addNode(fieldName).addConstraintViolation();
+                    addErrorMessage(context, fieldName);
                     break;
                 }
             }
         }
+    }
+
+    private void addErrorMessage(ConstraintValidatorContext context, String fieldName) {
+        String errorMessage = bean.getErrorMessage(fieldName);
+        ConstraintViolationBuilder builder = context.buildConstraintViolationWithTemplate(errorMessage);
+        builder.addNode(fieldName).addConstraintViolation();
     }
 
 }

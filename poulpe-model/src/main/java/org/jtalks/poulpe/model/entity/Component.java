@@ -15,8 +15,8 @@
 package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueField;
-import org.jtalks.poulpe.model.dao.hibernate.constraints.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 import ru.javatalks.utils.general.Assert;
 
@@ -27,13 +27,16 @@ import ru.javatalks.utils.general.Assert;
  */
 @UniqueConstraint
 public class Component extends Entity {
-
-    @UniqueField
+    // TODO: change it
+    public static final String NOT_UNIQUE_NAME = "item.already.exist";
+    public static final String NOT_UNIQUE_TYPE = "item.already.exist";
+    
+    @UniqueField(message = NOT_UNIQUE_NAME)
     private String name;
     
     private String description;
     
-    @UniqueField
+    @UniqueField(message = NOT_UNIQUE_TYPE)
     private ComponentType componentType;
 
     /**
