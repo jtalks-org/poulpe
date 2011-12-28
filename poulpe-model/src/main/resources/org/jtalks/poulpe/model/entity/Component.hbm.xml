@@ -6,6 +6,7 @@
     <id column="CMP_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
+    <discriminator column="COMPONENT_TYPE" />
     
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" unique="true" />
@@ -16,5 +17,13 @@
         <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
       </type>
     </property>
+    
+    <subclass name="Jcommune" discriminator-value="JCOMMUNE">
+      <bag name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
+        <cache usage="nonstrict-read-write" />
+        <key column="JCOMMUNE_ID" foreign-key="FK_JCOMMUNE" />
+        <one-to-many class="Section" />
+      </bag>
+    </subclass>
   </class>
 </hibernate-mapping>

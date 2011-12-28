@@ -14,6 +14,7 @@
     <module>poulpe-model</module>
     <module>poulpe-service</module>
     <module>poulpe-view</module>
+    <module>jtalks-common-security</module>
   </modules>
 
   <repositories>
@@ -40,6 +41,11 @@
       <dependency>
         <groupId>org.jtalks.poulpe</groupId>
         <artifactId>poulpe-model</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jtalks.poulpe</groupId>
+        <artifactId>jtalks-common-security</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -138,6 +144,32 @@
       <dependency>
         <groupId>org.springframework</groupId>
         <artifactId>spring-test</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <!-- Spring Security -->
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-core</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-config</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-web</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-taglibs</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.security</groupId>
+        <artifactId>spring-security-acl</artifactId>
         <version>${springVersion}</version>
       </dependency>
 
@@ -287,6 +319,11 @@
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-service</artifactId>
+        <version>${common.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jtalks.common</groupId>
+        <artifactId>jtalks-common-web-controller</artifactId>
         <version>${common.version}</version>
       </dependency>
       <dependency>

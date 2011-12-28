@@ -1,9 +1,8 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.common.security.acl.JtalksPermission;
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.security.JtalksPermission;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
 

@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import org.jtalks.common.model.entity.Entity;
 import org.springframework.security.acls.model.Permission;

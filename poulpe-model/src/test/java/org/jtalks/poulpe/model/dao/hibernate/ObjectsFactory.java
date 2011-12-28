@@ -24,6 +24,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.entity.TopicType;
@@ -43,27 +44,27 @@ public final class ObjectsFactory {
     public static TopicType createTopicTypeWithRandomTitle() {
         return new TopicType(random(), "desc");
     }
-    
+
     public static Component createComponent(ComponentType type) {
         return new Component(random(), "desc", type);
     }
-    
+
     public static Section createSectionWithBranches() {
         return createSectionWithBranches(randomInt());
     }
 
     public static Section createSectionWithBranches(int branchesAmount) {
         Section section = new Section(random());
-        
-        for (int i = 0; i < branchesAmount ; i++) {
+
+        for (int i = 0; i < branchesAmount; i++) {
             Branch branch = createBranch();
             branch.setSection(section);
             section.addBranch(branch);
         }
-        
+
         return section;
     }
-    
+
     public static Section createSection() {
         return new Section(random());
     }
@@ -71,26 +72,36 @@ public final class ObjectsFactory {
     public static User createUser() {
         return new User(random(), random(), random());
     }
-    
+
     public static Group createGroup() {
         return new Group(random(), "desc");
     }
-    
+
     private static String random() {
         return UUID.randomUUID().toString();
     }
-    
+
     private static int randomInt() {
         return new Random().nextInt(10) + 1;
     }
-    
+
     /**
      * Create rank with random name and postCount.
+     * 
      * @return new rank
      */
     public static Rank createRank() {
         int randNum = new Random().nextInt();
         Rank rank = new Rank("Rank" + randNum, randNum);
         return rank;
+    }
+
+    public static Jcommune createJcommune() {
+        Jcommune jcommune = new Jcommune(createComponent(ComponentType.FORUM));
+
+        for (int i = 0; i < 5; i++) {
+            jcommune.addSection(createSectionWithBranches());
+        }
+        return jcommune;
     }
 }

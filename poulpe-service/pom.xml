@@ -24,6 +24,10 @@
       <artifactId>poulpe-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.jtalks.poulpe</groupId>
+      <artifactId>jtalks-common-security</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-aop</artifactId>
     </dependency>

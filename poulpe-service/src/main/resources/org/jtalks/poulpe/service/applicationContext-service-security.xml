@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <!-- Retrieves, modifies and strores access control lists -->
+  <bean id="aclService" class="org.jtalks.common.security.acl.ExtendedJdbcMutableAclService">
+    <constructor-arg ref="dataSource" />
+    <constructor-arg ref="lookupStrategy" />
+    <constructor-arg ref="aclCache" />
+    <property name="classIdentityQuery" value="SELECT @@IDENTITY" />
+    <property name="sidIdentityQuery" value="SELECT @@IDENTITY" />
+  </bean>
+  <bean id="dtoMapper" class="org.jtalks.common.service.security.DtoMapper" />
+
+  <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+    <constructor-arg ref="dataSource" />
+    <constructor-arg ref="aclCache" />
+    <constructor-arg ref="aclAuthorizationStrategy" />
+    <constructor-arg>
+      <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger" />
+    </constructor-arg>
+    <property name="permissionFactory" ref="permissionFactory" />
+  </bean>
+  <!-- Authorization for ACLs administration setup -->
+  <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
+    <constructor-arg>
+      <list>
+        <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+          <constructor-arg value="ROLE_ADMIN" />
+        </bean>
+        <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+          <constructor-arg value="ROLE_ADMIN" />
+        </bean>
+        <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
+          <constructor-arg value="ROLE_ADMIN" />
+        </bean>
+      </list>
+    </constructor-arg>
+  </bean>
+
+  <!-- ACL permission factory -->
+  <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory" />
+  <!-- Responsible for efficient retrieval of ACLs from database -->
+  <bean id="lookupStrategy" class="org.jtalks.common.service.security.DtoLookupStrategy">
+    <constructor-arg ref="baseLookupStrategy" />
+    <constructor-arg ref="dtoMapper" />
+  </bean>
+  <!-- Caching support for ACLs -->
+  <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+    <constructor-arg>
+      <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager">
+          <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" />
+        </property>
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="aclManager" class="org.jtalks.common.security.acl.AclManagerImpl">
+    <constructor-arg ref="aclService" />
+  </bean>
+  <bean id="securityService" class="org.jtalks.common.security.SecurityService">
+    <constructor-arg index="0" ref="userDao"/>
+    <constructor-arg index="1" ref="aclManager"/>
+  </bean>
+</beans>

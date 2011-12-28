@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.service.security;
+package org.jtalks.common.security.acl;
 
 import org.springframework.security.acls.domain.BasePermission;
 import ru.javatalks.utils.general.Assert;

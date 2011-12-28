@@ -6,7 +6,8 @@
     </west>
     <center border="none">
       <hbox>
-        <button forEach="${arg.row.groups}" label="${each.name}" sclass="usergroup-button" />
+        <panel forEach="${arg.row.groups}" title="${each.name}" closable="true" framable="true"
+               onClose='alert("Удален");' />
       </hbox>
     </center>
     <east border="none">
