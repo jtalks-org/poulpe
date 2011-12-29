@@ -15,20 +15,18 @@
 package org.jtalks.poulpe.service.transactional;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 import java.util.Collections;
 import java.util.Set;
 
-import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationException;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -64,9 +62,8 @@ public class TransactionalComponentServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> errors = Collections.singleton(new ValidationError("name", "errorMessageCode"));
-        ValidationResult result = new ValidationResult(errors);
-        when(validator.validate(any(Entity.class))).thenReturn(result);
+        Set<ValidationError> empty = Collections.<ValidationError>emptySet();
+        doThrow(new ValidationException(empty)).when(validator).throwOnValidationFailure(any(Component.class));
     }
 
     @Test
