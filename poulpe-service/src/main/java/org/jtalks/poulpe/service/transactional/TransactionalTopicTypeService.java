@@ -59,11 +59,6 @@ public class TransactionalTopicTypeService extends
         dao.saveOrUpdate(topicType);
     }
     
-    @Deprecated
-    public boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID) {
-        return dao.isTopicTypeNameExists(topicTypeName, ignorableTopicTypeID);
-    }
-    
     @Override
     public void deleteTopicTypes(Collection<TopicType> topicTypes) {
         for (TopicType topicType: topicTypes) {
