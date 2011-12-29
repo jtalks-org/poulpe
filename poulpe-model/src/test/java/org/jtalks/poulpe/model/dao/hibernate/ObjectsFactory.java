@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -41,10 +39,10 @@ public final class ObjectsFactory {
         return newBranch;
     }
 
-    public static TopicType createTopicTypeWithRandomTitle() {
+    public static TopicType topicType() {
         return new TopicType(random(), "desc");
     }
-
+    
     public static Component createComponent(ComponentType type) {
         return new Component(random(), "desc", type);
     }
@@ -70,7 +68,8 @@ public final class ObjectsFactory {
     }
 
     public static User createUser() {
-        return new User(random(), random(), random());
+        String random = random();
+        return new User(random, random, random, random);
     }
 
     public static Group createGroup() {
