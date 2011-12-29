@@ -27,25 +27,38 @@ import javax.validation.ConstraintValidatorFactory;
  * <br>
  * 
  * <b>Note</b>: this implementation is <b>NOT THREAD SAFE</b> when used
- * incorretly. It will return <b>exactly the same instance</b> each time a
- * validator requested - thus <b>they must not keep any state</b>. For safe
- * implementation, see {@link ContextAwareConstraintValidatorFactory} or the
- * default spring's one. The reason why it isn't used is, when creating a bean,
- * autowiring leads to tons of warnings from zk-beans due to their incorrect
- * implementation of some specific spring features.
+ * incorrectly. It will return <b>exactly the same instance</b> each time a
+ * validator, provided via setter, is requested - thus <b>they must not keep any
+ * state</b>. For safe implementation, see
+ * {@link ContextAwareConstraintValidatorFactory} or the default spring's one.
+ * The reason why it isn't used is, when creating a bean, autowiring leads to
+ * tons of warnings from zk-beans due to their incorrect implementation of some
+ * specific spring features.
  */
 public class PredefinedConstraintValidationFactory implements ConstraintValidatorFactory {
 
     private Map<Class<?>, ConstraintValidator<?, ?>> validators;
 
     /**
-     * Returns one of the validators passed via {@link #setValidators(List)} or
-     * null, if there's none appropriate
+     * Returns one of the validators passed via {@link #setValidators(List)}. If
+     * not found, it will try to create a new instance of requested validator.
+     * If failed, null will be returned (which afterwards may lead to runtime
+     * exception).
      */
     @Override
-    @SuppressWarnings("unchecked")
     public <T extends ConstraintValidator<?, ?>> T getInstance(Class<T> key) {
-        return (T) validators.get(key);
+        @SuppressWarnings("unchecked")
+        T constraintValidator = (T) validators.get(key);
+
+        if (constraintValidator == null) {
+            try {
+                constraintValidator = key.newInstance();
+            } catch (Exception e) {
+                return null;
+            }
+        }
+
+        return constraintValidator;
     }
 
     /**
