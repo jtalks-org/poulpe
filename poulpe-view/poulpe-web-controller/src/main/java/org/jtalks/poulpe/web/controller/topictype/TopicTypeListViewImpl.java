@@ -38,7 +38,7 @@ import org.zkoss.zul.Window;
  * 
  * @author Vladimir Bukhtoyarov
  */
-public class TopicTypeListViewImpl extends Window implements TopicTypeListPresenter.TopicTypeListView, AfterCompose {
+public class TopicTypeListViewImpl extends Window implements TopicTypeListView, AfterCompose {
 
     private static final long serialVersionUID = 1L;
 

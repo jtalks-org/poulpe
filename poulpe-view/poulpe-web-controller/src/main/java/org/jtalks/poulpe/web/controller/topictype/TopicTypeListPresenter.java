@@ -35,44 +35,6 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  */
 public class TopicTypeListPresenter {
 
-    /**
-     * View to display a list of
-     * {@link org.jtalks.poulpe.model.entity.TopicType}
-     * 
-     * @author tomcat
-     * 
-     */
-    public interface TopicTypeListView {
-
-        /**
-         * Show topic type list.
-         * <ul>
-         * <li>
-         * Each row should show only the title.</li>
-         * <li>
-         * If user move mouse over the Topic type, a hint should appear with the
-         * description of the type.</li>
-         * <li>
-         * If user double click on the existing type event should be directed to
-         * the presenter</li>
-         * <li>
-         * Multiple selections should be allowed.</li>
-         * </ul>
-         * 
-         * @param list
-         *            of #{@link org.jtalks.poulpe.model.entity.TopicType}
-         */
-        void showTopicTypeList(List<TopicType> list);
-
-        /**
-         * Returns the selected topic types or empty list if nothing is selected.
-         * 
-         * @return a list of selected topic types or empty list
-         */
-        List<TopicType> getSelectedTopicType();
-
-    }
-
     private TopicTypeService topicTypeService;
     private WindowManager windowManager;
     private DialogManager dialogManager;

@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.jtalks.poulpe.validation.ValidationResult;
+
 /**
  * View interface for TopicType
  * @author unascribed
@@ -56,4 +58,9 @@ public interface TopicTypeView {
      * @param label for dialog
      */
     void openErrorPopupInTopicTypeDialog(String label);
+
+    /**
+     * @param result
+     */
+    void validationFailure(ValidationResult result);
 }
