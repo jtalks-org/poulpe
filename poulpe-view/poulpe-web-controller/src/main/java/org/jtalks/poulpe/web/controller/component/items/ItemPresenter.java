@@ -62,11 +62,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
     public void saveComponent() {
         Component component = editingStrategy.itemForSaving();
 
-        ValidationResult result = entityValidator.validate(component);
-        
-        if (result.hasErrors()) {
-            view.validaionFailure(result);
-        } else {
+        if (validate(component)) {
             getComponentService().saveComponent(component);
             view.hide();
         }
@@ -78,13 +74,18 @@ public class ItemPresenter extends AbstractComponentPresenter {
      */
     public void checkComponent() {
         Component component = ViewToEntityConverter.view2Model(view);
+        validate(component);
+    }
 
+    private boolean validate(Component component) {
         ValidationResult result = entityValidator.validate(component);
         
         if (result.hasErrors()) {
             view.validaionFailure(result);
+            return false;
         }
         
+        return true;
     }
 
     /**
