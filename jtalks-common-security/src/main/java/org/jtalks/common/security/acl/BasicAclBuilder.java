@@ -2,9 +2,7 @@ package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Group;
-import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import ru.javatalks.utils.general.Assert;
@@ -41,17 +39,6 @@ public class BasicAclBuilder {
     public BasicAclBuilder(@Nonnull AclManager aclManager) {
         Assert.throwIfNull(aclManager, "acl manager");
         this.aclManager = aclManager;
-    }
-
-    /**
-     * Sets the user that will be granted (or revoked from) the permissions.
-     *
-     * @param owner the user to grant to/restrict from the permissions
-     * @return this
-     */
-    public BasicAclBuilder setOwner(@Nonnull User owner) {
-        sids.add(new PrincipalSid(owner.getUsername()));
-        return this;
     }
 
     /**
@@ -132,7 +119,7 @@ public class BasicAclBuilder {
      * state.
      */
     private void executeUpdate() {
-        throwIfPermissionsOrSidsEmpty();
+        throwIfTargetIsNull();
         executeGrant(permissionsToGrant);
         executeDelete(permissionsToDelete);
         executeRestrict(permissionsToRestrict);
@@ -175,20 +162,9 @@ public class BasicAclBuilder {
         return this;
     }
 
-    private void throwIfPermissionsOrSidsEmpty() throws IllegalArgumentException {
-        assertAllPermissionsEmpty();
-        if (sids.isEmpty()) {
-            throw new IllegalStateException("You can't grant permissions without sids");
-        }
+    private void throwIfTargetIsNull() throws IllegalArgumentException {
         if(target == null){
             throw new IllegalStateException("The target is null! Set the target before flushing");
         }
     }
-
-    private void assertAllPermissionsEmpty() {
-        if (permissionsToDelete.isEmpty() && permissionsToGrant.isEmpty() && permissionsToRestrict.isEmpty()) {
-            throw new IllegalStateException("No permissions to flush! Specify at least one Permission.");
-        }
-    }
-
 }

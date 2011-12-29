@@ -70,14 +70,18 @@ public class BasicAclBuilderTest {
     }
 
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test
     public void testFlushWithoutPermissions() throws Exception {
-        builder.setOwner(new Group()).on(target).flush();
+        Group group = new Group();
+        builder.setOwner(group).on(target).flush();
+        verify(manager, times(0)).restrict(anyList(), anyList(), same(target));
     }
 
-    @Test(expectedExceptions = IllegalStateException.class)
+    @Test
     public void testFlushWithoutSids() throws Exception {
         builder.restrict(BranchPermission.VIEW_TOPICS).on(target).flush();
+        verify(manager, times(1)).restrict(groupSids(new Group[]{}),
+                Lists.<Permission>newArrayList(BranchPermission.VIEW_TOPICS), target);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)

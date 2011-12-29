@@ -73,7 +73,7 @@
     </constructor-arg>
   </bean>
 
-  <bean id="aclManager" class="org.jtalks.common.security.acl.AclManagerImpl">
+  <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
     <constructor-arg ref="aclService" />
   </bean>
   <bean id="securityService" class="org.jtalks.common.security.SecurityService">
