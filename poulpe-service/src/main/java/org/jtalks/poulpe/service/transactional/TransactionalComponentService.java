@@ -23,8 +23,6 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationException;
-import org.jtalks.poulpe.validation.ValidationResult;
 
 /**
  * Transactional implementation of {@link ComponentService}. Transactions are
@@ -68,12 +66,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     /** {@inheritDoc} */
     @Override
     public void saveComponent(Component component) {
-        ValidationResult result = validator.validate(component);
-        
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
-        
+        validator.throwOnValidationFailure(component);
         dao.saveOrUpdate(component);
     }
     
