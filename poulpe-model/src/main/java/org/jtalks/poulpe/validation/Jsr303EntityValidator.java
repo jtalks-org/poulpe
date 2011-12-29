@@ -23,7 +23,7 @@ import javax.validation.Validator;
 import org.jtalks.common.model.entity.Entity;
 
 /**
- * 
+ * @author Alexey Grigorev
  */
 public class Jsr303EntityValidator implements EntityValidator {
 
@@ -43,6 +43,15 @@ public class Jsr303EntityValidator implements EntityValidator {
         }
 
         return result;
+    }
+    
+    @Override
+    public void throwOnValidationFailure(Entity entity) throws ValidationException {
+        ValidationResult result = validate(entity);
+
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
     }
 
     /**

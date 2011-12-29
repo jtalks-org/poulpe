@@ -28,8 +28,15 @@ public interface EntityValidator {
      * Otherwise, {@link #hasErrors()} returns true and error messages can be obtained using
      * {@link #getErrors()}
      * 
-     * @param o object to be validated
+     * @param entity to be validated
      */
-    ValidationResult validate(Entity o);
+    ValidationResult validate(Entity entity);
+    
+    /**
+     * 
+     * @param entity
+     * @throws ValidationException
+     */
+    void throwOnValidationFailure(Entity entity) throws ValidationException;
     
 }
