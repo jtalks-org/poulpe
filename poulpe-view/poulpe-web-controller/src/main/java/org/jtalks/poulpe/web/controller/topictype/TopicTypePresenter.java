@@ -19,7 +19,6 @@ import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationResult;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
 
@@ -33,56 +32,23 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  */
 public class TopicTypePresenter {
 
+    public static final String TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
+
+    private TopicTypeService topicTypeService;
+    private EntityValidator entityValidator;
+
+    private EditListener<TopicType> listener;
+    private WindowManager windowManager;
+
+    private TopicTypeView view;
+    private TopicType topicType;
+
+
     /**
      * Save and init view.
      */
     public void initView(TopicTypeView view) {
         this.view = view;
-    }
-
-    @Deprecated
-    public static final String TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
-    @Deprecated
-    public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
-    @Deprecated
-    public static final String TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
-    @Deprecated
-    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
-    
-    protected DialogManager dialogManager;
-    protected WindowManager windowManager;
-    protected TopicTypeService topicTypeService;
-    protected TopicTypeView view;
-    
-    protected TopicType topicType;
-    
-    protected EditListener<TopicType> listener;
-    
-    private EntityValidator entityValidator;
-
-    /**
-     * Set the TopicTypeService implementation.
-     */
-    public void setTopicTypeService(TopicTypeService topicTypeService) {
-        this.topicTypeService = topicTypeService;
-    }
-
-    /**
-     * Sets the dialog manager
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
-
-    /**
-     * Sets the window manager
-     */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
-
-    public void setListener(EditListener<TopicType> listener) {
-        this.listener = listener;
     }
 
     /**
@@ -107,14 +73,14 @@ public class TopicTypePresenter {
         this.view = view;
         this.listener = listener;
         view.hideCreateAction();
-        
+
         try {
             this.topicType = topicTypeService.get(topicType.getId());
         } catch (NotFoundException e) {
             view.openErrorPopupInTopicTypeDialog(TITLE_DOESNT_EXISTS);
             return;
         }
-        
+
         view.showTypeTitle(this.topicType.getTitle());
         view.showTypeDescription(this.topicType.getDescription());
     }
@@ -172,7 +138,7 @@ public class TopicTypePresenter {
     public boolean save() {
         topicType.setTitle(view.getTypeTitle());
         topicType.setDescription(view.getTypeDescription());
-        
+
         if (validate(topicType)) {
             topicTypeService.saveOrUpdate(topicType);
             return true;
@@ -183,7 +149,7 @@ public class TopicTypePresenter {
 
     private boolean validate(TopicType topicType) {
         ValidationResult result = entityValidator.validate(topicType);
-        
+
         if (result.hasErrors()) {
             view.validationFailure(result);
             return false;
@@ -192,30 +158,11 @@ public class TopicTypePresenter {
         }
     }
 
-    
-    
     /**
-     * Validate topic type
-     * 
-     * @param topicType topicType we want to validate
-     * @return null if TopicType has a valid title or error message otherwise
+     * Set the TopicTypeService implementation.
      */
-    @Deprecated
-    public String validateTopicType(TopicType topicType) {
-        if (topicType.getTitle() == null || topicType.getTitle().equals("")) {
-            return TITLE_CANT_BE_VOID;
-        }
-        if (topicType.getTitle().length() > 254) {
-            return ERROR_LABEL_SECTION_NAME_WRONG;
-        }
-        return null;
-    }
-
-    /**
-     * @return the entityValidator
-     */
-    public EntityValidator getEntityValidator() {
-        return entityValidator;
+    public void setTopicTypeService(TopicTypeService topicTypeService) {
+        this.topicTypeService = topicTypeService;
     }
 
     /**
@@ -224,6 +171,18 @@ public class TopicTypePresenter {
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
     }
-    
 
+    /**
+     * Sets the window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
+    /**
+     * @param listener
+     */
+    public void setListener(EditListener<TopicType> listener) {
+        this.listener = listener;
+    }
 }
