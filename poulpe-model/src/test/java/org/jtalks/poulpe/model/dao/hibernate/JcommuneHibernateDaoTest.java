@@ -55,7 +55,7 @@ public class JcommuneHibernateDaoTest extends
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        jcommune = ObjectsFactory.createJcommune();
+        jcommune = ObjectsFactory.createJcommune(5);
     }
 
     @Test

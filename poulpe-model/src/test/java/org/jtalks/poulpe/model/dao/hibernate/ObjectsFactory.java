@@ -95,10 +95,10 @@ public final class ObjectsFactory {
         return rank;
     }
 
-    public static Jcommune createJcommune() {
+    public static Jcommune createJcommune(int sectionsAmount) {
         Jcommune jcommune = new Jcommune(createComponent(ComponentType.FORUM));
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < sectionsAmount; i++) {
             jcommune.addSection(createSectionWithBranches());
         }
         return jcommune;
