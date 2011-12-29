@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.security.acl.AclManagerImpl;
+import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -40,13 +40,13 @@ public class TransactionalBranchServiceTest {
 
     private long BRANCH_ID = 1L;
     private BranchDao branchDao;
-    private AclManagerImpl aclManager;
+    private AclManager aclManager;
     private BranchService branchService;
 
     @BeforeMethod
     public void setUp() throws Exception {
         branchDao = mock(BranchDao.class);
-        aclManager = mock(AclManagerImpl.class);
+        aclManager = mock(AclManager.class);
         branchService = new TransactionalBranchService(branchDao, null);
     }
 

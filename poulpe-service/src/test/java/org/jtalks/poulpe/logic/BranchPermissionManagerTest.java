@@ -1,24 +1,41 @@
 package org.jtalks.poulpe.logic;
 
+import org.aspectj.lang.annotation.Before;
+import org.jtalks.common.security.acl.AclManager;
+import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.Branch;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.runners.MockitoJUnitRunner;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import static org.mockito.Mockito.when;
+
 /**
- * Created by IntelliJ IDEA. User: ctapobep Date: 12/19/11 Time: 1:44 PM To change this template use File | Settings |
- * File Templates.
+ * @author stanislav bashkirtsev
  */
 public class BranchPermissionManagerTest {
-    @Test
-    public void testAllow() throws Exception {
+    @Mock
+    GroupDao groupDao;
+    @Mock
+    AclManager aclManager;
+    BranchPermissionManager manager;
 
+    @BeforeMethod
+    public void initMocks(){
+        MockitoAnnotations.initMocks(this);
+        manager = new BranchPermissionManager(aclManager, groupDao);
     }
-
     @Test
-    public void testRestrict() throws Exception {
-
+    public void testGetGroupAccessListFor() throws Exception {
+//        when(aclManager.getBranchPermissions(branch)).thenReturn()
     }
-
-    @Test
-    public void testRevoke() throws Exception {
-
+    
+    @DataProvider
+    public Object[][] provide(){
+        return new Object[][]{{new Branch()}};
     }
 }

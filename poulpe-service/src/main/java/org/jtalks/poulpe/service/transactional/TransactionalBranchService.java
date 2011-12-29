@@ -112,19 +112,4 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     }
 
-    @Override
-    public void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        branchPermissionManager.grantPermissions(branch, permission, groups);
-
-    }
-
-    @Override
-    public void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        branchPermissionManager.restrictPermissions(branch, permission, groups);
-    }
-
-    @Override
-    public void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        branchPermissionManager.deletePermissions(branch, permission, groups);
-    }
 }

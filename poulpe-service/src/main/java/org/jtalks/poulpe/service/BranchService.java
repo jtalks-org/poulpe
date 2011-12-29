@@ -79,12 +79,6 @@ public interface BranchService extends EntityService<Branch> {
 
     BranchAccessList getGroupAccessListFor(Branch branch);
 
-    void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
-
-    void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
-
-    void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
-
     void changeGrants(Branch branch, BranchAccessChanges changes);
 
     void changeRestrictions(Branch branch, BranchAccessChanges changes);
