@@ -27,7 +27,7 @@ public class ValidationError {
     private final String errorMessageCode;
 
     /**
-     * Constructs a validaion error with two fields - one is field which
+     * Constructs a validation error with two fields - one is field which
      * constraint is violated and its corresponding error message
      * 
      * @param fieldName
