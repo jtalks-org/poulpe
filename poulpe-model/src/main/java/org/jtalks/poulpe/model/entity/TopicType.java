@@ -14,16 +14,33 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Represent topic types on the page of general configuration
  * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
+@UniqueConstraint
 public class TopicType extends Entity {
 
+    public static final String TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
+    public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+    
+    @NotNull(message = TITLE_CANT_BE_VOID)
+    @NotEmpty(message = TITLE_CANT_BE_VOID)
+    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
+    @UniqueField(message = TITLE_ALREADY_EXISTS)
     private String title;
+    
     private String description;
 
     /**
