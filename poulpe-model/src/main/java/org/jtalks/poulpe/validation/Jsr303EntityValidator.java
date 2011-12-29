@@ -23,9 +23,13 @@ import javax.validation.Validator;
 import org.jtalks.common.model.entity.Entity;
 
 /**
+ * Implementation of {@link EntityValidator} using JSR-303. It delegates the
+ * verification to JSR-303 validator and then wraps its response to more
+ * convenient form.
+ * 
  * @author Alexey Grigorev
  */
-public class Jsr303EntityValidator implements EntityValidator {
+public class Jsr303EntityValidator extends EntityValidator {
 
     private Validator validator;
 
@@ -43,15 +47,6 @@ public class Jsr303EntityValidator implements EntityValidator {
         }
 
         return result;
-    }
-    
-    @Override
-    public void throwOnValidationFailure(Entity entity) throws ValidationException {
-        ValidationResult result = validate(entity);
-
-        if (result.hasErrors()) {
-            throw new ValidationException(result);
-        }
     }
 
     /**

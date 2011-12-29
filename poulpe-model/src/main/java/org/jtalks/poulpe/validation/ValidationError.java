@@ -15,12 +15,24 @@
 package org.jtalks.poulpe.validation;
 
 /**
+ * Designates a constraint violation found while validating a bean using JSR-303
+ * annotations. It has two fields - the field which constraint is violated and
+ * its corresponding code of error message.
+ * 
+ * @author Alexey Grigorev
  */
 public class ValidationError {
 
     private final String fieldName;
     private final String errorMessageCode;
 
+    /**
+     * Constructs a validaion error with two fields - one is field which
+     * constraint is violated and its corresponding error message
+     * 
+     * @param fieldName
+     * @param errorMessageCode
+     */
     public ValidationError(String fieldName, String errorMessageCode) {
         this.fieldName = fieldName;
         this.errorMessageCode = errorMessageCode;

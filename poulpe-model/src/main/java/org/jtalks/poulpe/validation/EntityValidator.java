@@ -16,27 +16,34 @@ package org.jtalks.poulpe.validation;
 
 import org.jtalks.common.model.entity.Entity;
 
-
 /**
  * Class for validating objects.
  * 
  * @author Alexey Grigorev
  */
-public interface EntityValidator {
+public abstract class EntityValidator {
     /**
-     * Validates given object. If the object is valid, {@link #hasErrors()} returns {@code false}.
-     * Otherwise, {@link #hasErrors()} returns true and error messages can be obtained using
-     * {@link #getErrors()}
+     * Validates given object. If the object is valid, {@link #hasErrors()}
+     * returns {@code false}. Otherwise, {@link #hasErrors()} returns true and
+     * error messages can be obtained using {@link #getErrors()}
      * 
      * @param entity to be validated
      */
-    ValidationResult validate(Entity entity);
-    
+    public abstract ValidationResult validate(Entity entity);
+
     /**
+     * Validates entity using {@link #validate(Entity)} and throws
+     * {@link ValidationException} if any constraint violations are found.
      * 
-     * @param entity
-     * @throws ValidationException
+     * @param entity to check
+     * @throws ValidationException if any constraints violated
      */
-    void throwOnValidationFailure(Entity entity) throws ValidationException;
-    
+    public void throwOnValidationFailure(Entity entity) throws ValidationException {
+        ValidationResult result = validate(entity);
+
+        if (result.hasErrors()) {
+            throw new ValidationException(result);
+        }
+    }
+
 }

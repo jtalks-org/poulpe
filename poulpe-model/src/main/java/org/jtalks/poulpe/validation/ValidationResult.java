@@ -18,17 +18,31 @@ import java.util.Collections;
 import java.util.Set;
 
 /**
+ * Class which holds results of validation of entities. Returned from
+ * {@link EntityValidator}
+ * 
+ * @author Alexey Grigorev
  */
 public class ValidationResult {
 
-    public static final ValidationResult EMPTY = new ValidationResult(Collections.<ValidationError>emptySet());
+    /**
+     * Validation result with no errors
+     */
+    public static final ValidationResult EMPTY = new ValidationResult(Collections.<ValidationError> emptySet());
 
     private final Set<ValidationError> errors;
 
+    /**
+     * Creates {@link ValidationResult} instance setting a set of validation
+     * errors, which afterwards can be retrieved using {@link #getErrors()}. For
+     * {@link ValidationResult} with no errors use {@link #EMPTY}.
+     * 
+     * @param errors set with validation errors
+     */
     public ValidationResult(Set<ValidationError> errors) {
         this.errors = errors;
     }
-    
+
     /**
      * Should be called only after {@link #validate(Entity)}
      * @return {@code false} if there's no error, {@code true} otherwise
