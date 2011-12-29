@@ -19,7 +19,6 @@ import java.util.Map;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
@@ -41,7 +40,6 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView {
     private Button editButton;
     private Button createButton;
 
-    
     @Override
     public void validationFailure(ValidationResult result) {
         Map<String, ? extends InputElement> comps = ImmutableMap.of("title", titleTextbox);
