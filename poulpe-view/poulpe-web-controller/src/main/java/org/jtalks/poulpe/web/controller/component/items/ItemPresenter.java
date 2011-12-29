@@ -29,6 +29,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
 
     private ItemView view;
     private ItemStrategy editingStrategy = DoNothingItemStrategy.instance;
+    
     private EntityValidator entityValidator;
 
     /**
@@ -64,7 +65,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
         ValidationResult result = entityValidator.validate(component);
         
         if (result.hasErrors()) {
-            view.wrongFields(result);
+            view.validaionFailure(result);
         } else {
             getComponentService().saveComponent(component);
             view.hide();
@@ -81,7 +82,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
         ValidationResult result = entityValidator.validate(component);
         
         if (result.hasErrors()) {
-            view.wrongFields(result);
+            view.validaionFailure(result);
         }
         
     }

@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -21,12 +22,13 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationException;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -38,11 +40,9 @@ public class TransactionalComponentServiceTest {
 
     private ComponentDao componentDao;
     private TransactionalComponentService conponentService;
+    private EntityValidator validator;
 
     Component component = new Component();
-    Set<DuplicatedField> empty = Collections.emptySet();
-    Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
-    private EntityValidator validator;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -57,25 +57,16 @@ public class TransactionalComponentServiceTest {
         verify(componentDao).getAll();
     }
 
-    @Test
-    public void testSaveComponent() throws NotUniqueFieldsException {
-        givenNoDuplicatedFields();
-        conponentService.saveComponentCheckUniqueness(component);
-        verify(componentDao).saveOrUpdate(component);
+    @Test(expectedExceptions = ValidationException.class)
+    public void testSaveComponentException() {
+        givenConstraintsViolations();
+        conponentService.saveComponent(component);
     }
 
-    private void givenNoDuplicatedFields() {
-        when(componentDao.getDuplicateFieldsFor(component)).thenReturn(empty);
-    }
-
-    @Test(expectedExceptions = NotUniqueFieldsException.class)
-    public void testSaveComponentException() throws NotUniqueFieldsException {
-        givenNameFieldDuplicated();
-        conponentService.saveComponentCheckUniqueness(component);
-    }
-
-    private void givenNameFieldDuplicated() {
-        when(componentDao.getDuplicateFieldsFor(component)).thenReturn(name);
+    private void givenConstraintsViolations() {
+        Set<ValidationError> errors = Collections.singleton(new ValidationError("name", "errorMessageCode"));
+        ValidationResult result = new ValidationResult(errors);
+        when(validator.validate(any(Entity.class))).thenReturn(result);
     }
 
     @Test

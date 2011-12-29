@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import java.util.Set;
-
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.validation.ValidationResult;
 
@@ -47,17 +44,8 @@ public interface ItemView extends ItemDataView {
     void hide();
 
     /**
-     * Notifies about wrong values of input fields which violates uniqueness of
-     * these fields.
-     * 
-     * @param set of fields violated the uniqueness
-     * @deprecated use {@link #wrongFields(Set)} instead
-     */
-    void wrongFieldsDuplicatedFieldSet(Set<DuplicatedField> set);
-
-    /**
      * @param result
      */
-    void wrongFields(ValidationResult result);
+    void validaionFailure(ValidationResult result);
 
 }

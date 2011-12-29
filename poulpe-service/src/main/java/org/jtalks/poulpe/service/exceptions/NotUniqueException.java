@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.service.exceptions;
 
-// FIXME: as far as NotUniqueFieldsException appeared this one is useless. Delete it
-// as soon as others get rid of it in their code.
 /**
  * Exception for cases when some entity field should be unique but it isn't.
  * @author Pavel Vervenko
+ * 
+ * @deprecated Use jsr303 validation and its ValidationException
  */
+@Deprecated
 public class NotUniqueException extends Exception {
 
     /**

@@ -19,8 +19,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
-import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.validation.ValidationError;
@@ -48,53 +46,34 @@ import com.google.common.collect.ImmutableMap;
  */
 public class ZkItemView extends Window implements ItemView, AfterCompose {
 
-    @Deprecated
-    public final static String ITEM_ALREADY_EXISTS = "item.already.exist";
-
     private static final long serialVersionUID = -3927090308078350369L;
 
     private transient ItemPresenter presenter;
+    
     private Longbox cid;
     private Textbox name;
     private Textbox description;
     private Combobox componentType;
+
+    private Map<String, ? extends org.zkoss.zk.ui.Component> components;
 
     /** {@inheritDoc} */
     @Override
     public void afterCompose() {
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
+        
         presenter.setView(this);
 
+        // fields which may be violated
+        components = ImmutableMap.of("name", name, "componentType", componentType);
     }
 
     // ==== ItemView methods ====
 
-    /** {@inheritDoc} */
     @Override
-    @Deprecated
-    public void wrongFieldsDuplicatedFieldSet(Set<DuplicatedField> set) {
-        // TODO: or not TODO? Let it be for a while
-
+    public void validaionFailure(ValidationResult result) {
         ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
-
-        if (set.contains(ComponentDuplicateField.NAME)) {
-            exceptions.add(new WrongValueException(name, Labels.getLabel(ITEM_ALREADY_EXISTS)));
-        }
-
-        if (set.contains(ComponentDuplicateField.TYPE)) {
-            exceptions.add(new WrongValueException(componentType, Labels.getLabel(ITEM_ALREADY_EXISTS)));
-        }
-
-        throw new WrongValuesException(exceptions.toArray(new WrongValueException[1]));
-    }
-
-    @Override
-    public void wrongFields(ValidationResult result) {
-        ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
-
-        // fields which may be violated
-        Map<String, Textbox> components = ImmutableMap.of("name", name, "componentType", componentType);
 
         Set<ValidationError> errors = result.getErrors();
         
@@ -102,12 +81,11 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
             String voilatedField = error.getFieldName();
             
             if (components.containsKey(voilatedField)) {
-                Textbox component = components.get(voilatedField);
+                org.zkoss.zk.ui.Component component = components.get(voilatedField);
                 String messageCode = error.getErrorMessageCode();
                 
                 exceptions.add(new WrongValueException(component, Labels.getLabel(messageCode)));
             }
-            
         }
         
         throw new WrongValuesException(exceptions.toArray(new WrongValueException[0]));

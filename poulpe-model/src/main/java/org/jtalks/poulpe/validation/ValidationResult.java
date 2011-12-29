@@ -28,7 +28,7 @@ public class ValidationResult {
     public ValidationResult(Set<ValidationError> errors) {
         this.errors = errors;
     }
-
+    
     /**
      * Should be called only after {@link #validate(Entity)}
      * @return {@code false} if there's no error, {@code true} otherwise

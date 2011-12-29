@@ -23,11 +23,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.component.items.ItemPresenter;
 import org.jtalks.poulpe.web.controller.component.items.ItemView;
@@ -36,7 +36,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * The test for {@link ItemPresenter} class.
+ * The test for {@link ItemPresenter} class
+ * 
  * @author Dmitriy Sukharev
  * @author Alexey Grigorev
  */
@@ -50,11 +51,17 @@ public class ItemPresenterTest {
     private Component component;
     private DialogManager dialogManager;
 
-    @Deprecated
-    Set<DuplicatedField> name = Collections.<DuplicatedField> singleton(ComponentDuplicateField.NAME);
-    @Deprecated
-    Set<DuplicatedField> empty = Collections.emptySet();
+    private EntityValidator entityValidator;
 
+    
+    private ValidationResult resultWithErrors = resultWithErrors();
+    
+    private ValidationResult resultWithErrors() {
+        ValidationError error = new ValidationError("name", Component.NOT_UNIQUE_NAME);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
+    }
+    
     @BeforeMethod
     public void setUp() {
         presenter = new ItemPresenter();
@@ -64,11 +71,15 @@ public class ItemPresenterTest {
 
         dialogManager = mock(DialogManager.class);
         presenter.setDialogManager(dialogManager);
-
+        
+        entityValidator = mock(EntityValidator.class);
+        presenter.setEntityValidator(entityValidator);
+        
         view = mock(ItemView.class);
-
+        presenter.setView(view);
+        
         prepareComponents();
-        initView();
+        prepareInput();
     }
 
     private void prepareComponents() {
@@ -76,17 +87,15 @@ public class ItemPresenterTest {
         component = components.get(0);
         int someRandomId = 12;
         component.setId(someRandomId);
+        
+        when(componentService.getAll()).thenReturn(components);
     }
 
-    private void initView() {
-        presenter.setView(view);
-
+    private void prepareInput() {
         when(view.getName()).thenReturn(component.getName());
         when(view.getComponentId()).thenReturn(component.getId());
         when(view.getDescription()).thenReturn(component.getDescription());
         when(view.getComponentType()).thenReturn(component.getComponentType());
-
-        when(componentService.getAll()).thenReturn(components);
     }
 
     @Test
@@ -115,113 +124,94 @@ public class ItemPresenterTest {
         verify(view).setComponentType(null);
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void saveNewComponentTest() throws Exception {
         presenter.create();
 
-        givenNoDiplicatedFields();
+        givenNoConstraintViolations();
         presenter.saveComponent();
 
         assertComponentSaved();
         verify(view).hide();
     }
 
-    @Deprecated
-    private void givenNoDiplicatedFields() {
-        when(componentService.getDuplicateFieldsFor(component)).thenReturn(empty);
+    private void givenNoConstraintViolations() {
+        when(entityValidator.validate(any(Component.class))).thenReturn(ValidationResult.EMPTY);
     }
 
-    @Deprecated
-    private void assertComponentSaved() throws NotUniqueFieldsException {
+    private void assertComponentSaved() {
         ArgumentCaptor<Component> captor = ArgumentCaptor.forClass(Component.class);
 
-        verify(presenter.getComponentService()).saveComponentCheckUniqueness(captor.capture());
+        verify(presenter.getComponentService()).saveComponent(captor.capture());
         Component value = captor.getValue();
 
         assertEquals(value.getName(), component.getName());
         assertEquals(value.getComponentType(), component.getComponentType());
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void saveComponentExistingTest() throws Exception {
         presenter.edit(component);
 
-        givenNoDiplicatedFields();
+        givenNoConstraintViolations();
         presenter.saveComponent();
 
-        verify(presenter.getComponentService()).saveComponentCheckUniqueness(component);
+        verify(presenter.getComponentService()).saveComponent(component);
         verify(view).hide();
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void saveComponentDuplicateTest() throws Exception {
         presenter.create();
 
-        givenNameFieldDuplicated();
+        givenConstraintViolations();
         presenter.saveComponent();
 
-        verify(view).wrongFieldsDuplicatedFieldSet(name);
+        verify(view).validaionFailure(resultWithErrors);
     }
 
-    @Deprecated
-    private void givenNameFieldDuplicated() throws NotUniqueFieldsException {
-        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponentCheckUniqueness(any(Component.class));
+    private void givenConstraintViolations() {
+        when(entityValidator.validate(any(Component.class))).thenReturn(resultWithErrors);
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void saveComponentDuplicateTestEdit() throws Exception {
         presenter.edit(component);
 
-        givenFieldNameDuplicatedWhenEditing();
+        givenConstraintViolations();
         presenter.saveComponent();
 
-        verify(view).wrongFieldsDuplicatedFieldSet(name);
+        verify(view).validaionFailure(resultWithErrors);
     }
 
-    @Deprecated
-    private void givenFieldNameDuplicatedWhenEditing() throws NotUniqueFieldsException {
-        doThrow(new NotUniqueFieldsException(name)).when(componentService).saveComponentCheckUniqueness(component);
-    }
-
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void checkComponentTestNewComponent() {
         presenter.create();
 
-        givenNoDiplicatedFields();
+        givenNoConstraintViolations();
         presenter.checkComponent();
 
-        verify(view, never()).wrongFieldsDuplicatedFieldSet(name);
+        verify(view, never()).validaionFailure(resultWithErrors);
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void checkComponentTestExistingComponent() {
         presenter.edit(component);
 
-        givenNoDiplicatedFields();
+        givenNoConstraintViolations();
         presenter.checkComponent();
 
-        verify(view, never()).wrongFieldsDuplicatedFieldSet(name);
+        verify(view, never()).validaionFailure(resultWithErrors);
     }
 
-    @Test(enabled = false)
-    @Deprecated
+    @Test
     public void checkComponentDiplicate() {
         presenter.edit(component);
-        givenDuplicatedField();
+        
+        givenConstraintViolations();
         presenter.checkComponent();
 
-        verify(view).wrongFieldsDuplicatedFieldSet(name);
-    }
-
-    @Deprecated
-    private void givenDuplicatedField() {
-        when(componentService.getDuplicateFieldsFor(any(Component.class))).thenReturn(name);
+        verify(view).validaionFailure(resultWithErrors);
     }
 
 }

@@ -24,8 +24,6 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.poulpe.model.dao.ComponentDao.ComponentDuplicateField;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +35,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  */
@@ -117,69 +114,5 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     private void assertForumUnavailable(Set<ComponentType> availableTypes) {
         assertFalse(availableTypes.contains(forum.getComponentType()));
-    }
-
-    @Test
-    public void noDuplicatesTest() {
-        givenForum();
-
-        Component article = createArticle();
-        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(article);
-
-        assertTrue(duplicates.isEmpty());
-    }
-
-    @Test
-    public void getDuplicateNameTest() {
-        givenForum();
-
-        Component article = createArticle();
-        article.setName(forum.getName());
-
-        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(article);
-
-        assertNameDuplicated(duplicates);
-    }
-
-    private void assertNameDuplicated(Set<DuplicatedField> duplicates) {
-        assertFieldsDuplicated(duplicates, ComponentDuplicateField.NAME);
-    }
-
-    private void assertFieldsDuplicated(Set<DuplicatedField> duplicates, DuplicatedField... fields) {
-        assertEquals(duplicates.size(), fields.length);
-
-        for (DuplicatedField field : fields) {
-            assertTrue(duplicates.contains(field));
-        }
-    }
-
-    @Test
-    public void getDuplicateComponentTypeTest() {
-        givenForum();
-
-        Component anotherForum = createForum();
-        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(anotherForum);
-
-        assertComponentTypeDuplicated(duplicates);
-    }
-
-    private void assertComponentTypeDuplicated(Set<DuplicatedField> duplicates) {
-        assertFieldsDuplicated(duplicates, ComponentDuplicateField.TYPE);
-    }
-
-    @Test
-    public void getDuplicateLoginAndComponentTypeTest() {
-        givenForum();
-
-        Component anotherForum = createForum();
-        anotherForum.setName(forum.getName());
-
-        Set<DuplicatedField> duplicates = dao.getDuplicateFieldsFor(anotherForum);
-
-        assertNameAndTypeDuplicated(duplicates);
-    }
-
-    private void assertNameAndTypeDuplicated(Set<DuplicatedField> duplicates) {
-        assertFieldsDuplicated(duplicates, ComponentDuplicateField.TYPE, ComponentDuplicateField.NAME);
     }
 }

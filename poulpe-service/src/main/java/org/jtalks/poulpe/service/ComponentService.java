@@ -18,16 +18,15 @@ import java.util.List;
 import java.util.Set;
 
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 import org.jtalks.poulpe.validation.ValidationException;
 
 /**
  * Service for some operations with {@link Component}.
  * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
 public interface ComponentService extends EntityService<Component> {
 
@@ -44,18 +43,10 @@ public interface ComponentService extends EntityService<Component> {
     void deleteComponent(Component component);
 
     /**
-     * Save new or update existent component.
-     * @param component component to save
-     * @throws NotUniqueFieldsException when saving entity to the date source cause violations of DB constraints
-     * @deprecated use {@link #saveComponent(Component)} for saving and jsr-303 validation for checking for unuqueness
-     */
-    @Deprecated
-    void saveComponentCheckUniqueness(Component component) throws NotUniqueFieldsException;
-
-    /**
+     * Saves new component or updates existent
      * 
-     * @param component
-     * @exception ValidationException
+     * @param component to save
+     * @exception ValidationException when entity being saved violates validation constraints
      */
     void saveComponent(Component component);
     
@@ -66,13 +57,4 @@ public interface ComponentService extends EntityService<Component> {
      */
     Set<ComponentType> getAvailableTypes();
     
-    /**
-     * Obtains the set of such fields which ought to be unique and whose uniqueness will be violated
-     * after adding {@code component} to the data source.
-     * @param component the component object
-     * @return the set of fields whose uniqueness will be violated after adding {@code component}
-     *         to the data source
-     */
-    @Deprecated
-    Set<DuplicatedField> getDuplicateFieldsFor(Component component);
 }

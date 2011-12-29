@@ -19,10 +19,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
@@ -56,26 +54,4 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
         return result;
     }
     
-    private static final String duplicatesQuery = 
-            "FROM Component c WHERE (c.name = :name OR c.componentType = :type) AND c.id != :id";
-    
-    /** {@inheritDoc} */
-    @Override
-    public Set<DuplicatedField> getDuplicateFieldsFor(Component component) {
-        List<Component> duplicates = retrieveDuplicatesFor(component);
-
-        ComponentDuplicatesFinder finder = new ComponentDuplicatesFinder(component, duplicates);
-        return finder.find();
-    }
-    
-    private List<Component> retrieveDuplicatesFor(Component component) {
-        Query query = getSession().createQuery(duplicatesQuery);
-        query.setString("name", component.getName())
-                .setParameter("type", component.getComponentType())
-                .setLong("id", component.getId());
-
-        @SuppressWarnings("unchecked")
-        List<Component> duplicates = query.list();
-        return duplicates;
-    }
 }
