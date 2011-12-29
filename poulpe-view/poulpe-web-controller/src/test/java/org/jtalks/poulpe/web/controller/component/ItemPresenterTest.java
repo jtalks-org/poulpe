@@ -14,10 +14,13 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.testng.Assert.*;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.createComponents;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
