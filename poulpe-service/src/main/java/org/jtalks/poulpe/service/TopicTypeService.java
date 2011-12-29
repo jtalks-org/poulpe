@@ -19,7 +19,7 @@ import java.util.List;
 
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.ValidationException;
 
 /**
  * Service for operations with {@link TopicType}
@@ -42,30 +42,16 @@ public interface TopicTypeService extends EntityService<TopicType> {
     void deleteTopicType(TopicType topicType);
     
     /**
-     * Delete the specified TopicType.
-     * @param topicType collection to delete
-     */
-    void deleteTopicTypes(Collection<TopicType> topicType);
-
-    /**
      * Save new TopicType.
      * @param topicType topicType to save
-     * @throws NotUniqueException 
+     * @exception ValidationException
      */
-    void saveTopicType(TopicType topicType) throws NotUniqueException;
-    
+    void saveOrUpdate(TopicType topicType);
+
     /**
-     * Update TopicType.
-     * @param topicType topicType to save
-     * @throws NotUniqueException 
+     * TODO: find out why it's needed
+     * @param topicTypes
      */
-    void updateTopicType(TopicType topicType) throws NotUniqueException;
+    void deleteTopicTypes(Collection<TopicType> topicTypes);
     
-    /**
-     * Check if type of topic with given name exists.
-     * @param topicTypeName name of type that will be checked
-     * @param ignorableTopicTypeID id of topic that will be ignored during check
-     * @return true if exists
-     */
-    boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID);
 }
