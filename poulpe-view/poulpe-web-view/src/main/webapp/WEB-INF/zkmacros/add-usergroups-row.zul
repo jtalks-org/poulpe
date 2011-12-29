@@ -1,34 +1,23 @@
-<zk xmlns="http://www.zkoss.org/2005/zul"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-	<borderlayout height="30px">
-		<west border="none" width="60px">
-			<label value="${arg.row.rowLabel}" />
-		</west>
-		<center border="none">
-			<hbox>
-				<listbox sizedByContent="true">
-					<listitem >
-						<listcell forEach="${arg.row.groups}"
-							label="${each.name}" style="	border: none; margin: none">
-							<button label="X"/>
-						</listcell>
-					</listitem>
-				</listbox>
-			</hbox>
-
-		</center>
-		<east border="none">
-			<!--
-				There is no other way to pass parameters that are evaluated by EL ${}, it simply doesn't work with @command.
-				I raised JIRA for this, but ZK team doesn't seem to be keen implementing this:
-				http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
-				button, and then we can pass the ID to the @command() where we can parse it in Java.
-			-->
-			<button
-				id="permissionName=${arg.permissionName},mode=${arg.mode}"
-				label="Add Group" sclass="add-group-button"
-				onClick="@command('showGroupsDialog', params=self.getId())" />
-		</east>
-	</borderlayout>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <borderlayout height="30px">
+    <west border="none" width="60px">
+      <label value="${arg.row.rowLabel}" />
+    </west>
+    <center border="none">
+      <hbox>
+        <button forEach="${arg.row.groups}" label="${each.name}" sclass="usergroup-button" />
+      </hbox>
+    </center>
+    <east border="none">
+      <!--
+      There is no other way to pass parameters that are evaluated by EL ${}, it simply doesn't work with @command.
+      I raised JIRA for this, but ZK team doesn't seem to be keen implementing this:
+      http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
+      button, and then we can pass the ID to the @command() where we can parse it in Java.
+      -->
+      <button id="permissionName=${arg.permissionName},mode=${arg.mode}" label="Add Group" sclass="add-group-button"
+              onClick="@command('showGroupsDialog', params=self.getId())" />
+    </east>
+  </borderlayout>
 </zk>
