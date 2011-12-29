@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
@@ -27,13 +26,12 @@ import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
-import org.zkoss.zk.ui.WrongValueException;
-import org.zkoss.zk.ui.WrongValuesException;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Longbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
 
 import com.google.common.collect.ImmutableMap;
 
@@ -55,7 +53,7 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     private Textbox description;
     private Combobox componentType;
 
-    private Map<String, ? extends org.zkoss.zk.ui.Component> components;
+    private Map<String, ? extends InputElement> components;
 
     /** {@inheritDoc} */
     @Override
@@ -73,22 +71,17 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
 
     @Override
     public void validaionFailure(ValidationResult result) {
-        ArrayList<WrongValueException> exceptions = new ArrayList<WrongValueException>();
 
-        Set<ValidationError> errors = result.getErrors();
-        
-        for (ValidationError error : errors) {
+        for (ValidationError error : result.getErrors()) {
             String voilatedField = error.getFieldName();
             
             if (components.containsKey(voilatedField)) {
-                org.zkoss.zk.ui.Component component = components.get(voilatedField);
-                String messageCode = error.getErrorMessageCode();
-                
-                exceptions.add(new WrongValueException(component, Labels.getLabel(messageCode)));
+                InputElement component = components.get(voilatedField);
+                String errorMessage = Labels.getLabel(error.getErrorMessageCode());
+                component.setErrorMessage(errorMessage);
             }
         }
         
-        throw new WrongValuesException(exceptions.toArray(new WrongValueException[0]));
     }
 
     /** {@inheritDoc} */
