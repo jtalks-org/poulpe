@@ -3,7 +3,7 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-	<window width="100%" title="${labels.topictypes.list.title}"
+	<window width="75%" title="${labels.topictypes.list.title}"
 		presenter="${topicTypeListPresenter}"
 		use="org.jtalks.poulpe.web.controller.topictype.TopicTypeListViewImpl">
 		<listbox id="topicTypeListbox">
