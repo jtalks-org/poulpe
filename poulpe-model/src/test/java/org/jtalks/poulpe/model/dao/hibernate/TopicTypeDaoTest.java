@@ -60,7 +60,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testSave() {
-        TopicType topicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType = ObjectsFactory.topicType();
         dao.saveOrUpdate(topicType);
 
         assertNotSame(topicType.getId(), 0, "Id not created");
@@ -81,7 +81,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testGet() {
-        TopicType TopicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType TopicType = ObjectsFactory.topicType();
         session.save(TopicType);
 
         TopicType result = dao.get(TopicType.getId());
@@ -99,7 +99,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testUpdate() {
-        TopicType topicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType = ObjectsFactory.topicType();
         session.save(topicType);
 
         String newTitle = "new title";
@@ -122,7 +122,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testDelete() {
-        TopicType topicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType = ObjectsFactory.topicType();
         session.save(topicType);
 
         boolean result = dao.delete(topicType.getId());
@@ -141,9 +141,9 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testGetAll() {
-        TopicType topicType1 = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType1 = ObjectsFactory.topicType();
         session.save(topicType1);
-        TopicType topicType2 = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType2 = ObjectsFactory.topicType();
         session.save(topicType2);
 
         List<TopicType> topicTypes = dao.getAll();
@@ -160,7 +160,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testIsExist() {
-        TopicType TopicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType TopicType = ObjectsFactory.topicType();
         session.save(TopicType);
 
         assertTrue(dao.isExist(TopicType.getId()));
@@ -176,7 +176,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
         assertFalse(dao.isTopicTypeNameExists("werwerwewr"));
         assertFalse(dao.isTopicTypeNameExists("werwerwewr", 123));        
     
-        TopicType topicType = ObjectsFactory.createTopicTypeWithRandomTitle();
+        TopicType topicType = ObjectsFactory.topicType();
         session.save(topicType);
         assertTrue(dao.isTopicTypeNameExists(topicType.getTitle()));
         
