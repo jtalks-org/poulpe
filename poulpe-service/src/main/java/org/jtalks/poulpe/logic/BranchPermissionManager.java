@@ -2,7 +2,7 @@ package org.jtalks.poulpe.logic;
 
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
-import org.jtalks.common.security.acl.JtalksPermission;
+import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
 

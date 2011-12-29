@@ -58,7 +58,7 @@ public class Refl {
         }
         return fields;
     }
-    
+
     /**
      * Retrieves all fields from the class, including its super classes,
      * filtering out only ones annotated by the given annotation.
@@ -68,9 +68,10 @@ public class Refl {
      * 
      * @return fields marked by the given annotation
      */
-    public static <A extends Annotation> List<AnnotatedField<A>> getAnnotatedFields(Class<?> beanClass, Class<A> annotation) {
+    public static <A extends Annotation> List<AnnotatedField<A>> getAnnotatedFields(Class<?> beanClass,
+            Class<A> annotation) {
         List<AnnotatedField<A>> fields = new ArrayList<AnnotatedField<A>>();
-        
+
         for (Field field : getAllFields(beanClass)) {
             for (Annotation a : field.getAnnotations()) {
                 if (annotation.isInstance(a)) {
@@ -83,7 +84,6 @@ public class Refl {
 
         return fields;
     }
-    
 
     /**
      * Retrieves all fields from the class, including its super classes. <br>
@@ -129,6 +129,45 @@ public class Refl {
         }
 
         return classes;
+    }
+
+    /**
+     * Converts an object to map using a collection of field instances. Null
+     * values won't go to the resulting map.<br>
+     * <br>
+     * 
+     * <b>Note:</b> Fields should be accessible (may be achieved using
+     * {@link #accessible(List)})
+     * 
+     * @param object values from which will be extracted
+     * @param fields a list of <b>accessible</b> fields
+     * 
+     * @return field names mapped to their values from the given bean
+     * 
+     * @exception IllegalArgumentException wrapping
+     * {@link IllegalAccessException} when one of the fields inaccessible
+     * @exception IllegalArgumentException if the bean is not an instance of the
+     * class declaring the field (or a subclass or implementor)
+     */
+    public static Map<String, Object> convertToMapFilterNulls(Object object, List<Field> fields) {
+        try {
+            return convertFilterNulls(object, fields);
+        } catch (IllegalAccessException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    private static Map<String, Object> convertFilterNulls(Object object, List<Field> fields)
+            throws IllegalAccessException {
+        Map<String, Object> map = new HashMap<String, Object>();
+
+        for (Field field : fields) {
+            Object value = field.get(object);
+            if (value != null) {
+                map.put(field.getName(), value);
+            }
+        }
+        return map;
     }
 
     /**

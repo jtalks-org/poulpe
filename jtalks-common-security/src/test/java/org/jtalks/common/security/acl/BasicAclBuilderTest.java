@@ -3,6 +3,7 @@ package org.jtalks.common.security.acl;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import org.testng.annotations.BeforeMethod;
@@ -51,9 +52,9 @@ public class BasicAclBuilderTest {
     @Test(dataProvider = "onePermissionAndOneGroup")
     public void testRestrictGrantDeleteTogether(Permission permission, Group group) throws Exception {
         builder.restrict(permission).delete(permission).grant(permission).setOwner(group).on(target).flush();
-        verify(manager, times(1)).grant(groupSids(group), newArrayList(permission), target);
-        verify(manager, times(1)).restrict(groupSids(group), newArrayList(permission), target);
-        verify(manager, times(1)).delete(groupSids(group), newArrayList(permission), target);
+        verify(manager, times(1)).grant(groupSids(group), Lists.newArrayList(permission), target);
+        verify(manager, times(1)).restrict(groupSids(group), Lists.newArrayList(permission), target);
+        verify(manager, times(1)).delete(groupSids(group), Lists.newArrayList(permission), target);
     }
 
     @Test(dataProvider = "twoPermissionsAndTwoGroup")
@@ -62,9 +63,9 @@ public class BasicAclBuilderTest {
             Permission permission = permissions[i];
             Group group = groups[i];
             builder.restrict(permission).delete(permission).grant(permission).setOwner(group).on(target).flush();
-            verify(manager, times(1)).grant(groupSids(group), newArrayList(permission), target);
-            verify(manager, times(1)).restrict(groupSids(group), newArrayList(permission), target);
-            verify(manager, times(1)).delete(groupSids(group), newArrayList(permission), target);
+            verify(manager, times(1)).grant(groupSids(group), Lists.newArrayList(permission), target);
+            verify(manager, times(1)).restrict(groupSids(group), Lists.newArrayList(permission), target);
+            verify(manager, times(1)).delete(groupSids(group), Lists.newArrayList(permission), target);
         }
     }
 
@@ -76,12 +77,12 @@ public class BasicAclBuilderTest {
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testFlushWithoutSids() throws Exception {
-        builder.restrict(JtalksPermission.ADMINISTRATION).on(target).flush();
+        builder.restrict(BranchPermission.VIEW_TOPICS).on(target).flush();
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
     public void testFlushWithoutTarget() throws Exception {
-        builder.restrict(JtalksPermission.ADMINISTRATION).setOwner(new Group()).flush();
+        builder.restrict(BranchPermission.VIEW_TOPICS).setOwner(new Group()).flush();
     }
 
     private List<Sid> groupSids(Group... groups) {
@@ -94,14 +95,14 @@ public class BasicAclBuilderTest {
 
     @DataProvider(name = "onePermissionAndOneGroup")
     public Object[][] provideOnePermissionAndOneGroup() {
-        return new Object[][]{{JtalksPermission.DELETE, new Group()}};
+        return new Object[][]{{BranchPermission.VIEW_TOPICS, new Group()}};
     }
 
     @DataProvider(name = "twoPermissionsAndTwoGroup")
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
     public Object[][] provideTwoPermissionsAndTwoGroup() {
         Group[] arrayWithTwoGroups = Group.createGroupsWithNames("Moderators", "Admins").toArray(new Group[]{});
-        Permission[] arrayWithTwoPermissions = {JtalksPermission.DELETE, JtalksPermission.CREATE};
+        Permission[] arrayWithTwoPermissions = {BranchPermission.VIEW_TOPICS, BranchPermission.CREATE_TOPICS};
 
         return new Object[][]{{arrayWithTwoGroups, arrayWithTwoPermissions}};
     }
@@ -110,10 +111,10 @@ public class BasicAclBuilderTest {
     @SuppressWarnings("ToArrayCallWithZeroLengthArrayArgument")
     public Object[][] provideGroupsAndPermissions() {
         Group[] arrayWithOneGroup = Group.createGroupsWithNames("Trolls").toArray(new Group[]{});
-        Permission[] arrayWithOnePermission = {JtalksPermission.DELETE};
+        Permission[] arrayWithOnePermission = {BranchPermission.VIEW_TOPICS};
 
         Group[] arrayWithTwoGroups = Group.createGroupsWithNames("Moderators", "Admins").toArray(new Group[]{});
-        Permission[] arrayWithTwoPermissions = {JtalksPermission.DELETE, JtalksPermission.CREATE};
+        Permission[] arrayWithTwoPermissions = {BranchPermission.VIEW_TOPICS, BranchPermission.CREATE_TOPICS};
 
         return new Object[][]{
                 {arrayWithOneGroup, arrayWithOnePermission},

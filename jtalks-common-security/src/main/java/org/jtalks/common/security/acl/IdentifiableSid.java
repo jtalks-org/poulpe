@@ -9,6 +9,8 @@ import org.springframework.security.acls.model.Sid;
  * @author stanislav bashkirtsev
  */
 public interface IdentifiableSid extends Sid {
+    static final String SID_NAME_SEPARATOR = ":";
+
     /**
      * Gets the unique identifier of the SID (usually a database ID of the entity). It is string since the ACL tables
      * require this.
@@ -16,4 +18,17 @@ public interface IdentifiableSid extends Sid {
      * @return the unique identifier of the SID (usually a database ID of the entity)
      */
     String getSidId();
+
+    public static class WrongFormatException extends RuntimeException {
+        private final String sidName;
+
+        public WrongFormatException(String sidName) {
+            super("Sid name is of incorrect format: " + sidName);
+            this.sidName = sidName;
+        }
+
+        public String getSidName() {
+            return sidName;
+        }
+    }
 }

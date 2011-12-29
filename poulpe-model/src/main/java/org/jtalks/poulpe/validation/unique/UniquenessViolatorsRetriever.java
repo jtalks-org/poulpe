@@ -107,7 +107,7 @@ public class UniquenessViolatorsRetriever {
      * @return {@link Criterion} ready for using via {@link Criteria}
      */
     private Criterion atLeastOneFieldViolated(EntityWrapper bean) {
-        Iterator<Entry<String, Object>> iterator = bean.getIterator();
+        Iterator<Entry<String, Object>> iterator = bean.getProperties().iterator();
         Entry<String, Object> first = iterator.next();
         Criterion or = Restrictions.eq(first.getKey(), first.getValue());
 

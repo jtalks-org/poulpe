@@ -21,9 +21,11 @@
   <bean id="branchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
     <constructor-arg index="0" ref="branchDao" />
     <constructor-arg index="1" ref="aclManager"/>
+    <constructor-arg index="2" ref="groupService"/>
   </bean>
   <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao" />

@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.dao.DuplicatedField;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.validation.ValidationException;
 
 /**
  * Service for some operations with {@link Component}.
@@ -51,6 +52,11 @@ public interface ComponentService extends EntityService<Component> {
     @Deprecated
     void saveComponentCheckUniqueness(Component component) throws NotUniqueFieldsException;
 
+    /**
+     * 
+     * @param component
+     * @exception ValidationException
+     */
     void saveComponent(Component component);
     
     

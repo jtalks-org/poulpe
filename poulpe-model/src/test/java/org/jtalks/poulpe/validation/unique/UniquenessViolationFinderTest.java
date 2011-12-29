@@ -74,8 +74,6 @@ public class UniquenessViolationFinderTest {
 
     @Test
     public void emptyDuplicates() {
-        forum = forum();
-
         List<EntityWrapper> noDuplicates = Collections.emptyList();
         forEntity(forum).in(noDuplicates).findViolationsAndAddTo(context);
 
@@ -84,36 +82,31 @@ public class UniquenessViolationFinderTest {
 
     @Test
     public void oneDuplicatesType() {
-        forum = forum();
-        List<EntityWrapper> duplicates = componentTypeDuplicated();
-
+        List<EntityWrapper> duplicates = componentTypeDuplicatedList();
         forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
 
         verifyComponentTypeConstraintViolationAdded();
     }
 
-    private List<EntityWrapper> componentTypeDuplicated() {
+    private List<EntityWrapper> componentTypeDuplicatedList() {
         return Arrays.asList(forum());
     }
 
     private void verifyComponentTypeConstraintViolationAdded() {
         String errorMessage = forum.getErrorMessage(COMPONENT_TYPE_FIELD);
         verify(context).buildConstraintViolationWithTemplate(errorMessage);
-        verify(nameNode, never()).addConstraintViolation();
         verify(componentTypeNode).addConstraintViolation();
     }
 
     @Test
     public void oneDuplicatesName() {
-        forum = forum();
-        List<EntityWrapper> duplicates = oneNameDuplication();
-
+        List<EntityWrapper> duplicates = oneNameDuplicationList();
         forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
 
         verifyNameConstaintViolationAdded();
     }
     
-    private List<EntityWrapper> oneNameDuplication() {
+    private List<EntityWrapper> oneNameDuplicationList() {
         Component article = new Component(component.getName(), "desc", ComponentType.ARTICLE);
         return Arrays.asList(wrap(article));
     }
@@ -122,7 +115,32 @@ public class UniquenessViolationFinderTest {
         String errorMessage = forum.getErrorMessage(NAME_FIELD);
         verify(context).buildConstraintViolationWithTemplate(errorMessage);
         verify(nameNode).addConstraintViolation();
-        verify(componentTypeNode, never()).addConstraintViolation();
+    }
+    
+    @Test
+    public void defaultViolationDisabled() {
+        List<EntityWrapper> duplicates = oneNameDuplicationList();
+        forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
+
+        verify(context).disableDefaultConstraintViolation();
     }
 
+    @Test
+    public void twoDuplicates() {
+        List<EntityWrapper> duplicates = twoDuplicatesList();
+        forEntity(forum).in(duplicates).findViolationsAndAddTo(context);
+
+        verityBothViolationsAdded();
+    }
+    
+    private List<EntityWrapper> twoDuplicatesList() {
+        Component article = new Component(component.getName(), "desc", ComponentType.ARTICLE);
+        return Arrays.asList(wrap(article), forum());
+    }
+
+    private void verityBothViolationsAdded() {
+        verify(nameNode).addConstraintViolation();
+        verify(componentTypeNode).addConstraintViolation();
+    }
+    
 }

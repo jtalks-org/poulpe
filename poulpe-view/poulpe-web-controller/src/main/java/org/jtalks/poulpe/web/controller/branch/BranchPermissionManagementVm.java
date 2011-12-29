@@ -3,13 +3,15 @@ package org.jtalks.poulpe.web.controller.branch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
-import org.jtalks.common.security.acl.JtalksPermission;
+import org.jtalks.poulpe.model.dto.groups.BranchAccessList;
+import org.jtalks.poulpe.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
-import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementRow;
+import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.Component;
@@ -19,11 +21,11 @@ import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
+
+import static com.google.common.base.Predicates.notNull;
+import static com.google.common.collect.Iterables.filter;
 
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
@@ -79,9 +81,9 @@ public class BranchPermissionManagementVm {
 
     @Command
     public void saveDialogState() {
-        if (groupsDialogVm.isAllowAccess()) {
+        if (groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
             branchService.grantPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
-        } else {
+        } else if(!groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
             branchService.restrictPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
         }
         if (!groupsDialogVm.getRemovedFromAdded().isEmpty()) {
@@ -114,26 +116,19 @@ public class BranchPermissionManagementVm {
     private void updateBlock(JtalksPermission permission, boolean allowRow, List<Group> groups) {
         BranchPermissionManagementBlock block = blocks.get(permission.getName());
         if (allowRow) {
-            block = block.setAllowRow(BranchPermissionManagementRow.newAllowRow(groups));
+            block = block.setAllowRow(BranchPermissionRow.newAllowRow(groups));
         } else {
-            block = block.setRestrictRow(BranchPermissionManagementRow.newRestrictRow(groups));
+            block = block.setRestrictRow(BranchPermissionRow.newRestrictRow(groups));
         }
         blocks.put(permission.getName(), block);
     }
 
     private void initDataForView() {
         branch = branchService.getAll().get(0);
-        Table<JtalksPermission, Group, Boolean> groupAccessList = branchService.getGroupAccessListFor(branch);
-        for (JtalksPermission permission : groupAccessList.rowKeySet()) {
-            BranchPermissionManagementRow allowRow = BranchPermissionManagementRow.newAllowRow(new ArrayList<Group>());
-            BranchPermissionManagementRow restrictRow = BranchPermissionManagementRow.newRestrictRow(new ArrayList<Group>());
-            for (Map.Entry<Group, Boolean> entry : groupAccessList.row(permission).entrySet()) {
-                if (entry.getValue()) {
-                    allowRow.addGroup(entry.getKey());
-                } else {
-                    restrictRow.addGroup(entry.getKey());
-                }
-            }
+        BranchAccessList groupAccessList = branchService.getGroupAccessListFor(branch);
+        for (BranchPermission permission : groupAccessList.getPermissions()) {
+            BranchPermissionRow allowRow = BranchPermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
+            BranchPermissionRow restrictRow = BranchPermissionRow.newRestrictRow(groupAccessList.getRestricted(permission));
             blocks.put(permission.getName(), new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
         }
     }

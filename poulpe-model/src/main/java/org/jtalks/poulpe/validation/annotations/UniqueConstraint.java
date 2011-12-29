@@ -21,9 +21,9 @@ import org.jtalks.poulpe.validation.unique.UniqueConstraintValidator;
  * <pre>
  * &#064;UniqueConstraint
  * class Component extends Entity {
- *     &#064;UniqueField
+ *     &#064;UniqueField(message = "not.unique.name")
  *     private String name;
- *     &#064;UniqueField
+ *     &#064;UniqueField(message = "not.unique.type")
  *     private ComponentType componentType;
  *     // getters, setters
  * }

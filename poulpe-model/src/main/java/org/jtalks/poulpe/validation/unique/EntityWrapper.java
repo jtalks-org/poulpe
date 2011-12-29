@@ -17,12 +17,13 @@ package org.jtalks.poulpe.validation.unique;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.validation.annotations.UniqueField;
 import org.jtalks.poulpe.validation.util.AnnotatedField;
@@ -45,7 +46,12 @@ class EntityWrapper {
      * Wraps the given entity, making possible to access to its values at
      * runtime without knowing instance of which class it is. Seeks for fields
      * marked with {@link UniqueField} annotation and stores their values in
-     * internal map.
+     * internal map. <br>
+     * <br>
+     * 
+     * If some of the annotated fields contain null, the will be excluded from
+     * resulting set returned from {@link #getProperties()}, although
+     * {@link #getValue(String)} will still return null.
      * 
      * @param entity being wrapped
      */
@@ -66,16 +72,7 @@ class EntityWrapper {
         }
         //
 
-        properties = Refl.convertToMap(entity, fields);
-        filterNullsInProperties();
-    }
-
-    private void filterNullsInProperties() {
-        for (Entry<String, Object> property : properties.entrySet()) {
-            if (property.getValue() == null) {
-                properties.remove(property.getKey());
-            }
-        }
+        properties = Refl.convertToMapFilterNulls(entity, fields);
     }
 
     /**
@@ -116,12 +113,14 @@ class EntityWrapper {
         return properties.entrySet();
     }
 
-    /**
-     * @return iterator for all key-value properties (for fields, marked with
-     * {@link UniqueField})
-     */
-    public Iterator<Entry<String, Object>> getIterator() {
-        return properties.entrySet().iterator();
+    @Override
+    public boolean equals(Object obj) {
+        return EqualsBuilder.reflectionEquals(this, obj, new String[] { "object" });
+    }
+
+    @Override
+    public int hashCode() {
+        return HashCodeBuilder.reflectionHashCode(this, new String[] { "object" });
     }
 
 }
