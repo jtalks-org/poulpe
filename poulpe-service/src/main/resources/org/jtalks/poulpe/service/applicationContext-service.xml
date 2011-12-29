@@ -31,6 +31,7 @@
   </bean>
   <bean id="topicTypeService" class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
     <constructor-arg index="0" ref="topicTypeDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
   <bean id="userService" class="org.jtalks.poulpe.service.transactional.TransactionalUserService">
     <constructor-arg index="0" ref="userDao" />

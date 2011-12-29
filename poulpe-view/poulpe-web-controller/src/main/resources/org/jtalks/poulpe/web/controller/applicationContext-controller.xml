@@ -63,6 +63,7 @@
     <property name="topicTypeService" ref="topicTypeService" />
     <property name="windowManager" ref="windowManager" />
     <property name="dialogManager" ref="dialogManager" />
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
   <bean id="usersListPresenter" class="org.jtalks.poulpe.web.controller.users.UsersListPresenter" scope="prototype">
