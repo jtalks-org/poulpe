@@ -14,26 +14,19 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import com.google.common.collect.Table;
-import org.jtalks.common.security.acl.AclManagerImpl;
-import org.jtalks.common.security.acl.BasicAclBuilder;
-import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.poulpe.logic.BranchPermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.groups.BranchAccessList;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author Vitaliy Kravchenko
@@ -41,17 +34,14 @@ import java.util.Map;
  */
 public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao> implements
         BranchService {
-    private final AclManagerImpl aclManager;
-    private final GroupService groupService;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final BranchPermissionManager branchPermissionManager;
 
     /**
      * Create an instance of entity based service
      */
-    public TransactionalBranchService(BranchDao branchDao, AclManagerImpl aclManager, GroupService groupService) {
+    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager) {
         this.dao = branchDao;
-        this.aclManager = aclManager;
-        this.groupService = groupService;
+        this.branchPermissionManager = branchPermissionManager;
     }
 
     /**
@@ -109,36 +99,32 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     @Override
     public BranchAccessList getGroupAccessListFor(Branch branch) {
-        BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
-        Table<Integer, Long, Boolean> branchPermissions = aclManager.getBranchPermissions(branch);
-        for (BranchPermission permission : branchAccessList.getPermissions()) {
-            Map<Long, Boolean> row = branchPermissions.row(permission.getMask());
-            for (Map.Entry<Long, Boolean> entry : row.entrySet()) {
-                try {
-                    Group group = groupService.get(entry.getKey());
-                    branchAccessList.put(permission, group, entry.getValue());
-                } catch (NotFoundException e) {
-                    logger.warn("A group with ID {} was removed, but this ID is still registered as a Permission owner in " +
-                            "ACL tables.", entry.getKey());
-                }
-            }
-        }
-        return branchAccessList;
+        return branchPermissionManager.getGroupAccessListFor(branch);
+    }
+
+    @Override
+    public void changeGrants(Branch branch, BranchAccessChanges changes){
+        branchPermissionManager.changeGrants(branch, changes);
+    }
+
+    @Override
+    public void changeRestrictions(Branch branch, BranchAccessChanges changes){
+
     }
 
     @Override
     public void grantPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        new BasicAclBuilder(aclManager).grant(permission).setOwner(groups.toArray(new Group[]{})).on(branch).flush();
+        branchPermissionManager.grantPermissions(branch, permission, groups);
 
     }
 
     @Override
     public void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        new BasicAclBuilder(aclManager).restrict(permission).setOwner(groups.toArray(new Group[]{})).on(branch).flush();
+        branchPermissionManager.restrictPermissions(branch, permission, groups);
     }
 
     @Override
     public void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups) {
-        new BasicAclBuilder(aclManager).delete(permission).setOwner(groups.toArray(new Group[]{})).on(branch).flush();
+        branchPermissionManager.deletePermissions(branch, permission, groups);
     }
 }

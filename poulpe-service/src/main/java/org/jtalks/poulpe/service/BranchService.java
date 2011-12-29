@@ -14,9 +14,8 @@
  */
 package org.jtalks.poulpe.service;
 
-import com.google.common.collect.Table;
-import org.jtalks.poulpe.model.dto.groups.BranchAccessList;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -85,4 +84,8 @@ public interface BranchService extends EntityService<Branch> {
     void restrictPermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
 
     void deletePermissions(Branch branch, JtalksPermission permission, Collection<Group> groups);
+
+    void changeGrants(Branch branch, BranchAccessChanges changes);
+
+    void changeRestrictions(Branch branch, BranchAccessChanges changes);
 }

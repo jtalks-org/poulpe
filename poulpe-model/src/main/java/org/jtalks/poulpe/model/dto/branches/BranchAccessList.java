@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.model.dto.groups;
+package org.jtalks.poulpe.model.dto.branches;
 
 import com.google.common.collect.Maps;
 import org.jtalks.poulpe.model.entity.Group;

@@ -47,7 +47,7 @@ public class TransactionalBranchServiceTest {
     public void setUp() throws Exception {
         branchDao = mock(BranchDao.class);
         aclManager = mock(AclManagerImpl.class);
-        branchService = new TransactionalBranchService(branchDao, aclManager, null);
+        branchService = new TransactionalBranchService(branchDao, null);
     }
 
     @Test

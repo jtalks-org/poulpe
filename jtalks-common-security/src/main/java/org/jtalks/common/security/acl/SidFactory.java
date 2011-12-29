@@ -52,28 +52,14 @@ public class SidFactory {
     }
 
     public static class SidWithoutRequiredConstructorException extends RuntimeException {
-        private final Class<? extends IdentifiableSid> sidClass;
-
         public SidWithoutRequiredConstructorException(Class<? extends IdentifiableSid> sidClass, Throwable ex) {
             super(sidClass + " doesnt have a public constructor with single String argument.", ex);
-            this.sidClass = sidClass;
-        }
-
-        public Class<? extends IdentifiableSid> getSidClass() {
-            return sidClass;
         }
     }
 
     public static class SidConstructorThrewException extends RuntimeException {
-        private final Class<? extends IdentifiableSid> sidClass;
-
         public SidConstructorThrewException(Class<? extends IdentifiableSid> sidClass, Throwable ex) {
             super(sidClass + ". While initiating the class, it threw an exception.", ex);
-            this.sidClass = sidClass;
-        }
-
-        public Class<? extends IdentifiableSid> getSidClass() {
-            return sidClass;
         }
     }
 }

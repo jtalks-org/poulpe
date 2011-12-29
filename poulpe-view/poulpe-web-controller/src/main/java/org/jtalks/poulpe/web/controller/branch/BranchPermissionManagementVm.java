@@ -2,12 +2,12 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Table;
-import org.jtalks.poulpe.model.dto.groups.BranchAccessList;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
@@ -21,11 +21,10 @@ import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Window;
 
 import javax.annotation.Nonnull;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
-
-import static com.google.common.base.Predicates.notNull;
-import static com.google.common.collect.Iterables.filter;
 
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
@@ -81,13 +80,13 @@ public class BranchPermissionManagementVm {
 
     @Command
     public void saveDialogState() {
+        BranchAccessChanges accessChanges = new BranchAccessChanges(groupsDialogVm.getPermission());
+        accessChanges.setNewlyAddedPermissions(groupsDialogVm.getNewAdded());
+        accessChanges.setRemovedPermissions(groupsDialogVm.getRemovedFromAdded());
         if (groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
-            branchService.grantPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
-        } else if(!groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
-            branchService.restrictPermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getNewAdded());
-        }
-        if (!groupsDialogVm.getRemovedFromAdded().isEmpty()) {
-            branchService.deletePermissions(branch, groupsDialogVm.getPermission(), groupsDialogVm.getRemovedFromAdded());
+            branchService.changeGrants(branch, accessChanges);
+        } else if (!groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
+            branchService.changeRestrictions(branch, accessChanges);
         }
         dialogClosed();
         Executions.getCurrent().sendRedirect("");//reloading the page, couldn't find a better way yet
