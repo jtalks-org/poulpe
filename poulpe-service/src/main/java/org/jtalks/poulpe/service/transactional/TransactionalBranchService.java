@@ -56,15 +56,6 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void deleteBranch(Branch selectedBranch) {
-        // TODO: check returned value?
-        dao.delete(selectedBranch.getId());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void saveBranch(Branch selectedBranch) throws NotUniqueException {
         if (dao.isBranchDuplicated(selectedBranch)) {
             throw new NotUniqueException();

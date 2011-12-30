@@ -39,14 +39,6 @@ public interface BranchService extends EntityService<Branch> {
     List<Branch> getAll();
 
     /**
-     * Mark the branch as deleted.
-     *
-     * @param selectedBranch branch to delete
-     * @deprecated because there are two other delete methods
-     */
-    void deleteBranch(Branch selectedBranch);
-
-    /**
      * Save or update branch.
      *
      * @param selectedBranch instance to save
