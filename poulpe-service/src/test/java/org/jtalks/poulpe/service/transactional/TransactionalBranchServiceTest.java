@@ -86,7 +86,7 @@ public class TransactionalBranchServiceTest {
     public void testDeleteBranch() {
         Branch branch = new Branch();
 
-        branchService.deleteBranch(branch);
+        branchService.deleteBranchRecursively(branch);
 
         verify(branchDao).delete(branch.getId());
     }

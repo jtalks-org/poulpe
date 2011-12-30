@@ -64,7 +64,7 @@ public class BranchEditorPresenter {
      * */
     public void deleteBranch() {
         Branch branch = view.getSelectedBranch();
-        branchService.deleteBranch(branch);
+        branchService.deleteBranchRecursively(branch);
     }
 
 }

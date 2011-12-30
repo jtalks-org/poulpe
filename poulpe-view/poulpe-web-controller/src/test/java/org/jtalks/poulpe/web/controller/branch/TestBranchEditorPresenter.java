@@ -70,7 +70,7 @@ public class TestBranchEditorPresenter {
         presenter.deleteBranch();
 
         // TODO: is it used?? the method marked as deprecated
-        verify(service).deleteBranch(branchCaptor.capture());
+        verify(service).deleteBranchRecursively(branchCaptor.capture());
         assertEquals(branchCaptor.getValue(), branch);
     }
 }
