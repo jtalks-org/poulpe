@@ -1,16 +1,21 @@
 package org.jtalks.poulpe.web.controller.section.moderation;
 
 import static org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter.*;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
@@ -30,11 +35,22 @@ public class ModerationDialogPresenterTest {
     private BranchService branchService;
     @Mock
     private DialogManager dialogManager;
+    
+    @Mock 
+    EntityValidator entityValidator;
 
     private Branch branch;
 
     private List<User> allUsers;
     private User user1, user2;
+    
+    private ValidationResult resultWithErrors = resultWithErrors();
+
+    private ValidationResult resultWithErrors() {
+        ValidationError error = new ValidationError("name", Branch.BRANCH_ALREADY_EXISTS);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
+    }
 
     @BeforeMethod
     public void beforeMethod() {
@@ -49,6 +65,7 @@ public class ModerationDialogPresenterTest {
         presenter.setDialogManager(dialogManager);
         presenter.setBranch(branch);
         presenter.initView(view);
+        presenter.setEntityValidator(entityValidator);
         
         allUsers = ObjectCreator.getFakeUsers(5);
         when(userService.getAll()).thenReturn(allUsers);
@@ -80,20 +97,28 @@ public class ModerationDialogPresenterTest {
     }
 
     @Test
-    public void onConfirm() throws Exception {
+    public void onConfirm() {
+    	givenNoConstraintsViolated();
         presenter.onConfirm();
         verify(branchService).saveBranch(branch);
+    }
+    
+    private void givenNoConstraintsViolated() {
+        when(entityValidator.validate(any(Branch.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
     public void onConfirmWithError() throws Exception {
-        doThrow(new NotUniqueException()).when(branchService).saveBranch(branch);
-        
+    	givenConstraintViolated();
         presenter.onConfirm();
         
-        verify(branchService).saveBranch(branch);
+        verify(branchService, never()).saveBranch(any(Branch.class));
         verify(dialogManager).notify("item.already.exist");
     }
+    
+   private void givenConstraintViolated() {
+		when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+	} 
 
     @Test
     public void onDeleteModeratorRemovedFromBranch() {

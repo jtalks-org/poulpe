@@ -15,9 +15,12 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
+import java.util.Map;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
@@ -30,6 +33,9 @@ import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * This class is implementation view for single branch
@@ -235,6 +241,21 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     	final String message = Labels.getLabel(label);
     	branchName.setErrorMessage(message);
     	
+    }
+    
+    @Override
+    public void validationFailure(ValidationResult result) {
+        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", branchName);
+        
+        for (ValidationError error : result.getErrors()) {
+            String fieldName = error.getFieldName();
+            if (comps.containsKey(fieldName)) {
+                String message = Labels.getLabel(error.getErrorMessageCode());
+
+                InputElement ie = comps.get(fieldName);
+                ie.setErrorMessage(message);
+            }
+        }
     }
 
 }

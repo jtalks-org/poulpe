@@ -20,7 +20,8 @@ import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
 public class ModerationDialogPresenter {
@@ -31,6 +32,7 @@ public class ModerationDialogPresenter {
     private BranchService branchService;
     private UserService userService;
     private DialogManager dialogManager;
+    private EntityValidator entityValidator;
 
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
@@ -50,13 +52,15 @@ public class ModerationDialogPresenter {
     }
 
     public void onConfirm() {
-        try {
-            branchService.saveBranch(branch);
-        } catch (NotUniqueException e) {
-            dialogManager.notify("item.already.exist");
-        }
+		ValidationResult result = entityValidator.validate(branch);
 
-        view.hideDialog();
+		if (result.hasErrors()) {
+			dialogManager.notify("item.already.exist");
+		} else {
+			branchService.saveBranch(branch);
+		}
+
+		view.hideDialog();
     }
 
     public void onReject() {
@@ -101,6 +105,13 @@ public class ModerationDialogPresenter {
 
     public void setBranch(Branch branch) {
         this.branch = branch;
+    }
+    
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
     }
 
 }

@@ -18,15 +18,24 @@ import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationException;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -38,16 +47,16 @@ import static org.testng.Assert.*;
  */
 public class TransactionalBranchServiceTest {
 
-    private long BRANCH_ID = 1L;
-    private BranchDao branchDao;
-    private AclManager aclManager;
+	@Mock BranchDao branchDao;
+	@Mock EntityValidator entityValidator;
+	@Mock AclManager aclManager;
+	private long BRANCH_ID = 1L;
     private BranchService branchService;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        branchDao = mock(BranchDao.class);
-        aclManager = mock(AclManager.class);
-        branchService = new TransactionalBranchService(branchDao, null);
+    	MockitoAnnotations.initMocks(this);
+        branchService = new TransactionalBranchService(branchDao, null, entityValidator);
     }
 
     @Test
@@ -92,7 +101,7 @@ public class TransactionalBranchServiceTest {
     }
     
     @Test
-    public void testSaveBranchWitoutException() throws NotUniqueException{
+    public void testSaveBranchWitoutException(){
         Branch branch = new Branch();
         branch.setName("new branch");
         branch.setDescription("new description");
@@ -104,14 +113,16 @@ public class TransactionalBranchServiceTest {
         assertEquals(branchCaptor.getValue().getName(), "new branch");
     }
     
-    @Test(expectedExceptions=NotUniqueException.class)
-    public void testSaveBranchWithException() throws NotUniqueException{
+    @Test(expectedExceptions = ValidationException.class)
+    public void testSaveBranchWithException(){
         Branch branch = new Branch();
-        branch.setName("not unique name");
-        branch.setDescription("new description");
-        
-        when(branchDao.isBranchDuplicated(branch)).thenReturn(true);
-        
+       
+        givenConstraintsViolations();       
         branchService.saveBranch(branch);
+    }
+    
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Branch.class));
     }
 }

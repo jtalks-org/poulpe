@@ -24,6 +24,7 @@ import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
 
 import java.util.Collection;
 import java.util.List;
@@ -35,13 +36,15 @@ import java.util.List;
 public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao> implements
         BranchService {
     private final BranchPermissionManager branchPermissionManager;
+    private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
      */
-    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager) {
+    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager, EntityValidator validator) {
         this.dao = branchDao;
         this.branchPermissionManager = branchPermissionManager;
+        this.validator = validator;
     }
 
     /**
@@ -56,11 +59,8 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void saveBranch(Branch selectedBranch) throws NotUniqueException {
-        if (dao.isBranchDuplicated(selectedBranch)) {
-            throw new NotUniqueException();
-        }
-
+    public void saveBranch(Branch selectedBranch) {
+        validator.throwOnValidationFailure(selectedBranch);
         dao.saveOrUpdate(selectedBranch);
     }
 

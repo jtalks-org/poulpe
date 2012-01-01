@@ -19,6 +19,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
@@ -32,8 +35,14 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
 @UniqueConstraint
 public class Branch extends Entity {
     
-    // change it
-    @UniqueField(message="labels.message.not_unique")
+    public static final String BRANCH_ALREADY_EXISTS = "branches.error.branch_name_already_exists";
+    public static final String BRANCH_CANT_BE_VOID = "branches.error.branch_name_cant_be_void";
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+    
+    @UniqueField(message = BRANCH_ALREADY_EXISTS)
+    @NotNull(message = BRANCH_CANT_BE_VOID)
+    @NotEmpty(message = BRANCH_CANT_BE_VOID)
+    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
     
     private String description;

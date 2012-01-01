@@ -21,6 +21,7 @@ import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.ValidationException;
 
 import java.util.Collection;
 import java.util.List;
@@ -42,9 +43,9 @@ public interface BranchService extends EntityService<Branch> {
      * Save or update branch.
      *
      * @param selectedBranch instance to save
-     * @throws NotUniqueException if branch with the same name already exists
+     * @exception ValidationException
      */
-    void saveBranch(Branch selectedBranch) throws NotUniqueException;
+    void saveBranch(Branch selectedBranch);
 
     /**
      * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.

@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.validation.ValidationResult;
 
 /**
  * Interface for representation view single branch
@@ -71,4 +72,6 @@ public interface BranchDialogView {
      * @return Branch branch
      * */
     Branch getBranch (Section section);
+    
+    void validationFailure(ValidationResult result);
 }

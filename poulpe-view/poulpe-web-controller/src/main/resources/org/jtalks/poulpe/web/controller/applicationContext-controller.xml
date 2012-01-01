@@ -28,6 +28,7 @@
     <property name="sectionService" ref="sectionService" />
     <property name="branchService" ref="branchService" />
     <property name="sectionPresenter" ref="sectionPresenter" />
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
   <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter"
@@ -86,6 +87,7 @@
     <property name="branchService" ref="branchService" />
     <property name="userService" ref="userService" />
     <property name="dialogManager" ref="dialogManager"></property>
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
   <bean id="groupPresenter" class="org.jtalks.poulpe.web.controller.group.GroupPresenter" scope="prototype">

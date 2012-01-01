@@ -18,7 +18,8 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 
 /**
@@ -30,10 +31,10 @@ import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 public class BranchPresenter {
 
     private SectionService sectionService;
+    private EntityValidator entityValidator;
     private BranchDialogView view;
     private BranchService branchService;
     private SectionPresenter sectionPresenter;
-    public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
     public SectionPresenter getSectionPresenter() {
         return sectionPresenter;
@@ -75,35 +76,44 @@ public class BranchPresenter {
         view.initSectionList(sectionService.getAll());
     }
 
-    public String validateLongName(String name) {
-        if (name != null && name.length() > 254) {
-            return ERROR_LABEL_SECTION_NAME_VERY_LONG;
-        }
-        return null;
-    }
 
     /**
      * Save new or edited branch in db In case when branch with equal name
      * exists, cause open error popup in view.
      */
-    public void saveBranch() {
+    public boolean saveBranch() {
         Section section = view.getSection();
         Branch branch = view.getBranch(section);
-        String result = validateLongName(branch.getName());
-        if (result == null) {
-            saveBranch(branch);
-        } else {
-            view.openErrorPopupInNewSectionDialog(result);
-        }
+		return saveBranch(branch);
     }
 
-    public void saveBranch(Branch branch) {
-        try {
-            branchService.saveBranch(branch);
-        } catch (NotUniqueException e) {
-            view.notUniqueBranchName();
+    //TODO: This method should be reworked or removed. It was added for testing purposes
+	protected boolean saveBranch(Branch branch) {
+		if (validate(branch)) {
+			branchService.saveBranch(branch);
+			view.hide();
+			return true;
+		} else {
+			return false;
+		}
+	}
+    
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
+    
+    private boolean validate(Branch branch) {
+        ValidationResult result = entityValidator.validate(branch);
+
+        if (result.hasErrors()) {
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
         }
-        view.hide();
     }
 
 }
