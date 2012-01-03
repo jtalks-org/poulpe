@@ -14,10 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
@@ -30,8 +26,11 @@ import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
-public class SectionViewImpl extends Window implements SectionView,
-        AfterCompose {
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+public class SectionViewImpl extends Window implements AfterCompose {
 
     private static final long serialVersionUID = -2745900622179593542L;
     private transient SectionPresenter presenter;
@@ -45,7 +44,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void afterCompose() {
         Components.addForwards(this, this);
@@ -56,8 +55,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
     public void showSection(Section section) {
         // TODO move SectionTreeComponent creation to external factory method
         getChildren().add(new SectionTreeComponentImpl(section, presenter));
@@ -65,13 +63,13 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void showSections(List<Section> sections) {
         //TODO: Find out what's happening here.
         List<Object> childrenToSave = new ArrayList<Object>();
         for (Object obj : getChildren()) {
-            if (!(obj instanceof SectionTreeComponent)) {
+            if (!(obj instanceof SectionTreeComponentImpl)) {
                 childrenToSave.add(obj);
             }
         }
@@ -88,11 +86,10 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * Set presenter
-     * 
+     *
+     * @param presenter instance presenter for view
      * @see BranchPresenter
-     * @param presenter
-     *            instance presenter for view
-     * */
+     */
     public void setPresenter(SectionPresenter presenter) {
         this.presenter = presenter;
     }
@@ -100,24 +97,23 @@ public class SectionViewImpl extends Window implements SectionView,
     // EVENT HANDLERS
 
     /**
-     * Event which happen when user click on '+' buttton opens dialog for adding
-     * new section
-     * */
+     * Event which happen when user click on '+' buttton opens dialog for adding new section
+     */
     public void onClick$addSectionButton() {
         presenter.openNewSectionDialog();
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void removeSection(Section section) {
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openNewSectionDialog() {
         setNewSectionName("");
         setNewSectionDescription("");
@@ -125,24 +121,22 @@ public class SectionViewImpl extends Window implements SectionView,
     }
 
     /**
-     * Event which happen when user click on cancel button in new branch dialog
-     * window this cause close new branch dialog
-     * */
+     * Event which happen when user click on cancel button in new branch dialog window this cause close new branch
+     * dialog
+     */
     public void onClick$closeButton$newSectionDialog() {
         closeNewSectionDialog();
     }
 
     /**
-     * Event occurs when the used click on cancel button in the
-     * DeleteSectionDialog
+     * Event occurs when the used click on cancel button in the DeleteSectionDialog
      */
     public void onClick$closeButton$deleteSectionDialog() {
         closeDeleteSectionDialog();
     }
 
     /**
-     * Event occurs when the used click on delete button in the
-     * DeleteSectionDialog
+     * Event occurs when the used click on delete button in the DeleteSectionDialog
      */
     public void onClick$deleteButton$deleteSectionDialog() {
         // if (deleteSectionDialog$deleteAll.isChecked()) {
@@ -157,26 +151,24 @@ public class SectionViewImpl extends Window implements SectionView,
     }
 
     /**
-     * Event which happen when user click on add button in new branch dialog
-     * window this cause save new branch
-     * */
+     * Event which happen when user click on add button in new branch dialog window this cause save new branch
+     */
     public void onClick$addButton$newSectionDialog() {
         presenter
                 .addNewSection(getNewSectionName(), getNewSectionDescription());
     }
 
     /**
-     * Event which happen when user click on cancel button in new branch dialog
-     * window this cause close new branch dialog
-     * */
+     * Event which happen when user click on cancel button in new branch dialog window this cause close new branch
+     * dialog
+     */
     public void onClick$closeButton$editSectionDialog() {
         closeEditSectionDialog();
     }
 
     /**
-     * Event which happen when user click on add button in new branch dialog
-     * window this cause save new branch
-     * */
+     * Event which happen when user click on add button in new branch dialog window this cause save new branch
+     */
     public void onClick$editButton$editSectionDialog() {
         presenter
                 .editSection(getEditSectionName(), getEditSectionDescription());
@@ -195,32 +187,40 @@ public class SectionViewImpl extends Window implements SectionView,
     // }
     // }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public void closeNewSectionDialog() {
         newSectionDialog.setVisible(false);
         setNewSectionDescription("");
         setNewSectionName("");
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public void closeEditSectionDialog() {
         editSectionDialog.setVisible(false);
         editSectionDialog$sectionName.setText("");
         editSectionDialog$sectionDescription.setText("");
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public void closeDeleteSectionDialog() {
         // deleteSectionDialog$transferAll.setChecked(true);
         // deleteSectionDialog$sectionsCombobox.setModel(new ListModelList());
         // deleteSectionDialog.setVisible(false);
     }
 
-    /** {@inheritDoc} */
-    @Override
+    /**
+     * {@inheritDoc}
+     */
+
     public void openDeleteSectionDialog(Section victim) {
         Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop()
                 .getPage("sectionDeleteDialog").getFellow("deleteWindow"), victim));
@@ -228,8 +228,8 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openEditSectionDialog(String name, String description) {
         setEditSectionName(name);
         setEditSectionDescription(description);
@@ -238,7 +238,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * get the value of sectionName textField of newSectionDialog
-     * 
+     *
      * @return new section name
      */
     private String getNewSectionName() {
@@ -247,7 +247,7 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * get the value of sectionDescription textField of newSectionDialog
-     * 
+     *
      * @return new section description
      */
     private String getNewSectionDescription() {
@@ -256,54 +256,50 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * @return edit section name
-     * */
+     */
     private String getEditSectionName() {
         return editSectionDialog$sectionName.getText();
     }
 
     /**
      * @return edit section description
-     * */
+     */
     private String getEditSectionDescription() {
         return editSectionDialog$sectionDescription.getText();
     }
 
     /**
-     * @param name
-     *            for edit section
-     * */
+     * @param name for edit section
+     */
     private void setEditSectionName(String name) {
         editSectionDialog$sectionName.setText(name);
     }
 
     /**
-     * @param description
-     *            for edit section
-     * */
+     * @param description for edit section
+     */
     private void setEditSectionDescription(String description) {
         editSectionDialog$sectionDescription.setText(description);
     }
 
     /**
-     * @param name
-     *            for new section
-     * */
+     * @param name for new section
+     */
     private void setNewSectionName(String name) {
         newSectionDialog$sectionName.setText(name);
     }
 
     /**
-     * @param description
-     *            for new section
-     * */
+     * @param description for new section
+     */
     private void setNewSectionDescription(String description) {
         newSectionDialog$sectionDescription.setText(description);
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openErrorPopupInNewSectionDialog(String label) {
         final String message = Labels.getLabel(label);
         newSectionDialog$sectionName.setErrorMessage(message);
@@ -311,8 +307,8 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openErrorPopupInEditSectionDialog(String label) {
         final String message = Labels.getLabel(label);
         editSectionDialog$sectionName.setErrorMessage(message);
@@ -320,9 +316,9 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
 
-    @Override
+
     public void closeDialogs() {
         closeNewSectionDialog();
         closeEditSectionDialog();
@@ -331,8 +327,8 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openNewBranchDialog() {
         Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage(
                 "BranchDialog").getFellow("editWindow")));
@@ -340,22 +336,22 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void closeNewBranchDialog() {
         // TODO : implement
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openEditBranchDialog(Branch branch) {
         Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
                 "BranchDialog").getFellow("editWindow"), branch));
     }
 
-    @Override
+
     public void openModeratorDialog(Branch branch) {
         Events.postEvent(new Event("onOpen", getDesktop()
                 .getPage("moderatorDialog").getFellow("moderatorWindow"),
@@ -366,33 +362,33 @@ public class SectionViewImpl extends Window implements SectionView,
 
     }
 
-    @Override
+
     public void closeModeratorDialog() {
         Events.postEvent(new Event("onCloseModeratorDialog", getDesktop()
                 .getPage("moderatorDialog").getFellow("moderatorWindow")));
     }
-   
+
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void openDeleteBranchDialog(Branch branch) {
 
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public void closeEditBranchDialog() {
 
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public boolean isDeleteDialogOpen() {
         return false;
         // return deleteSectionDialog.isVisible();
@@ -400,23 +396,23 @@ public class SectionViewImpl extends Window implements SectionView,
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public boolean isEditDialogOpen() {
         return editSectionDialog.isVisible();
     }
 
     /**
      * {@inheritDoc}
-     * */
-    @Override
+     */
+
     public boolean isNewDialogOpen() {
         return newSectionDialog.isVisible();
     }
 
     /**
      * Handle event when child dialog was hiding
-     * */
+     */
     public void onHideDialog() {
         presenter.updateView();
     }

@@ -60,7 +60,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	private SectionService service;
 
 	@Mock
-	SectionView view;
+	SectionViewImpl view;
 	@Mock
 	DialogManager dialogManager;
 
@@ -189,7 +189,7 @@ public class SectionPresenterTest extends SectionPresenter {
 
 	@Test
 	public void testOpenEditDialogNullParams(){
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
 		presenter.initView(view);
 		
@@ -202,7 +202,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	
 	@Test
 	public void testOpenEditDialogTopicType(){
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(new TopicType());
 		presenter.initView(view);
 		
@@ -216,7 +216,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testOpenEditSectionDialog(){
 		List<Section> fakeSections = getFakeSections(9);		
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(service.getAll()).thenReturn(fakeSections);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));		
 		presenter.initView(view);
@@ -227,23 +227,23 @@ public class SectionPresenterTest extends SectionPresenter {
 		verify(view, times(1)).openEditSectionDialog(
 				fakeSections.get(3).getName(),
 				fakeSections.get(3).getDescription());
-		assertEquals(presenter.getCurrentSectionTreeComponent(),
+		assertEquals(presenter.getCurrentSectionTreeComponentImpl(),
 				sectionTreeComponent);
-		presenter.setCurrentSectionTreeComponent(null);
+		presenter.setCurrentSectionTreeComponentImpl(null);
 	}
 	
 	@Test
 	public void testOpenEditBranchDialog() {		
 		Branch fakeBranch = getFakeBranch("test", "test");
 		presenter.initView(view);
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeBranch);		
 
 		// branch
 		presenter.openEditDialog(sectionTreeComponent);
 		
 		verify(view, times(1)).openEditBranchDialog(argThat(new BranchMatcher(fakeBranch)));
-		assertEquals(presenter.getCurrentSectionTreeComponent(),sectionTreeComponent);
+		assertEquals(presenter.getCurrentSectionTreeComponentImpl(),sectionTreeComponent);
 	}
 
 	@Test
@@ -263,10 +263,10 @@ public class SectionPresenterTest extends SectionPresenter {
 		when(service.getAll()).thenReturn(fakeSections);
 		
 		presenter.initView(view);
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);		
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);		
 		presenter.openNewBranchDialog(sectionTreeComponent);
 		
-		assertEquals(presenter.getCurrentSectionTreeComponent(),
+		assertEquals(presenter.getCurrentSectionTreeComponentImpl(),
 				sectionTreeComponent);
 		
 		verify(view, times(1)).openNewBranchDialog();
@@ -296,7 +296,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testEditSectionOK(){
 		List<Section> fakeSections = getFakeSections(9);		
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(
 				fakeSections.get(3));
 		
@@ -310,7 +310,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testEditSectionEmptyName(){
 		List<Section> fakeSections = getFakeSections(9);				
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(service.getAll()).thenReturn(fakeSections);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));		
 		
@@ -325,7 +325,7 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testEditSectionNullName() {
 		List<Section> fakeSections = getFakeSections(9);		
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(service.getAll()).thenReturn(fakeSections);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
 
@@ -384,11 +384,11 @@ public class SectionPresenterTest extends SectionPresenter {
 
 	@Test
 	public void testDeleteSectionNull() {
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
 		
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		// null object
 		presenter.deleteSection(null);
 		
@@ -397,11 +397,11 @@ public class SectionPresenterTest extends SectionPresenter {
 	
 	@Test
 	public void testDeleteSectionNullWithName() {
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
 		
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		// null object with name
 		presenter.deleteSection(getFakeSection("test", "test"));
 		
@@ -410,11 +410,11 @@ public class SectionPresenterTest extends SectionPresenter {
 	
 	@Test
 	public void testDeleteSectionUnproper() {
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(getFakeBranch("test", "test"));
 		
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		// unproper object
 		presenter.deleteSection(null);
 		
@@ -423,11 +423,11 @@ public class SectionPresenterTest extends SectionPresenter {
 	
 	@Test
 	public void testDeleteSectionUnproperWithName() {
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(getFakeBranch("test", "test"));
 		
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		// unproper object with name
 		presenter.deleteSection(getFakeSection("test", "test"));
 		
@@ -437,11 +437,11 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testDeleteSectionOK() {
 		List<Section> fakeSections = getFakeSections(9);		
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
 				
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		// proper object
 		presenter.deleteSection(null);
 		
@@ -451,11 +451,11 @@ public class SectionPresenterTest extends SectionPresenter {
 	@Test
 	public void testDeleteSectionOKWithName() {
 		List<Section> fakeSections = getFakeSections(9);
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
 		when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
 
 		presenter.initView(view);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 
 		// proper object
 		presenter.deleteSection(getFakeSection("test", "test"));
@@ -488,8 +488,8 @@ public class SectionPresenterTest extends SectionPresenter {
 		List<Section> fakeSections = getFakeSections(9);
 		when(service.getAll()).thenReturn(fakeSections);
 		presenter.initView(view);
-		SectionTreeComponent sectionTreeComponent = mock(SectionTreeComponent.class);
-		presenter.setCurrentSectionTreeComponent(sectionTreeComponent);
+		SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
+		presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
 		CreateUpdatePerformable perf = presenter.new CreateUpdatePerformable(
 				fakeSections.get(3), "test", "test");
 		

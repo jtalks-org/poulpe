@@ -39,8 +39,8 @@ public class SectionPresenter {
      * initialized via Spring DI
      */
     private SectionService sectionService;
-    private SectionView sectionView;
-    private SectionTreeComponent currentSectionTreeComponent;
+    private SectionViewImpl sectionView;
+    private SectionTreeComponentImpl currentSectionTreeComponentImpl;
     private DialogManager dialogManager;
 
     public static final String ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS = "sections.error.section_name_already_exists";
@@ -63,7 +63,7 @@ public class SectionPresenter {
      * @param view
      *            instance
      */
-    public void initView(SectionView view) {
+    public void initView(SectionViewImpl view) {
         this.sectionView = view;
         updateView();
     }
@@ -90,15 +90,15 @@ public class SectionPresenter {
     /**
      * This method is used to show dialog for editing section or branch
      * 
-     * @param currentSectionTreeComponent
+     * @param currentSectionTreeComponentImpl
      *            from this instance we get selected object
      */
-    public void openEditDialog(SectionTreeComponent currentSectionTreeComponent) {
-        Object object = currentSectionTreeComponent.getSelectedObject();
+    public void openEditDialog(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
+        Object object = currentSectionTreeComponentImpl.getSelectedObject();
         if (!(object instanceof Section) && !(object instanceof Branch)) {
             return;
         }
-        setCurrentSectionTreeComponent(currentSectionTreeComponent);
+        setCurrentSectionTreeComponentImpl(currentSectionTreeComponentImpl);
         if (object instanceof Section) {
             Section section = (Section) object;
             sectionView.openEditSectionDialog(section.getName(),
@@ -134,11 +134,11 @@ public class SectionPresenter {
     /**
      * This method is used to show new branch dialog
      * 
-     * @param sectionTreeComponent
+     * @param SectionTreeComponentImpl
      *            method save reference on this instance
      */
-    public void openNewBranchDialog(SectionTreeComponent sectionTreeComponent) {
-        this.currentSectionTreeComponent = sectionTreeComponent;
+    public void openNewBranchDialog(SectionTreeComponentImpl SectionTreeComponentImpl) {
+        this.currentSectionTreeComponentImpl = SectionTreeComponentImpl;
         sectionView.openNewBranchDialog();
     }
 
@@ -165,7 +165,7 @@ public class SectionPresenter {
      */
     public void editSection(final String name, final String description) {
 
-        final Section section = (Section) this.currentSectionTreeComponent
+        final Section section = (Section) this.currentSectionTreeComponentImpl
                 .getSelectedObject();
 
         String errorLabel = validateSection(name, description);
@@ -260,7 +260,7 @@ public class SectionPresenter {
      */
     public void deleteSection(final Section recipient) {
 
-        Object selectedObject = this.currentSectionTreeComponent
+        Object selectedObject = this.currentSectionTreeComponentImpl
                 .getSelectedObject();
         if (!(selectedObject instanceof Section)) {
             return;
@@ -283,20 +283,20 @@ public class SectionPresenter {
     }
 
     /**
-     * @return a currect selected <code>SectionTreeComponent</code>
+     * @return a currect selected <code>SectionTreeComponentImpl</code>
      */
-    public SectionTreeComponent getCurrentSectionTreeComponent() {
-        return currentSectionTreeComponent;
+    public SectionTreeComponentImpl getCurrentSectionTreeComponentImpl() {
+        return currentSectionTreeComponentImpl;
     }
 
     /**
-     * @param currentSectionTreeComponent
-     *            is current <code>SectionTreeComponent</code> that will process
+     * @param currentSectionTreeComponentImpl
+     *            is current <code>SectionTreeComponentImpl</code> that will process
      *            actions from presenter
      */
-    public void setCurrentSectionTreeComponent(
-            SectionTreeComponent currentSectionTreeComponent) {
-        this.currentSectionTreeComponent = currentSectionTreeComponent;
+    public void setCurrentSectionTreeComponentImpl(
+            SectionTreeComponentImpl currentSectionTreeComponentImpl) {
+        this.currentSectionTreeComponentImpl = currentSectionTreeComponentImpl;
     }
     
     /**
@@ -349,7 +349,7 @@ public class SectionPresenter {
                 doSaving();
                 // its not necessary here because of section was transferred as
                 // a reference
-                SectionPresenter.this.currentSectionTreeComponent
+                SectionPresenter.this.currentSectionTreeComponentImpl
                         .updateSectionInView(section);
                 sectionView.closeEditSectionDialog();
             }

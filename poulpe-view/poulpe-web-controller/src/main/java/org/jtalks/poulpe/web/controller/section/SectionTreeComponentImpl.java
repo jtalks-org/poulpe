@@ -38,7 +38,7 @@ import org.zkoss.zul.Treerow;
 /**
  * @author Konstantin Akimov
  * */
-public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTreeComponent {
+public class SectionTreeComponentImpl extends Div implements IdSpace {
     /**
      * 
      */
@@ -74,7 +74,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     /**
      * {@inheritDoc}
      * */
-    @Override
+    
     public Object getSelectedObject() {
         if (sectionTree.getSelectedCount() != 0) {
             Object data = sectionTree.getSelectedItem().getValue();
@@ -100,7 +100,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     /**
      * {@inheritDoc}
      * */
-    @Override
+    
     public void addBranchToView(Branch branch) {
         // TODO Auto-generated method stub
 
@@ -109,7 +109,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     /**
      * {@inheritDoc}
      * */
-    @Override
+    
     public void updateBranchInView(Branch branch) {
         // TODO Auto-generated method stub
 
@@ -118,7 +118,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     /**
      * {@inheritDoc}
      * */
-    @Override
+    
     public void removeBranchFromView(Branch branch) {
         // TODO Auto-generated method stub
 
@@ -127,7 +127,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     /**
      * {@inheritDoc}
      * */
-    @Override
+    
     public void updateSectionInView(Section section) {
         DefaultTreeNode<Section> root = (DefaultTreeNode<Section>) sectionTree.getModel().getRoot();
         ExtendedTreeNode<Section> sectionNode = (ExtendedTreeNode<Section>) root.getChildAt(0);
@@ -142,6 +142,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     }
 
     public void onClick$permissionsButton() throws IOException {
+        Object selectedObject = getSelectedObject();
         Executions.sendRedirect("/sections/BranchPermissionManagement.zul");
     }
 
@@ -165,7 +166,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace, SectionTre
     }
 
     public class SectionBranchTreeitemRendere implements TreeitemRenderer {
-        @Override
+        
         public void render(final Treeitem treeItem, Object node) throws Exception {
             ExtendedTreeNode curNode = (ExtendedTreeNode) node;
 
