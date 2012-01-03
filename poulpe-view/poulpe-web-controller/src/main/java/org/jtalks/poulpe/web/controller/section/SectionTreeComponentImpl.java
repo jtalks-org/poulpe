@@ -142,8 +142,8 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
     }
 
     public void onClick$permissionsButton() throws IOException {
-        Object selectedObject = getSelectedObject();
-        Executions.sendRedirect("/sections/BranchPermissionManagement.zul");
+        Branch selected = (Branch) getSelectedObject();
+        Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + selected.getId());
     }
 
     /**

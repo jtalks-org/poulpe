@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
@@ -123,13 +124,25 @@ public class BranchPermissionManagementVm {
     }
 
     private void initDataForView() {
-        branch = branchService.getAll().get(0);
+        branch = getSelectedBranch();
         BranchAccessList groupAccessList = branchService.getGroupAccessListFor(branch);
         for (BranchPermission permission : groupAccessList.getPermissions()) {
             BranchPermissionRow allowRow = BranchPermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
             BranchPermissionRow restrictRow = BranchPermissionRow.newRestrictRow(groupAccessList.getRestricted(permission));
             blocks.put(permission.getName(), new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
         }
+    }
+
+    public Branch getSelectedBranch() {
+        String stringBranchId = Executions.getCurrent().getParameter("branchId");
+        Long branchId = Long.parseLong(stringBranchId);
+        Branch branch;
+        try {
+            branch = branchService.get(branchId);
+        } catch (NotFoundException e) {
+            throw new IllegalArgumentException("There is no branch with id: " + stringBranchId);
+        }
+        return branch;
     }
 
     private List<Group> getGroupsDependingOnMode(String mode,
