@@ -18,12 +18,14 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
-import java.util.UUID;
+import java.util.Collections;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.JcommuneDao;
 import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -55,7 +57,7 @@ public class JcommuneHibernateDaoTest extends
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        jcommune = ObjectsFactory.createJcommune(5);
+        jcommune = ObjectsFactory.createJcommune(10);
     }
 
     @Test
@@ -86,4 +88,22 @@ public class JcommuneHibernateDaoTest extends
         assertEquals(actual, newName);
     }
 
+    @Test
+    public void testSectionPositions() {
+        for (int i = 0; i < 5; i++) {
+            List<Section> expected = jcommune.getSections();
+            Collections.shuffle(expected);
+
+            dao.saveOrUpdate(jcommune);
+
+            for (int index = 0; index < expected.size(); index++) {
+                expected.get(index).setPosition(index);
+            }
+
+            jcommune = ObjectRetriever.retrieveUpdated(jcommune, session);
+            List<Section> actual = jcommune.getSections();
+
+            assertEquals(actual, expected);
+        }
+    }
 }

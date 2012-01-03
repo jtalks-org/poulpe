@@ -19,11 +19,12 @@
     </property>
     
     <subclass name="Jcommune" discriminator-value="JCOMMUNE">
-      <bag name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
-        <cache usage="nonstrict-read-write" />
-        <key column="JCOMMUNE_ID" foreign-key="FK_JCOMMUNE" />
-        <one-to-many class="Section" />
-      </bag>
+      <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
+      	<cache usage="nonstrict-read-write" />
+      	<key column="JCOMMUNE_ID" foreign-key="FK_JCOMMUNE" />
+      	<index column="POSITION_" />
+      	<one-to-many class="Section" />
+      </list>
     </subclass>
   </class>
 </hibernate-mapping>
