@@ -83,9 +83,9 @@ public class BranchPermissionManagementVm {
         BranchAccessChanges accessChanges = new BranchAccessChanges(groupsDialogVm.getPermission());
         accessChanges.setNewlyAddedPermissions(groupsDialogVm.getNewAdded());
         accessChanges.setRemovedPermissions(groupsDialogVm.getRemovedFromAdded());
-        if (groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
+        if (groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
             branchService.changeGrants(branch, accessChanges);
-        } else if (!groupsDialogVm.isAllowAccess() && !groupsDialogVm.getNewAdded().isEmpty()) {
+        } else if (!groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
             branchService.changeRestrictions(branch, accessChanges);
         }
         dialogClosed();

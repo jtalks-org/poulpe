@@ -20,7 +20,12 @@ public enum BranchPermission implements JtalksPermission {
     /**
      * The ability of user group or user to view the branch (to see its topics).
      */
-    VIEW_TOPICS("110", "VIEW_TOPICS");
+    VIEW_TOPICS("110", "VIEW_TOPICS"),
+    /**
+     * The ability of users to remove their own posts. Some forums prefer to restrict this functionality to avoid
+     * misunderstanding between users.
+     */
+    DELETE_POSTS("111", "DELETE_POSTS");
 
     private final String name;
     private final int mask;
@@ -79,8 +84,8 @@ public enum BranchPermission implements JtalksPermission {
     public String getPattern() {
         return null;
     }
-    
-    public static List<BranchPermission> getAllAsList(){
+
+    public static List<BranchPermission> getAllAsList() {
         return Lists.newArrayList(values());
     }
 

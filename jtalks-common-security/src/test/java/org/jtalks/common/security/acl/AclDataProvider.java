@@ -13,6 +13,16 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class AclDataProvider {
+    @DataProvider(name = "randomSidsAndPermissions")
+    public static Object[][] provideRandomSidsAndPermissionsAndAcl() {
+        List<Permission> permissions = Lists.<Permission>newArrayList(
+                BranchPermission.VIEW_TOPICS, BranchPermission.CREATE_TOPICS, BranchPermission.DELETE_POSTS
+        );
+        List sids = (List) provideRandomSids()[0][0];
+        return new Object[][]{{sids, permissions}};
+    }
+
+
     @DataProvider(name = "randomSidsAndPermissionsAndEntity")
     public static Object[][] provideRandomSidsAndPermissionsAndEntity() {
         List<Permission> permissions = Lists.<Permission>newArrayList(

@@ -39,4 +39,7 @@ public class BranchAccessChanges {
     public JtalksPermission getPermission() {
         return permission;
     }
+    public boolean isEmpty(){
+        return removedPermissions.isEmpty() && newlyAddedPermissions.isEmpty();
+    }
 }

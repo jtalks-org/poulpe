@@ -36,8 +36,10 @@ public class BranchPermissionManager {
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedPermissionsAsArray()).on(branch).flush();
     }
 
-    public void changeRestrictions(BranchAccessChanges changes) {
-
+    public void changeRestrictions(Branch branch, BranchAccessChanges changes) {
+        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
+                .setOwner(changes.getNewlyAddedPermissionsAsArray()).on(branch).flush();
+        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedPermissionsAsArray()).on(branch).flush();
     }
 
     public BranchAccessList getGroupAccessListFor(Branch branch) {

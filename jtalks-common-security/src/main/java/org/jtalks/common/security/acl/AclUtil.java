@@ -31,7 +31,7 @@ public class AclUtil {
      *               of the entry and find/create its ACL object
      * @return Access Control List for the specified entity
      */
-    public MutableAcl getAclFor(Entity entity) {
+    public ExtendedMutableAcl getAclFor(Entity entity) {
         ObjectIdentity oid = createIdentityFor(entity);
         return getAclFor(oid);
     }
@@ -42,11 +42,11 @@ public class AclUtil {
      * @param oid object identity
      * @return ACL fro this object identity
      */
-    public MutableAcl getAclFor(ObjectIdentity oid) {
+    public ExtendedMutableAcl getAclFor(ObjectIdentity oid) {
         try {
-            return (MutableAcl) mutableAclService.readAclById(oid);
+            return ExtendedMutableAcl.castAndCreate(mutableAclService.readAclById(oid));
         } catch (NotFoundException nfe) {
-            return mutableAclService.createAcl(oid);
+            return ExtendedMutableAcl.castAndCreate(mutableAclService.createAcl(oid));
         }
     }
 
@@ -70,7 +70,7 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      */
-    public MutableAcl grantPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl grantPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, true);
     }
 
@@ -81,13 +81,13 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      */
-    public MutableAcl restrictPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl restrictPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, false);
     }
 
-    public MutableAcl deletePermissionsFromTarget(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl deletePermissionsFromTarget(List<Sid> sids, List<Permission> permissions, Entity target) {
         ObjectIdentity oid = createIdentityFor(target);
-        MutableAcl acl = (MutableAcl) mutableAclService.readAclById(oid);
+        ExtendedMutableAcl acl = ExtendedMutableAcl.castAndCreate(mutableAclService.readAclById(oid));
         deletePermissionsFromAcl(acl, sids, permissions);
         return acl;
     }
@@ -99,14 +99,10 @@ public class AclUtil {
      * @param sids        list of sids
      * @param permissions list of permissions
      */
-    public void deletePermissionsFromAcl(MutableAcl acl, List<Sid> sids, List<Permission> permissions) {
-        List<AccessControlEntry> entries = acl.getEntries(); // it's a copy
-        List<AccessControlEntry> filtered = newArrayList(filter(entries, new BySidAndPermissionFilter(sids, permissions)));
-        for (int i = 0; i < filtered.size(); i++) {
-            AccessControlEntry currentAce = filtered.get(i);
-            int indexOfCurrent = entries.indexOf(currentAce);
-            acl.deleteAce(indexOfCurrent - i);// -i because since 1 of them is removed, the list becomes size() - 1
-        }
+    public void deletePermissionsFromAcl(ExtendedMutableAcl acl, List<Sid> sids, List<Permission> permissions) {
+        List<AccessControlEntry> allEntries = acl.getEntries(); // it's a copy
+        List<AccessControlEntry> filtered = newArrayList(filter(allEntries, new BySidAndPermissionFilter(sids, permissions)));
+        acl.delete(filtered);
     }
 
 
@@ -118,8 +114,8 @@ public class AclUtil {
      * @param target      securable object
      * @param granting    grant if true, restrict if false
      */
-    private MutableAcl applyPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
-        MutableAcl acl = getAclFor(target);
+    private ExtendedMutableAcl applyPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
+        ExtendedMutableAcl acl = getAclFor(target);
         deletePermissionsFromAcl(acl, sids, permissions);
         int aclIndex = acl.getEntries().size();
         for (Sid recipient : sids) {
@@ -133,6 +129,13 @@ public class AclUtil {
         return acl;
     }
 
+
+    /**
+     * Gets the list of Sids and Permissions into the constructor and filters out those {@link AccessControlEntry} whose
+     * Sid & Permission is not in the specified lists.
+     *
+     * @see com.google.common.collect.Iterators#filter(java.util.Iterator, com.google.common.base.Predicate)
+     */
     private static class BySidAndPermissionFilter implements Predicate<AccessControlEntry> {
         private final List<Sid> sids;
         private final List<Permission> permissions;
@@ -155,5 +158,4 @@ public class AclUtil {
             return false;
         }
     }
-
 }

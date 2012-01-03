@@ -100,7 +100,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     @Override
     public void changeRestrictions(Branch branch, BranchAccessChanges changes){
-
+        branchPermissionManager.changeRestrictions(branch, changes);
     }
 
 }
