@@ -22,7 +22,6 @@
   <bean id="userDao" class="org.jtalks.common.model.dao.hibernate.UserHibernateDao" parent="abstractHibernateDao" />
   <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="abstractHibernateDao" />
   <bean id="rankDao" class="org.jtalks.poulpe.model.dao.hibernate.RankHibernateDao" parent="abstractHibernateDao" />
-  <bean id="jcommuneDao" class="org.jtalks.poulpe.model.dao.hibernate.JcommuneHibernateDao" parent="abstractHibernateDao" />
   
   <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way resolves a problem of multiple DAO beans definition -->
   <bean id="abstractHibernateDao" abstract="true">
