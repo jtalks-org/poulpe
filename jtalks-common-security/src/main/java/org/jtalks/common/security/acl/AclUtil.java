@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.List;
 
@@ -95,9 +96,9 @@ public class AclUtil {
     /**
      * Delete permissions from {@code acl} for every sid.
      *
-     * @param acl         provided acl
-     * @param sids        list of sids
-     * @param permissions list of permissions
+     * @param acl         the acl to remove the sid permissions from it
+     * @param sids        list of sids to remove their permissions
+     * @param permissions list of permissions to remove them
      */
     public void deletePermissionsFromAcl(ExtendedMutableAcl acl, List<Sid> sids, List<Permission> permissions) {
         List<AccessControlEntry> allEntries = acl.getEntries(); // it's a copy
@@ -140,11 +141,19 @@ public class AclUtil {
         private final List<Sid> sids;
         private final List<Permission> permissions;
 
-        private BySidAndPermissionFilter(List<Sid> sids, List<Permission> permissions) {
+        /**
+         * @param sids        to find {@link AccessControlEntry}s that contain them
+         * @param permissions to find the {@link AccessControlEntry}s where specified {@code sids} have these
+         *                    permissions
+         */
+        private BySidAndPermissionFilter(@Nonnull List<Sid> sids, @Nonnull List<Permission> permissions) {
             this.sids = sids;
             this.permissions = permissions;
         }
 
+        /**
+         * {@inheritDoc}
+         */
         @Override
         public boolean apply(@Nullable AccessControlEntry input) {
             if (input == null) {
@@ -153,6 +162,12 @@ public class AclUtil {
             return sids.contains(input.getSid()) && permissions.contains(input.getPermission());
         }
 
+        /**
+         * Always return {@code false}, we don't need this functionality.
+         *
+         * @param object who cares
+         * @return always {@code false}
+         */
         @Override
         public boolean equals(@Nullable Object object) {
             return false;
