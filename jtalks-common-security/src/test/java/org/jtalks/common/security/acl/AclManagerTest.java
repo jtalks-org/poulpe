@@ -51,19 +51,4 @@ public class AclManagerTest {
     public void testDeleteFromAclWithZeroId(Entity target) throws Exception {
         manager.deleteFromAcl(target.getClass(), 0);
     }
-
-    @Test(expectedExceptions = IllegalStateException.class,
-            dataProviderClass = AclDataProvider.class, dataProvider = "randomSids")
-    public void testGrantWithZeroId(List<Sid> sids) throws Exception {
-        Entity object = new Entity() {
-            @Override
-            public long getId() {
-                return 0;
-            }
-        };
-
-        manager.grant(sids, permissions, object);
-    }
-
-
 }
