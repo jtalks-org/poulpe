@@ -12,20 +12,3 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-.usergroup-button {
-    border: none;
-    border-radius: 25px;
-    background: rgb(204, 204, 204);
-}
-
-.usergroup-button:hover {
-    background: rgb(204, 204, 204);
-}
-
-.manage-groups-dialog-vertical-buttons img {
-    cursor: pointer;
-}
-
-.manage-groups-dialog-vertical-buttons {
-    padding-top: 50px;
-}
