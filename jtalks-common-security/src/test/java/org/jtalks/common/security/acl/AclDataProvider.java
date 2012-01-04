@@ -47,6 +47,11 @@ public class AclDataProvider {
         return new Object[][]{{new EntityImpl(2L)}};
     }
 
+    @DataProvider(name = "notSavedEntity")
+    public static Object[][] provideNotSavedEntity() {
+        return new Object[][]{{new EntityImpl(0L)}};
+    }
+
     private static class EntityImpl extends Entity {
         private EntityImpl(Long id) {
             setId(id);

@@ -15,21 +15,23 @@ import static com.google.common.collect.Iterables.filter;
 import static com.google.common.collect.Lists.newArrayList;
 
 /**
+ * The fine grained utilities to work with Spring ACL.
+ *
  * @author stanislav bashkirtsev
  */
 public class AclUtil {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MutableAclService mutableAclService;
 
-    public AclUtil(MutableAclService mutableAclService) {
+    public AclUtil(@Nonnull MutableAclService mutableAclService) {
         this.mutableAclService = mutableAclService;
     }
 
     /**
      * Get existing ACL record for the entity. If ACL does not exist it will be created.
      *
-     * @param entity entity to get is {@link org.springframework.security.acls.model.ObjectIdentity} which is an ACL id
-     *               of the entry and find/create its ACL object
+     * @param entity entity to get is {@link ObjectIdentity} which is an ACL id of the entry and find/create its ACL
+     *               object
      * @return Access Control List for the specified entity
      */
     public ExtendedMutableAcl getAclFor(Entity entity) {
@@ -40,8 +42,8 @@ public class AclUtil {
     /**
      * Get existing ACL for identity. If ACL does not exist it will be created.
      *
-     * @param oid object identity
-     * @return ACL fro this object identity
+     * @param oid object identity to get its ACL
+     * @return ACL or the specified object identity
      */
     public ExtendedMutableAcl getAclFor(ObjectIdentity oid) {
         try {
@@ -52,14 +54,16 @@ public class AclUtil {
     }
 
     /**
-     * Creates {@code ObjectIdentity} for {@code securedObject}
+     * Creates {@code ObjectIdentity} for {@code securedObject}.
      *
-     * @param securedObject object
+     * @param securedObject object to create its object identity (which is an ID for the Spring ACL that identifies the
+     *                      objects Sids have permissions for)
      * @return identity with {@code securedObject} class name and id
+     * @throws IllegalArgumentException if the specified entity doesn't have the id (it's {@code id <= 0})
      */
     public ObjectIdentity createIdentityFor(Entity securedObject) {
         if (securedObject.getId() <= 0) {
-            throw new IllegalStateException("Object id must be assigned before creating acl.");
+            throw new IllegalArgumentException("Object id must be assigned before creating acl.");
         }
         return new ObjectIdentityImpl(securedObject.getClass(), securedObject.getId());
     }
