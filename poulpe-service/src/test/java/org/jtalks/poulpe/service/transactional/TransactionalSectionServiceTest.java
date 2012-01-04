@@ -14,14 +14,24 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationException;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,15 +41,15 @@ import org.testng.annotations.Test;
  * @author Vahluev Vyacheslav
  */
 public class TransactionalSectionServiceTest {
-
-    private static final long SECTION_ID = 1L;
-    private SectionDao sectionDao;
+	@Mock EntityValidator entityValidator;
+	@Mock SectionDao sectionDao;
+    private static final long SECTION_ID = 1L;  
     private SectionService sectionService;
 
     @BeforeMethod
     public void setUp() {
-        sectionDao = mock(SectionDao.class);
-        sectionService = new TransactionalSectionService(sectionDao);
+    	MockitoAnnotations.initMocks(this);
+        sectionService = new TransactionalSectionService(sectionDao, entityValidator);
     }
 
     @Test
@@ -81,5 +91,24 @@ public class TransactionalSectionServiceTest {
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
         verify(sectionDao).deleteAndMoveBranchesTo(victim, recipient);
         assertEquals(actual, expected);
+    }
+    
+    @Test
+    public void testSaveSection(){
+    	 Section section = mock(Section.class);
+    	 sectionService.saveSection(section);
+    	 verify(entityValidator).throwOnValidationFailure(section);
+    }
+    
+    @Test(expectedExceptions = ValidationException.class)
+    public void saveSectionWithConstraintsViolations() {
+    	Section section = mock(Section.class);
+        givenConstraintsViolations();
+        sectionService.saveSection(section);
+    }
+
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Section.class));
     }
 }

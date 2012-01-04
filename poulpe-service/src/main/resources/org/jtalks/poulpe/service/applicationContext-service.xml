@@ -45,6 +45,7 @@
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
   <bean id="topicTypeService" class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
     <constructor-arg index="0" ref="topicTypeDao" />

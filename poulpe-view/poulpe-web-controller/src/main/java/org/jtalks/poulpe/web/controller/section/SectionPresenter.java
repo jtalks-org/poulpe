@@ -21,7 +21,8 @@ import java.util.logging.Logger;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 
@@ -42,6 +43,7 @@ public class SectionPresenter {
     private SectionViewImpl sectionView;
     private SectionTreeComponentImpl currentSectionTreeComponentImpl;
     private DialogManager dialogManager;
+    private EntityValidator entityValidator;
 
     public static final String ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS = "sections.error.section_name_already_exists";
     public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
@@ -163,69 +165,22 @@ public class SectionPresenter {
      * @param description
      *            is edited section description
      */
-    public void editSection(final String name, final String description) {
-
-        final Section section = (Section) this.currentSectionTreeComponentImpl
+    public boolean editSection(final String name, final String description) {  	
+        Section section = (Section) this.currentSectionTreeComponentImpl
                 .getSelectedObject();
-
-        String errorLabel = validateSection(name, description);
-        if (errorLabel != null) {
-            sectionView.openErrorPopupInEditSectionDialog(errorLabel);
-            return;
-        }
-
-        dialogManager.confirmEdition(name, new CreateUpdatePerformable(section,
-                name, description));
-        sectionView.closeEditSectionDialog();
-
-    }
-
-    /**
-     * Method check section's name and description.
-     * 
-     * @param name
-     *            for check
-     * @param description
-     *            for check
-     * @return label i18n error
-     * */
-    protected String validateSection(String name, String description) {
-        if (name == null || name.equals("")) {
-            return ERROR_LABEL_SECTION_NAME_CANT_BE_VOID;
-        }
-        return null;
-    }
-    private String validateNameLength(String name){
-    	if(name.length() > 254){
-    		return ERROR_LABEL_SECTION_NAME_VERY_LONG;
-    	}
-    	return null;
-    }
-    
-
-
-    /**
-     * Method check uniqueness of the section's name and the description.
-     * 
-     * @param name
-     *            for check
-     * @param description
-     *            for check
-     * @return label i18n error
-     * */
-    protected String checkSectionUniqueness(String name, String description) {
-        String result = validateSection(name, description);
-        Section section = new Section();
         section.setName(name);
         section.setDescription(description);
-        if (result != null) {
-            return result;
-        } else if (sectionService.isSectionExists(section)) {
-            return ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS;
-        }
-        return null;
+		if (validate(section, false)) {
+			dialogManager.confirmEdition(name, new UpdatePerformable(section));
+			sectionView.closeEditSectionDialog();
+			return true;
+		} else {
+			return false;
+		}
+
     }
 
+  
     /**
      * Create new Section object and save it if there no any Sections with the
      * same name in other cases (the name is already) should display error
@@ -236,19 +191,17 @@ public class SectionPresenter {
      * @param description
      *            section
      */
-    public void addNewSection(final String name, final String description) {
-
-        String errorLabel = checkSectionUniqueness(name, description);
-        if (errorLabel == null){
-        	errorLabel=validateNameLength(name);
-        }
-        if (errorLabel != null) {
-            sectionView.openErrorPopupInNewSectionDialog(errorLabel);
-            return;
-        }
-        dialogManager.confirmCreation(name, new CreateUpdatePerformable(null,
-                name, description));
-
+    public boolean addNewSection(final String name, final String description) {
+    	Section section = new Section();
+        section.setName(name);
+        section.setDescription(description);
+    	
+    	if (validate(section, true)) {
+			dialogManager.confirmCreation(name, new CreatePerformable(section));
+			return true;
+		} else {
+			return false;
+		} 
     }
 
     /**
@@ -310,65 +263,49 @@ public class SectionPresenter {
         sectionView.openModeratorDialog((Branch)selectedObject);
                 
     }
+    
+    public class CreatePerformable implements DialogManager.Performable {
+    	private Section section;
+    	public CreatePerformable(Section section) {
+            this.section = section;
+    	}
+		@Override
+		public void execute() {
+			sectionService.saveSection(section);
+			sectionView.showSection(section);
+            sectionView.closeNewSectionDialog();
+		}
+    	
+    }
 
-    public class CreateUpdatePerformable implements DialogManager.Performable {
-
+    public class UpdatePerformable implements DialogManager.Performable {
         private Section section;
-        private String name;
-        private String description;
+        
 
         /**
          * The params are already checked and validated otherwise the behavior
          * can't be predictable
          * 
-         * @param section to edit. If null then this section will be created
+         * @param section to edit. 
          * @param name new name for section
          * @param description new description for section
          */
-        public CreateUpdatePerformable(Section section, String name,
-                String description) {
-            this.section = section;
-            this.name = name;
-            this.description = description;
-        }
+        public UpdatePerformable(Section section) {
+			this.section = section;
+		}
 
-        @Override
-        public void execute() {
-            if (section == null) {
-                // then we are going to create a new section
-                section = new Section();
-                section.setName(name);
-                section.setDescription(description);
-                doSaving();
-                sectionView.showSection(section);
-                sectionView.closeNewSectionDialog();
-            } else {
-                // then we are going to edit some section
-                section.setName(name);
-                section.setDescription(description);
-                doSaving();
-                // its not necessary here because of section was transferred as
-                // a reference
-                SectionPresenter.this.currentSectionTreeComponentImpl
-                        .updateSectionInView(section);
-                sectionView.closeEditSectionDialog();
-            }
-        }
-
-        /**
-         * inner method to externalize a saving action
-         */
-        private void doSaving() {
-            try {
-                sectionService.saveSection(section);
-            } catch (NotUniqueException e) {
-                Logger.getLogger(BranchPresenter.class.getName()).log(
-                        Level.SEVERE, null, e);
-                sectionView
-                        .openErrorPopupInNewSectionDialog("sections.error.exeption_during_saving_process");
-            }
-        }
+		@Override
+		public void execute() {
+			sectionService.saveSection(section);
+			// its not necessary here because of section was transferred as
+			// a reference
+			SectionPresenter.this.currentSectionTreeComponentImpl
+					.updateSectionInView(section);
+			sectionView.closeEditSectionDialog();
+		}
+  
     }
+   
 
     public class DeleteBranchPerformable implements DialogManager.Performable {
 
@@ -386,12 +323,9 @@ public class SectionPresenter {
         @Override
         public void execute() {
             Section section = branch.getSection();
-            section.getBranches().remove(branch);
-            try {
+            section.getBranches().remove(branch);          
                 sectionService.saveSection(section);
-            } catch (NotUniqueException e) {
-
-            }
+            
             updateView();
         }
     }
@@ -419,17 +353,30 @@ public class SectionPresenter {
 
                 sectionService.deleteRecursively(victim);
                 return;
-            } else {
-                sectionService.deleteAndMoveBranchesTo(victim, recipient);
+			} else {
+				sectionService.deleteAndMoveBranchesTo(victim, recipient);
+				sectionService.saveSection(recipient);
 
-                // should save also all children
-                try {
-                    sectionService.saveSection(recipient);
-                } catch (NotUniqueException e) {
-                    // TODO add appropriate handling of exception
-                }
-            }
+			}
 
+        }
+    }
+
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
+    
+    public boolean validate(Section section, boolean isNewSection) {
+        ValidationResult result = entityValidator.validate(section);
+
+        if (result.hasErrors()) {
+        	sectionView.validationFailure(result, isNewSection);
+            return false;
+        } else {
+            return true;
         }
     }
 

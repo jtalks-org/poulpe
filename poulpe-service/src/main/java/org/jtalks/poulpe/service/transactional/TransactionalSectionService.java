@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
 
 /**
  * 
@@ -30,14 +31,16 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
  */
 public class TransactionalSectionService extends AbstractTransactionalEntityService<Section, SectionDao> implements
         SectionService {
+	private final EntityValidator validator;
     /**
      * Create an instance of entity based service
      * 
      * @param sectionDao
      *            - data access object
      */
-    public TransactionalSectionService(SectionDao sectionDao) {
+    public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
         this.dao = sectionDao;
+        this.validator = validator;
     }
 
     /**
@@ -61,12 +64,9 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public void saveSection(Section section) throws NotUniqueException {
-        try {
-            dao.saveOrUpdate(section);
-        } catch (ConstraintViolationException e) {
-            throw new NotUniqueException(e);
-        }
+    public void saveSection(Section section) {
+		validator.throwOnValidationFailure(section);
+		dao.saveOrUpdate(section);
     }
 
     /** {@inheritDoc} */

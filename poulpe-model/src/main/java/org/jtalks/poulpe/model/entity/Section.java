@@ -17,7 +17,13 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Forum section that contains branches. 
@@ -25,8 +31,16 @@ import org.jtalks.common.model.entity.Entity;
  * @author tanya birina
  * 
  */
+@UniqueConstraint
 public class Section extends Entity {
-
+	public static final String SECTION_ALREADY_EXISTS = "sections.error.section_name_already_exists";
+	public static final String SECTION_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
+	public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+	
+	@UniqueField(message = SECTION_ALREADY_EXISTS)
+    @NotNull(message = SECTION_CANT_BE_VOID)
+    @NotEmpty(message = SECTION_CANT_BE_VOID)
+    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
     private String description;
     private Integer position;

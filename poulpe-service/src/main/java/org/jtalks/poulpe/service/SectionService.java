@@ -35,10 +35,9 @@ public interface SectionService extends EntityService<Section> {
      * 
      * @param section
      *            instance to save
-     * @throws NotUniqueException
-     *             if section with the same name already exists
+     * 
      */
-    void saveSection(Section section) throws NotUniqueException;
+    void saveSection(Section section);
 
     /**
      * Check if section with given name exists.

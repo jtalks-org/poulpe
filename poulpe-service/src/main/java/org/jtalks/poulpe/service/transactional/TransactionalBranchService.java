@@ -23,10 +23,8 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.validation.EntityValidator;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

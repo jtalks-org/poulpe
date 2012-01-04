@@ -14,8 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -25,10 +32,11 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.common.collect.ImmutableMap;
+
+
 
 public class SectionViewImpl extends Window implements AfterCompose {
 
@@ -41,6 +49,29 @@ public class SectionViewImpl extends Window implements AfterCompose {
     private Window editSectionDialog;
     private Textbox editSectionDialog$sectionName;
     private Textbox editSectionDialog$sectionDescription;
+    
+    
+    public void validationFailure(ValidationResult result, boolean isNewSection) {
+    	Textbox textbox = getTextbox(isNewSection);
+        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", textbox);
+        
+        for (ValidationError error : result.getErrors()) {
+            String fieldName = error.getFieldName();
+            if (comps.containsKey(fieldName)) {
+                String message = Labels.getLabel(error.getErrorMessageCode());
+
+                InputElement ie = comps.get(fieldName);
+                ie.setErrorMessage(message);
+            }
+        }
+    }
+    
+	private Textbox getTextbox(boolean isNewSection) {
+		if (isNewSection)
+			return newSectionDialog$sectionName;
+		else
+			return editSectionDialog$sectionName;
+	}
 
     /**
      * {@inheritDoc}
