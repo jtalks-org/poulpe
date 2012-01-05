@@ -72,6 +72,13 @@ public class AclDataProvider {
         return new Object[][]{{new EntityImpl(0L)}};
     }
 
+    @SuppressWarnings("unchecked")
+    public static List<AccessControlEntry> createRandomEntries(MutableAcl acl) {
+        List<Sid> sids = (List<Sid>) provideRandomSidsAndPermissionsAndEntity()[0][0];
+        List<Permission> permissions = (List<Permission>) provideRandomSidsAndPermissionsAndEntity()[0][1];
+        return createEntries(acl, sids, permissions);
+    }
+    
     public static List<AccessControlEntry> createEntries(MutableAcl acl, List<Sid> sids,
                                                          List<Permission> permissions) {
         assertEquals(sids.size(), permissions.size(), "Provided lists should have the same size");

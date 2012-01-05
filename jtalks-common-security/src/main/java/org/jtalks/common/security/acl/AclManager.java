@@ -45,8 +45,8 @@ public class AclManager {
 
     /**
      * Gets each group that has some permissions on actions with the specified branch. So the resulting table will
-     * contain the mask of permission, the group id, and the flag whether the permission is granting. So this results in
-     * something like this:
+     * contain the mask of permission, the group id, and the flag whether the permission is granting. So considering
+     * that in the database there are records like this:
      * <pre>
      * --------------------------------------------------------------
      * | Permission mask | User Group ID | Granting                 |
@@ -55,13 +55,22 @@ public class AclManager {
      * | 3 (mask: 00011) |      2        | false (restricts action) |
      * | 5 (mask: 00101) |      1        | true (allows action)     |
      * --------------------------------------------------------------
-     * </pre>In this case we have 2 permissions and 2 groups, and both the permissions are granted to the group with id
-     * 1 and the first permission is restricted to the group with id 2.
+     * </pre> We'll get results like this:
+     * <pre>
+     * ----------------------------------
+     * |                 | 1    |   2   |
+     * |--------------------------------|
+     * | 3 (mask: 00011) | true | false |
+     * | 5 (mask: 00101) | true |       |
+     * ----------------------------------
+     * </pre>
+     * In this case we have 2 permissions and 2 groups, and both the permissions are granted to the group with id 1 and
+     * the first permission is restricted to the group with id 2.
      *
      * @param branch a branch to get all ACL entries for it (all the groups that have granting or restricting
      *               permissions on it)
-     * @return a table where the rows are permission masks, columns are group IDs, and the values are flags whether the
-     *         permission is granting to the group or restricting
+     * @return a table where the row IDs are permission masks, columns are group IDs, and the values are flags whether
+     *         the permission is granting to the group or restricting:
      */
     public Table<Integer, Long, Boolean> getBranchPermissions(Branch branch) {
         Table<Integer, Long, Boolean> groupIds = HashBasedTable.create();
