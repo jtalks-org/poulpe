@@ -28,6 +28,12 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class ExtendedMutableAcl implements MutableAcl {
+    /**
+     * This is a mock instance that is used usually just for testing purposes, most of its methods will throw {@link
+     * NullPointerException} if you invoke them.
+     */
+    public final static ExtendedMutableAcl NULL_ACL = new ExtendedMutableAcl();
+
     private final MutableAcl acl;
 
     /**
@@ -37,6 +43,13 @@ public class ExtendedMutableAcl implements MutableAcl {
      */
     private ExtendedMutableAcl(@Nonnull MutableAcl acl) {
         this.acl = acl;
+    }
+
+    /**
+     * An empty construct that shouldn't be ever used :) It's purpose is only to serve for {@link #NULL_ACL}.
+     */
+    private ExtendedMutableAcl() {
+        acl = null;
     }
 
     /**

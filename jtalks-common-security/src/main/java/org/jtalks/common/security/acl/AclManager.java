@@ -24,10 +24,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Interface that contains operations with ACL.
+ * Contains coarse-grained operations with Spring ACL to manage the permissions of Groups & Users for the actions on
+ * entities like Branch or Topic.
  *
  * @author Kirill Afonin
  */
@@ -36,7 +38,7 @@ public class AclManager {
     private final MutableAclService mutableAclService;
     private AclUtil aclUtil;
 
-    public AclManager(MutableAclService mutableAclService) {
+    public AclManager(@Nonnull MutableAclService mutableAclService) {
         this.mutableAclService = mutableAclService;
         aclUtil = new AclUtil(mutableAclService);
     }
@@ -80,7 +82,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void grant(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.grantPermissionsToSids(sids, permissions, target);
+        MutableAcl acl = aclUtil.grant(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 
@@ -92,7 +94,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.restrictPermissionsToSids(sids, permissions, target);
+        MutableAcl acl = aclUtil.restrict(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 
@@ -104,7 +106,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void delete(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.deletePermissionsFromTarget(sids, permissions, target);
+        MutableAcl acl = aclUtil.delete(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 

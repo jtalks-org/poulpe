@@ -89,7 +89,7 @@ public class AclUtil {
      * @param target      securable object
      * @return the ACL that serves the {@code sids}
      */
-    public ExtendedMutableAcl grantPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl grant(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, true);
     }
 
@@ -100,11 +100,11 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      */
-    public ExtendedMutableAcl restrictPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, false);
     }
 
-    public ExtendedMutableAcl deletePermissionsFromTarget(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl delete(List<Sid> sids, List<Permission> permissions, Entity target) {
         ObjectIdentity oid = createIdentityFor(target);
         ExtendedMutableAcl acl = ExtendedMutableAcl.castAndCreate(mutableAclService.readAclById(oid));
         deletePermissionsFromAcl(acl, sids, permissions);
