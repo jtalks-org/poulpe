@@ -34,7 +34,6 @@ import static com.google.common.collect.Lists.newArrayList;
  * @author stanislav bashkirtsev
  */
 public class AclUtil {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MutableAclService mutableAclService;
 
     public AclUtil(@Nonnull MutableAclService mutableAclService) {
@@ -133,8 +132,10 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      * @param granting    grant if true, restrict if false
+     * @return the ACL that manages the specified {@code target} and its Sids & Permissions
      */
-    private ExtendedMutableAcl applyPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
+    private ExtendedMutableAcl applyPermissionsToSids(
+            List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
         ExtendedMutableAcl acl = getAclFor(target);
         deletePermissionsFromAcl(acl, sids, permissions);
         acl.addPermissions(sids, permissions, granting);
