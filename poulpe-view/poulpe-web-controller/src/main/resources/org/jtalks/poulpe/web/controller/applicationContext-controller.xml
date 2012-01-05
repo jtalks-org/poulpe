@@ -115,6 +115,7 @@
   <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
         scope="prototype">
     <property name="groupService" ref="groupService" />
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
 </beans>

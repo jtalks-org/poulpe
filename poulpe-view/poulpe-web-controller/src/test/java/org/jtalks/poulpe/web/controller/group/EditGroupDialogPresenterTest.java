@@ -14,14 +14,21 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static org.mockito.Mockito.doThrow;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -33,54 +40,84 @@ public class EditGroupDialogPresenterTest {
     private GroupService mockGroupService;
     @Mock
     private EditGroupDialogView mockView;
+    
+    @Mock 
+    EntityValidator entityValidator;
     private Group group;
 
+    private ValidationResult resultWithErrors = resultWithErrors();
+
+    private ValidationResult resultWithErrors() {
+        ValidationError error = new ValidationError("title", TopicType.TITLE_ALREADY_EXISTS);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
+    }
+    
     @BeforeMethod
     public void beforeMethod() {
         dialogPresenter = new EditGroupDialogPresenter();
         MockitoAnnotations.initMocks(this);
         group = new Group();
         dialogPresenter.setGroupService(mockGroupService);
+        dialogPresenter.setEntityValidator(entityValidator);
     }
 
     @Test
     public void testValidateWhenNameIsNull() {
-        String nullName = null;
-        assertNotNull(dialogPresenter.validate(nullName));
-    }
-
+    	givenConstraintViolated();
+    	dialogPresenter.initView(mockView, group);
+    	dialogPresenter.saveOrUpdateGroup(null, "description");
+    	verify(mockGroupService, never()).saveGroup(any(Group.class));
+	}
+    
     @Test
-    public void testValidateWhenNameIsNormal() {
-        String normalName = "normal";
-        assertNull(dialogPresenter.validate(normalName));
-    }
+    public void testValidateWhenNameIsEmpty() {
+    	givenConstraintViolated();
+    	dialogPresenter.initView(mockView, group);
+    	dialogPresenter.saveOrUpdateGroup("", "description");
+    	verify(mockGroupService, never()).saveGroup(any(Group.class));
+	}
 
     @Test
     public void testValidateWhenNameIsLong() {
+    	givenConstraintViolated();
         String longName = new String(new byte[255]);
-        assertNotNull(dialogPresenter.validate(longName));
+        dialogPresenter.initView(mockView, group);
+    	dialogPresenter.saveOrUpdateGroup(longName, "description");
+    	verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
 
     @Test
-    public void testSaveOrUpdate() throws NotUniqueException {
+    public void testSaveOrUpdate() {
+    	givenNoConstraintsViolated();
         String name = "name";
         String desc = "description";
         dialogPresenter.initView(mockView, group);
         dialogPresenter.saveOrUpdateGroup(name, desc);
-        verify(mockGroupService).saveGroup(group);
+        verify(mockView, never()).validationFailure(any(ValidationResult.class));
+        verify(mockGroupService).saveGroup(any(Group.class));
+    }
+    
+    private void givenNoConstraintsViolated() {
+        when(entityValidator.validate(any(TopicType.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
-    public void testSaveOrUpdateGroupWithException() throws NotUniqueException {
+    public void testSaveOrUpdateGroupWithException() {
+    	givenConstraintViolated();
         Group nullGroup = new Group();
-        doThrow(new NotUniqueException()).when(mockGroupService).saveGroup(nullGroup);
-        final String name = "name";
+        
+        final String name = "";
         final String desc = "description";
 
         dialogPresenter.initView(mockView, nullGroup);
         dialogPresenter.setGroupService(mockGroupService);
         dialogPresenter.saveOrUpdateGroup(name, desc);
-        verify(mockView).notUniqueGroupName();
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
+    
+    private void givenConstraintViolated() {
+		when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+	}
 
 }

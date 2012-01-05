@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
  * @author Vitaliy Kravchenko
@@ -46,7 +45,7 @@ public interface GroupService extends EntityService<Group> {
      * @param selectedGroup instance to save
      * @throws NotUniqueException if group with the same name already exists
      */
-    void saveGroup(Group selectedGroup) throws NotUniqueException;   
+    void saveGroup(Group selectedGroup);   
     
 
 }

@@ -16,40 +16,56 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationResult;
 
 public class EditGroupDialogPresenter {
 
     private EditGroupDialogView view;
     private Group group;
     private GroupService groupService;
-    private final static String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+    private EntityValidator entityValidator;
 
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
+    }
+    
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
     }
 
     public void initView(EditGroupDialogView view, Group group) {
         this.view = view;
         this.group = group;
     }
-    public String validate(String name){
-    	if(name == null || name.length() > 245){
-    		return ERROR_LABEL_SECTION_NAME_WRONG;
-    	}
-    	return null;
-    }
+    
 
-    public void saveOrUpdateGroup(String name, String description) {
-        if (group == null) {
-            group = new Group();
-        }
-        group.setName(name);
-        group.setDescription(description);
-        try {
-            groupService.saveGroup(group);
-        } catch (NotUniqueException e) {
-            view.notUniqueGroupName();
+    public boolean saveOrUpdateGroup(String name, String description) {
+		if (group == null) {
+			group = new Group();
+		}
+		group.setName(name);
+		group.setDescription(description);
+		if (validate(group)) {
+			groupService.saveGroup(group);
+			view.hide();
+			return true;
+		} else {
+			return false;
+		}
+	}
+    
+    private boolean validate(Group group) {
+        ValidationResult result = entityValidator.validate(group);
+
+        if (result.hasErrors()) {
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
         }
     }
 

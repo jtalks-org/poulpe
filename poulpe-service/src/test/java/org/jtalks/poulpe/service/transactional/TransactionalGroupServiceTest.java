@@ -15,15 +15,23 @@
 package org.jtalks.poulpe.service.transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationException;
 import org.mockito.Mock;
+
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+
 import org.mockito.MockitoAnnotations;
 import static org.testng.Assert.*;
 
@@ -31,6 +39,8 @@ public class TransactionalGroupServiceTest {
     private TransactionalGroupService service;
     @Mock
     private GroupDao dao;
+    @Mock 
+    EntityValidator entityValidator;
     private List<Group> list, listByName;
     final private String name = "name";
     final Group group = new Group("new group");
@@ -38,7 +48,7 @@ public class TransactionalGroupServiceTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        service = new TransactionalGroupService(dao);
+        service = new TransactionalGroupService(dao, entityValidator);
         list = new ArrayList<Group>();
         listByName = new ArrayList<Group>();
         when(dao.getAll()).thenReturn(list);
@@ -62,14 +72,19 @@ public class TransactionalGroupServiceTest {
     }
 
     @Test
-    public void saveGroup() throws NotUniqueException {
+    public void saveGroup() {
         service.saveGroup(group);
-        verify(dao).saveOrUpdate(group);
+        verify(entityValidator).throwOnValidationFailure(group);
     }
 
-    @Test(expectedExceptions = NotUniqueException.class)
-    public void saveGroupWithException() throws NotUniqueException {
-        when(dao.isGroupDuplicated(group)).thenReturn(true);
+    @Test(expectedExceptions = ValidationException.class)
+    public void saveGroupWithException() {
+    	givenConstraintsViolations();
         service.saveGroup(group);
+    }
+    
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
     }
 }

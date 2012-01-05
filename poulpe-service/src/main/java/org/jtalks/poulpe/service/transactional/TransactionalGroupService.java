@@ -20,7 +20,7 @@ import org.jtalks.common.service.transactional.AbstractTransactionalEntityServic
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
 
 
 /**
@@ -30,14 +30,16 @@ import org.jtalks.poulpe.service.exceptions.NotUniqueException;
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
         implements GroupService {
+	 private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
      *
      * @param branchDao - data access object, which should be able do all CRUD operations.
      */
-    public TransactionalGroupService(GroupDao groupDao) {
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
         this.dao = groupDao;
+        this.validator = validator;
     }
 
     /**
@@ -65,14 +67,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     /**
      * {@inheritDoc}
      */
-    @Override
-    public void saveGroup(Group selectedGroup) throws NotUniqueException {
-        if(dao.isGroupDuplicated(selectedGroup)){
-            throw new NotUniqueException();
-        }
-        
-        dao.saveOrUpdate(selectedGroup);
-    }
+	@Override
+	public void saveGroup(Group selectedGroup) {
+		validator.throwOnValidationFailure(selectedGroup);
+		dao.saveOrUpdate(selectedGroup);
+	}
     
     
   
