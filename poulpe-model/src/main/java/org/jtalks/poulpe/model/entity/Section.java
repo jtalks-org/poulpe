@@ -26,18 +26,26 @@ import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
 import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
- * Forum section that contains branches. 
- * 
+ * Forum section that contains branches.
+ *
  * @author tanya birina
- * 
  */
 @UniqueConstraint
 public class Section extends Entity {
-	public static final String SECTION_ALREADY_EXISTS = "sections.error.section_name_already_exists";
-	public static final String SECTION_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
-	public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
-	
-	@UniqueField(message = SECTION_ALREADY_EXISTS)
+    /**
+     * Error message if section already exist
+     */
+    public static final String SECTION_ALREADY_EXISTS = "sections.error.section_name_already_exists";
+    /**
+     * Error message if section can be void
+     */
+    public static final String SECTION_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
+    /**
+     * Error message if section name is wrong
+     */
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+
+    @UniqueField(message = SECTION_ALREADY_EXISTS)
     @NotNull(message = SECTION_CANT_BE_VOID)
     @NotEmpty(message = SECTION_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
@@ -46,13 +54,27 @@ public class Section extends Entity {
     private Integer position;
     private List<Branch> branches = new ArrayList<Branch>();
 
+    /**
+     * Default constructor
+     */
     public Section() {
     }
-    
+
+    /**
+     * Constructor with setting name
+     *
+     * @param name - name for new section
+     */
     public Section(String name) {
         this.name = name;
     }
 
+    /**
+     * Constructor with name and description
+     *
+     * @param name        - name for new section
+     * @param description - description for new section
+     */
     public Section(String name, String description) {
         this.name = name;
         this.description = description;
@@ -60,6 +82,8 @@ public class Section extends Entity {
 
     /**
      * Set section name which briefly describes the topics contained in it.
+     *
+     * @return name section.
      */
     public String getName() {
         return name;
@@ -67,6 +91,8 @@ public class Section extends Entity {
 
     /**
      * Set section name.
+     *
+     * @param name - name for section.
      */
     public void setName(String name) {
         this.name = name;
@@ -74,6 +100,8 @@ public class Section extends Entity {
 
     /**
      * Get section description.
+     *
+     * @return description for section
      */
     public String getDescription() {
         return description;
@@ -82,27 +110,35 @@ public class Section extends Entity {
     /**
      * Set section description which contains additional information about the
      * section.
+     *
+     * @param description - description for section
      */
     public void setDescription(String description) {
         this.description = description;
-    } 
-    
+    }
+
     /**
      * Get section position.
+     *
+     * @return position
      */
-    public Integer getPosition () {
+    public Integer getPosition() {
         return position;
     }
-    
+
     /**
      * Set section position.
+     *
+     * @param position - position for section
      */
-    public void setPosition (Integer position) {
+    public void setPosition(Integer position) {
         this.position = position;
     }
 
     /**
      * Get section branches
+     *
+     * @return list of branches
      */
     public List<Branch> getBranches() {
         return branches;
@@ -110,6 +146,8 @@ public class Section extends Entity {
 
     /**
      * Set section branches
+     *
+     * @param branches - list of branches
      */
     public void setBranches(List<Branch> branches) {
         this.branches = branches;
@@ -117,6 +155,8 @@ public class Section extends Entity {
 
     /**
      * Add branch to the section.
+     *
+     * @param branch - Branch for adding to section
      */
     public void addBranch(Branch branch) {
         branches.add(branch);
@@ -124,6 +164,8 @@ public class Section extends Entity {
 
     /**
      * Delete branch from the section.
+     *
+     * @param branch - Branch for deleting from section
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);
