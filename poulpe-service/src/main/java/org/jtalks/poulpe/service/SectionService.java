@@ -14,17 +14,16 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.List;
-
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+
+import java.util.List;
 
 public interface SectionService extends EntityService<Section> {
 
     /**
      * Get list of all Sections.
-     * 
+     *
      * @return - list of Sections.
      */
     List<Section> getAll();
@@ -32,38 +31,32 @@ public interface SectionService extends EntityService<Section> {
 
     /**
      * Save or update section.
-     * 
-     * @param section
-     *            instance to save
-     * 
+     *
+     * @param section instance to save
      */
     void saveSection(Section section);
 
     /**
      * Check if section with given name exists.
-     * 
-     * @param section
-     *            name for check
+     *
+     * @param section name for check
      * @return true if exists
      */
     boolean isSectionExists(Section section);
 
     /**
      * Removes the section and all its branches.
-     * 
-     * @param victim
-     *            the removed section
+     *
+     * @param victim the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
     boolean deleteRecursively(Section victim);
 
     /**
      * Removes the section and move all its branches to another section.
-     * 
-     * @param victim
-     *            the removed section
-     * @param recipient
-     *            the section that will take orphan branches
+     *
+     * @param victim    the removed section
+     * @param recipient the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
      */
     boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
