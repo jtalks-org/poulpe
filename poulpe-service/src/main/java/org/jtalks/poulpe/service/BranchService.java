@@ -14,16 +14,11 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.permissions.JtalksPermission;
-import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.validation.ValidationException;
 
-import java.util.Collection;
 import java.util.List;
 
 /**
@@ -43,7 +38,6 @@ public interface BranchService extends EntityService<Branch> {
      * Save or update branch.
      *
      * @param selectedBranch instance to save
-     * @exception ValidationException
      */
     void saveBranch(Branch selectedBranch);
 
@@ -67,12 +61,31 @@ public interface BranchService extends EntityService<Branch> {
      * Checks if the branch is duplicated.
      *
      * @param branch branch to check
+     * @return true if branch is Duplicated
      */
     boolean isDuplicated(Branch branch);
 
+    /**
+     * Return access list for branch
+     *
+     * @param branch branch which will be returned access list
+     * @return access list
+     */
     BranchAccessList getGroupAccessListFor(Branch branch);
 
+    /**
+     * Change grants for branch
+     *
+     * @param branch  branch to which grants will be changed
+     * @param changes grants for branch
+     */
     void changeGrants(Branch branch, BranchAccessChanges changes);
 
+    /**
+     * Change restriction for branch
+     *
+     * @param branch  branch to which restriction will be changed
+     * @param changes new restriction for branch
+     */
     void changeRestrictions(Branch branch, BranchAccessChanges changes);
 }
