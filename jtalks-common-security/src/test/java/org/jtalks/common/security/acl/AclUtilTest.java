@@ -64,6 +64,18 @@ public class AclUtilTest {
         assertSame(extendedMutableAcl.getAcl(), mockAcl);
     }
 
+    @Test
+    @SuppressWarnings("unchecked")
+    public void testGetAclForObjectIdentity_whichIsNotSavedSoFar() throws Exception {
+        ObjectIdentity identity = new ObjectIdentityImpl(getClass().getName(), 1);
+        MutableAcl mockAcl = mock(MutableAcl.class);
+        when(aclService.readAclById(identity)).thenThrow(NotFoundException.class);
+        when(aclService.createAcl(identity)).thenReturn(mockAcl);
+
+        ExtendedMutableAcl extendedMutableAcl = util.getAclFor(identity);
+        assertSame(extendedMutableAcl.getAcl(), mockAcl);
+    }
+
     @Test(dataProvider = "randomEntity", dataProviderClass = AclDataProvider.class)
     public void testCreateIdentityFor(Entity entity) throws Exception {
         ObjectIdentity identity = util.createIdentityFor(entity);

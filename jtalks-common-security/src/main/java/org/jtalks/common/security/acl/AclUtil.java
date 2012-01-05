@@ -88,6 +88,7 @@ public class AclUtil {
      * @param sids        list of sids
      * @param permissions list of permissions
      * @param target      securable object
+     * @return the ACL that serves the {@code sids}
      */
     public ExtendedMutableAcl grantPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, true);
@@ -136,15 +137,7 @@ public class AclUtil {
     private ExtendedMutableAcl applyPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
         ExtendedMutableAcl acl = getAclFor(target);
         deletePermissionsFromAcl(acl, sids, permissions);
-        int aclIndex = acl.getEntries().size();
-        for (Sid recipient : sids) {
-            for (Permission permission : permissions) {
-                // add permission to acl for recipient
-                acl.insertAce(aclIndex++, permission, recipient, granting);
-                logger.debug("Added permission mask {} for Sid {} securedObject {} id {}", new Object[]{
-                        permission.getMask(), recipient, target.getClass().getSimpleName(), target.getId()});
-            }
-        }
+        acl.addPermissions(sids, permissions, granting);
         return acl;
     }
 

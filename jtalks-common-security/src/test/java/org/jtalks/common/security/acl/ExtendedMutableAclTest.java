@@ -14,6 +14,7 @@
  */
 package org.jtalks.common.security.acl;
 
+import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.springframework.security.acls.domain.AccessControlEntryImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
@@ -55,7 +56,7 @@ public class ExtendedMutableAclTest {
             description = "Checks what happens when there are no such elements in the Acl#getEntries()")
     public void testDeleteList_withNoSuchEntries(ExtendedMutableAcl extendedMutableAcl, MutableAcl wrappedMock) {
         List<AccessControlEntry> entries = createEntries(wrappedMock);
-        when(wrappedMock.getEntries()).thenReturn(entries.subList(0,2));
+        when(wrappedMock.getEntries()).thenReturn(entries.subList(0, 2));
 
         extendedMutableAcl.delete(entries.subList(1, 3));
         verify(wrappedMock).deleteAce(1);
@@ -87,6 +88,28 @@ public class ExtendedMutableAclTest {
         ExtendedMutableAcl.castAndCreate(mock(Acl.class));
     }
 
+    @Test(dataProvider = "extendedMutableAclAndWrappedMock")
+    public void testAddPermissions(ExtendedMutableAcl extendedMutableAcl, MutableAcl wrappedMock) throws Exception {
+        Sid sid = getRandomSids().get(0);
+        List<Permission> permissions = createPermissions();
+        extendedMutableAcl.addPermissions(sid, permissions, true);
+        for (int i = 0; i < permissions.size(); i++) {
+            verify(wrappedMock).insertAce(i, permissions.get(i), sid, true);
+        }
+    }
+
+    @Test(dataProvider = "extendedMutableAclAndWrappedMock")
+    public void testAddPermissionsForSids(ExtendedMutableAcl extendedMutableAcl, MutableAcl wrappedMock) {
+        List<Sid> sids = getRandomSids();
+        List<Permission> permissions = createPermissions();
+        extendedMutableAcl.addPermissions(sids, permissions, true);
+        for (int i = 0; i < permissions.size(); i++) {
+            for (Sid sid : sids) {
+                verify(wrappedMock).insertAce(i, permissions.get(i), sid, true);
+            }
+        }
+    }
+
     @DataProvider(name = "mutableAclMock")
     public Object[][] provideMutableAclMock() {
         return new Object[][]{{mock(MutableAcl.class)}};
@@ -96,6 +119,15 @@ public class ExtendedMutableAclTest {
     public Object[][] provideExtendedMutableAclAndWrappedMock() {
         MutableAcl wrappedMock = mock(MutableAcl.class);
         return new Object[][]{{ExtendedMutableAcl.create(wrappedMock), wrappedMock}};
+    }
+
+    @SuppressWarnings("unchecked")
+    private List<Sid> getRandomSids() {
+        return (List<Sid>) AclDataProvider.provideRandomSids()[0][0];
+    }
+
+    private List<Permission> createPermissions() {
+        return Lists.<Permission>newArrayList(BranchPermission.DELETE_POSTS, BranchPermission.VIEW_TOPICS);
     }
 
     private List<AccessControlEntry> createEntries(MutableAcl acl) {

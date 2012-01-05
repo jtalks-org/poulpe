@@ -69,6 +69,39 @@ public class ExtendedMutableAcl implements MutableAcl {
     }
 
     /**
+     * Adds all the permissions to the specified sid. Note, that it doesn't check whether there is already such Sid with
+     * such Permission in the ACL, so you should ensures this on your own.
+     *
+     * @param sid         sid to grant the permissions to
+     * @param permissions the list of permissions that should be granted to the Sid
+     * @param granting    specify {@code true} if you want to grant the permission or {@code false} if you want to
+     *                    restrict all the permissions
+     * @see #addPermissions(java.util.List, java.util.List, boolean)
+     */
+    public void addPermissions(@Nonnull Sid sid, @Nonnull List<Permission> permissions, boolean granting) {
+        int entriesAmount = acl.getEntries().size();
+        for (Permission permission : permissions) {
+            acl.insertAce(entriesAmount++, permission, sid, granting);
+        }
+    }
+
+    /**
+     * Adds all the permissions to all the specified sids. Note, that it doesn't check whether there are already such
+     * Sids with such Permission in the ACL, so you should check it on your own.
+     *
+     * @param sids        the sids to grant the permissions to
+     * @param permissions the list of permissions that should be granted to the Sid
+     * @param granting    specify {@code true} if you want to grant the permission or {@code false} if you want to
+     *                    restrict all the permissions
+     * @see #addPermissions(Sid, List, boolean)
+     */
+    public void addPermissions(@Nonnull List<Sid> sids, @Nonnull List<Permission> permissions, boolean granting) {
+        for (Sid recipient : sids) {
+            addPermissions(recipient, permissions, granting);
+        }
+    }
+
+    /**
      * Wraps the specified {@link MutableAcl} with the instance of {@link ExtendedMutableAcl} and returns the latter.
      *
      * @param acl the acl to be wrapped with the {@link ExtendedMutableAcl}
