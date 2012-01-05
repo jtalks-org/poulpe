@@ -25,7 +25,9 @@
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
     <property column="DELETED" name="deleted" />
-    <many-to-one column="SECTION_ID" name="section" class="Section" not-null="true" lazy="false" />
+    <property column="POSITION" name="position" insert="false" update="false" />
+    <many-to-one column="SECTION_ID" name="section" class="Section"
+      lazy="false" update="false" insert="false" />
 
     <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
       <cache usage="nonstrict-read-write" />
