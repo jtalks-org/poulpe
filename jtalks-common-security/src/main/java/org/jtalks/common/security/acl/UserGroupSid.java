@@ -14,11 +14,11 @@
  */
 package org.jtalks.common.security.acl;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.poulpe.model.entity.Group;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 import java.util.regex.Pattern;
 
 /**
@@ -29,16 +29,22 @@ import java.util.regex.Pattern;
  *
  * @author stanislav bashkirstev
  */
+@Immutable
 public class UserGroupSid implements IdentifiableSid {
     public final static String SID_PREFIX = "usergroup";
     private final String groupId;
 
-    public UserGroupSid(String sidId) {
+    /**
+     * @param sidId passes the direct sid id which should obey the format "usergroup:[group_id]"
+     * @throws IdentifiableSid.WrongFormatException
+     *          if the format of the passed string is wrong
+     */
+    public UserGroupSid(@Nonnull String sidId) {
         this.groupId = parseGroupId(sidId);
     }
 
     /**
-     * Constructs SID by the group id.
+     * Constructs SID by the group id. The {@link #getSidId()} will consist of word 'usrgroup:[specified id]'.
      *
      * @param groupId the id of the group that will own permissions for some actions on some objects
      * @see Group#getId()
@@ -87,13 +93,16 @@ public class UserGroupSid implements IdentifiableSid {
      */
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         UserGroupSid that = (UserGroupSid) o;
-
-        if (!groupId.equals(that.groupId)) return false;
-
+        if (!groupId.equals(that.groupId)) {
+            return false;
+        }
         return true;
     }
 

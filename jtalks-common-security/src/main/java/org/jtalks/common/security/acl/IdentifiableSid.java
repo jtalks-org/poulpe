@@ -23,6 +23,11 @@ import org.springframework.security.acls.model.Sid;
  * @author stanislav bashkirtsev
  */
 public interface IdentifiableSid extends Sid {
+    /**
+     * All the custom Sids, when they implement the {@link IdentifiableSid} should obey some pattern since they are
+     * saved as string to the DB. This pattern usually will be: some string identifier of the Sid implementation + ":" +
+     * the database id of the entity which is a Sid. Like in case of user groups: {@code usergroup:2123}.
+     */
     static final String SID_NAME_SEPARATOR = ":";
 
     /**
@@ -33,16 +38,19 @@ public interface IdentifiableSid extends Sid {
      */
     String getSidId();
 
+    /**
+     * Since some of Sid implementations accept different arguments while creation, like String, and these arguments
+     * have to be of some particular pattern, we need such exception that is thrown when the passed argument is of wrong
+     * format.
+     *
+     * @author stanislav bashkirtsev
+     */
     public static class WrongFormatException extends RuntimeException {
-        private final String sidName;
-
+        /**
+         * @param sidName the name of the sid (actually the value which is of wrong format)
+         */
         public WrongFormatException(String sidName) {
             super("Sid name is of incorrect format: " + sidName);
-            this.sidName = sidName;
-        }
-
-        public String getSidName() {
-            return sidName;
         }
     }
 }
