@@ -33,27 +33,57 @@ public class BranchAccessChanges {
         this.permission = permission;
     }
 
+    /**
+     * Get newly added permissions
+     *
+     * @return Group[] with newly permissions
+     */
     public Group[] getNewlyAddedPermissionsAsArray() {
         return newlyAddedPermissions.toArray(new Group[]{});
     }
 
+    /**
+     * Set newly added permissions
+     *
+     * @param newlyAddedPermissions - list of newly added permissions
+     */
     public void setNewlyAddedPermissions(Collection<Group> newlyAddedPermissions) {
         this.newlyAddedPermissions.addAll(newlyAddedPermissions);
     }
 
+    /**
+     * Get removed permissions
+     *
+     * @return Group[] with removed permissions
+     */
     public Group[] getRemovedPermissionsAsArray() {
         return removedPermissions.toArray(new Group[]{});
     }
 
-
+    /**
+     * Set removed permissions
+     *
+     * @param removedPermissions - list with removed permissions
+     */
     public void setRemovedPermissions(Collection<Group> removedPermissions) {
         this.removedPermissions.addAll(removedPermissions);
     }
 
+    /**
+     * Get permission
+     *
+     * @return {@link JtalksPermission}
+     */
     public JtalksPermission getPermission() {
         return permission;
     }
-    public boolean isEmpty(){
+
+    /**
+     * Check {@link BranchAccessChanges} is empty
+     *
+     * @return {@code true} if empty, else return {@code false}
+     */
+    public boolean isEmpty() {
         return removedPermissions.isEmpty() && newlyAddedPermissions.isEmpty();
     }
 }
