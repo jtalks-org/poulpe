@@ -14,10 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Mockito.*;
-
-import java.util.List;
-
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -25,6 +21,10 @@ import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 /**
  * The test for {@link ListPresenter} class.
@@ -108,6 +108,15 @@ public class ListPresenterTest {
 
         verify(componentService).deleteComponent(component);
         verify(view).updateList(components);
+    }
+
+    @Test
+    public void testConfigureComponentNoSelectedItem() {
+        givenNoSelectedElement();
+
+        presenter.configureComponent();
+
+        verify(dialogManager).notify("item.no.selected.item");
     }
 
 }

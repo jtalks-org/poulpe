@@ -18,17 +18,22 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
+import org.zkoss.zk.ui.ext.Scope;
 
 /**
  * The class for mediating between model and view representation of components.
  * 
  * @author Dmitriy Sukharev
+ * @author Vahluev Vyacheslav
  * @author Vyacheslav Zhivaev
  */
 public class ListPresenter extends AbstractComponentPresenter {
 
     private static final String NO_SELECTED_ITEM = "item.no.selected.item";
     private static final String NO_AVAILABLE_TYPES = "component.error.no_available_types";
+    private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
     
     /** The object that is responsible for updating view of the component list. */
     private ListView view;
@@ -73,6 +78,36 @@ public class ListPresenter extends AbstractComponentPresenter {
         } else {
             getDialogManager().notify(NO_SELECTED_ITEM);
         }
+    }
+
+    /**
+     * Opening a new window to configure a component
+     * or shows a message if none were selected
+     */
+    public void configureComponent() {
+        if (!view.hasSelectedItem()) {
+            dialogManager.notify(NO_SELECTED_ITEM);
+        }
+        else {
+            showEditWindow();
+        }
+    }
+
+    /**
+     * Shows a component edit window
+     */
+    private void showEditWindow () {
+        org.zkoss.zk.ui.Component currentComp = (org.zkoss.zk.ui.Component) view;
+        org.zkoss.zk.ui.Component parent = currentComp.getParent();
+
+        Component cm = view.getSelectedItem();
+        Executions.getCurrent().getDesktop().setAttribute("componentToEdit", cm);
+
+        currentComp.detach();
+
+        currentComp = Executions.createComponents(EDIT_COMPONENT_LOCATION, null, null);
+        currentComp.setParent(parent);
+        currentComp.setVisible(true);
     }
 
     /**
