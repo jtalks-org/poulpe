@@ -58,7 +58,7 @@ public final class ObjectsFactory {
             Branch branch = createBranch();
             branch.setSection(section);
             branch.setPosition(i);
-            section.addBranch(branch);
+            section.addOrUpdateBranch(branch);
         }
 
         return section;

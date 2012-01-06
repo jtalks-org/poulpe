@@ -231,7 +231,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         
         section = (Section) session.load(Section.class, section.getId());
         branch.setSection(section);
-        section.addBranch(branch);
+        section.addOrUpdateBranch(branch);
         session.save(branch);
         
         assertTrue(branch.getId() != 0);
