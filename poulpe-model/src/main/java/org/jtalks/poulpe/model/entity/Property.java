@@ -19,77 +19,73 @@ import org.jtalks.common.model.entity.Entity;
 /**
  * The Property entity which contains configuration
  * for components
- * 
+ *
  * @author Vahluev Vyacheslav
  *
  */
 public class Property extends Entity {
-	/**
-	 * Property's name
-	 */
-	private String name;
-	/**
-	 * Property's value
-	 */
-	private String value;
-	/**
-	 * The ID of the component, to which this property belongs
-	 */
-	private long cmp_id; 
-	
-	/**
-	 * 	Gets id of the component
-	 * @return id of the component, to which this property belongs
-	 */
-	public long getCmp_id() {
-		return cmp_id;
-	}
+    /**
+     * Property's name
+     */
+    private String name;
+    /**
+     * Property's value
+     */
+    private String value;
 
-	/**
-	 * Sets id of the component, to which this property belongs
-	 * @param cmp_id
-	 */
-	public void setCmp_id(long cmp_id) {
-		this.cmp_id = cmp_id;
-	}
+    /**
+     * Default constructor, sets nothing
+     */
+    public Property() {
+    }
 
-	/**
-	 * Gets the name of the property
-	 * @return name of the property
-	 */
-	public String getName() {
-		return name;
-	}
-	
-	/**
-	 * Sets the name of the property
-	 * @param name
-	 */
-	public void setName(String name) {
-		this.name = name;
-	}
-	
-	/**
-	 * Gets the value of the property
-	 * @return
-	 */
-	public String getValue() {
-		return value;
-	}
-	
-	/**
-	 * Sets the value of the property
-	 * @param value
-	 */
-	public void setValue(String value) {
-		this.value = value;
-	}
-	
-	/**
-	 * Returns String representation of the property
-	 */
-	public String toString() {
-		return this.getName() + ": " + this.getValue();
-	}
-	
+    /**
+     * Constructor which sets name and value of the property
+     * @param name
+     * @param value
+     */
+    public Property(String name, String value) {
+        this.name = name;
+        this.value = value;
+    }
+
+    /**
+     * Gets the name of the property
+     * @return name of the property
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Sets the name of the property
+     * @param name
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * Gets the value of the property
+     * @return
+     */
+    public String getValue() {
+        return value;
+    }
+
+    /**
+     * Sets the value of the property
+     * @param value
+     */
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    /**
+     * Returns String representation of the property
+     */
+    public String toString() {
+        return this.getName() + ": " + this.getValue();
+    }
+
 }

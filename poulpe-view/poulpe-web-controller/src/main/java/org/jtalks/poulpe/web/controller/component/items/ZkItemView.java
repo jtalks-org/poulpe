@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
  * 
  * @author Dmitriy Sukharev
  * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
  */
 public class ZkItemView extends Window implements ItemView, AfterCompose {
 
@@ -101,6 +102,7 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     private void showForm() {
         setVisible(true);
         name.setFocus(true);
+        setValidationConstraints("");
     }
 
     /** {@inheritDoc} */
@@ -151,8 +153,14 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
      * @see ListPresenter
      */
     public void onBlur$name() {
-        name.setConstraint("no empty");
         presenter.checkComponent();
+    }
+    
+    /**
+     * Handle event when name field in focus
+     */
+    public void onFocus$name() {
+        name.clearErrorMessage();
     }
 
     // ==== ItemDataView methods ====

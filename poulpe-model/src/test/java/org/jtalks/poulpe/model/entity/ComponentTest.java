@@ -73,4 +73,40 @@ public class ComponentTest {
         assertNotSame(ComponentType.ARTICLE, component.getComponentType());
     }
 
+    @Test
+    public void testAddProperty() {
+        component.addProperty("someprop", "someval");
+
+        assertEquals(component.getProperties().size(), 1);
+        assertEquals(component.getProperties().get(0).getName(), "someprop");
+        assertEquals(component.getProperties().get(0).getValue(), "someval");
+    }
+
+    @Test
+    public void testSetProperty() {
+        component.addProperty("setname", "setval");
+        component.setProperty("setname", "x");
+
+        assertEquals(component.getProperties().size(), 1);
+        assertEquals(component.getProperties().get(0).getName(), "setname");
+        assertEquals(component.getProperties().get(0).getValue(), "x");
+    }
+
+    @Test
+    public void testSetPropertyWithAdd() {
+        component.addProperty("setname", "setval");
+        component.setProperty("setname2", "x");
+
+        assertEquals(component.getProperties().size(), 2);
+        assertEquals(component.getProperties().get(1).getName(), "setname2");
+        assertEquals(component.getProperties().get(1).getValue(), "x");
+    }
+
+    @Test
+    public void testGetProperty() {
+        component.addProperty("setname", "setval");
+
+        assertEquals(component.getProperty("setname"), "setval");
+    }
+
 }

@@ -125,6 +125,14 @@ public class ZkListView extends Window implements ListView, AfterCompose {
         presenter.deleteComponent();
     }
 
+    /**
+     * Tells presenter to configure selected component
+     * @see ListPresenter
+     */
+    public void onClick$confCompButton() {
+        presenter.configureComponent();
+    }
+
     // ==== get-set methods ====
 
     /**

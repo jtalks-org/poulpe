@@ -41,6 +41,7 @@ import com.google.common.collect.ImmutableMap;
  * This class is implementation view for single branch
  * 
  * @author Bekrenev Dmitry
+ * @author Vyacheslav Zhivaev
  * */
 public class BranchDialogViewImpl extends Window implements BranchDialogView,
         AfterCompose {
@@ -108,7 +109,6 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         presenter.setView(this);
         presenter.initView();
 
-        branchName.setConstraint("no empty");
         sectionList.setItemRenderer(sectionItemRenderer);
     }
 
@@ -116,6 +116,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * Handle event when user click on confirm button
      * */
     public void onClick$confirmButton() {
+        branchName.setConstraint("no empty");
         presenter.saveBranch();
         presenter.updateView();
     }
@@ -192,6 +193,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         confirmButton.setLabel(Labels.getLabel("branches.button.add"));
         rejectButton.setLabel(Labels.getLabel("branches.button.cancel"));
         branchName.setRawValue("");
+        branchName.setConstraint("");
         branchDescription.setText("");
         branch = new Branch();
         setDefaultSection(null);
@@ -210,6 +212,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         Section section = branch.getSection();
         setDefaultSection(section);
         branchName.setText(branch.getName());
+        branchName.setConstraint("");
         branchDescription.setText(branch.getDescription());
         this.branch = branch;
         setVisible(true);
