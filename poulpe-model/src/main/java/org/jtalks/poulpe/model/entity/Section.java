@@ -162,8 +162,11 @@ public class Section extends Entity {
      */
     public void addOrUpdateBranch(Branch branch) {
         for (int index = 0; index < branches.size(); index++) {
-            System.out.println("index: " + index);
-            if (branches.get(index).getId() == branch.getId()) {
+            long id = branches.get(index).getId();
+            if (id == 0) {
+                continue;
+            }
+            if (id == branch.getId()) {
                 branches.set(index, branch);
                 return;
             }
