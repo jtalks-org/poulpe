@@ -32,6 +32,7 @@
   <bean id="rankManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
     <constructor-arg index="0" ref="rankService"/>
+    <constructor-arg index="1" ref="entityValidator"/>
   </bean>
 
   <!--Declaration of presenters -->

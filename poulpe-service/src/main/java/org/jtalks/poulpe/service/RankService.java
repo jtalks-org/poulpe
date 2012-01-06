@@ -17,7 +17,6 @@ package org.jtalks.poulpe.service;
 import java.util.List;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Rank;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
  *
@@ -37,10 +36,10 @@ public interface RankService extends EntityService<Rank> {
      */
     void deleteRank(Rank rank);
 
-    /**
-     * Save new or update existent rank.
-     * @param rank rank to save
-     * @throws NotUniqueException when rank name already exists
-     */
-    void saveRank(Rank rank) throws NotUniqueException;
+	/**
+	 * Save new or update existent rank.
+	 * 
+	 * @param rank rank to save
+	 */
+	void saveRank(Rank rank);
 }

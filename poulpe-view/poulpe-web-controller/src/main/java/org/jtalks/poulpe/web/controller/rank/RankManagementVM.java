@@ -14,15 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.rank;
 
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.service.RankService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.*;
+import org.zkoss.zul.impl.InputElement;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * View Model for rank management page.
@@ -35,17 +43,26 @@ public class RankManagementVM {
     private RankService rankService;
     private Rank selected;
     private Component editor;
+    private EntityValidator entityValidator;
+    private Textbox rankName;
 
     /**
      * Construct the object with injected service.
      *
      * @param rankService rankService
      */
-    public RankManagementVM(@Nonnull RankService rankService) {
+    public RankManagementVM(@Nonnull RankService rankService, EntityValidator entityValidator) {
         this.rankService = rankService;
+        this.entityValidator = entityValidator;
         initData();
     }
 
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
     /**
      * Get ranks list.
      *
@@ -88,12 +105,39 @@ public class RankManagementVM {
 
     @Command
     @NotifyChange
-    public void save() throws NotUniqueException {
-        rankService.saveRank(selected);
+    public void save()  {
+        
+    	if (validate (selected))
+    	rankService.saveRank(selected);
         String windowId = "kNKF0";
         getCurrentWindow("RankEditorWindow").setVisible(false);
         dialogClosed();
         initData();
+    }
+    
+    private boolean validate(Rank rank) {
+        ValidationResult result = entityValidator.validate(rank);
+
+        if (result.hasErrors()) {
+            validationFailure(result);
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public void validationFailure(ValidationResult result) {
+        Map<String, ? extends InputElement> comps = ImmutableMap.of("name",rankName);
+        
+        for (ValidationError error : result.getErrors()) {
+            String fieldName = error.getFieldName();
+            if (comps.containsKey(fieldName)) {
+                String message = Labels.getLabel(error.getErrorMessageCode());
+
+                InputElement ie = comps.get(fieldName);
+                ie.setErrorMessage(message);
+            }
+        }
     }
 
     @Command

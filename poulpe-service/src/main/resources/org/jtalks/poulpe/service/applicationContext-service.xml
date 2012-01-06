@@ -60,6 +60,7 @@
   </bean>
   <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
     <constructor-arg index="0" ref="rankDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
 
   <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.BranchPermissionManager">

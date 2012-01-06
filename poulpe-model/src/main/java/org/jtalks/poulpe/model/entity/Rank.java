@@ -14,7 +14,12 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
+import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Forum rank.
@@ -23,7 +28,20 @@ import org.jtalks.common.model.entity.Entity;
  * 
  * @author Pavel Vervenko
  */
+@UniqueConstraint
 public class Rank extends Entity {
+	/**
+     * Error message if rank already exists
+     */
+    public static final String RANK_ALREADY_EXISTS = "rank.validation.not_unique_rank_name";
+    
+    /**
+     * Error message if rank name is void
+     */
+    public static final String RANK_CANT_BE_VOID = "rank.error.rank_name_cant_be_void";
+	@UniqueField(message = RANK_ALREADY_EXISTS)
+    @NotNull(message = RANK_CANT_BE_VOID)
+    @NotEmpty(message = RANK_CANT_BE_VOID)
     private String rankName;
     private boolean autoAssigned;
     private int postCount;
