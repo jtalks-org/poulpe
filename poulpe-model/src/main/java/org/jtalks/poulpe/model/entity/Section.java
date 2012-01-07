@@ -29,6 +29,7 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
  * Forum section that contains branches.
  *
  * @author tanya birina
+ * @author Guram Savinov
  */
 @UniqueConstraint
 public class Section extends Entity {
@@ -154,18 +155,30 @@ public class Section extends Entity {
     }
 
     /**
-     * Add branch to the section.
+     * Adds branch to the section or updates if it exist.
      *
-     * @param branch - Branch for adding to section
+     * @param branch
+     *            the branch for adding to section
      */
-    public void addBranch(Branch branch) {
+    public void addOrUpdateBranch(Branch branch) {
+        for (int index = 0; index < branches.size(); index++) {
+            long id = branches.get(index).getId();
+            if (id == 0) {
+                continue;
+            }
+            if (id == branch.getId()) {
+                branches.set(index, branch);
+                return;
+            }
+        }
         branches.add(branch);
     }
 
     /**
      * Delete branch from the section.
      *
-     * @param branch - Branch for deleting from section
+     * @param branch
+     *            the branch for deleting from section
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);

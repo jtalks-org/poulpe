@@ -19,20 +19,21 @@ import org.jtalks.common.service.transactional.AbstractTransactionalEntityServic
 import org.jtalks.poulpe.model.dao.RankDao;
 import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.service.RankService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
 
 /**
  * Transactional Rank Service implementation.
  * @author Pavel Vervenko
  */
 public class TransactionalRankService extends AbstractTransactionalEntityService<Rank, RankDao> implements RankService {
-
+	private final EntityValidator validator;
     /**
      * Create an instance of service.
      * @param rankDao rank DAO
      */
-    public TransactionalRankService(RankDao rankDao) {
+    public TransactionalRankService(RankDao rankDao, EntityValidator validator) {
         this.dao = rankDao;
+        this.validator = validator;
     }
 
     /**
@@ -55,10 +56,8 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      * {@inheritDoc}
      */
     @Override
-    public void saveRank(Rank rank) throws NotUniqueException {
-        if (dao.isRankNameExists(rank.getRankName())) {
-            throw new NotUniqueException("Name " + rank.getRankName() + " already exists");
-        }
+    public void saveRank(Rank rank) {
+    	validator.throwOnValidationFailure(rank);
         dao.saveOrUpdate(rank);
     }
 }

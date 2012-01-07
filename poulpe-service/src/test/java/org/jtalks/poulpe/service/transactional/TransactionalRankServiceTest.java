@@ -14,11 +14,21 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.jtalks.poulpe.model.entity.Rank;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationException;
 import org.testng.annotations.Test;
 import org.jtalks.poulpe.model.dao.RankDao;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,15 +38,15 @@ import static org.mockito.Mockito.when;
  * @author Pavel Vervenko
  */
 public class TransactionalRankServiceTest {
-
-    private RankDao rankDao;
+	@Mock EntityValidator entityValidator;
+	@Mock RankDao rankDao;
     private TransactionalRankService rankService;
     private Rank rank;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        rankDao = mock(RankDao.class);
-        rankService = new TransactionalRankService(rankDao);
+    	MockitoAnnotations.initMocks(this);
+        rankService = new TransactionalRankService(rankDao, entityValidator);
         rank = new Rank();
     }
 
@@ -53,16 +63,21 @@ public class TransactionalRankServiceTest {
     }
 
     @Test
-    public void testSaveRank() throws NotUniqueException {
+    public void testSaveRank() {
         rankService.saveRank(rank);
-        verify(rankDao).saveOrUpdate(rank);
+        verify(entityValidator).throwOnValidationFailure(rank);
     }
 
-    @Test(expectedExceptions = NotUniqueException.class)
-    public void testSaveRankException() throws NotUniqueException {
-        String notUniqueName = "name";
-        rank.setRankName(notUniqueName);
-        when(rankDao.isRankNameExists(notUniqueName)).thenReturn(Boolean.TRUE);
-        rankService.saveRank(rank);
+	@Test(expectedExceptions = ValidationException.class)
+	public void testSaveRankException() {
+		String notUniqueName = "name";
+		rank.setRankName(notUniqueName);
+		givenConstraintsViolations();
+		rankService.saveRank(rank);
+	}
+    
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Rank.class));
     }
 }

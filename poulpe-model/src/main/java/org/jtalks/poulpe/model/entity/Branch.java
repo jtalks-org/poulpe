@@ -47,6 +47,7 @@ public class Branch extends Entity {
     private String name;
     private String description;
     private boolean deleted;
+    private Integer position;
     private Section section;
 
     private List<User> moderators = new ArrayList<User>();
@@ -222,6 +223,25 @@ public class Branch extends Entity {
 
     @Override
     public String toString() {
-        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + "]";
+        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + ", position=" + position + "]";
+    }
+
+    /**
+     * Gets the position.
+     * 
+     * @return the position
+     */
+    public Integer getPosition() {
+        return position;
+    }
+
+    /**
+     * Sets the position.
+     * 
+     * @param position
+     *            the position to set
+     */
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 }

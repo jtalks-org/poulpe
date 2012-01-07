@@ -79,6 +79,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     private void assertBranchSaved() throws AssertionFailedError {
         assertNotSame(branch.getId(), 0, "Id not created");
         Branch actual = retrieveActualBranch();
+        actual.setSection(branch.getSection());
         assertReflectionEquals(branch, actual);
     }
     
@@ -230,7 +231,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         
         section = (Section) session.load(Section.class, section.getId());
         branch.setSection(section);
-        section.addBranch(branch);
+        section.addOrUpdateBranch(branch);
         session.save(branch);
         
         assertTrue(branch.getId() != 0);

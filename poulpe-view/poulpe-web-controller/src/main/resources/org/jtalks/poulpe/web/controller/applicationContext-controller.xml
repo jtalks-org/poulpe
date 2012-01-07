@@ -32,6 +32,13 @@
   <bean id="rankManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
     <constructor-arg index="0" ref="rankService"/>
+    <constructor-arg index="1" ref="entityValidator"/>
+  </bean>
+
+  <bean id="editCompViewModel"
+        scope="desktop"
+        class="org.jtalks.poulpe.web.controller.component.EditCompViewModel">
+      <constructor-arg index="0" ref="componentService"/>
   </bean>
 
   <!--Declaration of presenters -->
@@ -115,6 +122,7 @@
   <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
         scope="prototype">
     <property name="groupService" ref="groupService" />
+    <property name="entityValidator" ref="entityValidator" />
   </bean>
 
 </beans>

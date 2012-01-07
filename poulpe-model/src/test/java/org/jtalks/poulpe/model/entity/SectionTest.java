@@ -32,13 +32,13 @@ public class SectionTest {
     
     @Test
     public void testAddBranch() {
-        section.addBranch(branch);
+        section.addOrUpdateBranch(branch);
         assertEquals(section.getBranches().size(), 1);
     }
     
     @Test
     public void testDeleteBranch(){
-        section.addBranch(branch);
+        section.addOrUpdateBranch(branch);
         section.deleteBranch(branch);
         
         assertTrue(section.getBranches().isEmpty());

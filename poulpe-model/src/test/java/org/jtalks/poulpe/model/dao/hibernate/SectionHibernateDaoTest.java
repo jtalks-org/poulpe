@@ -21,11 +21,13 @@ import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -42,6 +44,7 @@ import org.testng.annotations.Test;
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
  * @author Alexey Grigorev
+ * @author Guram Savinov
  */
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -59,7 +62,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        section = ObjectsFactory.createSection();
+        section = ObjectsFactory.createSectionWithBranches(10);
     }
 
     @Test
@@ -152,5 +155,20 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @Test
     public void notExistingSectionTest() {
         assertFalse(dao.isExist(99999L));
+    }
+
+    @Test
+    public void testBranchPositions() {
+        for (int i = 0; i < 5; i++) {
+            List<Branch> expected = section.getBranches();
+            Collections.shuffle(expected);
+
+            dao.saveOrUpdate(section);
+
+            section = ObjectRetriever.retrieveUpdated(section, session);
+            List<Branch> actual = section.getBranches();
+
+            assertEquals(actual, expected);
+        }
     }
 }

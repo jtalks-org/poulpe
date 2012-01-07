@@ -34,7 +34,6 @@ import static com.google.common.collect.Lists.newArrayList;
  * @author stanislav bashkirtsev
  */
 public class AclUtil {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final MutableAclService mutableAclService;
 
     public AclUtil(@Nonnull MutableAclService mutableAclService) {
@@ -90,7 +89,7 @@ public class AclUtil {
      * @param target      securable object
      * @return the ACL that serves the {@code sids}
      */
-    public ExtendedMutableAcl grantPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl grant(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, true);
     }
 
@@ -101,11 +100,11 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      */
-    public ExtendedMutableAcl restrictPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, false);
     }
 
-    public ExtendedMutableAcl deletePermissionsFromTarget(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl delete(List<Sid> sids, List<Permission> permissions, Entity target) {
         ObjectIdentity oid = createIdentityFor(target);
         ExtendedMutableAcl acl = ExtendedMutableAcl.castAndCreate(mutableAclService.readAclById(oid));
         deletePermissionsFromAcl(acl, sids, permissions);
@@ -133,8 +132,10 @@ public class AclUtil {
      * @param permissions list of permissions
      * @param target      securable object
      * @param granting    grant if true, restrict if false
+     * @return the ACL that manages the specified {@code target} and its Sids & Permissions
      */
-    private ExtendedMutableAcl applyPermissionsToSids(List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
+    private ExtendedMutableAcl applyPermissionsToSids(
+            List<Sid> sids, List<Permission> permissions, Entity target, boolean granting) {
         ExtendedMutableAcl acl = getAclFor(target);
         deletePermissionsFromAcl(acl, sids, permissions);
         acl.addPermissions(sids, permissions, granting);

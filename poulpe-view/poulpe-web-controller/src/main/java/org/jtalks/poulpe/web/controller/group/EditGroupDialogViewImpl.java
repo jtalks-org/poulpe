@@ -14,7 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import java.util.Map;
+
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.validation.ValidationError;
+import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
@@ -25,11 +29,15 @@ import org.zkoss.zul.Button;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+import org.zkoss.zul.impl.InputElement;
+
+import com.google.common.collect.ImmutableMap;
 
 /**
  * This class is implementation view for single branch
  * 
  * @author Bekrenev Dmitry
+ * @author Vyacheslav Zhivaev
  * */
 public class EditGroupDialogViewImpl extends Window implements EditGroupDialogView, AfterCompose {
 
@@ -41,6 +49,21 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
     private Button confirmButton;
     private Button rejectButton;
     private Combobox sectionList;
+    
+    @Override
+    public void validationFailure(ValidationResult result) {
+        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", groupName);
+        
+        for (ValidationError error : result.getErrors()) {
+            String fieldName = error.getFieldName();
+            if (comps.containsKey(fieldName)) {
+                String message = Labels.getLabel(error.getErrorMessageCode());
+
+                InputElement ie = comps.get(fieldName);
+                ie.setErrorMessage(message);
+            }
+        }
+    }
 
     /**
      * Set presenter
@@ -60,22 +83,17 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         presenter.initView(this, null);
-        groupName.setConstraint("no empty");
     }
 
     /**
      * Handle event when user click on confirm button
      * */
-    public void onClick$confirmButton() {
-        String result = presenter.validate(groupName.getText());
-        if (result != null) {
-            openErrorPopupInEditGroupDialog(result);
-        } else {
+    public void onClick$confirmButton() {      
+            groupName.setConstraint("no empty");
             presenter.saveOrUpdateGroup(groupName.getText(), groupDescription.getText());
-            hide();
+            
         }
 
-    }
 
     /**
      * Handle event when user click on reject button
@@ -131,6 +149,7 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         confirmButton.setLabel(Labels.getLabel("groups.button.add"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
         groupName.setRawValue("");
+        groupName.setConstraint("");
         groupDescription.setText("");
         setVisible(true);
     }
@@ -145,6 +164,7 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         confirmButton.setLabel(Labels.getLabel("groups.button.edit"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
         groupName.setText(group.getName());
+        groupName.setConstraint("");
         groupDescription.setText(group.getDescription());
         setVisible(true);
     }
@@ -153,10 +173,6 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
      * {@inheritDoc}
      * */
 
-    @Override
-    public void notUniqueGroupName() {
-        throw new WrongValueException(groupName, Labels.getLabel("groups.validation.not_unique_group_name"));
-    }
 
     @Override
     public void openErrorPopupInEditGroupDialog(String label) {

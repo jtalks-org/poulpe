@@ -42,9 +42,11 @@ public final class ObjectsFactory {
     public static TopicType topicType() {
         return new TopicType(random(), "desc");
     }
-    
+
     public static Component createComponent(ComponentType type) {
-        return new Component(random(), "desc", type);
+        Component c = new Component(random(), "desc", type);
+        c.addProperty("prop.name", "prop.value");
+        return c;
     }
 
     public static Section createSectionWithBranches() {
@@ -57,7 +59,8 @@ public final class ObjectsFactory {
         for (int i = 0; i < branchesAmount; i++) {
             Branch branch = createBranch();
             branch.setSection(section);
-            section.addBranch(branch);
+            branch.setPosition(i);
+            section.addOrUpdateBranch(branch);
         }
 
         return section;

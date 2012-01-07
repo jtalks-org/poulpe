@@ -24,10 +24,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 
+import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * Interface that contains operations with ACL.
+ * Contains coarse-grained operations with Spring ACL to manage the permissions of Groups & Users for the actions on
+ * entities like Branch or Topic.
  *
  * @author Kirill Afonin
  */
@@ -36,15 +38,15 @@ public class AclManager {
     private final MutableAclService mutableAclService;
     private AclUtil aclUtil;
 
-    public AclManager(MutableAclService mutableAclService) {
+    public AclManager(@Nonnull MutableAclService mutableAclService) {
         this.mutableAclService = mutableAclService;
         aclUtil = new AclUtil(mutableAclService);
     }
 
     /**
      * Gets each group that has some permissions on actions with the specified branch. So the resulting table will
-     * contain the mask of permission, the group id, and the flag whether the permission is granting. So this results in
-     * something like this:
+     * contain the mask of permission, the group id, and the flag whether the permission is granting. So considering
+     * that in the database there are records like this:
      * <pre>
      * --------------------------------------------------------------
      * | Permission mask | User Group ID | Granting                 |
@@ -53,13 +55,22 @@ public class AclManager {
      * | 3 (mask: 00011) |      2        | false (restricts action) |
      * | 5 (mask: 00101) |      1        | true (allows action)     |
      * --------------------------------------------------------------
-     * </pre>In this case we have 2 permissions and 2 groups, and both the permissions are granted to the group with id
-     * 1 and the first permission is restricted to the group with id 2.
+     * </pre> We'll get results like this:
+     * <pre>
+     * ----------------------------------
+     * |                 | 1    |   2   |
+     * |--------------------------------|
+     * | 3 (mask: 00011) | true | false |
+     * | 5 (mask: 00101) | true |       |
+     * ----------------------------------
+     * </pre>
+     * In this case we have 2 permissions and 2 groups, and both the permissions are granted to the group with id 1 and
+     * the first permission is restricted to the group with id 2.
      *
      * @param branch a branch to get all ACL entries for it (all the groups that have granting or restricting
      *               permissions on it)
-     * @return a table where the rows are permission masks, columns are group IDs, and the values are flags whether the
-     *         permission is granting to the group or restricting
+     * @return a table where the row IDs are permission masks, columns are group IDs, and the values are flags whether
+     *         the permission is granting to the group or restricting:
      */
     public Table<Integer, Long, Boolean> getBranchPermissions(Branch branch) {
         Table<Integer, Long, Boolean> groupIds = HashBasedTable.create();
@@ -80,7 +91,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void grant(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.grantPermissionsToSids(sids, permissions, target);
+        MutableAcl acl = aclUtil.grant(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 
@@ -92,7 +103,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.restrictPermissionsToSids(sids, permissions, target);
+        MutableAcl acl = aclUtil.restrict(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 
@@ -104,7 +115,7 @@ public class AclManager {
      * @param target      secured object
      */
     public void delete(List<Sid> sids, List<Permission> permissions, Entity target) {
-        MutableAcl acl = aclUtil.deletePermissionsFromTarget(sids, permissions, target);
+        MutableAcl acl = aclUtil.delete(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
 

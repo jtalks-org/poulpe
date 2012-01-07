@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.validation.ValidationResult;
 
 /**
  * 
@@ -35,14 +36,16 @@ public interface EditGroupDialogView {
      * */
     void show();
 
-    /**
-     * Cause throw exception for popup error message
-     */
-    void notUniqueGroupName();
     
     /**
      * Show popup window with error text
      */
     public void openErrorPopupInEditGroupDialog(String label);
+    
+    /**
+     * Shows validation errors
+     * @param result
+     */
+    public void validationFailure(ValidationResult result);
 
 }

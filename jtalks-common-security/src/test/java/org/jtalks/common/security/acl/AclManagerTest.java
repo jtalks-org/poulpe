@@ -14,43 +14,72 @@
  */
 package org.jtalks.common.security.acl;
 
+import com.google.common.collect.Table;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.model.entity.Branch;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
-import org.springframework.security.acls.model.MutableAclService;
-import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
+import org.springframework.security.acls.model.*;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author stanislav bashkirtsev
  */
 public class AclManagerTest {
-    private List<Permission> permissions = new ArrayList<Permission>();
-    private AclManager manager;
+    @Mock
+    private AclUtil mockAclUtil;
+    @Mock
     private MutableAclService aclService;
+    private AclManager manager;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        aclService = mock(MutableAclService.class);
+        MockitoAnnotations.initMocks(this);
         manager = new AclManager(aclService);
+        manager.setAclUtil(mockAclUtil);
     }
 
     @Test
     public void testGetBranchPermissions() throws Exception {
-
+        Branch branch = new Branch();
+        ExtendedMutableAcl acl = mock(ExtendedMutableAcl.class);
+        List<AccessControlEntry> aces = AclDataProvider.createRandomEntries(acl);
+        when(acl.getEntries()).thenReturn(aces);
+        when(mockAclUtil.getAclFor(branch)).thenReturn(acl);
+        Table<Integer,Long,Boolean> results = manager.getBranchPermissions(branch);
+        for(AccessControlEntry entry: aces){
+            UserGroupSid sid = (UserGroupSid) entry.getSid();
+            results.get(entry.getPermission().getMask(), Long.parseLong(sid.getGroupId()));
+        }
     }
 
     @Test(dataProvider = "randomSidsAndPermissionsAndEntity", dataProviderClass = AclDataProvider.class)
     public void testGrant(List<Sid> sids, List<Permission> permissions, Entity target) throws Exception {
+        when(mockAclUtil.grant(sids, permissions, target)).thenReturn(ExtendedMutableAcl.NULL_ACL);
+        manager.grant(sids, permissions, target);
+        verify(aclService).updateAcl(ExtendedMutableAcl.NULL_ACL);
+    }
 
+    @Test(dataProvider = "randomSidsAndPermissionsAndEntity", dataProviderClass = AclDataProvider.class)
+    public void testDelete(List<Sid> sids, List<Permission> permissions, Entity target) throws Exception {
+        when(mockAclUtil.delete(sids, permissions, target)).thenReturn(ExtendedMutableAcl.NULL_ACL);
+        manager.delete(sids, permissions, target);
+        verify(aclService).updateAcl(ExtendedMutableAcl.NULL_ACL);
+    }
+
+    @Test(dataProvider = "randomSidsAndPermissionsAndEntity", dataProviderClass = AclDataProvider.class)
+    public void testRestrict(List<Sid> sids, List<Permission> permissions, Entity target) throws Exception {
+        when(mockAclUtil.restrict(sids, permissions, target)).thenReturn(ExtendedMutableAcl.NULL_ACL);
+        manager.restrict(sids, permissions, target);
+        verify(aclService).updateAcl(ExtendedMutableAcl.NULL_ACL);
     }
 
     @Test(dataProvider = "randomEntity", dataProviderClass = AclDataProvider.class)

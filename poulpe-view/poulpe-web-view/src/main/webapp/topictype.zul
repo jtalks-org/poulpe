@@ -13,7 +13,7 @@
       <rows>
         <row>
           <label value="${labels.title}" />
-          <textbox id="titleTextbox" focus="true" forward="onBlur=onTitleLoseFocus" width="99%" />
+          <textbox id="titleTextbox" focus="true" width="99%" />
         </row>
         <row>
           <label value="${labels.description}" />

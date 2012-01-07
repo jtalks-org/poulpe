@@ -164,10 +164,6 @@ public class ComponentHibernateDaoTest extends
 
             dao.saveOrUpdate(jcommune);
 
-            for (int index = 0; index < expected.size(); index++) {
-                expected.get(index).setPosition(index);
-            }
-
             jcommune = ObjectRetriever.retrieveUpdated(jcommune, session);
             List<Section> actual = jcommune.getSections();
 

@@ -17,11 +17,17 @@ package org.jtalks.common.security.acl;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
+import org.springframework.security.acls.domain.AccessControlEntryImpl;
+import org.springframework.security.acls.model.AccessControlEntry;
+import org.springframework.security.acls.model.MutableAcl;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import org.testng.annotations.DataProvider;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author stanislav bashkirtsev
@@ -40,7 +46,7 @@ public class AclDataProvider {
     @DataProvider(name = "randomSidsAndPermissionsAndEntity")
     public static Object[][] provideRandomSidsAndPermissionsAndEntity() {
         List<Permission> permissions = Lists.<Permission>newArrayList(
-                BranchPermission.VIEW_TOPICS, BranchPermission.CREATE_TOPICS
+                BranchPermission.VIEW_TOPICS, BranchPermission.CREATE_TOPICS, BranchPermission.DELETE_POSTS
         );
         List sids = (List) provideRandomSids()[0][0];
         return new Object[][]{{sids, permissions, new EntityImpl(3L)}};
@@ -64,6 +70,27 @@ public class AclDataProvider {
     @DataProvider(name = "notSavedEntity")
     public static Object[][] provideNotSavedEntity() {
         return new Object[][]{{new EntityImpl(0L)}};
+    }
+
+    @SuppressWarnings("unchecked")
+    public static List<AccessControlEntry> createRandomEntries(MutableAcl acl) {
+        List<Sid> sids = (List<Sid>) provideRandomSidsAndPermissionsAndEntity()[0][0];
+        List<Permission> permissions = (List<Permission>) provideRandomSidsAndPermissionsAndEntity()[0][1];
+        return createEntries(acl, sids, permissions);
+    }
+    
+    public static List<AccessControlEntry> createEntries(MutableAcl acl, List<Sid> sids,
+                                                         List<Permission> permissions) {
+        assertEquals(sids.size(), permissions.size(), "Provided lists should have the same size");
+        List<AccessControlEntry> toReturn = new ArrayList<AccessControlEntry>(sids.size());
+        for (int i = 0; i < sids.size(); i++) {
+            toReturn.add(createEntry(acl, sids.get(i), permissions.get(i)));
+        }
+        return toReturn;
+    }
+
+    public static AccessControlEntry createEntry(MutableAcl acl, Sid sid, Permission permission) {
+        return new AccessControlEntryImpl(1L, acl, sid, permission, true, true, true);
     }
 
     private static class EntityImpl extends Entity {
