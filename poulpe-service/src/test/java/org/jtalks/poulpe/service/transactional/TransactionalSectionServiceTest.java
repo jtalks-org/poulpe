@@ -19,6 +19,7 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.eq;
 import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
@@ -39,6 +40,7 @@ import org.testng.annotations.Test;
  * The test for {@link TransactionalSectionService}.
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
+ * @author Vyacheslav Zhivaev
  */
 public class TransactionalSectionServiceTest {
 	@Mock EntityValidator entityValidator;
@@ -105,6 +107,19 @@ public class TransactionalSectionServiceTest {
     	Section section = mock(Section.class);
         givenConstraintsViolations();
         sectionService.saveSection(section);
+    }
+
+    @Test
+    public void testGetAll() {
+        sectionService.getAll();
+        verify(sectionDao).getAll();
+    }
+
+    @Test
+    public void testIsSectionExists() {
+    	Section section = mock(Section.class);
+        sectionService.isSectionExists(section);
+        verify(sectionDao).isSectionNameExists(eq(section));
     }
 
     private void givenConstraintsViolations() {
