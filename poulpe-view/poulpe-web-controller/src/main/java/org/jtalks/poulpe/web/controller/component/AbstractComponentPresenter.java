@@ -26,9 +26,9 @@ import org.jtalks.poulpe.web.controller.component.items.ItemPresenter;
 public abstract class AbstractComponentPresenter {
 
     /** The service instance to manipulate with stored components. */
-    private ComponentService componentService;
+    protected ComponentService componentService;
 
-    private DialogManager dialogManager;
+    protected DialogManager dialogManager;
 
     /**
      * Returns the service instance which is used for manipulating with stored components.

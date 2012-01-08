@@ -43,7 +43,7 @@ public class Group extends Entity {
     /**
      * Error message if group name is void
      */
-    public static final String GROUP_CANT_BE_VOID = "groups.error.section_name_cant_be_void";
+    public static final String GROUP_CANT_BE_VOID = "groups.error.group_name_cant_be_void";
     
     /**
      * Error message if section name is wrong

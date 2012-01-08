@@ -82,9 +82,10 @@ public class BranchPresenterTest {
     	givenNoConstraintsViolated();
     	
         Branch branch = new Branch();
+        branch.setSection(new Section());
         presenter.saveBranch(branch);
         verify(view, never()).validationFailure(any(ValidationResult.class));
-        verify(branchService).saveBranch(any(Branch.class));
+        verify(service).saveSection(any(Section.class));
     }
     
     private void givenNoConstraintsViolated() {

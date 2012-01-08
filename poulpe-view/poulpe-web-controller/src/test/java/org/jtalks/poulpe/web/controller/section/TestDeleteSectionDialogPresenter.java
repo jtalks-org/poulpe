@@ -74,8 +74,8 @@ public class TestDeleteSectionDialogPresenter {
     public void testDeleteIfmodeDeleteAll(){
         Section deleteSection = new Section();
         deleteSection.setName("Section for delete");
-        deleteSection.addBranch(new Branch());
-        deleteSection.addBranch(new Branch());
+        deleteSection.addOrUpdateBranch(new Branch());
+        deleteSection.addOrUpdateBranch(new Branch());
         when(view.getDeleteMode()).thenReturn("deleteAll");
         when(view.getDeleteSection()).thenReturn(deleteSection);
         

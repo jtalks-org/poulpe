@@ -37,6 +37,7 @@ import com.google.common.collect.ImmutableMap;
  * This class is implementation view for single branch
  * 
  * @author Bekrenev Dmitry
+ * @author Vyacheslav Zhivaev
  * */
 public class EditGroupDialogViewImpl extends Window implements EditGroupDialogView, AfterCompose {
 
@@ -82,13 +83,13 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         presenter.initView(this, null);
-        groupName.setConstraint("no empty");
     }
 
     /**
      * Handle event when user click on confirm button
      * */
     public void onClick$confirmButton() {      
+            groupName.setConstraint("no empty");
             presenter.saveOrUpdateGroup(groupName.getText(), groupDescription.getText());
             
         }
@@ -148,6 +149,7 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         confirmButton.setLabel(Labels.getLabel("groups.button.add"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
         groupName.setRawValue("");
+        groupName.setConstraint("");
         groupDescription.setText("");
         setVisible(true);
     }
@@ -162,6 +164,7 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
         confirmButton.setLabel(Labels.getLabel("groups.button.edit"));
         rejectButton.setLabel(Labels.getLabel("groups.button.cancel"));
         groupName.setText(group.getName());
+        groupName.setConstraint("");
         groupDescription.setText(group.getDescription());
         setVisible(true);
     }

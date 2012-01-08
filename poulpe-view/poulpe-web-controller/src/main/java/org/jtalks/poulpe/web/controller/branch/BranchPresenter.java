@@ -90,7 +90,9 @@ public class BranchPresenter {
     //TODO: This method should be reworked or removed. It was added for testing purposes
 	protected boolean saveBranch(Branch branch) {
 		if (validate(branch)) {
-			branchService.saveBranch(branch);
+		    Section section = branch.getSection();
+		    section.addOrUpdateBranch(branch);
+		    sectionService.saveSection(section);
 			view.hide();
 			return true;
 		} else {

@@ -35,6 +35,12 @@
     <constructor-arg index="1" ref="entityValidator"/>
   </bean>
 
+  <bean id="editCompViewModel"
+        scope="desktop"
+        class="org.jtalks.poulpe.web.controller.component.EditCompViewModel">
+      <constructor-arg index="0" ref="componentService"/>
+  </bean>
+
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
         scope="prototype">

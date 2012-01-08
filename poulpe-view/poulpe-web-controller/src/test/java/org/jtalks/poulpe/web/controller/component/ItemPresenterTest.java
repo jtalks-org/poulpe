@@ -14,18 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.createComponents;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.validation.EntityValidator;
@@ -37,6 +25,15 @@ import org.jtalks.poulpe.web.controller.component.items.ItemView;
 import org.mockito.ArgumentCaptor;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.createComponents;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * The test for {@link ItemPresenter} class

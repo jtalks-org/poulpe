@@ -485,8 +485,8 @@ public class SectionPresenterTest extends SectionPresenter {
 		Branch fakeBranch_1 = getFakeBranch("test 2", "test 2");
 		fakeBranch.setSection(fakeSection);
 		fakeBranch_1.setSection(fakeSection);
-		fakeSection.addBranch(fakeBranch);
-		fakeSection.addBranch(fakeBranch_1);
+		fakeSection.addOrUpdateBranch(fakeBranch);
+		fakeSection.addOrUpdateBranch(fakeBranch_1);
 
 		DeleteBranchPerformable perf = presenter.new DeleteBranchPerformable(
 				fakeBranch);
@@ -509,16 +509,16 @@ public class SectionPresenterTest extends SectionPresenter {
 		Branch fakeBranch_1 = getFakeBranch("test 1", "test 1");
 		fakeBranch.setSection(fakeSection);
 		fakeBranch_1.setSection(fakeSection);
-		fakeSection.addBranch(fakeBranch);
-		fakeSection.addBranch(fakeBranch_1);
+		fakeSection.addOrUpdateBranch(fakeBranch);
+		fakeSection.addOrUpdateBranch(fakeBranch_1);
 		
 		Section fakeSection_1 = fakeSections.get(3);
 		Branch fakeBranch_2 = getFakeBranch("test 1", "test 1");
 		Branch fakeBranch_3 = getFakeBranch("test 1", "test 1");
 		fakeBranch_2.setSection(fakeSection_1);
 		fakeBranch_3.setSection(fakeSection_1);
-		fakeSection_1.addBranch(fakeBranch_2);
-		fakeSection_1.addBranch(fakeBranch_3);
+		fakeSection_1.addOrUpdateBranch(fakeBranch_2);
+		fakeSection_1.addOrUpdateBranch(fakeBranch_3);
 		
 		DeleteSectionPerformable perf = presenter.new DeleteSectionPerformable(fakeSection, fakeSection_1);
 		
@@ -543,16 +543,16 @@ public class SectionPresenterTest extends SectionPresenter {
 		Branch fakeBranch_1 = getFakeBranch("test 1", "test 1");
 		fakeBranch.setSection(fakeSection);
 		fakeBranch_1.setSection(fakeSection);
-		fakeSection.addBranch(fakeBranch);
-		fakeSection.addBranch(fakeBranch_1);
+		fakeSection.addOrUpdateBranch(fakeBranch);
+		fakeSection.addOrUpdateBranch(fakeBranch_1);
 		
 		Section fakeSection_1 = fakeSections.get(3);
 		Branch fakeBranch_2 = getFakeBranch("test 1", "test 1");
 		Branch fakeBranch_3 = getFakeBranch("test 1", "test 1");
 		fakeBranch_2.setSection(fakeSection_1);
 		fakeBranch_3.setSection(fakeSection_1);
-		fakeSection_1.addBranch(fakeBranch_2);
-		fakeSection_1.addBranch(fakeBranch_3);
+		fakeSection_1.addOrUpdateBranch(fakeBranch_2);
+		fakeSection_1.addOrUpdateBranch(fakeBranch_3);
 		
 		DeleteSectionPerformable perf = presenter.new DeleteSectionPerformable(fakeSection,null);
 		
