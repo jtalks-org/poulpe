@@ -44,7 +44,7 @@ public interface ItemView extends ItemDataView {
     void hide();
 
     /**
-     * @param result
+     * @param result the result of entity validation
      */
     void validaionFailure(ValidationResult result);
 

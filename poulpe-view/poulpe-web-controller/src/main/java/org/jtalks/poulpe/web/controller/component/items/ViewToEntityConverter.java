@@ -26,6 +26,9 @@ import org.jtalks.poulpe.model.entity.Component;
  */
 class ViewToEntityConverter {
 
+    /**
+     * Default contructor
+     */
     private ViewToEntityConverter() {
     }
 
@@ -37,7 +40,7 @@ class ViewToEntityConverter {
      * <b>Note:</b> the created component is new - this means that it doesn't
      * yet have an id, and it's unique.
      * 
-     * @param instance with component's data
+     * @param view view to take instance from
      * @return <i>new</i> {@link Component} converted from view
      */
     public static Component view2Model(ItemDataView view) {

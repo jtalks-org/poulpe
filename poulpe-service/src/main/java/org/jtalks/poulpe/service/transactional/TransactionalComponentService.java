@@ -38,8 +38,8 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /**
      * Creates new instance of the service
-     * @param dao
-     * @param validator TODO
+     * @param dao dao we use for Component
+     * @param validator used to validate entites
      */
     public TransactionalComponentService(ComponentDao dao, EntityValidator validator) {
         this.dao = dao;

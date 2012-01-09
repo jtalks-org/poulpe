@@ -39,7 +39,7 @@ class EditItemStrategy implements ItemStrategy {
      * Sets the view which will be filled with components data when
      * {@link #init()} is called.
      * 
-     * @param view
+     * @param view view to iteract with
      * @see NewItemStrategy
      */
     public EditItemStrategy(ItemDataView view, Component component) {
