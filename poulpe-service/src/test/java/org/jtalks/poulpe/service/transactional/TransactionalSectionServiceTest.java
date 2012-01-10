@@ -112,7 +112,7 @@ public class TransactionalSectionServiceTest {
     public void testIsSectionExists() {
         Section section = buildFakeSection();
         sectionService.isSectionExists(section);
-        verify(sectionDao).isSectionNameExists(eq(section));
+        verify(sectionDao).isSectionNameExists(section);
     }
 
     private void givenConstraintsViolations() {

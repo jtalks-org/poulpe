@@ -15,8 +15,6 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.service.UserService;
@@ -75,10 +73,10 @@ public class UserPresenterTest {
 
         presenter.initializeForEdit(view, user, listener);
 
-        verify(view).showFirstname(any(String.class));
-        verify(view).showLastname(any(String.class));
-        verify(view).showEmail(any(String.class));
-        verify(view).showPassword(any(String.class));
+        verify(view).showFirstname(anyString());
+        verify(view).showLastname(anyString());
+        verify(view).showEmail(anyString());
+        verify(view).showPassword(anyString());
     }
 
     @Test
@@ -100,7 +98,7 @@ public class UserPresenterTest {
 
         verifyUserUpdated();
         verifyViewClosed();
-        verify(listener).onUpdate(eq(user));
+        verify(listener).onUpdate(user);
     }
 
     @Test
@@ -115,16 +113,16 @@ public class UserPresenterTest {
     }
 
     private void verifyViewClosed() {
-        verify(windowManager).closeWindow(eq(view));
+        verify(windowManager).closeWindow(view);
     }
 
     private void verifyUserUpdated() {
-        assertEquals(user.getFirstName(), view.getFirstname());
-        assertEquals(user.getLastName(), view.getLastname());
-        assertEquals(user.getEmail(), view.getEmail());
-        assertEquals(user.getPassword(), view.getPassword());
+        verify(user).setFirstName(view.getFirstname());
+        verify(user).setLastName(view.getLastname());
+        verify(user).setEmail(view.getEmail());
+        verify(user).setPassword(view.getPassword());
 
-        verify(userService).updateUser(eq(user));
+        verify(userService).updateUser(user);
     }
 
     private void givenUserExist() throws NotFoundException {

@@ -127,9 +127,12 @@ public class TopicTypeListPresenterTest {
     }
 
     /**
-     * Fake answer for {@link WindowManager#openTopicTypeWindowForCreate(EditListener)}.
+     * Builder for fake answer. It will replace original method
+     * {@link WindowManager#openTopicTypeWindowForCreate(EditListener)}
+     * on mocked object.
      *
-     * @return answer instance
+     * @see {@link Answer}
+     * @return new answer instance
      */
     private Answer<?> answerWindowForCreate() {
         return new Answer<Void>() {
@@ -143,9 +146,12 @@ public class TopicTypeListPresenterTest {
     }
 
     /**
-     * Fake answer for {@link WindowManager#openTopicTypeWindowForEdit(TopicType, EditListener)}.
+     * Builder for fake answer. It will replace original method
+     * {@link WindowManager#openTopicTypeWindowForEdit(TopicType, EditListener)}
+     * on mocked object.
      *
-     * @return answer instance
+     * @see {@link Answer}
+     * @return new answer instance
      */
     private Answer<?> answerWindowForEdit() {
         return new Answer<Void>() {
@@ -159,9 +165,12 @@ public class TopicTypeListPresenterTest {
     }
 
     /**
-     * Fake answer for {@link DialogManager#confirmDeletion(String, Performable)}.
+     * Builder for fake answer. It will replace original method
+     * {@link DialogManager#confirmDeletion(String, Performable)}
+     * on mocked object.
      *
-     * @return answer instance
+     * @see {@link Answer}
+     * @return new answer instance
      */
     private Answer<?> answerConfirmDeletion() {
         return new Answer<Void>() {
