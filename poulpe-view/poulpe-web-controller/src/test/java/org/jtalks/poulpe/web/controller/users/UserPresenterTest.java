@@ -23,7 +23,6 @@ import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -49,8 +48,7 @@ public class UserPresenterTest {
 
     @Mock
     UserView view;
-
-    // For that we no need Mock, we use real instance from ObjectCreator factory and spying on it
+    @Mock
     User user;
 
     @Mock
@@ -64,8 +62,6 @@ public class UserPresenterTest {
         presenter.setDialogManager(dialogManager);
         presenter.setUserService(userService);
         presenter.setWindowManager(windowManager);
-
-        user = spy(ObjectCreator.getFakeUsers(1).get(0));
     }
 
     @Test
