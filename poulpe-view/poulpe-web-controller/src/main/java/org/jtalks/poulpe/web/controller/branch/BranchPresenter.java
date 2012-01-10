@@ -84,21 +84,21 @@ public class BranchPresenter {
     public boolean saveBranch() {
         Section section = view.getSection();
         Branch branch = view.getBranch(section);
-		return saveBranch(branch);
+        return saveBranch(branch);
     }
 
     //TODO: This method should be reworked or removed. It was added for testing purposes
-	protected boolean saveBranch(Branch branch) {
-		if (validate(branch)) {
-		    Section section = branch.getSection();
-		    section.addOrUpdateBranch(branch);
-		    sectionService.saveSection(section);
-			view.hide();
-			return true;
-		} else {
-			return false;
-		}
-	}
+    protected boolean saveBranch(Branch branch) {
+        if (validate(branch)) {
+            Section section = branch.getSection();
+            section.addOrUpdateBranch(branch);
+            sectionService.saveSection(section);
+            view.hide();
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     /**
      * @param entityValidator the entityValidator to set

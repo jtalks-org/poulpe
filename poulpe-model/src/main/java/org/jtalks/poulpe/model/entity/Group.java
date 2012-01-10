@@ -35,7 +35,7 @@ import java.util.List;
  */
 @UniqueConstraint
 public class Group extends Entity {
-	/**
+    /**
      * Error message if group already exists
      */
     public static final String GROUP_ALREADY_EXISTS = "groups.validation.not_unique_group_name";
@@ -50,11 +50,11 @@ public class Group extends Entity {
      */
     public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
     
-	@UniqueField(message = GROUP_ALREADY_EXISTS)
+    @UniqueField(message = GROUP_ALREADY_EXISTS)
     @NotNull(message = GROUP_CANT_BE_VOID)
     @NotEmpty(message = GROUP_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
-	private String name;
+    private String name;
     private String description;
 
     public Group() {

@@ -107,8 +107,8 @@ public class RankManagementVM {
     @NotifyChange
     public void save()  {
         
-    	if (validate (selected))
-    	rankService.saveRank(selected);
+        if (validate (selected))
+        rankService.saveRank(selected);
         String windowId = "kNKF0";
         getCurrentWindow("RankEditorWindow").setVisible(false);
         dialogClosed();

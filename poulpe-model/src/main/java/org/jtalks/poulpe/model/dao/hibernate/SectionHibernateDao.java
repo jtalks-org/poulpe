@@ -40,7 +40,7 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Secti
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionNameExists(Section section) {    	
+    public boolean isSectionNameExists(Section section) {        
         return ((Number) getSession()
                 .createQuery("select count(*) from Section s where s.name = ?")
                 .setString(0, section.getName()).uniqueResult()).intValue() != 0;

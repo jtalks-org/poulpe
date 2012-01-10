@@ -45,14 +45,14 @@ private static final long serialVersionUID = 1L;
     private Textbox searchTextbox;
     
     @Override
-	public void showSearchString(String searchString) {
-		searchTextbox.setText(searchString);
-	}
+    public void showSearchString(String searchString) {
+        searchTextbox.setText(searchString);
+    }
 
-	@Override
-	public String getSearchString() {
-		return searchTextbox.getText();
-	}
+    @Override
+    public String getSearchString() {
+        return searchTextbox.getText();
+    }
 
     public void setPresenter(UsersListPresenter presenter) {
         this.presenter = presenter;
@@ -60,7 +60,7 @@ private static final long serialVersionUID = 1L;
 
     @Override
     public void showUsersList(List<User> list) {
-    	usersListbox.setModel(new ListModelList<User>(list));
+        usersListbox.setModel(new ListModelList<User>(list));
     }
 
     @Override

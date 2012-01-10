@@ -30,7 +30,7 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
  */
 @UniqueConstraint
 public class Rank extends Entity {
-	/**
+    /**
      * Error message if rank already exists
      */
     public static final String RANK_ALREADY_EXISTS = "rank.validation.not_unique_rank_name";
@@ -39,7 +39,7 @@ public class Rank extends Entity {
      * Error message if rank name is void
      */
     public static final String RANK_CANT_BE_VOID = "rank.error.rank_name_cant_be_void";
-	@UniqueField(message = RANK_ALREADY_EXISTS)
+    @UniqueField(message = RANK_ALREADY_EXISTS)
     @NotNull(message = RANK_CANT_BE_VOID)
     @NotEmpty(message = RANK_CANT_BE_VOID)
     private String rankName;

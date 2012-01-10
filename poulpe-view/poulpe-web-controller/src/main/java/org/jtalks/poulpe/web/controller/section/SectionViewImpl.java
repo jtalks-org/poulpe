@@ -52,7 +52,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
     
     
     public void validationFailure(ValidationResult result, boolean isNewSection) {
-    	Textbox textbox = getTextbox(isNewSection);
+        Textbox textbox = getTextbox(isNewSection);
         Map<String, ? extends InputElement> comps = ImmutableMap.of("name", textbox);
         
         for (ValidationError error : result.getErrors()) {
@@ -66,12 +66,12 @@ public class SectionViewImpl extends Window implements AfterCompose {
         }
     }
     
-	private Textbox getTextbox(boolean isNewSection) {
-		if (isNewSection)
-			return newSectionDialog$sectionName;
-		else
-			return editSectionDialog$sectionName;
-	}
+    private Textbox getTextbox(boolean isNewSection) {
+        if (isNewSection)
+            return newSectionDialog$sectionName;
+        else
+            return editSectionDialog$sectionName;
+    }
 
     /**
      * {@inheritDoc}

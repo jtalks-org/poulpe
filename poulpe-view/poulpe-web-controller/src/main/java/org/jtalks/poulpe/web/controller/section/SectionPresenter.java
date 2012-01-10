@@ -165,18 +165,18 @@ public class SectionPresenter {
      * @param description
      *            is edited section description
      */
-    public boolean editSection(final String name, final String description) {  	
+    public boolean editSection(final String name, final String description) {      
         Section section = (Section) this.currentSectionTreeComponentImpl
                 .getSelectedObject();
         section.setName(name);
         section.setDescription(description);
-		if (validate(section, false)) {
-			dialogManager.confirmEdition(name, new UpdatePerformable(section));
-			sectionView.closeEditSectionDialog();
-			return true;
-		} else {
-			return false;
-		}
+        if (validate(section, false)) {
+            dialogManager.confirmEdition(name, new UpdatePerformable(section));
+            sectionView.closeEditSectionDialog();
+            return true;
+        } else {
+            return false;
+        }
 
     }
 
@@ -192,16 +192,16 @@ public class SectionPresenter {
      *            section
      */
     public boolean addNewSection(final String name, final String description) {
-    	Section section = new Section();
+        Section section = new Section();
         section.setName(name);
         section.setDescription(description);
-    	
-    	if (validate(section, true)) {
-			dialogManager.confirmCreation(name, new CreatePerformable(section));
-			return true;
-		} else {
-			return false;
-		} 
+        
+        if (validate(section, true)) {
+            dialogManager.confirmCreation(name, new CreatePerformable(section));
+            return true;
+        } else {
+            return false;
+        } 
     }
 
     /**
@@ -265,17 +265,17 @@ public class SectionPresenter {
     }
     
     public class CreatePerformable implements DialogManager.Performable {
-    	private Section section;
-    	public CreatePerformable(Section section) {
+        private Section section;
+        public CreatePerformable(Section section) {
             this.section = section;
-    	}
-		@Override
-		public void execute() {
-			sectionService.saveSection(section);
-			sectionView.showSection(section);
+        }
+        @Override
+        public void execute() {
+            sectionService.saveSection(section);
+            sectionView.showSection(section);
             sectionView.closeNewSectionDialog();
-		}
-    	
+        }
+        
     }
 
     public class UpdatePerformable implements DialogManager.Performable {
@@ -291,18 +291,18 @@ public class SectionPresenter {
          * @param description new description for section
          */
         public UpdatePerformable(Section section) {
-			this.section = section;
-		}
+            this.section = section;
+        }
 
-		@Override
-		public void execute() {
-			sectionService.saveSection(section);
-			// its not necessary here because of section was transferred as
-			// a reference
-			SectionPresenter.this.currentSectionTreeComponentImpl
-					.updateSectionInView(section);
-			sectionView.closeEditSectionDialog();
-		}
+        @Override
+        public void execute() {
+            sectionService.saveSection(section);
+            // its not necessary here because of section was transferred as
+            // a reference
+            SectionPresenter.this.currentSectionTreeComponentImpl
+                    .updateSectionInView(section);
+            sectionView.closeEditSectionDialog();
+        }
   
     }
    
@@ -353,11 +353,11 @@ public class SectionPresenter {
 
                 sectionService.deleteRecursively(victim);
                 return;
-			} else {
-				sectionService.deleteAndMoveBranchesTo(victim, recipient);
-				sectionService.saveSection(recipient);
+            } else {
+                sectionService.deleteAndMoveBranchesTo(victim, recipient);
+                sectionService.saveSection(recipient);
 
-			}
+            }
 
         }
     }
@@ -373,7 +373,7 @@ public class SectionPresenter {
         ValidationResult result = entityValidator.validate(section);
 
         if (result.hasErrors()) {
-        	sectionView.validationFailure(result, isNewSection);
+            sectionView.validationFailure(result, isNewSection);
             return false;
         } else {
             return true;

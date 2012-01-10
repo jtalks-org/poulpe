@@ -52,15 +52,15 @@ public class ModerationDialogPresenter {
     }
 
     public void onConfirm() {
-		ValidationResult result = entityValidator.validate(branch);
+        ValidationResult result = entityValidator.validate(branch);
 
-		if (result.hasErrors()) {
-			dialogManager.notify("item.already.exist");
-		} else {
-			branchService.saveBranch(branch);
-		}
+        if (result.hasErrors()) {
+            dialogManager.notify("item.already.exist");
+        } else {
+            branchService.saveBranch(branch);
+        }
 
-		view.hideDialog();
+        view.hideDialog();
     }
 
     public void onReject() {

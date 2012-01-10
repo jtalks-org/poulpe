@@ -59,7 +59,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     private Map<String, String> validationMessages =
             new HashMap<String,String>();
 
-    //	constructor
+    //    constructor
     /**
      * Default constructor. Inits the data on the form.
      * @param componentService service we use to access components
@@ -86,7 +86,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         description = valueOf(currentComponent.getDescription());
     }
 
-    //	service functions
+    //    service functions
     /**
      * Returns all components.
      * @return the list of the components
@@ -95,7 +95,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         return componentService.getAll();
     }
 
-    //	commands
+    //    commands
     /**
      * Saves a component. Shows validation messages, if
      * something is wrong
@@ -136,7 +136,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         Executions.sendRedirect("");
     }
 
-    //	helpers
+    //    helpers
     /**
      * Returns string value of the field or
      * empty string if string is null
@@ -171,7 +171,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
 
-    //	getters & setters for web-form
+    //    getters & setters for web-form
     /**
      * Returns the title for current component
      * @return title value from web-form
@@ -228,7 +228,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         return validationMessages;
     }
 
-//	getter and setter for current component we edit
+//    getter and setter for current component we edit
     /**
      * Gets the current component we edit
      * @return current component

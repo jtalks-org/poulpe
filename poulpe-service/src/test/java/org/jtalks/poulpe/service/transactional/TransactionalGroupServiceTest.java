@@ -79,7 +79,7 @@ public class TransactionalGroupServiceTest {
 
     @Test(expectedExceptions = ValidationException.class)
     public void saveGroupWithException() {
-    	givenConstraintsViolations();
+        givenConstraintsViolations();
         service.saveGroup(group);
     }
     

@@ -79,8 +79,8 @@ public class BranchPresenterTest {
 
     @Test
     public void testSaveBranch() {
-    	givenNoConstraintsViolated();
-    	
+        givenNoConstraintsViolated();
+        
         Branch branch = new Branch();
         branch.setSection(new Section());
         presenter.saveBranch(branch);
@@ -94,15 +94,15 @@ public class BranchPresenterTest {
 
   @Test
     public void testSaveBranchWhenExceptionHappen()  {
-	   Branch branch = new Branch();
-	   givenConstraintViolated();
-	   
+       Branch branch = new Branch();
+       givenConstraintViolated();
+       
         presenter.saveBranch(branch);
         verify(branchService, never()).saveBranch(any(Branch.class));
     }
 
-	private void givenConstraintViolated() {
-		when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
-	}
+    private void givenConstraintViolated() {
+        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+    }
 
 }

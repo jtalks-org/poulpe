@@ -47,15 +47,15 @@ import static org.testng.Assert.*;
  */
 public class TransactionalBranchServiceTest {
 
-	@Mock BranchDao branchDao;
-	@Mock EntityValidator entityValidator;
-	@Mock AclManager aclManager;
-	private long BRANCH_ID = 1L;
+    @Mock BranchDao branchDao;
+    @Mock EntityValidator entityValidator;
+    @Mock AclManager aclManager;
+    private long BRANCH_ID = 1L;
     private BranchService branchService;
 
     @BeforeMethod
     public void setUp() throws Exception {
-    	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
         branchService = new TransactionalBranchService(branchDao, null, entityValidator);
     }
 

@@ -36,10 +36,10 @@ public interface RankService extends EntityService<Rank> {
      */
     void deleteRank(Rank rank);
 
-	/**
-	 * Save new or update existent rank.
-	 * 
-	 * @param rank rank to save
-	 */
-	void saveRank(Rank rank);
+    /**
+     * Save new or update existent rank.
+     * 
+     * @param rank rank to save
+     */
+    void saveRank(Rank rank);
 }
