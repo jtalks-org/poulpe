@@ -31,13 +31,17 @@ import org.zkoss.zul.*;
 import org.zkoss.zul.impl.InputElement;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import org.jtalks.poulpe.web.controller.DialogManager;
 
 /**
  * View Model for rank management page.
  *
  * @author Pavel Vervenko
  */
-public class RankManagementVM {
+public class RankManagementVM implements DialogManager.Performable {
 
     ListModelList<Rank> items;
     private RankService rankService;
@@ -45,15 +49,18 @@ public class RankManagementVM {
     private Component editor;
     private EntityValidator entityValidator;
     private Textbox rankName;
+    private final DialogManager dialogManager;
 
     /**
      * Construct the object with injected service.
      *
      * @param rankService rankService
      */
-    public RankManagementVM(@Nonnull RankService rankService, EntityValidator entityValidator) {
+    public RankManagementVM(@Nonnull RankService rankService, 
+            EntityValidator entityValidator, DialogManager dialogManager) {
         this.rankService = rankService;
         this.entityValidator = entityValidator;
+        this.dialogManager = dialogManager;
         initData();
     }
 
@@ -106,10 +113,9 @@ public class RankManagementVM {
     @Command
     @NotifyChange
     public void save()  {
-        
-        if (validate (selected))
-        rankService.saveRank(selected);
-        String windowId = "kNKF0";
+        if (validate (selected)) {
+            rankService.saveRank(selected);
+        }
         getCurrentWindow("RankEditorWindow").setVisible(false);
         dialogClosed();
         initData();
@@ -146,6 +152,11 @@ public class RankManagementVM {
         openEditor();
     }
 
+    @Command
+    public void delete() {
+        dialogManager.confirmDeletion(getSelectionAsStringList(), this);
+    }
+    
     private Component getCurrentWindow(String id) {
         for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
             if (c.getId().equals(id)) {
@@ -155,7 +166,22 @@ public class RankManagementVM {
         return null;
     }
 
+    private List<String> getSelectionAsStringList() {
+        List<String> list = new LinkedList<String>();
+        for(Rank current: items.getSelection()) {
+            list.add(current.getRankName());
+        }
+        return list;
+    }
+    
     private void openEditor() {
         editor = Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow("rankManagementWindow"), null);
+    }
+
+    @Override
+    public void execute() {
+        for(Rank current: items.getSelection()) {
+            rankService.deleteRank(current);
+        }
     }
 }
