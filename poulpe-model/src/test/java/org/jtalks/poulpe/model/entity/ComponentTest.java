@@ -109,4 +109,20 @@ public class ComponentTest {
         assertEquals(component.getProperty("setname"), "setval");
     }
 
+    @Test
+    public void testGetPropertyNull() {
+        component.addProperty("setname", "setval");
+
+        assertEquals(component.getProperty("unknown"), null);
+    }
+
+    @Test
+    public void testToString() {
+        String
+                expected = "Component [id=" + 0 + ", name=" + component.getName() + ", description="
+                            + component.getDescription() + ", componentType=" + component.getComponentType() + "]",
+                returned = component.toString();
+        assertEquals(expected, returned);
+    }
+
 }

@@ -19,7 +19,7 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.mockito.ArgumentMatcher;
 
 public class BranchMatcher extends ArgumentMatcher<Branch>{
-	Branch branch;
+    Branch branch;
 
     public BranchMatcher(Branch branch) {
         this.branch = branch;

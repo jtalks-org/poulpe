@@ -26,7 +26,7 @@ import org.jtalks.poulpe.validation.EntityValidator;
  * @author Pavel Vervenko
  */
 public class TransactionalRankService extends AbstractTransactionalEntityService<Rank, RankDao> implements RankService {
-	private final EntityValidator validator;
+    private final EntityValidator validator;
     /**
      * Create an instance of service.
      * @param rankDao rank DAO
@@ -57,7 +57,7 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      */
     @Override
     public void saveRank(Rank rank) {
-    	validator.throwOnValidationFailure(rank);
+        validator.throwOnValidationFailure(rank);
         dao.saveOrUpdate(rank);
     }
 }

@@ -241,9 +241,9 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     
     @Override
     public void openErrorPopupInNewSectionDialog(String label) {
-    	final String message = Labels.getLabel(label);
-    	branchName.setErrorMessage(message);
-    	
+        final String message = Labels.getLabel(label);
+        branchName.setErrorMessage(message);
+        
     }
     
     @Override

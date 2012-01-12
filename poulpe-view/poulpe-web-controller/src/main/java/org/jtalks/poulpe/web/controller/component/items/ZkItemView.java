@@ -22,7 +22,6 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
-import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;

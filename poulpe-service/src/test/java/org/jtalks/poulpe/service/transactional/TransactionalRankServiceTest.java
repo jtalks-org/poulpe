@@ -38,14 +38,14 @@ import static org.mockito.Mockito.when;
  * @author Pavel Vervenko
  */
 public class TransactionalRankServiceTest {
-	@Mock EntityValidator entityValidator;
-	@Mock RankDao rankDao;
+    @Mock EntityValidator entityValidator;
+    @Mock RankDao rankDao;
     private TransactionalRankService rankService;
     private Rank rank;
 
     @BeforeMethod
     public void setUp() throws Exception {
-    	MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.initMocks(this);
         rankService = new TransactionalRankService(rankDao, entityValidator);
         rank = new Rank();
     }
@@ -68,13 +68,13 @@ public class TransactionalRankServiceTest {
         verify(entityValidator).throwOnValidationFailure(rank);
     }
 
-	@Test(expectedExceptions = ValidationException.class)
-	public void testSaveRankException() {
-		String notUniqueName = "name";
-		rank.setRankName(notUniqueName);
-		givenConstraintsViolations();
-		rankService.saveRank(rank);
-	}
+    @Test(expectedExceptions = ValidationException.class)
+    public void testSaveRankException() {
+        String notUniqueName = "name";
+        rank.setRankName(notUniqueName);
+        givenConstraintsViolations();
+        rankService.saveRank(rank);
+    }
     
     private void givenConstraintsViolations() {
         Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();

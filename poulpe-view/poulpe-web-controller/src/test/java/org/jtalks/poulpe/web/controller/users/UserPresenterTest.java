@@ -15,21 +15,19 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import static org.mockito.Mockito.*;
-
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Tests for {@link org.jtalks.poulpe.web.controller.users.UserPresenter}
+ * Tests for {@link UserPresenter}
  *
  * @author Vyacheslav Zhivaev
  *
@@ -50,12 +48,14 @@ public class UserPresenterTest {
     UserView view;
     @Mock
     User user;
+
     @Mock
     EditListener<User> listener;
 
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
         presenter = new UserPresenter();
         presenter.setDialogManager(dialogManager);
         presenter.setUserService(userService);
@@ -70,20 +70,22 @@ public class UserPresenterTest {
     @Test
     public void testInitializeForEditUserExist() throws NotFoundException {
         givenUserExist();
+
         presenter.initializeForEdit(view, user, listener);
 
-        verify(view).showFirstname(eq(user.getFirstName()));
-        verify(view).showLastname(eq(user.getLastName()));
-        verify(view).showEmail(eq(user.getEmail()));
-        verify(view).showPassword(eq(user.getPassword()));
+        verify(view).showFirstname(anyString());
+        verify(view).showLastname(anyString());
+        verify(view).showEmail(anyString());
+        verify(view).showPassword(anyString());
     }
 
     @Test
     public void testInitializeForEditUserNotExist() throws NotFoundException {
         givenUserNotExist();
+
         presenter.initializeForEdit(view, user, listener);
 
-        verify(dialogManager).notify(isA(String.class));
+        verify(dialogManager).notify(anyString());
         verifyViewClosed();
     }
 
@@ -96,7 +98,7 @@ public class UserPresenterTest {
 
         verifyUserUpdated();
         verifyViewClosed();
-        verify(listener).onUpdate(eq(user));
+        verify(listener).onUpdate(user);
     }
 
     @Test
@@ -111,24 +113,24 @@ public class UserPresenterTest {
     }
 
     private void verifyViewClosed() {
-        verify(windowManager).closeWindow(eq(view));
+        verify(windowManager).closeWindow(view);
     }
 
     private void verifyUserUpdated() {
-        verify(user).setFirstName(eq(view.getFirstname()));
-        verify(user).setLastName(eq(view.getLastname()));
-        verify(user).setEmail(eq(view.getEmail()));
-        verify(user).setPassword(eq(view.getPassword()));
-        verify(userService).updateUser(eq(user));
+        verify(user).setFirstName(view.getFirstname());
+        verify(user).setLastName(view.getLastname());
+        verify(user).setEmail(view.getEmail());
+        verify(user).setPassword(view.getPassword());
+
+        verify(userService).updateUser(user);
     }
 
     private void givenUserExist() throws NotFoundException {
-        user = spy(ObjectCreator.getFakeUsers(1).get(0));
-        when(userService.get(isA(Long.class))).thenReturn(user);
+        when(userService.get(anyLong())).thenReturn(user);
     }
 
     private void givenUserNotExist() throws NotFoundException {
-        when(userService.get(isA(Long.class))).thenThrow(new NotFoundException());
+        when(userService.get(anyLong())).thenThrow(new NotFoundException());
     }
 
 }

@@ -41,8 +41,8 @@ public class Property extends Entity {
 
     /**
      * Constructor which sets name and value of the property
-     * @param name
-     * @param value
+     * @param name name of the property
+     * @param value value of the property
      */
     public Property(String name, String value) {
         this.name = name;
@@ -59,7 +59,7 @@ public class Property extends Entity {
 
     /**
      * Sets the name of the property
-     * @param name
+     * @param name new name of the property
      */
     public void setName(String name) {
         this.name = name;
@@ -67,7 +67,7 @@ public class Property extends Entity {
 
     /**
      * Gets the value of the property
-     * @return
+     * @return current value of the property
      */
     public String getValue() {
         return value;
@@ -75,15 +75,13 @@ public class Property extends Entity {
 
     /**
      * Sets the value of the property
-     * @param value
+     * @param value new value of the property
      */
     public void setValue(String value) {
         this.value = value;
     }
 
-    /**
-     * Returns String representation of the property
-     */
+     /** {@inheritDoc} */
     public String toString() {
         return this.getName() + ": " + this.getValue();
     }

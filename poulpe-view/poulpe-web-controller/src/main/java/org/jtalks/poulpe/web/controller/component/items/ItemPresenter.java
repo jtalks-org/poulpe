@@ -34,7 +34,6 @@ public class ItemPresenter extends AbstractComponentPresenter {
 
     /**
      * Initializes this presenter for creating a new component
-     * @param view current {@link ItemView} instance
      */
     public void create() {
         editingStrategy = new NewItemStrategy(view);
@@ -43,7 +42,6 @@ public class ItemPresenter extends AbstractComponentPresenter {
 
     /**
      * Initializes this presenter for editing the new component
-     * @param view current {@link ItemView} instance
      * @param component to be edited
      */
     public void edit(Component component) {
@@ -51,6 +49,9 @@ public class ItemPresenter extends AbstractComponentPresenter {
         reinit();
     }
 
+    /**
+     * Re-Initializes this presenter, showing available components
+     */
     private void reinit() {
         editingStrategy.init();
         view.setComponentTypes(getComponentService().getAvailableTypes());
@@ -77,6 +78,14 @@ public class ItemPresenter extends AbstractComponentPresenter {
         validate(component);
     }
 
+    /**
+     * Validates a component and invokes
+     * notification if component is invalid
+     *
+     * @param component component to validate
+     * @return true if validation has succeeded
+     * or false otherwise
+     */
     private boolean validate(Component component) {
         ValidationResult result = entityValidator.validate(component);
         

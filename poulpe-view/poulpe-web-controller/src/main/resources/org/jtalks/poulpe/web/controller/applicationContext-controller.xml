@@ -33,6 +33,7 @@
         class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
     <constructor-arg index="0" ref="rankService"/>
     <constructor-arg index="1" ref="entityValidator"/>
+    <constructor-arg index="2" ref="dialogManager"/>
   </bean>
 
   <bean id="editCompViewModel"

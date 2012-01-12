@@ -19,6 +19,7 @@ import static org.mockito.Mockito.*;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -27,11 +28,13 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * Tests for {@link org.jtalks.poulpe.web.controller.topictype.TopicTypeListPresenter}
+ * Tests for {@link TopicTypeListPresenter}
  *
  * @author Vyacheslav Zhivaev
  *
@@ -53,58 +56,134 @@ public class TopicTypeListPresenterTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
+
         presenter = new TopicTypeListPresenter();
         presenter.setDialogManager(dialogManager);
         presenter.setTopicTypeService(topicTypeService);
         presenter.setWindowManager(windowManager);
     }
 
-    @Test
-    public void testInitView() {
-        List<TopicType> types = buildFakeTopicTypeList();
-        when(topicTypeService.getAll()).thenReturn(types);
-        presenter.initView(view);
-        verify(view).showTopicTypeList(types);
-    }
-
     @SuppressWarnings("unchecked")
     @Test
     public void testOnAddAction() {
+        doAnswer(answerWindowForCreate()).when(windowManager)
+                .openTopicTypeWindowForCreate(any(EditListener.class));
+
+        presenter.initView(view);
         presenter.onAddAction();
-        verify(windowManager).openTopicTypeWindowForCreate(isA(EditListener.class));
+
+        verifyViewShowTopicTypeList(2);
     }
 
     @SuppressWarnings("unchecked")
     @Test
     public void testOnEditAction() {
-        TopicType t = buildFakeTopicType();
-        presenter.onEditAction(t);
-        verify(windowManager).openTopicTypeWindowForEdit(eq(t), isA(EditListener.class));
+        TopicType topicType = buildFakeTopicType();
+
+        doAnswer(answerWindowForEdit()).when(windowManager)
+                .openTopicTypeWindowForEdit(eq(topicType), any(EditListener.class));
+
+        presenter.initView(view);
+        presenter.onEditAction(topicType);
+
+        verifyViewShowTopicTypeList(2);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testOnDeleteActionWithSelection() {
+        givenAllFromService();
         givenSelectionExist();
+
+        doNothing().when(topicTypeService).deleteTopicTypes(anyCollectionOf(TopicType.class));
+        doAnswer(answerConfirmDeletion()).when(dialogManager)
+                .confirmDeletion(anyListOf(String.class), any(DialogManager.Performable.class));
+
+        presenter.initView(view);
         presenter.onDeleteAction();
-        verify(dialogManager).confirmDeletion(isA(List.class), isA(DialogManager.Performable.class));
+
+        verifyViewShowTopicTypeList(2);
     }
 
     @Test
     public void testOnDeleteActionWithoutSelection() {
         givenSelectionNotExist();
+
+        presenter.initView(view);
         presenter.onDeleteAction();
-        verify(dialogManager).notify(isA(String.class));
+
+        verify(dialogManager).notify(anyString());
     }
 
     private void givenSelectionExist() {
         when(view.getSelectedTopicType()).thenReturn(buildFakeTopicTypeList());
-        presenter.initView(view);
     }
 
     private void givenSelectionNotExist() {
         when(view.getSelectedTopicType()).thenReturn(Collections.<TopicType>emptyList());
-        presenter.initView(view);
+    }
+
+    private void givenAllFromService() {
+        when(topicTypeService.getAll()).thenReturn(buildFakeTopicTypeList());
+    }
+
+    /**
+     * Builder for fake answer. It will replace original method
+     * {@link WindowManager#openTopicTypeWindowForCreate(EditListener)}
+     * on mocked object.
+     *
+     * @see {@link Answer}
+     * @return new answer instance
+     */
+    private Answer<?> answerWindowForCreate() {
+        return new Answer<Void>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                ((EditListener<TopicType>) invocation.getArguments()[0]).onCreate(null);
+                return null;
+            }
+        };
+    }
+
+    /**
+     * Builder for fake answer. It will replace original method
+     * {@link WindowManager#openTopicTypeWindowForEdit(TopicType, EditListener)}
+     * on mocked object.
+     *
+     * @see {@link Answer}
+     * @return new answer instance
+     */
+    private Answer<?> answerWindowForEdit() {
+        return new Answer<Void>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                ((EditListener<TopicType>) invocation.getArguments()[1]).onUpdate(null);
+                return null;
+            }
+        };
+    }
+
+    /**
+     * Builder for fake answer. It will replace original method
+     * {@link DialogManager#confirmDeletion(String, Performable)}
+     * on mocked object.
+     *
+     * @see {@link Answer}
+     * @return new answer instance
+     */
+    private Answer<?> answerConfirmDeletion() {
+        return new Answer<Void>() {
+            @Override
+            public Void answer(InvocationOnMock invocation) throws Throwable {
+                ((DialogManager.Performable) invocation.getArguments()[1]).execute();
+                return null;
+            }
+        };
+    }
+
+    private void verifyViewShowTopicTypeList(int wantedNumberOfInvocations) {
+        verify(view, times(wantedNumberOfInvocations)).showTopicTypeList(anyListOf(TopicType.class));
     }
 
     /**
@@ -113,10 +192,8 @@ public class TopicTypeListPresenterTest {
      * @return fake TopicType instance
      */
     public TopicType buildFakeTopicType() {
-        return ObjectCreator.getFakeTopicType(
-                (long) (Math.random() * Long.MAX_VALUE)
-                , "test topic title"
-                , "test topic description");
+        return ObjectCreator.getFakeTopicType(RandomUtils.nextLong(),
+                "test topic title", "test topic description");
     }
 
     /**

@@ -35,7 +35,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      * Show the component list view
      */
     public void onShowComponents() {
-        show("components.zul");    	
+        show("components.zul");        
     }
 
     /**

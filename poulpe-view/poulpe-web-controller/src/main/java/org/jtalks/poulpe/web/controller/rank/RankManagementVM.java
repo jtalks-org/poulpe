@@ -31,29 +31,37 @@ import org.zkoss.zul.*;
 import org.zkoss.zul.impl.InputElement;
 
 import com.google.common.collect.ImmutableMap;
+import java.util.LinkedList;
+import java.util.List;
+import org.jtalks.poulpe.web.controller.DialogManager;
 
 /**
  * View Model for rank management page.
  *
  * @author Pavel Vervenko
  */
-public class RankManagementVM {
+public class RankManagementVM implements DialogManager.Performable {
 
-    ListModelList<Rank> items;
-    private RankService rankService;
+    private ListModelList<Rank> items;
     private Rank selected;
-    private Component editor;
-    private EntityValidator entityValidator;
     private Textbox rankName;
+    
+    private RankService rankService;
+    private EntityValidator entityValidator;
+    private final DialogManager dialogManager;
 
     /**
      * Construct the object with injected service.
      *
-     * @param rankService rankService
+     * @param rankService rankService to manipulate with ranks objects
+     * @param entityValidator for validation
+     * @param dialogManager used to show confirmation
      */
-    public RankManagementVM(@Nonnull RankService rankService, EntityValidator entityValidator) {
+    public RankManagementVM(@Nonnull RankService rankService,
+            EntityValidator entityValidator, DialogManager dialogManager) {
         this.rankService = rankService;
         this.entityValidator = entityValidator;
+        this.dialogManager = dialogManager;
         initData();
     }
 
@@ -63,6 +71,7 @@ public class RankManagementVM {
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
     }
+
     /**
      * Get ranks list.
      *
@@ -80,41 +89,53 @@ public class RankManagementVM {
         items = new ListModelList<Rank>(rankService.getAll());
     }
 
+    /**
+     * Get selected item.
+     * @return current selected item
+     */
     @NotifyChange
     public Rank getSelected() {
         return selected;
     }
 
+    /**
+     * Set selected Rank.
+     * @param selected selected rank
+     */
     public void setSelected(Rank selected) {
         this.selected = selected;
     }
 
+    /**
+     * Open the editor window.
+     */
     @Command
     public void edit() {
         openEditor();
     }
 
-    @Command
-    public void check() {
-    }
-
+    /**
+     * Close the editor dialog
+     */
     @Command
     public void dialogClosed() {
-        editor = null;
+        //TODO: add code to close dialog
+        getCurrentWindow("RankEditorWindow").setVisible(false);
     }
 
+    /**
+     * Validate and save rank.
+     */
     @Command
     @NotifyChange
-    public void save()  {
-        
-    	if (validate (selected))
-    	rankService.saveRank(selected);
-        String windowId = "kNKF0";
-        getCurrentWindow("RankEditorWindow").setVisible(false);
+    public void save() {
+        if (validate(selected)) {
+            rankService.saveRank(selected);
+        }
         dialogClosed();
         initData();
     }
-    
+
     private boolean validate(Rank rank) {
         ValidationResult result = entityValidator.validate(rank);
 
@@ -125,10 +146,10 @@ public class RankManagementVM {
             return true;
         }
     }
-    
-    public void validationFailure(ValidationResult result) {
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("name",rankName);
-        
+
+    private void validationFailure(ValidationResult result) {
+        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", rankName);
+
         for (ValidationError error : result.getErrors()) {
             String fieldName = error.getFieldName();
             if (comps.containsKey(fieldName)) {
@@ -140,12 +161,28 @@ public class RankManagementVM {
         }
     }
 
+    /**
+     * Command for crating new Rank.
+     */
     @Command
     public void newItem() {
         selected = new Rank("new", 100);
         openEditor();
     }
 
+    /**
+     * Delete selected ranks.
+     */
+    @Command
+    public void delete() {
+        dialogManager.confirmDeletion(getSelectionAsStringList(), this);
+    }
+
+    /**
+     * Find the window by id.
+     * @param id window Id
+     * @return found component or null
+     */
     private Component getCurrentWindow(String id) {
         for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
             if (c.getId().equals(id)) {
@@ -155,7 +192,29 @@ public class RankManagementVM {
         return null;
     }
 
+    /**
+     * Prepare list of String for confirmation window.
+     * @return names list of selected items
+     */
+    private List<String> getSelectionAsStringList() {
+        List<String> list = new LinkedList<String>();
+        for (Rank current : items.getSelection()) {
+            list.add(current.getRankName());
+        }
+        return list;
+    }
+
     private void openEditor() {
-        editor = Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow("rankManagementWindow"), null);
+        Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow("rankManagementWindow"), null);
+    }
+
+    /**
+     * Execute Delete operation.
+     */
+    @Override
+    public void execute() {
+        for (Rank current : items.getSelection()) {
+            rankService.deleteRank(current);
+        }
     }
 }

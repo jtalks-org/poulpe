@@ -2,21 +2,28 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window width="30%" apply="org.zkoss.bind.BindComposer" id="rankManagementWindow"
+    <window width="30%" apply="org.zkoss.bind.BindComposer" id="rankManagementWindow"
    title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
-    <listbox model="@load(vm.items)" hflex="true" height="300px" selectedItem="@bind(vm.selected)">
-      <listhead>
-        <listheader label="${labels.rank.name}"/>
-        <listheader label="${labels.rank.post_count}"/>
-      </listhead>
-      <template name="model" var="item">
-        <listitem >
-          <listcell label="@load(item.rankName)" onDoubleClick="@command('edit')"/>
-          <listcell label="@load(item.postCount)" onDoubleClick="@command('edit')"/>
-        </listitem>
-      </template>
-    </listbox>
-    <button onClick="@command('edit')" label="Edit"/>
-    <button onClick="@command('newItem')" label="New"/>
-  </window>
+        <listbox multiple="true" model="@load(vm.items)" height="300px" selectedItem="@bind(vm.selected)">
+            <listhead>
+                <listheader label="${labels.rank.name}"/>
+                <listheader label="${labels.rank.post_count}"/>
+            </listhead>
+            <template name="model" var="item">
+                <listitem >
+                    <listcell label="@load(item.rankName)" onDoubleClick="@command('edit')"/>
+                    <listcell onDoubleClick="@command('edit')">
+                        <label value="${labels.rank.assigned_by_admin}" if="${item.autoAssigned=='false'}"/>
+                        <label value="@load(item.postCount)" if="${item.autoAssigned=='true'}"/>
+                    </listcell>
+                </listitem>
+            </template>
+            <listfoot>
+                <listfooter>
+                    <button onClick="@command('newItem')" label="${labels.rank.add}"/>
+                    <button onClick="@command('delete')" label="${labels.rank.delete}"/>
+                </listfooter>
+            </listfoot>
+        </listbox>
+    </window>
 </zk>

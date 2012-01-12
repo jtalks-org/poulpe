@@ -30,7 +30,7 @@ import org.jtalks.poulpe.validation.EntityValidator;
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
         implements GroupService {
-	 private final EntityValidator validator;
+     private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
@@ -67,11 +67,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     /**
      * {@inheritDoc}
      */
-	@Override
-	public void saveGroup(Group selectedGroup) {
-		validator.throwOnValidationFailure(selectedGroup);
-		dao.saveOrUpdate(selectedGroup);
-	}
+    @Override
+    public void saveGroup(Group selectedGroup) {
+        validator.throwOnValidationFailure(selectedGroup);
+        dao.saveOrUpdate(selectedGroup);
+    }
     
     
   

@@ -31,7 +31,7 @@ import org.jtalks.poulpe.validation.EntityValidator;
  */
 public class TransactionalSectionService extends AbstractTransactionalEntityService<Section, SectionDao> implements
         SectionService {
-	private final EntityValidator validator;
+    private final EntityValidator validator;
     /**
      * Create an instance of entity based service
      * 
@@ -65,8 +65,8 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      */
     @Override
     public void saveSection(Section section) {
-		validator.throwOnValidationFailure(section);
-		dao.saveOrUpdate(section);
+        validator.throwOnValidationFailure(section);
+        dao.saveOrUpdate(section);
     }
 
     /** {@inheritDoc} */

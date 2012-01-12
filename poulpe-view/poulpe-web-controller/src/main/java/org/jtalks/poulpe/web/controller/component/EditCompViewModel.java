@@ -30,7 +30,8 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Current component we are working with
      */
-    private Component currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");;
+    private Component currentComponent =
+            (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
     /**
      * The title of the component
@@ -55,13 +56,13 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Web-form validation messages
      */
-    Map<String, String> validationMessages =
+    private Map<String, String> validationMessages =
             new HashMap<String,String>();
 
-//	constructor
+    //    constructor
     /**
      * Default constructor. Inits the data on the form.
-     * @param componentService
+     * @param componentService service we use to access components
      */
     public EditCompViewModel(@Nonnull ComponentService componentService) {
         this.setComponentService(componentService);
@@ -85,7 +86,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         description = valueOf(currentComponent.getDescription());
     }
 
-//	service functions	
+    //    service functions
     /**
      * Returns all components.
      * @return the list of the components
@@ -94,7 +95,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         return componentService.getAll();
     }
 
-//	commands
+    //    commands
     /**
      * Saves a component. Shows validation messages, if
      * something is wrong
@@ -135,11 +136,12 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         Executions.sendRedirect("");
     }
 
-//	helpers
+    //    helpers
     /**
      * Returns string value of the field or
      * empty string if string is null
-     * @param value
+     *
+     * @param value value of the string
      * @return string value of the field or
      * empty string if string is null
      */
@@ -169,10 +171,10 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
 
-//	getters & setters for web-form
+    //    getters & setters for web-form
     /**
      * Returns the title for current component
-     * @return
+     * @return title value from web-form
      */
     public String getTitle() {
         return title;
@@ -180,7 +182,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the title for the current component
-     * @param title
+     * @param title title value to set
      */
     public void setTitle(String title) {
         this.title = title;
@@ -188,7 +190,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns the description for the current component
-     * @return
+     * @return description value from web-form
      */
     public String getDescription() {
         return description;
@@ -196,7 +198,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the description for the current component
-     * @param description
+     * @param description to set on web-form
      */
     public void setDescription(String description) {
         this.description = description;
@@ -204,7 +206,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns the name of the current component
-     * @return
+     * @return name value from web-form
      */
     public String getName() {
         return name;
@@ -212,7 +214,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the name for current component
-     * @param name
+     * @param name new value on web-form
      */
     public void setName(String name) {
         this.name = name;
@@ -226,7 +228,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         return validationMessages;
     }
 
-//	getter and setter for current component we edit
+//    getter and setter for current component we edit
     /**
      * Gets the current component we edit
      * @return current component

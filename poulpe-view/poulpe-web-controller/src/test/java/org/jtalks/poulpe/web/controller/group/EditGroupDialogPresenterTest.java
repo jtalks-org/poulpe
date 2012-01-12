@@ -64,32 +64,32 @@ public class EditGroupDialogPresenterTest {
 
     @Test
     public void testValidateWhenNameIsNull() {
-    	givenConstraintViolated();
-    	dialogPresenter.initView(mockView, group);
-    	dialogPresenter.saveOrUpdateGroup(null, "description");
-    	verify(mockGroupService, never()).saveGroup(any(Group.class));
-	}
+        givenConstraintViolated();
+        dialogPresenter.initView(mockView, group);
+        dialogPresenter.saveOrUpdateGroup(null, "description");
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
+    }
     
     @Test
     public void testValidateWhenNameIsEmpty() {
-    	givenConstraintViolated();
-    	dialogPresenter.initView(mockView, group);
-    	dialogPresenter.saveOrUpdateGroup("", "description");
-    	verify(mockGroupService, never()).saveGroup(any(Group.class));
-	}
+        givenConstraintViolated();
+        dialogPresenter.initView(mockView, group);
+        dialogPresenter.saveOrUpdateGroup("", "description");
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
+    }
 
     @Test
     public void testValidateWhenNameIsLong() {
-    	givenConstraintViolated();
+        givenConstraintViolated();
         String longName = new String(new byte[255]);
         dialogPresenter.initView(mockView, group);
-    	dialogPresenter.saveOrUpdateGroup(longName, "description");
-    	verify(mockGroupService, never()).saveGroup(any(Group.class));
+        dialogPresenter.saveOrUpdateGroup(longName, "description");
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
 
     @Test
     public void testSaveOrUpdate() {
-    	givenNoConstraintsViolated();
+        givenNoConstraintsViolated();
         String name = "name";
         String desc = "description";
         dialogPresenter.initView(mockView, group);
@@ -104,7 +104,7 @@ public class EditGroupDialogPresenterTest {
 
     @Test
     public void testSaveOrUpdateGroupWithException() {
-    	givenConstraintViolated();
+        givenConstraintViolated();
         Group nullGroup = new Group();
         
         final String name = "";
@@ -117,7 +117,7 @@ public class EditGroupDialogPresenterTest {
     }
     
     private void givenConstraintViolated() {
-		when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
-	}
+        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+    }
 
 }

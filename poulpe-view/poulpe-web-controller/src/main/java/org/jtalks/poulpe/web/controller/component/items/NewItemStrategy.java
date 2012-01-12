@@ -34,7 +34,7 @@ class NewItemStrategy implements ItemStrategy {
 
     /**
      * Sets the view which will be emptied when {@link #init()} is called.
-     * @param view
+     * @param view view to iteract with
      * @see NewItemStrategy
      */
     public NewItemStrategy(ItemDataView view) {

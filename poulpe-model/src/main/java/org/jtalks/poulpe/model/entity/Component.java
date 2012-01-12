@@ -82,7 +82,7 @@ public class Component extends Entity {
 
     /**
      * Copy constructor
-     * @param component
+     * @param component component to copy parameters from
      */
     public Component(Component component) {
         this.name = component.getName();
@@ -109,7 +109,7 @@ public class Component extends Entity {
 
     /**
      * Get the component description.
-     * @return description
+     * @return description description of the component
      */
     public String getDescription() {
         return description;
@@ -117,7 +117,7 @@ public class Component extends Entity {
 
     /**
      * Set components description.
-     * @param description
+     * @param description new description of the component
      * @exception IllegalArgumentException if the description is null
      */
     public void setDescription(String description) {
@@ -127,7 +127,7 @@ public class Component extends Entity {
 
     /**
      * Get component's name.
-     * @return name
+     * @return name name of the component
      */
     public String getName() {
         return name;
@@ -135,7 +135,7 @@ public class Component extends Entity {
 
     /**
      * Set the name of the component.
-     * @param name
+     * @param name new name of the component
      * @exception IllegalArgumentException if the name is null
      */
     public void setName(String name) {
@@ -145,7 +145,7 @@ public class Component extends Entity {
 
     /**
      * Get the type of the component.
-     * @return type
+     * @return type type of the component
      */
     public ComponentType getComponentType() {
         return componentType;
@@ -153,7 +153,7 @@ public class Component extends Entity {
 
     /**
      * Set component's type.
-     * @param type
+     * @param type new type of the component
      */
     public void setComponentType(ComponentType type) {
         this.componentType = type;
@@ -161,6 +161,7 @@ public class Component extends Entity {
 
     /**
      * Adds the property to this component
+     *
      * @param name is the name of the property
      * @param value is the value of the property
      */
@@ -171,6 +172,7 @@ public class Component extends Entity {
     /**
      * Sets the property some value if one is exist. If it
      * is not, then adds a new property
+     *
      * @param name is the name of the property
      * @param value is the value of the property
      */
@@ -196,10 +198,11 @@ public class Component extends Entity {
      * @return property value or null if not found
      */
     public String getProperty(String name) {
-        for (Property p : properties)
+        for (Property p : properties) {
             if (p.getName().equals(name)) {
                 return p.getValue();
             }
+        }
         return null;
     }
 

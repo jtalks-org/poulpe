@@ -20,7 +20,6 @@ import java.util.Set;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.validation.ValidationException;
 
 /**
  * Service for some operations with {@link Component}.

@@ -105,7 +105,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     /** {@inheritDoc} */
     @Override
     public void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener) {
-    	Window win = (Window) createComponent("topictype.zul");
+        Window win = (Window) createComponent("topictype.zul");
         TopicTypePresenter  presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
         doModal(win);
         presenter.initializeForEdit((TopicTypeView) win, topicType, listener);

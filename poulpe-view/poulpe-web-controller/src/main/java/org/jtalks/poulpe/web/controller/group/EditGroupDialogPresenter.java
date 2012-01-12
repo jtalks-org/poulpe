@@ -44,19 +44,19 @@ public class EditGroupDialogPresenter {
     
 
     public boolean saveOrUpdateGroup(String name, String description) {
-		if (group == null) {
-			group = new Group();
-		}
-		group.setName(name);
-		group.setDescription(description);
-		if (validate(group)) {
-			groupService.saveGroup(group);
-			view.hide();
-			return true;
-		} else {
-			return false;
-		}
-	}
+        if (group == null) {
+            group = new Group();
+        }
+        group.setName(name);
+        group.setDescription(description);
+        if (validate(group)) {
+            groupService.saveGroup(group);
+            view.hide();
+            return true;
+        } else {
+            return false;
+        }
+    }
     
     private boolean validate(Group group) {
         ValidationResult result = entityValidator.validate(group);

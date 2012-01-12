@@ -112,7 +112,7 @@ public class ModerationDialogPresenterTest {
 
     @Test
     public void onConfirm() {
-    	givenNoConstraintsViolated();
+        givenNoConstraintsViolated();
         presenter.onConfirm();
         verify(branchService).saveBranch(branch);
     }
@@ -123,7 +123,7 @@ public class ModerationDialogPresenterTest {
 
     @Test
     public void onConfirmWithError() throws Exception {
-    	givenConstraintViolated();
+        givenConstraintViolated();
         presenter.onConfirm();
         
         verify(branchService, never()).saveBranch(any(Branch.class));
@@ -131,8 +131,8 @@ public class ModerationDialogPresenterTest {
     }
     
    private void givenConstraintViolated() {
-		when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
-	} 
+        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+    } 
 
     @Test
     public void onDeleteModeratorRemovedFromBranch() {
