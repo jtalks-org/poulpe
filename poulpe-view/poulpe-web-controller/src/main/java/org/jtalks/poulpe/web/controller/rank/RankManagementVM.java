@@ -45,7 +45,6 @@ public class RankManagementVM implements DialogManager.Performable {
     private ListModelList<Rank> items;
     private Rank selected;
     private Textbox rankName;
-    
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
@@ -77,7 +76,6 @@ public class RankManagementVM implements DialogManager.Performable {
      *
      * @return ranks list
      */
-    @NotifyChange
     public ListModelList<Rank> getItems() {
         return items;
     }
@@ -93,7 +91,6 @@ public class RankManagementVM implements DialogManager.Performable {
      * Get selected item.
      * @return current selected item
      */
-    @NotifyChange
     public Rank getSelected() {
         return selected;
     }
@@ -127,7 +124,7 @@ public class RankManagementVM implements DialogManager.Performable {
      * Validate and save rank.
      */
     @Command
-    @NotifyChange
+    @NotifyChange({"items", "selected"})
     public void save() {
         if (validate(selected)) {
             rankService.saveRank(selected);
@@ -173,6 +170,7 @@ public class RankManagementVM implements DialogManager.Performable {
     /**
      * Delete selected ranks.
      */
+    @NotifyChange({"items", "selected"})
     @Command
     public void delete() {
         dialogManager.confirmDeletion(getSelectionAsStringList(), this);
@@ -212,9 +210,12 @@ public class RankManagementVM implements DialogManager.Performable {
      * Execute Delete operation.
      */
     @Override
+    @NotifyChange({"items", "selected"})
     public void execute() {
         for (Rank current : items.getSelection()) {
             rankService.deleteRank(current);
+            items.remove(current);
         }
     }
+
 }
