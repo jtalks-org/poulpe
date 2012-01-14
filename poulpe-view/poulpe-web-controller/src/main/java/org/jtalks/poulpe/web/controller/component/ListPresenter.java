@@ -19,12 +19,10 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.ext.Scope;
 
 /**
  * The class for mediating between model and view representation of components.
- * 
+ *
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
  * @author Vyacheslav Zhivaev
@@ -34,7 +32,7 @@ public class ListPresenter extends AbstractComponentPresenter {
     private static final String NO_SELECTED_ITEM = "item.no.selected.item";
     private static final String NO_AVAILABLE_TYPES = "component.error.no_available_types";
     private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
-    
+
     /** The object that is responsible for updating view of the component list. */
     private ListView view;
 
@@ -103,11 +101,7 @@ public class ListPresenter extends AbstractComponentPresenter {
         Component cm = view.getSelectedItem();
         Executions.getCurrent().getDesktop().setAttribute("componentToEdit", cm);
 
-        currentComp.detach();
-
-        currentComp = Executions.createComponents(EDIT_COMPONENT_LOCATION, null, null);
-        currentComp.setParent(parent);
-        currentComp.setVisible(true);
+        windowManager.open(EDIT_COMPONENT_LOCATION, parent);
     }
 
     /**

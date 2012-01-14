@@ -42,6 +42,10 @@
       <constructor-arg index="0" ref="componentService"/>
   </bean>
 
+  <bean id="adminWindow" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
+    <property name="windowManager" ref="windowManager" />
+  </bean>
+
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
         scope="prototype">
@@ -65,6 +69,7 @@
   <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
+    <property name="windowManager" ref="windowManager" />
   </bean>
 
   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
@@ -111,7 +116,7 @@
         class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
     <property name="branchService" ref="branchService" />
     <property name="userService" ref="userService" />
-    <property name="dialogManager" ref="dialogManager"></property>
+    <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
   </bean>
 

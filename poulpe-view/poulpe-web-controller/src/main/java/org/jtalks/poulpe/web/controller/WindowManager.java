@@ -16,18 +16,20 @@ package org.jtalks.poulpe.web.controller;
 
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.zkoss.zk.ui.Component;
 
 /**
  * The interface for creation and closing application windows.
- * 
+ *
  * @author Dmitriy Sukharev
- * 
+ * @author Vyacheslav Zhivaev
+ *
  */
 public interface WindowManager {
 
     /**
      * Creates and shows new window which is responsible for editing components.
-     * 
+     *
      * @param componentId
      *            identifier of the {@link Component} to be edited, or
      *            {@code -1L} to create a new one
@@ -40,15 +42,24 @@ public interface WindowManager {
 
     /**
      * Closes the {@code window} window and invokes its "onDetach" listener.
-     * 
+     *
      * @param window
      *            the window to be closed
      */
     void closeWindow(Object window);
-    
+
     void openTopicTypeWindowForCreate(EditListener<TopicType> listener);
-    
+
     void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
-    
+
     void openUserWindowForEdit(User user, EditListener<User> listener);
+
+    /**
+     * Opens and shows new window. Previous window will be forcibly detached.
+     *
+     * @param pathToZulFile the path to *.zul config file which describes new window
+     * @param parent the parent component for new window
+     */
+    void open(String pathToZulFile, Component parent);
+
 }

@@ -16,11 +16,15 @@ package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.items.ItemPresenter;
 
 /**
  * The abstract class which contains common fields and methods for {@link ItemPresenter} and
  * {@link ListPresenter} classes.
  * @author Dmitriy Sukharev
+ * @author Vyacheslav Zhivaev
+ *
  */
 public abstract class AbstractComponentPresenter {
 
@@ -28,6 +32,7 @@ public abstract class AbstractComponentPresenter {
     protected ComponentService componentService;
 
     protected DialogManager dialogManager;
+	protected WindowManager windowManager;
 
     /**
      * Returns the service instance which is used for manipulating with stored components.
@@ -46,6 +51,15 @@ public abstract class AbstractComponentPresenter {
     }
 
     /**
+     * Returns the window manager which is used for controlling windows.
+     * 
+	 * @return the current window manager instance
+	 */
+	public WindowManager getWindowManager() {
+		return windowManager;
+	}
+	
+    /**
      * Sets the service instance which is used for manipulating with stored components.
      * @param componentService the new value of the service instance
      */
@@ -60,4 +74,14 @@ public abstract class AbstractComponentPresenter {
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
+
+	/**
+	 * Sets window manager.
+	 *
+	 * @param windowManager the new window manager
+	 */
+	public void setWindowManager(WindowManager windowManager) {
+	    this.windowManager = windowManager;
+	}
+
 }

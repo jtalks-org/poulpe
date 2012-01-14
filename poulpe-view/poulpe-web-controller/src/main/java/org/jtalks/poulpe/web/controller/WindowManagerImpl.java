@@ -37,35 +37,38 @@ import org.zkoss.zul.Window;
 
 /**
  * The class which is responsible for creating and closing application windows.
- * 
+ *
  * @author Dmitriy Sukharev
- * 
+ * @author Vyacheslav Zhivaev
+ *
  */
 public final class WindowManagerImpl implements WindowManager, ApplicationContextAware {
 
     /** The path to the web-page for adding / editing component. */
     private static final String EDIT_COMPONENT_URL = "/WEB-INF/pages/edit_component.zul";
-    
+
     /** The path to the web-page for editing user. */
     private static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
 
     private ApplicationContext applicationContext;
-    
+
+    private Component currentWindow;
+
     /** {@inheritDoc} */
     @Override
     public void showEditComponentWindow(long componentId, Object listener) {
         Map<String, Object> args = new HashMap<String, Object>();
         args.put("componentId", componentId);
         Window win = (Window) Executions.createComponents(EDIT_COMPONENT_URL, null, args);
-        win.setAttribute("CLOSE_LISTENER", listener);        
-        
+        win.setAttribute("CLOSE_LISTENER", listener);
+
         try {
             win.doModal();
         } catch (Exception e) {
             throw new AssertionError(e); // can't happen
         }
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void closeWindow(Object object) {
@@ -83,7 +86,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
             }
         }
     }
-       
+
     /** {@inheritDoc} */
     @Override
     public void openTopicTypeWindowForCreate(EditListener<TopicType> listener) {
@@ -101,7 +104,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         doModal(win);
         presenter.initializeForEdit((UserView) win, user, listener);
     }
-    
+
     /** {@inheritDoc} */
     @Override
     public void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener) {
@@ -116,7 +119,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
     }
-    
+
     private Object getBean(String beanName, Component comp) {
         assertBeanDefined(beanName);
         assertBeanPrototype(beanName);
@@ -124,27 +127,43 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         Events.addEventListeners(comp, presenter);
         return presenter;
     }
-    
+
     private Component createComponent(String pathToZulFile) {
         Component component = Executions.createComponents(pathToZulFile, null, null);
         Components.wireVariables(component, component);
         return component;
     }
-    
+
     private void assertBeanDefined(String beanName) {
         Assert.isTrue(applicationContext.containsBean(beanName));
     }
-    
+
     private void assertBeanPrototype(String beanName) {
         Assert.isTrue(applicationContext.isPrototype(beanName));
     }
-    
+
     private void doModal(Window win) {
         try {
             win.doModal();
         } catch (Exception e) {
             throw new AssertionError(e); // can't happen
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void open(String pathToZulFile, Component parent) {
+        if (currentWindow != null) {
+        	// detach only if window belongs to current desktop
+            if (Executions.getCurrent().getDesktop().equals(currentWindow.getDesktop())) {
+                currentWindow.detach();
+            }
+        }
+        currentWindow = Executions.createComponents(pathToZulFile, null, null);
+        currentWindow.setParent(parent);
+        currentWindow.setVisible(true);
     }
 
 }

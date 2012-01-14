@@ -15,82 +15,82 @@
 package org.jtalks.poulpe.web.controller;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Center;
 
 /**
- * 
- * 
+ * Server-side representation of view for main 'Admin Window'.
+ *
  * @author Vladimir Bukhoyarov
+ * @author Vyacheslav Zhivaev
  *
  */
 public class AdminWindow extends GenericForwardComposer<Component> {
-    
+
     private static final long serialVersionUID = 1L;
     private Center workArea;
-    private Component currentComponent;
-    
+    private WindowManager windowManager;
+
     /**
      * Show the component list view
      */
     public void onShowComponents() {
-        show("components.zul");        
+        windowManager.open("components.zul", workArea);
     }
 
     /**
      * Show the branches list view
      */
     public void onShowBranches() {
-        show("brancheditor.zul");        
+        windowManager.open("brancheditor.zul", workArea);
     }
-    
+
     /**
      * Show the topic type list view
      */
     public void onShowTopicTypes() {
-        show("topictypelist.zul");
-//        show("WEB-INF/pages/edit_comp.zul");
+        windowManager.open("topictypelist.zul", workArea);
     }
-    
+
     /**
      * Show the sections list view
      */
     public void onShowSections() {
-        show("sections.zul");
+        windowManager.open("sections.zul", workArea);
     }
-    
+
     public void onShowUserBanning(){
-        show("userbanning.zul");
+        windowManager.open("userbanning.zul", workArea);
     }
 
     /**
      * Shows User Groups window that allows admins to CRUD groups.
      */
     public void onShowUserGroups(){
-        show("groups.zul");
+        windowManager.open("groups.zul", workArea);
     }
 
     /**
      * Show the users list view
      */
     public void onShowUsers() {
-        show("users.zul");
+        windowManager.open("users.zul", workArea);
     }
-    
+
     /**
      * Show the ranks page.
      */
     public void onShowRanks() {
-        show("ranks.zul");
+        windowManager.open("ranks.zul", workArea);
     }
-    
-    private void show(String pathToZulFile) {
-        if (currentComponent != null) {
-            currentComponent.detach();
-        }
-        currentComponent = Executions.createComponents(pathToZulFile, null, null);
-        currentComponent.setParent(workArea);
-        currentComponent.setVisible(true);
-    }  
+
+    /**
+     * Sets window manager.
+     *
+     * @param windowManager the new window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
 }
