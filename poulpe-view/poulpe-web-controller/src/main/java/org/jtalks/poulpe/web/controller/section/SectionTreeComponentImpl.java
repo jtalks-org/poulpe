@@ -22,6 +22,7 @@ import java.util.List;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
@@ -29,6 +30,8 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
+import org.zkoss.zk.ui.event.DropEvent;
+import org.zkoss.zk.ui.event.GenericEventListener;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Div;
@@ -42,6 +45,7 @@ import org.zkoss.zul.Treerow;
 
 /**
  * @author Konstantin Akimov
+ * @author Guram Savinov
  * */
 public class SectionTreeComponentImpl extends Div implements IdSpace {
     /**
@@ -177,6 +181,20 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
 
     public class SectionBranchTreeitemRendere implements TreeitemRenderer {
         
+        /**
+         * Listener for Drag'n'Drop event.
+         */
+        EventListener<Event> listener = new GenericEventListener<Event>() {
+
+            @Override
+            public void onEvent(Event evt) throws Exception {
+                DropEvent dropevent = (DropEvent) evt;
+                Component dragged = dropevent.getDragged().getParent();
+                Component target = dropevent.getTarget().getParent();
+                target.getParent().insertBefore(dragged, target);
+            }
+        };
+
         @Override
         public void render(final Treeitem treeItem, Object node) throws Exception {
             ExtendedTreeNode curNode = (ExtendedTreeNode) node;
@@ -208,7 +226,9 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
                 treeRow.appendChild(new Treecell(((Section) data).getName()));
             } else if (data instanceof Branch) {
                 treeRow.appendChild(new Treecell(((Branch) data).getName()));
-
+                treeRow.setDraggable("true");
+                treeRow.setDroppable("true");
+                treeRow.addEventListener("onDrop", listener);
             }
 
         }
