@@ -29,6 +29,8 @@ import org.zkoss.zul.Window;
 
 /**
  * @author Konstantin Akimov
+ * @author Vyacheslav Zhivaev
+ *
  */
 @SuppressWarnings("serial")
 public class GroupViewImpl extends Window implements AfterCompose {
@@ -77,6 +79,10 @@ public class GroupViewImpl extends Window implements AfterCompose {
 
     public void onClick$removeButton() {
         presenter.deleteGroup(getSelectedGroup());
+    }
+
+    public void onClick$editMembersButton() {
+        presenter.editMembers(getSelectedGroup());
     }
 
     public void onSearchAction() {
