@@ -14,21 +14,26 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
+import org.jtalks.poulpe.web.controller.WindowManager;
+import org.zkoss.zk.ui.Executions;
 
 /**
  * 
  * @author Konstantin Akimov
- * 
+ * @author Vyacheslav Zhivaev
+ *
  */
 public class GroupPresenter {
 
     private GroupViewImpl view;
     private GroupService groupService;
     private DialogManager dialogManager;
+    private WindowManager windowManager;
     private String searchRestrictions;
 
     public void setGroupService(GroupService groupService) {
@@ -75,5 +80,19 @@ public class GroupPresenter {
             }
         });
     }
+
+	public void editMembers(Group selectedGroup) {
+        org.zkoss.zk.ui.Component workArea = ((org.zkoss.zk.ui.Component) view).getParent();
+        Executions.getCurrent().getDesktop().setAttribute("workAreaComponent", workArea);
+        Executions.getCurrent().getDesktop().setAttribute("groupToEdit", selectedGroup);
+		windowManager.open("groups/EditMembers.zul", workArea);
+	}
+
+	/**
+	 * @param windowManager the windowManager to set
+	 */
+	public void setWindowManager(WindowManager windowManager) {
+		this.windowManager = windowManager;
+	}
 
 }

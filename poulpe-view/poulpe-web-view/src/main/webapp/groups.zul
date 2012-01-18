@@ -20,6 +20,7 @@
     </listbox>
     <button id="addButton" label="+" />
     <button id="removeButton" label="-" />
+    <button id="editMembersButton" label="Edit Members of group" />
   </window>
   <include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer" />
 

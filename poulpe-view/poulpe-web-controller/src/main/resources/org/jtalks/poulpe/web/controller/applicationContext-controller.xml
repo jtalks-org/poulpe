@@ -25,7 +25,7 @@
 
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-    <constructor-arg ref="branchService"/>
+    <constructor-arg ref="branchService" />
     <constructor-arg index="1" ref="groupService"/>
   </bean>
 
@@ -40,6 +40,12 @@
         scope="desktop"
         class="org.jtalks.poulpe.web.controller.component.EditCompViewModel">
       <constructor-arg index="0" ref="componentService"/>
+  </bean>
+
+  <bean id="editGroupMembersVM" scope="desktop" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM">
+    <constructor-arg index="0" ref="groupService" />
+    <constructor-arg index="1" ref="userService" />
+    <constructor-arg index="2" ref="windowManager" />
   </bean>
 
   <bean id="adminWindow" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
@@ -123,6 +129,7 @@
   <bean id="groupPresenter" class="org.jtalks.poulpe.web.controller.group.GroupPresenter" scope="prototype">
     <property name="groupService" ref="groupService" />
     <property name="dialogManager" ref="dialogManager" />
+    <property name="windowManager" ref="windowManager" />
   </bean>
 
   <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"

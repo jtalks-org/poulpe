@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Edit Members of Groups" contentType="text/html; charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<!-- works with ZK 6 and later only -->
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window mode="modal" closable="true" border="normal" width="70%" title="Edit Members of groups"
+  apply="org.zkoss.bind.BindComposer" onClose="@command('cancel')" viewModel="@id('vm') @init(editGroupMembersVM)">
+    <vbox>
+      <hbox>
+        <label value="Members of group: " />
+        <label value="@load(vm.groupToEdit.name)" />
+      </hbox>
+      <hbox>
+        <vbox>
+          <panel title="Available users" border="normal">
+            <panelchildren>
+              <hbox align="center" style="margin: 10px">
+                <label value="Search:" />
+                <textbox value="@bind(vm.availSearch)" />
+                <button label="Search" onClick="@command('searchAvail')" />
+              </hbox>
+              <listbox model="@load(vm.availUsers)" selectedItem="@bind(vm.availSelected)" height="240px">
+                <listhead>
+                  <listheader label="Name" sclass="boldstyle" />
+                  <listheader label="Nickname" />
+                  <listheader label="Posts" />
+                </listhead>
+                <template name="model" var="user">
+                  <listitem>
+                    <listcell label="@load(user.username)" />
+                    <listcell>
+                      <label value="@load(user.firstName)" />
+                      <label value="@load(user.lastName)" />
+                    </listcell>
+                    <listcell label="?" />
+                  </listitem>
+                </template>
+              </listbox>
+            </panelchildren>
+          </panel>
+        </vbox>
+         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons">
+           <image onClick="@command('add', direction='toExist')" src="/resources/img/rightarrow.png" />
+           <image onClick="@command('addAll', direction='toExist')" src="/resources/img/rightrightarrow.png" />
+           <image onClick="@command('add', direction='toAvail')" src="/resources/img/leftarrow.png" />
+           <image onClick="@command('addAll', direction='toAvail')" src="/resources/img/leftleftarrow.png" />
+         </vbox>
+        <vbox>
+          <panel title="Users already in the group" border="normal">
+            <panelchildren>
+              <hbox align="center" style="margin: 10px">
+                <label value="Search:" />
+                <textbox value="@bind(vm.existSearch)" />
+                <button label="Search" onClick="@command('searchExist')" />
+              </hbox>
+              <listbox model="@load(vm.existUsers)" selectedItem="@bind(vm.existSelected)" height="240px">
+                <listhead>
+                  <listheader label="Name" sclass="boldstyle" />
+                  <listheader label="Nickname" />
+                  <listheader label="Posts" />
+                </listhead>
+                <template name="model" var="user">
+                  <listitem>
+                    <listcell label="@load(user.username)" />
+                    <listcell>
+                      <label value="@load(user.firstName)" />
+                      <label value="@load(user.lastName)" />
+                    </listcell>
+                    <listcell label="?" />
+                  </listitem>
+                </template>
+              </listbox>
+            </panelchildren>
+          </panel>
+        </vbox>
+      </hbox>
+      <hbox align="center" pack="center" height="30px">
+        <button label="Save" onClick="@command('save')" />
+        <button label="Cancel" onClick="@command('cancel')" />
+      </hbox>
+    </vbox>
+  </window>
+</zk>
