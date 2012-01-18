@@ -25,9 +25,14 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Div;
+import org.zkoss.zul.Messagebox;
 import org.zkoss.zul.Tree;
 import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.Treecell;
@@ -142,8 +147,13 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
     }
 
     public void onClick$permissionsButton() throws IOException {
-        Branch selected = (Branch) getSelectedObject();
-        Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + selected.getId());
+        Object selected = getSelectedObject();
+        if(!(selected instanceof Branch)) {
+            Messagebox.show("This action not provided for section, please select a branch");
+            return;
+        }
+        Branch branch = (Branch) selected;
+        Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + branch.getId());
     }
 
     /**
@@ -167,6 +177,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
 
     public class SectionBranchTreeitemRendere implements TreeitemRenderer {
         
+        @Override
         public void render(final Treeitem treeItem, Object node) throws Exception {
             ExtendedTreeNode curNode = (ExtendedTreeNode) node;
 
@@ -210,5 +221,23 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
      */
     public void setSectionTree(Tree tree) {
         this.sectionTree = tree;
+        sectionTree.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
+
+            @Override
+            public void onEvent(Event event) throws Exception {
+                Object selected = getSelectedObject();
+                Button permissionsButton = getBranchPermissionsButton();
+                if (selected instanceof Branch) {
+                    permissionsButton.setDisabled(false);
+                } else {
+                    permissionsButton.setDisabled(true);
+                }
+            }
+
+        });
+    }
+    
+    private Button getBranchPermissionsButton() {
+        return (Button) sectionTree.getFellow("permissionsButton");
     }
 }

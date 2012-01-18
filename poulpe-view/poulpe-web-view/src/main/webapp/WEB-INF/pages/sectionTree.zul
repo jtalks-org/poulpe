@@ -10,5 +10,5 @@
   <button id="moderatorButton" label="Moderators" />
   <button id="addBranchButton" label="Add Branch" />
   <button id="delButton" label="Remove selected" />
-  <button id="permissionsButton" label="Branch Permissions" onClick="openPermissionsPage" />
+  <button id="permissionsButton" label="Branch Permissions" onClick="openPermissionsPage" disabled="true" />
 </zk>
