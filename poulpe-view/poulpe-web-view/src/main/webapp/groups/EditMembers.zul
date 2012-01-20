@@ -4,27 +4,26 @@
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window mode="modal" closable="true" border="normal" width="70%" title="Edit Members of groups"
+  <window mode="modal" closable="true" border="normal" width="70%" title="${labels.groups.edit_members.title}"
   apply="org.zkoss.bind.BindComposer" onClose="@command('cancel')" viewModel="@id('vm') @init(editGroupMembersVM)">
     <vbox>
-      <hbox>
-        <label value="Members of group: " />
+      <hbox style="padding-bottom: 10px">
+        <label value="${lables.groups.edit_members.group_caption}" />
         <label value="@load(vm.groupToEdit.name)" />
       </hbox>
       <hbox>
         <vbox>
-          <panel title="Available users" border="normal">
+          <panel title="${lables.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <label value="Search:" />
-                <textbox value="@bind(vm.availSearch)" />
-                <button label="Search" onClick="@command('searchAvail')" />
+                <textbox value="@bind(vm.filterAvail)" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')" />
               </hbox>
-              <listbox model="@load(vm.availUsers)" selectedItem="@bind(vm.availSelected)" height="240px">
+              <listbox model="@load(vm.avail)" selectedItem="@bind(vm.availSelected)" height="240px">
                 <listhead>
-                  <listheader label="Name" sclass="boldstyle" />
-                  <listheader label="Nickname" />
-                  <listheader label="Posts" />
+                  <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
+                  <listheader label="${labels.groups.edit_members.full_name}" />
+                  <listheader label="${labels.groups.edit_members.email}" />
                 </listhead>
                 <template name="model" var="user">
                   <listitem>
@@ -33,7 +32,7 @@
                       <label value="@load(user.firstName)" />
                       <label value="@load(user.lastName)" />
                     </listcell>
-                    <listcell label="?" />
+                    <listcell label="@load(user.email)" />
                   </listitem>
                 </template>
               </listbox>
@@ -41,24 +40,23 @@
           </panel>
         </vbox>
          <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons">
-           <image onClick="@command('add', direction='toExist')" src="/resources/img/rightarrow.png" />
-           <image onClick="@command('addAll', direction='toExist')" src="/resources/img/rightrightarrow.png" />
-           <image onClick="@command('add', direction='toAvail')" src="/resources/img/leftarrow.png" />
-           <image onClick="@command('addAll', direction='toAvail')" src="/resources/img/leftleftarrow.png" />
+           <image onClick="@command('add')" src="/resources/img/rightarrow.png" />
+           <image onClick="@command('addAll')" src="/resources/img/rightrightarrow.png" />
+           <image onClick="@command('remove')" src="/resources/img/leftarrow.png" />
+           <image onClick="@command('removeAll')" src="/resources/img/leftleftarrow.png" />
          </vbox>
         <vbox>
-          <panel title="Users already in the group" border="normal">
+          <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <label value="Search:" />
-                <textbox value="@bind(vm.existSearch)" />
-                <button label="Search" onClick="@command('searchExist')" />
+                <textbox value="@bind(vm.filterExist)" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')" />
               </hbox>
-              <listbox model="@load(vm.existUsers)" selectedItem="@bind(vm.existSelected)" height="240px">
+              <listbox model="@load(vm.exist)" selectedItem="@bind(vm.existSelected)" height="240px">
                 <listhead>
-                  <listheader label="Name" sclass="boldstyle" />
-                  <listheader label="Nickname" />
-                  <listheader label="Posts" />
+                  <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
+                  <listheader label="${labels.groups.edit_members.full_name}" />
+                  <listheader label="${labels.groups.edit_members.email}" />
                 </listhead>
                 <template name="model" var="user">
                   <listitem>
@@ -67,7 +65,7 @@
                       <label value="@load(user.firstName)" />
                       <label value="@load(user.lastName)" />
                     </listcell>
-                    <listcell label="?" />
+                    <listcell label="@load(user.email)" />
                   </listitem>
                 </template>
               </listbox>
@@ -76,8 +74,8 @@
         </vbox>
       </hbox>
       <hbox align="center" pack="center" height="30px">
-        <button label="Save" onClick="@command('save')" />
-        <button label="Cancel" onClick="@command('cancel')" />
+        <button label="${labels.window.save}" onClick="@command('save')" />
+        <button label="${labels.window.cancel}" onClick="@command('cancel')" />
       </hbox>
     </vbox>
   </window>
