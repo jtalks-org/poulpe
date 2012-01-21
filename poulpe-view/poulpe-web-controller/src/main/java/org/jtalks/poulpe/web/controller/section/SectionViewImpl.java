@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -49,28 +50,20 @@ public class SectionViewImpl extends Window implements AfterCompose {
     private Window editSectionDialog;
     private Textbox editSectionDialog$sectionName;
     private Textbox editSectionDialog$sectionDescription;
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
     
     
-    public void validationFailure(ValidationResult result, boolean isNewSection) {
-        Textbox textbox = getTextbox(isNewSection);
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", textbox);
-        
-        for (ValidationError error : result.getErrors()) {
-            String fieldName = error.getFieldName();
-            if (comps.containsKey(fieldName)) {
-                String message = Labels.getLabel(error.getErrorMessageCode());
-
-                InputElement ie = comps.get(fieldName);
-                ie.setErrorMessage(message);
-            }
-        }
+    public void validationFailure(ValidationResult result, boolean isNewSection) {        
+		handler.validationFailure(result, "name", getTextbox(isNewSection));
     }
     
     private Textbox getTextbox(boolean isNewSection) {
-        if (isNewSection)
+        if (isNewSection) {
             return newSectionDialog$sectionName;
-        else
+        }
+        else {
             return editSectionDialog$sectionName;
+        }
     }
 
     /**

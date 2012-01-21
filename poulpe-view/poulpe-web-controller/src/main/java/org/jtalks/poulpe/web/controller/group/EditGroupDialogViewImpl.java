@@ -19,6 +19,7 @@ import java.util.Map;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
@@ -49,20 +50,11 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
     private Button confirmButton;
     private Button rejectButton;
     private Combobox sectionList;
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
     
     @Override
     public void validationFailure(ValidationResult result) {
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", groupName);
-        
-        for (ValidationError error : result.getErrors()) {
-            String fieldName = error.getFieldName();
-            if (comps.containsKey(fieldName)) {
-                String message = Labels.getLabel(error.getErrorMessageCode());
-
-                InputElement ie = comps.get(fieldName);
-                ie.setErrorMessage(message);
-            }
-        }
+       handler.validationFailure(result, "name", groupName);
     }
 
     /**

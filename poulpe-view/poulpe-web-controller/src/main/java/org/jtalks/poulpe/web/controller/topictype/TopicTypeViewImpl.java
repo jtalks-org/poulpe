@@ -18,6 +18,7 @@ import java.util.Map;
 
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
@@ -39,20 +40,11 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView {
     private Textbox descriptionTextbox;
     private Button editButton;
     private Button createButton;
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
 
     @Override
     public void validationFailure(ValidationResult result) {
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("title", titleTextbox);
-        
-        for (ValidationError error : result.getErrors()) {
-            String fieldName = error.getFieldName();
-            if (comps.containsKey(fieldName)) {
-                String message = Labels.getLabel(error.getErrorMessageCode());
-
-                InputElement ie = comps.get(fieldName);
-                ie.setErrorMessage(message);
-            }
-        }
+        handler.validationFailure(result, "title", titleTextbox);
     }
     
     

@@ -22,6 +22,7 @@ import org.jtalks.poulpe.service.RankService;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
@@ -48,6 +49,7 @@ public class RankManagementVM implements DialogManager.Performable {
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
 
     /**
      * Construct the object with injected service.
@@ -145,17 +147,7 @@ public class RankManagementVM implements DialogManager.Performable {
     }
 
     private void validationFailure(ValidationResult result) {
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", rankName);
-
-        for (ValidationError error : result.getErrors()) {
-            String fieldName = error.getFieldName();
-            if (comps.containsKey(fieldName)) {
-                String message = Labels.getLabel(error.getErrorMessageCode());
-
-                InputElement ie = comps.get(fieldName);
-                ie.setErrorMessage(message);
-            }
-        }
+        handler.validationFailure(result, "name", rankName);
     }
 
     /**

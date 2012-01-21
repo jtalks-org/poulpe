@@ -87,7 +87,6 @@ public class BranchPresenter {
         return saveBranch(branch);
     }
 
-    //TODO: This method should be reworked or removed. It was added for testing purposes
     protected boolean saveBranch(Branch branch) {
         if (validate(branch)) {
             Section section = branch.getSection();

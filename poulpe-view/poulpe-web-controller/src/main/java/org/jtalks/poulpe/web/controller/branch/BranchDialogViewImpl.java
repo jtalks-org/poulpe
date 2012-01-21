@@ -21,6 +21,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
@@ -55,6 +56,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Button rejectButton;
     private Branch branch;
     private Combobox sectionList;
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
 
     /**
      * set default section in combobox for select section when branch will be
@@ -248,17 +250,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     
     @Override
     public void validationFailure(ValidationResult result) {
-        Map<String, ? extends InputElement> comps = ImmutableMap.of("name", branchName);
-        
-        for (ValidationError error : result.getErrors()) {
-            String fieldName = error.getFieldName();
-            if (comps.containsKey(fieldName)) {
-                String message = Labels.getLabel(error.getErrorMessageCode());
-
-                InputElement ie = comps.get(fieldName);
-                ie.setErrorMessage(message);
-            }
-        }
+        handler.validationFailure(result, "name", branchName);
     }
 
 }
