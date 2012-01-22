@@ -37,7 +37,7 @@ import org.testng.annotations.Test;
 public class TransactionalComponentServiceTest {
 
     private ComponentDao componentDao;
-    private TransactionalComponentService conponentService;
+    private TransactionalComponentService componentService;
     private EntityValidator validator;
 
     Component component = new Component();
@@ -46,35 +46,45 @@ public class TransactionalComponentServiceTest {
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
         validator = mock(EntityValidator.class);
-        conponentService = new TransactionalComponentService(componentDao, validator);
+        componentService = new TransactionalComponentService(componentDao, validator);
+    }
+
+    @Test
+    public void testSaveComponent() {
+        Component component = new Component();
+        
+        componentService.saveComponent(component);
+        
+        verify(validator).throwOnValidationFailure(component);
+        verify(componentDao).saveOrUpdate(component);
     }
 
     @Test
     public void testGetAll() {
-        conponentService.getAll();
+        componentService.getAll();
         verify(componentDao).getAll();
     }
 
     @Test(expectedExceptions = ValidationException.class)
     public void testSaveComponentException() {
         givenConstraintsViolations();
-        conponentService.saveComponent(component);
+        componentService.saveComponent(component);
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> empty = Collections.<ValidationError>emptySet();
+        Set<ValidationError> empty = Collections.<ValidationError> emptySet();
         doThrow(new ValidationException(empty)).when(validator).throwOnValidationFailure(any(Component.class));
     }
 
     @Test
     public void testDeleteComponent() {
-        conponentService.deleteComponent(component);
+        componentService.deleteComponent(component);
         verify(componentDao).delete(component.getId());
     }
 
     @Test
     void testGetAvailableTypes() {
-        conponentService.getAvailableTypes();
+        componentService.getAvailableTypes();
         verify(componentDao).getAvailableTypes();
     }
 }
