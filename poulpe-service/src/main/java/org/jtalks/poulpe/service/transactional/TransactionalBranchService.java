@@ -20,8 +20,6 @@ import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.validation.EntityValidator;
 
@@ -39,7 +37,8 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
     /**
      * Create an instance of entity based service
      */
-    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager, EntityValidator validator) {
+    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager,
+            EntityValidator validator) {
         this.dao = branchDao;
         this.branchPermissionManager = branchPermissionManager;
         this.validator = validator;
@@ -92,12 +91,12 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
     }
 
     @Override
-    public void changeGrants(Branch branch, BranchAccessChanges changes){
+    public void changeGrants(Branch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeGrants(branch, changes);
     }
 
     @Override
-    public void changeRestrictions(Branch branch, BranchAccessChanges changes){
+    public void changeRestrictions(Branch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeRestrictions(branch, changes);
     }
 
