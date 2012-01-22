@@ -17,6 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayList;
+import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -29,7 +31,7 @@ public class SectionTest {
     public void setUp() {
         section = ObjectsFactory.createSection();
     }
-    
+
     @Test
     public void testAddBranch() {
         section.addOrUpdateBranch(branch);
@@ -37,10 +39,37 @@ public class SectionTest {
     }
     
     @Test
-    public void testDeleteBranch(){
+    public void testForCoverageSimleAccessors(){
+        section = new Section();
+        section = new Section("Name", "Description");
+        section.setName(section.getName());
+        section.setDescription(section.getDescription());
+        section.setPosition(section.getPosition());
+        
+    }
+
+    @Test
+    public void testAddOrUpdateBranch() {
+        ArrayList<Branch> branches = new ArrayList<Branch>();
+        Branch branch = new Branch("some branch");
+        branch.setId(15L);
+        for (int i = 0; i < 10; i++) {
+            branches.add(new Branch(RandomStringUtils.random(10)));
+        }
+        branches.add(branch);
+        section.setBranches(branches);
+        branch.setName("new name");
+
+        section.addOrUpdateBranch(branch);
+
+        assertEquals(11, section.getBranches().size());
+    }
+
+    @Test
+    public void testDeleteBranch() {
         section.addOrUpdateBranch(branch);
         section.deleteBranch(branch);
-        
+
         assertTrue(section.getBranches().isEmpty());
     }
 }
