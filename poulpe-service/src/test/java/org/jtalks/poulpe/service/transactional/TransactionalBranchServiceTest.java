@@ -14,16 +14,25 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.logic.BranchPermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationException;
@@ -32,17 +41,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.naming.spi.ObjectFactory;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 /**
  * This test class is intended to test all topic-related forum branch facilities
