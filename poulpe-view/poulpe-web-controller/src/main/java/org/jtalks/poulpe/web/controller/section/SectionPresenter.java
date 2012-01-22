@@ -380,4 +380,13 @@ public class SectionPresenter {
         }
     }
 
+    /**
+     * Save section
+     * 
+     * @param section
+     *            the section to save
+     */
+    public void saveSection(Section section) {
+        sectionService.saveSection(section);
+    }
 }

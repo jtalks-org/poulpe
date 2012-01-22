@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -77,7 +78,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
         DefaultTreeModel<Section> model = new DefaultTreeModel<Section>(root);
         sectionTree.setModel(model);
-        sectionTree.setItemRenderer(new SectionBranchTreeitemRendere());
+        sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer());
     }
 
     /**
@@ -179,18 +180,36 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
 
     }
 
-    public class SectionBranchTreeitemRendere implements TreeitemRenderer {
+    public class SectionBranchTreeitemRenderer implements TreeitemRenderer {
         
         /**
          * Listener for Drag'n'Drop event.
          */
-        EventListener<Event> listener = new GenericEventListener<Event>() {
+        private EventListener<Event> listener = new GenericEventListener<Event>() {
+
+            private static final long serialVersionUID = 1L;
 
             @Override
             public void onEvent(Event evt) throws Exception {
                 DropEvent dropevent = (DropEvent) evt;
-                Component dragged = dropevent.getDragged().getParent();
-                Component target = dropevent.getTarget().getParent();
+                Treeitem dragged = (Treeitem) dropevent.getDragged().getParent();
+                Treeitem target = (Treeitem) dropevent.getTarget().getParent();
+
+                int draggedIndex = dragged.getIndex();
+                int targetIndex = target.getIndex();
+                if ((targetIndex-1) == draggedIndex) {
+                    return;
+                } else if (targetIndex > draggedIndex) {
+                    targetIndex--;
+                }
+
+                Section section = dragged.getParentItem().getValue();
+                List<Branch> branches = section.getBranches();
+
+                branches.remove(draggedIndex);
+                branches.add(targetIndex, (Branch) dragged.getValue());
+                presenter.saveSection(section);
+
                 target.getParent().insertBefore(dragged, target);
             }
         };
