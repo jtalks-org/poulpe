@@ -22,6 +22,7 @@ import java.util.Collection;
 
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -66,6 +67,41 @@ public class TransactionalUserServiceTest {
         userService.setTemporaryBanStatus(null, 1, BAN_REASON);
     }
 
+    @Test
+    public void testGetAll() {
+        userService.getAll();
+
+        verify(userDao).getAll();
+    }
+
+    @Test
+    public void testGetUsersByUsernameWord() {
+        String word = "word";
+
+        userService.getUsersByUsernameWord(word);
+
+        verify(userDao).getByUsernamePart(word);
+    }
+    
+    @Test
+    public void testUpdateUser() {
+        User user = new User("username", "email", "password", "salt");
+        
+        userService.updateUser(user);
+        
+        verify(userDao).update(user);
+    }
+    
+    @Test
+    public void testUpdateLastLoginTime() {
+        User user = mock(User.class);
+        
+        userService.updateLastLoginTime(user);
+        
+        verify(user).updateLastLoginTime();
+        verify(userDao).update(user);
+    }
+
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetTemporaryBanStatusIllegalArgument() {
         userService.setTemporaryBanStatus(users, -1, BAN_REASON);
@@ -103,8 +139,7 @@ public class TransactionalUserServiceTest {
      * Creates and return the {@link User} entity with default username, email
      * and password, etc.
      * 
-     * @param username
-     *            username
+     * @param username username
      * @return the user entity
      */
     private User getUser(String username) {
