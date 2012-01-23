@@ -18,7 +18,7 @@
 
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
-    <class name="Property" table="PROPERTY">
+    <class name="Property" table="PROPERTIES">
         <id column="PROPERTY_ID" name="id" unsaved-value="0">
             <generator class="native" />
         </id>
