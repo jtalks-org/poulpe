@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.zkoss.zk.ui.Component;
 

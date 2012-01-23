@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
 import org.jtalks.poulpe.validation.annotations.UniqueField;
 

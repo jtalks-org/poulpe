@@ -23,8 +23,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -47,7 +48,7 @@ public class EditGroupMembersVM {
     /**
      * Used by utility methods for determine how many entry's we need to process
      */
-    // TODO: replace it Enum values, to prevent invalid use
+    // TODO: replace it by Enum values
     private static final String ALL = "all";
     private static final String ONE = "one";
 
@@ -61,9 +62,8 @@ public class EditGroupMembersVM {
     private Group groupToEdit;
 
     /**
-     * Lists represents state of group members before and after editing
+     * Lists represents state of group members after editing
      */
-    private List<User> usersInGroupBeforeEdit;
     private List<User> usersInGroupAfterEdit;
 
     private String filterAvail;
@@ -80,15 +80,17 @@ public class EditGroupMembersVM {
      * @param groupService the group service instance
      * @param userService the user service instance
      * @param windowManager the window manager instance
+     * @throws NotFoundException 
      */
     public EditGroupMembersVM(@Nonnull GroupService groupService, @Nonnull UserService userService,
-            @Nonnull WindowManager windowManager) {
+            @Nonnull WindowManager windowManager) throws NotFoundException {
         this.groupService = groupService;
         this.userService = userService;
         this.windowManager = windowManager;
 
         groupToEdit = (Group) Executions.getCurrent().getDesktop().getAttribute("groupToEdit");
-        usersInGroupBeforeEdit = usersInGroupAfterEdit = userService.getAll();
+        groupToEdit = groupService.get(groupToEdit.getId());
+        usersInGroupAfterEdit = groupToEdit.getUsers();
         filterAvail = filterExist = "";
 
         updateView();
@@ -264,10 +266,8 @@ public class EditGroupMembersVM {
     @Command
     @NotifyChange
     public void save() {
-        setGroupToUsers(usersInGroupAfterEdit, groupToEdit);
-        usersInGroupBeforeEdit.removeAll(usersInGroupAfterEdit);
-        // setGroupToUsers(usersInGroupBeforeEdit,
-        // groupService.getDefaultGroup());
+        groupToEdit.setUsers(usersInGroupAfterEdit);
+        groupService.saveGroup(groupToEdit);
         switchToGroupWindow();
     }
 
@@ -316,6 +316,7 @@ public class EditGroupMembersVM {
      * Closes currently opened window and opens window with group list.
      */
     private void switchToGroupWindow() {
+        Executions.getCurrent().getDesktop().removeAttribute("groupToEdit");
         Component workAreaComponent = (Component) Executions.getCurrent().getDesktop()
                 .getAttribute("workAreaComponent");
         windowManager.open("groups.zul", workAreaComponent);
@@ -336,21 +337,8 @@ public class EditGroupMembersVM {
         } else if (ALL.equals(quantity)) {
             return allSelected;
         }
-        LoggerFactory.getLogger(EditGroupMembersVM.class).warn("Invalid value of parametr 'quantity': " + quantity);
+        LoggerFactory.getLogger(EditGroupMembersVM.class).warn("Invalid value of parametr 'quantity': '{}'", quantity);
         return null;
-    }
-
-    /**
-     * Sets group to users.
-     *
-     * @param users the list of users that would be setted group
-     * @param group the group to set
-     */
-    private void setGroupToUsers(List<User> users, Group group) {
-        for (User user : users) {
-            // user.setGroup(group);
-            // userService.updateUser(user);
-        }
     }
 
 }

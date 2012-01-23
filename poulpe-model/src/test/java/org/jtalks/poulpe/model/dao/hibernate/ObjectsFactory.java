@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.util.Random;
 import java.util.UUID;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -30,6 +30,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
 /**
  * @author Kirill Afonin
  * @author Alexey Grigorev
+ *
  */
 public final class ObjectsFactory {
 

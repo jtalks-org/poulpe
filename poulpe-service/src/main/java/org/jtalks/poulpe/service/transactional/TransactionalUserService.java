@@ -18,16 +18,20 @@ import java.util.Collection;
 import java.util.List;
 
 import org.joda.time.DateTime;
-import org.jtalks.common.model.dao.UserDao;
-import org.jtalks.common.model.entity.User;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User}
  * persistent entity.
- * 
+ *
  * @author Guram Savinov
+ * @author Vyacheslav Zhivaev
+ *
  */
 public class TransactionalUserService extends AbstractTransactionalEntityService<User, UserDao> implements UserService {
 
@@ -95,8 +99,9 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
     }
 
     @Override
-    public void updateLastLoginTime(User user) {
+    public void updateLastLoginTime(org.jtalks.common.model.entity.User user) {
         user.updateLastLoginTime();
-        updateUser(user);
+        updateUser((User) user);
     }
+
 }

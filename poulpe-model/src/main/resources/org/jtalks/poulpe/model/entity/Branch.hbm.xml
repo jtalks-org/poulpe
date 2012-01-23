@@ -32,7 +32,7 @@
     <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
       <cache usage="nonstrict-read-write" />
       <key column="BRANCH_ID" foreign-key="FK_BRANCH" />
-      <many-to-many class="org.jtalks.common.model.entity.User" column="USER_ID" />
+      <many-to-many class="User" column="USER_ID" />
     </bag>
   </class>
 </hibernate-mapping>

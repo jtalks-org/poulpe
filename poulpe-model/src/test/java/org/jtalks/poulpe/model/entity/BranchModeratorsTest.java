@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.entity;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

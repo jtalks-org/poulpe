@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.users;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 
 /**
  * View to display a list of

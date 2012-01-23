@@ -35,7 +35,7 @@
   <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao" parent="abstractHibernateDao" />
   <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao" parent="abstractHibernateDao" />
   <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao" parent="abstractHibernateDao" />
-  <bean id="userDao" class="org.jtalks.common.model.dao.hibernate.UserHibernateDao" parent="abstractHibernateDao" />
+  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao" parent="abstractHibernateDao" />
   <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="abstractHibernateDao" />
   <bean id="rankDao" class="org.jtalks.poulpe.model.dao.hibernate.RankHibernateDao" parent="abstractHibernateDao" />
   
@@ -63,7 +63,7 @@
         <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Group.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Rank.hbm.xml</value>
-        <value>/org/jtalks/common/model/entity/User.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/User.hbm.xml</value>
 		<value>/org/jtalks/poulpe/model/entity/Property.hbm.xml</value>
       </list>
     </property>

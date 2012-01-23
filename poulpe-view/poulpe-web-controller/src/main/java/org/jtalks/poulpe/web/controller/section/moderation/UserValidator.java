@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section.moderation;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validator.AbstractValidator;

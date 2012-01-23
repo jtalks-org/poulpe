@@ -42,7 +42,7 @@
       <constructor-arg index="0" ref="componentService"/>
   </bean>
 
-  <bean id="editGroupMembersVM" scope="desktop" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM">
+  <bean id="editGroupMembersVM" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM">
     <constructor-arg index="0" ref="groupService" />
     <constructor-arg index="1" ref="userService" />
     <constructor-arg index="2" ref="windowManager" />

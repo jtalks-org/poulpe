@@ -16,9 +16,9 @@ package org.jtalks.common.security;
 
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.common.model.dao.UserDao;
+import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;

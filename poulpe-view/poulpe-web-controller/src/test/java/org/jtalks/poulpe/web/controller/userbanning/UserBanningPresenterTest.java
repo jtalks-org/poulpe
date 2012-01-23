@@ -24,7 +24,7 @@ import static org.mockito.Mockito.verify;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.userbanning.UserBanningPresenter.BanningDialog;

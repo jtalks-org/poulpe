@@ -24,5 +24,12 @@
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
+    <bag name="users" table="GROUP_USER_REF" inverse="false" lazy="true" fetch="select" cascade="all">
+      <cache usage="nonstrict-read-write" />
+      <key column="GROUP_ID" not-null="true" />
+      <many-to-many class="User">
+        <column name="USER_ID" not-null="true" />
+      </many-to-many>
+    </bag>
   </class>
 </hibernate-mapping>

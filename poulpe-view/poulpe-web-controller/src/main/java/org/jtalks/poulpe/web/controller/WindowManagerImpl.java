@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;

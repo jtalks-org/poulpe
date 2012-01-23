@@ -14,24 +14,26 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
+
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
 import org.jtalks.poulpe.validation.annotations.UniqueField;
 
-import javax.annotation.Nonnull;
-import javax.validation.constraints.NotNull;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-
 /**
  * User Groups is the class that can join users into groups. After that permissions can be assigned to the groups and
  * all users in this group will have that permission while browsing components.
  *
  * @author Akimov Knostantin
+ * @author Vyacheslav Zhivaev
+ *
  */
 @UniqueConstraint
 public class Group extends Entity {
@@ -39,23 +41,24 @@ public class Group extends Entity {
      * Error message if group already exists
      */
     public static final String GROUP_ALREADY_EXISTS = "groups.validation.not_unique_group_name";
-    
+
     /**
      * Error message if group name is void
      */
     public static final String GROUP_CANT_BE_VOID = "groups.error.group_name_cant_be_void";
-    
+
     /**
      * Error message if section name is wrong
      */
     public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
-    
+
     @UniqueField(message = GROUP_ALREADY_EXISTS)
     @NotNull(message = GROUP_CANT_BE_VOID)
     @NotEmpty(message = GROUP_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
     private String description;
+    private List<User> users = new ArrayList<User>();
 
     public Group() {
     }
@@ -108,6 +111,24 @@ public class Group extends Entity {
      */
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    /**
+     * Gets list of users assigned to this group.
+     *
+     * @return the list of users in this group
+     */
+    public List<User> getUsers() {
+        return users;
+    }
+
+    /**
+     * Sets list of users assigned to this group.
+     *
+     * @param users the list of users in this group
+     */
+    public void setUsers(List<User> users) {
+        this.users = users;
     }
 
     /**

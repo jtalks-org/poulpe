@@ -20,8 +20,8 @@ import static org.testng.AssertJUnit.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.jtalks.common.model.dao.UserDao;
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
