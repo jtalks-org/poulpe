@@ -15,9 +15,9 @@
 			</listhead>
 			<listfoot>
 				<listfooter>
-					<button label="Add" forward="onClick=onAddAction" />
+					<button label="Add" forward="onClick=onAddAction" sclass="topic.type.list.addButton" />
 					<button label="Remove"
-						forward="onClick=onDeleteAction" />
+						forward="onClick=onDeleteAction" sclass="topic.type.list.removeButton" />
 				</listfooter>
 			</listfoot>
 		</listbox>

@@ -17,7 +17,7 @@
             <panelchildren>
               <hbox align="center" style="margin: 10px">
                 <textbox value="@bind(vm.filterAvail)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')" sclass="edit.members.searchAvailButton" />
               </hbox>
               <listbox model="@load(vm.avail)" selectedItem="@bind(vm.availSelected)" height="240px">
                 <listhead>
@@ -50,7 +50,7 @@
             <panelchildren>
               <hbox align="center" style="margin: 10px">
                 <textbox value="@bind(vm.filterExist)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')" sclass="edit.members.searchExistButton" />
               </hbox>
               <listbox model="@load(vm.exist)" selectedItem="@bind(vm.existSelected)" height="240px">
                 <listhead>
@@ -74,8 +74,8 @@
         </vbox>
       </hbox>
       <hbox align="center" pack="center" height="30px">
-        <button label="${labels.window.save}" onClick="@command('save')" />
-        <button label="${labels.window.cancel}" onClick="@command('cancel')" />
+        <button label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton" />
+        <button label="${labels.window.cancel}" onClick="@command('cancel')" sclass="edit.members.cancelButton" />
       </hbox>
     </vbox>
   </window>

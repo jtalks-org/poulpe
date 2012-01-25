@@ -29,8 +29,8 @@
       </rows>
     </grid>
     <hbox align="end">
-      <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" />
-      <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" />
+      <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" sclass="edit.user.saveButton" />
+      <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" sclass="edit.user.cancelButton" />
     </hbox>
   </window>
 </zk>

@@ -16,9 +16,9 @@
         </listhead>
       </listbox>
       <div>
-        <button id="addCompButton" label="${labels.componentlist.add}" />
-        <button id="delCompButton" label="${labels.componentlist.delete}" />
-		<button id="confCompButton" label="${labels.componentlist.configure}" />
+        <button id="addCompButton" label="${labels.componentlist.add}" sclass="components.addCompButton" />
+        <button id="delCompButton" label="${labels.componentlist.delete}" sclass="components.delCompButton" />
+		<button id="confCompButton" label="${labels.componentlist.configure}" sclass="components.confCompButton" />
       </div>
     </vlayout>
   </window>

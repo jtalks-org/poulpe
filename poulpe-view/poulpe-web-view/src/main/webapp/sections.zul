@@ -6,7 +6,7 @@
   <window title="Sections" presenter="${sectionPresenter}" use="org.jtalks.poulpe.web.controller.section.SectionViewImpl"
     id="mainWindow">
 
-    <button id="addSectionButton" label="+" />
+    <button id="addSectionButton" label="+" sclass="sections.addSectionButton" />
 
     <!-- "New Section dialog" -->
     <window title="${labels.sections.newsectiondialog.title}" id="newSectionDialog" border="normal" visible="false"
@@ -21,8 +21,8 @@
           <textbox id="sectionDescription" />
         </hbox>
         <hbox>
-          <button id="addButton" label="${labels.sections.button.add}" />
-          <button id="closeButton" label="${labels.sections.button.cancel}" />
+          <button id="addButton" label="${labels.sections.button.add}" sclass="sections.addButton" />
+          <button id="closeButton" label="${labels.sections.button.cancel}" sclass="sections.closeButton" />
         </hbox>
       </vbox>
     </window>
@@ -40,8 +40,8 @@
           <textbox id="sectionDescription" width="200px" />
         </hbox>
         <hbox>
-          <button id="editButton" label="${labels.sections.button.edit}" />
-          <button id="closeButton" label="${labels.sections.button.cancel}" />
+          <button id="editButton" label="${labels.sections.button.edit}" sclass="sections.editButton" />
+          <button id="closeButton" label="${labels.sections.button.cancel}" sclass="sections.closeButton" />
         </hbox>
       </vbox>
     </window>

@@ -8,7 +8,7 @@
     :
     <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
 
-    <button label="${labels.users.label.button.search}" forward="onClick=onSearchAction" />
+    <button label="${labels.users.label.button.search}" forward="onClick=onSearchAction" sclass="users.searchButton" />
 
     <listbox sizedByContent="true" id="usersListbox" mold="paging" pageSize="20">
       <listhead>

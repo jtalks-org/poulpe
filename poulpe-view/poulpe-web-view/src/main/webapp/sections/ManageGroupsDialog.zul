@@ -28,6 +28,6 @@
         </template>
       </listbox>
     </hlayout>
-    <button onClick="@command('saveDialogState')" label="Save"/>
+    <button onClick="@command('saveDialogState')" label="Save" sclass="manage.groups.saveButton" />
   </window>
 </zk>

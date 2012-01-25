@@ -5,7 +5,7 @@
   <vbox>
     <hbox>
       <combobox id="userCombobox" autodrop="true" buttonVisible="false" />
-      <button id="addButton" label="${labels.moderationdialog.add}" />
+      <button id="addButton" label="${labels.moderationdialog.add}" sclass="moderator.addButton" />
     </hbox>
     <listbox id="users">
       <listhead sizable="true">
@@ -16,9 +16,9 @@
       </listhead>
     </listbox>
     <hbox>
-      <button id="deleteButton" label="${labels.sections.button.delete}" />
-      <button id="confirmButton" label="${labels.sections.button.ok}" />
-      <button id="rejectButton" label="${labels.sections.button.cancel}" />
+      <button id="deleteButton" label="${labels.sections.button.delete}" sclass="moderator.deleteButton" />
+      <button id="confirmButton" label="${labels.sections.button.ok}" sclass="moderator.confirmButton" />
+      <button id="rejectButton" label="${labels.sections.button.cancel}" sclass="moderator.rejectButton" />
     </hbox>
   </vbox>
 </window>

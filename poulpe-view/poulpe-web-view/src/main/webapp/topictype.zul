@@ -24,13 +24,13 @@
     
     <hbox align="end">
       <cell>
-        <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" />
+        <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" sclass="topic.type.editButton" />
       </cell>
       <cell>
-        <button id="createButton" label="${labels.item.save}" forward="onClick=onCreateAction" />
+        <button id="createButton" label="${labels.item.save}" forward="onClick=onCreateAction" sclass="topic.type.createButton" />
       </cell>
       <cell>
-        <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" />
+        <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" sclass="topic.type.cancelButton" />
       </cell>
     </hbox>
   </window>

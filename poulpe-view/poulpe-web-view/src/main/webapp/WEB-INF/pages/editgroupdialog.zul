@@ -12,8 +12,8 @@
       <textbox id="groupDescription" />
     </hbox>
     <hbox>
-      <button id="confirmButton" />
-      <button id="rejectButton" />
+      <button id="confirmButton" sclass="edit.group.confirmButton" />
+      <button id="rejectButton" sclass="edit.group.rejectButton" />
     </hbox>
   </vbox>
 </window>
