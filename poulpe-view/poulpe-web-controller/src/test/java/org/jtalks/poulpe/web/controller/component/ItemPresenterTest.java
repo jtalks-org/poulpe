@@ -1,17 +1,17 @@
 /**
- * Copyright (C) 2011  JTalks.org Team
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
+* Copyright (C) 2011  JTalks.org Team
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2.1 of the License, or (at your option) any later version.
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.poulpe.model.entity.Component;
@@ -36,11 +36,11 @@ import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
 /**
- * The test for {@link ItemPresenter} class
- * 
- * @author Dmitriy Sukharev
- * @author Alexey Grigorev
- */
+* The test for {@link ItemPresenter} class
+*
+* @author Dmitriy Sukharev
+* @author Alexey Grigorev
+*/
 public class ItemPresenterTest {
 
     private ItemPresenter presenter;
@@ -53,15 +53,15 @@ public class ItemPresenterTest {
 
     private EntityValidator entityValidator;
 
-    
+
     private ValidationResult resultWithErrors = resultWithErrors();
-    
+
     private ValidationResult resultWithErrors() {
         ValidationError error = new ValidationError("name", Component.NOT_UNIQUE_NAME);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }
-    
+
     @BeforeMethod
     public void setUp() {
         presenter = new ItemPresenter();
@@ -71,13 +71,13 @@ public class ItemPresenterTest {
 
         dialogManager = mock(DialogManager.class);
         presenter.setDialogManager(dialogManager);
-        
+
         entityValidator = mock(EntityValidator.class);
         presenter.setEntityValidator(entityValidator);
-        
+
         view = mock(ItemView.class);
         presenter.setView(view);
-        
+
         prepareComponents();
         prepareInput();
     }
@@ -87,7 +87,7 @@ public class ItemPresenterTest {
         component = components.get(0);
         int someRandomId = 12;
         component.setId(someRandomId);
-        
+
         when(componentService.getAll()).thenReturn(components);
     }
 
@@ -207,7 +207,7 @@ public class ItemPresenterTest {
     @Test
     public void checkComponentDiplicate() {
         presenter.edit(component);
-        
+
         givenConstraintViolations();
         presenter.checkComponent();
 

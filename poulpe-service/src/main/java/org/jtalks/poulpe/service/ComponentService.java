@@ -14,12 +14,12 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Service for some operations with {@link Component}.

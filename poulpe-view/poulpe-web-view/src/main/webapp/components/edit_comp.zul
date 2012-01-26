@@ -11,20 +11,28 @@
             <row>
                 ${labels.component.title}
                 <hlayout>
-                    <textbox width="100%" value="@bind(vm.name)" />
-                    <label value="@load(vm.validationMessages['name'])" sclass="red" />
+                    <textbox width="100%" value="@bind(vm.componentName)" />
+                    <label value="@load(vm.validationMessages['componentName'])" sclass="red" />
                 </hlayout>
             </row>
             <row>
                 ${labels.component.property.title}
                 <hlayout>
-                    <textbox width="100%" value="@bind(vm.title)" />
-                    <label value="@load(vm.validationMessages['title'])" sclass="red" />
+                    <textbox width="100%" value="@bind(vm.name)" maxlength="50" />
+                    <label value="@load(vm.validationMessages['name'])" sclass="red" />
                 </hlayout>
             </row>
             <row>
                 ${labels.component.description}
                 <textbox width="60%" value="@bind(vm.description)" />
+            </row>
+            <row visible="@load(not empty vm.caption)">
+                ${labels.component.property.caption}
+                <textbox width="60%" value="@bind(vm.caption)" maxlength="100" />
+            </row>
+            <row visible="@load(not empty vm.post_preview_size)">
+                ${labels.component.property.post_preview_size}
+                <textbox width="60%" value="@bind(vm.post_preview_size)" constraint="/[0-9]+/: Digits only!" />
             </row>
             <row>
                 <hlayout>

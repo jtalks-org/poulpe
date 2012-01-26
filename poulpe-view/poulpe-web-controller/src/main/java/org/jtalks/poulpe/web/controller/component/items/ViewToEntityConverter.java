@@ -46,7 +46,7 @@ class ViewToEntityConverter {
     public static Component view2Model(ItemDataView view) {
         Component component = new Component();
         component.setId(view.getComponentId());
-        return view2Model(view, component);
+        return  view2Model(view, component);
     }
 
     /**

@@ -1,11 +1,5 @@
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -14,6 +8,11 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
+
+import javax.annotation.Nonnull;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * ViewModel class for EditComponent View
@@ -34,9 +33,9 @@ public class EditCompViewModel extends AbstractComponentPresenter {
             (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
     /**
-     * The title of the component
+     * The name of the component
      */
-    private String title;
+    private String name;
 
     /**
      * The description of the component
@@ -46,12 +45,20 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * The name of the component
      */
-    private String name;
+    private String componentName;
 
     /**
      *  Type of the component
      */
     private String componentType;
+    /**
+     * The caption of the forum
+     */
+    private String caption;
+    /**
+     * The post preview size of the forum
+     */
+    private String post_preview_size;
 
     /**
      * Web-form validation messages
@@ -72,7 +79,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Inits the data on the form.
      */
-    @NotifyChange({ "name", "title", "description" })
+    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size" })
     public void initData() {
         currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
@@ -81,9 +88,11 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         } else {
             componentType = "antarcticle";
         }
-        name = valueOf(currentComponent.getName());
-        title = valueOf(currentComponent.getProperty(componentType + ".title"));
+        componentName = valueOf(currentComponent.getName());
+        name = valueOf(currentComponent.getProperty(componentType + ".name"));
         description = valueOf(currentComponent.getDescription());
+        caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
+        post_preview_size = valueOf(currentComponent.getProperty(componentType + ".post_preview_size"));
     }
 
     //    service functions
@@ -101,20 +110,22 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * something is wrong
      */
     @Command()
-    @NotifyChange({ "name", "title", "description", "validationMessages" })
+    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size" })
     public void save() {
         boolean correct = true;
         validationMessages.clear();
 
         if (checkCorrect()) {
-            currentComponent.setName(name);
+            currentComponent.setName(componentName);
             currentComponent.setDescription(description);
-            currentComponent.setProperty(componentType + ".title", title);
+            currentComponent.setProperty(componentType + ".name", name);
+            currentComponent.setProperty(componentType + ".caption", caption);
+            currentComponent.setProperty(componentType + ".post_preview_size", post_preview_size);
 
             try {
                 componentService.saveComponent(currentComponent);
             } catch (ValidationException e) {
-                validationMessages.put("name", Labels.getLabel(ITEM_ALREADY_EXISTS));
+                validationMessages.put("componentName", Labels.getLabel(ITEM_ALREADY_EXISTS));
                 correct = false;
             }
 
@@ -129,7 +140,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({ "name", "title", "description", "validationMessages" })
+    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size", "validationMessages" })
     public void cancel() {
         initData();
         validationMessages.clear();
@@ -157,13 +168,13 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     public boolean checkCorrect() {
         boolean correct = true;
 
-        if (title.equals("") || title == null) {
-            validationMessages.put("title", Labels.getLabel(EMPTY_TITLE));
+        if (name.equals("") || name == null) {
+            validationMessages.put("name", Labels.getLabel(EMPTY_TITLE));
             correct = false;
         }
 
-        if (name.equals("") || name == null) {
-            validationMessages.put("name", Labels.getLabel(EMPTY_NAME));
+        if (componentName.equals("") || componentName == null) {
+            validationMessages.put("componentName", Labels.getLabel(EMPTY_NAME));
             correct = false;
         }
 
@@ -174,18 +185,18 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     //    getters & setters for web-form
     /**
      * Returns the title for current component
-     * @return title value from web-form
+     * @return name value from web-form
      */
-    public String getTitle() {
-        return title;
+    public String getName() {
+        return name;
     }
 
     /**
      * Sets the title for the current component
-     * @param title title value to set
+     * @param name value to set
      */
-    public void setTitle(String title) {
-        this.title = title;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
@@ -206,18 +217,18 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns the name of the current component
-     * @return name value from web-form
+     * @return component name value from web-form
      */
-    public String getName() {
-        return name;
+    public String getComponentName() {
+        return componentName;
     }
 
     /**
      * Sets the name for current component
-     * @param name new value on web-form
+     * @param componentName new component name value on web-form
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
     }
 
     /**
@@ -243,6 +254,38 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      */
     public void setCurrentComponent(Component currentComponent) {
         this.currentComponent = currentComponent;
+    }
+
+    /**
+     * Returns caption from the web-form
+     * @return caption
+     */
+    public String getCaption() {
+        return caption;
+    }
+
+    /**
+     * Sets the current caption
+     * @param caption - to set on web-form
+     */
+    public void setCaption(String caption) {
+        this.caption = caption;
+    }
+
+    /**
+     * Returns post preview size from the web-form
+     * @return post preview size
+     */
+    public String getPost_preview_size() {
+        return post_preview_size;
+    }
+
+    /**
+     * Sets the current component we edit
+     * @param post_preview_size- to set on web-form
+     */
+    public void setPost_preview_size(String post_preview_size) {
+        this.post_preview_size = post_preview_size;
     }
 
 }

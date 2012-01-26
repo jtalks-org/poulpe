@@ -62,7 +62,7 @@ public class Component extends Entity {
      * @param componentType type of the component {@see ComponentType}
      */
     public Component(String name, String description, ComponentType componentType) {
-        this(name, description, componentType, new ArrayList());
+        this(name, description, componentType, componentType.loadDefaults());
     }
 
     /**
@@ -177,18 +177,13 @@ public class Component extends Entity {
      * @param value is the value of the property
      */
     public void setProperty(String name, String value) {
-        boolean set = false;
         for (Property p : properties) {
             if (p.getName().equals(name)) {
                 p.setValue(value);
-                set = true;
                 return;
             }
         }
-
-        if (!set) {
             addProperty(name, value);
-        }
     }
 
     /**

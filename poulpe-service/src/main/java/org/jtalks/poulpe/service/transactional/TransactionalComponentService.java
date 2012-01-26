@@ -14,15 +14,15 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.validation.EntityValidator;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Transactional implementation of {@link ComponentService}. Transactions are
@@ -67,6 +67,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
+
+        if (component.getId() == 0) {
+            component.setProperties(component.getComponentType().loadDefaults());
+        }
         dao.saveOrUpdate(component);
     }
     

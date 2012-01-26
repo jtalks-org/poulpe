@@ -133,7 +133,7 @@ public class UniqueConstraintValidatorIntegrationalTest extends AbstractTransact
     @Test
     public void validateWhenOnlyOneFieldIsSet() {
         Component forum = forum();
-        Component anotherForum = new Component(forum.getName(), "desc", null);
+        Component anotherForum = new Component(forum.getName(), "desc", ComponentType.ARTICLE);
 
         Set<ConstraintViolation<Component>> constraints = validator.validate(anotherForum);
 
