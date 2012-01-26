@@ -14,19 +14,25 @@
  */
 package org.jtalks.poulpe.logic;
 
-import org.aspectj.lang.annotation.Before;
+import com.google.common.collect.Lists;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.runners.MockitoJUnitRunner;
+import org.springframework.security.acls.model.Permission;
+import org.springframework.security.acls.model.Sid;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.when;
+import java.util.List;
+
+import static org.mockito.Mockito.verify;
 
 /**
  * @author stanislav bashkirtsev
@@ -39,17 +45,33 @@ public class BranchPermissionManagerTest {
     BranchPermissionManager manager;
 
     @BeforeMethod
-    public void initMocks(){
+    public void initMocks() {
         MockitoAnnotations.initMocks(this);
         manager = new BranchPermissionManager(aclManager, groupDao);
     }
+
+    @Test
+    public void testChangeGrants() throws Exception {
+        BranchAccessChanges accessChanges = new BranchAccessChanges(BranchPermission.CREATE_TOPICS);
+        accessChanges.setNewlyAddedGroups(Lists.newArrayList(new Group("new1"), new Group("new2")));
+        accessChanges.setRemovedGroups(Lists.newArrayList(new Group("removed1"), new Group("removed2")));
+
+        Branch branch = new Branch("test branch");
+        manager.changeGrants(branch, accessChanges);
+        List<? extends Sid> removedGroupSids = UserGroupSid.create(accessChanges.getRemovedPermissionsAsArray());
+        List<? extends Sid> grantedGroupSids = UserGroupSid.create(accessChanges.getNewlyAddedPermissionsAsArray());
+        verify(aclManager).delete(removedGroupSids, Lists.<Permission>newArrayList(accessChanges.getPermission()), branch);
+        verify(aclManager).grant(grantedGroupSids, Lists.<Permission>newArrayList(accessChanges.getPermission()),
+                branch);
+    }
+
     @Test
     public void testGetGroupAccessListFor() throws Exception {
 //        when(aclManager.getBranchPermissions(branch)).thenReturn()
     }
-    
+
     @DataProvider
-    public Object[][] provide(){
+    public Object[][] provide() {
         return new Object[][]{{new Branch()}};
     }
 }

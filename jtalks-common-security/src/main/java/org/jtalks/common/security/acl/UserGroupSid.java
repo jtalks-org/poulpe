@@ -19,6 +19,8 @@ import org.jtalks.poulpe.model.entity.Group;
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 /**
@@ -89,6 +91,21 @@ public class UserGroupSid implements IdentifiableSid {
     }
 
     /**
+     * Creates a list of sids from the specified list of groups.
+     *
+     * @param groups the array of groups that should be turned into the list of sids, might be empty
+     * @return the list of sids with the same size as it was specified
+     * @see #UserGroupSid(Group)
+     */
+    public static List<UserGroupSid> create(@Nonnull Group... groups) {
+        List<UserGroupSid> userGroupSids = new ArrayList<UserGroupSid>();
+        for (Group group : groups) {
+            userGroupSids.add(new UserGroupSid(group));
+        }
+        return userGroupSids;
+    }
+
+    /**
      * {@inheritDoc}
      */
     @Override
@@ -112,5 +129,13 @@ public class UserGroupSid implements IdentifiableSid {
     @Override
     public int hashCode() {
         return groupId.hashCode();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String toString() {
+        return getSidId();
     }
 }

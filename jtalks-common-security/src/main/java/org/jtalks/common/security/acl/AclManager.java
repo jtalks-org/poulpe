@@ -90,7 +90,7 @@ public class AclManager {
      * @param permissions list of permissions
      * @param target      secured object
      */
-    public void grant(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public void grant(List<? extends Sid> sids, List<Permission> permissions, Entity target) {
         MutableAcl acl = aclUtil.grant(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
@@ -114,7 +114,7 @@ public class AclManager {
      * @param permissions list of permissions
      * @param target      secured object
      */
-    public void delete(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public void delete(List<? extends Sid> sids, List<Permission> permissions, Entity target) {
         MutableAcl acl = aclUtil.delete(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }
