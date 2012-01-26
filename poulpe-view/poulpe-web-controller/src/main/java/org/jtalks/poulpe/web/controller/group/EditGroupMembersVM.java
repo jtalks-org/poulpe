@@ -29,7 +29,6 @@ import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
@@ -92,7 +91,7 @@ public class EditGroupMembersVM {
         this.userService = userService;
         this.groupToEdit = groupService.get(groupToEdit.getId());
 
-        usersInGroupAfterEdit = this.groupToEdit.getUsers();
+        usersInGroupAfterEdit = Lists.newLinkedList(this.groupToEdit.getUsers());
         filterAvail = "";
         filterExist = "";
 
@@ -209,7 +208,7 @@ public class EditGroupMembersVM {
     @Command
     @NotifyChange({ "avail", "availSelected" })
     public void searchAvail() {
-        avail = userService.getUsersByUsernameWord(getFilterAvail());
+        avail = Lists.newLinkedList(userService.getUsersByUsernameWord(getFilterAvail()));
         avail.removeAll(usersInGroupAfterEdit);
         setAvailSelected(null);
     }
@@ -303,7 +302,7 @@ public class EditGroupMembersVM {
      *            in otherwise - one selected item
      */
     private void processAdd(boolean useAll) {
-        List<User> usersForProcessing = getUsersForProcessing(availSelected, avail, useAll);
+        List<User> usersForProcessing = getUsersForProcessing(getAvailSelected(), getAvail(), useAll);
         usersInGroupAfterEdit.addAll(usersForProcessing);
     }
 
@@ -314,7 +313,7 @@ public class EditGroupMembersVM {
      *            in otherwise - one selected item
      */
     private void processRemove(boolean useAll) {
-        List<User> usersForProcessing = getUsersForProcessing(existSelected, exist, useAll);
+        List<User> usersForProcessing = getUsersForProcessing(getExistSelected(), getExist(), useAll);
         usersInGroupAfterEdit.removeAll(usersForProcessing);
     }
 
@@ -322,6 +321,7 @@ public class EditGroupMembersVM {
      * Closes currently opened window and opens window with group list.
      */
     private void switchToGroupWindow() {
+        // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
         windowManager.open("groups.zul");
     }
 

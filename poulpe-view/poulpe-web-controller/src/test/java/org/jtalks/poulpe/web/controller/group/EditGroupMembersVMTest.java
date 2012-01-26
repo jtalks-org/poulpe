@@ -30,7 +30,6 @@ import static org.testng.Assert.assertTrue;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.entity.User;
@@ -40,7 +39,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeTest;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -54,7 +53,10 @@ public class EditGroupMembersVMTest {
     // SUT
     private EditGroupMembersVM viewModel;
 
+    private List<User> usersAvailable;
+
     private Group groupToEdit;
+
     @Mock
     private GroupService groupService;
     @Mock
@@ -62,11 +64,14 @@ public class EditGroupMembersVMTest {
     @Mock
     private WindowManager windowManager;
 
-    @BeforeTest
+    @BeforeMethod
     public void setUp() throws NotFoundException {
         MockitoAnnotations.initMocks(this);
 
-        groupToEdit = createGroupWithUsers();
+        usersAvailable = ObjectCreator.getFakeUsers(50);
+        // we are assert, that half of users already in group
+        List<User> usersAlreadyInGroup = usersAvailable.subList(0, usersAvailable.size() / 2);
+        groupToEdit = createGroupWithUsers(usersAlreadyInGroup);
 
         givenGroupExistInPersistent();
         givenAvailableUsersExist();
@@ -79,9 +84,10 @@ public class EditGroupMembersVMTest {
     /**
      * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#add()}.
      */
-    // @Test
+    @Test
     public void testAdd() {
-        User selected = viewModel.getAvailSelected();
+        User selected = viewModel.getAvail().get(0);
+        viewModel.setAvailSelected(selected);
 
         viewModel.add();
 
@@ -105,9 +111,10 @@ public class EditGroupMembersVMTest {
     /**
      * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#remove()}.
      */
-    // @Test
+    @Test
     public void testRemove() {
-        User selected = viewModel.getExistSelected();
+        User selected = viewModel.getExist().get(0);
+        viewModel.setExistSelected(selected);
 
         viewModel.remove();
 
@@ -118,7 +125,7 @@ public class EditGroupMembersVMTest {
     /**
      * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#removeAll()}.
      */
-    // @Test
+    @Test
     public void testRemoveAll() {
         List<User> selected = viewModel.getExist();
 
@@ -163,14 +170,13 @@ public class EditGroupMembersVMTest {
     }
 
     private void givenAvailableUsersExist() {
-        when(userService.getUsersByUsernameWord(anyString())).thenReturn(
-                ObjectCreator.getFakeUsers(RandomUtils.nextInt(50)));
-        when(userService.getAll()).thenReturn(ObjectCreator.getFakeUsers(RandomUtils.nextInt(50)));
+        when(userService.getUsersByUsernameWord(anyString())).thenReturn(usersAvailable);
+        when(userService.getAll()).thenReturn(usersAvailable);
     }
 
-    private Group createGroupWithUsers() {
+    private Group createGroupWithUsers(List<User> usersInGroup) {
         Group group = new Group(RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20));
-        group.setUsers(ObjectCreator.getFakeUsers(RandomUtils.nextInt(50)));
+        group.setUsers(usersInGroup);
         return group;
     }
 
