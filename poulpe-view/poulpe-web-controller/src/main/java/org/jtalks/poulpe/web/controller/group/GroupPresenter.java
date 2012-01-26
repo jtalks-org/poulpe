@@ -22,7 +22,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.zk.ui.Executions;
 
 /**
- * 
+ *
  * @author Konstantin Akimov
  * @author Vyacheslav Zhivaev
  *
@@ -80,18 +80,16 @@ public class GroupPresenter {
         });
     }
 
-	public void editMembers(Group selectedGroup) {
-        org.zkoss.zk.ui.Component workArea = ((org.zkoss.zk.ui.Component) view).getParent();
-        Executions.getCurrent().getDesktop().setAttribute("workAreaComponent", workArea);
+    public void editMembers(Group selectedGroup) {
         Executions.getCurrent().getDesktop().setAttribute("groupToEdit", selectedGroup);
-		windowManager.open("groups/EditMembers.zul", workArea);
-	}
+        windowManager.open("groups/EditMembers.zul");
+    }
 
-	/**
-	 * @param windowManager the windowManager to set
-	 */
-	public void setWindowManager(WindowManager windowManager) {
-		this.windowManager = windowManager;
-	}
+    /**
+     * @param windowManager the windowManager to set
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
 
 }

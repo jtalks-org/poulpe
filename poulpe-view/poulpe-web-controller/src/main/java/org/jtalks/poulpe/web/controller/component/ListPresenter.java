@@ -95,13 +95,10 @@ public class ListPresenter extends AbstractComponentPresenter {
      * Shows a component edit window
      */
     private void showEditWindow () {
-        org.zkoss.zk.ui.Component currentComp = (org.zkoss.zk.ui.Component) view;
-        org.zkoss.zk.ui.Component parent = currentComp.getParent();
-
         Component cm = view.getSelectedItem();
         Executions.getCurrent().getDesktop().setAttribute("componentToEdit", cm);
 
-        windowManager.open(EDIT_COMPONENT_LOCATION, parent);
+        windowManager.open(EDIT_COMPONENT_LOCATION);
     }
 
     /**

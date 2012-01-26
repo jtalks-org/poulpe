@@ -19,6 +19,6 @@
           </row>
         </rows>
       </grid>
-    <button onClick="@command('save')" label="Save"/>
+    <button onClick="@command('save')" label="Save" sclass="rank.editor.saveButton" />
   </window>
 </zk>

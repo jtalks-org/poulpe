@@ -36,8 +36,8 @@
             </row>
             <row>
                 <hlayout>
-                    <button label="${labels.componentedit.save}" onClick="@command('save')"/>
-                    <button label="${labels.componentedit.cancel}" onClick="@command('cancel')"/>
+                    <button label="${labels.componentedit.save}" onClick="@command('save')" sclass="edit.comp.saveButton" />
+                    <button label="${labels.componentedit.cancel}" onClick="@command('cancel')" sclass="edit.comp.cancelButton" />
                 </hlayout>
             </row>
         </rows>

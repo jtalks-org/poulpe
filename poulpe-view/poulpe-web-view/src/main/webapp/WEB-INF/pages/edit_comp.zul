@@ -21,8 +21,8 @@
 			</row>
 			<row>
 				<hlayout>
-					<button label="${labels.componentedit.save}" onClick="@command('showHello')"/>
-					<button label="${labels.componentedit.cancel}" onClick="@command('showHello')"/>
+					<button label="${labels.componentedit.save}" onClick="@command('showHello')" sclass="edit.comp.saveButton" />
+					<button label="${labels.componentedit.cancel}" onClick="@command('showHello')" sclass="edit.comp.cancelButton" />
 				</hlayout>
 			</row>
 		</rows> 		

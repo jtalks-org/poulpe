@@ -17,8 +17,8 @@ package org.jtalks.poulpe.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 import org.jtalks.poulpe.web.controller.users.UserPresenter;
@@ -52,6 +52,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     private ApplicationContext applicationContext;
 
+    private Component workArea;
     private Component currentWindow;
 
     /** {@inheritDoc} */
@@ -154,7 +155,15 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
      * {@inheritDoc}
      */
     @Override
-    public void open(String pathToZulFile, Component parent) {
+    public void setWorkArea(Component workArea) {
+        this.workArea = workArea;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void open(String pathToZulFile) {
         if (currentWindow != null) {
         	// detach only if window belongs to current desktop
             if (Executions.getCurrent().getDesktop().equals(currentWindow.getDesktop())) {
@@ -162,7 +171,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
             }
         }
         currentWindow = Executions.createComponents(pathToZulFile, null, null);
-        currentWindow.setParent(parent);
+        currentWindow.setParent(workArea);
         currentWindow.setVisible(true);
     }
 

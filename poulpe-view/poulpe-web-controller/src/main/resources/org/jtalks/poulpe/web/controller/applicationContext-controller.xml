@@ -20,7 +20,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
   <zksp:zk-config />
-  <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="singleton" />
+  <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop" />
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
 
   <bean id="branchPermissionManagementVm" scope="desktop"
@@ -42,10 +42,14 @@
       <constructor-arg index="0" ref="componentService"/>
   </bean>
 
+  <bean id="groupToEdit" scope="prototype"
+    class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM" factory-method="retrieveGroupToEdit" />
+
   <bean id="editGroupMembersVM" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM">
-    <constructor-arg index="0" ref="groupService" />
-    <constructor-arg index="1" ref="userService" />
-    <constructor-arg index="2" ref="windowManager" />
+    <constructor-arg type="WindowManager" ref="windowManager" />
+    <constructor-arg type="GroupService" ref="groupService" />
+    <constructor-arg type="UserService" ref="userService" />
+    <constructor-arg type="Group" ref="groupToEdit" />
   </bean>
 
   <bean id="adminWindow" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">

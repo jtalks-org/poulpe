@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.dto.branches;
 
+import com.google.common.collect.ImmutableList;
 import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 
@@ -26,8 +27,8 @@ import java.util.List;
  */
 public class BranchAccessChanges {
     private final JtalksPermission permission;
-    private final List<Group> newlyAddedPermissions = new ArrayList<Group>();
-    private final List<Group> removedPermissions = new ArrayList<Group>();
+    private final List<Group> newlyAddedGroups = new ArrayList<Group>();
+    private final List<Group> removedGroups = new ArrayList<Group>();
 
     public BranchAccessChanges(JtalksPermission permission) {
         this.permission = permission;
@@ -39,16 +40,25 @@ public class BranchAccessChanges {
      * @return Group[] with newly permissions
      */
     public Group[] getNewlyAddedPermissionsAsArray() {
-        return newlyAddedPermissions.toArray(new Group[]{});
+        return newlyAddedGroups.toArray(new Group[]{});
     }
 
     /**
      * Set newly added permissions
      *
-     * @param newlyAddedPermissions - list of newly added permissions
+     * @param newlyAddedGroups - list of newly added permissions
      */
-    public void setNewlyAddedPermissions(Collection<Group> newlyAddedPermissions) {
-        this.newlyAddedPermissions.addAll(newlyAddedPermissions);
+    public void setNewlyAddedGroups(Collection<Group> newlyAddedGroups) {
+        this.newlyAddedGroups.addAll(newlyAddedGroups);
+    }
+
+    /**
+     * Get removed permissions
+     *
+     * @return Group[] with removed permissions
+     */
+    public List<Group> getRemovedGroups() {
+        return ImmutableList.copyOf(removedGroups);
     }
 
     /**
@@ -57,16 +67,16 @@ public class BranchAccessChanges {
      * @return Group[] with removed permissions
      */
     public Group[] getRemovedPermissionsAsArray() {
-        return removedPermissions.toArray(new Group[]{});
+        return removedGroups.toArray(new Group[]{});
     }
 
     /**
      * Set removed permissions
      *
-     * @param removedPermissions - list with removed permissions
+     * @param removedGroups - list with removed permissions
      */
-    public void setRemovedPermissions(Collection<Group> removedPermissions) {
-        this.removedPermissions.addAll(removedPermissions);
+    public void setRemovedGroups(Collection<Group> removedGroups) {
+        this.removedGroups.addAll(removedGroups);
     }
 
     /**
@@ -84,6 +94,6 @@ public class BranchAccessChanges {
      * @return {@code true} if empty, else return {@code false}
      */
     public boolean isEmpty() {
-        return removedPermissions.isEmpty() && newlyAddedPermissions.isEmpty();
+        return removedGroups.isEmpty() && newlyAddedGroups.isEmpty();
     }
 }

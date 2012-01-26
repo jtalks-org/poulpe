@@ -16,8 +16,8 @@
       <textbox id="branchDescription" />
     </hbox>
     <hbox>
-      <button id="confirmButton" />
-      <button id="rejectButton" />
+      <button id="confirmButton" sclass="edit.branch.confirmButton" />
+      <button id="rejectButton" sclass="edit.branch.rejectButton" />
     </hbox>
   </vbox>
 </window>

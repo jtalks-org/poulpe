@@ -5,7 +5,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window mode="modal" closable="true" border="normal" width="70%" title="${labels.groups.edit_members.title}"
-  apply="org.zkoss.bind.BindComposer" onClose="@command('cancel')" viewModel="@id('vm') @init(editGroupMembersVM)">
+    apply="org.zkoss.bind.BindComposer" onClose="@command('cancel')" viewModel="@id('vm') @init(editGroupMembersVM)">
     <vbox>
       <hbox style="padding: 5px">
         <label value="${labels.groups.edit_members.group_caption}" style="font: bold 18px sans-serif" />
@@ -17,9 +17,9 @@
             <panelchildren>
               <hbox align="center" style="margin: 10px">
                 <textbox value="@bind(vm.filterAvail)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')" sclass="edit.members.searchAvailButton" />
               </hbox>
-              <listbox model="@load(vm.avail)" selectedItem="@bind(vm.availSelected)" height="240px">
+              <listbox model="@load(vm.avail)" selectedItem="@bind(vm.availSelected)" checkmark="true" multiple="true" height="240px">
                 <listhead>
                   <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader label="${labels.groups.edit_members.full_name}" />
@@ -40,17 +40,17 @@
           </panel>
         </vbox>
         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
-          <image onClick="@command('add')" src="/resources/img/rightarrow.png" />
-          <image onClick="@command('addAll')" src="/resources/img/rightrightarrow.png" />
-          <image onClick="@command('remove')" src="/resources/img/leftarrow.png" />
-          <image onClick="@command('removeAll')" src="/resources/img/leftleftarrow.png" />
+          <button onClick="@command('add')" disabled="@load(empty vm.availSelected)" image="/resources/img/rightarrow.png" width="36px" />
+          <button onClick="@command('addAll')" disabled="@load(empty vm.avail)" image="/resources/img/rightrightarrow.png" width="36px" />
+          <button onClick="@command('remove')" disabled="@load(empty vm.existSelected)" image="/resources/img/leftarrow.png" width="36px" />
+          <button onClick="@command('removeAll')" disabled="@load(empty vm.exist)" image="/resources/img/leftleftarrow.png" width="36px" />
         </vbox>
         <vbox hflex="1">
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
                 <textbox value="@bind(vm.filterExist)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')" sclass="edit.members.searchExistButton" />
               </hbox>
               <listbox model="@load(vm.exist)" selectedItem="@bind(vm.existSelected)" height="240px">
                 <listhead>
@@ -74,8 +74,8 @@
         </vbox>
       </hbox>
       <hbox align="center" pack="center" height="30px">
-        <button label="${labels.window.save}" onClick="@command('save')" />
-        <button label="${labels.window.cancel}" onClick="@command('cancel')" />
+        <button label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton" />
+        <button label="${labels.window.cancel}" onClick="@command('cancel')" sclass="edit.members.cancelButton" />
       </hbox>
     </vbox>
   </window>
