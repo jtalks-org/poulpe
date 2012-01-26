@@ -20,8 +20,8 @@
             </template>
             <listfoot>
                 <listfooter>
-                    <button onClick="@command('newItem')" label="${labels.rank.add}"/>
-                    <button onClick="@command('delete')" label="${labels.rank.delete}"/>
+                    <button onClick="@command('newItem')" label="${labels.rank.add}" sclass="ranks.addButton" />
+                    <button onClick="@command('delete')" label="${labels.rank.delete}" sclass="ranks.deleteButton" />
                 </listfooter>
             </listfoot>
         </listbox>

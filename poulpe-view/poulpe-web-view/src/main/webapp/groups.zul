@@ -9,7 +9,7 @@
       <label value="Filter" />
       :
       <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
-      <button label="Search" forward="onClick=onSearchAction" />
+      <button label="Search" forward="onClick=onSearchAction" sclass="groups.searchButton" />
     </hbox>
 
     <listbox id="groupsListbox">
@@ -18,9 +18,9 @@
         <listheader align="center" label="Members" />
       </listhead>
     </listbox>
-    <button id="addButton" label="+" />
-    <button id="removeButton" label="-" />
-    <button id="editMembersButton" label="${labels.groups.button.edit_members}" />
+    <button id="addButton" label="+" sclass="groups.addButton" />
+    <button id="removeButton" label="-" sclass="groups.removeButton" />
+    <button id="editMembersButton" label="${labels.groups.button.edit_members}" sclass="groups.editMembersButton" />
   </window>
   <include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer" />
 

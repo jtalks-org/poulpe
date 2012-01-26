@@ -8,7 +8,7 @@
     <vlayout>
       <hbox>
         <combobox id="userCombobox" autodrop="true" buttonVisible="false" />
-        <button id="addButton" label="${labels.userbanning.add}" />
+        <button id="addButton" label="${labels.userbanning.add}" sclass="users.banning.addButton" />
       </hbox>
       <listbox id="usersToBan">
         <listhead sizable="true">
@@ -26,8 +26,8 @@
       </textbox>
     </vlayout>
     
-    <button label="${labels.userbanning.submit}" id="submitButton" />
-    <button label="${labels.userbanning.reset}" id="resetButton" />
+    <button label="${labels.userbanning.submit}" id="submitButton" sclass="users.banning.submitButton" />
+    <button label="${labels.userbanning.reset}" id="resetButton" sclass="users.banning.resetButton" />
   </window>
 </zk>
 

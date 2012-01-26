@@ -18,8 +18,8 @@
     <vbox width="100%">
       <listbox sizedByContent="true" id="branchesList" />
       <span>
-        <button id="addBranchButton" label="+" />
-        <button id="delBranchButton" label="-" />
+        <button id="addBranchButton" label="+" sclass="branch.editor.addBranchButton" />
+        <button id="delBranchButton" label="-" sclass="branch.editor.delBranchButton" />
       </span>
     </vbox>
   </window>
