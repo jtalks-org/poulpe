@@ -96,8 +96,8 @@ public class BranchPermissionManagementVm {
     @Command
     public void saveDialogState() {
         BranchAccessChanges accessChanges = new BranchAccessChanges(groupsDialogVm.getPermission());
-        accessChanges.setNewlyAddedPermissions(groupsDialogVm.getNewAdded());
-        accessChanges.setRemovedPermissions(groupsDialogVm.getRemovedFromAdded());
+        accessChanges.setNewlyAddedGroups(groupsDialogVm.getNewAdded());
+        accessChanges.setRemovedGroups(groupsDialogVm.getRemovedFromAdded());
         if (groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
             branchService.changeGrants(branch, accessChanges);
         } else if (!groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {

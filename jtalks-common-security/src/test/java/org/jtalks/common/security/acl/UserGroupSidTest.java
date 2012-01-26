@@ -14,9 +14,13 @@
  */
 package org.jtalks.common.security.acl;
 
+import org.jtalks.poulpe.model.entity.Group;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author stanislav bashkirtsev
@@ -35,5 +39,22 @@ public class UserGroupSidTest {
     @Test(expectedExceptions = IdentifiableSid.WrongFormatException.class)
     public void testConstructor_withSidNameWithTwoSeparators() throws Exception {
         new UserGroupSid("groupname:1:2").getGroupId();
+    }
+
+    @Test
+    public void testCreateFromGroups() throws Exception {
+        Group[] groups = new Group[]{new Group("1"), new Group("2")};
+        groups[0].setId(1L);
+        groups[1].setId(2L);
+        List<UserGroupSid> resultSids = UserGroupSid.create(groups);
+        for (int i = 0, resultSidsSize = resultSids.size(); i < resultSidsSize; i++) {
+            assertEquals(resultSids.get(i).getGroupId(), groups[i].getId() + "");
+        }
+    }
+
+    @Test
+    public void testCreateFromGroups_withEmpty() throws Exception {
+        List<UserGroupSid> userGroupSids = UserGroupSid.create();
+        assertTrue(userGroupSids.isEmpty());
     }
 }

@@ -108,7 +108,7 @@ public class ExtendedMutableAcl implements MutableAcl {
      *                    restrict all the permissions
      * @see #addPermissions(Sid, List, boolean)
      */
-    public void addPermissions(@Nonnull List<Sid> sids, @Nonnull List<Permission> permissions, boolean granting) {
+    public void addPermissions(@Nonnull List<? extends Sid> sids, @Nonnull List<Permission> permissions, boolean granting) {
         for (Sid recipient : sids) {
             addPermissions(recipient, permissions, granting);
         }
