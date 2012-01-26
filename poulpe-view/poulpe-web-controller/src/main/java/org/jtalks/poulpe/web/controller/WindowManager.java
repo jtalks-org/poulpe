@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.User;
 import org.zkoss.zk.ui.Component;
 
 /**
@@ -55,11 +55,17 @@ public interface WindowManager {
     void openUserWindowForEdit(User user, EditListener<User> listener);
 
     /**
-     * Opens and shows new window. Previous window will be forcibly detached.
+     * Sets work-area component which will be used as parent component for newly created windows.
+     *
+     * @param workArea the work area component
+     */
+    void setWorkArea(Component workArea);
+
+    /**
+     * Opens and shows new window in work area. Previous window will be forcibly detached.
      *
      * @param pathToZulFile the path to *.zul config file which describes new window
-     * @param parent the parent component for new window
      */
-    void open(String pathToZulFile, Component parent);
+    void open(String pathToZulFile);
 
 }

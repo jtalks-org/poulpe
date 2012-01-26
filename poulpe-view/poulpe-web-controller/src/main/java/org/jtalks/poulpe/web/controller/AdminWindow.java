@@ -32,56 +32,65 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     private WindowManager windowManager;
 
     /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void doAfterCompose(Component comp) throws Exception {
+        super.doAfterCompose(comp);
+        windowManager.setWorkArea(workArea);
+    }
+
+    /**
      * Show the component list view
      */
     public void onShowComponents() {
-        windowManager.open("components.zul", workArea);
+        windowManager.open("components.zul");
     }
 
     /**
      * Show the branches list view
      */
     public void onShowBranches() {
-        windowManager.open("brancheditor.zul", workArea);
+        windowManager.open("brancheditor.zul");
     }
 
     /**
      * Show the topic type list view
      */
     public void onShowTopicTypes() {
-        windowManager.open("topictypelist.zul", workArea);
+        windowManager.open("topictypelist.zul");
     }
 
     /**
      * Show the sections list view
      */
     public void onShowSections() {
-        windowManager.open("sections.zul", workArea);
+        windowManager.open("sections.zul");
     }
 
     public void onShowUserBanning(){
-        windowManager.open("userbanning.zul", workArea);
+        windowManager.open("userbanning.zul");
     }
 
     /**
      * Shows User Groups window that allows admins to CRUD groups.
      */
     public void onShowUserGroups(){
-        windowManager.open("groups.zul", workArea);
+        windowManager.open("groups.zul");
     }
 
     /**
      * Show the users list view
      */
     public void onShowUsers() {
-        windowManager.open("users.zul", workArea);
+        windowManager.open("users.zul");
     }
 
     /**
      * Show the ranks page.
      */
     public void onShowRanks() {
-        windowManager.open("ranks.zul", workArea);
+        windowManager.open("ranks.zul");
     }
 
     /**

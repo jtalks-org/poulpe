@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -101,7 +102,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
         String username = user.getUsername();
 
         assertTrue(dao.isUserWithUsernameExist(username));
-        assertTrue(!dao.isUserWithUsernameExist(username + "_"));
+        assertFalse(dao.isUserWithUsernameExist(username + "_"));
     }
 
     @Test
@@ -120,7 +121,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
         String email = user.getEmail();
 
         assertTrue(dao.isUserWithEmailExist(email));
-        assertTrue(!dao.isUserWithEmailExist(email + "_"));
+        assertFalse(dao.isUserWithEmailExist(email + "_"));
     }
 
     /**
