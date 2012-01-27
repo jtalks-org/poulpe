@@ -27,6 +27,7 @@ public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
      * 
      */
     private static final long serialVersionUID = -3198582085335476694L;
+
     /**
      * this flag is used to determine if the node is going to be expanded by
      * defaults
@@ -34,39 +35,34 @@ public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
     private boolean isExpanded = true;
 
     /**
-     * @param entity
-     *            node data
-     * @param children
-     *            list of childrens for node
+     * @param entity node data
+     * @param children list of childrens for node
      * @see DefaultTreeNode
-     * */
+     */
     public ExtendedTreeNode(T entity, ExtendedTreeNode<T>[] children) {
         super(entity, children);
     }
 
     /**
-     * @param entity
-     *            node data
-     * @param children
-     *            list of childrens for node
+     * @param entity node data
+     * @param children list of childrens for node
      * @see DefaultTreeNode
-     * */
+     */
     public ExtendedTreeNode(T entity, List<ExtendedTreeNode<T>> children) {
         super(entity, children);
     }
 
     /**
-     * @param entity
-     *            data for leaf node
+     * @param entity data for leaf node
      * @see DefaultTreeNode
-     * */
+     */
     public ExtendedTreeNode(T entity) {
         super(entity);
     }
 
     /**
      * @return if node expanded return true
-     * */
+     */
     public boolean isExpanded() {
         return isExpanded;
     }
@@ -74,9 +70,8 @@ public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
     /**
      * set expanded status
      * 
-     * @param flag
-     *            true if node expanded
-     * */
+     * @param flag true if node expanded
+     */
     public void setExpanded(boolean flag) {
         this.isExpanded = flag;
     }

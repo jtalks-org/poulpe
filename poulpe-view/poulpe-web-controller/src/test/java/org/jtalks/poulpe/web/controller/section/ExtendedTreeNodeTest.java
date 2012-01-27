@@ -16,23 +16,18 @@ package org.jtalks.poulpe.web.controller.section;
 
 import static org.testng.Assert.assertTrue;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Section;
 import org.testng.annotations.Test;
 
+// TODO: do we need this test?
 public class ExtendedTreeNodeTest {
+    Section section = new Section("test", "test");
 
- 
-  @Test
-  public void testNode() {
-      Section entity = new Section();
-      entity.setName("test");
-      entity.setDescription("test");
-      ExtendedTreeNode treeNode = new ExtendedTreeNode(entity);
-      assertTrue(treeNode.getData() instanceof Section);
-      assertTrue(treeNode.isExpanded());
-      treeNode.setExpanded(false);
-      assertTrue(!treeNode.isExpanded());
-  }    
+    @Test
+    public void testExpandedByDefault() {
+        ExtendedTreeNode<Entity> treeNode = new ExtendedTreeNode<Entity>(section);
+        assertTrue(treeNode.isExpanded());
+    }
 
-  
 }
