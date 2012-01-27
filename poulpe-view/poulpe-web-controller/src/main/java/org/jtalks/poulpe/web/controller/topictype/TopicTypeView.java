@@ -14,14 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
  * View interface for TopicType
+ * 
  * @author unascribed
  * @see TopicTypeListPresenter
  */
-public interface TopicTypeView {
+public interface TopicTypeView extends ValidationFailure {
 
     /**
      * Shows type title
@@ -37,30 +38,25 @@ public interface TopicTypeView {
      * Gets type title
      */
     String getTypeTitle();
-    
+
     /**
      * Gets type description
      */
     String getTypeDescription();
-    
+
     /**
      * Hide edit action
      */
     void hideEditAction();
-    
+
     /**
      * Hide create action
      */
     void hideCreateAction();
-    
+
     /**
      * Show error popup dialog
      * @param label for dialog
      */
     void openErrorPopupInTopicTypeDialog(String label);
-
-    /**
-     * @param result
-     */
-    void validationFailure(ValidationResult result);
 }

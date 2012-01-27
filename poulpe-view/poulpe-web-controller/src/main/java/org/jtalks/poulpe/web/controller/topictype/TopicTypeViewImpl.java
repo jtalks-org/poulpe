@@ -14,18 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import java.util.Map;
-
-import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.impl.InputElement;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * @author Pavel Vervenko
@@ -40,13 +34,13 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView {
     private Textbox descriptionTextbox;
     private Button editButton;
     private Button createButton;
-    private ValidationFailureHandler handler = new ValidationFailureHandler();
+    
+    private ValidationFailureHandler handler = new ValidationFailureHandler("title", titleTextbox);
 
     @Override
     public void validationFailure(ValidationResult result) {
-        handler.validationFailure(result, "title", titleTextbox);
+        handler.validationFailure(result);
     }
-    
     
     @Override
     public void showTypeTitle(String title) {
@@ -88,5 +82,4 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView {
         String message = Labels.getLabel(label);
         titleTextbox.setErrorMessage(message);
     }
-
 }
