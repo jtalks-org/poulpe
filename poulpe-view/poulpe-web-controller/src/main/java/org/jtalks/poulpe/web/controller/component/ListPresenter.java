@@ -85,8 +85,7 @@ public class ListPresenter extends AbstractComponentPresenter {
     public void configureComponent() {
         if (!view.hasSelectedItem()) {
             dialogManager.notify(NO_SELECTED_ITEM);
-        }
-        else {
+        } else {
             showEditWindow();
         }
     }
