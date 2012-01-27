@@ -14,34 +14,31 @@
  */
 package org.jtalks.poulpe.web.controller.rank;
 
-import java.util.Map;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.annotation.Nonnull;
+
 import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.service.RankService;
 import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.DialogManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zul.*;
-import org.zkoss.zul.impl.InputElement;
-
-import com.google.common.collect.ImmutableMap;
-import java.util.LinkedList;
-import java.util.List;
-import org.jtalks.poulpe.web.controller.DialogManager;
+import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Textbox;
 
 /**
  * View Model for rank management page.
  *
  * @author Pavel Vervenko
  */
-public class RankManagementVM implements DialogManager.Performable {
+public class RankManagementVM implements DialogManager.Performable, ValidationFailure {
 
     private ListModelList<Rank> items;
     private Rank selected;
@@ -49,7 +46,8 @@ public class RankManagementVM implements DialogManager.Performable {
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
-    private ValidationFailureHandler handler = new ValidationFailureHandler();
+    
+    private ValidationFailureHandler handler = new ValidationFailureHandler("name", rankName);
 
     /**
      * Construct the object with injected service.
@@ -64,13 +62,6 @@ public class RankManagementVM implements DialogManager.Performable {
         this.entityValidator = entityValidator;
         this.dialogManager = dialogManager;
         initData();
-    }
-
-    /**
-     * @param entityValidator the entityValidator to set
-     */
-    public void setEntityValidator(EntityValidator entityValidator) {
-        this.entityValidator = entityValidator;
     }
 
     /**
@@ -146,8 +137,9 @@ public class RankManagementVM implements DialogManager.Performable {
         }
     }
 
-    private void validationFailure(ValidationResult result) {
-        handler.validationFailure(result, "name", rankName);
+    @Override
+    public void validationFailure(ValidationResult result) {
+        handler.validationFailure(result);
     }
 
     /**
@@ -208,6 +200,13 @@ public class RankManagementVM implements DialogManager.Performable {
             rankService.deleteRank(current);
             items.remove(current);
         }
+    }
+    
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
     }
 
 }

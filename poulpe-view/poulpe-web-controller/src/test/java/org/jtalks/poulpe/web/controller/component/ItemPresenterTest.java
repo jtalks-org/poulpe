@@ -167,7 +167,7 @@ public class ItemPresenterTest {
         givenConstraintViolations();
         presenter.saveComponent();
 
-        verify(view).validaionFailure(resultWithErrors);
+        verify(view).validationFailure(resultWithErrors);
     }
 
     private void givenConstraintViolations() {
@@ -181,7 +181,7 @@ public class ItemPresenterTest {
         givenConstraintViolations();
         presenter.saveComponent();
 
-        verify(view).validaionFailure(resultWithErrors);
+        verify(view).validationFailure(resultWithErrors);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class ItemPresenterTest {
         givenNoConstraintViolations();
         presenter.checkComponent();
 
-        verify(view, never()).validaionFailure(resultWithErrors);
+        verify(view, never()).validationFailure(resultWithErrors);
     }
 
     @Test
@@ -201,7 +201,7 @@ public class ItemPresenterTest {
         givenNoConstraintViolations();
         presenter.checkComponent();
 
-        verify(view, never()).validaionFailure(resultWithErrors);
+        verify(view, never()).validationFailure(resultWithErrors);
     }
 
     @Test
@@ -211,7 +211,7 @@ public class ItemPresenterTest {
         givenConstraintViolations();
         presenter.checkComponent();
 
-        verify(view).validaionFailure(resultWithErrors);
+        verify(view).validationFailure(resultWithErrors);
     }
 
 }
