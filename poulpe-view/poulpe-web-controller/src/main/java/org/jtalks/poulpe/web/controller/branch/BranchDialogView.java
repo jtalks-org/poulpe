@@ -18,14 +18,14 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
  * Interface for representation view single branch
  * 
  * @author Bekrenev Dmitry
  * */
-public interface BranchDialogView {
+public interface BranchDialogView extends ValidationFailure {
 
     /**
      * Get new or edited branch from view
@@ -72,6 +72,4 @@ public interface BranchDialogView {
      * @return Branch branch
      * */
     Branch getBranch (Section section);
-    
-    void validationFailure(ValidationResult result);
 }

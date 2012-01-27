@@ -21,6 +21,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
@@ -44,7 +45,7 @@ import com.google.common.collect.ImmutableMap;
  * @author Bekrenev Dmitry
  * @author Vyacheslav Zhivaev
  * */
-public class BranchDialogViewImpl extends Window implements BranchDialogView,
+public class BranchDialogViewImpl extends Window implements BranchDialogView, 
         AfterCompose {
 
     private static final long serialVersionUID = 7388638074018815713L;
@@ -56,8 +57,25 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Button rejectButton;
     private Branch branch;
     private Combobox sectionList;
-    private ValidationFailureHandler handler = new ValidationFailureHandler();
+    
+    private ValidationFailureHandler validationHandler;
 
+    /**
+     * {@inheritDoc}
+     * */
+    @Override
+    public void afterCompose() {
+        Components.addForwards(this, this);
+        Components.wireVariables(this, this);
+        presenter.setView(this);
+        presenter.initView();
+
+        sectionList.setItemRenderer(sectionItemRenderer);
+        
+        validationHandler = new ValidationFailureHandler("name", branchName);
+    }
+    
+    
     /**
      * set default section in combobox for select section when branch will be
      * stored
@@ -99,19 +117,6 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * */
     public void setPresenter(BranchPresenter presenter) {
         this.presenter = presenter;
-    }
-
-    /**
-     * {@inheritDoc}
-     * */
-    @Override
-    public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
-        presenter.setView(this);
-        presenter.initView();
-
-        sectionList.setItemRenderer(sectionItemRenderer);
     }
 
     /**
@@ -250,7 +255,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     
     @Override
     public void validationFailure(ValidationResult result) {
-        handler.validationFailure(result, "name", branchName);
+        validationHandler.validationFailure(result);
     }
 
 }
