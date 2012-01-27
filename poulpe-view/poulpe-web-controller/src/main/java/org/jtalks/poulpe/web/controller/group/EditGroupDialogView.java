@@ -15,12 +15,12 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
  * 
  */
-public interface EditGroupDialogView {
+public interface EditGroupDialogView extends ValidationFailure {
 
     /**
      * Cause hiding current dialog
@@ -42,10 +42,4 @@ public interface EditGroupDialogView {
      */
     public void openErrorPopupInEditGroupDialog(String label);
     
-    /**
-     * Shows validation errors
-     * @param result
-     */
-    public void validationFailure(ValidationResult result);
-
 }
