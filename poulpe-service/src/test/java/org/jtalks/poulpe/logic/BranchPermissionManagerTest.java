@@ -32,6 +32,7 @@ import org.testng.annotations.Test;
 
 import java.util.List;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -50,19 +51,24 @@ public class BranchPermissionManagerTest {
         manager = new BranchPermissionManager(aclManager, groupDao);
     }
 
-    @Test
-    public void testChangeGrants() throws Exception {
-        BranchAccessChanges accessChanges = new BranchAccessChanges(BranchPermission.CREATE_TOPICS);
-        accessChanges.setNewlyAddedGroups(Lists.newArrayList(new Group("new1"), new Group("new2")));
-        accessChanges.setRemovedGroups(Lists.newArrayList(new Group("removed1"), new Group("removed2")));
-
+    @Test(dataProvider = "accessChanges")
+    public void testChangeGrants(BranchAccessChanges accessChanges) throws Exception {
         Branch branch = new Branch("test branch");
         manager.changeGrants(branch, accessChanges);
         List<? extends Sid> removedGroupSids = UserGroupSid.create(accessChanges.getRemovedPermissionsAsArray());
         List<? extends Sid> grantedGroupSids = UserGroupSid.create(accessChanges.getNewlyAddedPermissionsAsArray());
-        verify(aclManager).delete(removedGroupSids, Lists.<Permission>newArrayList(accessChanges.getPermission()), branch);
-        verify(aclManager).grant(grantedGroupSids, Lists.<Permission>newArrayList(accessChanges.getPermission()),
-                branch);
+        verify(aclManager).delete(removedGroupSids, createFromArray(accessChanges.getPermission()), branch);
+        verify(aclManager).grant(grantedGroupSids, createFromArray(accessChanges.getPermission()), branch);
+    }
+
+    @Test(dataProvider = "accessChanges")
+    public void testChangeRestriction(BranchAccessChanges accessChanges) throws Exception {
+        Branch branch = new Branch("test branch");
+        manager.changeRestrictions(branch, accessChanges);
+        List<? extends Sid> removedGroupSids = UserGroupSid.create(accessChanges.getRemovedPermissionsAsArray());
+        List<? extends Sid> grantedGroupSids = UserGroupSid.create(accessChanges.getNewlyAddedPermissionsAsArray());
+        verify(aclManager).delete(removedGroupSids, createFromArray(accessChanges.getPermission()), branch);
+        verify(aclManager).restrict(grantedGroupSids, createFromArray(accessChanges.getPermission()), branch);
     }
 
     @Test
@@ -71,7 +77,19 @@ public class BranchPermissionManagerTest {
     }
 
     @DataProvider
+    public Object[][] accessChanges() {
+        BranchAccessChanges accessChanges = new BranchAccessChanges(BranchPermission.CREATE_TOPICS);
+        accessChanges.setNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
+        accessChanges.setRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
+        return new Object[][]{{accessChanges}};
+    }
+
+    @DataProvider
     public Object[][] provide() {
         return new Object[][]{{new Branch()}};
+    }
+
+    private List<Permission> createFromArray(Permission... permissions) {
+        return Lists.newArrayList(permissions);
     }
 }

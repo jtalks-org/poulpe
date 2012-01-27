@@ -102,7 +102,7 @@ public class AclManager {
      * @param permissions list of permissions
      * @param target      secured object
      */
-    public void restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public void restrict(List<? extends Sid> sids, List<Permission> permissions, Entity target) {
         MutableAcl acl = aclUtil.restrict(sids, permissions, target);
         mutableAclService.updateAcl(acl);
     }

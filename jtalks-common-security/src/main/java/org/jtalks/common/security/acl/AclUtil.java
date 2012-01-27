@@ -16,8 +16,6 @@ package org.jtalks.common.security.acl;
 
 import com.google.common.base.Predicate;
 import org.jtalks.common.model.entity.Entity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 
@@ -99,8 +97,9 @@ public class AclUtil {
      * @param sids        list of sids
      * @param permissions list of permissions
      * @param target      securable object
+     * @return the mutable acl that was created/retrieved while the operation
      */
-    public ExtendedMutableAcl restrict(List<Sid> sids, List<Permission> permissions, Entity target) {
+    public ExtendedMutableAcl restrict(List<? extends Sid> sids, List<Permission> permissions, Entity target) {
         return applyPermissionsToSids(sids, permissions, target, false);
     }
 
