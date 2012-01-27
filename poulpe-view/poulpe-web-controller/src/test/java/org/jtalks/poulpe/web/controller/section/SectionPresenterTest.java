@@ -48,28 +48,18 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
- * 
  * @author costa
  * @author Vahluev Vyacheslav
- * 
  */
 public class SectionPresenterTest extends SectionPresenter {
 
     private SectionPresenter presenter;
 
-    @Mock
-    private SectionService service;
-
-    @Mock
-    SectionViewImpl view;
-    @Mock
-    DialogManager dialogManager;
-
-    @Mock
-    EntityValidator entityValidator;
-
-    @Mock
-    SectionTreeComponentImpl currentSectionTreeComponent;
+    @Mock SectionService service;
+    @Mock SectionViewImpl view;
+    @Mock DialogManager dialogManager;
+    @Mock EntityValidator entityValidator;
+    @Mock SectionTreeComponentImpl currentSectionTreeComponent;
 
     private ValidationResult resultWithErrors = resultWithErrors();
 
@@ -87,7 +77,6 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.setDialogManager(dialogManager);
         presenter.setEntityValidator(entityValidator);
         presenter.setCurrentSectionTreeComponentImpl(currentSectionTreeComponent);
-
     }
 
     @Test
