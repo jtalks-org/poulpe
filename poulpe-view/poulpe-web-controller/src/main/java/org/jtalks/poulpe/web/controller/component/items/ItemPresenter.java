@@ -90,7 +90,7 @@ public class ItemPresenter extends AbstractComponentPresenter {
         ValidationResult result = entityValidator.validate(component);
         
         if (result.hasErrors()) {
-            view.validaionFailure(result);
+            view.validationFailure(result);
             return false;
         }
         

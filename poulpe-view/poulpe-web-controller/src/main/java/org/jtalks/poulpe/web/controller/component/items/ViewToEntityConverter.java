@@ -17,8 +17,7 @@ package org.jtalks.poulpe.web.controller.component.items;
 import org.jtalks.poulpe.model.entity.Component;
 
 /**
- * The sole purpose of this object is to get rid of duplicated code. It's used
- * for converting {@link ItemDataView} instances to corresponding
+ * It's used for converting {@link ItemDataView} instances to corresponding
  * {@link Component} item.
  * 
  * @author Alexey Grigorev
@@ -26,11 +25,7 @@ import org.jtalks.poulpe.model.entity.Component;
  */
 class ViewToEntityConverter {
 
-    /**
-     * Default contructor
-     */
-    private ViewToEntityConverter() {
-    }
+    private ViewToEntityConverter() {}
 
     /**
      * Converts the component from the view representation to the model
@@ -46,7 +41,7 @@ class ViewToEntityConverter {
     public static Component view2Model(ItemDataView view) {
         Component component = new Component();
         component.setId(view.getComponentId());
-        return  view2Model(view, component);
+        return view2Model(view, component);
     }
 
     /**

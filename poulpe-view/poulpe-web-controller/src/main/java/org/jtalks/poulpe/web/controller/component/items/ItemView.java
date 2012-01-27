@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.web.controller.component.items;
 
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
  * Controls the component editing window. <br>
@@ -25,7 +25,7 @@ import org.jtalks.poulpe.validation.ValidationResult;
  * @author Dmitriy Sukharev
  * @author Alexey Grigorev
  */
-public interface ItemView extends ItemDataView {
+public interface ItemView extends ItemDataView, ValidationFailure {
 
     /**
      * Shows the window for editing a component.
@@ -42,10 +42,5 @@ public interface ItemView extends ItemDataView {
      * Hides the window.
      */
     void hide();
-
-    /**
-     * @param result the result of entity validation
-     */
-    void validaionFailure(ValidationResult result);
 
 }

@@ -14,25 +14,21 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang.StringUtils;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Longbox;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.impl.InputElement;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * The class which manages actions and represents information about component
@@ -53,7 +49,7 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     private Textbox description;
     private Combobox componentType;
 
-    private Map<String, ? extends InputElement> components;
+    private ValidationFailureHandler validationHandler;
 
     /** {@inheritDoc} */
     @Override
@@ -63,26 +59,15 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
         
         presenter.setView(this);
 
-        // fields which may be violated
-        components = ImmutableMap.of("name", name, "componentType", componentType);
+        validationHandler = new ValidationFailureHandler("name", name, "componentType", componentType);
     }
-
-    // ==== ItemView methods ====
-
+    
     @Override
-    public void validaionFailure(ValidationResult result) {
-
-        for (ValidationError error : result.getErrors()) {
-            String voilatedField = error.getFieldName();
-            
-            if (components.containsKey(voilatedField)) {
-                InputElement component = components.get(voilatedField);
-                String errorMessage = Labels.getLabel(error.getErrorMessageCode());
-                component.setErrorMessage(errorMessage);
-            }
-        }
-        
+    public void validationFailure(ValidationResult result) {
+        validationHandler.validationFailure(result);
     }
+    
+    // ==== ItemView methods ====
 
     /** {@inheritDoc} */
     @Override
@@ -246,5 +231,6 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     public void setPresenter(ItemPresenter presenter) {
         this.presenter = presenter;
     }
+    
 
 }
