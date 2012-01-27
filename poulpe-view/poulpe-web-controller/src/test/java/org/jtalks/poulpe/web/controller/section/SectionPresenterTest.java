@@ -64,18 +64,17 @@ public class SectionPresenterTest extends SectionPresenter {
     SectionViewImpl view;
     @Mock
     DialogManager dialogManager;
-    
-    @Mock 
+
+    @Mock
     EntityValidator entityValidator;
-    
+
     @Mock
     SectionTreeComponentImpl currentSectionTreeComponent;
-    
+
     private ValidationResult resultWithErrors = resultWithErrors();
 
     private ValidationResult resultWithErrors() {
-        ValidationError error = new ValidationError("name",
-                Section.SECTION_ALREADY_EXISTS);
+        ValidationError error = new ValidationError("name", Section.SECTION_ALREADY_EXISTS);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }
@@ -88,27 +87,26 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.setDialogManager(dialogManager);
         presenter.setEntityValidator(entityValidator);
         presenter.setCurrentSectionTreeComponentImpl(currentSectionTreeComponent);
-        
+
     }
-    
+
     @Test
-    public void testValidateSectionEmptyName(){
+    public void testValidateSectionEmptyName() {
         givenConstraintViolated();
         presenter.initView(view);
         presenter.addNewSection("", "description");
-        
-        verify(service, never()).saveSection(any(Section.class));    
+
+        verify(service, never()).saveSection(any(Section.class));
     }
-    
+
     @Test
-    public void testValidateSectionNullName(){
+    public void testValidateSectionNullName() {
         givenConstraintViolated();
         presenter.initView(view);
         presenter.addNewSection(null, "description");
-        
-        verify(service, never()).saveSection(any(Section.class));    
-    }
 
+        verify(service, never()).saveSection(any(Section.class));
+    }
 
     @Test
     public void testCheckSectionUniquenessOK() {
@@ -116,23 +114,23 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.initView(view);
         presenter.addNewSection("name", "description");
         verify(view, never()).validationFailure(any(ValidationResult.class), any(Boolean.class));
-        verify(dialogManager).confirmCreation(anyString(),any(DialogManager.Performable.class));
+        verify(dialogManager).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     private void givenNoConstraintsViolated() {
         when(entityValidator.validate(any(Section.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
-    public void testCheckSectionUniquenessNonUnique() {        
+    public void testCheckSectionUniquenessNonUnique() {
         givenConstraintViolated();
         presenter.initView(view);
         presenter.addNewSection("name", "description");
-        
+
         verify(service, never()).saveSection(any(Section.class));
-        verify(dialogManager, never()).confirmCreation(anyString(),any(DialogManager.Performable.class));
+        verify(dialogManager, never()).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     private void givenConstraintViolated() {
         when(entityValidator.validate(any(Section.class))).thenReturn(resultWithErrors);
     }
@@ -144,9 +142,8 @@ public class SectionPresenterTest extends SectionPresenter {
 
         presenter.initView(view);
 
-        verify(view).showSections(
-                argThat(new SectionsListMatcher(fakeSections)));
-         verify(view).closeDialogs();
+        verify(view).showSections(argThat(new SectionsListMatcher(fakeSections)));
+        verify(view).closeDialogs();
     }
 
     @Test
@@ -165,16 +162,15 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.openDeleteDialog(fakeSections.get(3));
         verify(view).openDeleteSectionDialog(argThat(new SectionMatcher(fakeSections.get(3))));
     }
-    
+
     @Test
     public void testOpenDeleteDialogNullObject() {
         List<Section> fakeSections = getFakeSections(9);
-        
-        presenter.openDeleteDialog(null);        
-        verify(view, never()).openDeleteSectionDialog(
-                argThat(new SectionMatcher(fakeSections.get(3))));
+
+        presenter.openDeleteDialog(null);
+        verify(view, never()).openDeleteSectionDialog(argThat(new SectionMatcher(fakeSections.get(3))));
     }
-    
+
     @Test
     public void testOpenDeleteDialogUnproperObject() {
         List<Section> fakeSections = getFakeSections(9);
@@ -195,69 +191,67 @@ public class SectionPresenterTest extends SectionPresenter {
             }
         }
         Branch fakeBranch = getFakeBranch("test branch", "test branch");
-        
+
         presenter.openDeleteDialog(fakeBranch);
-        
-        verify(dialogManager).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
 
     @Test
-    public void testOpenEditDialogNullParams(){
+    public void testOpenEditDialogNullParams() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
         presenter.initView(view);
-        
-        //null
+
+        // null
         presenter.openEditDialog(sectionTreeComponent);
-        
+
         verify(view, never()).openEditBranchDialog(any(Branch.class));
         verify(view, never()).openEditSectionDialog(anyString(), anyString());
     }
-    
+
     @Test
-    public void testOpenEditDialogTopicType(){
+    public void testOpenEditDialogTopicType() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(new TopicType());
         presenter.initView(view);
-        
+
         // TopicType object
         presenter.openEditDialog(sectionTreeComponent);
-        
+
         verify(view, never()).openEditBranchDialog(any(Branch.class));
         verify(view, never()).openEditSectionDialog(anyString(), anyString());
     }
-    
+
     @Test
-    public void testOpenEditSectionDialog(){
-        List<Section> fakeSections = getFakeSections(9);        
+    public void testOpenEditSectionDialog() {
+        List<Section> fakeSections = getFakeSections(9);
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(service.getAll()).thenReturn(fakeSections);
-        when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));        
+        when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
         presenter.initView(view);
-        
+
         // section
         presenter.openEditDialog(sectionTreeComponent);
-        
-        verify(view, times(1)).openEditSectionDialog(
-                fakeSections.get(3).getName(),
+
+        verify(view, times(1)).openEditSectionDialog(fakeSections.get(3).getName(),
                 fakeSections.get(3).getDescription());
-        assertEquals(presenter.getCurrentSectionTreeComponentImpl(),
-                sectionTreeComponent);
+        assertEquals(presenter.getCurrentSectionTreeComponentImpl(), sectionTreeComponent);
         presenter.setCurrentSectionTreeComponentImpl(null);
     }
-    
+
     @Test
-    public void testOpenEditBranchDialog() {        
+    public void testOpenEditBranchDialog() {
         Branch fakeBranch = getFakeBranch("test", "test");
         presenter.initView(view);
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
-        when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeBranch);        
+        when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeBranch);
 
         // branch
         presenter.openEditDialog(sectionTreeComponent);
-        
+
         verify(view, times(1)).openEditBranchDialog(argThat(new BranchMatcher(fakeBranch)));
-        assertEquals(presenter.getCurrentSectionTreeComponentImpl(),sectionTreeComponent);
+        assertEquals(presenter.getCurrentSectionTreeComponentImpl(), sectionTreeComponent);
     }
 
     @Test
@@ -266,8 +260,8 @@ public class SectionPresenterTest extends SectionPresenter {
         when(service.getAll()).thenReturn(fakeSections);
         presenter.initView(view);
 
-        presenter.openNewSectionDialog();        
-        
+        presenter.openNewSectionDialog();
+
         verify(view, times(1)).openNewSectionDialog();
     }
 
@@ -275,27 +269,26 @@ public class SectionPresenterTest extends SectionPresenter {
     public void testOpenNewBranchDialog() {
         List<Section> fakeSections = getFakeSections(9);
         when(service.getAll()).thenReturn(fakeSections);
-        
+
         presenter.initView(view);
-        SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);        
+        SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         presenter.openNewBranchDialog(sectionTreeComponent);
-        
-        assertEquals(presenter.getCurrentSectionTreeComponentImpl(),
-                sectionTreeComponent);
-        
+
+        assertEquals(presenter.getCurrentSectionTreeComponentImpl(), sectionTreeComponent);
+
         verify(view, times(1)).openNewBranchDialog();
     }
-    
+
     @Test
     public void testRemoveSectionFromViewNull() {
         List<Section> fakeSections = getFakeSections(9);
         when(service.getAll()).thenReturn(fakeSections);
         presenter.initView(view);
-        
+
         presenter.removeSectionFromView(null);
-        verify(view, never()).removeSection(
-                argThat(new SectionMatcher(fakeSections.get(4))));
+        verify(view, never()).removeSection(argThat(new SectionMatcher(fakeSections.get(4))));
     }
+
     @Test
     public void testRemoveSectionFromViewOK() {
         List<Section> fakeSections = getFakeSections(9);
@@ -303,45 +296,43 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.initView(view);
 
         presenter.removeSectionFromView(fakeSections.get(4));
-        verify(view, times(1)).removeSection(
-                argThat(new SectionMatcher(fakeSections.get(4))));
+        verify(view, times(1)).removeSection(argThat(new SectionMatcher(fakeSections.get(4))));
     }
-    
+
     @Test
-    public void testEditSectionOK(){
+    public void testEditSectionOK() {
         givenNoConstraintsViolated();
-        List<Section> fakeSections = getFakeSections(9);        
+        List<Section> fakeSections = getFakeSections(9);
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
-        when(sectionTreeComponent.getSelectedObject()).thenReturn(
-                fakeSections.get(3));
-        
-        presenter.initView(view);        
+        when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
+
+        presenter.initView(view);
         presenter.openEditDialog(sectionTreeComponent);
         presenter.editSection("1", "2");
 
-        verify(dialogManager).confirmEdition(anyString(),any(DialogManager.Performable.class));        
+        verify(dialogManager).confirmEdition(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
-    public void testEditSectionEmptyName(){
+    public void testEditSectionEmptyName() {
         givenConstraintViolated();
-        List<Section> fakeSections = getFakeSections(9);                
+        List<Section> fakeSections = getFakeSections(9);
 
         when(service.getAll()).thenReturn(fakeSections);
-        when(currentSectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));        
-        
+        when(currentSectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
+
         presenter.initView(view);
-        presenter.openEditDialog(currentSectionTreeComponent);        
+        presenter.openEditDialog(currentSectionTreeComponent);
         presenter.editSection("", "2");
-        
-        verify(service, never()).saveSection(any(Section.class));    
-        
+
+        verify(service, never()).saveSection(any(Section.class));
+
     }
 
     @Test
     public void testEditSectionNullName() {
         givenConstraintViolated();
-        List<Section> fakeSections = getFakeSections(9);        
+        List<Section> fakeSections = getFakeSections(9);
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(service.getAll()).thenReturn(fakeSections);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
@@ -349,77 +340,76 @@ public class SectionPresenterTest extends SectionPresenter {
         presenter.initView(view);
         presenter.openEditDialog(sectionTreeComponent);
         presenter.editSection(null, "2");
-        
+
         verify(service, never()).saveSection(any(Section.class));
     }
-    
 
     @Test
     public void testDeleteSectionNull() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
-        
+
         presenter.initView(view);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
         // null object
         presenter.deleteSection(null);
-        
-        verify(dialogManager, never()).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
     public void testDeleteSectionNullWithName() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(null);
-        
+
         presenter.initView(view);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
         // null object with name
         presenter.deleteSection(getFakeSection("test", "test"));
-        
-        verify(dialogManager, never()).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
     public void testDeleteSectionUnproper() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(getFakeBranch("test", "test"));
-        
+
         presenter.initView(view);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
         // unproper object
         presenter.deleteSection(null);
-        
-        verify(dialogManager, never()).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
     public void testDeleteSectionUnproperWithName() {
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(getFakeBranch("test", "test"));
-        
+
         presenter.initView(view);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
         // unproper object with name
         presenter.deleteSection(getFakeSection("test", "test"));
-        
-        verify(dialogManager, never()).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
     public void testDeleteSectionOK() {
-        List<Section> fakeSections = getFakeSections(9);        
+        List<Section> fakeSections = getFakeSections(9);
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         when(sectionTreeComponent.getSelectedObject()).thenReturn(fakeSections.get(3));
-                
+
         presenter.initView(view);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
         // proper object
         presenter.deleteSection(null);
-        
-        verify(dialogManager).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
-    
+
     @Test
     public void testDeleteSectionOKWithName() {
         List<Section> fakeSections = getFakeSections(9);
@@ -431,47 +421,42 @@ public class SectionPresenterTest extends SectionPresenter {
 
         // proper object
         presenter.deleteSection(getFakeSection("test", "test"));
-        
-        verify(dialogManager).confirmDeletion(anyString(),any(DialogManager.Performable.class));
+
+        verify(dialogManager).confirmDeletion(anyString(), any(DialogManager.Performable.class));
     }
 
-//    ***************************************
-//    END REFACTORING
-//    
-//    
+    // ***************************************
+    // END REFACTORING
+    //
+    //
     @Test
-    public void testCreatePerformableCreateSection(){
+    public void testCreatePerformableCreateSection() {
         Section test = getFakeSection("test", "");
         presenter.initView(view);
         CreatePerformable perf = presenter.new CreatePerformable(test);
-        
+
         perf.execute();
-        
+
         verify(view).showSection(argThat(new SectionMatcher(test)));
         verify(view).closeNewSectionDialog();
-        verify(service).saveSection(
-                    argThat(new SectionMatcher(test)));        
+        verify(service).saveSection(argThat(new SectionMatcher(test)));
     }
 
     @Test
-    public void testUpdatePerformableEditSection(){
+    public void testUpdatePerformableEditSection() {
         List<Section> fakeSections = getFakeSections(9);
         when(service.getAll()).thenReturn(fakeSections);
         presenter.initView(view);
 
         SectionTreeComponentImpl sectionTreeComponent = mock(SectionTreeComponentImpl.class);
         presenter.setCurrentSectionTreeComponentImpl(sectionTreeComponent);
-        UpdatePerformable perf = presenter.new UpdatePerformable(
-                fakeSections.get(3));
+        UpdatePerformable perf = presenter.new UpdatePerformable(fakeSections.get(3));
 
-        
         perf.execute();
 
-        verify(sectionTreeComponent).updateSectionInView(
-                argThat(new SectionMatcher(fakeSections.get(3))));
+        verify(sectionTreeComponent).updateSectionInView(argThat(new SectionMatcher(fakeSections.get(3))));
         verify(view).closeEditSectionDialog();
-        verify(service).saveSection(
-                    argThat(new SectionMatcher(fakeSections.get(3))));
+        verify(service).saveSection(argThat(new SectionMatcher(fakeSections.get(3))));
     }
 
     @Test
@@ -488,22 +473,20 @@ public class SectionPresenterTest extends SectionPresenter {
         fakeSection.addOrUpdateBranch(fakeBranch);
         fakeSection.addOrUpdateBranch(fakeBranch_1);
 
-        DeleteBranchPerformable perf = presenter.new DeleteBranchPerformable(
-                fakeBranch);
+        DeleteBranchPerformable perf = presenter.new DeleteBranchPerformable(fakeBranch);
         perf.execute();
 
         assertEquals(fakeSection.getBranches().size(), 1);
         assertEquals(fakeSection.getBranches().get(0), fakeBranch_1);
-        verify(service).saveSection(
-                    argThat(new SectionMatcher(fakeSections.get(3))));    
+        verify(service).saveSection(argThat(new SectionMatcher(fakeSections.get(3))));
     }
-    
+
     @Test
     public void testDeleteSectionSaveBranchesPerformable() {
         List<Section> fakeSections = getFakeSections(9);
         when(service.getAll()).thenReturn(fakeSections);
         presenter.initView(view);
-        
+
         Section fakeSection = fakeSections.get(3);
         Branch fakeBranch = getFakeBranch("test 1", "test 1");
         Branch fakeBranch_1 = getFakeBranch("test 1", "test 1");
@@ -511,7 +494,7 @@ public class SectionPresenterTest extends SectionPresenter {
         fakeBranch_1.setSection(fakeSection);
         fakeSection.addOrUpdateBranch(fakeBranch);
         fakeSection.addOrUpdateBranch(fakeBranch_1);
-        
+
         Section fakeSection_1 = fakeSections.get(3);
         Branch fakeBranch_2 = getFakeBranch("test 1", "test 1");
         Branch fakeBranch_3 = getFakeBranch("test 1", "test 1");
@@ -519,25 +502,26 @@ public class SectionPresenterTest extends SectionPresenter {
         fakeBranch_3.setSection(fakeSection_1);
         fakeSection_1.addOrUpdateBranch(fakeBranch_2);
         fakeSection_1.addOrUpdateBranch(fakeBranch_3);
-        
+
         DeleteSectionPerformable perf = presenter.new DeleteSectionPerformable(fakeSection, fakeSection_1);
-        
+
         perf.execute();
-        
-        verify(service).deleteAndMoveBranchesTo(argThat(new SectionMatcher(fakeSection)), argThat(new SectionMatcher(fakeSection_1)));        
+
+        verify(service).deleteAndMoveBranchesTo(argThat(new SectionMatcher(fakeSection)),
+                argThat(new SectionMatcher(fakeSection_1)));
         assertEquals(fakeSection_1.getBranches().size(), 4);
         assertTrue(fakeSection_1.getBranches().contains(fakeBranch));
         assertTrue(fakeSection_1.getBranches().contains(fakeBranch_1));
         assertTrue(fakeSection_1.getBranches().contains(fakeBranch_2));
         assertTrue(fakeSection_1.getBranches().contains(fakeBranch_3));
     }
-    
+
     @Test
-    public void testDeleteSectionWithoutSaveBranchesPerformable(){
+    public void testDeleteSectionWithoutSaveBranchesPerformable() {
         List<Section> fakeSections = getFakeSections(9);
         when(service.getAll()).thenReturn(fakeSections);
         presenter.initView(view);
-        
+
         Section fakeSection = fakeSections.get(3);
         Branch fakeBranch = getFakeBranch("test 1", "test 1");
         Branch fakeBranch_1 = getFakeBranch("test 1", "test 1");
@@ -545,7 +529,7 @@ public class SectionPresenterTest extends SectionPresenter {
         fakeBranch_1.setSection(fakeSection);
         fakeSection.addOrUpdateBranch(fakeBranch);
         fakeSection.addOrUpdateBranch(fakeBranch_1);
-        
+
         Section fakeSection_1 = fakeSections.get(3);
         Branch fakeBranch_2 = getFakeBranch("test 1", "test 1");
         Branch fakeBranch_3 = getFakeBranch("test 1", "test 1");
@@ -553,13 +537,11 @@ public class SectionPresenterTest extends SectionPresenter {
         fakeBranch_3.setSection(fakeSection_1);
         fakeSection_1.addOrUpdateBranch(fakeBranch_2);
         fakeSection_1.addOrUpdateBranch(fakeBranch_3);
-        
-        DeleteSectionPerformable perf = presenter.new DeleteSectionPerformable(fakeSection,null);
-        
+
+        DeleteSectionPerformable perf = presenter.new DeleteSectionPerformable(fakeSection, null);
+
         perf.execute();
         verify(service).deleteRecursively(argThat(new SectionMatcher(fakeSection)));
     }
-
-    
 
 }

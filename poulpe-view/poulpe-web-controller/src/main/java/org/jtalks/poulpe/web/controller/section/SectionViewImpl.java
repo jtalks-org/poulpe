@@ -14,16 +14,13 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.validation.ValidationError;
 import org.jtalks.poulpe.validation.ValidationResult;
-import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -33,11 +30,6 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.impl.InputElement;
-
-import com.google.common.collect.ImmutableMap;
-
-
 
 public class SectionViewImpl extends Window implements AfterCompose {
 
@@ -50,25 +42,29 @@ public class SectionViewImpl extends Window implements AfterCompose {
     private Window editSectionDialog;
     private Textbox editSectionDialog$sectionName;
     private Textbox editSectionDialog$sectionDescription;
-    private ValidationFailureHandler handler = new ValidationFailureHandler();
+
+    // TODO: make this validator conform the common interface
     
-    
-    public void validationFailure(ValidationResult result, boolean isNewSection) {        
-		handler.validationFailure(result, "name", getTextbox(isNewSection));
+    public void validationFailure(ValidationResult result, boolean isNewSection) {
+        // keeping the signature for testing
     }
     
+    /*
+    private ValidationFailureHandler handler = new ValidationFailureHandler();
+
+    public void validationFailure(ValidationResult result, boolean isNewSection) {
+        handler.validationFailure(result, "name", getTextbox(isNewSection));
+    }
+
     private Textbox getTextbox(boolean isNewSection) {
         if (isNewSection) {
             return newSectionDialog$sectionName;
-        }
-        else {
+        } else {
             return editSectionDialog$sectionName;
         }
     }
-
-    /**
-     * {@inheritDoc}
      */
+    
     @Override
     public void afterCompose() {
         Components.addForwards(this, this);
@@ -90,7 +86,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
      */
 
     public void showSections(List<Section> sections) {
-        //TODO: Find out what's happening here.
+        // TODO: Find out what's happening here.
         List<Object> childrenToSave = new ArrayList<Object>();
         for (Object obj : getChildren()) {
             if (!(obj instanceof SectionTreeComponentImpl)) {
@@ -110,7 +106,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
 
     /**
      * Set presenter
-     *
+     * 
      * @param presenter instance presenter for view
      * @see BranchPresenter
      */
@@ -121,7 +117,8 @@ public class SectionViewImpl extends Window implements AfterCompose {
     // EVENT HANDLERS
 
     /**
-     * Event which happen when user click on '+' buttton opens dialog for adding new section
+     * Event which happen when user click on '+' buttton opens dialog for adding
+     * new section
      */
     public void onClick$addSectionButton() {
         presenter.openNewSectionDialog();
@@ -145,22 +142,24 @@ public class SectionViewImpl extends Window implements AfterCompose {
     }
 
     /**
-     * Event which happen when user click on cancel button in new branch dialog window this cause close new branch
-     * dialog
+     * Event which happen when user click on cancel button in new branch dialog
+     * window this cause close new branch dialog
      */
     public void onClick$closeButton$newSectionDialog() {
         closeNewSectionDialog();
     }
 
     /**
-     * Event occurs when the used click on cancel button in the DeleteSectionDialog
+     * Event occurs when the used click on cancel button in the
+     * DeleteSectionDialog
      */
     public void onClick$closeButton$deleteSectionDialog() {
         closeDeleteSectionDialog();
     }
 
     /**
-     * Event occurs when the used click on delete button in the DeleteSectionDialog
+     * Event occurs when the used click on delete button in the
+     * DeleteSectionDialog
      */
     public void onClick$deleteButton$deleteSectionDialog() {
         // if (deleteSectionDialog$deleteAll.isChecked()) {
@@ -175,27 +174,27 @@ public class SectionViewImpl extends Window implements AfterCompose {
     }
 
     /**
-     * Event which happen when user click on add button in new branch dialog window this cause save new branch
+     * Event which happen when user click on add button in new branch dialog
+     * window this cause save new branch
      */
     public void onClick$addButton$newSectionDialog() {
-        presenter
-                .addNewSection(getNewSectionName(), getNewSectionDescription());
+        presenter.addNewSection(getNewSectionName(), getNewSectionDescription());
     }
 
     /**
-     * Event which happen when user click on cancel button in new branch dialog window this cause close new branch
-     * dialog
+     * Event which happen when user click on cancel button in new branch dialog
+     * window this cause close new branch dialog
      */
     public void onClick$closeButton$editSectionDialog() {
         closeEditSectionDialog();
     }
 
     /**
-     * Event which happen when user click on add button in new branch dialog window this cause save new branch
+     * Event which happen when user click on add button in new branch dialog
+     * window this cause save new branch
      */
     public void onClick$editButton$editSectionDialog() {
-        presenter
-                .editSection(getEditSectionName(), getEditSectionDescription());
+        presenter.editSection(getEditSectionName(), getEditSectionDescription());
 
     }
 
@@ -246,8 +245,8 @@ public class SectionViewImpl extends Window implements AfterCompose {
      */
 
     public void openDeleteSectionDialog(Section victim) {
-        Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop()
-                .getPage("sectionDeleteDialog").getFellow("deleteWindow"), victim));
+        Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop().getPage("sectionDeleteDialog").getFellow(
+                "deleteWindow"), victim));
     }
 
     /**
@@ -262,7 +261,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
 
     /**
      * get the value of sectionName textField of newSectionDialog
-     *
+     * 
      * @return new section name
      */
     private String getNewSectionName() {
@@ -271,7 +270,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
 
     /**
      * get the value of sectionDescription textField of newSectionDialog
-     *
+     * 
      * @return new section description
      */
     private String getNewSectionDescription() {
@@ -342,7 +341,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
      * {@inheritDoc}
      */
 
-
     public void closeDialogs() {
         closeNewSectionDialog();
         closeEditSectionDialog();
@@ -352,16 +350,13 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void openNewBranchDialog() {
-        Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage(
-                "BranchDialog").getFellow("editWindow")));
+        Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow")));
     }
 
     /**
      * {@inheritDoc}
      */
-
     public void closeNewBranchDialog() {
         // TODO : implement
     }
@@ -369,16 +364,13 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void openEditBranchDialog(Branch branch) {
-        Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage(
-                "BranchDialog").getFellow("editWindow"), branch));
+        Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
+                branch));
     }
 
-
     public void openModeratorDialog(Branch branch) {
-        Events.postEvent(new Event("onOpen", getDesktop()
-                .getPage("moderatorDialog").getFellow("moderatorWindow"),
+        Events.postEvent(new Event("onOpen", getDesktop().getPage("moderatorDialog").getFellow("moderatorWindow"),
                 branch));
     }
 
@@ -386,17 +378,14 @@ public class SectionViewImpl extends Window implements AfterCompose {
 
     }
 
-
     public void closeModeratorDialog() {
-        Events.postEvent(new Event("onCloseModeratorDialog", getDesktop()
-                .getPage("moderatorDialog").getFellow("moderatorWindow")));
+        Events.postEvent(new Event("onCloseModeratorDialog", getDesktop().getPage("moderatorDialog").getFellow(
+                "moderatorWindow")));
     }
-
 
     /**
      * {@inheritDoc}
      */
-
     public void openDeleteBranchDialog(Branch branch) {
 
     }
@@ -404,7 +393,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void closeEditBranchDialog() {
 
     }
@@ -421,7 +409,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public boolean isEditDialogOpen() {
         return editSectionDialog.isVisible();
     }
@@ -429,7 +416,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public boolean isNewDialogOpen() {
         return newSectionDialog.isVisible();
     }
