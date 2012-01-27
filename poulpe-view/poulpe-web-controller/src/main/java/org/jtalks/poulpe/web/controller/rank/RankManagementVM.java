@@ -47,7 +47,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
     
-    private ValidationFailureHandler handler = new ValidationFailureHandler("name", rankName);
+    private ValidationFailureHandler handler;
 
     /**
      * Construct the object with injected service.
@@ -139,6 +139,8 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     @Override
     public void validationFailure(ValidationResult result) {
+        //  new ValidationFailureHandler("name", rankName)
+        // TODO: add initialization - now it causes NPE because rankName is null
         handler.validationFailure(result);
     }
 
