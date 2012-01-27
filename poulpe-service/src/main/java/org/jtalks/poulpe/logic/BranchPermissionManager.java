@@ -26,6 +26,7 @@ import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.annotation.Nonnull;
 import java.util.Map;
 
 /**
@@ -39,21 +40,39 @@ public class BranchPermissionManager {
     private final AclManager aclManager;
     private final GroupDao groupDao;
 
-    public BranchPermissionManager(AclManager aclManager, GroupDao groupDao) {
+    public BranchPermissionManager(@Nonnull AclManager aclManager, @Nonnull GroupDao groupDao) {
         this.aclManager = aclManager;
         this.groupDao = groupDao;
     }
 
+    /**
+     * Changes the granted permissions according to the specified changes.
+     *
+     * @param branch  the branch to change permissions to
+     * @param changes contains a permission itself, a list of groups to be granted to the permission and the list of
+     *                groups to remove their granted privileges
+     * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
+     * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
+     */
     public void changeGrants(Branch branch, BranchAccessChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).grant(changes.getPermission())
-                .setOwner(changes.getNewlyAddedPermissionsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedPermissionsAsArray()).on(branch).flush();
+                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
+    /**
+     * Changes the restricting permissions according to the specified changes.
+     *
+     * @param branch  the branch to change permissions to
+     * @param changes contains a permission itself, a list of groups to be restricted from the permission and the list
+     *                of groups to remove their restricting privileges
+     * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
+     * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
+     */
     public void changeRestrictions(Branch branch, BranchAccessChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
-                .setOwner(changes.getNewlyAddedPermissionsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedPermissionsAsArray()).on(branch).flush();
+                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
     public BranchAccessList getGroupAccessListFor(Branch branch) {

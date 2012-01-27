@@ -39,7 +39,7 @@ public class BranchAccessChanges {
      *
      * @return Group[] with newly permissions
      */
-    public Group[] getNewlyAddedPermissionsAsArray() {
+    public Group[] getNewlyAddedGroupsAsArray() {
         return newlyAddedGroups.toArray(new Group[]{});
     }
 
@@ -66,7 +66,7 @@ public class BranchAccessChanges {
      *
      * @return Group[] with removed permissions
      */
-    public Group[] getRemovedPermissionsAsArray() {
+    public Group[] getRemovedGroupsAsArray() {
         return removedGroups.toArray(new Group[]{});
     }
 

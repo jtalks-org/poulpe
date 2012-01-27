@@ -25,7 +25,6 @@ import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -52,23 +51,19 @@ public class BranchPermissionManagerTest {
     }
 
     @Test(dataProvider = "accessChanges")
-    public void testChangeGrants(BranchAccessChanges accessChanges) throws Exception {
+    public void testChangeGrants(BranchAccessChanges changes) throws Exception {
         Branch branch = new Branch("test branch");
-        manager.changeGrants(branch, accessChanges);
-        List<? extends Sid> removedGroupSids = UserGroupSid.create(accessChanges.getRemovedPermissionsAsArray());
-        List<? extends Sid> grantedGroupSids = UserGroupSid.create(accessChanges.getNewlyAddedPermissionsAsArray());
-        verify(aclManager).delete(removedGroupSids, createFromArray(accessChanges.getPermission()), branch);
-        verify(aclManager).grant(grantedGroupSids, createFromArray(accessChanges.getPermission()), branch);
+        manager.changeGrants(branch, changes);
+        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager).grant(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
     }
 
     @Test(dataProvider = "accessChanges")
-    public void testChangeRestriction(BranchAccessChanges accessChanges) throws Exception {
+    public void testChangeRestriction(BranchAccessChanges changes) throws Exception {
         Branch branch = new Branch("test branch");
-        manager.changeRestrictions(branch, accessChanges);
-        List<? extends Sid> removedGroupSids = UserGroupSid.create(accessChanges.getRemovedPermissionsAsArray());
-        List<? extends Sid> grantedGroupSids = UserGroupSid.create(accessChanges.getNewlyAddedPermissionsAsArray());
-        verify(aclManager).delete(removedGroupSids, createFromArray(accessChanges.getPermission()), branch);
-        verify(aclManager).restrict(grantedGroupSids, createFromArray(accessChanges.getPermission()), branch);
+        manager.changeRestrictions(branch, changes);
+        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager).restrict(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
     }
 
     @Test
@@ -89,7 +84,15 @@ public class BranchPermissionManagerTest {
         return new Object[][]{{new Branch()}};
     }
 
-    private List<Permission> createFromArray(Permission... permissions) {
+    private List<UserGroupSid> getNewlyAddedSids(BranchAccessChanges accessChanges) {
+        return UserGroupSid.create(accessChanges.getNewlyAddedGroupsAsArray());
+    }
+
+    private List<UserGroupSid> getRemovedSids(BranchAccessChanges accessChanges) {
+        return UserGroupSid.create(accessChanges.getRemovedGroupsAsArray());
+    }
+
+    private List<Permission> listFromArray(Permission... permissions) {
         return Lists.newArrayList(permissions);
     }
 }
