@@ -25,6 +25,7 @@ import org.springframework.security.acls.domain.ObjectIdentityImpl;
 import org.springframework.security.acls.model.*;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,44 +44,14 @@ public class AclManager {
         aclUtil = new AclUtil(mutableAclService);
     }
 
-    /**
-     * Gets each group that has some permissions on actions with the specified branch. So the resulting table will
-     * contain the mask of permission, the group id, and the flag whether the permission is granting. So considering
-     * that in the database there are records like this:
-     * <pre>
-     * --------------------------------------------------------------
-     * | Permission mask | User Group ID | Granting                 |
-     * |------------------------------------------------------------|
-     * | 3 (mask: 00011) |      1        | true (allows action)     |
-     * | 3 (mask: 00011) |      2        | false (restricts action) |
-     * | 5 (mask: 00101) |      1        | true (allows action)     |
-     * --------------------------------------------------------------
-     * </pre> We'll get results like this:
-     * <pre>
-     * ----------------------------------
-     * |                 | 1    |   2   |
-     * |--------------------------------|
-     * | 3 (mask: 00011) | true | false |
-     * | 5 (mask: 00101) | true |       |
-     * ----------------------------------
-     * </pre>
-     * In this case we have 2 permissions and 2 groups, and both the permissions are granted to the group with id 1 and
-     * the first permission is restricted to the group with id 2.
-     *
-     * @param branch a branch to get all ACL entries for it (all the groups that have granting or restricting
-     *               permissions on it)
-     * @return a table where the row IDs are permission masks, columns are group IDs, and the values are flags whether
-     *         the permission is granting to the group or restricting:
-     */
-    public Table<Integer, Long, Boolean> getBranchPermissions(Branch branch) {
-        Table<Integer, Long, Boolean> groupIds = HashBasedTable.create();
+    public List<GroupAce> getBranchPermissions(Branch branch) {
         MutableAcl branchAcl = aclUtil.getAclFor(branch);
-        for (AccessControlEntry entry : branchAcl.getEntries()) {
-            String groupId = ((UserGroupSid) entry.getSid()).getGroupId();
-            int mask = entry.getPermission().getMask();
-            groupIds.put(mask, Long.parseLong(groupId), entry.isGranting());
+        List<AccessControlEntry> originalAces = branchAcl.getEntries();
+        List<GroupAce> resultingAces = new ArrayList<GroupAce>(originalAces.size());
+        for (AccessControlEntry entry : originalAces) {
+            resultingAces.add(new GroupAce(entry));
         }
-        return groupIds;
+        return resultingAces;
     }
 
     /**

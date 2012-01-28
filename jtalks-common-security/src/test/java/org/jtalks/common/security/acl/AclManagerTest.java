@@ -47,17 +47,17 @@ public class AclManagerTest {
         manager.setAclUtil(mockAclUtil);
     }
 
-    @Test
+    @Test()
     public void testGetBranchPermissions() throws Exception {
         Branch branch = new Branch();
         ExtendedMutableAcl acl = mock(ExtendedMutableAcl.class);
         List<AccessControlEntry> aces = AclDataProvider.createRandomEntries(acl);
         when(acl.getEntries()).thenReturn(aces);
         when(mockAclUtil.getAclFor(branch)).thenReturn(acl);
-        Table<Integer,Long,Boolean> results = manager.getBranchPermissions(branch);
+        List<GroupAce> branchPermissions = manager.getBranchPermissions(branch);
         for(AccessControlEntry entry: aces){
             UserGroupSid sid = (UserGroupSid) entry.getSid();
-            results.get(entry.getPermission().getMask(), Long.parseLong(sid.getGroupId()));
+//            results.get(entry.getPermission().getMask(), Long.parseLong(sid.getGroupId()));
         }
     }
 

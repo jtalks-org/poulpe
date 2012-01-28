@@ -33,6 +33,7 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 /**
  * @author stanislav bashkirtsev
@@ -68,6 +69,9 @@ public class BranchPermissionManagerTest {
 
     @Test
     public void testGetGroupAccessListFor() throws Exception {
+        Branch branch = new Branch();
+
+
 //        when(aclManager.getBranchPermissions(branch)).thenReturn()
     }
 

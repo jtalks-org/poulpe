@@ -14,9 +14,9 @@
  */
 package org.jtalks.poulpe.logic;
 
-import com.google.common.collect.Table;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
+import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
@@ -27,6 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +37,6 @@ import java.util.Map;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManager {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final AclManager aclManager;
     private final GroupDao groupDao;
 
@@ -75,21 +75,12 @@ public class BranchPermissionManager {
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
+
     public BranchAccessList getGroupAccessListFor(Branch branch) {
         BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
-        Table<Integer, Long, Boolean> branchPermissions = aclManager.getBranchPermissions(branch);
-        for (BranchPermission permission : branchAccessList.getPermissions()) {
-            Map<Long, Boolean> row = branchPermissions.row(permission.getMask());
-            for (Map.Entry<Long, Boolean> entry : row.entrySet()) {
-                Group group;
-                group = groupDao.get(entry.getKey());
-                if (group != null) {
-                    branchAccessList.put(permission, group, entry.getValue());
-                } else {
-                    logger.warn("A group with ID {} was removed, but this ID is still registered as a Permission owner in " +
-                            "ACL tables.", entry.getKey());
-                }
-            }
+        List<GroupAce> groupAces = aclManager.getBranchPermissions(branch);
+        for(GroupAce groupAce: groupAces){
+            branchAccessList.put(groupAce.getBranchPermission(), groupAce.getGroup(groupDao), groupAce.isGranting());
         }
         return branchAccessList;
     }

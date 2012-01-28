@@ -89,13 +89,28 @@ public enum BranchPermission implements JtalksPermission {
         Assert.throwIfNull(name, "The name can't be null");
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int getMask() {
         return mask;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String getPattern() {
+        return null;
+    }
+
+    public static BranchPermission findByMask(int mask){
+        for(BranchPermission nextPermission: values()){
+            if(mask == nextPermission.getMask()){
+                return nextPermission;
+            }
+        }
         return null;
     }
 
