@@ -263,4 +263,13 @@ public class SectionPresenter {
         this.perfomableFactory = perfomableFactory;
     }
 
+    /**
+     * Save section
+     * 
+     * @param section
+     *            the section to save
+     */
+    public void saveSection(Section section) {
+        sectionService.saveSection(section);
+    }
 }

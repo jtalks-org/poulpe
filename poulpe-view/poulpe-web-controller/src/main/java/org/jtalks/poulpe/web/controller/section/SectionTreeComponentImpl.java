@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +23,7 @@ import java.util.List;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
@@ -29,6 +31,8 @@ import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zul.Button;
+import org.zkoss.zk.ui.event.DropEvent;
+import org.zkoss.zk.ui.event.GenericEventListener;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Div;
@@ -42,6 +46,7 @@ import org.zkoss.zul.Treerow;
 
 /**
  * @author Konstantin Akimov
+ * @author Guram Savinov
  * */
 public class SectionTreeComponentImpl extends Div implements IdSpace {
     /**
@@ -73,7 +78,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
         DefaultTreeModel<Section> model = new DefaultTreeModel<Section>(root);
         sectionTree.setModel(model);
-        sectionTree.setItemRenderer(new SectionBranchTreeitemRendere());
+        sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer());
     }
 
     /**
@@ -175,8 +180,40 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
 
     }
 
-    public class SectionBranchTreeitemRendere implements TreeitemRenderer {
+    public class SectionBranchTreeitemRenderer implements TreeitemRenderer {
         
+        /**
+         * Listener for Drag'n'Drop event.
+         */
+        private EventListener<Event> listener = new GenericEventListener<Event>() {
+
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void onEvent(Event evt) throws Exception {
+                DropEvent dropevent = (DropEvent) evt;
+                Treeitem dragged = (Treeitem) dropevent.getDragged().getParent();
+                Treeitem target = (Treeitem) dropevent.getTarget().getParent();
+
+                int draggedIndex = dragged.getIndex();
+                int targetIndex = target.getIndex();
+                if ((targetIndex-1) == draggedIndex) {
+                    return;
+                } else if (targetIndex > draggedIndex) {
+                    targetIndex--;
+                }
+
+                Section section = dragged.getParentItem().getValue();
+                List<Branch> branches = section.getBranches();
+
+                branches.remove(draggedIndex);
+                branches.add(targetIndex, (Branch) dragged.getValue());
+                presenter.saveSection(section);
+
+                target.getParent().insertBefore(dragged, target);
+            }
+        };
+
         @Override
         public void render(final Treeitem treeItem, Object node) throws Exception {
             ExtendedTreeNode curNode = (ExtendedTreeNode) node;
@@ -208,7 +245,9 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
                 treeRow.appendChild(new Treecell(((Section) data).getName()));
             } else if (data instanceof Branch) {
                 treeRow.appendChild(new Treecell(((Branch) data).getName()));
-
+                treeRow.setDraggable("true");
+                treeRow.setDroppable("true");
+                treeRow.addEventListener("onDrop", listener);
             }
 
         }
