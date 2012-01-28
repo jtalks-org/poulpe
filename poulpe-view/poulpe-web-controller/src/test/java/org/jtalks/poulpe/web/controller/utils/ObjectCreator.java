@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
@@ -44,11 +45,11 @@ public class ObjectCreator {
     }
 
     public static List<Section> getFakeSections(int sizeOfCollection) {
-        List<Section> sections = new ArrayList<Section>();
-        for (int i = 0; i < sizeOfCollection; i++) {
-            sections.add(new Section(random(), "desc"));
-        }
-        return sections;
+        return Collections.nCopies(sizeOfCollection, new Section(random(), "desc"));
+    }
+
+    public static List<Section> fakeSections() {
+        return getFakeSections(10);
     }
 
     /**
@@ -63,6 +64,25 @@ public class ObjectCreator {
         return section;
     }
 
+    public static Section fakeSection() {
+        return new Section(random(), random());
+    }
+
+    public static Section sectionWithBranches(int n) {
+        Section section = new Section(random(), random());
+        while (n > 0) {
+            Branch branch = fakeBranch();
+            section.addOrUpdateBranch(branch);
+            branch.setSection(section);
+            n--;
+        }
+        return section;
+    }
+
+    public static Section sectionWithBranches() {
+        return sectionWithBranches(10);
+    }
+    
     /**
      * @deprecated use {@link Branch#Branch(String, String)} constructor instead
      */
@@ -72,6 +92,10 @@ public class ObjectCreator {
         branch.setName(name);
         branch.setDescription(description);
         return branch;
+    }
+    
+    public static Branch fakeBranch() {
+        return new Branch(random(), random());
     }
 
     public static List<User> getFakeUsers(int size) {

@@ -15,8 +15,6 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
@@ -24,7 +22,6 @@ import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 
 /**
  * This class is used as Presenter layer in Model-View-Presenter pattern for
@@ -32,38 +29,27 @@ import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
  * 
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
- * 
+ * @author Grigorev Alexey
  */
 public class SectionPresenter {
 
-    /**
-     * initialized via Spring DI
-     */
+    public static final String ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS = "sections.error.section_name_already_exists";
+    public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
+    public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
+
+    // injected
     private SectionService sectionService;
     private SectionViewImpl sectionView;
     private SectionTreeComponentImpl currentSectionTreeComponentImpl;
     private DialogManager dialogManager;
     private EntityValidator entityValidator;
 
-    public static final String ERROR_LABEL_SECTION_NAME_ALREADY_EXISTS = "sections.error.section_name_already_exists";
-    public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
-    public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
-
-    /**
-     * @param service
-     *            set section service instance
-     * */
-    public void setSectionService(SectionService service) {
-        this.sectionService = service;
-    }
-
     // View management methods
 
     /**
      * initialize main view SectionView instance
      * 
-     * @param view
-     *            instance
+     * @param view instance
      */
     public void initView(SectionViewImpl view) {
         this.sectionView = view;
@@ -82,8 +68,7 @@ public class SectionPresenter {
     /**
      * Remove section from sectionView
      * 
-     * @param section
-     *            which will be removed from view
+     * @param section which will be removed from view
      */
     public void removeSectionFromView(Section section) {
         sectionView.removeSection(section);
@@ -92,8 +77,8 @@ public class SectionPresenter {
     /**
      * This method is used to show dialog for editing section or branch
      * 
-     * @param currentSectionTreeComponentImpl
-     *            from this instance we get selected object
+     * @param currentSectionTreeComponentImpl from this instance we get selected
+     * object
      */
     public void openEditDialog(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
         Object object = currentSectionTreeComponentImpl.getSelectedObject();
@@ -103,8 +88,7 @@ public class SectionPresenter {
         setCurrentSectionTreeComponentImpl(currentSectionTreeComponentImpl);
         if (object instanceof Section) {
             Section section = (Section) object;
-            sectionView.openEditSectionDialog(section.getName(),
-                    section.getDescription());
+            sectionView.openEditSectionDialog(section.getName(), section.getDescription());
         } else if (object instanceof Branch) {
 
             sectionView.openEditBranchDialog((Branch) object);
@@ -115,8 +99,7 @@ public class SectionPresenter {
     /**
      * Method used for delete section or branch.
      * 
-     * @param object
-     *            can be Section or Branch instance
+     * @param object can be Section or Branch instance
      * */
     public void openDeleteDialog(Object object) {
         if (!(object instanceof Section) && !(object instanceof Branch)) {
@@ -127,8 +110,7 @@ public class SectionPresenter {
             sectionView.openDeleteSectionDialog(section);
         } else if (object instanceof Branch) {
             final Branch branch = (Branch) object;
-            dialogManager.confirmDeletion(branch.getName(),
-                    new DeleteBranchPerformable(branch));
+            dialogManager.confirmDeletion(branch.getName(), new DeleteBranchPerformable(branch));
         }
 
     }
@@ -136,11 +118,10 @@ public class SectionPresenter {
     /**
      * This method is used to show new branch dialog
      * 
-     * @param SectionTreeComponentImpl
-     *            method save reference on this instance
+     * @param sectionTreeComponentImpl method save reference on this instance
      */
-    public void openNewBranchDialog(SectionTreeComponentImpl SectionTreeComponentImpl) {
-        this.currentSectionTreeComponentImpl = SectionTreeComponentImpl;
+    public void openNewBranchDialog(SectionTreeComponentImpl sectionTreeComponentImpl) {
+        this.currentSectionTreeComponentImpl = sectionTreeComponentImpl;
         sectionView.openNewBranchDialog();
     }
 
@@ -160,16 +141,14 @@ public class SectionPresenter {
     /**
      * This method is invoked when the user saves editions and push edit button
      * 
-     * @param name
-     *            is edited section name
-     * @param description
-     *            is edited section description
+     * @param name is edited section name
+     * @param description is edited section description
      */
-    public boolean editSection(final String name, final String description) {      
-        Section section = (Section) this.currentSectionTreeComponentImpl
-                .getSelectedObject();
+    public boolean editSection(String name, String description) {
+        Section section = (Section) currentSectionTreeComponentImpl.getSelectedObject();
         section.setName(name);
         section.setDescription(description);
+        
         if (validate(section, false)) {
             dialogManager.confirmEdition(name, new UpdatePerformable(section));
             sectionView.closeEditSectionDialog();
@@ -180,56 +159,86 @@ public class SectionPresenter {
 
     }
 
-  
     /**
      * Create new Section object and save it if there no any Sections with the
      * same name in other cases (the name is already) should display error
      * dialog
      * 
-     * @param name
-     *            section
-     * @param description
-     *            section
+     * @param name section
+     * @param description section
      */
     public boolean addNewSection(final String name, final String description) {
         Section section = new Section();
         section.setName(name);
         section.setDescription(description);
-        
+
         if (validate(section, true)) {
             dialogManager.confirmCreation(name, new CreatePerformable(section));
             return true;
         } else {
             return false;
-        } 
+        }
     }
 
     /**
      * Delete section via sectionService
      * 
-     * @param recipient
-     *            if specified than all branches should be add as children to
-     *            this section. If null then all children should be also deleted
+     * @param recipient if specified than all branches should be add as children
+     * to this section. If null then all children should be also deleted
      */
     public void deleteSection(final Section recipient) {
 
-        Object selectedObject = this.currentSectionTreeComponentImpl
-                .getSelectedObject();
+        Object selectedObject = this.currentSectionTreeComponentImpl.getSelectedObject();
         if (!(selectedObject instanceof Section)) {
             return;
         }
         final Section victim = (Section) selectedObject;
-        dialogManager.confirmDeletion(victim.getName(),
-                new DeleteSectionPerformable(victim, recipient));
+        dialogManager.confirmDeletion(victim.getName(), new DeleteSectionPerformable(victim, recipient));
         removeSectionFromView(victim);
 
     }
 
     /**
-     * DI for dialog dialog manager might be used within spring
+     * Method used to manage moderation dialog
      * 
-     * @param dialogManager
-     *            manager to manage interaction with user
+     * @param branch
+     */
+    public void openModeratorDialog(Object selectedObject) {
+        if (!(selectedObject instanceof Branch)) {
+            return;
+        }
+        sectionView.openModeratorDialog((Branch) selectedObject);
+
+    }
+
+
+    public boolean validate(Section section, boolean isNewSection) {
+        ValidationResult result = entityValidator.validate(section);
+
+        if (result.hasErrors()) {
+            sectionView.validationFailure(result, isNewSection);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
+
+    /**
+     * @param service set section service instance
+     */
+    public void setSectionService(SectionService service) {
+        this.sectionService = service;
+    }
+
+    /**
+     * @param dialogManager manager to manage interaction with user
      */
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
@@ -243,104 +252,30 @@ public class SectionPresenter {
     }
 
     /**
-     * @param currentSectionTreeComponentImpl
-     *            is current <code>SectionTreeComponentImpl</code> that will process
-     *            actions from presenter
+     * @param currentSectionTreeComponentImpl is current
+     * <code>SectionTreeComponentImpl</code> that will process actions from
+     * presenter
      */
-    public void setCurrentSectionTreeComponentImpl(
-            SectionTreeComponentImpl currentSectionTreeComponentImpl) {
+    public void setCurrentSectionTreeComponentImpl(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
         this.currentSectionTreeComponentImpl = currentSectionTreeComponentImpl;
     }
+
     
     /**
-     * Method used to manage moderation dialog 
-     * @param branch
+     * Implementation of {@link DialogManager.Performable} for deleting sections, 
+     * performed when user confirms deletion
+     * 
+     * @author unascribed
      */
-    public void openModeratorDialog(Object selectedObject){
-        if(!(selectedObject instanceof Branch)){
-            return;
-        }
-        sectionView.openModeratorDialog((Branch)selectedObject);
-                
-    }
-    
-    public class CreatePerformable implements DialogManager.Performable {
-        private Section section;
-        public CreatePerformable(Section section) {
-            this.section = section;
-        }
-        @Override
-        public void execute() {
-            sectionService.saveSection(section);
-            sectionView.showSection(section);
-            sectionView.closeNewSectionDialog();
-        }
-        
-    }
-
-    public class UpdatePerformable implements DialogManager.Performable {
-        private Section section;
-        
-
-        /**
-         * The params are already checked and validated otherwise the behavior
-         * can't be predictable
-         * 
-         * @param section to edit. 
-         * @param name new name for section
-         * @param description new description for section
-         */
-        public UpdatePerformable(Section section) {
-            this.section = section;
-        }
-
-        @Override
-        public void execute() {
-            sectionService.saveSection(section);
-            // its not necessary here because of section was transferred as
-            // a reference
-            SectionPresenter.this.currentSectionTreeComponentImpl
-                    .updateSectionInView(section);
-            sectionView.closeEditSectionDialog();
-        }
-  
-    }
-   
-
-    public class DeleteBranchPerformable implements DialogManager.Performable {
-
-        private Branch branch;
-
-        /**
-         * 
-         * @param branch
-         *            to be deleted
-         */
-        public DeleteBranchPerformable(Branch branch) {
-            this.branch = branch;
-        }
-
-        @Override
-        public void execute() {
-            Section section = branch.getSection();
-            section.getBranches().remove(branch);          
-                sectionService.saveSection(section);
-            
-            updateView();
-        }
-    }
-
     public class DeleteSectionPerformable implements DialogManager.Performable {
 
-        private Section victim;
-        private Section recipient;
+        private final Section victim;
+        private final Section recipient;
 
         /**
-         * @param victim
-         *            to be deleted
-         * @param recipient
-         *            is section which will adopt victim's branches, might be
-         *            <code>null</code>
+         * @param victim to be deleted
+         * @param recipient is section which will adopt victim's branches, might
+         * be <code>null</code>
          */
         public DeleteSectionPerformable(Section victim, Section recipient) {
             this.victim = victim;
@@ -349,8 +284,8 @@ public class SectionPresenter {
 
         @Override
         public void execute() {
+            // TODO: get rid of if - use polymorphism 
             if (recipient == null) {
-
                 sectionService.deleteRecursively(victim);
                 return;
             } else {
@@ -362,22 +297,69 @@ public class SectionPresenter {
         }
     }
 
-    /**
-     * @param entityValidator the entityValidator to set
-     */
-    public void setEntityValidator(EntityValidator entityValidator) {
-        this.entityValidator = entityValidator;
-    }
-    
-    public boolean validate(Section section, boolean isNewSection) {
-        ValidationResult result = entityValidator.validate(section);
+    public class CreatePerformable implements DialogManager.Performable {
+        private final Section section;
 
-        if (result.hasErrors()) {
-            sectionView.validationFailure(result, isNewSection);
-            return false;
-        } else {
-            return true;
+        public CreatePerformable(Section section) {
+            this.section = section;
+        }
+
+        @Override
+        public void execute() {
+            sectionService.saveSection(section);
+            sectionView.showSection(section);
+            sectionView.closeNewSectionDialog();
+        }
+
+    }
+
+    public class UpdatePerformable implements DialogManager.Performable {
+        private final Section section;
+
+        /**
+         * The params are already checked and validated otherwise the behavior
+         * can't be predictable
+         * 
+         * @param section to edit.
+         * @param name new name for section
+         * @param description new description for section
+         */
+        public UpdatePerformable(Section section) {
+            this.section = section;
+        }
+
+        @Override
+        public void execute() {
+            sectionService.saveSection(section);
+            currentSectionTreeComponentImpl.updateSectionInView(section);
+            sectionView.closeEditSectionDialog();
+        }
+
+    }
+
+    public class DeleteBranchPerformable implements DialogManager.Performable {
+
+        private final Branch branch;
+
+        /**
+         * 
+         * @param branch to be deleted
+         */
+        public DeleteBranchPerformable(Branch branch) {
+            this.branch = branch;
+        }
+
+        @Override
+        public void execute() {
+            // TODO: move away to service
+            Section section = branch.getSection();
+            section.getBranches().remove(branch);
+            
+            sectionService.saveSection(section);
+
+            updateView();
         }
     }
 
+    
 }

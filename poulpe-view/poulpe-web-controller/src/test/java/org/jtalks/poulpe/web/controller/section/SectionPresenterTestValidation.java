@@ -7,9 +7,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.validation.EntityValidator;
@@ -20,7 +17,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 
 /**
  * @author Tatiana Birina
@@ -40,7 +36,7 @@ public class SectionPresenterTestValidation {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        
+
         presenter = new SectionPresenter();
 
         presenter.setSectionService(service);
@@ -51,9 +47,7 @@ public class SectionPresenterTestValidation {
     }
 
     private ValidationResult resultWithErrors() {
-        ValidationError error = new ValidationError("name", Section.SECTION_ALREADY_EXISTS);
-        Set<ValidationError> errors = Collections.singleton(error);
-        return new ValidationResult(errors);
+        return new ValidationResult(new ValidationError("name", Section.SECTION_ALREADY_EXISTS));
     }
 
     @Test
@@ -73,9 +67,9 @@ public class SectionPresenterTestValidation {
     @Test
     public void testCheckSectionUniquenessOK() {
         givenNoConstraintsViolated();
-        
+
         presenter.addNewSection("name", "description");
-        
+
         verify(view, never()).validationFailure(any(ValidationResult.class), anyBoolean());
         verify(dialogManager).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
@@ -87,7 +81,9 @@ public class SectionPresenterTestValidation {
     @Test
     public void testCheckSectionUniquenessNonUnique() {
         givenConstraintViolated();
+
         presenter.addNewSection("name", "description");
+
         verify(service, never()).saveSection(any(Section.class));
         verify(dialogManager, never()).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
@@ -95,4 +91,5 @@ public class SectionPresenterTestValidation {
     private void givenConstraintViolated() {
         when(entityValidator.validate(any(Section.class))).thenReturn(resultWithErrors);
     }
+
 }
