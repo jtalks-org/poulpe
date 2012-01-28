@@ -44,6 +44,16 @@ public class ValidationResult {
     }
 
     /**
+     * Creates {@link ValidationResult} instance with one error
+     * 
+     * @param error validation error
+     */
+    public ValidationResult(ValidationError error) {
+        this(Collections.singleton(error));
+    }
+
+    
+    /**
      * Should be called only after {@link #validate(Entity)}
      * @return {@code false} if there's no error, {@code true} otherwise
      */
