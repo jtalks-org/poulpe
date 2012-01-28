@@ -21,6 +21,7 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPresenter;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
@@ -127,14 +128,12 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void removeSection(Section section) {
     }
 
     /**
      * {@inheritDoc}
      */
-
     public void openNewSectionDialog() {
         setNewSectionName("");
         setNewSectionDescription("");
@@ -242,8 +241,9 @@ public class SectionViewImpl extends Window implements AfterCompose {
 
     /**
      * {@inheritDoc}
+     * @deprecated use {@link DialogManager} and {@link PerfomableFactory#deleteSection(Section)} for this
      */
-
+    @Deprecated
     public void openDeleteSectionDialog(Section victim) {
         Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop().getPage("sectionDeleteDialog").getFellow(
                 "deleteWindow"), victim));
@@ -252,7 +252,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void openEditSectionDialog(String name, String description) {
         setEditSectionName(name);
         setEditSectionDescription(description);
@@ -322,25 +321,22 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public void openErrorPopupInNewSectionDialog(String label) {
-        final String message = Labels.getLabel(label);
+        String message = Labels.getLabel(label);
         newSectionDialog$sectionName.setErrorMessage(message);
     }
 
     /**
      * {@inheritDoc}
      */
-
     public void openErrorPopupInEditSectionDialog(String label) {
-        final String message = Labels.getLabel(label);
+        String message = Labels.getLabel(label);
         editSectionDialog$sectionName.setErrorMessage(message);
     }
 
     /**
      * {@inheritDoc}
      */
-
     public void closeDialogs() {
         closeNewSectionDialog();
         closeEditSectionDialog();
@@ -400,7 +396,6 @@ public class SectionViewImpl extends Window implements AfterCompose {
     /**
      * {@inheritDoc}
      */
-
     public boolean isDeleteDialogOpen() {
         return false;
         // return deleteSectionDialog.isVisible();
