@@ -26,14 +26,14 @@ import org.zkoss.zul.Comboitem;
 import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Radio;
-import org.zkoss.zul.Window;
 import org.zkoss.zul.Radiogroup;
+import org.zkoss.zul.Window;
 
 /**
  * @author Bekrenev Dmitry
  * 
- *         This class implementation for Delete section dialog
- * */
+ * This class implementation for Delete section dialog
+ */
 public class DeleteSectionDialogViewImpl extends Window implements DeleteSectionDialogView, AfterCompose {
 
     private static final long serialVersionUID = -4999382692611273729L;
@@ -44,7 +44,6 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     private DeleteSectionDialogPresenter presenter;
 
     private static ComboitemRenderer<Section> itemRenderer = new ComboitemRenderer<Section>() {
-
         @Override
         public void render(Comboitem item, Section section) {
             item.setLabel(section.getName());
@@ -53,18 +52,8 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     };
 
     /**
-     * Set presenter
-     * 
-     * @param presenter
-     *            DeleteSectionDialogPresenter instance
-     * */
-    public void setPresenter(DeleteSectionDialogPresenter presenter) {
-        this.presenter = presenter;
-    }
-
-    /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void afterCompose() {
         Components.wireVariables(this, this);
@@ -76,7 +65,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public Section getDeleteSection() {
         return deletedSection;
@@ -84,7 +73,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public Section getSelectedSection() {
         return (Section) selectedSection.getModel().getElementAt(selectedSection.getSelectedIndex());
@@ -92,7 +81,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public String getDeleteMode() {
         return deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
@@ -100,7 +89,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void closeDialog() {
         setVisible(false);
@@ -109,7 +98,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void showDialog() {
         presenter.initView();
@@ -120,7 +109,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void initSectionList(List<Section> selectableSections) {
         selectableSections.remove(deletedSection);
@@ -138,8 +127,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * Choice default section in combobox
-     * 
-     * */
+     */
     private void setDefaultSection() {
         @SuppressWarnings("unchecked")
         ListModelList<Section> model = (ListModelList<Section>) selectedSection.getModel();
@@ -147,8 +135,9 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
         if (!model.isEmpty()) {
             model.addSelection(model.get(0));
-        } else
+        } else {
             model.addSelection(null);
+        }
 
         selectedSection.setModel(model);
     }
@@ -156,9 +145,9 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     /**
      * This event cause show dialog
      * 
-     * @param event
-     *            information about event contain Section which will be deleted
-     * */
+     * @param event information about event contain Section which will be
+     * deleted
+     */
     public void onOpenDeleteSectionDialog(Event event) {
         deletedSection = (Section) event.getData();
         showDialog();
@@ -166,16 +155,23 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
 
     /**
      * This event cause delete
-     * */
+     */
     public void onClick$confirmButton() {
         presenter.delete();
     }
 
     /**
      * This event cause close dialog
-     * */
+     */
     public void onClick$rejectButton() {
         closeDialog();
+    }
+
+    /**
+     * @param presenter DeleteSectionDialogPresenter instance
+     */
+    public void setPresenter(DeleteSectionDialogPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }

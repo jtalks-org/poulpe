@@ -19,51 +19,50 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Section;
 
 /**
- * @author Bekrenev Dmitry
+ * This interface for representation view delete section dialog
  * 
- *         This interface for representation view delete section dialog
- * */
+ * @author Bekrenev Dmitry
+ */
 public interface DeleteSectionDialogView {
 
     /**
      * Get victim section
      * 
      * @return Section which will be deleted
-     * */
+     */
     Section getDeleteSection();
 
     /**
      * Get selected section in combobox
      * 
      * @return Section which will be recipient
-     * */
+     */
     Section getSelectedSection();
 
     /**
      * Get delete mode
      * 
      * @return String deleting mode. Now available only 2 modes: "deleteAll" -
-     *         which mean delete section with she branches. "deleteAndMove" -
-     *         which mean delete section and move branches in recipient section
-     * */
+     * which mean delete section with she branches. "deleteAndMove" - which mean
+     * delete section and move branches in recipient section
+     */
     String getDeleteMode();
 
     /**
      * Cause showing dialog
      * 
-     * */
+     */
     void showDialog();
 
     /**
      * Cause close dialog
-     * */
+     */
     void closeDialog();
 
     /**
      * Initialize combobox available section
      * 
-     * @param selectableSections
-     *            list available sections
-     * */
+     * @param selectableSections list available sections
+     */
     void initSectionList(List<Section> selectableSections);
 }
