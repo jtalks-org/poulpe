@@ -19,6 +19,7 @@ import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.PropertyLoader;
 import org.jtalks.poulpe.validation.EntityValidator;
 
 import java.util.List;
@@ -35,6 +36,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         implements ComponentService {
 
     private final EntityValidator validator;
+    private PropertyLoader propertyLoader;
 
     /**
      * Creates new instance of the service
@@ -69,7 +71,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         validator.throwOnValidationFailure(component);
 
         if (component.getId() == 0) {
-            component.setProperties(component.getComponentType().loadDefaults());
+            propertyLoader.loadDefaults(component);
         }
         dao.saveOrUpdate(component);
     }
@@ -82,4 +84,22 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         return dao.getAvailableTypes();
     }
 
+    /**
+     * Sets property loader. See {@link PropertyLoader}
+     *
+     * @param propertyLoader property loader to set
+     */
+    public void setPropertyLoader(PropertyLoader propertyLoader) {
+        this.propertyLoader = propertyLoader;
+    }
+
+    /**
+     * Gets currently used property loader.
+     * See {@link PropertyLoader}
+     *
+     * @return property loader
+     */
+    public PropertyLoader getPropertyLoader() {
+        return propertyLoader;
+    }
 }

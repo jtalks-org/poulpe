@@ -62,7 +62,7 @@ public class Component extends Entity {
      * @param componentType type of the component {@see ComponentType}
      */
     public Component(String name, String description, ComponentType componentType) {
-        this(name, description, componentType, componentType.loadDefaults());
+        this(name, description, componentType, new ArrayList<Property>());
     }
 
     /**
