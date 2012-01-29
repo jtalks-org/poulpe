@@ -18,8 +18,8 @@ import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.zk.ui.Executions;
 
 /**
  *
@@ -34,6 +34,7 @@ public class GroupPresenter {
     private DialogManager dialogManager;
     private WindowManager windowManager;
     private String searchRestrictions;
+    private SelectedEntity<Group> selectedEntity;
 
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
@@ -81,7 +82,7 @@ public class GroupPresenter {
     }
 
     public void editMembers(Group selectedGroup) {
-        Executions.getCurrent().getDesktop().setAttribute("groupToEdit", selectedGroup);
+        selectedEntity.setEntity(selectedGroup);
         windowManager.open("groups/EditMembers.zul");
     }
 
@@ -90,6 +91,15 @@ public class GroupPresenter {
      */
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
+    }
+
+    /**
+     * Sets SelectedEntity provider.
+     * 
+     * @param selectedEntity the selectedEntity to set
+     */
+    public void setSelectedEntity(SelectedEntity<Group> selectedEntity) {
+        this.selectedEntity = selectedEntity;
     }
 
 }

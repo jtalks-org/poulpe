@@ -20,6 +20,7 @@ import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.text.StringContains.containsString;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -28,18 +29,20 @@ import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.ListModelList;
 
 import com.google.common.collect.Lists;
 
 /**
  * View-Model for 'Edit Members of group'.
- *
+ * 
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
 public class EditGroupMembersVM {
 
@@ -58,16 +61,14 @@ public class EditGroupMembersVM {
     private List<User> usersInGroupAfterEdit;
 
     private String filterAvail;
-    private List<User> avail;
-    private User availSelected;
+    private ListModelList<User> avail;
 
     private String filterExist;
-    private List<User> exist;
-    private User existSelected;
+    private ListModelList<User> exist;
 
     /**
      * Retrieve group selected for editing from current context.
-     *
+     * 
      * @return {@link Group} instance
      */
     // TODO: this used by Dependency Injection, needs to move it in proper place
@@ -77,21 +78,25 @@ public class EditGroupMembersVM {
 
     /**
      * Construct View-Model for 'Edit Members of group' view.
-     *
-     * @param windowManager the window manager instance
-     * @param groupService the group service instance
-     * @param userService the user service instance
-     * @param groupToEdit the group to be edited
+     * 
+     * @param windowManager
+     *            the window manager instance
+     * @param groupService
+     *            the group service instance
+     * @param userService
+     *            the user service instance
+     * @param groupToEdit
+     *            the group to be edited
      * @throws NotFoundException
      */
     public EditGroupMembersVM(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull Group groupToEdit) throws NotFoundException {
+            @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity) throws NotFoundException {
         this.windowManager = windowManager;
         this.groupService = groupService;
         this.userService = userService;
-        this.groupToEdit = groupService.get(groupToEdit.getId());
+        this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
 
-        usersInGroupAfterEdit = Lists.newLinkedList(this.groupToEdit.getUsers());
+        usersInGroupAfterEdit = groupToEdit.getUsers();
         filterAvail = "";
         filterExist = "";
 
@@ -102,7 +107,7 @@ public class EditGroupMembersVM {
 
     /**
      * Gets text for filtering users in available for adding list.
-     *
+     * 
      * @return the text for filter text field
      */
     public String getFilterAvail() {
@@ -111,34 +116,17 @@ public class EditGroupMembersVM {
 
     /**
      * Sets text for filtering users in available for adding list.
-     *
-     * @param filterAvail the new value for filter text field
+     * 
+     * @param filterAvail
+     *            the new value for filter text field
      */
-    public void setFilterAvail(String filterAvail) {
+    public void setFilterAvail(@Nonnull String filterAvail) {
         this.filterAvail = filterAvail;
     }
 
     /**
-     * Gets selected user in available for adding list.
-     *
-     * @return the {@link User} instance, indicating selected user
-     */
-    public User getAvailSelected() {
-        return availSelected;
-    }
-
-    /**
-     * Sets selected user in available for adding list.
-     *
-     * @param availSelected the new value indicating selected user
-     */
-    public void setAvailSelected(User availSelected) {
-        this.availSelected = availSelected;
-    }
-
-    /**
      * Gets text for filtering users which already exist in group.
-     *
+     * 
      * @return the text for filter text field
      */
     public String getFilterExist() {
@@ -147,90 +135,92 @@ public class EditGroupMembersVM {
 
     /**
      * Sets text for filtering users which already exist in group.
-     *
-     * @param filterExist the new value for filter text field
+     * 
+     * @param filterExist
+     *            the new value for filter text field
      */
-    public void setFilterExist(String filterExist) {
+    public void setFilterExist(@Nonnull String filterExist) {
         this.filterExist = filterExist;
     }
 
     /**
-     * Gets selected user in list which represent users already in group.
-     *
-     * @return the {@link User} instance, indicating selected user
-     */
-    public User getExistSelected() {
-        return existSelected;
-    }
-
-    /**
-     * Sets selected user in list which represent users already in group.
-     *
-     * @param existSelected the new value indicating selected user
-     */
-    public void setExistSelected(User existSelected) {
-        this.existSelected = existSelected;
-    }
-
-    /**
      * Gets list of users available for adding in group.
-     *
+     * 
      * @return the list of users available for adding in group
      */
-    public List<User> getAvail() {
+    public ListModelList<User> getAvail() {
         return avail;
     }
 
     /**
      * Gets list of users which already exist in group.
-     *
+     * 
      * @return the list of users which already exist in group
      */
-    public List<User> getExist() {
+    public ListModelList<User> getExist() {
         return exist;
     }
 
     /**
      * Gets group to be edited.
-     *
+     * 
      * @return the {@link Group} instance
      */
     public Group getGroupToEdit() {
         return groupToEdit;
     }
 
-    // -- ZK Command bindings --------------------
-
     /**
-     * Search users users available for adding in group.
-     * After executing this method list of available users would be updated with values of search result.
+     * Gets set of users which selected in list of available users.
+     * 
+     * @return set of selected users in list of available users
      */
-    @Command
-    @NotifyChange({ "avail", "availSelected" })
-    public void searchAvail() {
-        avail = Lists.newLinkedList(userService.getUsersByUsernameWord(getFilterAvail()));
-        avail.removeAll(usersInGroupAfterEdit);
-        setAvailSelected(null);
+    public Set<User> getAvailSelected() {
+        return avail.getSelection();
     }
 
     /**
-     * Search users users which already exist in group.
-     * After executing this method list of exist users would be updated with values of search result.
+     * Gets selected users which already exist in group.
+     * 
+     * @return set of selected users which already exist in group
+     */
+    public Set<User> getExistSelected() {
+        return exist.getSelection();
+    }
+
+    // -- ZK Command bindings --------------------
+
+    /**
+     * Search users users available for adding in group. After executing this method list of available users would be
+     * updated with values of search result.
      */
     @Command
-    @NotifyChange({ "exist", "existSelected" })
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    public void searchAvail() {
+        List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getFilterAvail()));
+        users.removeAll(usersInGroupAfterEdit);
+        avail = new ListModelList<User>(users);
+    }
+
+    /**
+     * Search users users which already exist in group. After executing this method list of exist users would be updated
+     * with values of search result.
+     */
+    @Command
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void searchExist() {
-        exist = filter(having(on(User.class).getUsername(), containsString(getFilterExist())), usersInGroupAfterEdit);
-        setExistSelected(null);
+        List<User> users = filter(having(on(User.class).getUsername(), containsString(getFilterExist())),
+                usersInGroupAfterEdit);
+        exist = new ListModelList<User>(users);
     }
 
     /**
      * Add selected user in group.
      */
     @Command
-    @NotifyChange({ "avail", "availSelected", "exist", "existSelected" })
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void add() {
-        processAdd(false);
+        usersInGroupAfterEdit.addAll(getAvailSelected());
         updateView();
     }
 
@@ -238,9 +228,9 @@ public class EditGroupMembersVM {
      * Add all selected users in group.
      */
     @Command
-    @NotifyChange({ "avail", "availSelected", "exist", "existSelected" })
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void addAll() {
-        processAdd(true);
+        usersInGroupAfterEdit.addAll(getAvail());
         updateView();
     }
 
@@ -248,9 +238,9 @@ public class EditGroupMembersVM {
      * Remove selected user from group.
      */
     @Command
-    @NotifyChange({ "avail", "availSelected", "exist", "existSelected" })
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void remove() {
-        processRemove(false);
+        usersInGroupAfterEdit.removeAll(exist.getSelection());
         updateView();
     }
 
@@ -258,9 +248,9 @@ public class EditGroupMembersVM {
      * Remove all selected user from group.
      */
     @Command
-    @NotifyChange({ "avail", "availSelected", "exist", "existSelected" })
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void removeAll() {
-        processRemove(true);
+        usersInGroupAfterEdit.removeAll(exist.getInnerList());
         updateView();
     }
 
@@ -268,11 +258,9 @@ public class EditGroupMembersVM {
      * Save changes provided for group and close edit window.
      */
     @Command
-    @NotifyChange
     public void save() {
         groupToEdit.setUsers(usersInGroupAfterEdit);
         groupService.saveGroup(groupToEdit);
-
         switchToGroupWindow();
     }
 
@@ -280,9 +268,18 @@ public class EditGroupMembersVM {
      * Reject any changes for group and close window.
      */
     @Command
-    @NotifyChange
     public void cancel() {
         switchToGroupWindow();
+    }
+
+    /**
+     * Dummy command, used only for updating state of view components via binding. It's fired when user select item in
+     * any of two list's in window.
+     */
+    @Command
+    @NotifyChange({ "availSelected", "existSelected" })
+    public void listSelected() {
+        // NOOP
     }
 
     // -- Utility methods ------------------------
@@ -296,49 +293,11 @@ public class EditGroupMembersVM {
     }
 
     /**
-     * Provide adding users to group, also this method resets currently selected user.
-     *
-     * @param useAll value, indicating how many user we must process, if {@code true} we must use all items from list,
-     *            in otherwise - one selected item
-     */
-    private void processAdd(boolean useAll) {
-        List<User> usersForProcessing = getUsersForProcessing(getAvailSelected(), getAvail(), useAll);
-        usersInGroupAfterEdit.addAll(usersForProcessing);
-    }
-
-    /**
-     * Provide removing users from group, also this method resets currently selected user.
-     *
-     * @param useAll value, indicating how many user we must process, if {@code true} we must use all items from list,
-     *            in otherwise - one selected item
-     */
-    private void processRemove(boolean useAll) {
-        List<User> usersForProcessing = getUsersForProcessing(getExistSelected(), getExist(), useAll);
-        usersInGroupAfterEdit.removeAll(usersForProcessing);
-    }
-
-    /**
      * Closes currently opened window and opens window with group list.
      */
     private void switchToGroupWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
         windowManager.open("groups.zul");
-    }
-
-    /**
-     * Gets user for processing.
-     *
-     * @param oneSelected the user, that can be currently selected
-     * @param allSelected the list of users, that can be currently selected
-     * @param useAll value, indicating how many user we must process, if {@code true} we must use {@code allSelected},
-     *            in otherwise - {@code oneSelected}
-     * @return list of users to be processed
-     */
-    private List<User> getUsersForProcessing(User oneSelected, List<User> allSelected, boolean useAll) {
-        if (useAll) {
-            return allSelected;
-        }
-        return Lists.newArrayList(oneSelected);
     }
 
 }
