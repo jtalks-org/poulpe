@@ -48,38 +48,33 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
         Components.wireVariables(this, this);
         Components.addForwards(this, this);
 
-        userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
-            @Override
-            public void render(Comboitem item, User user) throws Exception {
-                item.setLabel(user.getUsername());
-                item.setValue(user);
-            }
-        });
-
-        users.setItemRenderer(new ListitemRenderer<User>() {
-            @Override
-            public void render(Listitem item, User user) throws Exception {
-                Listcell cell_1 = new Listcell(user.getUsername());
-                Listcell cell_2 = new Listcell(user.getEmail());
-                Listcell cell_3 = new Listcell("NOT IMPLEMENTED YET");
-                Listcell cell_4 = new Listcell("NOT IMPLEMENTED YET");
-                item.appendChild(cell_1);
-                item.appendChild(cell_2);
-                item.appendChild(cell_3);
-                item.appendChild(cell_4);
-            }
-        });
+        userCombobox.setItemRenderer(userComboboxItemRenderer);
+        users.setItemRenderer(userListItemRenderer);
     }
 
-    public void setPresenter(ModerationDialogPresenter presenter) {
-        this.presenter = presenter;
-    }
-
+    private static ComboitemRenderer<User> userComboboxItemRenderer = new ComboitemRenderer<User>() {
+        @Override
+        public void render(Comboitem item, User user) throws Exception {
+            item.setLabel(user.getUsername());
+            item.setValue(user);
+        }
+    };
+    
+    private static ListitemRenderer<User> userListItemRenderer = new ListitemRenderer<User>() {
+        @Override
+        public void render(Listitem item, User user) throws Exception {
+            item.appendChild(new Listcell(user.getUsername()));
+            item.appendChild(new Listcell(user.getEmail()));
+            item.appendChild(new Listcell("NOT IMPLEMENTED YET"));
+            item.appendChild(new Listcell("NOT IMPLEMENTED YET"));
+        }
+    };
+    
     /**
      * This event cause show dialog
      * 
-     * @param event
-     *            information about event contain Section which will be deleted
+     * @param event information about event contain Section which will be
+     * deleted
      * */
     public void onOpen(Event event) {
         Branch branch = (Branch) event.getData();
@@ -91,7 +86,7 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     public void onClose(Event event) {
         hideDialog();
     }
-    
+
     @Override
     public void showDialog() {
         setVisible(true);
@@ -122,30 +117,40 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     }
 
     public void onClick$confirmButton() {
-        presenter.onConfirm();
+        presenter.confirm();
     }
 
     public void onClick$rejectButton() {
-        presenter.onReject();
+        presenter.reject();
     }
 
     public void onClick$deleteButton() {
-        if (users.getSelectedIndex() < 0)
+        if (users.getSelectedIndex() < 0) {
             return;
+        }
 
-        presenter.onDelete((User) users.getModel().getElementAt(users.getSelectedIndex()));
+        presenter.deleteUser(currentlySelectedUser());
+    }
+
+    private User currentlySelectedUser() {
+        return (User) users.getModel().getElementAt(users.getSelectedIndex());
     }
 
     public void onClick$addButton() {
         Comboitem selectedItem = userCombobox.getSelectedItem();
         if (selectedItem != null) {
-            presenter.onAdd((User) selectedItem.getValue());
+            User user = (User) selectedItem.getValue();
+            presenter.addUser(user);
         }
     }
 
     @Override
     public void showComboboxErrorMessage(String message) {
         userCombobox.setErrorMessage(Labels.getLabel(message));
+    }
+    
+    public void setPresenter(ModerationDialogPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }
