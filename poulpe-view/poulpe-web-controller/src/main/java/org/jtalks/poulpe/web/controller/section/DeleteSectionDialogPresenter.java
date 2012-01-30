@@ -18,16 +18,47 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
 
 /**
- * @author Bekrenev Dmitry
- * 
  * This class is implementation the dialog section presenter in pattern
  * Model-View-Presenter
  * 
+ * @author Bekrenev Dmitry
  */
 public class DeleteSectionDialogPresenter {
 
     private SectionService sectionService;
     private DeleteSectionDialogView view;
+
+    /**
+     * Use for initialize combobox which contains sections
+     */
+    public void initView() {
+        view.initSectionList(sectionService.getAll());
+    }
+
+    /**
+     * In depend user choice delete section recursively or with moving victim's
+     * branches
+     */
+    public void delete() {
+        if (deleteAllBranches()) {
+            sectionService.deleteRecursively(view.getDeleteSection());
+        } else {
+            Section deleteSection = view.getDeleteSection();
+            Section selectedSection = view.getRecipientSection();
+            sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
+        }
+
+        view.closeDialog();
+    }
+
+    private boolean deleteAllBranches() {
+        return view.getDeleteMode() == SectionDeleteMode.DELETE_ALL;
+    }
+
+    public void show(Section section) {
+        // TODO: add passing section
+        view.showDialog();
+    }
 
     /**
      * Sets the view instance which represent User interface
@@ -45,35 +76,6 @@ public class DeleteSectionDialogPresenter {
      */
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
-    }
-
-    /**
-     * Use for initialize combobox which contains sections
-     */
-    public void initView() {
-        view.initSectionList(sectionService.getAll());
-    }
-
-    /**
-     * In depend user choice delete section recursively or with moving victim's
-     * branches
-     */
-    public void delete() {
-        if (view.getDeleteMode().equals("deleteAll")) {
-            sectionService.deleteRecursively(view.getDeleteSection());
-        } else {
-            Section deleteSection = view.getDeleteSection();
-            Section selectedSection = view.getSelectedSection();
-            sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
-        }
-
-        view.closeDialog();
-    }
-    
-    
-    public void show(Section section) {
-        // TODO: add passing section
-        view.showDialog();
     }
 
 }

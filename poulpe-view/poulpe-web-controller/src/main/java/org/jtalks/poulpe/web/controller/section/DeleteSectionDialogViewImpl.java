@@ -19,7 +19,6 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Section;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Comboitem;
@@ -30,9 +29,8 @@ import org.zkoss.zul.Radiogroup;
 import org.zkoss.zul.Window;
 
 /**
- * @author Bekrenev Dmitry
- * 
  * This class implementation for Delete section dialog
+ * @author Bekrenev Dmitry
  */
 public class DeleteSectionDialogViewImpl extends Window implements DeleteSectionDialogView, AfterCompose {
 
@@ -75,7 +73,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
      * {@inheritDoc}
      */
     @Override
-    public Section getSelectedSection() {
+    public Section getRecipientSection() {
         return (Section) selectedSection.getModel().getElementAt(selectedSection.getSelectedIndex());
     }
 
@@ -83,8 +81,9 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
      * {@inheritDoc}
      */
     @Override
-    public String getDeleteMode() {
-        return deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
+    public SectionDeleteMode getDeleteMode() {
+        String mode = deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
+        return SectionDeleteMode.fromString(mode);
     }
 
     /**
@@ -93,7 +92,6 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     @Override
     public void closeDialog() {
         setVisible(false);
-        Events.postEvent(new Event("onHideDialog", getDesktop().getPage("mainPage").getFellow("mainWindow")));
     }
 
     /**

@@ -37,16 +37,12 @@ public interface DeleteSectionDialogView {
      * 
      * @return Section which will be recipient
      */
-    Section getSelectedSection();
+    Section getRecipientSection();
 
     /**
-     * Get delete mode
-     * 
-     * @return String deleting mode. Now available only 2 modes: "deleteAll" -
-     * which mean delete section with she branches. "deleteAndMove" - which mean
-     * delete section and move branches in recipient section
+     * @return deleting mode
      */
-    String getDeleteMode();
+    SectionDeleteMode getDeleteMode();
 
     /**
      * Cause showing dialog
