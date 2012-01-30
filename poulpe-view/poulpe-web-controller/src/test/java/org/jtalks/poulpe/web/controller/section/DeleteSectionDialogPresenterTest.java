@@ -30,6 +30,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Bekrenev Dmitry
+ * @author Alexey Grigorev
  */
 public class DeleteSectionDialogPresenterTest {
 
@@ -71,7 +72,7 @@ public class DeleteSectionDialogPresenterTest {
 
     private void givenDeleteAllMode() {
         when(view.getDeleteMode()).thenReturn(SectionDeleteMode.DELETE_ALL);
-        when(view.getDeleteSection()).thenReturn(section);
+        when(view.getSectionToDelete()).thenReturn(section);
     }
 
     @Test
@@ -86,7 +87,7 @@ public class DeleteSectionDialogPresenterTest {
 
     private void givenDeleteAndMoveMode() {
         when(view.getDeleteMode()).thenReturn(SectionDeleteMode.DELETE_AND_MOVE);
-        when(view.getDeleteSection()).thenReturn(section);
+        when(view.getSectionToDelete()).thenReturn(section);
         when(view.getRecipientSection()).thenReturn(recipient);
     }
 }

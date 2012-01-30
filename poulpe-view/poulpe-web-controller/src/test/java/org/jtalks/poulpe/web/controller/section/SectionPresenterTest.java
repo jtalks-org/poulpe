@@ -52,6 +52,7 @@ public class SectionPresenterTest {
     @Mock EntityValidator entityValidator;
     @Mock SectionTreeComponentImpl currentSectionTreeComponent;
     @Mock PerfomableFactory perfomableFactory;
+    @Mock DeleteSectionDialogPresenter dialogPresenter;
     
     
     private List<Section> sections = fakeSections();
@@ -68,6 +69,7 @@ public class SectionPresenterTest {
         presenter.setEntityValidator(entityValidator);
         presenter.setCurrentSectionTreeComponentImpl(currentSectionTreeComponent);
         presenter.setPerfomableFactory(perfomableFactory);
+        presenter.setDeleteSectionDialogPresenter(dialogPresenter);
         
         when(service.getAll()).thenReturn(sections);
         presenter.initView(view);
@@ -83,23 +85,13 @@ public class SectionPresenterTest {
     @Test
     public void testOpenDeleteDialogOK() {
         presenter.openDeleteDialog(section);
-        verify(view).openDeleteSectionDialog(section);
-        //verify(perfomableFactory).deleteSection(section);
+        verify(dialogPresenter).show(section);
     }
 
     @Test
     public void testOpenDeleteDialogNullObject() {
         presenter.openDeleteDialog(null);
-        verify(view, never()).openDeleteSectionDialog(section);
-        //verify(perfomableFactory, never()).deleteSection(section);
-    }
-
-    @Test
-    public void testOpenDeleteDialogUnproperObject() {
-        // verify that only Section or Branch can be deleted
-        presenter.openDeleteDialog(new TopicType());
-        verify(view, never()).openDeleteSectionDialog(section);
-        //verify(perfomableFactory, never()).deleteSection(section);
+        verify(dialogPresenter, never()).show(section);
     }
 
     @Test
@@ -111,16 +103,6 @@ public class SectionPresenterTest {
 
     @Test
     public void testOpenEditDialogNullParams() {
-        presenter.openEditDialog(currentSectionTreeComponent);
-
-        verify(view, never()).openEditBranchDialog(any(Branch.class));
-        verify(view, never()).openEditSectionDialog(anyString(), anyString());
-    }
-
-    @Test
-    public void testOpenEditDialogTopicType() {
-        when(currentSectionTreeComponent.getSelectedObject()).thenReturn(new TopicType());
-
         presenter.openEditDialog(currentSectionTreeComponent);
 
         verify(view, never()).openEditBranchDialog(any(Branch.class));
@@ -168,8 +150,7 @@ public class SectionPresenterTest {
         givenNoSectionSelected();
         presenter.deleteSection(null);
         verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
-        verify(view, never()).openDeleteSectionDialog(section);
-        //verify(perfomableFactory, never()).deleteSection(any(Section.class));
+        verify(dialogPresenter, never()).show(section);
     }
 
     private void givenNoSectionSelected() { 
@@ -181,8 +162,7 @@ public class SectionPresenterTest {
         givenNoSectionSelected();
         presenter.deleteSection(section);
         verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
-        verify(view, never()).openDeleteSectionDialog(section);
-        //verify(perfomableFactory, never()).deleteSection(any(Section.class));
+        verify(dialogPresenter, never()).show(section);
     }
 
     @Test

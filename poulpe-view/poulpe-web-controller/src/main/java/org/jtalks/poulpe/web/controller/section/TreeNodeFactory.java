@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
@@ -35,8 +36,7 @@ class TreeNodeFactory {
      * Wrap single entity to DefaultTreeNode. If this entity has some related
      * object in one-to-many relation them can be either be wrapped
      * 
-     * @param entity
-     *            section or branch instance
+     * @param entity section or branch instance
      * @return node
      */
     // TODO: it's strange and unclear, refactoring is needed
@@ -52,25 +52,32 @@ class TreeNodeFactory {
         }
         return null;
     }
+    
 
     /**
      * Wrap a List of persistent entities
      * 
-     * @param entities
-     *            list of entities
+     * @param entities list of entities
      * @return list of nodes
      */
     public static <T extends Entity> List<ExtendedTreeNode<T>> getTreeNodes(List<T> entities) {
+        if (entities != null) {
+            return wrapInTreeNodes(entities);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private static <T extends Entity> List<ExtendedTreeNode<T>> wrapInTreeNodes(List<T> entities) {
         List<ExtendedTreeNode<T>> list = new ArrayList<ExtendedTreeNode<T>>();
-        if (entities == null) {
-            return list;
-        }
+        
         for (T entity : entities) {
-            if (entity == null) {
-                continue;
+            // TODO: can it be null?
+            if (entity != null) {
+                list.add(getTreeNode(entity));
             }
-            list.add(getTreeNode(entity));
         }
+
         return list;
     }
 }

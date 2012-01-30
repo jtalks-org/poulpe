@@ -22,6 +22,7 @@ import org.jtalks.poulpe.service.SectionService;
  * Model-View-Presenter
  * 
  * @author Bekrenev Dmitry
+ * @author Alexey Grigorev
  */
 public class DeleteSectionDialogPresenter {
 
@@ -36,16 +37,13 @@ public class DeleteSectionDialogPresenter {
     }
 
     /**
-     * In depend user choice delete section recursively or with moving victim's
-     * branches
+     * Depending on user choice, deleting all branches or moving 
      */
     public void delete() {
         if (deleteAllBranches()) {
-            sectionService.deleteRecursively(view.getDeleteSection());
+            deleteBranches();
         } else {
-            Section deleteSection = view.getDeleteSection();
-            Section selectedSection = view.getRecipientSection();
-            sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
+            moveBranches();
         }
 
         view.closeDialog();
@@ -55,9 +53,18 @@ public class DeleteSectionDialogPresenter {
         return view.getDeleteMode() == SectionDeleteMode.DELETE_ALL;
     }
 
+    private void deleteBranches() {
+        sectionService.deleteRecursively(view.getSectionToDelete());
+    }
+    
+    private void moveBranches() {
+        Section deleteSection = view.getSectionToDelete();
+        Section selectedSection = view.getRecipientSection();
+        sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
+    }
+
     public void show(Section section) {
-        // TODO: add passing section
-        view.showDialog();
+        view.showDialog(section);
     }
 
     /**

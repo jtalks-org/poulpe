@@ -22,20 +22,20 @@ import org.jtalks.poulpe.model.entity.Section;
  * This interface for representation view delete section dialog
  * 
  * @author Bekrenev Dmitry
+ * @author Alexey Grigorev
  */
 public interface DeleteSectionDialogView {
 
     /**
-     * Get victim section
-     * 
-     * @return Section which will be deleted
+     * @return section which will be deleted
      */
-    Section getDeleteSection();
+    Section getSectionToDelete();
 
     /**
      * Get selected section in combobox
      * 
-     * @return Section which will be recipient
+     * @return section which will receive branches of the section being deleted,
+     * or null if none selected
      */
     Section getRecipientSection();
 
@@ -45,18 +45,22 @@ public interface DeleteSectionDialogView {
     SectionDeleteMode getDeleteMode();
 
     /**
-     * Cause showing dialog
-     * 
+     * Causes the dialog to show
      */
     void showDialog();
+    
+    /**
+     * Causes the dialog to show
+     */
+    void showDialog(Section section);
 
     /**
-     * Cause close dialog
+     * Causes the dialog to close
      */
     void closeDialog();
 
     /**
-     * Initialize combobox available section
+     * Initializes combobox with available section
      * 
      * @param selectableSections list available sections
      */

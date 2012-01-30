@@ -26,6 +26,12 @@ public enum SectionDeleteMode {
         this.mode = mode;
     }
 
+    /**
+     * Available modes: "deleteAll" and "deleteAndMove" 
+     * 
+     * @param mode string to be converted to enum
+     * @return proper enum value
+     */
     public static SectionDeleteMode fromString(String mode) {
         if (DELETE_ALL.mode.equals(mode)) {
             return DELETE_ALL;

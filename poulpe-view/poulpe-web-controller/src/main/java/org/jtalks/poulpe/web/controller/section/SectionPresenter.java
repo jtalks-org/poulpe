@@ -17,6 +17,8 @@ package org.jtalks.poulpe.web.controller.section;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
+import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.validation.EntityValidator;
@@ -43,6 +45,8 @@ public class SectionPresenter {
     private SectionTreeComponentImpl currentSectionTreeComponentImpl;
     private DialogManager dialogManager;
     private EntityValidator entityValidator;
+    
+    private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
     
@@ -82,44 +86,51 @@ public class SectionPresenter {
      * object
      */
     public void openEditDialog(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
-        Object object = currentSectionTreeComponentImpl.getSelectedObject();
-        if (!(object instanceof Section) && !(object instanceof Branch)) {
-            return;
+        BranchSectionVisitable visitable = currentSectionTreeComponentImpl.getSelectedObject();
+        if (visitable != null) {
+            visitable.apply(editVisitor);
         }
         
         // TODO: get rid of it! Why it's needed here?
         setCurrentSectionTreeComponentImpl(currentSectionTreeComponentImpl);
-        
-        if (object instanceof Section) {
-            Section section = (Section) object;
-            sectionView.openEditSectionDialog(section.getName(), section.getDescription());
-        } else if (object instanceof Branch) {
-            sectionView.openEditBranchDialog((Branch) object);
-        }
-
     }
+    
+    private BranchSectionVisitor editVisitor = new BranchSectionVisitor() {
+        @Override
+        public void visitSection(Section section) {
+            sectionView.openEditSectionDialog(section.getName(), section.getDescription());
+        }
+        
+        @Override
+        public void visitBranch(Branch branch) {
+            sectionView.openEditBranchDialog(branch);
+        }
+    };
+
 
     /**
      * Method used for delete section or branch.
      * 
      * @param object can be Section or Branch instance
      */
-    public void openDeleteDialog(Object object) {
-        if (!(object instanceof Section) && !(object instanceof Branch)) {
-            return;
+    public void openDeleteDialog(BranchSectionVisitable visitable) {
+        if (visitable != null) {
+            visitable.apply(deleteVisitor);
+        }
+    }
+    
+    private BranchSectionVisitor deleteVisitor = new BranchSectionVisitor() {
+        @Override
+        public void visitSection(Section section) {
+            deleteSectionDialogPresenter.show(section);
+            updateView();
         }
         
-        if (object instanceof Section) {
-            Section section = (Section) object;
-            //dialogManager.confirmDeletion(section.getName(), perfomableFactory.deleteSection(section));
-            // TODO: find out how to get rid of this and of events inside and then use the commented line above
-            sectionView.openDeleteSectionDialog(section);
-        } else if (object instanceof Branch) {
-            Branch branch = (Branch) object;
+        @Override
+        public void visitBranch(Branch branch) {
             dialogManager.confirmDeletion(branch.getName(), perfomableFactory.deleteBranch(branch));
         }
-
-    }
+    };
 
     /**
      * This method is used to show new branch dialog
@@ -167,7 +178,7 @@ public class SectionPresenter {
      * @param name section
      * @param description section
      */
-    public boolean addNewSection(final String name, final String description) {
+    public boolean addNewSection(String name, String description) {
         Section section = new Section();
         section.setName(name);
         section.setDescription(description);
@@ -187,10 +198,12 @@ public class SectionPresenter {
      * to this section. If null then all children should be also deleted
      */
     public void deleteSection(Section recipient) {
-        Object selectedObject = currentSectionTreeComponentImpl.getSelectedObject();
+        BranchSectionVisitable selectedObject = currentSectionTreeComponentImpl.getSelectedObject();
+        
         if (!(selectedObject instanceof Section)) {
             return;
         }
+        
         final Section victim = (Section) selectedObject;
         dialogManager.confirmDeletion(victim.getName(), perfomableFactory.deleteSection(victim, recipient));
         removeSectionFromView(victim);
@@ -202,11 +215,8 @@ public class SectionPresenter {
      * 
      * @param branch
      */
-    public void openModeratorDialog(Object selectedObject) {
-        if (!(selectedObject instanceof Branch)) {
-            return;
-        }
-        sectionView.openModeratorDialog((Branch) selectedObject);
+    public void openModeratorDialog(Branch branch) {
+        sectionView.openModeratorDialog(branch);
     }
 
     public boolean validate(Section section, boolean isNewSection) {
@@ -220,6 +230,16 @@ public class SectionPresenter {
         }
     }
 
+    /**
+     * Save section
+     * 
+     * @param section the section to save
+     */
+    public void saveSection(Section section) {
+        sectionService.saveSection(section);
+    }
+    
+    
     /**
      * @param entityValidator the entityValidator to set
      */
@@ -263,13 +283,11 @@ public class SectionPresenter {
         this.perfomableFactory = perfomableFactory;
     }
 
-    /**
-     * Save section
-     * 
-     * @param section
-     *            the section to save
-     */
-    public void saveSection(Section section) {
-        sectionService.saveSection(section);
+    public DeleteSectionDialogPresenter getDeleteSectionDialogPresenter() {
+        return deleteSectionDialogPresenter;
+    }
+
+    public void setDeleteSectionDialogPresenter(DeleteSectionDialogPresenter deleteSectionDialogPresenter) {
+        this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
     }
 }
