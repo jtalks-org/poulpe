@@ -137,7 +137,10 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     }
 
     public void onClick$addButton() {
-        presenter.onAdd((User) userCombobox.getSelectedItem().getValue());
+        Comboitem selectedItem = userCombobox.getSelectedItem();
+        if (selectedItem != null) {
+            presenter.onAdd((User) selectedItem.getValue());
+        }
     }
 
     @Override

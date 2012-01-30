@@ -27,6 +27,7 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 public class ModerationDialogPresenter {
 
     public static final String USER_ALREADY_MODERATOR = "moderatedialog.validation.user_already_in_list";
+    
     private ModerationDialogView view;
     private Branch branch;
     private BranchService branchService;
@@ -51,7 +52,18 @@ public class ModerationDialogPresenter {
         updateView(branch.getModeratorsList(), userService.getAll());
     }
 
-    public void onConfirm() {
+    public void addUser(User user) {
+        UserValidator validator = validateUser(user);
+
+        if (validator.hasError()) {
+            view.showComboboxErrorMessage(validator.getError());
+        } else {
+            branch.addModerator(user);
+            refreshView();
+        }
+    }
+    
+    public void confirm() {
         ValidationResult result = entityValidator.validate(branch);
 
         if (result.hasErrors()) {
@@ -62,31 +74,40 @@ public class ModerationDialogPresenter {
 
         view.hideDialog();
     }
-
-    public void onReject() {
-        view.hideDialog();
-    }
-
-    public void onAdd(final User user) {
-        UserValidator validator = validateUser(user);
-
-        if (validator.hasError()) {
-            view.showComboboxErrorMessage(validator.getError());
-        } else {
-            branch.addModerator(user);
-            refreshView();
-        }
-    }
-
-    public void onDelete(final User user) {
-        branch.removeModerator(user);
-        refreshView();
-    }
-
+    
     public UserValidator validateUser(User user) {
         UserValidator validator = new UserValidator(branch);
         validator.validate(user);
         return validator;
+    }
+    
+    public void deleteUser(User user) {
+        branch.removeModerator(user);
+        refreshView();
+    }
+    
+    public void reject() {
+        view.hideDialog();
+    }
+    
+    @Deprecated
+    public void onAdd(User user) {
+        addUser(user);
+    }
+
+    @Deprecated
+    public void onDelete(User user) {
+        deleteUser(user);
+    }
+    
+    @Deprecated
+    public void onConfirm() {
+        confirm();
+    }
+
+    @Deprecated
+    public void onReject() {
+        reject();
     }
 
     /**
