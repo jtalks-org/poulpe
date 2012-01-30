@@ -27,12 +27,12 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Forum section that contains branches.
- *
+ * 
  * @author tanya birina
  * @author Guram Savinov
  */
 @UniqueConstraint
-public class Section extends Entity {
+public class Section extends Entity implements BranchSectionVisitable {
     /**
      * Error message if section already exist
      */
@@ -63,7 +63,7 @@ public class Section extends Entity {
 
     /**
      * Constructor with setting name
-     *
+     * 
      * @param name - name for new section
      */
     public Section(String name) {
@@ -72,8 +72,8 @@ public class Section extends Entity {
 
     /**
      * Constructor with name and description
-     *
-     * @param name        - name for new section
+     * 
+     * @param name - name for new section
      * @param description - description for new section
      */
     public Section(String name, String description) {
@@ -83,7 +83,7 @@ public class Section extends Entity {
 
     /**
      * Set section name which briefly describes the topics contained in it.
-     *
+     * 
      * @return name section.
      */
     public String getName() {
@@ -92,7 +92,7 @@ public class Section extends Entity {
 
     /**
      * Set section name.
-     *
+     * 
      * @param name - name for section.
      */
     public void setName(String name) {
@@ -101,7 +101,7 @@ public class Section extends Entity {
 
     /**
      * Get section description.
-     *
+     * 
      * @return description for section
      */
     public String getDescription() {
@@ -111,7 +111,7 @@ public class Section extends Entity {
     /**
      * Set section description which contains additional information about the
      * section.
-     *
+     * 
      * @param description - description for section
      */
     public void setDescription(String description) {
@@ -120,7 +120,7 @@ public class Section extends Entity {
 
     /**
      * Get section position.
-     *
+     * 
      * @return position
      */
     public Integer getPosition() {
@@ -129,7 +129,7 @@ public class Section extends Entity {
 
     /**
      * Set section position.
-     *
+     * 
      * @param position - position for section
      */
     public void setPosition(Integer position) {
@@ -138,7 +138,7 @@ public class Section extends Entity {
 
     /**
      * Get section branches
-     *
+     * 
      * @return list of branches
      */
     public List<Branch> getBranches() {
@@ -147,7 +147,7 @@ public class Section extends Entity {
 
     /**
      * Set section branches
-     *
+     * 
      * @param branches - list of branches
      */
     public void setBranches(List<Branch> branches) {
@@ -156,32 +156,39 @@ public class Section extends Entity {
 
     /**
      * Adds branch to the section or updates if it exist.
-     *
-     * @param branch
-     *            the branch for adding to section
+     * 
+     * @param branch the branch for adding to section
      */
     public void addOrUpdateBranch(Branch branch) {
         for (int index = 0; index < branches.size(); index++) {
             long id = branches.get(index).getId();
-            if (id == 0) {
-                continue;
-            }
-            if (id == branch.getId()) {
+            
+            if (id != 0 && id == branch.getId()) {
                 branches.set(index, branch);
                 return;
             }
         }
+        
         branches.add(branch);
     }
 
     /**
      * Delete branch from the section.
-     *
-     * @param branch
-     *            the branch for deleting from section
+     * 
+     * @param branch the branch for deleting from section
      */
     public void deleteBranch(Branch branch) {
         branches.remove(branch);
     }
 
+    @Override
+    public String toString() {
+        return "Section [id=" + getId() + ", name=" + name + ", description=" + description + "]";
+    }
+
+    @Override
+    public void apply(BranchSectionVisitor visitor) {
+        visitor.visitSection(this);
+    }
+    
 }

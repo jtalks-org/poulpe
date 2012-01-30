@@ -30,11 +30,11 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
 
 /**
  * Forum branch that contains topics related to branch theme.
- *
+ * 
  * @author Pavel Vervenko
  */
 @UniqueConstraint
-public class Branch extends Entity {
+public class Branch extends Entity implements BranchSectionVisitable {
 
     public static final String BRANCH_ALREADY_EXISTS = "branches.error.branch_name_already_exists";
     public static final String BRANCH_CANT_BE_VOID = "branches.error.branch_name_cant_be_void";
@@ -60,7 +60,7 @@ public class Branch extends Entity {
 
     /**
      * Create Branch with name.
-     *
+     * 
      * @param name - name for branch
      */
     public Branch(String name) {
@@ -69,8 +69,8 @@ public class Branch extends Entity {
 
     /**
      * Create Branch with name and description
-     *
-     * @param name        - name for new Branch
+     * 
+     * @param name - name for new Branch
      * @param description - description for new Branch
      */
     public Branch(String name, String description) {
@@ -80,7 +80,7 @@ public class Branch extends Entity {
 
     /**
      * Get branch name which briefly describes the topics contained in it.
-     *
+     * 
      * @return Branch name as String
      */
     public String getName() {
@@ -89,7 +89,7 @@ public class Branch extends Entity {
 
     /**
      * Set branch name.
-     *
+     * 
      * @param name - Branch name
      */
     public void setName(String name) {
@@ -98,7 +98,7 @@ public class Branch extends Entity {
 
     /**
      * Get branch description.
-     *
+     * 
      * @return Branch description
      */
     public String getDescription() {
@@ -108,7 +108,7 @@ public class Branch extends Entity {
     /**
      * Set branch description which contains additional information about the
      * branch.
-     *
+     * 
      * @param description - Branch description
      */
     public void setDescription(String description) {
@@ -117,7 +117,7 @@ public class Branch extends Entity {
 
     /**
      * Check if branch marked is deleted.
-     *
+     * 
      * @return true if is deleted, false otherwise
      */
     public boolean getDeleted() {
@@ -126,7 +126,7 @@ public class Branch extends Entity {
 
     /**
      * Mark branch as deleted. True means that branch is deleted.
-     *
+     * 
      * @param deleted - boolean flag.
      */
     public void setDeleted(boolean deleted) {
@@ -135,7 +135,7 @@ public class Branch extends Entity {
 
     /**
      * Returns the section in which this branch is.
-     *
+     * 
      * @return the parent section
      */
     public Section getSection() {
@@ -144,7 +144,7 @@ public class Branch extends Entity {
 
     /**
      * Sets the section in which this branch is.
-     *
+     * 
      * @param section the parent section
      */
     public void setSection(Section section) {
@@ -153,7 +153,7 @@ public class Branch extends Entity {
 
     /**
      * @return an unmodifiable list of {@link User} which are signed to moderate
-     *         this branch
+     * this branch
      */
     public List<User> getModeratorsList() {
         return Collections.unmodifiableList(moderators);
@@ -161,7 +161,7 @@ public class Branch extends Entity {
 
     /**
      * Protected for using only by hibernate.
-     *
+     * 
      * @return the list of moderators.
      */
     protected List<User> getModerators() {
@@ -171,7 +171,7 @@ public class Branch extends Entity {
     /**
      * Sets the list of users which will be signed to moderate this branch.
      * Protected for using only by hibernate.
-     *
+     * 
      * @param moderators a list of {@link User}
      */
     protected void setModerators(List<User> moderators) {
@@ -187,7 +187,7 @@ public class Branch extends Entity {
 
     /**
      * Assigns a list of {@link User} to moderate this branch
-     *
+     * 
      * @param users - list of users
      */
     public void addModerators(List<User> users) {
@@ -197,7 +197,7 @@ public class Branch extends Entity {
     /**
      * Assigns a list of {@link User} to moderate this branch. This method
      * mainly for using in test.
-     *
+     * 
      * @param users - list of users
      */
     public void addModerators(User... users) {
@@ -213,17 +213,12 @@ public class Branch extends Entity {
 
     /**
      * Checks if {@link User} is assigned to moderate this branch
-     *
+     * 
      * @param user - user for check
      * @return {@code true} if assigned, {@code false} otherwise
      */
     public boolean isModeratedBy(User user) {
         return this.moderators.contains(user);
-    }
-
-    @Override
-    public String toString() {
-        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + ", position=" + position + "]";
     }
 
     /**
@@ -238,10 +233,20 @@ public class Branch extends Entity {
     /**
      * Sets the position.
      * 
-     * @param position
-     *            the position to set
+     * @param position the position to set
      */
     public void setPosition(Integer position) {
         this.position = position;
+    }
+    
+    @Override
+    public String toString() {
+        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + ", position=" + position
+                + "]";
+    }
+
+    @Override
+    public void apply(BranchSectionVisitor visitor) {
+        visitor.visitBranch(this);
     }
 }
