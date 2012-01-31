@@ -71,7 +71,7 @@ public class SectionTreeComponentImplTest {
 
     @Test
     public void moderationButton() {
-        sectionTreeComponent.moderationButton();
+        sectionTreeComponent.moderationDialog();
         verify(presenter).openModerationWindow();
     }
 

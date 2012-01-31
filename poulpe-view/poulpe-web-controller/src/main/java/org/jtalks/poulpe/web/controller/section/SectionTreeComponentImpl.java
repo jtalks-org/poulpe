@@ -82,6 +82,23 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer(presenter));
     }
     
+    public void newBranchDialog() {
+        presenter.openNewBranchDialog(this);
+    }
+
+    public void editDialog() {
+        presenter.openEditDialog(this);
+    }
+
+    public void moderationDialog() {
+        presenter.openModerationWindow();
+    }
+    
+    /** {@inheritDoc} */
+    public void updateSectionInView(Section section) {
+        treeNode.setData(section);
+    }
+    
     private static DefaultTreeModel<Section> prepareTreeModel(DefaultTreeNode<Section> treeNode) {
         List<DefaultTreeNode<Section>> defaultTreeNodes = Collections.singletonList(treeNode);
         DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
@@ -96,23 +113,6 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         }
         
         return null;
-    }
-
-    public void newBranchDialog() {
-        presenter.openNewBranchDialog(this);
-    }
-
-    public void editDialog() {
-        presenter.openEditDialog(this);
-    }
-
-    /** {@inheritDoc} */
-    public void updateSectionInView(Section section) {
-        treeNode.setData(section);
-    }
-
-    public void moderationButton() {
-        presenter.openModerationWindow();
     }
 
     public void showPermissionsWindow() {
@@ -213,7 +213,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
      * Click on '*' button
      */
     public void onClick$moderatorButton() {
-        moderationButton();
+        moderationDialog();
     }
 
     /**
