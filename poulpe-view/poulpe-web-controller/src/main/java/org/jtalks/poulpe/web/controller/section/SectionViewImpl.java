@@ -365,7 +365,7 @@ public class SectionViewImpl extends Window implements AfterCompose {
                 branch));
     }
 
-    public void openModeratorDialog(Branch branch) {
+    public void openModerationDialog(Branch branch) {
         Events.postEvent(new Event("onOpen", getDesktop().getPage("moderatorDialog").getFellow("moderatorWindow"),
                 branch));
     }

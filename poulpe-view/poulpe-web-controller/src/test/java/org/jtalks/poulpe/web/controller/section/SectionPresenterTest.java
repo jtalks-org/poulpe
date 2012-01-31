@@ -28,7 +28,6 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -77,7 +76,6 @@ public class SectionPresenterTest {
     
     @Test
     public void testInitView() {
-        
         verify(view).showSections(sections);
         verify(view).closeDialogs();
     }
@@ -184,6 +182,18 @@ public class SectionPresenterTest {
         presenter.deleteSection(recipient);
         verify(dialogManager).confirmDeletion(eq(section.getName()), any(DialogManager.Performable.class));
         verify(perfomableFactory).deleteSection(section, recipient);
+    }
+    
+    @Test 
+    public void openModeratorDialog() {
+        presenter.openModerationDialog(branch);
+        verify(view).openModerationDialog(branch);
+    }
+    
+    @Test 
+    public void saveSection() {
+        presenter.saveSection(section);
+        verify(service).saveSection(section);
     }
 
 }

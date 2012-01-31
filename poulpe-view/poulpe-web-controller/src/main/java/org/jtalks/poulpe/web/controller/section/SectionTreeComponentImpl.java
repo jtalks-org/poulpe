@@ -22,7 +22,6 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.Section;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.event.Event;
@@ -46,41 +45,50 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
     private static final long serialVersionUID = -1083425488934932487L;
 
     /**
-     * Reference to a corresponding ZUL file
+     * Reference to the corresponding ZUL file
      */
-    private static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
+    public static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
 
-    private Tree sectionTree;
-    private final SectionPresenter presenter;
+    private ZkInitializer zkInitializer;
+
+    private SectionPresenter presenter;
     
+    private Tree sectionTree;
     private DefaultTreeNode<Section> treeNode;
+    
+    SectionTreeComponentImpl(ZkInitializer zkInitializer) {
+        this.zkInitializer = zkInitializer;
+    }
+    
     /**
      * @param section for which will be build tree
      * @param presenter instance section presenter
      */
     public SectionTreeComponentImpl(Section section, SectionPresenter presenter) {
+        this.zkInitializer = new ZkInitializer(this);
+        init(section, presenter);
+    }
+
+    public void init(Section section, SectionPresenter presenter) {
+        zkInitializer.wireToZul(ZUL_REF);
+        zkInitializer.init();
+        
         this.presenter = presenter;
-        
-        Executions.createComponents(ZUL_REF, this, null);
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
-        
+
         treeNode = TreeNodeFactory.getTreeNode(section);
         DefaultTreeModel<Section> model = prepareTreeModel(treeNode);
         
         sectionTree.setModel(model);
         sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer(presenter));
     }
-
-    private DefaultTreeModel<Section> prepareTreeModel(DefaultTreeNode<Section> treeNode) {
+    
+    private static DefaultTreeModel<Section> prepareTreeModel(DefaultTreeNode<Section> treeNode) {
         List<DefaultTreeNode<Section>> defaultTreeNodes = Collections.singletonList(treeNode);
         DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
         return new DefaultTreeModel<Section>(root);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     public BranchSectionVisitable getSelectedObject() {
         if (sectionTree.getSelectedCount() != 0) {
             BranchSectionVisitable data = sectionTree.getSelectedItem().getValue();
@@ -90,66 +98,29 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         return null;
     }
 
-    /**
-     * event which happen when click on add branch button
-     */
-    public void onClick$addBranchButton() {
+    public void newBranchDialog() {
         presenter.openNewBranchDialog(this);
     }
 
-    /**
-     * event which happen when double click on section or branch
-     */
-    public void onDoubleClick$sectionTree() {
+    public void editDialog() {
         presenter.openEditDialog(this);
     }
 
     /** {@inheritDoc} */
-    public void addBranchToView(Branch branch) {
-        // TODO
-    }
-
-    /** {@inheritDoc} */
-    public void updateBranchInView(Branch branch) {
-    }
-
-    /** {@inheritDoc} */
-    public void removeBranchFromView(Branch branch) {
-    }
-
-    /**
-     * {@inheritDoc}
-     */
     public void updateSectionInView(Section section) {
         treeNode.setData(section);
     }
 
-    /**
-     * Click on '*' button
-     */
-    public void onClick$moderatorButton() {
-        BranchSectionVisitable selectedObject = getSelectedObject();
-        selectedObject.apply(openModeratorDialogVisitor);
+    public void moderationButton() {
+        presenter.openModerationWindow();
     }
 
-    private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
-        @Override
-        public void visitSection(Section section) {
-            // do nothing because moderators windows is not applicable for sections
-        }
-
-        @Override
-        public void visitBranch(Branch branch) {
-            presenter.openModeratorDialog(branch);
-        }
-    };
-
-    public void onClick$permissionsButton() throws IOException {
+    public void showPermissionsWindow() {
         BranchSectionVisitable selectedObject = getSelectedObject();
-        selectedObject.apply(showPermissions);
+        selectedObject.apply(showPermissionsVisitor);
     }
 
-    private static BranchSectionVisitor showPermissions = new BranchSectionVisitor() {
+    private static BranchSectionVisitor showPermissionsVisitor = new BranchSectionVisitor() {
         @Override
         public void visitSection(Section section) {
             Messagebox.show("This action not provided for section, please select a branch");
@@ -161,25 +132,26 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
         }
     };
 
-    
+    public void deleteDialog() {
+        BranchSectionVisitable selectedObject = getSelectedOrFirstElement();
+        presenter.openDeleteDialog(selectedObject);
+    }
 
     /**
-     * Event which happen when user click on '-' button after it selected
-     * section is going to be deleted
+     * (Open for spying)
+     * @return
      */
-    public void onClick$delButton() {
+    public BranchSectionVisitable getSelectedOrFirstElement() {
         BranchSectionVisitable selectedObject = getSelectedObject();
 
         if (selectedObject == null) {
             selectedObject = getFirstElement();
         }
-
-        presenter.openDeleteDialog(selectedObject);
+        
+        return selectedObject;
     }
 
     private BranchSectionVisitable getFirstElement() {
-        // if the there no selected object
-        // we should consider this event as a try to remove section
         TreeModel<DefaultTreeNode<BranchSectionVisitable>> model = sectionTree.getModel();
         DefaultTreeNode<BranchSectionVisitable> root = model.getRoot();
         TreeNode<BranchSectionVisitable> child = root.getChildAt(0);
@@ -187,31 +159,73 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
     }
 
     /**
-     * @param tree
+     * @param sectionTree
      */
-    public void setSectionTree(Tree tree) {
-        this.sectionTree = tree;
-        
+    public void setSectionTree(Tree sectionTree) {
+        this.sectionTree = sectionTree;
+        addDisablingForSections();
+    }
+
+    private void addDisablingForSections() {
         sectionTree.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
             @Override
             public void onEvent(Event event) throws Exception {
-                getSelectedObject().apply(new BranchSectionVisitor() {
-                    @Override
-                    public void visitSection(Section section) {
-                        getBranchPermissionsButton().setDisabled(true);
-                    }
-
-                    @Override
-                    public void visitBranch(Branch branch) {
-                        getBranchPermissionsButton().setDisabled(false);
-                    }
-                });
+                disablePermissionsButtonIfNeeded(getSelectedObject());
             }
         });
-        
     }
+    
+    public void disablePermissionsButtonIfNeeded(BranchSectionVisitable visitable) {
+        visitable.apply(disablePermissionsButtonVisitor);
+    }
+    
+    private BranchSectionVisitor disablePermissionsButtonVisitor = new BranchSectionVisitor() {
+        @Override
+        public void visitSection(Section section) {
+            getBranchPermissionsButton().setDisabled(true);
+        }
 
-    private Button getBranchPermissionsButton() {
+        @Override
+        public void visitBranch(Branch branch) {
+            getBranchPermissionsButton().setDisabled(false);
+        }
+    };
+    
+    Button getBranchPermissionsButton() {
         return (Button) sectionTree.getFellow("permissionsButton");
     }
+    
+    /**
+     * event which happen when click on add branch button
+     */
+    public void onClick$addBranchButton() {
+        newBranchDialog();
+    }
+    
+    /**
+     * event which happen when double click on section or branch
+     */
+    public void onDoubleClick$sectionTree() {
+        editDialog();
+    }
+    
+    /**
+     * Click on '*' button
+     */
+    public void onClick$moderatorButton() {
+        moderationButton();
+    }
+
+    /**
+     * Event which happen when user click on '-' button after it selected
+     * section is going to be deleted
+     */
+    public void onClick$delButton() {
+        deleteDialog();
+    }
+    
+    public void onClick$permissionsButton() throws IOException {
+        showPermissionsWindow();
+    }
+
 }

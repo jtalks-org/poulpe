@@ -204,7 +204,7 @@ public class SectionPresenter {
             return;
         }
         
-        final Section victim = (Section) selectedObject;
+        Section victim = (Section) selectedObject;
         dialogManager.confirmDeletion(victim.getName(), perfomableFactory.deleteSection(victim, recipient));
         removeSectionFromView(victim);
 
@@ -215,8 +215,8 @@ public class SectionPresenter {
      * 
      * @param branch
      */
-    public void openModeratorDialog(Branch branch) {
-        sectionView.openModeratorDialog(branch);
+    public void openModerationDialog(Branch branch) {
+        sectionView.openModerationDialog(branch);
     }
 
     public boolean validate(Section section, boolean isNewSection) {
@@ -263,13 +263,6 @@ public class SectionPresenter {
     }
 
     /**
-     * @return a currect selected <code>SectionTreeComponentImpl</code>
-     */
-    public SectionTreeComponentImpl getCurrentSectionTreeComponentImpl() {
-        return currentSectionTreeComponentImpl;
-    }
-
-    /**
      * @param currentSectionTreeComponentImpl is current
      * <code>SectionTreeComponentImpl</code> that will process actions from
      * presenter
@@ -283,11 +276,26 @@ public class SectionPresenter {
         this.perfomableFactory = perfomableFactory;
     }
 
-    public DeleteSectionDialogPresenter getDeleteSectionDialogPresenter() {
-        return deleteSectionDialogPresenter;
-    }
-
     public void setDeleteSectionDialogPresenter(DeleteSectionDialogPresenter deleteSectionDialogPresenter) {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
     }
+
+    public void openModerationWindow() {
+        BranchSectionVisitable selectedObject = currentSectionTreeComponentImpl.getSelectedObject();
+        selectedObject.apply(openModeratorDialogVisitor);
+    }
+
+    private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
+        @Override
+        public void visitSection(Section section) {
+            // do nothing because moderators windows is not applicable for sections
+        }
+
+        @Override
+        public void visitBranch(Branch branch) {
+            openModerationDialog(branch);
+        }
+    };
+    
+    
 }
