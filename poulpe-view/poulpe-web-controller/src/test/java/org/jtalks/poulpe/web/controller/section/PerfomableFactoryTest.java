@@ -22,8 +22,8 @@ public class PerfomableFactoryTest {
     
     @Mock SectionPresenter presenter;
     @Mock SectionService service;
-    @Mock SectionViewImpl view;
-    @Mock SectionTreeComponentImpl currentSectionTreeComponent;
+    @Mock ZkSectionView view;
+    @Mock ZkSectionTreeComponent currentSectionTreeComponent;
 
     private Section section = sectionWithBranches();
     private Branch branch = section.getBranches().get(0);

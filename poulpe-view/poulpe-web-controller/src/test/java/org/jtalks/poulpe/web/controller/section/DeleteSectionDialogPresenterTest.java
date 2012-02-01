@@ -16,9 +16,9 @@ package org.jtalks.poulpe.web.controller.section;
 
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSections;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
@@ -36,8 +36,10 @@ public class DeleteSectionDialogPresenterTest {
 
     DeleteSectionDialogPresenter presenter;
 
-    @Mock SectionService sectionService;
-    @Mock DeleteSectionDialogView view;
+    @Mock
+    SectionService sectionService;
+    @Mock
+    DeleteSectionDialogView view;
 
     private List<Section> sections = fakeSections();
     private Section section = sectionWithBranches();
@@ -54,14 +56,23 @@ public class DeleteSectionDialogPresenterTest {
     }
 
     @Test
-    public void testInitView() {
-        when(sectionService.getAll()).thenReturn(sections);
-        presenter.initView();
-        verify(view).initSectionList(sections);
+    public void refreshSectionsComboboxEmpty() {
+        List<Section> empty = Collections.emptyList();
+        when(sectionService.getAll()).thenReturn(empty);
+        presenter.refreshSectionsCombobox();
+        verify(view).initEmptyAndDisabledCombobox();
     }
 
     @Test
-    public void testDeleteIfmodeDeleteAll() {
+    public void refreshSectionsComboboxWithSections() {
+        when(sectionService.getAll()).thenReturn(sections);
+        presenter.refreshSectionsCombobox();
+        verify(view).initSectionsCombobox(sections);
+        verify(view, never()).initEmptyAndDisabledCombobox();
+    }
+
+    @Test
+    public void deleteIfmodeDeleteAll() {
         givenDeleteAllMode();
 
         presenter.delete();
@@ -76,11 +87,11 @@ public class DeleteSectionDialogPresenterTest {
     }
 
     @Test
-    public void testDeleteIfmodeMoveBranches() {
+    public void deleteIfmodeMoveBranches() {
         givenDeleteAndMoveMode();
 
         presenter.delete();
-        
+
         verify(sectionService).deleteAndMoveBranchesTo(section, recipient);
         verify(view).closeDialog();
     }
@@ -89,5 +100,11 @@ public class DeleteSectionDialogPresenterTest {
         when(view.getDeleteMode()).thenReturn(SectionDeleteMode.DELETE_AND_MOVE);
         when(view.getSectionToDelete()).thenReturn(section);
         when(view.getRecipientSection()).thenReturn(recipient);
+    }
+    
+    @Test
+    public void show() {
+        presenter.show(section);
+        verify(view).showDialog(section);
     }
 }

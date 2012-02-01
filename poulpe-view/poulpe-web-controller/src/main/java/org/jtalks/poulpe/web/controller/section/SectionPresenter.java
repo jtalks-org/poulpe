@@ -41,21 +41,21 @@ public class SectionPresenter {
 
     // injected
     private SectionService sectionService;
-    private SectionViewImpl sectionView;
-    private SectionTreeComponentImpl currentSectionTreeComponentImpl;
+    private SectionView sectionView;
+    private ZkSectionTreeComponent currentSectionTreeComponent;
     private DialogManager dialogManager;
     private EntityValidator entityValidator;
-    
+
     private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
-    
+
     /**
      * initialize main view SectionView instance
      * 
      * @param view instance
      */
-    public void initView(SectionViewImpl view) {
+    public void initView(SectionView view) {
         perfomableFactory.setSectionView(view);
         this.sectionView = view;
         updateView();
@@ -85,28 +85,27 @@ public class SectionPresenter {
      * @param currentSectionTreeComponentImpl from this instance we get selected
      * object
      */
-    public void openEditDialog(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
+    public void openEditDialog(ZkSectionTreeComponent currentSectionTreeComponentImpl) {
         BranchSectionVisitable visitable = currentSectionTreeComponentImpl.getSelectedObject();
         if (visitable != null) {
             visitable.apply(editVisitor);
         }
-        
+
         // TODO: get rid of it! Why it's needed here?
         setCurrentSectionTreeComponentImpl(currentSectionTreeComponentImpl);
     }
-    
+
     private BranchSectionVisitor editVisitor = new BranchSectionVisitor() {
         @Override
         public void visitSection(Section section) {
             sectionView.openEditSectionDialog(section.getName(), section.getDescription());
         }
-        
+
         @Override
         public void visitBranch(Branch branch) {
             sectionView.openEditBranchDialog(branch);
         }
     };
-
 
     /**
      * Method used for delete section or branch.
@@ -118,14 +117,14 @@ public class SectionPresenter {
             visitable.apply(deleteVisitor);
         }
     }
-    
+
     private BranchSectionVisitor deleteVisitor = new BranchSectionVisitor() {
         @Override
         public void visitSection(Section section) {
             deleteSectionDialogPresenter.show(section);
             updateView();
         }
-        
+
         @Override
         public void visitBranch(Branch branch) {
             dialogManager.confirmDeletion(branch.getName(), perfomableFactory.deleteBranch(branch));
@@ -137,8 +136,8 @@ public class SectionPresenter {
      * 
      * @param sectionTreeComponentImpl method save reference on this instance
      */
-    public void openNewBranchDialog(SectionTreeComponentImpl sectionTreeComponentImpl) {
-        this.currentSectionTreeComponentImpl = sectionTreeComponentImpl;
+    public void openNewBranchDialog(ZkSectionTreeComponent sectionTreeComponentImpl) {
+        this.currentSectionTreeComponent = sectionTreeComponentImpl;
         sectionView.openNewBranchDialog();
     }
 
@@ -156,10 +155,10 @@ public class SectionPresenter {
      * @param description is edited section description
      */
     public boolean editSection(String name, String description) {
-        Section section = (Section) currentSectionTreeComponentImpl.getSelectedObject();
+        Section section = (Section) currentSectionTreeComponent.getSelectedObject();
         section.setName(name);
         section.setDescription(description);
-        
+
         if (validate(section, false)) {
             dialogManager.confirmEdition(name, perfomableFactory.updateSection(section));
             sectionView.closeEditSectionDialog();
@@ -198,12 +197,12 @@ public class SectionPresenter {
      * to this section. If null then all children should be also deleted
      */
     public void deleteSection(Section recipient) {
-        BranchSectionVisitable selectedObject = currentSectionTreeComponentImpl.getSelectedObject();
-        
+        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
+
         if (!(selectedObject instanceof Section)) {
             return;
         }
-        
+
         Section victim = (Section) selectedObject;
         dialogManager.confirmDeletion(victim.getName(), perfomableFactory.deleteSection(victim, recipient));
         removeSectionFromView(victim);
@@ -238,8 +237,7 @@ public class SectionPresenter {
     public void saveSection(Section section) {
         sectionService.saveSection(section);
     }
-    
-    
+
     /**
      * @param entityValidator the entityValidator to set
      */
@@ -263,13 +261,13 @@ public class SectionPresenter {
     }
 
     /**
-     * @param currentSectionTreeComponentImpl is current
-     * <code>SectionTreeComponentImpl</code> that will process actions from
+     * @param currentSectionTreeComponent is current
+     * <code>ZkSectionTreeComponent</code> that will process actions from
      * presenter
      */
-    public void setCurrentSectionTreeComponentImpl(SectionTreeComponentImpl currentSectionTreeComponentImpl) {
-        perfomableFactory.setCurrentSectionTreeComponent(currentSectionTreeComponentImpl);
-        this.currentSectionTreeComponentImpl = currentSectionTreeComponentImpl;
+    public void setCurrentSectionTreeComponentImpl(ZkSectionTreeComponent currentSectionTreeComponent) {
+        perfomableFactory.setCurrentSectionTreeComponent(currentSectionTreeComponent);
+        this.currentSectionTreeComponent = currentSectionTreeComponent;
     }
 
     public void setPerfomableFactory(PerfomableFactory perfomableFactory) {
@@ -281,14 +279,15 @@ public class SectionPresenter {
     }
 
     public void openModerationWindow() {
-        BranchSectionVisitable selectedObject = currentSectionTreeComponentImpl.getSelectedObject();
+        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
         selectedObject.apply(openModeratorDialogVisitor);
     }
 
     private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
         @Override
         public void visitSection(Section section) {
-            // do nothing because moderators windows is not applicable for sections
+            // do nothing because moderators windows is not applicable for
+            // sections
         }
 
         @Override
@@ -296,6 +295,5 @@ public class SectionPresenter {
             openModerationDialog(branch);
         }
     };
-    
-    
+
 }

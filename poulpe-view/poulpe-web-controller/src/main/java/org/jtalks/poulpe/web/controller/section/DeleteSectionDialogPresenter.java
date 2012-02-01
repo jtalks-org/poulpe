@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.service.SectionService;
 
@@ -32,8 +34,15 @@ public class DeleteSectionDialogPresenter {
     /**
      * Use for initialize combobox which contains sections
      */
-    public void initView() {
-        view.initSectionList(sectionService.getAll());
+    public void refreshSectionsCombobox() {
+        List<Section> sections = sectionService.getAll();
+
+        if (sections.isEmpty()) {
+            view.initEmptyAndDisabledCombobox();
+        } else {
+            view.initSectionsCombobox(sections);
+        }
+        
     }
 
     /**
@@ -68,17 +77,13 @@ public class DeleteSectionDialogPresenter {
     }
 
     /**
-     * Sets the view instance which represent User interface
-     * 
-     * @param view The instance DeleteSectionDialogView
+     * @param view instance which represent User interface
      */
     public void setView(DeleteSectionDialogView view) {
         this.view = view;
     }
 
     /**
-     * Sets section service for manipulating sections
-     * 
      * @param sectionService The instance SectionService
      */
     public void setSectionService(SectionService sectionService) {

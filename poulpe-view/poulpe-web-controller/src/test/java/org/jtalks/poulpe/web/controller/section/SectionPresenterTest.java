@@ -46,10 +46,10 @@ public class SectionPresenterTest {
     private SectionPresenter presenter;
 
     @Mock SectionService service;
-    @Mock SectionViewImpl view;
+    @Mock ZkSectionView view;
     @Mock DialogManager dialogManager;
     @Mock EntityValidator entityValidator;
-    @Mock SectionTreeComponentImpl currentSectionTreeComponent;
+    @Mock ZkSectionTreeComponent currentSectionTreeComponent;
     @Mock PerfomableFactory perfomableFactory;
     @Mock DeleteSectionDialogPresenter dialogPresenter;
     

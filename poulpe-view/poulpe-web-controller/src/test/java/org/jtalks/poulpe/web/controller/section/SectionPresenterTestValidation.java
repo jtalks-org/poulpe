@@ -27,7 +27,7 @@ public class SectionPresenterTestValidation {
     private SectionPresenter presenter;
 
     @Mock SectionService service;
-    @Mock SectionViewImpl view;
+    @Mock ZkSectionView view;
     @Mock DialogManager dialogManager;
     @Mock EntityValidator entityValidator;
 

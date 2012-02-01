@@ -45,6 +45,7 @@ class TreeNodeFactory {
             return null;
         }
         if (entity instanceof Section) {
+            @SuppressWarnings("unchecked")
             List<T> branches = (List<T>) ((Section) entity).getBranches();
             return new ExtendedTreeNode<T>(entity, getTreeNodes(branches));
         } else if (entity instanceof Branch) {

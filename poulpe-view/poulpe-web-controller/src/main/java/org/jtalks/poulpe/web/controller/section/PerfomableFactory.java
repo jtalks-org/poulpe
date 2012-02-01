@@ -19,8 +19,8 @@ public class PerfomableFactory {
     private final SectionPresenter sectionPresenter;
 
     private SectionService sectionService;
-    private SectionViewImpl sectionView;
-    private SectionTreeComponentImpl currentSectionTreeComponent;
+    private SectionView sectionView;
+    private ZkSectionTreeComponent currentSectionTreeComponent;
 
     /**
      * @param sectionPresenter
@@ -194,14 +194,14 @@ public class PerfomableFactory {
      * @param currentSectionTreeComponent that will process actions from
      * presenter
      */
-    public void setCurrentSectionTreeComponent(SectionTreeComponentImpl currentSectionTreeComponent) {
+    public void setCurrentSectionTreeComponent(ZkSectionTreeComponent currentSectionTreeComponent) {
         this.currentSectionTreeComponent = currentSectionTreeComponent;
     }
 
     /**
      * @param sectionView
      */
-    public void setSectionView(SectionViewImpl sectionView) {
+    public void setSectionView(SectionView sectionView) {
         this.sectionView = sectionView;
     }
 }

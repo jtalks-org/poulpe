@@ -62,7 +62,9 @@ public interface DeleteSectionDialogView {
     /**
      * Initializes combobox with available section
      * 
-     * @param selectableSections list available sections
+     * @param sections list available sections
      */
-    void initSectionList(List<Section> selectableSections);
+    void initSectionsCombobox(List<Section> sections);
+
+    void initEmptyAndDisabledCombobox();
 }
