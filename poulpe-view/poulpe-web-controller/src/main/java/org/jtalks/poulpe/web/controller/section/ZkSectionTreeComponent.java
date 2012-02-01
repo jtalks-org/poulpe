@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.web.controller.ZkInitializer;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.event.Event;
@@ -41,7 +42,7 @@ import org.zkoss.zul.TreeNode;
  * @author Guram Savinov
  * @author Alexey Grigorev
  */
-public class SectionTreeComponentImpl extends Div implements IdSpace {
+public class ZkSectionTreeComponent extends Div implements IdSpace {
     private static final long serialVersionUID = -1083425488934932487L;
 
     /**
@@ -56,7 +57,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
     private Tree sectionTree;
     private DefaultTreeNode<Section> treeNode;
     
-    SectionTreeComponentImpl(ZkInitializer zkInitializer) {
+    ZkSectionTreeComponent(ZkInitializer zkInitializer) {
         this.zkInitializer = zkInitializer;
     }
     
@@ -64,7 +65,7 @@ public class SectionTreeComponentImpl extends Div implements IdSpace {
      * @param section for which will be build tree
      * @param presenter instance section presenter
      */
-    public SectionTreeComponentImpl(Section section, SectionPresenter presenter) {
+    public ZkSectionTreeComponent(Section section, SectionPresenter presenter) {
         this.zkInitializer = new ZkInitializer(this);
         init(section, presenter);
     }

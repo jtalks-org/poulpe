@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.section;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
-import org.zkoss.zk.ui.Components;
+import org.jtalks.poulpe.web.controller.ZkInitializer;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
@@ -34,44 +34,45 @@ import org.zkoss.zul.Window;
  * @author Bekrenev Dmitry
  * @author Alexey Grigorev
  */
-public class DeleteSectionDialogViewImpl extends Window implements DeleteSectionDialogView, AfterCompose {
+public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDialogView, AfterCompose {
 
     private static final long serialVersionUID = -4999382692611273729L;
-    
+
+    private ZkInitializer zkInitializer = new ZkInitializer(this);
+
     private Radiogroup deleteMode;
     private Radio removeAndMoveMode;
     private Combobox selectedSection;
-    
+
     private DeleteSectionDialogPresenter presenter;
 
-    private Section deletedSection;
+    private Section sectionToDelete;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
+        zkInitializer.init();
 
         presenter.setView(this);
-        selectedSection.setItemRenderer(itemRenderer);
+        selectedSection.setItemRenderer(new SectionComboboxItemRenderer());
     }
-    
-    private static ComboitemRenderer<Section> itemRenderer = new ComboitemRenderer<Section>() {
+
+    static class SectionComboboxItemRenderer implements ComboitemRenderer<Section> {
         @Override
-        public void render(Comboitem item, Section section) {
+        public void render(Comboitem item, Section section) throws Exception {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }
-    };
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
     public Section getSectionToDelete() {
-        return deletedSection;
+        return sectionToDelete;
     }
 
     /**
@@ -87,8 +88,12 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
      */
     @Override
     public SectionDeleteMode getDeleteMode() {
-        String mode = deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
+        String mode = getDeleteModeValue();
         return SectionDeleteMode.fromString(mode);
+    }
+
+    private String getDeleteModeValue() {
+        return deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
     }
 
     /**
@@ -96,66 +101,27 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
      */
     @Override
     public void showDialog(Section section) {
-        deletedSection = section;
+        sectionToDelete = section;
         showDialog();
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
     public void showDialog() {
-        presenter.initView();
-        setDefaultSection();
+        presenter.refreshSectionsCombobox();
+
+        useFirstSectionAsDefaultRecipient();
         deleteMode.setSelectedIndex(0);
+
         show();
-    }
-
-    private void show() {
-        setVisible(true);
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void closeDialog() {
-        setVisible(false);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void initSectionList(List<Section> selectableSections) {
-        if (!selectableSections.isEmpty()) {
-            initCombobox(selectableSections);
-        } else {
-            initDisabledCombobox();
-        }
-    }
-
-    private void initCombobox(List<Section> selectableSections) {
-        ListModelList<Section> modelList = new ListModelList<Section>(selectableSections);
-        modelList.remove(deletedSection);
-        
-        selectedSection.setModel(modelList);
-        selectedSection.setDisabled(false);
-        selectedSection.setRawValue(null);
-
-        removeAndMoveMode.setDisabled(false);
-    }
-    
-    private void initDisabledCombobox() {
-        selectedSection.setModel(null);
-        selectedSection.setDisabled(true);
-        removeAndMoveMode.setDisabled(true);
     }
 
     /**
      * Choice default section in combobox
      */
-    private void setDefaultSection() {
+    private void useFirstSectionAsDefaultRecipient() {
         @SuppressWarnings("unchecked")
         ListModelList<Section> model = (ListModelList<Section>) selectedSection.getModel();
         model.clearSelection();
@@ -169,12 +135,49 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
         selectedSection.setModel(model);
     }
 
+    private void show() {
+        setVisible(true);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void closeDialog() {
+        setVisible(false);
+    }
+
+    public void deleteSection() {
+        presenter.delete();
+    }
+
+    @Override
+    public void initSectionsCombobox(List<Section> selectableSections) {
+        ListModelList<Section> modelList = new ListModelList<Section>(selectableSections);
+        modelList.remove(sectionToDelete);
+
+        selectedSection.setModel(modelList);
+        selectedSection.setDisabled(false);
+        selectedSection.setRawValue(null);
+
+        removeAndMoveMode.setDisabled(false);
+    }
+
+    @Override
+    public void initEmptyAndDisabledCombobox() {
+        selectedSection.setModel(null);
+        selectedSection.setDisabled(true);
+        removeAndMoveMode.setDisabled(true);
+    }
+
     /**
      * This event cause show dialog
      * 
      * @param event information about event contain Section which will be
      * deleted
+     * @deprecated use {@link #showDialog(Section)} instead
      */
+    @Deprecated
     public void onOpenDeleteSectionDialog(Event event) {
         showDialog((Section) event.getData());
     }
@@ -183,7 +186,7 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
      * This event cause delete
      */
     public void onClick$confirmButton() {
-        presenter.delete();
+        deleteSection();
     }
 
     /**
@@ -199,8 +202,15 @@ public class DeleteSectionDialogViewImpl extends Window implements DeleteSection
     public void setPresenter(DeleteSectionDialogPresenter presenter) {
         this.presenter = presenter;
     }
-    
-    public DeleteSectionDialogPresenter getPresenter() {
-        return presenter;
+
+    void setZkInitializer(ZkInitializer zkInitializer) {
+        this.zkInitializer = zkInitializer;
     }
+
+    void setUiElements(Radiogroup deleteMode, Radio removeAndMoveMode, Combobox selectedSection) {
+        this.deleteMode = deleteMode;
+        this.removeAndMoveMode = removeAndMoveMode;
+        this.selectedSection = selectedSection;
+    }
+
 }

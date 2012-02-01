@@ -11,6 +11,7 @@ import static org.mockito.Mockito.when;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.web.controller.ZkInitializer;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -23,10 +24,10 @@ import org.zkoss.zul.Tree;
 /**
  * @author Alexey Grigorev
  */
-public class SectionTreeComponentImplTest {
+public class ZkSectionTreeComponentTest {
     
-    private SectionTreeComponentImpl sectionTreeComponent;
-    private SectionTreeComponentImpl spy;
+    private ZkSectionTreeComponent sectionTreeComponent;
+    private ZkSectionTreeComponent spy;
 
     @Mock SectionPresenter presenter;
     @Mock ZkInitializer zkInitializer;
@@ -39,7 +40,7 @@ public class SectionTreeComponentImplTest {
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
         
-        sectionTreeComponent = new SectionTreeComponentImpl(zkInitializer);
+        sectionTreeComponent = new ZkSectionTreeComponent(zkInitializer);
         sectionTreeComponent.setSectionTree(sectionTree);
         sectionTreeComponent.init(section, presenter);
         
@@ -49,7 +50,7 @@ public class SectionTreeComponentImplTest {
     @Test
     public void initialization() {
         verify(zkInitializer).init();
-        verify(zkInitializer).wireToZul(SectionTreeComponentImpl.ZUL_REF);
+        verify(zkInitializer).wireToZul(ZkSectionTreeComponent.ZUL_REF);
     }
     
     @Test
