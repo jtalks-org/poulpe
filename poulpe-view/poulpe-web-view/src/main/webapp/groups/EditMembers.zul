@@ -40,10 +40,14 @@
           </panel>
         </vbox>
         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
-          <button onClick="@command('add')" disabled="@load(empty editGroupMembersVM.availSelected)" image="/resources/img/rightarrow.png" width="36px" />
-          <button onClick="@command('addAll')" disabled="@load(empty editGroupMembersVM.avail)" image="/resources/img/rightrightarrow.png" width="36px" />
-          <button onClick="@command('remove')" disabled="@load(empty editGroupMembersVM.existSelected)" image="/resources/img/leftarrow.png" width="36px" />
-          <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVM.exist)" image="/resources/img/leftleftarrow.png" width="36px" />
+          <button onClick="@command('add')" disabled="@load(empty editGroupMembersVM.availSelected)" image="/resources/img/rightarrow.png" width="36px"
+		    sclass="edit.members.addButton" />
+          <button onClick="@command('addAll')" disabled="@load(empty editGroupMembersVM.avail)" image="/resources/img/rightrightarrow.png" width="36px"
+		    sclass="edit.members.addAllButton" />
+          <button onClick="@command('remove')" disabled="@load(empty editGroupMembersVM.existSelected)" image="/resources/img/leftarrow.png" width="36px"
+		    sclass="edit.members.removeButton" />
+          <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVM.exist)" image="/resources/img/leftleftarrow.png" width="36px"
+		    sclass="edit.members.removeAllButton" />
         </vbox>
         <vbox hflex="1">
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">

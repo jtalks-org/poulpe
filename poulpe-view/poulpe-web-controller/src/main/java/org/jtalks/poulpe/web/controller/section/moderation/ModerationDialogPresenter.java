@@ -24,6 +24,9 @@ import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
+/**
+ * This class provides implementation for the moderation dialog presenter in pattern Model-View-Presenter.
+ */
 public class ModerationDialogPresenter {
 
     public static final String USER_ALREADY_MODERATOR = "moderatedialog.validation.user_already_in_list";
@@ -35,23 +38,40 @@ public class ModerationDialogPresenter {
     private DialogManager dialogManager;
     private EntityValidator entityValidator;
 
+    /**
+     * Mutator to set the {@link DialogManager} for this presenter.
+     */
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
 
+    /**
+     * Mutator to set the {@link ModerationDialogView} for this presenter.
+     */
     public void initView(ModerationDialogView view) {
         this.view = view;
         refreshView();
     }
-
-    public void updateView(List<User> users, List<User> usersInCombo) {
-        view.updateView(users, usersInCombo);
-    }
-
+    
+    /**
+     * Updates view using users from the branch and userService of this presenter.
+     */
     public void refreshView() {
         updateView(branch.getModeratorsList(), userService.getAll());
     }
 
+    /**
+     * Updates view using specified users.
+     */
+    public void updateView(List<User> users, List<User> usersInCombo) {
+        view.updateView(users, usersInCombo);
+    }
+
+    /**
+     * Validate the specified user, on success sets him as a moderator for the branch, on failure shows error message.
+     * 
+     *  @param user - candidate for the moderator
+     * */
     public void addUser(User user) {
         UserValidator validator = validateUser(user);
 
@@ -63,6 +83,9 @@ public class ModerationDialogPresenter {
         }
     }
     
+    /**
+     * Validate branch, on success saves it, on failure shows message.
+     * */
     public void confirm() {
         ValidationResult result = entityValidator.validate(branch);
 
@@ -75,17 +98,31 @@ public class ModerationDialogPresenter {
         view.hideDialog();
     }
     
+    /**
+     * Creates new user validator and validates the specified user.
+     * 
+     *  @param user - user to validate
+     *  @return validator - new validator for the user
+     */
     public UserValidator validateUser(User user) {
         UserValidator validator = new UserValidator(branch);
         validator.validate(user);
         return validator;
     }
     
+    /**
+     * Removes the specified user from the moderator's list of the branch.
+     * 
+     * @param user the moderator to remove
+     */
     public void deleteUser(User user) {
         branch.removeModerator(user);
         refreshView();
     }
     
+    /**
+     * Hides the dialog.
+     */
     public void reject() {
         view.hideDialog();
     }
@@ -111,24 +148,35 @@ public class ModerationDialogPresenter {
     }
 
     /**
-     * Accessor to set the {@link BranchService} for this presenter
+     * Mutator to set the {@link BranchService} for this presenter.
+     * 
+     * @param service the service to set
      */
     public void setBranchService(BranchService service) {
         this.branchService = service;
     }
 
     /**
-     * Accessor to set the {@link UserService} for this presenter
+     * Mutator to set the {@link UserService} for this presenter.
+     * 
+     * @param service the service to set
      */
     public void setUserService(UserService service) {
         this.userService = service;
     }
 
+    /**
+     * Mutator to set the {@link Branch} for this presenter.
+     * 
+     * @param branch the branch to set
+     */
     public void setBranch(Branch branch) {
         this.branch = branch;
     }
     
     /**
+     * Mutator to set the {@link EntityValidator} for this presenter.
+     * 
      * @param entityValidator the entityValidator to set
      */
     public void setEntityValidator(EntityValidator entityValidator) {

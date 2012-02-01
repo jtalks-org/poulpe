@@ -22,7 +22,8 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 
 /**
- *
+ * This class provides implementation for the group presenter in pattern Model-View-Presenter.
+ * 
  * @author Konstantin Akimov
  * @author Vyacheslav Zhivaev
  *
@@ -36,41 +37,76 @@ public class GroupPresenter {
     private String searchRestrictions;
     private SelectedEntity<Group> selectedEntity;
 
+    /**
+     * Sets {@link GroupService} for this presenter.
+     *
+     * @param groupService the groupService to set
+     */
     public void setGroupService(GroupService groupService) {
         this.groupService = groupService;
     }
 
+    /**
+     * Sets {@link DialogManager} for this presenter.
+     * 
+     * @param dialogManager the dialogManager to set
+     */ 
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
     }
 
+    /**
+     * Sets {@link GroupViewImpl} for this presenter and update it.
+     * 
+     * @param view
+     */
     public void initView(GroupViewImpl view) {
         this.view = view;
         updateView(null);
     }
 
+    /**
+     * Update view for groups matching the specified pattern.
+     * 
+     *  @param restrictions - specified pattern for groups to match
+     * */
     public void updateView(String restrictions) {
         searchRestrictions = restrictions;
         updateView();
 
     }
 
+    /**
+     * Update view of this presenter.
+     */
     public void updateView() {
         view.updateView(groupService.getAllMatchedByName(searchRestrictions));
     }
 
+    /**
+     * Opens dialog for the new group. 
+     * */ 
     public void onAddGroup() {
         view.openNewDialog();
     }
 
+    /**
+     * Opens group edit dialog for the specified groupToEdit. 
+     * */
     public void onEditGroup(Group groupToEdit) {
         view.openEditDialog(groupToEdit);
     }
 
+    /**
+     * Look for the groups matching specified pattern.
+     * */
     public void doSearch(String pattern) {
         updateView(pattern);
     }
 
+    /**
+     * Opens group delete dialog for the specified groupToDelete. 
+     * */
     public void deleteGroup(final Group groupToDelete) {
         dialogManager.confirmDeletion(groupToDelete.getName(), new Performable() {
             @Override
@@ -81,12 +117,17 @@ public class GroupPresenter {
         });
     }
 
+    /**
+     * Edits user members of the group.
+     * */
     public void editMembers(Group selectedGroup) {
         selectedEntity.setEntity(selectedGroup);
         windowManager.open("groups/EditMembers.zul");
     }
 
     /**
+     * Sets {@link  WindowManager} for this presenter.
+     * 
      * @param windowManager the windowManager to set
      */
     public void setWindowManager(WindowManager windowManager) {
@@ -94,7 +135,7 @@ public class GroupPresenter {
     }
 
     /**
-     * Sets SelectedEntity provider.
+     * Sets {@link SelectedEntity} provider.
      * 
      * @param selectedEntity the selectedEntity to set
      */
