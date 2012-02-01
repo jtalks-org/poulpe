@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <window id="deleteWindow" border="normal" mode="modal" title="${labels.sections.deletesectiondialog.title}"
-  visible="false" presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogViewImpl">
+  visible="false" presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.ZkDeleteSectionDialogView">
   <vbox>
     ${labels.sections.deletedialog.message}
     <radiogroup id="deleteMode">
