@@ -1,7 +1,6 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -70,7 +69,7 @@ public class SectionPresenterTestValidation {
 
         presenter.addNewSection("name", "description");
 
-        verify(view, never()).validationFailure(any(ValidationResult.class), anyBoolean());
+        verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(dialogManager).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
 

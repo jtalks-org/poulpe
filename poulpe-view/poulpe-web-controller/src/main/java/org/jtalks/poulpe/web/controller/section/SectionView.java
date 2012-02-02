@@ -32,6 +32,6 @@ public interface SectionView {
 
     void openModerationDialog(Branch branch);
 
-    void validationFailure(ValidationResult result, boolean isNewSection);
+    void validationFailure(ValidationResult result);
 
 }

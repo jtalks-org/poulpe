@@ -20,6 +20,8 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailure;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.ZkInitializer;
 import org.zkoss.zk.ui.Component;
@@ -34,12 +36,13 @@ import org.zkoss.zul.Window;
  * @author unascribed
  * @author Alexey Grigorev
  */
-public class ZkSectionView extends Window implements AfterCompose, SectionView {
+public class ZkSectionView extends Window implements AfterCompose, SectionView, ValidationFailure {
 
     private static final long serialVersionUID = -2745900622179593542L;
 
     private ZkInitializer zkInitializer = new ZkInitializer(this);
-
+    private ValidationFailureHandler handler;
+    
     private SectionPresenter presenter;
 
     private Window editSectionDialog;
@@ -47,31 +50,17 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
     private Textbox editSectionDialog$sectionDescription;
 
     private boolean forEditing = false;
-    
-    // TODO: make this validator conform the common interface
-
-    public void validationFailure(ValidationResult result, boolean isNewSection) {
-        // keeping the signature for testing
-    }
-
-    /*
-     * private ValidationFailureHandler handler = new
-     * ValidationFailureHandler();
-     * 
-     * public void validationFailure(ValidationResult result, boolean
-     * isNewSection) { handler.validationFailure(result, "name",
-     * getTextbox(isNewSection)); }
-     * 
-     * private Textbox getTextbox(boolean isNewSection) { if (isNewSection) {
-     * return newSectionDialog$sectionName; } else { return
-     * editSectionDialog$sectionName; } }
-     */
 
     @Override
     public void afterCompose() {
         zkInitializer.wireByConvention();
-
+        handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         presenter.initView(this);
+    }
+    
+    @Override
+    public void validationFailure(ValidationResult result) {
+        handler.validationFailure(result);
     }
 
     @Override
@@ -251,6 +240,10 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
      */
     public void setPresenter(SectionPresenter presenter) {
         this.presenter = presenter;
+    }
+
+    void setValidationFailureHandler(ValidationFailureHandler handler) {
+        this.handler = handler;
     }
 
 }

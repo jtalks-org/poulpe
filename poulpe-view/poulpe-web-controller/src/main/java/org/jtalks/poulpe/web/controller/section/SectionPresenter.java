@@ -222,7 +222,7 @@ public class SectionPresenter {
         ValidationResult result = entityValidator.validate(section);
 
         if (result.hasErrors()) {
-            sectionView.validationFailure(result, isNewSection);
+            sectionView.validationFailure(result);
             return false;
         } else {
             return true;
