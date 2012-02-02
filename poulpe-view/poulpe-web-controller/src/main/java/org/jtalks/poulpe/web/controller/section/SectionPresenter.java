@@ -67,7 +67,6 @@ public class SectionPresenter {
     public void updateView() {
         List<Section> sections = sectionService.getAll();
         sectionView.showSections(sections);
-        sectionView.closeDialogs();
     }
 
     /**
@@ -159,7 +158,7 @@ public class SectionPresenter {
         section.setName(name);
         section.setDescription(description);
 
-        if (validate(section, false)) {
+        if (validate(section)) {
             dialogManager.confirmEdition(name, perfomableFactory.updateSection(section));
             sectionView.closeEditSectionDialog();
             return true;
@@ -178,11 +177,9 @@ public class SectionPresenter {
      * @param description section
      */
     public boolean addNewSection(String name, String description) {
-        Section section = new Section();
-        section.setName(name);
-        section.setDescription(description);
+        Section section = new Section(name, description);
 
-        if (validate(section, true)) {
+        if (validate(section)) {
             dialogManager.confirmCreation(name, perfomableFactory.saveSection(section));
             return true;
         } else {
@@ -218,7 +215,7 @@ public class SectionPresenter {
         sectionView.openModerationDialog(branch);
     }
 
-    public boolean validate(Section section, boolean isNewSection) {
+    public boolean validate(Section section) {
         ValidationResult result = entityValidator.validate(section);
 
         if (result.hasErrors()) {

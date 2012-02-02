@@ -77,7 +77,6 @@ public class SectionPresenterTest {
     @Test
     public void testInitView() {
         verify(view).showSections(sections);
-        verify(view).closeDialogs();
     }
 
     @Test
@@ -101,6 +100,8 @@ public class SectionPresenterTest {
 
     @Test
     public void testOpenEditDialogNullParams() {
+        givenNoElementSelected();
+        
         presenter.openEditDialog(currentSectionTreeComponent);
 
         verify(view, never()).openEditBranchDialog(any(Branch.class));
@@ -145,19 +146,19 @@ public class SectionPresenterTest {
 
     @Test
     public void testDeleteSectionNull() {
-        givenNoSectionSelected();
+        givenNoElementSelected();
         presenter.deleteSection(null);
         verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
         verify(dialogPresenter, never()).show(section);
     }
 
-    private void givenNoSectionSelected() { 
+    private void givenNoElementSelected() { 
         // currentSectionTreeComponent.getSelectedObject() returns null
     }
 
     @Test
     public void testDeleteSectionNullWithName() {
-        givenNoSectionSelected();
+        givenNoElementSelected();
         presenter.deleteSection(section);
         verify(dialogManager, never()).confirmDeletion(anyString(), any(DialogManager.Performable.class));
         verify(dialogPresenter, never()).show(section);

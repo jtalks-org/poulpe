@@ -55,6 +55,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         zkHelper.wireByConvention();
         handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         presenter.initView(this);
+        hide();
     }
 
     @Override
