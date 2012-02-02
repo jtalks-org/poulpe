@@ -41,7 +41,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     private ZkHelper zkHelper = new ZkHelper(this);
     private ValidationFailureHandler handler;
-    
+
     private SectionPresenter presenter;
 
     private Window editSectionDialog;
@@ -56,7 +56,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         presenter.initView(this);
     }
-    
+
     @Override
     public void validationFailure(ValidationResult result) {
         handler.validationFailure(result);
@@ -69,22 +69,22 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     @Override
     public void showSections(List<Section> sections) {
-        removeOldSectionComponents();
-        addNewSections(sections);
+        removeOldSections();
+        addSections(sections);
     }
 
-    private void removeOldSectionComponents() {
+    private void removeOldSections() {
         List<Component> childrenToSave = zkHelper.filterOut(ZkSectionTreeComponent.class);
         zkHelper.removeAllChildComponents();
         zkHelper.addComponents(childrenToSave);
     }
-    
-    private void addNewSections(List<Section> sections) {
+
+    private void addSections(List<Section> sections) {
         for (Section section : sections) {
             addSection(section);
         }
     }
-    
+
     private void addSection(Section section) {
         // TODO move SectionTreeComponent creation to external factory method
         zkHelper.addComponent(new ZkSectionTreeComponent(section, presenter));
@@ -97,19 +97,26 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     @Override
     public void openNewSectionDialog() {
         forEditing = false;
-        setEditSectionName("");
-        setEditSectionName("");
+        clean();
+        show();
+    }
+
+    private void show() {
         editSectionDialog.setVisible(true);
     }
 
     @Override
     public void openEditSectionDialog(String name, String description) {
         forEditing = true;
-        setEditSectionName(name);
-        setEditSectionDescription(description);
-        editSectionDialog.setVisible(true);
+        setData(name, description);
+        show();
     }
-    
+
+    private void setData(String name, String description) {
+        editSectionDialog$sectionName.setText(name);
+        editSectionDialog$sectionDescription.setText(description);
+    }
+
     private void save() {
         if (forEditing) {
             saveSection();
@@ -117,44 +124,41 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
             createSection();
         }
     }
-    
+
     private void createSection() {
-        presenter.addNewSection(getEditSectionName(), getEditSectionName());
+        presenter.addNewSection(getSectionName(), getSectionDescription());
     }
 
     private void saveSection() {
-        presenter.editSection(getEditSectionName(), getEditSectionDescription());
+        presenter.editSection(getSectionName(), getSectionDescription());
     }
 
     @Override
     @Deprecated
     public void closeNewSectionDialog() {
+        closeEditSectionDialog();
+    }
+
+    private void hide() {
         editSectionDialog.setVisible(false);
-        setEditSectionName("");
-        setEditSectionDescription("");
     }
 
     @Override
     public void closeEditSectionDialog() {
-        editSectionDialog.setVisible(false);
-        editSectionDialog$sectionName.setText("");
-        editSectionDialog$sectionDescription.setText("");
+        hide();
+        clean();
     }
 
-    private String getEditSectionName() {
+    private void clean() {
+        setData("", "");
+    }
+
+    private String getSectionName() {
         return editSectionDialog$sectionName.getText();
     }
 
-    private String getEditSectionDescription() {
+    private String getSectionDescription() {
         return editSectionDialog$sectionDescription.getText();
-    }
-
-    private void setEditSectionName(String name) {
-        editSectionDialog$sectionName.setText(name);
-    }
-
-    private void setEditSectionDescription(String description) {
-        editSectionDialog$sectionDescription.setText(description);
     }
 
     @Override
@@ -178,7 +182,6 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     public void onClick$addSectionButton() {
         openNewSectionDialog();
     }
-
 
     /**
      * Event which happen when user click on add button in new branch dialog
