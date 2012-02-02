@@ -8,7 +8,7 @@ import static org.testng.Assert.*;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.web.controller.ZkInitializer;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.jtalks.poulpe.web.controller.section.ZkDeleteSectionDialogView.SectionComboboxItemRenderer;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -28,7 +28,7 @@ public class ZkDeleteSectionDialogViewTest {
 
     ZkDeleteSectionDialogView deleteSectionDialogView;
     
-    @Mock ZkInitializer zkInitializer;
+    @Mock ZkHelper zkInitializer;
 
     @Mock DeleteSectionDialogPresenter presenter;
     

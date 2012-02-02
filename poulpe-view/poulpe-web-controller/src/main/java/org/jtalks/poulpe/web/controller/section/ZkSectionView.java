@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Branch;
@@ -23,7 +22,7 @@ import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.ZkInitializer;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -40,7 +39,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     private static final long serialVersionUID = -2745900622179593542L;
 
-    private ZkInitializer zkInitializer = new ZkInitializer(this);
+    private ZkHelper zkHelper = new ZkHelper(this);
     private ValidationFailureHandler handler;
     
     private SectionPresenter presenter;
@@ -53,7 +52,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     @Override
     public void afterCompose() {
-        zkInitializer.wireByConvention();
+        zkHelper.wireByConvention();
         handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         presenter.initView(this);
     }
@@ -65,28 +64,30 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     @Override
     public void showSection(Section section) {
-        // TODO move SectionTreeComponent creation to external factory method
-        getChildren().add(new ZkSectionTreeComponent(section, presenter));
+        addSection(section);
     }
 
     @Override
     public void showSections(List<Section> sections) {
-        // TODO: Find out what's happening here.
-        List<Object> childrenToSave = new ArrayList<Object>();
-        for (Object obj : getChildren()) {
-            if (!(obj instanceof ZkSectionTreeComponent)) {
-                childrenToSave.add(obj);
-            }
-        }
-        getChildren().clear();
-        for (Object obj : childrenToSave) {
-            getChildren().add((Component) obj);
-        }
+        removeOldSectionComponents();
+        addNewSections(sections);
+    }
+
+    private void removeOldSectionComponents() {
+        List<Component> childrenToSave = zkHelper.filterOut(ZkSectionTreeComponent.class);
+        zkHelper.removeAllChildComponents();
+        zkHelper.addComponents(childrenToSave);
+    }
+    
+    private void addNewSections(List<Section> sections) {
         for (Section section : sections) {
-            // TODO move SectionTreeComponent creation to external factory
-            // method
-            getChildren().add(new ZkSectionTreeComponent(section, presenter));
+            addSection(section);
         }
+    }
+    
+    private void addSection(Section section) {
+        // TODO move SectionTreeComponent creation to external factory method
+        zkHelper.addComponent(new ZkSectionTreeComponent(section, presenter));
     }
 
     @Override
@@ -244,6 +245,10 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     void setValidationFailureHandler(ValidationFailureHandler handler) {
         this.handler = handler;
+    }
+
+    void setZkHelper(ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;
     }
 
 }

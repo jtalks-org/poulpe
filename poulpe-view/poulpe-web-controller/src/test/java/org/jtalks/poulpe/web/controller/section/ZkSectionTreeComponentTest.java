@@ -11,7 +11,7 @@ import static org.mockito.Mockito.when;
 
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.web.controller.ZkInitializer;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -30,7 +30,7 @@ public class ZkSectionTreeComponentTest {
     private ZkSectionTreeComponent spy;
 
     @Mock SectionPresenter presenter;
-    @Mock ZkInitializer zkInitializer;
+    @Mock ZkHelper zkInitializer;
     @Mock Tree sectionTree;
     
     private Section section = sectionWithBranches();

@@ -22,7 +22,7 @@ import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.web.controller.ZkInitializer;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.event.Event;
@@ -50,14 +50,14 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      */
     public static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
 
-    private ZkInitializer zkInitializer;
+    private ZkHelper zkInitializer;
 
     private SectionPresenter presenter;
     
     private Tree sectionTree;
     private DefaultTreeNode<Section> treeNode;
     
-    ZkSectionTreeComponent(ZkInitializer zkInitializer) {
+    ZkSectionTreeComponent(ZkHelper zkInitializer) {
         this.zkInitializer = zkInitializer;
     }
     
@@ -66,7 +66,7 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      * @param presenter instance section presenter
      */
     public ZkSectionTreeComponent(Section section, SectionPresenter presenter) {
-        this.zkInitializer = new ZkInitializer(this);
+        this.zkInitializer = new ZkHelper(this);
         init(section, presenter);
     }
 

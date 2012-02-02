@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.section;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.web.controller.ZkInitializer;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
@@ -38,7 +38,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
 
     private static final long serialVersionUID = -4999382692611273729L;
 
-    private ZkInitializer zkInitializer = new ZkInitializer(this);
+    private ZkHelper zkInitializer = new ZkHelper(this);
 
     private Radiogroup deleteMode;
     private Radio removeAndMoveMode;
@@ -203,7 +203,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         this.presenter = presenter;
     }
 
-    void setZkInitializer(ZkInitializer zkInitializer) {
+    void setZkInitializer(ZkHelper zkInitializer) {
         this.zkInitializer = zkInitializer;
     }
 
