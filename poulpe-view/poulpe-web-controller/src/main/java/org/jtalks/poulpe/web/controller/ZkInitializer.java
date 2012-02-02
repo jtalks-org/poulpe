@@ -1,8 +1,8 @@
 package org.jtalks.poulpe.web.controller;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.util.ConventionWires;
 
 /**
  * Initializer for zk-based view objects - mainly for easing the testing for
@@ -19,11 +19,11 @@ public class ZkInitializer {
     }
 
     /**
-     * Wires zk objects to theirs ui representation
+     * Wires zk objects to their ui representation
      */
-    public void init() {
-        Components.wireVariables(component, component);
-        Components.addForwards(component, component);
+    public void wireByConvention() {
+        ConventionWires.wireVariables(component, component);
+        ConventionWires.addForwards(component, component);
     }
 
     /**

@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +22,6 @@ import org.jtalks.poulpe.model.entity.Section;
 import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.ZkInitializer;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
@@ -42,16 +40,14 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
 
     private ZkInitializer zkInitializer = new ZkInitializer(this);
 
-    private transient SectionPresenter presenter;
-
-    private Window newSectionDialog;
-    private Textbox newSectionDialog$sectionName;
-    private Textbox newSectionDialog$sectionDescription;
+    private SectionPresenter presenter;
 
     private Window editSectionDialog;
     private Textbox editSectionDialog$sectionName;
     private Textbox editSectionDialog$sectionDescription;
 
+    private boolean forEditing = false;
+    
     // TODO: make this validator conform the common interface
 
     public void validationFailure(ValidationResult result, boolean isNewSection) {
@@ -73,7 +69,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
 
     @Override
     public void afterCompose() {
-        zkInitializer.init();
+        zkInitializer.wireByConvention();
 
         presenter.initView(this);
     }
@@ -110,24 +106,42 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
 
     @Override
     public void openNewSectionDialog() {
-        setNewSectionName("");
-        setNewSectionDescription("");
-        newSectionDialog.setVisible(true);
+        forEditing = false;
+        setEditSectionName("");
+        setEditSectionName("");
+        editSectionDialog.setVisible(true);
     }
 
-    public void newSectionDialog() {
-        presenter.addNewSection(getNewSectionName(), getNewSectionDescription());
+    @Override
+    public void openEditSectionDialog(String name, String description) {
+        forEditing = true;
+        setEditSectionName(name);
+        setEditSectionDescription(description);
+        editSectionDialog.setVisible(true);
+    }
+    
+    private void save() {
+        if (forEditing) {
+            saveSection();
+        } else {
+            createSection();
+        }
+    }
+    
+    private void createSection() {
+        presenter.addNewSection(getEditSectionName(), getEditSectionName());
     }
 
-    public void editSectionDialog() {
+    private void saveSection() {
         presenter.editSection(getEditSectionName(), getEditSectionDescription());
     }
 
     @Override
+    @Deprecated
     public void closeNewSectionDialog() {
-        newSectionDialog.setVisible(false);
-        setNewSectionDescription("");
-        setNewSectionName("");
+        editSectionDialog.setVisible(false);
+        setEditSectionName("");
+        setEditSectionDescription("");
     }
 
     @Override
@@ -135,24 +149,6 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
         editSectionDialog.setVisible(false);
         editSectionDialog$sectionName.setText("");
         editSectionDialog$sectionDescription.setText("");
-    }
-
-    public void closeDeleteSectionDialog() {
-    }
-
-    @Override
-    public void openEditSectionDialog(String name, String description) {
-        setEditSectionName(name);
-        setEditSectionDescription(description);
-        editSectionDialog.setVisible(true);
-    }
-
-    private String getNewSectionName() {
-        return newSectionDialog$sectionName.getText();
-    }
-
-    private String getNewSectionDescription() {
-        return newSectionDialog$sectionDescription.getText();
     }
 
     private String getEditSectionName() {
@@ -171,58 +167,9 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
         editSectionDialog$sectionDescription.setText(description);
     }
 
-    private void setNewSectionName(String name) {
-        newSectionDialog$sectionName.setText(name);
-    }
-
-    private void setNewSectionDescription(String description) {
-        newSectionDialog$sectionDescription.setText(description);
-    }
-
-    public void openErrorPopupInNewSectionDialog(String label) {
-        String message = Labels.getLabel(label);
-        newSectionDialog$sectionName.setErrorMessage(message);
-    }
-
-    public void openErrorPopupInEditSectionDialog(String label) {
-        String message = Labels.getLabel(label);
-        editSectionDialog$sectionName.setErrorMessage(message);
-    }
-
     @Override
     public void closeDialogs() {
-        closeNewSectionDialog();
         closeEditSectionDialog();
-        closeDeleteSectionDialog();
-    }
-
-    public void closeNewBranchDialog() {
-        // TODO : implement
-    }
-
-    public void forwardToBranchPermissionManagement(Branch branch) throws IOException {
-
-    }
-
-    public void openDeleteBranchDialog(Branch branch) {
-
-    }
-
-    public void closeEditBranchDialog() {
-
-    }
-
-    public boolean isDeleteDialogOpen() {
-        return false;
-        // return deleteSectionDialog.isVisible();
-    }
-
-    public boolean isEditDialogOpen() {
-        return editSectionDialog.isVisible();
-    }
-
-    public boolean isNewDialogOpen() {
-        return newSectionDialog.isVisible();
     }
 
     /**
@@ -242,43 +189,13 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView {
         openNewSectionDialog();
     }
 
-    /**
-     * Event which happen when user click on add button in new branch dialog
-     * window this cause save new branch
-     */
-    public void onClick$addButton$newSectionDialog() {
-        newSectionDialog();
-    }
-
-    /**
-     * Event which happen when user click on cancel button in new branch dialog
-     * window this cause close new branch dialog
-     */
-    public void onClick$closeButton$newSectionDialog() {
-        closeNewSectionDialog();
-    }
-
-    /**
-     * Event occurs when the used click on cancel button in the
-     * DeleteSectionDialog
-     */
-    public void onClick$closeButton$deleteSectionDialog() {
-        closeDeleteSectionDialog();
-    }
-
-    /**
-     * Event occurs when the used click on delete button in the
-     * DeleteSectionDialog
-     */
-    public void onClick$deleteButton$deleteSectionDialog() {
-    }
 
     /**
      * Event which happen when user click on add button in new branch dialog
      * window this cause save new branch
      */
     public void onClick$editButton$editSectionDialog() {
-        editSectionDialog();
+        save();
     }
 
     /**

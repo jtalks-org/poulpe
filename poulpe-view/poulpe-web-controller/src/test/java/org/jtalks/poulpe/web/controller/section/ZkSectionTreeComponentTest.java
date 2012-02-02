@@ -49,7 +49,7 @@ public class ZkSectionTreeComponentTest {
 
     @Test
     public void initialization() {
-        verify(zkInitializer).init();
+        verify(zkInitializer).wireByConvention();
         verify(zkInitializer).wireToZul(ZkSectionTreeComponent.ZUL_REF);
     }
     

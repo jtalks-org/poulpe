@@ -53,7 +53,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      */
     @Override
     public void afterCompose() {
-        zkInitializer.init();
+        zkInitializer.wireByConvention();
 
         presenter.setView(this);
         selectedSection.setItemRenderer(new SectionComboboxItemRenderer());

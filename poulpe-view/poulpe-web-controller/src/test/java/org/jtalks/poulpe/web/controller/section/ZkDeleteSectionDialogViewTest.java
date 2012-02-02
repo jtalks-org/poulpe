@@ -60,7 +60,7 @@ public class ZkDeleteSectionDialogViewTest {
     public void afterCompose() {
         deleteSectionDialogView.afterCompose();
         
-        verify(zkInitializer).init();
+        verify(zkInitializer).wireByConvention();
         verify(presenter).setView(deleteSectionDialogView);
         verify(selectedSection).setItemRenderer(any(SectionComboboxItemRenderer.class));
     }

@@ -72,7 +72,7 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
 
     public void init(Section section, SectionPresenter presenter) {
         zkInitializer.wireToZul(ZUL_REF);
-        zkInitializer.init();
+        zkInitializer.wireByConvention();
         
         this.presenter = presenter;
 
