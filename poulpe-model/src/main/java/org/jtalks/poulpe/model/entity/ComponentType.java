@@ -15,11 +15,19 @@
 package org.jtalks.poulpe.model.entity;
 
 /**
- * Type of the engine component.
+ * Type of the {@link Component}
  *
  * @author Pavel Vervenko
  * @see Component
  */
 public enum ComponentType {
-    FORUM, ARTICLE;
+    /**
+     * Specifies that the component is Forum
+     */
+    FORUM, 
+    
+    /**
+     * Specifies that the component is Article
+     */
+    ARTICLE;
 }

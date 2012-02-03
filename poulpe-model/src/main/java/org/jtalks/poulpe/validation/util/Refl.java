@@ -28,7 +28,7 @@ import java.util.Map;
  * 
  * @author Alexey Grigorev
  */
-public class Refl {
+public final class Refl {
 
     private Refl() {
     }

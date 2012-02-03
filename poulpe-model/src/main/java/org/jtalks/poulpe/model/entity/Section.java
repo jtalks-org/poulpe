@@ -28,7 +28,7 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
 /**
  * Forum section that contains branches.
  * 
- * @author tanya birina
+ * @author Tatiana Birina
  * @author Guram Savinov
  */
 @UniqueConstraint
@@ -51,27 +51,28 @@ public class Section extends Entity implements BranchSectionVisitable {
     @NotEmpty(message = SECTION_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
+    
     private String description;
     private Integer position;
     private List<Branch> branches = new ArrayList<Branch>();
 
     /**
-     * Default constructor
+     * Default constructor, creates a section with empty list of branches
      */
     public Section() {
     }
 
     /**
-     * Constructor with setting name
+     * Creates a section with empty list of branches setting section a name
      * 
-     * @param name - name for new section
+     * @param name for new section
      */
     public Section(String name) {
         this.name = name;
     }
 
     /**
-     * Constructor with name and description
+     * Constructor with name and description, creates a section with empty list of branches
      * 
      * @param name - name for new section
      * @param description - description for new section

@@ -44,7 +44,7 @@ public class TopicType extends Entity {
     private String description;
 
     /**
-     * Default constructor of entity.
+     * Default constructor, sets nothing
      */
     public TopicType() {
     }

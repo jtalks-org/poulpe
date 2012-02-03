@@ -31,7 +31,7 @@ import org.jtalks.poulpe.validation.annotations.UniqueField;
  * User Groups is the class that can join users into groups. After that permissions can be assigned to the groups and
  * all users in this group will have that permission while browsing components.
  *
- * @author Akimov Knostantin
+ * @author Akimov Konstantin
  * @author Vyacheslav Zhivaev
  *
  */
@@ -57,19 +57,27 @@ public class Group extends Entity {
     @NotEmpty(message = GROUP_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
+    
     private String description;
     private List<User> users = new ArrayList<User>();
 
+    /**
+     * Creates {@link Group} with empty users list
+     */
     public Group() {
     }
 
+    /**
+     * @param name the title of the groups, when saving to DB, can't be empty or
+     * {@code null}, it also should be unique
+     */
     public Group(String name) {
         this.name = name;
     }
 
     /**
-     * @param name        the title of the groups, when saving to DB, can't be empty or {@code null}, it also should be
-     *                    unique
+     * @param name the title of the groups, when saving to DB, can't be empty or
+     * {@code null}, it also should be unique
      * @param description an optional description of the group
      */
     public Group(String name, String description) {

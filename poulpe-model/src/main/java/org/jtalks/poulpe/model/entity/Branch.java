@@ -45,6 +45,7 @@ public class Branch extends Entity implements BranchSectionVisitable {
     @NotEmpty(message = BRANCH_CANT_BE_VOID)
     @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     private String name;
+    
     private String description;
     private boolean deleted;
     private Integer position;
@@ -134,9 +135,7 @@ public class Branch extends Entity implements BranchSectionVisitable {
     }
 
     /**
-     * Returns the section in which this branch is.
-     * 
-     * @return the parent section
+     * @return its parent section
      */
     public Section getSection() {
         return section;
@@ -180,35 +179,39 @@ public class Branch extends Entity implements BranchSectionVisitable {
 
     /**
      * Assigns {@link User} to moderate this branch
+     * 
+     * @param user to be assigned
      */
     public void addModerator(User user) {
-        this.moderators.add(user);
+        moderators.add(user);
     }
 
     /**
      * Assigns a list of {@link User} to moderate this branch
      * 
-     * @param users - list of users
+     * @param users - list of moderators
      */
     public void addModerators(List<User> users) {
-        this.moderators.addAll(users);
+        moderators.addAll(users);
     }
 
     /**
      * Assigns a list of {@link User} to moderate this branch. This method
-     * mainly for using in test.
+     * mainly for using in tests
      * 
-     * @param users - list of users
+     * @param users - arrays of moderators
      */
     public void addModerators(User... users) {
-        this.addModerators(Arrays.asList(users));
+        addModerators(Arrays.asList(users));
     }
 
     /**
      * Removes an assignment for {@link User} to moderate this branch
+     * 
+     * @param user to be removed from moderators
      */
     public void removeModerator(User user) {
-        this.moderators.remove(user);
+        moderators.remove(user);
     }
 
     /**
@@ -218,11 +221,11 @@ public class Branch extends Entity implements BranchSectionVisitable {
      * @return {@code true} if assigned, {@code false} otherwise
      */
     public boolean isModeratedBy(User user) {
-        return this.moderators.contains(user);
+        return moderators.contains(user);
     }
 
     /**
-     * Gets the position.
+     * Gets the position of this branch within all branches of its parent section
      * 
      * @return the position
      */
@@ -231,7 +234,7 @@ public class Branch extends Entity implements BranchSectionVisitable {
     }
 
     /**
-     * Sets the position.
+     * Sets the position of this branch within all branches of its parent section
      * 
      * @param position the position to set
      */
@@ -239,14 +242,15 @@ public class Branch extends Entity implements BranchSectionVisitable {
         this.position = position;
     }
     
-    @Override
-    public String toString() {
-        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + ", position=" + position
-                + "]";
-    }
 
     @Override
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitBranch(this);
+    }
+    
+    @Override
+    public String toString() {
+        return "Branch [id=" + getId() + ", name=" + name + ", description=" + description + ", position=" + position
+                + "]";
     }
 }

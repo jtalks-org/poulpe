@@ -17,9 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import org.jtalks.common.model.entity.Entity;
 
 /**
- * The Property entity which contains configuration
- * for components
- *
+ * The Property entity which contains configuration for components
+ * 
  * @author Vahluev Vyacheslav
  */
 public class Property extends Entity {
@@ -40,9 +39,9 @@ public class Property extends Entity {
 
     /**
      * Constructor which sets name and value of the property
-     *
-     * @param name  name of the property
-     * @param value value of the property
+     * 
+     * @param name of the property
+     * @param value of the property
      */
     public Property(String name, String value) {
         this.name = name;
@@ -88,30 +87,35 @@ public class Property extends Entity {
     /**
      * {@inheritDoc}
      */
-    public String toString() {
-        return this.getName() + ": " + this.getValue();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
+    // TODO: why it is needed? 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         Property property = (Property) o;
 
-        if (!name.equals(property.name)) return false;
-        if (value != null ? !value.equals(property.value) : property.value != null) return false;
+        if (!name.equals(property.name)) {
+            return false;
+        }
+        if (value != null ? !value.equals(property.value) : property.value != null) {
+            return false;
+        }
 
         return true;
     }
 
-    /**
+    /** 
      * {@inheritDoc}
      */
+    // TODO: why it is needed? 
     @Override
     public int hashCode() {
         int result = super.hashCode();

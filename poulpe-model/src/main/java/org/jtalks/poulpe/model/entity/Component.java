@@ -31,7 +31,6 @@ import ru.javatalks.utils.general.Assert;
  */
 @UniqueConstraint
 public class Component extends Entity {
-    // TODO: change it
     public static final String NOT_UNIQUE_NAME = "item.already.exist";
     public static final String NOT_UNIQUE_TYPE = "item.already.exist";
 
@@ -70,7 +69,7 @@ public class Component extends Entity {
      *
      * @param name name of the component
      * @param description description of the component
-     * @param componentType type of the component {@see ComponentType}
+     * @param componentType type of the component {@link ComponentType}
      * @param properties list of properties {@link Property}}
      */
     public Component(String name, String description, ComponentType componentType, List<Property> properties) {
@@ -78,17 +77,6 @@ public class Component extends Entity {
         this.description = description;
         this.componentType = componentType;
         this.properties = properties;
-    }
-
-    /**
-     * Copy constructor
-     * @param component component to copy parameters from
-     */
-    public Component(Component component) {
-        this.name = component.getName();
-        this.description = component.getDescription();
-        this.componentType = component.getComponentType();
-        this.properties = component.getProperties();
     }
 
     /**

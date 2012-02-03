@@ -39,38 +39,53 @@ public class Rank extends Entity {
      * Error message if rank name is void
      */
     public static final String RANK_CANT_BE_VOID = "rank.error.rank_name_cant_be_void";
+    
     @UniqueField(message = RANK_ALREADY_EXISTS)
     @NotNull(message = RANK_CANT_BE_VOID)
     @NotEmpty(message = RANK_CANT_BE_VOID)
     private String rankName;
+    
     private boolean autoAssigned;
     private int postCount;
 
     /**
-     * Default constructor.
+     * Default constructor with postCount = 0 and autoAssigned = false
      */
     public Rank() {
     }
 
     /**
-     * Create auto-assigned rank with specified name.
+     * Create auto-assigned rank with specified name, sets postCount = 0 and
+     * autoAssigned = false
+     * 
      * @param rankName new rank's name
      */
     public Rank(String rankName) {
-        this.rankName = rankName;
-        this.postCount = 0;
-        this.autoAssigned = true;
+        this(rankName, 0, false);
     }
 
     /**
-     * Create rank with specified posts limit and name.
+     * Create auto-assigned rank with specified posts limit and name
+     * 
      * @param rankName rank name
      * @param postCount posts limit
      */
     public Rank(String rankName, int postCount) {
+        this(rankName, postCount, true);
+    }
+    
+    /**
+     * Create rank with specified posts limit, name and autoAssigned flag
+     * 
+     * @param rankName rank name
+     * @param postCount posts limit
+     * @param autoAssigned {@code true} if the Rank should be assigned to users
+     * automatically, {@code false} otherwise
+     */
+    public Rank(String rankName, int postCount, boolean autoAssigned) {
         this.rankName = rankName;
+        this.autoAssigned = autoAssigned;
         this.postCount = postCount;
-        this.autoAssigned = false;
     }
 
     /**
@@ -119,6 +134,12 @@ public class Rank extends Entity {
      */
     public void setRankName(String rankName) {
         this.rankName = rankName;
+    }
+
+    @Override
+    public String toString() {
+        return "Rank [id=" + getId() + ", rankName=" + rankName + ", autoAssigned=" + autoAssigned + ", postCount="
+                + postCount + "]";
     }
 
 }

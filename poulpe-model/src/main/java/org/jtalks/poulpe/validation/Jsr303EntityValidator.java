@@ -33,13 +33,19 @@ public class Jsr303EntityValidator extends EntityValidator {
 
     private Validator validator;
 
+    /** {@inheritDoc} */
     @Override
     public ValidationResult validate(Entity o) {
         Set<ValidationError> errorSet = wrap(validator.validate(o));
         return new ValidationResult(errorSet);
     }
 
-    private Set<ValidationError> wrap(Set<ConstraintViolation<Entity>> set) {
+    /**
+     * Converts JSR-303 set of {@link ConstraintViolation} to our {@link ValidationError} objects
+     * @param set to be converted
+     * @return converted set
+     */
+    private static Set<ValidationError> wrap(Set<ConstraintViolation<Entity>> set) {
         Set<ValidationError> result = new HashSet<ValidationError>();
 
         for (ConstraintViolation<?> c : set) {

@@ -23,27 +23,47 @@ import java.util.List;
  * 
  * @author Guram Savinov
  * @author Vahluev Vyacheslav
- * 
  */
 public class Jcommune extends Component {
 
     private List<Section> sections = new ArrayList<Section>();
 
     /**
-     * Default constructor, sets nothing.
+     * Creates Component with {@link ComponentType#FORUM}
+     * and empty section list
      */
     public Jcommune() {
+        setComponentType(ComponentType.FORUM);
+    }
+    
+    /**
+     * Converts given {@link Component} to {@link Jcommune}, keeping the
+     * identity of the first (i.e. id and uuid are copied as well)
+     * 
+     * @param component to be converted
+     * @return converted {@link Jcommune}
+     * 
+     * @exception IllegalArgumentException when passed component is not Forum
+     * (its componentType != {@link ComponentType#FORUM})
+     */
+    public static Jcommune fromComponent(Component component) {
+        checkComponentType(component.getComponentType());
 
+        Jcommune jcommune = new Jcommune();
+        jcommune.setId(component.getId());
+        jcommune.setUuid(component.getUuid());
+        jcommune.setName(component.getName());
+        jcommune.setDescription(component.getDescription());
+        jcommune.setProperties(component.getProperties());
+
+        return jcommune;
     }
 
-    /**
-     * Creates {@code Jcommune} from {@code Component}.
-     * 
-     * @param component
-     *            the component from what object creates
-     */
-    public Jcommune(Component component) {
-        super(component);
+    private static void checkComponentType(ComponentType componentType) {
+        if (componentType != ComponentType.FORUM) {
+            throw new IllegalArgumentException("Can't convert component to Forum because componentType == FORUM " +
+            		"is expected, got " + componentType);
+        }
     }
 
     /**
@@ -58,8 +78,7 @@ public class Jcommune extends Component {
     /**
      * Sets the sections.
      * 
-     * @param sections
-     *            the sections to set
+     * @param sections the sections to set
      */
     public void setSections(List<Section> sections) {
         this.sections = sections;
@@ -68,8 +87,7 @@ public class Jcommune extends Component {
     /**
      * Adds a section to the list.
      * 
-     * @param section
-     *            the section to add
+     * @param section the section to add
      */
     public void addSection(Section section) {
         sections.add(section);
