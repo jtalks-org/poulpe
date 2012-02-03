@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
-
     Copyright (C) 2011  JTalks.org Team
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Lesser General Public
@@ -13,20 +11,14 @@
     You should have received a copy of the GNU Lesser General Public
     License along with this library; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-
 -->
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Rank" table="RANKS">
-    <cache usage="nonstrict-read-write"/>
-  
-    <id column="RANK_ID" name="id" unsaved-value="0">
-      <generator class="native" />
-    </id>
-    
-    <property column="UUID" name="uuid" not-null="true" unique="true" />
-    <property column="RANK_NAME" name="rankName" not-null="true" unique="true"/>
-    <property column="AUTO_ASSIGNED" name="autoAssigned" />
-    <property column="POST_COUNT" name="postCount" />
-  </class>
-</hibernate-mapping>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://ehcache.sf.net/ehcache.xsd">
+  <diskStore path="java.io.tmpdir" />
+
+  <defaultCache maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="300"
+    overflowToDisk="false" diskPersistent="false" memoryStoreEvictionPolicy="LRU" />
+  <cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="50" eternal="false" timeToLiveSeconds="120"
+    overflowToDisk="false" />
+  <cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true"
+    overflowToDisk="false" />
+</ehcache>

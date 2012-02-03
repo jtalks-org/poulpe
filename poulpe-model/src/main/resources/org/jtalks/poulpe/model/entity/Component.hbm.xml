@@ -19,9 +19,12 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
   <class name="Component" table="COMPONENTS">
+    <cache usage="nonstrict-read-write"/>
+    
     <id column="CMP_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
+    
     <discriminator column="COMPONENT_TYPE" />
     
     <property column="UUID" name="uuid" not-null="true" unique="true" />
@@ -41,12 +44,16 @@
     </property>
     
     <subclass name="Jcommune" discriminator-value="JCOMMUNE">
+    
       <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
       	<cache usage="nonstrict-read-write" />
+        
       	<key column="JCOMMUNE_ID" foreign-key="FK_JCOMMUNE" />
-      	<list-index column="POSITION" />
+      	
+        <list-index column="POSITION" />
       	<one-to-many class="Section" />
       </list>
+      
     </subclass>
   </class>
 </hibernate-mapping>

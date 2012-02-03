@@ -18,14 +18,18 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
   <class name="Branch" table="BRANCHES">
+    <cache usage="nonstrict-read-write"/>
+    
     <id column="BRANCH_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
+    
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
     <property column="DELETED" name="deleted" />
     <property column="POSITION" name="position" insert="false" update="false" />
+    
     <many-to-one column="SECTION_ID" name="section" class="Section"
       lazy="false" update="false" insert="false" />
 

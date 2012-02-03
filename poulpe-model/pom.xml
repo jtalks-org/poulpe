@@ -116,6 +116,13 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
     </dependency>
+    
+    <!-- Cache -->
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+    </dependency>
+    
   </dependencies>
 
   <build>

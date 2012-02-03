@@ -19,9 +19,12 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
     <class name="Property" table="PROPERTIES">
+        <cache usage="nonstrict-read-write"/>
+        
         <id column="PROPERTY_ID" name="id" unsaved-value="0">
             <generator class="native" />
         </id>
+        
         <property column="UUID" name="uuid" not-null="true" unique="true" />
         <property column="NAME" name="name" not-null="true" unique="false" />
         <property column="VALUE" name="value" not-null="false" unique="false" />

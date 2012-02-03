@@ -19,9 +19,12 @@
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping package="org.jtalks.poulpe.model.entity">
   <class name="TopicType" table="TOPIC_TYPES">
+    <cache usage="nonstrict-read-write"/>
+    
     <id column="ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
+    
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="TITLE" name="title" not-null="true" unique="true" />
     <property column="DESCRIPTION" name="description" />
