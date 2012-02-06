@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.zkmacro;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 
 import java.util.ArrayList;
 import java.util.List;

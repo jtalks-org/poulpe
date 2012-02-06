@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
 
 /**
@@ -35,7 +35,7 @@ public class DeleteSectionDialogPresenter {
      * Use for initialize combobox which contains sections
      */
     public void refreshSectionsCombobox() {
-        List<Section> sections = sectionService.getAll();
+        List<PoulpeSection> sections = sectionService.getAll();
 
         if (sections.isEmpty()) {
             view.initEmptyAndDisabledCombobox();
@@ -67,12 +67,12 @@ public class DeleteSectionDialogPresenter {
     }
     
     private void moveBranches() {
-        Section deleteSection = view.getSectionToDelete();
-        Section selectedSection = view.getRecipientSection();
+        PoulpeSection deleteSection = view.getSectionToDelete();
+        PoulpeSection selectedSection = view.getRecipientSection();
         sectionService.deleteAndMoveBranchesTo(deleteSection, selectedSection);
     }
 
-    public void show(Section section) {
+    public void show(PoulpeSection section) {
         view.showDialog(section);
     }
 

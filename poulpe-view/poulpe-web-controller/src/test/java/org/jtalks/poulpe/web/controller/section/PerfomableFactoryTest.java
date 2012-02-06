@@ -4,8 +4,8 @@ import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
 import static org.mockito.Mockito.verify;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.mockito.Mock;
@@ -25,8 +25,8 @@ public class PerfomableFactoryTest {
     @Mock ZkSectionView view;
     @Mock ZkSectionTreeComponent currentSectionTreeComponent;
 
-    private Section section = sectionWithBranches();
-    private Branch branch = section.getBranches().get(0);
+    private PoulpeSection section = sectionWithBranches();
+    private PoulpeBranch branch = (PoulpeBranch) section.getBranches().get(0);
     
     @BeforeMethod
     public void beforeMethod() {
@@ -70,7 +70,7 @@ public class PerfomableFactoryTest {
 
     @Test
     public void testDeleteSectionSaveBranchesPerformable() {
-        Section section1 = fakeSection(), section2 = fakeSection();
+        PoulpeSection section1 = fakeSection(), section2 = fakeSection();
         Performable perf = perfomableFactory.deleteSection(section1, section2);
 
         perf.execute();

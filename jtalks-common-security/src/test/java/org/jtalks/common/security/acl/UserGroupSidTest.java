@@ -14,7 +14,7 @@
  */
 package org.jtalks.common.security.acl;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 import org.testng.annotations.Test;
 
 import java.util.List;

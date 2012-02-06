@@ -18,8 +18,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 
 /**
  * Dao for jtalks engine {@link Component}.

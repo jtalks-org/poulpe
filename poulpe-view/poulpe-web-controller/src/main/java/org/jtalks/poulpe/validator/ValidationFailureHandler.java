@@ -2,8 +2,8 @@ package org.jtalks.poulpe.validator;
 
 import java.util.Map;
 
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.impl.InputElement;

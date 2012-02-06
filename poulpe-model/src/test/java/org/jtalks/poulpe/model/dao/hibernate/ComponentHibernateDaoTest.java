@@ -27,10 +27,10 @@ import java.util.Set;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -159,13 +159,13 @@ public class ComponentHibernateDaoTest extends
     @Test
     public void testSectionPositions() {
         for (int i = 0; i < 5; i++) {
-            List<Section> expected = jcommune.getSections();
+            List<PoulpeSection> expected = jcommune.getSections();
             Collections.shuffle(expected);
 
             dao.saveOrUpdate(jcommune);
 
             jcommune = ObjectRetriever.retrieveUpdated(jcommune, session);
-            List<Section> actual = jcommune.getSections();
+            List<PoulpeSection> actual = jcommune.getSections();
 
             assertEquals(actual, expected);
         }

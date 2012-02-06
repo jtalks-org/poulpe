@@ -14,9 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section.moderation;
 
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.validation.EntityValidator;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.validator.AbstractValidator;
 
 /**
@@ -27,9 +27,9 @@ import org.jtalks.poulpe.validator.AbstractValidator;
  */
 class UserValidator extends AbstractValidator<User> {
 
-    private final Branch branch;
+    private final PoulpeBranch branch;
 
-    public UserValidator(Branch branch) {
+    public UserValidator(PoulpeBranch branch) {
         this.branch = branch;
     }
 

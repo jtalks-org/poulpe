@@ -14,11 +14,13 @@
 */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationException;
+import org.jtalks.poulpe.service.PropertyLoader;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -38,20 +40,19 @@ public class TransactionalComponentServiceTest {
     private TransactionalComponentService componentService;
     private EntityValidator validator;
 
-    Component component = new Component();
+    Component component = new Component("", "", ComponentType.FORUM);
 
     @BeforeMethod
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
         validator = mock(EntityValidator.class);
         componentService = new TransactionalComponentService(componentDao, validator);
+        PropertyLoader propertyLoader = mock(PropertyLoader.class);
+        componentService.setPropertyLoader(propertyLoader);
     }
 
     @Test
     public void testSaveComponent() {
-        Component component = new Component();
-        component.setId(12);
-
         componentService.saveComponent(component);
 
         verify(validator).throwOnValidationFailure(component);

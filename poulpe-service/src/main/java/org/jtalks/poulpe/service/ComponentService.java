@@ -14,9 +14,9 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.List;
 import java.util.Set;

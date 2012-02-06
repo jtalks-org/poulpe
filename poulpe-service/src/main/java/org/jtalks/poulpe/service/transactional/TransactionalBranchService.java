@@ -15,13 +15,13 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.logic.BranchPermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 import java.util.List;
 
@@ -29,7 +29,7 @@ import java.util.List;
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class TransactionalBranchService extends AbstractTransactionalEntityService<Branch, BranchDao> implements
+public class TransactionalBranchService extends AbstractTransactionalEntityService<PoulpeBranch, BranchDao> implements
         BranchService {
     private final BranchPermissionManager branchPermissionManager;
     private final EntityValidator validator;
@@ -48,7 +48,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public List<Branch> getAll() {
+    public List<PoulpeBranch> getAll() {
         return dao.getAll();
     }
 
@@ -56,7 +56,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void saveBranch(Branch selectedBranch) {
+    public void saveBranch(PoulpeBranch selectedBranch) {
         validator.throwOnValidationFailure(selectedBranch);
         dao.saveOrUpdate(selectedBranch);
     }
@@ -65,7 +65,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void deleteBranchRecursively(Branch victim) {
+    public void deleteBranchRecursively(PoulpeBranch victim) {
         dao.delete(victim.getId());
     }
 
@@ -73,7 +73,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void deleteBranchMovingTopics(Branch victim, Branch recipient) {
+    public void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient) {
         dao.delete(victim.getId());
     }
 
@@ -81,22 +81,22 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public boolean isDuplicated(Branch branch) {
+    public boolean isDuplicated(PoulpeBranch branch) {
         return dao.isBranchDuplicated(branch);
     }
 
     @Override
-    public BranchAccessList getGroupAccessListFor(Branch branch) {
+    public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         return branchPermissionManager.getGroupAccessListFor(branch);
     }
 
     @Override
-    public void changeGrants(Branch branch, BranchAccessChanges changes) {
+    public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeGrants(branch, changes);
     }
 
     @Override
-    public void changeRestrictions(Branch branch, BranchAccessChanges changes) {
+    public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeRestrictions(branch, changes);
     }
 

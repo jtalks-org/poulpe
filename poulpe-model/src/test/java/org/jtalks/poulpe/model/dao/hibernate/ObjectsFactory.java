@@ -17,14 +17,14 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.util.Random;
 import java.util.UUID;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -34,8 +34,8 @@ import org.jtalks.poulpe.model.entity.TopicType;
  */
 public final class ObjectsFactory {
 
-    public static Branch createBranch() {
-        Branch newBranch = new Branch(random(), "desc");
+    public static PoulpeBranch createBranch() {
+        PoulpeBranch newBranch = new PoulpeBranch(random(), "desc");
         newBranch.setSection(createSection());
         return newBranch;
     }
@@ -50,15 +50,15 @@ public final class ObjectsFactory {
         return c;
     }
 
-    public static Section createSectionWithBranches() {
+    public static PoulpeSection createSectionWithBranches() {
         return createSectionWithBranches(randomInt());
     }
 
-    public static Section createSectionWithBranches(int branchesAmount) {
-        Section section = new Section(random());
+    public static PoulpeSection createSectionWithBranches(int branchesAmount) {
+        PoulpeSection section = new PoulpeSection(random());
 
         for (int i = 0; i < branchesAmount; i++) {
-            Branch branch = createBranch();
+            PoulpeBranch branch = createBranch();
             branch.setSection(section);
             branch.setPosition(i);
             section.addOrUpdateBranch(branch);
@@ -67,8 +67,8 @@ public final class ObjectsFactory {
         return section;
     }
 
-    public static Section createSection() {
-        return new Section(random());
+    public static PoulpeSection createSection() {
+        return new PoulpeSection(random());
     }
 
     public static User createUser() {
@@ -103,7 +103,7 @@ public final class ObjectsFactory {
         Jcommune jcommune = Jcommune.fromComponent(createComponent(ComponentType.FORUM));
 
         for (int position = 0; position < sectionsAmount; position++) {
-            Section section = createSectionWithBranches();
+            PoulpeSection section = createSectionWithBranches();
             section.setPosition(position);
             jcommune.addSection(section);
         }

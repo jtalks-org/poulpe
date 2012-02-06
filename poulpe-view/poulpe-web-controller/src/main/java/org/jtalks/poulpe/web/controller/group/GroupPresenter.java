@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;

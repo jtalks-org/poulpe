@@ -2,15 +2,15 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 public interface SectionView {
 
-    void showSection(Section section);
+    void showSection(PoulpeSection section);
 
-    void removeSection(Section section);
+    void removeSection(PoulpeSection section);
 
     void openNewSectionDialog();
 
@@ -24,13 +24,13 @@ public interface SectionView {
     void openNewBranchDialog();
 
     @Deprecated
-    void openEditBranchDialog(Branch branch);
+    void openEditBranchDialog(PoulpeBranch branch);
 
-    void showSections(List<Section> sections);
+    void showSections(List<PoulpeSection> sections);
 
     void closeNewSectionDialog();
 
-    void openModerationDialog(Branch branch);
+    void openModerationDialog(PoulpeBranch branch);
 
     void validationFailure(ValidationResult result);
 

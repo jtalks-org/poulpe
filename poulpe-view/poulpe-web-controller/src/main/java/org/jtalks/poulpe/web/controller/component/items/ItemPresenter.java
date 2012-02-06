@@ -14,9 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.component.AbstractComponentPresenter;
 
 /**

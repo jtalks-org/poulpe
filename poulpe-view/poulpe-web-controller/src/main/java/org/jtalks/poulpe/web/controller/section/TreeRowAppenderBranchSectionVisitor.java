@@ -1,8 +1,8 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.zkoss.zul.Treecell;
 import org.zkoss.zul.Treerow;
 
@@ -17,12 +17,12 @@ class TreeRowAppenderBranchSectionVisitor implements BranchSectionVisitor {
     }
     
     @Override
-    public void visitSection(Section section) {
+    public void visitSection(PoulpeSection section) {
         treeRow.appendChild(new Treecell(section.getName()));
     }
 
     @Override
-    public void visitBranch(Branch branch) {
+    public void visitBranch(PoulpeBranch branch) {
         treeRow.appendChild(new Treecell(branch.getName()));
         treeRow.setDraggable("true");
         treeRow.setDroppable("true");

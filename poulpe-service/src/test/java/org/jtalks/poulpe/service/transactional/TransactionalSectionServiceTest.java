@@ -25,12 +25,12 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationException;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -57,7 +57,7 @@ public class TransactionalSectionServiceTest {
     @Test
     public void deleteRecursivelyTest() {
         boolean expected = true;
-        Section victim = buildFakeSection();
+        PoulpeSection victim = buildFakeSection();
         when(sectionDao.deleteRecursively(victim)).thenReturn(expected);
         boolean actual = sectionService.deleteRecursively(victim);
         verify(sectionDao).deleteRecursively(victim);
@@ -66,8 +66,8 @@ public class TransactionalSectionServiceTest {
 
     @Test
     public void deleteAndMoveBranchesToTest() {
-        Section victim = buildFakeSection(SECTION_ID);
-        Section recipient = buildFakeSection(SECTION_ID + 1);
+        PoulpeSection victim = buildFakeSection(SECTION_ID);
+        PoulpeSection recipient = buildFakeSection(SECTION_ID + 1);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
@@ -79,8 +79,8 @@ public class TransactionalSectionServiceTest {
     public void deleteAndMoveBranchesToExceptionTest() {
         final long victimId = SECTION_ID;
         final long recipientId = victimId;
-        Section victim = buildFakeSection(victimId);
-        Section recipient = buildFakeSection(recipientId);
+        PoulpeSection victim = buildFakeSection(victimId);
+        PoulpeSection recipient = buildFakeSection(recipientId);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
@@ -90,14 +90,14 @@ public class TransactionalSectionServiceTest {
 
     @Test
     public void testSaveSection(){
-         Section section = buildFakeSection();
+         PoulpeSection section = buildFakeSection();
          sectionService.saveSection(section);
          verify(entityValidator).throwOnValidationFailure(section);
     }
 
     @Test(expectedExceptions = ValidationException.class)
     public void saveSectionWithConstraintsViolations() {
-        Section section = buildFakeSection();
+        PoulpeSection section = buildFakeSection();
         givenConstraintsViolations();
         sectionService.saveSection(section);
     }
@@ -110,22 +110,22 @@ public class TransactionalSectionServiceTest {
 
     @Test
     public void testIsSectionExists() {
-        Section section = buildFakeSection();
+        PoulpeSection section = buildFakeSection();
         sectionService.isSectionExists(section);
         verify(sectionDao).isSectionNameExists(section);
     }
 
     private void givenConstraintsViolations() {
         Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Section.class));
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeSection.class));
     }
 
-    private Section buildFakeSection() {
+    private PoulpeSection buildFakeSection() {
         return buildFakeSection(SECTION_ID);
     }
 
-    private Section buildFakeSection(long id) {
-        Section section = new Section(RandomStringUtils.randomAlphanumeric(10),
+    private PoulpeSection buildFakeSection(long id) {
+        PoulpeSection section = new PoulpeSection(RandomStringUtils.randomAlphanumeric(10),
                 RandomStringUtils.randomAlphanumeric(20));
         section.setId(id);
         return section;

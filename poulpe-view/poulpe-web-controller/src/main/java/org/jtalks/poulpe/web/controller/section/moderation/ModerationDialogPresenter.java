@@ -16,12 +16,12 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 
 import java.util.List;
 
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
 /**
@@ -32,7 +32,7 @@ public class ModerationDialogPresenter {
     public static final String USER_ALREADY_MODERATOR = "moderatedialog.validation.user_already_in_list";
     
     private ModerationDialogView view;
-    private Branch branch;
+    private PoulpeBranch branch;
     private BranchService branchService;
     private UserService userService;
     private DialogManager dialogManager;
@@ -166,11 +166,11 @@ public class ModerationDialogPresenter {
     }
 
     /**
-     * Mutator to set the {@link Branch} for this presenter.
+     * Mutator to set the {@link PoulpeBranch} for this presenter.
      * 
      * @param branch the branch to set
      */
-    public void setBranch(Branch branch) {
+    public void setBranch(PoulpeBranch branch) {
         this.branch = branch;
     }
     

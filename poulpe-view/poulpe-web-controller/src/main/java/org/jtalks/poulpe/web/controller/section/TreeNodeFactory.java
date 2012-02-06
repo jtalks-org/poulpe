@@ -19,8 +19,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
  * This class should be used to wrap one-to-many related persistent entities
@@ -44,11 +44,11 @@ class TreeNodeFactory {
         if (entity == null) {
             return null;
         }
-        if (entity instanceof Section) {
+        if (entity instanceof PoulpeSection) {
             @SuppressWarnings("unchecked")
-            List<T> branches = (List<T>) ((Section) entity).getBranches();
+            List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
             return new ExtendedTreeNode<T>(entity, getTreeNodes(branches));
-        } else if (entity instanceof Branch) {
+        } else if (entity instanceof PoulpeBranch) {
             return new ExtendedTreeNode<T>(entity);
         }
         return null;

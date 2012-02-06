@@ -1,7 +1,7 @@
 package org.jtalks.common.security.acl;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.springframework.security.acls.model.AccessControlEntry;
 

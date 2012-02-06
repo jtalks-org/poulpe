@@ -18,7 +18,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Table;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
@@ -30,7 +30,7 @@ import java.util.List;
 
 /**
  * Contains coarse-grained operations with Spring ACL to manage the permissions of Groups & Users for the actions on
- * entities like Branch or Topic.
+ * entities like PoulpeBranch or Topic.
  *
  * @author Kirill Afonin
  */
@@ -44,7 +44,7 @@ public class AclManager {
         aclUtil = new AclUtil(mutableAclService);
     }
 
-    public List<GroupAce> getBranchPermissions(Branch branch) {
+    public List<GroupAce> getBranchPermissions(PoulpeBranch branch) {
         MutableAcl branchAcl = aclUtil.getAclFor(branch);
         List<AccessControlEntry> originalAces = branchAcl.getEntries();
         List<GroupAce> resultingAces = new ArrayList<GroupAce>(originalAces.size());

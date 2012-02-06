@@ -6,11 +6,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -46,21 +46,21 @@ public class SectionPresenterTestValidation {
     }
 
     private ValidationResult resultWithErrors() {
-        return new ValidationResult(new ValidationError("name", Section.SECTION_ALREADY_EXISTS));
+        return new ValidationResult(new ValidationError("name", PoulpeSection.SECTION_ALREADY_EXISTS));
     }
 
     @Test
     public void testValidateSectionEmptyName() {
         givenConstraintViolated();
         presenter.addNewSection("", "description");
-        verify(service, never()).saveSection(any(Section.class));
+        verify(service, never()).saveSection(any(PoulpeSection.class));
     }
 
     @Test
     public void testValidateSectionNullName() {
         givenConstraintViolated();
         presenter.addNewSection(null, "description");
-        verify(service, never()).saveSection(any(Section.class));
+        verify(service, never()).saveSection(any(PoulpeSection.class));
     }
 
     @Test
@@ -74,7 +74,7 @@ public class SectionPresenterTestValidation {
     }
 
     private void givenNoConstraintsViolated() {
-        when(entityValidator.validate(any(Section.class))).thenReturn(ValidationResult.EMPTY);
+        when(entityValidator.validate(any(PoulpeSection.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
@@ -83,12 +83,12 @@ public class SectionPresenterTestValidation {
 
         presenter.addNewSection("name", "description");
 
-        verify(service, never()).saveSection(any(Section.class));
+        verify(service, never()).saveSection(any(PoulpeSection.class));
         verify(dialogManager, never()).confirmCreation(anyString(), any(DialogManager.Performable.class));
     }
 
     private void givenConstraintViolated() {
-        when(entityValidator.validate(any(Section.class))).thenReturn(resultWithErrors);
+        when(entityValidator.validate(any(PoulpeSection.class))).thenReturn(resultWithErrors);
     }
 
 }

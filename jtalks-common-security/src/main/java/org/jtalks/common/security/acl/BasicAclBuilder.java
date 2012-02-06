@@ -16,7 +16,7 @@ package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;
 import ru.javatalks.utils.general.Assert;

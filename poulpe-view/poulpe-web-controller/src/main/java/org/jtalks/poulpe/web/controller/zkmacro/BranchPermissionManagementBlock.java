@@ -25,7 +25,7 @@ import javax.annotation.concurrent.Immutable;
  * lists of groups that are granted to that permission (allowed) or restricted to it. The example of such block:
  * <pre>
  *  ____________________________________
- * |Create New Topics in the Branch     |
+ * |Create New Topics in the PoulpeBranch     |
  * |------------------------------------|
  * |Allowed: Moderators, Activated Users|
  * |Restricted: Banned Users            |

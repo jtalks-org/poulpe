@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.service;
 
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.Property;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.Property;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.ClassPathResource;

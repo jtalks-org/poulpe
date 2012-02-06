@@ -18,10 +18,10 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
@@ -55,7 +55,7 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
     private SectionPresenter presenter;
     
     private Tree sectionTree;
-    private DefaultTreeNode<Section> treeNode;
+    private DefaultTreeNode<PoulpeSection> treeNode;
     
     ZkSectionTreeComponent(ZkHelper zkInitializer) {
         this.zkInitializer = zkInitializer;
@@ -65,19 +65,19 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      * @param section for which will be build tree
      * @param presenter instance section presenter
      */
-    public ZkSectionTreeComponent(Section section, SectionPresenter presenter) {
+    public ZkSectionTreeComponent(PoulpeSection section, SectionPresenter presenter) {
         this.zkInitializer = new ZkHelper(this);
         init(section, presenter);
     }
 
-    public void init(Section section, SectionPresenter presenter) {
+    public void init(PoulpeSection section, SectionPresenter presenter) {
         zkInitializer.wireToZul(ZUL_REF);
         zkInitializer.wireByConvention();
         
         this.presenter = presenter;
 
         treeNode = TreeNodeFactory.getTreeNode(section);
-        DefaultTreeModel<Section> model = prepareTreeModel(treeNode);
+        DefaultTreeModel<PoulpeSection> model = prepareTreeModel(treeNode);
         
         sectionTree.setModel(model);
         sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer(presenter));
@@ -96,14 +96,14 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
     }
     
     /** {@inheritDoc} */
-    public void updateSectionInView(Section section) {
+    public void updateSectionInView(PoulpeSection section) {
         treeNode.setData(section);
     }
     
-    private static DefaultTreeModel<Section> prepareTreeModel(DefaultTreeNode<Section> treeNode) {
-        List<DefaultTreeNode<Section>> defaultTreeNodes = Collections.singletonList(treeNode);
-        DefaultTreeNode<Section> root = new DefaultTreeNode<Section>(null, defaultTreeNodes);
-        return new DefaultTreeModel<Section>(root);
+    private static DefaultTreeModel<PoulpeSection> prepareTreeModel(DefaultTreeNode<PoulpeSection> treeNode) {
+        List<DefaultTreeNode<PoulpeSection>> defaultTreeNodes = Collections.singletonList(treeNode);
+        DefaultTreeNode<PoulpeSection> root = new DefaultTreeNode<PoulpeSection>(null, defaultTreeNodes);
+        return new DefaultTreeModel<PoulpeSection>(root);
     }
 
     /** {@inheritDoc} */
@@ -123,12 +123,12 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
 
     private static BranchSectionVisitor showPermissionsVisitor = new BranchSectionVisitor() {
         @Override
-        public void visitSection(Section section) {
+        public void visitSection(PoulpeSection section) {
             Messagebox.show("This action not provided for section, please select a branch");
         }
 
         @Override
-        public void visitBranch(Branch branch) {
+        public void visitBranch(PoulpeBranch branch) {
             Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + branch.getId());
         }
     };
@@ -182,12 +182,12 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
     
     private BranchSectionVisitor disablePermissionsButtonVisitor = new BranchSectionVisitor() {
         @Override
-        public void visitSection(Section section) {
+        public void visitSection(PoulpeSection section) {
             getBranchPermissionsButton().setDisabled(true);
         }
 
         @Override
-        public void visitBranch(Branch branch) {
+        public void visitBranch(PoulpeBranch branch) {
             getBranchPermissionsButton().setDisabled(false);
         }
     };

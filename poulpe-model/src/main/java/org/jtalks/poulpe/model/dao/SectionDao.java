@@ -17,20 +17,20 @@ package org.jtalks.poulpe.model.dao;
 import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
  * @author tanya birina
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
  */
-public interface SectionDao extends ParentRepository<Section> {
+public interface SectionDao extends ParentRepository<PoulpeSection> {
     /**
      * Get the list of all sections.
      * 
      * @return list of sections
      */
-    List<Section> getAll();
+    List<PoulpeSection> getAll();
 
     /**
      * Method to check if section name is already exists.
@@ -39,7 +39,7 @@ public interface SectionDao extends ParentRepository<Section> {
      *            name for check
      * @return true if section with such name already exists
      */
-    boolean isSectionNameExists(Section section);
+    boolean isSectionNameExists(PoulpeSection section);
 
     /**
      * Removes the section and all its branches.
@@ -48,7 +48,7 @@ public interface SectionDao extends ParentRepository<Section> {
      *            the identifier of the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteRecursively(Section section);
+    boolean deleteRecursively(PoulpeSection section);
 
     /**
      * Removes the section and move all its branches to another section.
@@ -59,6 +59,6 @@ public interface SectionDao extends ParentRepository<Section> {
      *            the identifier of the section that will take branches
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
+    boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient);
 
 }

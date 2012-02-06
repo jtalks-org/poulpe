@@ -15,8 +15,9 @@
 package org.jtalks.poulpe.service;
 
 import java.util.List;
+
+import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.Rank;
 
 /**
  *

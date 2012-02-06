@@ -17,12 +17,12 @@ package org.jtalks.poulpe.web.controller.section;
 import static org.testng.Assert.assertTrue;
 
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.testng.annotations.Test;
 
 // TODO: do we need this test?
 public class ExtendedTreeNodeTest {
-    Section section = new Section("test", "test");
+    PoulpeSection section = new PoulpeSection("test", "test");
 
     @Test
     public void testExpandedByDefault() {

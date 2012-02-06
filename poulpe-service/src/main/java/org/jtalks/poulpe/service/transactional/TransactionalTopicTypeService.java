@@ -18,10 +18,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 /**
  * @author Pavel Vervenko

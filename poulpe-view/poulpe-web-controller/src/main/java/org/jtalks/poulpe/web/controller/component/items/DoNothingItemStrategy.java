@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 
 /**
  * Special case object for doing nothing - for preventing any possible

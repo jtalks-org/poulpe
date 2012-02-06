@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 
 public class BranchModeratorsTest {
     
-    private Branch branch = new Branch();
+    private PoulpeBranch branch = new PoulpeBranch();
     
     private User user1 = ObjectsFactory.createUser();
     private User user2 = ObjectsFactory.createUser();

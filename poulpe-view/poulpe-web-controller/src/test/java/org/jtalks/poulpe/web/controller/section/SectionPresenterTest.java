@@ -26,10 +26,10 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -54,9 +54,9 @@ public class SectionPresenterTest {
     @Mock DeleteSectionDialogPresenter dialogPresenter;
     
     
-    private List<Section> sections = fakeSections();
-    private Section section = sections.get(0);
-    private Branch branch = fakeBranch();
+    private List<PoulpeSection> sections = fakeSections();
+    private PoulpeSection section = sections.get(0);
+    private PoulpeBranch branch = fakeBranch();
     
     @BeforeMethod
     public void setUp() {
@@ -104,7 +104,7 @@ public class SectionPresenterTest {
         
         presenter.openEditDialog(currentSectionTreeComponent);
 
-        verify(view, never()).openEditBranchDialog(any(Branch.class));
+        verify(view, never()).openEditBranchDialog(any(PoulpeBranch.class));
         verify(view, never()).openEditSectionDialog(anyString(), anyString());
     }
 
@@ -179,7 +179,7 @@ public class SectionPresenterTest {
     @Test
     public void testDeleteSectionOKWithName() {
         givenSectionSelected();
-        Section recipient = fakeSection();
+        PoulpeSection recipient = fakeSection();
         presenter.deleteSection(recipient);
         verify(dialogManager).confirmDeletion(eq(section.getName()), any(DialogManager.Performable.class));
         verify(perfomableFactory).deleteSection(section, recipient);

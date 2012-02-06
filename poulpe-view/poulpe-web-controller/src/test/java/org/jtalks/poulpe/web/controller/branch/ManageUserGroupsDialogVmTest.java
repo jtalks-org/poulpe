@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

@@ -21,7 +21,7 @@ import static org.mockito.Mockito.*;
 import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -41,9 +41,9 @@ public class DeleteSectionDialogPresenterTest {
     @Mock
     DeleteSectionDialogView view;
 
-    private List<Section> sections = fakeSections();
-    private Section section = sectionWithBranches();
-    private Section recipient = sectionWithBranches();
+    private List<PoulpeSection> sections = fakeSections();
+    private PoulpeSection section = sectionWithBranches();
+    private PoulpeSection recipient = sectionWithBranches();
 
     @BeforeMethod
     public void setUp() {
@@ -57,7 +57,7 @@ public class DeleteSectionDialogPresenterTest {
 
     @Test
     public void refreshSectionsComboboxEmpty() {
-        List<Section> empty = Collections.emptyList();
+        List<PoulpeSection> empty = Collections.emptyList();
         when(sectionService.getAll()).thenReturn(empty);
         presenter.refreshSectionsCombobox();
         verify(view).initEmptyAndDisabledCombobox();

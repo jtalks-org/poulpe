@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.web.controller.component.items.ItemView;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.ext.AfterCompose;

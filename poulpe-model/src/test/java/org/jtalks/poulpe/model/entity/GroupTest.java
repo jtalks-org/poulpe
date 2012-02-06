@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Group;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 

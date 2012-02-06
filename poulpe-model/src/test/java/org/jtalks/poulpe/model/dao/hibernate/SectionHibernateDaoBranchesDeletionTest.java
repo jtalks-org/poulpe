@@ -21,7 +21,7 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -51,7 +51,7 @@ public class SectionHibernateDaoBranchesDeletionTest extends AbstractTransaction
     private Session session;
 
     private int branchesAmount = 10;
-    private Section section;
+    private PoulpeSection section;
     
     @BeforeMethod
     public void setUp() throws Exception {
@@ -71,7 +71,7 @@ public class SectionHibernateDaoBranchesDeletionTest extends AbstractTransaction
     
     @Test
     public void deleteAndMoveBranchesToTest() {
-        Section recipient = sectionWithNoBranches();       
+        PoulpeSection recipient = sectionWithNoBranches();       
 
         boolean isDeleted = dao.deleteAndMoveBranchesTo(section, recipient);
         assertTrue(isDeleted);
@@ -80,28 +80,28 @@ public class SectionHibernateDaoBranchesDeletionTest extends AbstractTransaction
         assertBranchesMovedTo(recipient);
     }
 
-    private void assertBranchesMovedTo(Section section) {
+    private void assertBranchesMovedTo(PoulpeSection section) {
         assertActualAmountOfBranches(section, branchesAmount);
     }
     
-    private void assertActualAmountOfBranches(Section recipient, int branchesAmount) {
+    private void assertActualAmountOfBranches(PoulpeSection recipient, int branchesAmount) {
         Long actualAmount = retrieveActualBranchesAmount(recipient);
         assertEquals(actualAmount, Long.valueOf(branchesAmount));
     }
     
-    private Long retrieveActualBranchesAmount(Section section) {
-        String countQuery = "SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id";
+    private Long retrieveActualBranchesAmount(PoulpeSection section) {
+        String countQuery = "SELECT count(b) FROM PoulpeSection s JOIN s.branches b WHERE s.id=:id";
         Query query = session.createQuery(countQuery).setLong("id", section.getId());
         return (Long) query.uniqueResult();
     }
     
-    private Section sectionWithSomeBranches(int brancesAmount) {
-        Section section = ObjectsFactory.createSectionWithBranches(brancesAmount);
+    private PoulpeSection sectionWithSomeBranches(int brancesAmount) {
+        PoulpeSection section = ObjectsFactory.createSectionWithBranches(brancesAmount);
         session.save(section);
         return section;
     }
     
-    private Section sectionWithNoBranches() {
+    private PoulpeSection sectionWithNoBranches() {
         return sectionWithSomeBranches(0);
     }
 

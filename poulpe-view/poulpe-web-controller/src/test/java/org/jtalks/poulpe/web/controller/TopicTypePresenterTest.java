@@ -24,11 +24,11 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 import org.mockito.Mock;

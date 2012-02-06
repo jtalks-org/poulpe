@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
@@ -73,11 +73,11 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     /**
      * This event cause show dialog
      * 
-     * @param event information about event contain Section which will be
+     * @param event information about event contain PoulpeSection which will be
      * deleted
      * */
     public void onOpen(Event event) {
-        Branch branch = (Branch) event.getData();
+        PoulpeBranch branch = (PoulpeBranch) event.getData();
         presenter.setBranch(branch);
         presenter.initView(this);
         showDialog();

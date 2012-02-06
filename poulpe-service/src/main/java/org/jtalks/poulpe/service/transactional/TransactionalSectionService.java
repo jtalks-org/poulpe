@@ -18,18 +18,18 @@ import java.util.List;
 
 import org.hibernate.exception.ConstraintViolationException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 /**
  * 
  * @author tanya birina
  * 
  */
-public class TransactionalSectionService extends AbstractTransactionalEntityService<Section, SectionDao> implements
+public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao> implements
         SectionService {
     private final EntityValidator validator;
     /**
@@ -47,7 +47,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionExists(Section section) {
+    public boolean isSectionExists(PoulpeSection section) {
         return dao.isSectionNameExists(section);
     }
 
@@ -55,7 +55,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public List<Section> getAll() {
+    public List<PoulpeSection> getAll() {
         return dao.getAll();
     }
 
@@ -64,20 +64,20 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public void saveSection(Section section) {
+    public void saveSection(PoulpeSection section) {
         validator.throwOnValidationFailure(section);
         dao.saveOrUpdate(section);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteRecursively(Section victim) {
+    public boolean deleteRecursively(PoulpeSection victim) {
         return dao.deleteRecursively(victim);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteAndMoveBranchesTo(Section victim, Section recipient) {
+    public boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient) {
         if (victim.getId() == recipient.getId()) {
             throw new IllegalArgumentException("Victim and recipient can't be the same section");
         }

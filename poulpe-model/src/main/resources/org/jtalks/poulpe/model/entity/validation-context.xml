@@ -21,7 +21,7 @@
     http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
-  <bean id="entityValidator" class="org.jtalks.poulpe.validation.Jsr303EntityValidator">
+  <bean id="entityValidator" class="org.jtalks.common.validation.Jsr303EntityValidator">
     <property name="validator" ref="validator" />
   </bean>
 
@@ -32,7 +32,7 @@
     <property name="constraintValidatorFactory" ref="validatorFactory" />
   </bean>
 
-  <bean id="validatorFactory" class="org.jtalks.poulpe.validation.config.PredefinedConstraintValidationFactory">
+  <bean id="validatorFactory" class="org.jtalks.common.validation.config.PredefinedConstraintValidationFactory">
     <property name="validators">
       <list>
         <ref bean="uniqueConstraintValidator" />
@@ -40,11 +40,11 @@
     </property>
   </bean>
 
-  <bean id="uniqueConstraintValidator" class="org.jtalks.poulpe.validation.unique.UniqueConstraintValidator">
+  <bean id="uniqueConstraintValidator" class="org.jtalks.common.validation.unique.UniqueConstraintValidator">
     <property name="uniquenessViolatorsRetriever" ref="uniquenessViolatorsRetriever" />
   </bean>
 
-  <bean id="uniquenessViolatorsRetriever" class="org.jtalks.poulpe.validation.unique.UniquenessViolatorsRetriever">
+  <bean id="uniquenessViolatorsRetriever" class="org.jtalks.common.validation.unique.UniquenessViolatorsRetriever">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 

@@ -14,7 +14,7 @@
  */
 
 /** 
- * Contains classes related to presenting each {@link org.jtalks.poulpe.model.entity.Component} item, 
+ * Contains classes related to presenting each {@link org.jtalks.common.model.entity.Component} item, 
  * used from {@link org.jtalks.poulpe.web.controller.component}.
  */
 package org.jtalks.poulpe.web.controller.component.items;

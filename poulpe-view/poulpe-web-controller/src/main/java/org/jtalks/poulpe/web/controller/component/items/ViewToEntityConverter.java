@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.component.items;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 
 /**
  * It's used for converting {@link ItemDataView} instances to corresponding

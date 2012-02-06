@@ -16,18 +16,18 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
 /**
  * This class is used as Presenter layer in Model-View-Presenter pattern for
- * managing Section entities
+ * managing PoulpeSection entities
  * 
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
@@ -65,7 +65,7 @@ public class SectionPresenter {
      * Use when need update view
      * */
     public void updateView() {
-        List<Section> sections = sectionService.getAll();
+        List<PoulpeSection> sections = sectionService.getAll();
         sectionView.showSections(sections);
     }
 
@@ -74,7 +74,7 @@ public class SectionPresenter {
      * 
      * @param section which will be removed from view
      */
-    public void removeSectionFromView(Section section) {
+    public void removeSectionFromView(PoulpeSection section) {
         sectionView.removeSection(section);
     }
 
@@ -96,12 +96,12 @@ public class SectionPresenter {
 
     private BranchSectionVisitor editVisitor = new BranchSectionVisitor() {
         @Override
-        public void visitSection(Section section) {
+        public void visitSection(PoulpeSection section) {
             sectionView.openEditSectionDialog(section.getName(), section.getDescription());
         }
 
         @Override
-        public void visitBranch(Branch branch) {
+        public void visitBranch(PoulpeBranch branch) {
             sectionView.openEditBranchDialog(branch);
         }
     };
@@ -109,7 +109,7 @@ public class SectionPresenter {
     /**
      * Method used for delete section or branch.
      * 
-     * @param object can be Section or Branch instance
+     * @param object can be PoulpeSection or PoulpeBranch instance
      */
     public void openDeleteDialog(BranchSectionVisitable visitable) {
         if (visitable != null) {
@@ -119,13 +119,13 @@ public class SectionPresenter {
 
     private BranchSectionVisitor deleteVisitor = new BranchSectionVisitor() {
         @Override
-        public void visitSection(Section section) {
+        public void visitSection(PoulpeSection section) {
             deleteSectionDialogPresenter.show(section);
             updateView();
         }
 
         @Override
-        public void visitBranch(Branch branch) {
+        public void visitBranch(PoulpeBranch branch) {
             dialogManager.confirmDeletion(branch.getName(), perfomableFactory.deleteBranch(branch));
         }
     };
@@ -154,7 +154,7 @@ public class SectionPresenter {
      * @param description is edited section description
      */
     public boolean editSection(String name, String description) {
-        Section section = (Section) currentSectionTreeComponent.getSelectedObject();
+        PoulpeSection section = (PoulpeSection) currentSectionTreeComponent.getSelectedObject();
         section.setName(name);
         section.setDescription(description);
 
@@ -169,7 +169,7 @@ public class SectionPresenter {
     }
 
     /**
-     * Create new Section object and save it if there no any Sections with the
+     * Create new PoulpeSection object and save it if there no any Sections with the
      * same name in other cases (the name is already) should display error
      * dialog
      * 
@@ -177,7 +177,7 @@ public class SectionPresenter {
      * @param description section
      */
     public boolean addNewSection(String name, String description) {
-        Section section = new Section(name, description);
+        PoulpeSection section = new PoulpeSection(name, description);
 
         if (validate(section)) {
             dialogManager.confirmCreation(name, perfomableFactory.saveSection(section));
@@ -193,14 +193,14 @@ public class SectionPresenter {
      * @param recipient if specified than all branches should be add as children
      * to this section. If null then all children should be also deleted
      */
-    public void deleteSection(Section recipient) {
+    public void deleteSection(PoulpeSection recipient) {
         BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
 
-        if (!(selectedObject instanceof Section)) {
+        if (!(selectedObject instanceof PoulpeSection)) {
             return;
         }
 
-        Section victim = (Section) selectedObject;
+        PoulpeSection victim = (PoulpeSection) selectedObject;
         dialogManager.confirmDeletion(victim.getName(), perfomableFactory.deleteSection(victim, recipient));
         removeSectionFromView(victim);
 
@@ -211,11 +211,11 @@ public class SectionPresenter {
      * 
      * @param branch
      */
-    public void openModerationDialog(Branch branch) {
+    public void openModerationDialog(PoulpeBranch branch) {
         sectionView.openModerationDialog(branch);
     }
 
-    public boolean validate(Section section) {
+    public boolean validate(PoulpeSection section) {
         ValidationResult result = entityValidator.validate(section);
 
         if (result.hasErrors()) {
@@ -231,7 +231,7 @@ public class SectionPresenter {
      * 
      * @param section the section to save
      */
-    public void saveSection(Section section) {
+    public void saveSection(PoulpeSection section) {
         sectionService.saveSection(section);
     }
 
@@ -282,13 +282,13 @@ public class SectionPresenter {
 
     private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
         @Override
-        public void visitSection(Section section) {
+        public void visitSection(PoulpeSection section) {
             // do nothing because moderators windows is not applicable for
             // sections
         }
 
         @Override
-        public void visitBranch(Branch branch) {
+        public void visitBranch(PoulpeBranch branch) {
             openModerationDialog(branch);
         }
     };

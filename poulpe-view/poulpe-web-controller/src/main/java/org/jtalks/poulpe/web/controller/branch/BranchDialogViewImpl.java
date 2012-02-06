@@ -17,10 +17,10 @@ package org.jtalks.poulpe.web.controller.branch;
 import java.util.List;
 import java.util.Map;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
@@ -55,7 +55,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Textbox branchDescription;
     private Button confirmButton;
     private Button rejectButton;
-    private Branch branch;
+    private PoulpeBranch branch;
     private Combobox sectionList;
     
     private ValidationFailureHandler validationHandler;
@@ -83,9 +83,9 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * @param section
      *            default section
      * */
-    private void setDefaultSection(Section section) {
+    private void setDefaultSection(PoulpeSection section) {
         @SuppressWarnings("unchecked")
-        ListModelList<Section> model = (ListModelList<Section>) sectionList.getModel();
+        ListModelList<PoulpeSection> model = (ListModelList<PoulpeSection>) sectionList.getModel();
         model.clearSelection();
         if (section != null) {
             model.addSelection(section);
@@ -99,10 +99,10 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     /**
      * This class render items Combobox list
      * */
-    private static ComboitemRenderer<Section> sectionItemRenderer = new ComboitemRenderer<Section>() {
+    private static ComboitemRenderer<PoulpeSection> sectionItemRenderer = new ComboitemRenderer<PoulpeSection>() {
 
         @Override
-        public void render(Comboitem item, Section section) {
+        public void render(Comboitem item, PoulpeSection section) {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }
@@ -156,20 +156,20 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      *            information about event
      * */
     public void onOpenEditDialog(Event event) {
-        show((Branch) event.getData());
+        show((PoulpeBranch) event.getData());
     }
 
     /**
      * {@inheritDoc}
      * */
     @Override
-    public Section getSection() {
-        Section section = (Section) sectionList.getModel().getElementAt(
+    public PoulpeSection getSection() {
+        PoulpeSection section = (PoulpeSection) sectionList.getModel().getElementAt(
                 sectionList.getSelectedIndex());
         return section;
     }
 
-    public Branch getBranch(Section section) {
+    public PoulpeBranch getBranch(PoulpeSection section) {
         branch.setName(branchName.getText().trim());
         branch.setDescription(branchDescription.getText().trim());
         branch.setSection(section);
@@ -202,7 +202,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
         branchName.setRawValue("");
         branchName.setConstraint("");
         branchDescription.setText("");
-        branch = new Branch();
+        branch = new PoulpeBranch();
         setDefaultSection(null);
         setVisible(true);
     }
@@ -211,12 +211,12 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * {@inheritDoc}
      * */
     @Override
-    public void show(Branch branch) {
+    public void show(PoulpeBranch branch) {
         presenter.initView();
         setTitle(Labels.getLabel("branches.editdialog.title"));
         confirmButton.setLabel(Labels.getLabel("branches.button.edit"));
         rejectButton.setLabel(Labels.getLabel("branches.button.cancel"));
-        Section section = branch.getSection();
+        PoulpeSection section = branch.getPoulpeSection();
         setDefaultSection(section);
         branchName.setText(branch.getName());
         branchName.setConstraint("");
@@ -238,12 +238,12 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * {@inheritDoc}
      * */
     @Override
-    public void initSectionList(List<Section> sections) {
-        sectionList.setModel(new ListModelList<Section>(sections));
+    public void initSectionList(List<PoulpeSection> sections) {
+        sectionList.setModel(new ListModelList<PoulpeSection>(sections));
     }
 
-    Branch createBranch() {
-        return branch = new Branch();
+    PoulpeBranch createBranch() {
+        return branch = new PoulpeBranch();
     }
     
     @Override

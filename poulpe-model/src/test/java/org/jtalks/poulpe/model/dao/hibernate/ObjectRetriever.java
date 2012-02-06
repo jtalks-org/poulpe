@@ -40,7 +40,7 @@ public class ObjectRetriever {
      * 1) Retrieving the branch
      * 
      * <pre>
-     * private Branch retrieveActualBranch() {
+     * private PoulpeBranch retrieveActualBranch() {
      *     return ObjectRetriever.retrieveUpdated(branch, session);
      * }
      * </pre>
@@ -48,7 +48,7 @@ public class ObjectRetriever {
      * 2) Retrieving the section:
      * 
      * <pre>
-     * private Section retrieveActualSection() {
+     * private PoulpeSection retrieveActualSection() {
      *     return ObjectRetriever.retrieveUpdated(section, session);
      * }
      * </pre>

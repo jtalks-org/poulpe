@@ -23,13 +23,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -47,13 +47,13 @@ public class BranchPresenterTest {
     BranchService branchService;
     @Mock 
     EntityValidator entityValidator;
-    private Section section = new Section("sectionName", "sectionDescription");
+    private PoulpeSection section = new PoulpeSection("sectionName", "sectionDescription");
     BranchPresenter presenter = new BranchPresenter();
     
     private ValidationResult resultWithErrors = resultWithErrors();
 
     private ValidationResult resultWithErrors() {
-        ValidationError error = new ValidationError("name", Branch.BRANCH_ALREADY_EXISTS);
+        ValidationError error = new ValidationError("name", PoulpeBranch.BRANCH_ALREADY_EXISTS);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }
@@ -69,7 +69,7 @@ public class BranchPresenterTest {
 
     @Test
     public void testInitView() {
-        List<Section> sections = Collections.nCopies(4, section);
+        List<PoulpeSection> sections = Collections.nCopies(4, section);
         when(service.getAll()).thenReturn(sections);
 
         presenter.initView();
@@ -81,28 +81,28 @@ public class BranchPresenterTest {
     public void testSaveBranch() {
         givenNoConstraintsViolated();
         
-        Branch branch = new Branch();
-        branch.setSection(new Section());
+        PoulpeBranch branch = new PoulpeBranch();
+        branch.setSection(new PoulpeSection());
         presenter.saveBranch(branch);
         verify(view, never()).validationFailure(any(ValidationResult.class));
-        verify(service).saveSection(any(Section.class));
+        verify(service).saveSection(any(PoulpeSection.class));
     }
     
     private void givenNoConstraintsViolated() {
-        when(entityValidator.validate(any(Branch.class))).thenReturn(ValidationResult.EMPTY);
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(ValidationResult.EMPTY);
     }
 
   @Test
     public void testSaveBranchWhenExceptionHappen()  {
-       Branch branch = new Branch();
+       PoulpeBranch branch = new PoulpeBranch();
        givenConstraintViolated();
        
         presenter.saveBranch(branch);
-        verify(branchService, never()).saveBranch(any(Branch.class));
+        verify(branchService, never()).saveBranch(any(PoulpeBranch.class));
     }
 
     private void givenConstraintViolated() {
-        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(resultWithErrors);
     }
 
 }

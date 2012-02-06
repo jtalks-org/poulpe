@@ -17,6 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Group;
+
 /**
  * Stores information about the user.
  *

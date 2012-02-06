@@ -1,6 +1,6 @@
 package org.jtalks.poulpe.logic;
 
-import org.jtalks.poulpe.model.entity.Property;
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.poulpe.service.PropertyLoader;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;

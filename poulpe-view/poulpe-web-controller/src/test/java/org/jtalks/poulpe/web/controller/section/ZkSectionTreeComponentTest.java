@@ -9,8 +9,8 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -33,8 +33,8 @@ public class ZkSectionTreeComponentTest {
     @Mock ZkHelper zkInitializer;
     @Mock Tree sectionTree;
     
-    private Section section = sectionWithBranches();
-    private Branch branch = fakeBranch();
+    private PoulpeSection section = sectionWithBranches();
+    private PoulpeBranch branch = fakeBranch();
 
     @BeforeMethod
     public void beforeMethod() {

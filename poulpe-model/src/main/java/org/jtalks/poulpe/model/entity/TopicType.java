@@ -19,8 +19,8 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.validation.annotations.UniqueConstraint;
-import org.jtalks.poulpe.validation.annotations.UniqueField;
+import org.jtalks.common.validation.annotations.UniqueConstraint;
+import org.jtalks.common.validation.annotations.UniqueField;
 
 /**
  * Represent topic types on the page of general configuration

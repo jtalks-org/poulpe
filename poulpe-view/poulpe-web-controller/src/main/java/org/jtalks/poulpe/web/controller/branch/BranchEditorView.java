@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 /**
  * Interface for representation view branches list
@@ -28,11 +28,11 @@ public interface BranchEditorView {
     /**Show branch list
      * @param branches List branches for showing
      * */
-    void showBranches(List<Branch> branches);
+    void showBranches(List<PoulpeBranch> branches);
 
     /**
      * Get selected branch from branch list
-     * @return Branch selected branch
+     * @return PoulpeBranch selected branch
      * */
-    Branch getSelectedBranch();
+    PoulpeBranch getSelectedBranch();
 }

@@ -29,8 +29,8 @@ import junit.framework.AssertionFailedError;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -55,7 +55,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     private BranchDao dao;
 
     private Session session;
-    private Branch branch;
+    private PoulpeBranch branch;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -78,18 +78,18 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     
     private void assertBranchSaved() throws AssertionFailedError {
         assertNotSame(branch.getId(), 0, "Id not created");
-        Branch actual = retrieveActualBranch();
+        PoulpeBranch actual = retrieveActualBranch();
         actual.setSection(branch.getSection());
         assertReflectionEquals(branch, actual);
     }
     
-    private Branch retrieveActualBranch() {
+    private PoulpeBranch retrieveActualBranch() {
         return ObjectRetriever.retrieveUpdated(branch, session);
     }
 
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void testSaveBranchWithNameNotNullViolation() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
         dao.saveOrUpdate(branch);
     }
 
@@ -97,7 +97,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testGet() {
         givenBranch();
 
-        Branch result = dao.get(branch.getId());
+        PoulpeBranch result = dao.get(branch.getId());
 
         assertNotNull(result);
         assertEquals(result.getId(), branch.getId());
@@ -110,7 +110,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
     @Test
     public void testGetInvalidId() {
-        Branch result = dao.get(-567890L);
+        PoulpeBranch result = dao.get(-567890L);
 
         assertNull(result);
     }
@@ -128,7 +128,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void assertNameChanged(String newName) {
-        Branch result = retrieveActualBranch();
+        PoulpeBranch result = retrieveActualBranch();
         assertEquals(result.getName(), newName);
     }
 
@@ -156,7 +156,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
     
     private int retrieveActualBranchesAmount() {
-        String countQuery = "select count(*) from Branch";
+        String countQuery = "select count(*) from PoulpeBranch";
         Number count = (Number) session.createQuery(countQuery).uniqueResult();
         return count.intValue();
     }
@@ -172,7 +172,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testGetAll() {
         givenTwoBranches();
 
-        List<Branch> branches = dao.getAll();
+        List<PoulpeBranch> branches = dao.getAll();
 
         assertEquals(branches.size(), 2);
     }
@@ -183,14 +183,14 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void addBranch() {
-        Branch randomBranch = ObjectsFactory.createBranch();
+        PoulpeBranch randomBranch = ObjectsFactory.createBranch();
         session.save(randomBranch.getSection());
         session.save(randomBranch);
     }
 
     @Test
     public void testGetAllWithEmptyTable() {
-        List<Branch> branches = dao.getAll();
+        List<PoulpeBranch> branches = dao.getAll();
 
         assertTrue(branches.isEmpty());
     }
@@ -206,7 +206,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testIsBranchNameExists() {
         givenBranch();
 
-        Branch branchWithExistentName = ObjectsFactory.createBranch();
+        PoulpeBranch branchWithExistentName = ObjectsFactory.createBranch();
         branchWithExistentName.setName(branch.getName());
 
         boolean result = dao.isBranchDuplicated(branchWithExistentName);
@@ -225,18 +225,18 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
      */
     @Test
     public void branchSectionBidirectionalTest() {
-        Branch branch = ObjectsFactory.createBranch();
-        Section section = ObjectsFactory.createSection();
+        PoulpeBranch branch = ObjectsFactory.createBranch();
+        PoulpeSection section = ObjectsFactory.createSection();
         session.save(section);
         
-        section = (Section) session.load(Section.class, section.getId());
+        section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());
         branch.setSection(section);
         section.addOrUpdateBranch(branch);
         session.save(branch);
         
         assertTrue(branch.getId() != 0);
         
-        section = (Section) session.load(Section.class, section.getId());
+        section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());
         assertEquals(section.getBranches().size(), 1);
         assertReflectionEquals(branch, section.getBranches().get(0));
     }

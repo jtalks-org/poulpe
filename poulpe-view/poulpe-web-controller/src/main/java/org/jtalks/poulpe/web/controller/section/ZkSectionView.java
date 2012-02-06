@@ -16,9 +16,9 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -64,12 +64,12 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     }
 
     @Override
-    public void showSection(Section section) {
+    public void showSection(PoulpeSection section) {
         addSection(section);
     }
 
     @Override
-    public void showSections(List<Section> sections) {
+    public void showSections(List<PoulpeSection> sections) {
         removeOldSections();
         addSections(sections);
     }
@@ -80,19 +80,19 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         zkHelper.addComponents(childrenToSave);
     }
 
-    private void addSections(List<Section> sections) {
-        for (Section section : sections) {
+    private void addSections(List<PoulpeSection> sections) {
+        for (PoulpeSection section : sections) {
             addSection(section);
         }
     }
 
-    private void addSection(Section section) {
+    private void addSection(PoulpeSection section) {
         // TODO move SectionTreeComponent creation to external factory method
         zkHelper.addComponent(new ZkSectionTreeComponent(section, presenter));
     }
 
     @Override
-    public void removeSection(Section section) {
+    public void removeSection(PoulpeSection section) {
     }
 
     @Override
@@ -204,10 +204,10 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     /**
      * @deprecated use {@link DialogManager} and
-     * {@link PerfomableFactory#deleteSection(Section)} for this
+     * {@link PerfomableFactory#deleteSection(PoulpeSection)} for this
      */
     @Deprecated
-    public void openDeleteSectionDialog(Section victim) {
+    public void openDeleteSectionDialog(PoulpeSection victim) {
         Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop().getPage("sectionDeleteDialog").getFellow(
                 "deleteWindow"), victim));
     }
@@ -220,14 +220,14 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     @Override
     @Deprecated
-    public void openEditBranchDialog(Branch branch) {
+    public void openEditBranchDialog(PoulpeBranch branch) {
         Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
                 branch));
     }
 
     @Override
     @Deprecated
-    public void openModerationDialog(Branch branch) {
+    public void openModerationDialog(PoulpeBranch branch) {
         Events.postEvent(new Event("onOpen", getDesktop().getPage("moderatorDialog").getFellow("moderatorWindow"),
                 branch));
     }

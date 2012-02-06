@@ -19,11 +19,11 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 public class ObjectCreator {
@@ -44,34 +44,34 @@ public class ObjectCreator {
         return list;
     }
 
-    public static List<Section> getFakeSections(int sizeOfCollection) {
-        return Collections.nCopies(sizeOfCollection, new Section(random(), "desc"));
+    public static List<PoulpeSection> getFakeSections(int sizeOfCollection) {
+        return Collections.nCopies(sizeOfCollection, new PoulpeSection(random(), "desc"));
     }
 
-    public static List<Section> fakeSections() {
+    public static List<PoulpeSection> fakeSections() {
         return getFakeSections(10);
     }
 
     /**
-     * @deprecated use {@link Section#Section(String, String)} constructor
+     * @deprecated use {@link PoulpeSection#Section(String, String)} constructor
      * instead
      */
     @Deprecated
-    public static Section getFakeSection(String name, String description) {
-        Section section = new Section();
+    public static PoulpeSection getFakeSection(String name, String description) {
+        PoulpeSection section = new PoulpeSection();
         section.setName(name);
         section.setDescription(description);
         return section;
     }
 
-    public static Section fakeSection() {
-        return new Section(random(), random());
+    public static PoulpeSection fakeSection() {
+        return new PoulpeSection(random(), random());
     }
 
-    public static Section sectionWithBranches(int n) {
-        Section section = new Section(random(), random());
+    public static PoulpeSection sectionWithBranches(int n) {
+        PoulpeSection section = new PoulpeSection(random(), random());
         while (n > 0) {
-            Branch branch = fakeBranch();
+            PoulpeBranch branch = fakeBranch();
             section.addOrUpdateBranch(branch);
             branch.setSection(section);
             n--;
@@ -79,23 +79,23 @@ public class ObjectCreator {
         return section;
     }
 
-    public static Section sectionWithBranches() {
+    public static PoulpeSection sectionWithBranches() {
         return sectionWithBranches(10);
     }
     
     /**
-     * @deprecated use {@link Branch#Branch(String, String)} constructor instead
+     * @deprecated use {@link PoulpeBranch#Branch(String, String)} constructor instead
      */
     @Deprecated
-    public static Branch getFakeBranch(String name, String description) {
-        Branch branch = new Branch();
+    public static PoulpeBranch getFakeBranch(String name, String description) {
+        PoulpeBranch branch = new PoulpeBranch();
         branch.setName(name);
         branch.setDescription(description);
         return branch;
     }
     
-    public static Branch fakeBranch() {
-        return new Branch(random(), random());
+    public static PoulpeBranch fakeBranch() {
+        return new PoulpeBranch(random(), random());
     }
 
     public static List<User> getFakeUsers(int size) {

@@ -17,7 +17,7 @@ package org.jtalks.poulpe.service;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
 
@@ -25,28 +25,28 @@ import java.util.List;
  * @author Vitaliy Kravchenko
  * @author Kirill Afonin
  */
-public interface BranchService extends EntityService<Branch> {
+public interface BranchService extends EntityService<PoulpeBranch> {
 
     /**
      * Get list of all persistence objects T currently present in database.
      *
      * @return - list of persistence objects T.
      */
-    List<Branch> getAll();
+    List<PoulpeBranch> getAll();
 
     /**
      * Save or update branch.
      *
      * @param selectedBranch instance to save
      */
-    void saveBranch(Branch selectedBranch);
+    void saveBranch(PoulpeBranch selectedBranch);
 
     /**
      * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
      *
      * @param victim the branch to be removed
      */
-    void deleteBranchRecursively(Branch victim);
+    void deleteBranchRecursively(PoulpeBranch victim);
 
     /**
      * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim}
@@ -55,7 +55,7 @@ public interface BranchService extends EntityService<Branch> {
      * @param victim    the branch to be removed
      * @param recipient the branch to take topics of {@code victim}
      */
-    void deleteBranchMovingTopics(Branch victim, Branch recipient);
+    void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient);
 
     /**
      * Checks if the branch is duplicated.
@@ -63,7 +63,7 @@ public interface BranchService extends EntityService<Branch> {
      * @param branch branch to check
      * @return true if branch is Duplicated
      */
-    boolean isDuplicated(Branch branch);
+    boolean isDuplicated(PoulpeBranch branch);
 
     /**
      * Return access list for branch
@@ -71,7 +71,7 @@ public interface BranchService extends EntityService<Branch> {
      * @param branch branch which will be returned access list
      * @return access list
      */
-    BranchAccessList getGroupAccessListFor(Branch branch);
+    BranchAccessList getGroupAccessListFor(PoulpeBranch branch);
 
     /**
      * Change grants for branch
@@ -79,7 +79,7 @@ public interface BranchService extends EntityService<Branch> {
      * @param branch  branch to which grants will be changed
      * @param changes grants for branch
      */
-    void changeGrants(Branch branch, BranchAccessChanges changes);
+    void changeGrants(PoulpeBranch branch, BranchAccessChanges changes);
 
     /**
      * Change restriction for branch
@@ -87,5 +87,5 @@ public interface BranchService extends EntityService<Branch> {
      * @param branch  branch to which restriction will be changed
      * @param changes new restriction for branch
      */
-    void changeRestrictions(Branch branch, BranchAccessChanges changes);
+    void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes);
 }

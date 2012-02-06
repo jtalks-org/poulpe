@@ -1,9 +1,9 @@
 package org.jtalks.poulpe.web.controller.component;
 
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.validation.ValidationException;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;

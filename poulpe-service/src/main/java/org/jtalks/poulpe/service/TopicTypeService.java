@@ -18,8 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.service.EntityService;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.validation.ValidationException;
 
 /**
  * Service for operations with {@link TopicType}

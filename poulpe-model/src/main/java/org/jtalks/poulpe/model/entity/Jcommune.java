@@ -17,6 +17,9 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+
 /**
  * The central JCommune entity that contains all the configuration for
  * respective component.
@@ -26,7 +29,7 @@ import java.util.List;
  */
 public class Jcommune extends Component {
 
-    private List<Section> sections = new ArrayList<Section>();
+    private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
      * Creates Component with {@link ComponentType#FORUM}
@@ -71,7 +74,7 @@ public class Jcommune extends Component {
      * 
      * @return the sections
      */
-    public List<Section> getSections() {
+    public List<PoulpeSection> getSections() {
         return sections;
     }
 
@@ -80,7 +83,7 @@ public class Jcommune extends Component {
      * 
      * @param sections the sections to set
      */
-    public void setSections(List<Section> sections) {
+    public void setSections(List<PoulpeSection> sections) {
         this.sections = sections;
     }
 
@@ -89,7 +92,7 @@ public class Jcommune extends Component {
      * 
      * @param section the section to add
      */
-    public void addSection(Section section) {
+    public void addSection(PoulpeSection section) {
         sections.add(section);
     }
 }

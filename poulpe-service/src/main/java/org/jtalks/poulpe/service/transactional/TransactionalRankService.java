@@ -15,11 +15,12 @@
 package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
+
+import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.RankDao;
-import org.jtalks.poulpe.model.entity.Rank;
 import org.jtalks.poulpe.service.RankService;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 /**
  * Transactional Rank Service implementation.

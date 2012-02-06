@@ -14,13 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.PropertyLoader;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 import java.util.List;
 import java.util.Set;

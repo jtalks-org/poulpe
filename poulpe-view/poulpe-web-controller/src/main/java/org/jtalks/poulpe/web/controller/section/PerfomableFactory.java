@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -37,7 +37,7 @@ public class PerfomableFactory {
      * null if no recipient is needed
      * @return instance to be performed by dialog manager
      */
-    public Performable deleteSection(Section victim, Section recipient) {
+    public Performable deleteSection(PoulpeSection victim, PoulpeSection recipient) {
         if (recipient == null) {
             return new DeleteSectionWithoutRecipientPerformable(victim);
         } else {
@@ -50,7 +50,7 @@ public class PerfomableFactory {
      * @param branch to be deleted
      * @return instance to be performed by dialog manager
      */
-    public Performable deleteBranch(Branch branch) {
+    public Performable deleteBranch(PoulpeBranch branch) {
         return new DeleteBranchPerformable(branch);
     }
 
@@ -58,7 +58,7 @@ public class PerfomableFactory {
      * @param section to be updated
      * @return instance to be performed by dialog manager
      */
-    public Performable updateSection(Section section) {
+    public Performable updateSection(PoulpeSection section) {
         return new UpdatePerformable(section);
     }
 
@@ -66,7 +66,7 @@ public class PerfomableFactory {
      * @param section to be saved
      * @return instance to be performed by dialog manager
      */
-    public Performable saveSection(Section section) {
+    public Performable saveSection(PoulpeSection section) {
         return new CreatePerformable(section);
     }
 
@@ -77,14 +77,14 @@ public class PerfomableFactory {
      * @author unascribed
      */
     private class DeleteSectionWithRecipientPerformable implements DialogManager.Performable {
-        private final Section victim;
-        private final Section recipient;
+        private final PoulpeSection victim;
+        private final PoulpeSection recipient;
 
         /**
          * @param victim to be deleted
          * @param recipient is section which will adopt victim's branches
          */
-        public DeleteSectionWithRecipientPerformable(Section victim, Section recipient) {
+        public DeleteSectionWithRecipientPerformable(PoulpeSection victim, PoulpeSection recipient) {
             this.victim = victim;
             this.recipient = recipient;
         }
@@ -103,9 +103,9 @@ public class PerfomableFactory {
      * @author unascribed
      */
     private class DeleteSectionWithoutRecipientPerformable implements DialogManager.Performable {
-        private final Section victim;
+        private final PoulpeSection victim;
 
-        public DeleteSectionWithoutRecipientPerformable(Section victim) {
+        public DeleteSectionWithoutRecipientPerformable(PoulpeSection victim) {
             this.victim = victim;
         }
 
@@ -122,9 +122,9 @@ public class PerfomableFactory {
      * @author unascribed
      */
     private class CreatePerformable implements DialogManager.Performable {
-        private final Section section;
+        private final PoulpeSection section;
 
-        public CreatePerformable(Section section) {
+        public CreatePerformable(PoulpeSection section) {
             this.section = section;
         }
 
@@ -143,9 +143,9 @@ public class PerfomableFactory {
      * @author unascribed
      */
     private class UpdatePerformable implements DialogManager.Performable {
-        private final Section section;
+        private final PoulpeSection section;
 
-        public UpdatePerformable(Section section) {
+        public UpdatePerformable(PoulpeSection section) {
             this.section = section;
         }
 
@@ -165,16 +165,16 @@ public class PerfomableFactory {
      * @author unascribed
      */
     private class DeleteBranchPerformable implements DialogManager.Performable {
-        private final Branch branch;
+        private final PoulpeBranch branch;
 
-        public DeleteBranchPerformable(Branch branch) {
+        public DeleteBranchPerformable(PoulpeBranch branch) {
             this.branch = branch;
         }
 
         @Override
         public void execute() {
             // TODO: move away to service
-            Section section = branch.getSection();
+            PoulpeSection section = branch.getPoulpeSection();
             section.getBranches().remove(branch);
 
             sectionService.saveSection(section);

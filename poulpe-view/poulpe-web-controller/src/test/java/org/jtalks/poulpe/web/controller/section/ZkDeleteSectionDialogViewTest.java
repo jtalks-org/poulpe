@@ -7,7 +7,7 @@ import static org.testng.Assert.*;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.jtalks.poulpe.web.controller.section.ZkDeleteSectionDialogView.SectionComboboxItemRenderer;
 import org.mockito.Mock;
@@ -36,7 +36,7 @@ public class ZkDeleteSectionDialogViewTest {
     @Mock Radio removeAndMoveMode;
     @Mock Combobox selectedSection;
     
-    private Section section = fakeSection();
+    private PoulpeSection section = fakeSection();
     
     @BeforeMethod
     public void beforeMethod() {
@@ -87,7 +87,7 @@ public class ZkDeleteSectionDialogViewTest {
     
     @Test 
     public void initSectionsCombobox() {
-        List<Section> sections = fakeSections();
+        List<PoulpeSection> sections = fakeSections();
         
         deleteSectionDialogView.initSectionsCombobox(sections);
         

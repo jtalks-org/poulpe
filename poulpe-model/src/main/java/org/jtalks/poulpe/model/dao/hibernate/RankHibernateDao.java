@@ -16,8 +16,8 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.List;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.dao.RankDao;
-import org.jtalks.poulpe.model.entity.Rank;
 
 /**
  * Implementation of dao for {@link Rank}. The most of methods inherited from

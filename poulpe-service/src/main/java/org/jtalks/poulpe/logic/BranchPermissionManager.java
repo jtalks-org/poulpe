@@ -14,14 +14,14 @@
  */
 package org.jtalks.poulpe.logic;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,7 +54,7 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
-    public void changeGrants(Branch branch, BranchAccessChanges changes) {
+    public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).grant(changes.getPermission())
                 .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
@@ -69,14 +69,14 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
-    public void changeRestrictions(Branch branch, BranchAccessChanges changes) {
+    public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
                 .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
 
-    public BranchAccessList getGroupAccessListFor(Branch branch) {
+    public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
         List<GroupAce> groupAces = aclManager.getBranchPermissions(branch);
         for(GroupAce groupAce: groupAces){

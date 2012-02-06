@@ -1,6 +1,6 @@
 package org.jtalks.poulpe.validator;
 
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationResult;
 
 /**
  * 

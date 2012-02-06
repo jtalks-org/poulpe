@@ -16,7 +16,7 @@ package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Table;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.acls.domain.ObjectIdentityImpl;
@@ -49,7 +49,7 @@ public class AclManagerTest {
 
     @Test()
     public void testGetBranchPermissions() throws Exception {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
         ExtendedMutableAcl acl = mock(ExtendedMutableAcl.class);
         List<AccessControlEntry> aces = AclDataProvider.createRandomEntries(acl);
         when(acl.getEntries()).thenReturn(aces);

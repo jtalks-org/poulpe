@@ -14,23 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.utils;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.mockito.ArgumentMatcher;
 
-public class BranchMatcher extends ArgumentMatcher<Branch>{
-    Branch branch;
+public class BranchMatcher extends ArgumentMatcher<PoulpeBranch>{
+    PoulpeBranch branch;
 
-    public BranchMatcher(Branch branch) {
+    public BranchMatcher(PoulpeBranch branch) {
         this.branch = branch;
     }
     
 
     @Override
     public boolean matches(Object argument) {
-        if (!(argument instanceof Branch))
+        if (!(argument instanceof PoulpeBranch))
             return false;
-        Branch arg = (Branch) argument;
+        PoulpeBranch arg = (PoulpeBranch) argument;
         return arg.equals(branch);
     }
 }

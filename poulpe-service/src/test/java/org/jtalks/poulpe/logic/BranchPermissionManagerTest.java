@@ -15,12 +15,13 @@
 package org.jtalks.poulpe.logic;
 
 import com.google.common.collect.Lists;
+
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -53,7 +54,7 @@ public class BranchPermissionManagerTest {
 
     @Test(dataProvider = "accessChanges")
     public void testChangeGrants(BranchAccessChanges changes) throws Exception {
-        Branch branch = new Branch("test branch");
+        PoulpeBranch branch = new PoulpeBranch("test branch", "");
         manager.changeGrants(branch, changes);
         verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
         verify(aclManager).grant(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
@@ -61,7 +62,7 @@ public class BranchPermissionManagerTest {
 
     @Test(dataProvider = "accessChanges")
     public void testChangeRestriction(BranchAccessChanges changes) throws Exception {
-        Branch branch = new Branch("test branch");
+        PoulpeBranch branch = new PoulpeBranch("test branch");
         manager.changeRestrictions(branch, changes);
         verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
         verify(aclManager).restrict(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
@@ -69,7 +70,7 @@ public class BranchPermissionManagerTest {
 
     @Test
     public void testGetGroupAccessListFor() throws Exception {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
 
 
 //        when(aclManager.getBranchPermissions(branch)).thenReturn()
@@ -85,7 +86,7 @@ public class BranchPermissionManagerTest {
 
     @DataProvider
     public Object[][] provide() {
-        return new Object[][]{{new Branch()}};
+        return new Object[][]{{new PoulpeBranch()}};
     }
 
     private List<UserGroupSid> getNewlyAddedSids(BranchAccessChanges accessChanges) {

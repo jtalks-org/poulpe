@@ -16,8 +16,8 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
@@ -30,9 +30,9 @@ public interface BranchDialogView extends ValidationFailure {
     /**
      * Get new or edited branch from view
      * 
-     * @return Branch new or edited branch
+     * @return PoulpeBranch new or edited branch
      * */
-    Section getSection();
+    PoulpeSection getSection();
 
     /**
      * Cause hiding current dialog
@@ -45,7 +45,7 @@ public interface BranchDialogView extends ValidationFailure {
      * @param branch
      *            name and description current branch will fill dialog fields
      * */
-    void show(Branch branch);
+    void show(PoulpeBranch branch);
     void openErrorPopupInNewSectionDialog(String label);
 
     /**
@@ -59,17 +59,17 @@ public interface BranchDialogView extends ValidationFailure {
     void notUniqueBranchName();
 
     /**
-     * Init Section combobox list
+     * Init PoulpeSection combobox list
      * 
      * @param sections
      *            list sections
      * */
-    void initSectionList(List<Section> sections);
+    void initSectionList(List<PoulpeSection> sections);
     
     /**
      * Get branch from view
      * 
-     * @return Branch branch
+     * @return PoulpeBranch branch
      * */
-    Branch getBranch (Section section);
+    PoulpeBranch getBranch (PoulpeSection section);
 }

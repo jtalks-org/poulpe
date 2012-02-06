@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**

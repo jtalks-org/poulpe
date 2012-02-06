@@ -19,14 +19,14 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
-import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationException;
 import org.mockito.Mock;
 
 import static org.mockito.Matchers.any;

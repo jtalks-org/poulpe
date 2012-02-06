@@ -25,8 +25,8 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.dao.RankDao;
-import org.jtalks.poulpe.model.entity.Rank;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -71,7 +71,8 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void testSaveBranchWithNameNotNullViolation() {
-        Rank rank = new Rank();
+        Rank rank = new Rank("");
+        rank.setRankName(null);
 
         dao.saveOrUpdate(rank);
     }

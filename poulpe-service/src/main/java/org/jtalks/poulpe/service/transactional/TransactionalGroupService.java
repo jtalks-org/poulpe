@@ -16,11 +16,11 @@ package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.validation.EntityValidator;
 
 
 /**

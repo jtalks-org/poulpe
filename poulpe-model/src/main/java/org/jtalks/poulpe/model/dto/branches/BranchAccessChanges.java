@@ -15,7 +15,8 @@
 package org.jtalks.poulpe.model.dto.branches;
 
 import com.google.common.collect.ImmutableList;
-import org.jtalks.poulpe.model.entity.Group;
+
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 
 import java.util.ArrayList;

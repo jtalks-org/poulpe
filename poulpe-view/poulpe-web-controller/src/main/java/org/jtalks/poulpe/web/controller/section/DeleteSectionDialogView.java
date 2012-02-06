@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
  * This interface for representation view delete section dialog
@@ -29,7 +29,7 @@ public interface DeleteSectionDialogView {
     /**
      * @return section which will be deleted
      */
-    Section getSectionToDelete();
+    PoulpeSection getSectionToDelete();
 
     /**
      * Get selected section in combobox
@@ -37,7 +37,7 @@ public interface DeleteSectionDialogView {
      * @return section which will receive branches of the section being deleted,
      * or null if none selected
      */
-    Section getRecipientSection();
+    PoulpeSection getRecipientSection();
 
     /**
      * @return deleting mode
@@ -52,7 +52,7 @@ public interface DeleteSectionDialogView {
     /**
      * Causes the dialog to show
      */
-    void showDialog(Section section);
+    void showDialog(PoulpeSection section);
 
     /**
      * Causes the dialog to close
@@ -64,7 +64,11 @@ public interface DeleteSectionDialogView {
      * 
      * @param sections list available sections
      */
-    void initSectionsCombobox(List<Section> sections);
+    void initSectionsCombobox(List<PoulpeSection> sections);
 
+    /**
+     * Cleans the combobox with sections and disables it, used when no 
+     * sections are available
+     */
     void initEmptyAndDisabledCombobox();
 }

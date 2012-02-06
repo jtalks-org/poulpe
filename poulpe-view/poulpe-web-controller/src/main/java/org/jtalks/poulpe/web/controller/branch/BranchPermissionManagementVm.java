@@ -16,11 +16,12 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
@@ -55,7 +56,7 @@ public class BranchPermissionManagementVm {
      * Created each time {@link #showGroupsDialog(String)} is invoked.
      */
     private ManageUserGroupsDialogVm groupsDialogVm;
-    private Branch branch;
+    private PoulpeBranch branch;
 
     public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService) {
         this.groupService = groupService;
@@ -147,10 +148,10 @@ public class BranchPermissionManagementVm {
         }
     }
 
-    public Branch getSelectedBranch() {
+    public PoulpeBranch getSelectedBranch() {
         String stringBranchId = Executions.getCurrent().getParameter("branchId");
         Long branchId = Long.parseLong(stringBranchId);
-        Branch branch;
+        PoulpeBranch branch;
         try {
             branch = branchService.get(branchId);
         } catch (NotFoundException e) {

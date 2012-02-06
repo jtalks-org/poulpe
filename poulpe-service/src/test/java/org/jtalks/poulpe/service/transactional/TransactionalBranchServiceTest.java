@@ -28,14 +28,14 @@ import java.util.Set;
 
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.BranchPermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationException;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -69,11 +69,11 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testGet() throws NotFoundException {
-        Branch expectedBranch = new Branch();
+        PoulpeBranch expectedBranch = new PoulpeBranch();
         when(branchDao.isExist(BRANCH_ID)).thenReturn(true);
         when(branchDao.get(BRANCH_ID)).thenReturn(expectedBranch);
 
-        Branch branch = branchService.get(BRANCH_ID);
+        PoulpeBranch branch = branchService.get(BRANCH_ID);
 
         assertEquals(branch, expectedBranch, "Branches aren't equals");
         verify(branchDao).isExist(BRANCH_ID);
@@ -83,7 +83,7 @@ public class TransactionalBranchServiceTest {
     @Test
     public void testChangeGrants() {
         BranchAccessChanges accessChanges = new BranchAccessChanges(null);
-        Branch branch = new Branch("name");
+        PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeGrants(branch, accessChanges);
 
@@ -98,7 +98,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testGetGroupAccessListFor() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
 
         branchService.getGroupAccessListFor(branch);
 
@@ -109,7 +109,7 @@ public class TransactionalBranchServiceTest {
     @Test
     public void testChangeRestrictions() {
         BranchAccessChanges accessChanges = new BranchAccessChanges(null);
-        Branch branch = new Branch("name");
+        PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeRestrictions(branch, accessChanges);
         
@@ -118,7 +118,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testIsDuplicated() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
 
         when(branchDao.isBranchDuplicated(branch)).thenReturn(true);
 
@@ -127,8 +127,8 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testDeleteBranchMovingTopic() {
-        Branch victim = new Branch("Victim");
-        Branch recepient = new Branch("Recepient");
+        PoulpeBranch victim = new PoulpeBranch("Victim");
+        PoulpeBranch recepient = new PoulpeBranch("Recepient");
 
         branchService.deleteBranchMovingTopics(victim, recepient);
 
@@ -138,27 +138,27 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void getAllTest() {
-        List<Branch> expectedBranchList = new ArrayList<Branch>();
-        expectedBranchList.add(new Branch());
+        List<PoulpeBranch> expectedBranchList = new ArrayList<PoulpeBranch>();
+        expectedBranchList.add(new PoulpeBranch());
         when(branchDao.getAll()).thenReturn(expectedBranchList);
-        List<Branch> actualBranchList = branchService.getAll();
+        List<PoulpeBranch> actualBranchList = branchService.getAll();
         assertEquals(actualBranchList, expectedBranchList);
         verify(branchDao).getAll();
     }
 
     @Test
     public void testDeleteBranch() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
         branchService.deleteBranchRecursively(branch);
         verify(branchDao).delete(branch.getId());
     }
 
     @Test
     public void testSaveBranchWitoutException() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
         branch.setName("new branch");
         branch.setDescription("new description");
-        ArgumentCaptor<Branch> branchCaptor = ArgumentCaptor.forClass(Branch.class);
+        ArgumentCaptor<PoulpeBranch> branchCaptor = ArgumentCaptor.forClass(PoulpeBranch.class);
 
         branchService.saveBranch(branch);
 
@@ -168,7 +168,7 @@ public class TransactionalBranchServiceTest {
 
     @Test(expectedExceptions = ValidationException.class)
     public void testSaveBranchWithException() {
-        Branch branch = new Branch();
+        PoulpeBranch branch = new PoulpeBranch();
 
         givenConstraintsViolations();
         branchService.saveBranch(branch);
@@ -176,6 +176,6 @@ public class TransactionalBranchServiceTest {
 
     private void givenConstraintsViolations() {
         Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Branch.class));
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeBranch.class));
     }
 }

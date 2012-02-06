@@ -22,13 +22,13 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Set;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -117,7 +117,7 @@ public class EditGroupDialogPresenterTest {
     }
     
     private void givenConstraintViolated() {
-        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(resultWithErrors);
     }
 
 }

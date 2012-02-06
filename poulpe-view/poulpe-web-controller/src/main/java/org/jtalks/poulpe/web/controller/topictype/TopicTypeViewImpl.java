@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;

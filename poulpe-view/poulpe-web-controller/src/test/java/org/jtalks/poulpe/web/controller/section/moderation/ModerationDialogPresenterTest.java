@@ -23,13 +23,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
@@ -53,7 +53,7 @@ public class ModerationDialogPresenterTest {
     @Mock 
     EntityValidator entityValidator;
 
-    private Branch branch;
+    private PoulpeBranch branch;
 
     private List<User> allUsers;
     private User user1, user2;
@@ -61,7 +61,7 @@ public class ModerationDialogPresenterTest {
     private ValidationResult resultWithErrors = resultWithErrors();
 
     private ValidationResult resultWithErrors() {
-        ValidationError error = new ValidationError("name", Branch.BRANCH_ALREADY_EXISTS);
+        ValidationError error = new ValidationError("name", PoulpeBranch.BRANCH_ALREADY_EXISTS);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }
@@ -70,7 +70,7 @@ public class ModerationDialogPresenterTest {
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
 
-        branch = new Branch("name", "description");
+        branch = new PoulpeBranch("name", "description");
 
         presenter = new ModerationDialogPresenter();
         
@@ -118,7 +118,7 @@ public class ModerationDialogPresenterTest {
     }
     
     private void givenNoConstraintsViolated() {
-        when(entityValidator.validate(any(Branch.class))).thenReturn(ValidationResult.EMPTY);
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
@@ -126,12 +126,12 @@ public class ModerationDialogPresenterTest {
         givenConstraintViolated();
         presenter.onConfirm();
         
-        verify(branchService, never()).saveBranch(any(Branch.class));
+        verify(branchService, never()).saveBranch(any(PoulpeBranch.class));
         verify(dialogManager).notify("item.already.exist");
     }
     
    private void givenConstraintViolated() {
-        when(entityValidator.validate(any(Branch.class))).thenReturn(resultWithErrors);
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(resultWithErrors);
     } 
 
     @Test
@@ -169,7 +169,7 @@ public class ModerationDialogPresenterTest {
     @Test
     public void setBranch() {
         branch.addModerators(allUsers);
-        Branch newBranch = new Branch("tt", "ttt");
+        PoulpeBranch newBranch = new PoulpeBranch("tt", "ttt");
 
         presenter.setBranch(newBranch);
         presenter.refreshView();

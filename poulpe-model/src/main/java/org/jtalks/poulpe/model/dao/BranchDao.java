@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
 
@@ -23,19 +23,19 @@ import java.util.List;
  * @author Pavel Vervenko
  */
 
-public interface BranchDao extends ParentRepository<Branch> {
+public interface BranchDao extends ParentRepository<PoulpeBranch> {
 
     /**
      * Get the list of all branches.
      *
      * @return list of branches
      */
-    List<Branch> getAll();
+    List<PoulpeBranch> getAll();
 
     /**
      * Method to check is branch used.
      * @param branch branch to check
      * @return true if branch with such name already exists and branch id not equal
      */
-    boolean isBranchDuplicated(Branch branch);
+    boolean isBranchDuplicated(PoulpeBranch branch);
 }

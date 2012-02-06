@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 
 /**
@@ -63,7 +63,7 @@ public class BranchEditorPresenter {
      * Invocation this method makes get selected branch in branch list and delete it 
      * */
     public void deleteBranch() {
-        Branch branch = view.getSelectedBranch();
+        PoulpeBranch branch = view.getSelectedBranch();
         branchService.deleteBranchRecursively(branch);
     }
 

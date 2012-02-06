@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.validation.ValidationResult;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;

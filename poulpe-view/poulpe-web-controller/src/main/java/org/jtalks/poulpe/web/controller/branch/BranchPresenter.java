@@ -14,12 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 
 /**
@@ -45,14 +45,14 @@ public class BranchPresenter {
     }
 
     /**
-     * Sets the Branch instance
+     * Sets the PoulpeBranch instance
      */
     public void setBranchService(BranchService service) {
         branchService = service;
     }
 
     /**
-     * Sets the Section instance
+     * Sets the PoulpeSection instance
      */
     public void setSectionService(SectionService service) {
         sectionService = service;
@@ -82,14 +82,14 @@ public class BranchPresenter {
      * exists, cause open error popup in view.
      */
     public boolean saveBranch() {
-        Section section = view.getSection();
-        Branch branch = view.getBranch(section);
+        PoulpeSection section = view.getSection();
+        PoulpeBranch branch = view.getBranch(section);
         return saveBranch(branch);
     }
 
-    protected boolean saveBranch(Branch branch) {
+    protected boolean saveBranch(PoulpeBranch branch) {
         if (validate(branch)) {
-            Section section = branch.getSection();
+            PoulpeSection section = branch.getPoulpeSection();
             section.addOrUpdateBranch(branch);
             sectionService.saveSection(section);
             view.hide();
@@ -106,7 +106,7 @@ public class BranchPresenter {
         this.entityValidator = entityValidator;
     }
     
-    private boolean validate(Branch branch) {
+    private boolean validate(PoulpeBranch branch) {
         ValidationResult result = entityValidator.validate(branch);
 
         if (result.hasErrors()) {

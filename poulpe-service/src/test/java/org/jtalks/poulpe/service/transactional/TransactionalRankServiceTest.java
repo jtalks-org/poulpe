@@ -17,10 +17,10 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.Collections;
 import java.util.Set;
 
-import org.jtalks.poulpe.model.entity.Rank;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationError;
-import org.jtalks.poulpe.validation.ValidationException;
+import org.jtalks.common.model.entity.Rank;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.testng.annotations.Test;
 import org.jtalks.poulpe.model.dao.RankDao;
 import org.mockito.Mock;
@@ -47,7 +47,7 @@ public class TransactionalRankServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         rankService = new TransactionalRankService(rankDao, entityValidator);
-        rank = new Rank();
+        rank = new Rank("");
     }
 
     @Test

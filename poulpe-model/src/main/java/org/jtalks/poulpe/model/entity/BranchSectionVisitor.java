@@ -1,13 +1,13 @@
 package org.jtalks.poulpe.model.entity;
 
 /**
- * Interface for implementing visitor pattern for {@link Branch} and
- * {@link Section} classes. Mainly for using in Section view where, depending on
+ * Interface for implementing visitor pattern for {@link PoulpeBranch} and
+ * {@link PoulpeSection} classes. Mainly for using in PoulpeSection view where, depending on
  * selected element, needed actions should be performed.<br>
  * <br>
  * 
  * This interface should be implemented by all visitors, applicable to
- * {@link Branch} and {@link Section}
+ * {@link PoulpeBranch} and {@link PoulpeSection}
  * 
  * @author Alexey Grigorev
  * 
@@ -15,17 +15,17 @@ package org.jtalks.poulpe.model.entity;
 public interface BranchSectionVisitor {
 
     /**
-     * Performs an action when the passed element is {@link Section}
+     * Performs an action when the passed element is {@link PoulpeSection}
      * 
      * @param section to be processed
      */
-    void visitSection(Section section);
+    void visitSection(PoulpeSection section);
 
     /**
-     * Performs an action when the passed element is {@link Branch}
+     * Performs an action when the passed element is {@link PoulpeBranch}
      * 
      * @param branch to be processed
      */
-    void visitBranch(Branch branch);
+    void visitBranch(PoulpeBranch branch);
 
 }

@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
 
 public class EditGroupDialogPresenter {
 

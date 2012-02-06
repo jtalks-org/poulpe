@@ -19,10 +19,10 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.jtalks.poulpe.model.entity.Rank;
+import org.jtalks.common.model.entity.Rank;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.service.RankService;
-import org.jtalks.poulpe.validation.EntityValidator;
-import org.jtalks.poulpe.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;

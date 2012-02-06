@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManagerImpl;
 import org.zkoss.zk.ui.Component;
@@ -50,16 +50,16 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      */
     private transient BranchEditorPresenter presenter;
 
-    private ListModelList<Branch> branchesListModel;
+    private ListModelList<PoulpeBranch> branchesListModel;
 
     /**
      * Use for render ListItem This class draws two labels for branch name and
      * description for change view attributes branch list item use css classes:
      * .branch-name and .branch-description
      * */
-    private static ListitemRenderer<Branch> branchRenderer = new ListitemRenderer<Branch>() {
+    private static ListitemRenderer<PoulpeBranch> branchRenderer = new ListitemRenderer<PoulpeBranch>() {
         @Override
-        public void render(Listitem item, Branch branch) {
+        public void render(Listitem item, PoulpeBranch branch) {
             Listcell cell = new Listcell();
             Label name = new Label(branch.getName());
             Label desc = new Label(branch.getDescription());
@@ -83,7 +83,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
 
-        branchesListModel = new ListModelList<Branch>();
+        branchesListModel = new ListModelList<PoulpeBranch>();
         branchesList.setModel(branchesListModel);
         branchesList.setItemRenderer(branchRenderer);
 
@@ -106,7 +106,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      * {@inheritDoc}
      * */
     @Override
-    public void showBranches(List<Branch> branches) {
+    public void showBranches(List<PoulpeBranch> branches) {
         branchesListModel.clear();
         branchesListModel.addAll(branches);
     }
@@ -125,7 +125,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      * */
     public void onClick$delBranchButton() {
         if (branchesList.getSelectedCount() == 1) {
-            Branch branch = getSelectedBranch();
+            PoulpeBranch branch = getSelectedBranch();
             DialogManager dmanager = new DialogManagerImpl();
             dmanager.confirmDeletion(branch.getName(), new DialogManager.Performable() {
 
@@ -157,8 +157,8 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      * {@inheritDoc}
      * */
     @Override
-    public Branch getSelectedBranch() {
-        return (Branch) branchesListModel.get(branchesList.getSelectedIndex());
+    public PoulpeBranch getSelectedBranch() {
+        return (PoulpeBranch) branchesListModel.get(branchesList.getSelectedIndex());
     }
 
 }

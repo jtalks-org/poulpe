@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.dao;
 import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Group;
+import org.jtalks.common.model.entity.Group;
 
 /**
  * @author Konstantin Akimov

@@ -21,7 +21,7 @@ import static org.testng.Assert.assertEquals;
 import java.util.Arrays;
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -38,12 +38,12 @@ public class TestBranchEditorPresenter {
     @Mock
     BranchEditorView view;
     @Captor
-    ArgumentCaptor<Branch> branchCaptor;
+    ArgumentCaptor<PoulpeBranch> branchCaptor;
     
     private static final String branchName = "branch";
     private static final String description = "decs";
     
-    private final Branch branch = new Branch(branchName, description);
+    private final PoulpeBranch branch = new PoulpeBranch(branchName, description);
     
     @BeforeTest
     public void setUp() {
@@ -54,7 +54,7 @@ public class TestBranchEditorPresenter {
 
     @Test
     public void testUpdateView() {
-        List<Branch> listOfTwoBranches = Arrays.asList(branch, branch);
+        List<PoulpeBranch> listOfTwoBranches = Arrays.asList(branch, branch);
         when(service.getAll()).thenReturn(listOfTwoBranches);
 
         presenter.updateView();

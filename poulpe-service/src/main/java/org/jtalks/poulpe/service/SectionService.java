@@ -15,18 +15,18 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 import java.util.List;
 
-public interface SectionService extends EntityService<Section> {
+public interface SectionService extends EntityService<PoulpeSection> {
 
     /**
      * Get list of all Sections.
      *
      * @return - list of Sections.
      */
-    List<Section> getAll();
+    List<PoulpeSection> getAll();
 
 
     /**
@@ -34,7 +34,7 @@ public interface SectionService extends EntityService<Section> {
      *
      * @param section instance to save
      */
-    void saveSection(Section section);
+    void saveSection(PoulpeSection section);
 
     /**
      * Check if section with given name exists.
@@ -42,7 +42,7 @@ public interface SectionService extends EntityService<Section> {
      * @param section name for check
      * @return true if exists
      */
-    boolean isSectionExists(Section section);
+    boolean isSectionExists(PoulpeSection section);
 
     /**
      * Removes the section and all its branches.
@@ -50,7 +50,7 @@ public interface SectionService extends EntityService<Section> {
      * @param victim the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteRecursively(Section victim);
+    boolean deleteRecursively(PoulpeSection victim);
 
     /**
      * Removes the section and move all its branches to another section.
@@ -59,6 +59,6 @@ public interface SectionService extends EntityService<Section> {
      * @param recipient the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
      */
-    boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
+    boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient);
 
 }

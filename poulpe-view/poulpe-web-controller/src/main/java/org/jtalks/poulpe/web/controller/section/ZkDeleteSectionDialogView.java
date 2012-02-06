@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -46,7 +46,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
 
     private DeleteSectionDialogPresenter presenter;
 
-    private Section sectionToDelete;
+    private PoulpeSection sectionToDelete;
 
     /**
      * {@inheritDoc}
@@ -59,9 +59,9 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         selectedSection.setItemRenderer(new SectionComboboxItemRenderer());
     }
 
-    static class SectionComboboxItemRenderer implements ComboitemRenderer<Section> {
+    static class SectionComboboxItemRenderer implements ComboitemRenderer<PoulpeSection> {
         @Override
-        public void render(Comboitem item, Section section) throws Exception {
+        public void render(Comboitem item, PoulpeSection section) throws Exception {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }
@@ -71,7 +71,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      * {@inheritDoc}
      */
     @Override
-    public Section getSectionToDelete() {
+    public PoulpeSection getSectionToDelete() {
         return sectionToDelete;
     }
 
@@ -79,8 +79,8 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      * {@inheritDoc}
      */
     @Override
-    public Section getRecipientSection() {
-        return (Section) selectedSection.getModel().getElementAt(selectedSection.getSelectedIndex());
+    public PoulpeSection getRecipientSection() {
+        return (PoulpeSection) selectedSection.getModel().getElementAt(selectedSection.getSelectedIndex());
     }
 
     /**
@@ -100,7 +100,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      * {@inheritDoc}
      */
     @Override
-    public void showDialog(Section section) {
+    public void showDialog(PoulpeSection section) {
         sectionToDelete = section;
         showDialog();
     }
@@ -123,7 +123,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      */
     private void useFirstSectionAsDefaultRecipient() {
         @SuppressWarnings("unchecked")
-        ListModelList<Section> model = (ListModelList<Section>) selectedSection.getModel();
+        ListModelList<PoulpeSection> model = (ListModelList<PoulpeSection>) selectedSection.getModel();
         model.clearSelection();
 
         if (!model.isEmpty()) {
@@ -152,8 +152,8 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
     }
 
     @Override
-    public void initSectionsCombobox(List<Section> selectableSections) {
-        ListModelList<Section> modelList = new ListModelList<Section>(selectableSections);
+    public void initSectionsCombobox(List<PoulpeSection> selectableSections) {
+        ListModelList<PoulpeSection> modelList = new ListModelList<PoulpeSection>(selectableSections);
         modelList.remove(sectionToDelete);
 
         selectedSection.setModel(modelList);
@@ -173,13 +173,13 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
     /**
      * This event cause show dialog
      * 
-     * @param event information about event contain Section which will be
+     * @param event information about event contain PoulpeSection which will be
      * deleted
-     * @deprecated use {@link #showDialog(Section)} instead
+     * @deprecated use {@link #showDialog(PoulpeSection)} instead
      */
     @Deprecated
     public void onOpenDeleteSectionDialog(Event event) {
-        showDialog((Section) event.getData());
+        showDialog((PoulpeSection) event.getData());
     }
 
     /**

@@ -39,7 +39,7 @@
     
     <property name="componentType" column="C_TYPE" unique="true">
       <type name="org.hibernate.type.EnumType">
-        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
       </type>
     </property>
     

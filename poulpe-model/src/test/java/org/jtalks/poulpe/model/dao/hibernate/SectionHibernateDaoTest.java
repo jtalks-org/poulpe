@@ -27,8 +27,8 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -57,7 +57,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     private SectionDao dao;
     
     private Session session;
-    private Section section;
+    private PoulpeSection section;
     
     @BeforeMethod
     public void setUp() throws Exception {
@@ -73,24 +73,24 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 
     private void assertSectionSaved() {
         assertNotSame(section.getId(), 0, "Id not created");
-        Section actual = retrieveActualSection();
+        PoulpeSection actual = retrieveActualSection();
         assertReflectionEquals(section, actual);
     }
     
-    private Section retrieveActualSection() {
+    private PoulpeSection retrieveActualSection() {
         return ObjectRetriever.retrieveUpdated(section, session);
     }
 
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void saveSectionWithNameNotNullViolationTest() {
-        Section nullTitleSection = new Section();
+        PoulpeSection nullTitleSection = new PoulpeSection();
         dao.saveOrUpdate(nullTitleSection);
     }
 
     @Test
     public void getTest() {
         givenSection();
-        Section actual = dao.get(section.getId());
+        PoulpeSection actual = dao.get(section.getId());
         assertReflectionEquals(section, actual);
     }
 
@@ -100,7 +100,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 
     @Test
     public void getInvalidIdTest() {
-        Section result = dao.get(-567890L);
+        PoulpeSection result = dao.get(-567890L);
         assertNull(result);
     }
 
@@ -117,7 +117,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     }
 
     private void assertNameChanged(String newName) {
-        Section actual = retrieveActualSection();
+        PoulpeSection actual = retrieveActualSection();
         assertEquals(actual.getName(), newName);
     }
 
@@ -131,7 +131,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @Test
     public void getAllTest() {
         givenTwoSections();
-        List<Section> sections = dao.getAll();
+        List<PoulpeSection> sections = dao.getAll();
         assertEquals(sections.size(), 2);
     }
 
@@ -142,7 +142,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
 
     @Test
     public void GetAllWhenTableIsEmptyTest() {
-        List<Section> sections = dao.getAll();
+        List<PoulpeSection> sections = dao.getAll();
         assertTrue(sections.isEmpty());
     }
 
@@ -160,13 +160,13 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @Test
     public void testBranchPositions() {
         for (int i = 0; i < 5; i++) {
-            List<Branch> expected = section.getBranches();
+            List<PoulpeBranch> expected = section.getPoulpeBranches();
             Collections.shuffle(expected);
 
             dao.saveOrUpdate(section);
 
             section = ObjectRetriever.retrieveUpdated(section, session);
-            List<Branch> actual = section.getBranches();
+            List<PoulpeBranch> actual = section.getPoulpeBranches();
 
             assertEquals(actual, expected);
         }
