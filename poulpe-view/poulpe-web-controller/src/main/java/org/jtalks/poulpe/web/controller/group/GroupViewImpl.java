@@ -18,7 +18,11 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Group;
 import org.zkoss.zk.ui.Components;
+import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
+import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Listbox;
 import org.zkoss.zul.Listcell;
@@ -60,6 +64,14 @@ public class GroupViewImpl extends Window implements AfterCompose {
                 listItem.setId(String.valueOf(group.getId()));
             }
         });
+        
+        groupsListbox.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
+            @Override
+            public void onEvent(Event event) throws Exception {
+        		enableRemoveAndEditButtons();
+            }
+
+        });
 
         presenter.initView(this);
     }
@@ -67,6 +79,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
     public void updateView(List<Group> groups) {
         groupsListboxModel = new ListModelList<Group>(groups);
         groupsListbox.setModel(groupsListboxModel);
+        disableRemoveAndEditButtons();
     }
 
     public void onDoubleClick$groupsListbox() {
@@ -116,6 +129,16 @@ public class GroupViewImpl extends Window implements AfterCompose {
 
     public Group getSelectedGroup() {
         return (Group) groupsListboxModel.getElementAt(groupsListbox.getSelectedIndex());
+    }
+
+    private void enableRemoveAndEditButtons() {
+    	((Button) getFellow("removeButton")).setDisabled(false);
+    	((Button) getFellow("editMembersButton")).setDisabled(false);
+    }
+
+    private void disableRemoveAndEditButtons() {
+    	((Button) getFellow("removeButton")).setDisabled(true);
+    	((Button) getFellow("editMembersButton")).setDisabled(true);
     }
 
 }

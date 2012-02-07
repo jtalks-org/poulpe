@@ -49,9 +49,9 @@ import com.google.common.collect.Sets;
 
 /**
  * Tests for {@link EditGroupMembersVM}
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
+ *
  */
 public class EditGroupMembersVMTest {
 
@@ -94,11 +94,12 @@ public class EditGroupMembersVMTest {
         viewModel = new EditGroupMembersVM(windowManager, groupService, userService, selectedEntity);
         viewModel = spy(viewModel);
 
-        givenUsersSelectedInView();
+        // givenUsersSelectedInView();
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#add()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#add()}.
      */
     @Test
     public void testAdd() {
@@ -109,7 +110,8 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#addAll()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#addAll()}.
      */
     @Test
     public void testAddAll() {
@@ -122,11 +124,14 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#remove()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#remove()}.
      */
-    // @Test
     // FIXME
+    // @Test
     public void testRemove() {
+        givenUsersSelectedInView();
+        
         viewModel.remove();
 
         assertFalse(viewModel.getExist().containsAll(usersSelectedInExist));
@@ -134,10 +139,10 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#removeAll()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#removeAll()}.
      */
-    // @Test
-    // FIXME
+    @Test
     public void testRemoveAll() {
         List<User> selected = viewModel.getExist();
 
@@ -148,7 +153,8 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#save()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#save()}.
      */
     @Test
     public void testSave() {
@@ -158,7 +164,8 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#cancel()}.
+     * Test method for
+     * {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#cancel()}.
      */
     @Test
     public void testCancel() {
@@ -170,8 +177,7 @@ public class EditGroupMembersVMTest {
     private void vefiryNothingChanges() {
         verify(userService, never()).setPermanentBanStatus(anyCollectionOf(User.class), anyBoolean(), anyString());
         verify(userService, never()).setTemporaryBanStatus(anyCollectionOf(User.class), anyInt(), anyString());
-        // TODO: why it's missing?
-        // verify(userService, never()).updateLastLoginTime(any(User.class));
+        verify(userService, never()).updateLastLoginTime(any(User.class));
         verify(userService, never()).updateUser(any(User.class));
 
         verify(groupService, never()).saveGroup(any(Group.class));

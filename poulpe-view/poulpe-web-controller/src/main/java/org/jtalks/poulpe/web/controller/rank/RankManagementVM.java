@@ -46,6 +46,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
+    private String title;
     
     private ValidationFailureHandler handler;
 
@@ -101,6 +102,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
+    	title = "Edit rank";
         openEditor();
     }
 
@@ -145,11 +147,12 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     }
 
     /**
-     * Command for crating new Rank.
+     * Command for creating new Rank.
      */
     @Command
     public void newItem() {
         selected = new Rank("new", 100);
+        title = "Create rank";
         openEditor();
     }
 
@@ -210,5 +213,21 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
     }
+
+    /**
+     * Returns the title of the rank editor window.
+     * @return the rank editor window title
+     */
+	public String getTitle() {
+		return title;
+	}
+
+	/**
+     * Sets the title of the rank editor window.
+     * @param title the title to set
+     */
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
 }
