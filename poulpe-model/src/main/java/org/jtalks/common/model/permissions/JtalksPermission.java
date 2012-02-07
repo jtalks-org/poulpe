@@ -12,40 +12,15 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao;
+package org.jtalks.common.model.permissions;
 
-import java.util.List;
-
-import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.common.model.entity.Group;
+import org.springframework.security.acls.model.Permission;
 
 /**
- * @author Konstantin Akimov
+ * @author stanislav bashkirtsev
+ * @see <a href=http://jtalks.org/display/jtalks/Permission+Management>JTalks Permission Management Architecture</a>
+ * @see <a href=http://jtalks.org/display/jtalks/Managing+Permissions>JTalks Permission Management Vision</a>
  */
-
-public interface GroupDao extends ParentRepository<Group> {
-
-    /**
-     * Get the list of all groups.
-     *
-     * @return list of groups
-     */
-    List<Group> getAll();
-    
-    
-    
-    /**
-     * Method to check is branch used.
-     * @param branch
-     * @return true if branch with such name already exists and branch id not equal
-     */
-    boolean isGroupDuplicated(Group branch);
-    
-    
-    /**
-     * Get the list of all groups which match to the specified name
-     * @param name
-     * @return list of groups
-     */
-    List<Group> getMatchedByName(String name);
+public interface JtalksPermission extends Permission {
+    String getName();
 }

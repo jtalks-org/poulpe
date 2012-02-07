@@ -15,7 +15,8 @@
 package org.jtalks.common.security.acl;
 
 import com.google.common.collect.Lists;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
+
+import org.jtalks.common.model.permissions.BranchPermission;
 import org.springframework.security.acls.domain.AccessControlEntryImpl;
 import org.springframework.security.acls.domain.PrincipalSid;
 import org.springframework.security.acls.model.*;

@@ -14,15 +14,15 @@
  */
 package org.jtalks.poulpe.logic;
 
+import org.jtalks.common.model.dao.GroupDao;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
-import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.dto.branches;
 import com.google.common.collect.Maps;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.BranchPermission;
 
 import java.util.List;
 import java.util.Map;

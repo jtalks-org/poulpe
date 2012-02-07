@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.permissions.JtalksPermission;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
 

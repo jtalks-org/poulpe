@@ -18,12 +18,12 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
