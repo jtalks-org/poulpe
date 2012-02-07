@@ -16,27 +16,33 @@
 
 -->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Section" table="SECTIONS">
+<hibernate-mapping>
+  <class name="org.jtalks.common.model.entity.Section" table="SECTIONS" abstract="true">
     <cache usage="nonstrict-read-write"/>
     
     <id column="SECTION_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
     
+    <discriminator column="type" type="string"/>
+    
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
     <property column="POSITION_" name="position" />
-
-    <!-- inverse is false because otherwise indexes are saved as null -->
-    <!-- (even if you save branch and just after that section). -->
-    <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
+  </class>
+  
+  <subclass name="org.jtalks.poulpe.model.entity.PoulpeSection" 
+    extends="org.jtalks.common.model.entity.Section"
+    discriminator-value="section">
+     <!-- inverse is false because otherwise indexes are saved as null -->
+      <!-- (even if you save branch and just after that section). -->
+      <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
       <cache usage="nonstrict-read-write" />
       
       <key column="SECTION_ID" foreign-key="FK_SECTION" />
-	  <list-index column="POSITION" />
-      <one-to-many class="Branch" />
-    </list>
-  </class>
+      <list-index column="POSITION" />
+        <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch" />
+      </list>
+   </subclass>
 </hibernate-mapping>

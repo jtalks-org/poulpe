@@ -16,27 +16,35 @@
 
 -->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Branch" table="BRANCHES">
+<hibernate-mapping>
+  <class name="org.jtalks.common.model.entity.Branch" table="BRANCHES">
     <cache usage="nonstrict-read-write"/>
     
     <id column="BRANCH_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
     
+    <discriminator column="type" type="string"/>
+    
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
-    <property column="DELETED" name="deleted" />
     <property column="POSITION" name="position" insert="false" update="false" />
+  </class>
+  
+  <subclass name="org.jtalks.poulpe.model.entity.PoulpeBranch" 
+    extends="org.jtalks.common.model.entity.Branch"
+    discriminator-value="branch">
     
-    <many-to-one column="SECTION_ID" name="section" class="Section"
+    <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection"
       lazy="false" update="false" insert="false" />
-
+  
     <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
       <cache usage="nonstrict-read-write" />
       <key column="BRANCH_ID" foreign-key="FK_BRANCH" />
-      <many-to-many class="User" column="USER_ID" />
+      <many-to-many class="org.jtalks.poulpe.model.entity.User" column="USER_ID" />
     </bag>
-  </class>
+    
+  </subclass>
+  
 </hibernate-mapping>

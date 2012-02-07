@@ -16,8 +16,8 @@
 
 -->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Group" table="GROUPS">
+<hibernate-mapping>
+  <class name="org.jtalks.common.model.entity.Group" table="GROUPS">
     <cache usage="nonstrict-read-write"/>
     
     <id column="GROUP_ID" name="id" unsaved-value="0">
@@ -31,7 +31,7 @@
     <bag name="users" table="GROUP_USER_REF" inverse="false" lazy="true" fetch="select" cascade="all">
       <cache usage="nonstrict-read-write" />
       <key column="GROUP_ID" not-null="true" />
-      <many-to-many class="User">
+      <many-to-many class="org.jtalks.poulpe.model.entity.User">
         <column name="USER_ID" not-null="true" />
       </many-to-many>
     </bag>
