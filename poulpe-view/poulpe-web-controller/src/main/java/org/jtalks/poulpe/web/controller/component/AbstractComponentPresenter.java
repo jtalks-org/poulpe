@@ -32,7 +32,7 @@ public abstract class AbstractComponentPresenter {
     protected ComponentService componentService;
 
     protected DialogManager dialogManager;
-	protected WindowManager windowManager;
+    protected WindowManager windowManager;
 
     /**
      * Returns the service instance which is used for manipulating with stored components.
@@ -53,12 +53,12 @@ public abstract class AbstractComponentPresenter {
     /**
      * Returns the window manager which is used for controlling windows.
      * 
-	 * @return the current window manager instance
-	 */
-	public WindowManager getWindowManager() {
-		return windowManager;
-	}
-	
+     * @return the current window manager instance
+     */
+    public WindowManager getWindowManager() {
+        return windowManager;
+    }
+    
     /**
      * Sets the service instance which is used for manipulating with stored components.
      * @param componentService the new value of the service instance
@@ -75,13 +75,13 @@ public abstract class AbstractComponentPresenter {
         this.dialogManager = dialogManager;
     }
 
-	/**
-	 * Sets window manager.
-	 *
-	 * @param windowManager the new window manager
-	 */
-	public void setWindowManager(WindowManager windowManager) {
-	    this.windowManager = windowManager;
-	}
+    /**
+     * Sets window manager.
+     *
+     * @param windowManager the new window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
 
 }

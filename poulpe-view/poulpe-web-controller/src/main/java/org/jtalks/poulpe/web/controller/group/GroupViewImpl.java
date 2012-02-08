@@ -68,7 +68,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
         groupsListbox.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
             @Override
             public void onEvent(Event event) throws Exception {
-        		enableRemoveAndEditButtons();
+                enableRemoveAndEditButtons();
             }
 
         });
@@ -132,13 +132,13 @@ public class GroupViewImpl extends Window implements AfterCompose {
     }
 
     private void enableRemoveAndEditButtons() {
-    	((Button) getFellow("removeButton")).setDisabled(false);
-    	((Button) getFellow("editMembersButton")).setDisabled(false);
+        ((Button) getFellow("removeButton")).setDisabled(false);
+        ((Button) getFellow("editMembersButton")).setDisabled(false);
     }
 
     private void disableRemoveAndEditButtons() {
-    	((Button) getFellow("removeButton")).setDisabled(true);
-    	((Button) getFellow("editMembersButton")).setDisabled(true);
+        ((Button) getFellow("removeButton")).setDisabled(true);
+        ((Button) getFellow("editMembersButton")).setDisabled(true);
     }
 
 }

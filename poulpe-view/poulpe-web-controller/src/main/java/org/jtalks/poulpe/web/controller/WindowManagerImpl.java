@@ -165,7 +165,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     @Override
     public void open(String pathToZulFile) {
         if (currentWindow != null) {
-        	// detach only if window belongs to current desktop
+            // detach only if window belongs to current desktop
             if (Executions.getCurrent().getDesktop().equals(currentWindow.getDesktop())) {
                 currentWindow.detach();
             }

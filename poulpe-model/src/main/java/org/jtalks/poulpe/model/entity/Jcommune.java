@@ -65,7 +65,7 @@ public class Jcommune extends Component {
     private static void checkComponentType(ComponentType componentType) {
         if (componentType != ComponentType.FORUM) {
             throw new IllegalArgumentException("Can't convert component to Forum because componentType == FORUM " +
-            		"is expected, got " + componentType);
+                    "is expected, got " + componentType);
         }
     }
 
