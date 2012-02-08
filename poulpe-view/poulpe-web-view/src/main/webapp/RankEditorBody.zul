@@ -1,0 +1,21 @@
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <grid>
+    <columns>
+      <column width="120px"/>
+      <column/>
+    </columns>
+    <rows>
+      <row>Rank Name 
+        <textbox value="@bind(vm.selected.rankName)" /> 
+      </row>
+      <row>Auto Assigned 
+        <checkbox checked="@bind(vm.selected.autoAssigned)" /> 
+      </row>
+      <row>Post count 
+        <intbox value="@bind(vm.selected.postCount)" disabled="@load(not vm.selected.autoAssigned)"/>
+      </row>
+    </rows>
+  </grid>
+  <button onClick="@command('save')" label="Save" sclass="rank.editor.saveButton" />
+</zk>

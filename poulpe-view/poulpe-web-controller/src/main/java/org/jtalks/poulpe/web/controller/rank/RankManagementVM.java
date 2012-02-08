@@ -46,7 +46,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
-    private String title;
     
     private ValidationFailureHandler handler;
 
@@ -102,8 +101,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
-    	title = "Edit rank";
-        openEditor();
+    	openEditorModifier();
     }
 
     /**
@@ -112,7 +110,9 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     @Command
     public void dialogClosed() {
         //TODO: add code to close dialog
-        getCurrentWindow("RankEditorWindow").setVisible(false);
+        Component window = getCurrentWindow("RankEditorCreatorWindow");
+        window = (window != null) ? window : getCurrentWindow("RankEditorModifierWindow"); 
+        window.setVisible(false);
     }
 
     /**
@@ -152,8 +152,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     @Command
     public void newItem() {
         selected = new Rank("new", 100);
-        title = "Create rank";
-        openEditor();
+        openEditorCreator();
     }
 
     /**
@@ -191,10 +190,13 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         return list;
     }
 
-    private void openEditor() {
-        Executions.getCurrent().createComponents("/RankEditor.zul", getCurrentWindow("rankManagementWindow"), null);
+    private void openEditorModifier() {
+        Executions.getCurrent().createComponents("/RankEditorModifier.zul", getCurrentWindow("rankManagementWindow"), null);
     }
 
+    private void openEditorCreator() {
+        Executions.getCurrent().createComponents("/RankEditorCreator.zul", getCurrentWindow("rankManagementWindow"), null);
+    }
     /**
      * Execute Delete operation.
      */
@@ -213,21 +215,5 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
     }
-
-    /**
-     * Returns the title of the rank editor window.
-     * @return the rank editor window title
-     */
-	public String getTitle() {
-		return title;
-	}
-
-	/**
-     * Sets the title of the rank editor window.
-     * @param title the title to set
-     */
-	public void setTitle(String title) {
-		this.title = title;
-	}
 
 }
