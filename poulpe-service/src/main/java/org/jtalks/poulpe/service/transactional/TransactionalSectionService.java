@@ -16,13 +16,11 @@ package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
  * 

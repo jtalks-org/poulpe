@@ -17,9 +17,7 @@ package org.jtalks.poulpe.model.entity;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.ArrayList;
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.Branch;
 import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

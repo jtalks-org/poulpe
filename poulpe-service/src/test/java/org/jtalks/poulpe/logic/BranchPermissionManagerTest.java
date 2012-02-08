@@ -34,7 +34,6 @@ import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 /**
  * @author stanislav bashkirtsev

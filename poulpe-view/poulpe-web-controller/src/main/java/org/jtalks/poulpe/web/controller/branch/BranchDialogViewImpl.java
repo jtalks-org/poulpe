@@ -15,13 +15,10 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
-import java.util.Map;
 
-import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
@@ -35,9 +32,6 @@ import org.zkoss.zul.ComboitemRenderer;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
-import org.zkoss.zul.impl.InputElement;
-
-import com.google.common.collect.ImmutableMap;
 
 /**
  * This class is implementation view for single branch

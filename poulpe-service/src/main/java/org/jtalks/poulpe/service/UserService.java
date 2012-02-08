@@ -17,7 +17,6 @@ package org.jtalks.poulpe.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.user.LastLoginTimeServiceMixin;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.User;

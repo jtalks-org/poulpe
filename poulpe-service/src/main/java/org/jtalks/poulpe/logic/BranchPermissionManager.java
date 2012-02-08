@@ -14,8 +14,11 @@
  */
 package org.jtalks.poulpe.logic;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
@@ -23,12 +26,6 @@ import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.annotation.Nonnull;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions related to the
