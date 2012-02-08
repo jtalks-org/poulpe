@@ -13,11 +13,4 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-/**
- *  This package contains {@link org.jtalks.poulpe.validator.Validator} interface and its basic
- *  implementation.
- */
-package org.jtalks.poulpe.validator;
-
-// TODO: think of moving it to somewhere else
-// this module doesn't seem the best place for validator
+package org.jtalks.common.model.dao.hibernate;
