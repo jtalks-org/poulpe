@@ -12,12 +12,12 @@ import org.zkoss.zul.Treeitem;
 /**
  * Listener for Drag'n'Drop event.
  */
-class DragAndDropEventListener extends GenericEventListener<Event> {
+class BranchDragAndDropEventListener extends GenericEventListener<Event> {
 
     private static final long serialVersionUID = 1L;
     private final SectionPresenter presenter;
 
-    public DragAndDropEventListener(SectionPresenter presenter) {
+    public BranchDragAndDropEventListener(SectionPresenter presenter) {
         this.presenter = presenter;
     }
 
