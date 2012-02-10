@@ -40,14 +40,18 @@ class TreeRowAppenderBranchSectionVisitor implements BranchSectionVisitor {
     @Override
     public void visitSection(PoulpeSection section) {
         treeRow.appendChild(new Treecell(section.getName()));
+        treeRow.setDraggable("section");
+        treeRow.setDroppable("section");
+        
+        treeRow.addEventListener("onDrop", new SectionDragAndDropEventListener(presenter));
     }
 
     @Override
     public void visitBranch(PoulpeBranch branch) {
         treeRow.appendChild(new Treecell(branch.getName()));
-        treeRow.setDraggable("true");
-        treeRow.setDroppable("true");
-
-        treeRow.addEventListener("onDrop", new DragAndDropEventListener(presenter));
+        treeRow.setDraggable("branch");
+        treeRow.setDroppable("branch");
+        
+        treeRow.addEventListener("onDrop", new BranchDragAndDropEventListener(presenter));
     }
 }
