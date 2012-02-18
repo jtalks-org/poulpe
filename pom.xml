@@ -14,7 +14,6 @@
     <module>poulpe-model</module>
     <module>poulpe-service</module>
     <module>poulpe-view</module>
-    <module>jtalks-common-security</module>
   </modules>
 
   <repositories>
@@ -339,6 +338,11 @@
         <version>${common.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.jtalks.common</groupId>
+        <artifactId>jtalks-common-security</artifactId>
+        <version>${common.version}</version>
+      </dependency>
+      <dependency>
         <groupId>ru.javatalks.utils</groupId>
         <artifactId>core-utils</artifactId>
         <version>0.1</version>
@@ -459,7 +463,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zk.version>6.0.0.FL.20111221</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.9</common.version>
+    <common.version>0.12-SNAPSHOT</common.version>
   </properties>
 
   <distributionManagement>

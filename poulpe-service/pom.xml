@@ -23,7 +23,7 @@
       <artifactId>poulpe-model</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.jtalks.poulpe</groupId>
+      <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-security</artifactId>
     </dependency>
     <dependency>
