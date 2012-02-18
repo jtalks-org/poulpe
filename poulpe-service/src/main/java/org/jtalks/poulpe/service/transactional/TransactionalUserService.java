@@ -41,8 +41,7 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
 
     @Override
     public void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason) {
-//        checkUsers(users);
-        checkUsers(null);
+        checkUsers(users);
 
         for (User user : users) {
             user.setPermanentBan(permanentBan);
