@@ -45,7 +45,6 @@ import java.util.regex.Pattern;
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
  * groups can do them.
- *
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManagementVm {
@@ -126,16 +125,6 @@ public class BranchPermissionManagementVm {
     @Command
     public void moveAllFromAdded() {
         groupsDialogVm.moveAllFromAddedGroups();
-    }
-
-    private void updateBlock(JtalksPermission permission, boolean allowRow, List<Group> groups) {
-        BranchPermissionManagementBlock block = blocks.get(permission.getName());
-        if (allowRow) {
-            block = block.setAllowRow(BranchPermissionRow.newAllowRow(groups));
-        } else {
-            block = block.setRestrictRow(BranchPermissionRow.newRestrictRow(groups));
-        }
-        blocks.put(permission.getName(), block);
     }
 
     private void initDataForView() {

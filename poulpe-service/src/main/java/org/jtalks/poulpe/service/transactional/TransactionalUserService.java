@@ -14,27 +14,26 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.Collection;
-import java.util.List;
-
 import org.joda.time.DateTime;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 
+import java.util.Collection;
+import java.util.List;
+
 /**
  * User service class, contains methods needed to manipulate with {@code User}
  * persistent entity.
- *
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
- *
  */
 public class TransactionalUserService extends AbstractTransactionalEntityService<User, UserDao> implements UserService {
 
     /**
      * Create an instance of user entity based service.
+     * @param userDao a DAO providing persistence operations over {@link User} entities
      */
     public TransactionalUserService(UserDao userDao) {
         this.dao = userDao;
@@ -42,7 +41,8 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
 
     @Override
     public void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason) {
-        checkUsers(users);
+//        checkUsers(users);
+        checkUsers(null);
 
         for (User user : users) {
             user.setPermanentBan(permanentBan);
@@ -55,6 +55,9 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
 
     private void checkUsers(Collection<User> users) {
         if (users == null) {
+            System.out.println("NULL");
+            System.out.println("NULL");
+            System.out.println("NULL");
             throw new IllegalArgumentException("Users can't be null");
         }
     }
@@ -98,6 +101,10 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
 
     @Override
     public void updateLastLoginTime(org.jtalks.common.model.entity.User user) {
+        if (!(user instanceof User)) {
+
+            return;
+        }
         user.updateLastLoginTime();
         updateUser((User) user);
     }

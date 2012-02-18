@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jtalks.poulpe.model.entity.User;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
@@ -35,6 +32,9 @@ import org.zkoss.zul.Listitem;
 import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("serial")
 public class UserBanningViewImpl extends Window implements UserBanningView, AfterCompose {
@@ -130,8 +130,6 @@ public class UserBanningViewImpl extends Window implements UserBanningView, Afte
     public void onClick$submitButton() {
         if (validateBanForm()) {
             presenter.banBasters(usersToBanList, permanent.isChecked(), banLength.getValue(), banReason.getValue());
-        } else {
-
         }
     }
 

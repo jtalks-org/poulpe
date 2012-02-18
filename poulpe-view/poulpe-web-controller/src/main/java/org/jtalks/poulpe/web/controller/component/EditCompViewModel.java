@@ -16,9 +16,7 @@ import java.util.Map;
 
 /**
  * ViewModel class for EditComponent View
- *
  * @author Vahluev Vyacheslav
- *
  */
 public class EditCompViewModel extends AbstractComponentPresenter {
 
@@ -48,7 +46,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     private String componentName;
 
     /**
-     *  Type of the component
+     * Type of the component
      */
     private String componentType;
     /**
@@ -64,9 +62,10 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Web-form validation messages
      */
     private Map<String, String> validationMessages =
-            new HashMap<String,String>();
+            new HashMap<String, String>();
 
     //    constructor
+
     /**
      * Default constructor. Inits the data on the form.
      * @param componentService service we use to access components
@@ -79,7 +78,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Inits the data on the form.
      */
-    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size" })
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size"})
     public void initData() {
         currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
@@ -96,6 +95,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
     //    service functions
+
     /**
      * Returns all components.
      * @return the list of the components
@@ -105,12 +105,13 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
     //    commands
+
     /**
      * Saves a component. Shows validation messages, if
      * something is wrong
      */
     @Command()
-    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size" })
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size"})
     public void save() {
         boolean correct = true;
         validationMessages.clear();
@@ -140,7 +141,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({ "componentName", "name", "description", "caption", "post_preview_size", "validationMessages" })
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size", "validationMessages"})
     public void cancel() {
         initData();
         validationMessages.clear();
@@ -148,13 +149,13 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
     //    helpers
+
     /**
      * Returns string value of the field or
      * empty string if string is null
-     *
      * @param value value of the string
      * @return string value of the field or
-     * empty string if string is null
+     *         empty string if string is null
      */
     public String valueOf(String value) {
         return (value == null) ? "" : value;
@@ -162,18 +163,17 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Check if input data is correct
-     *
      * @return true if input is correct, else otherwise
      */
     public boolean checkCorrect() {
         boolean correct = true;
 
-        if (name.equals("") || name == null) {
+        if (name == null || name.equals("")) {
             validationMessages.put("name", Labels.getLabel(EMPTY_TITLE));
             correct = false;
         }
 
-        if (componentName.equals("") || componentName == null) {
+        if (componentName == null || componentName.equals("")) {
             validationMessages.put("componentName", Labels.getLabel(EMPTY_NAME));
             correct = false;
         }
@@ -183,6 +183,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
 
     //    getters & setters for web-form
+
     /**
      * Returns the title for current component
      * @return name value from web-form
@@ -240,6 +241,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     }
 
 //    getter and setter for current component we edit
+
     /**
      * Gets the current component we edit
      * @return current component

@@ -14,17 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import java.util.List;
-
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
+import java.util.List;
+
 /**
  * Presenter class for 'ban user' action
- * 
  * @author costa
- * 
  */
 public class UserBanningPresenter {
 
@@ -34,6 +32,7 @@ public class UserBanningPresenter {
 
     /**
      * Method to be invoked when view is initialized
+     * @param view the view for banning users
      */
     public void initView(UserBanningView view) {
         this.view = view;
@@ -46,7 +45,7 @@ public class UserBanningPresenter {
     }
 
     public void banBasters(final List<User> usersToBan, final boolean permanent, final Integer daysOfBan,
-            final String reason) {
+                           final String reason) {
         dialogManager.confirmBan(usersToBan, reason, new BanningDialog(usersToBan, permanent, daysOfBan, reason));
     }
 

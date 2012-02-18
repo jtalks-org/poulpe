@@ -11,11 +11,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
  * Responsible for loading properties for various types of components
- *
  * @author Vahluev Vyacheslav
  */
 public class PropertyLoader {
@@ -26,7 +26,6 @@ public class PropertyLoader {
 
     /**
      * Gets the path to the directory with properties files
-     *
      * @return the String representation of path
      */
     public String getPathToProperties() {
@@ -35,7 +34,6 @@ public class PropertyLoader {
 
     /**
      * Sets the path to the directory with properties files
-     *
      * @param pathToProperties new path to set
      */
     public void setPathToProperties(String pathToProperties) {
@@ -46,7 +44,6 @@ public class PropertyLoader {
 
     /**
      * This method loads default properties for the component.
-     *
      * @param component component to load properties for
      */
     public void loadDefaults(Component component) {
@@ -68,17 +65,16 @@ public class PropertyLoader {
 
     /**
      * Converts {@link Properties} to List of {@link Property}
-     *
      * @param properties properties to convert
      * @return List of {@link Property}
      */
     public List<Property> convertToList(Properties properties) {
         List<Property> listProperties = new ArrayList<Property>();
 
-        for (Object property : properties.keySet()) {
+        for (Map.Entry<Object, Object> property : properties.entrySet()) {
             String
-                    name = property.toString(),
-                    value = properties.get(property).toString();
+                    name = property.getKey().toString(),
+                    value = property.getValue().toString();
             listProperties.add(new Property(name, value));
         }
 

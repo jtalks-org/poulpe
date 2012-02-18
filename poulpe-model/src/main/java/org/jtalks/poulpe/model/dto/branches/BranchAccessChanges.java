@@ -37,16 +37,14 @@ public class BranchAccessChanges {
 
     /**
      * Get newly added permissions
-     *
      * @return Group[] with newly permissions
      */
     public Group[] getNewlyAddedGroupsAsArray() {
-        return newlyAddedGroups.toArray(new Group[]{});
+        return newlyAddedGroups.toArray(new Group[newlyAddedGroups.size()]);
     }
 
     /**
      * Set newly added permissions
-     *
      * @param newlyAddedGroups - list of newly added permissions
      */
     public void setNewlyAddedGroups(Collection<Group> newlyAddedGroups) {
@@ -55,7 +53,6 @@ public class BranchAccessChanges {
 
     /**
      * Get removed permissions
-     *
      * @return Group[] with removed permissions
      */
     public List<Group> getRemovedGroups() {
@@ -64,16 +61,14 @@ public class BranchAccessChanges {
 
     /**
      * Get removed permissions
-     *
      * @return Group[] with removed permissions
      */
     public Group[] getRemovedGroupsAsArray() {
-        return removedGroups.toArray(new Group[]{});
+        return removedGroups.toArray(new Group[removedGroups.size()]);
     }
 
     /**
      * Set removed permissions
-     *
      * @param removedGroups - list with removed permissions
      */
     public void setRemovedGroups(Collection<Group> removedGroups) {
@@ -82,7 +77,6 @@ public class BranchAccessChanges {
 
     /**
      * Get permission
-     *
      * @return {@link JtalksPermission}
      */
     public JtalksPermission getPermission() {
@@ -91,7 +85,6 @@ public class BranchAccessChanges {
 
     /**
      * Check {@link BranchAccessChanges} is empty
-     *
      * @return {@code true} if empty, else return {@code false}
      */
     public boolean isEmpty() {
