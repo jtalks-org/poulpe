@@ -14,32 +14,33 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.model.dao.GroupDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-
-import org.mockito.MockitoAnnotations;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertTrue;
 
 public class TransactionalGroupServiceTest {
     private TransactionalGroupService service;
     @Mock
     private GroupDao dao;
-    @Mock 
+    @Mock
     EntityValidator entityValidator;
     private List<Group> list, listByName;
     final private String name = "name";
@@ -58,7 +59,7 @@ public class TransactionalGroupServiceTest {
     @Test
     public void deleteGroup() {
         service.deleteGroup(group);
-        verify(dao).delete(group.getId());
+        verify(dao).delete(group);
     }
 
     @Test
@@ -82,9 +83,9 @@ public class TransactionalGroupServiceTest {
         givenConstraintsViolations();
         service.saveGroup(group);
     }
-    
+
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        Set<ValidationError> dontCare = Collections.<ValidationError>emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
     }
 }

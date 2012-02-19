@@ -14,11 +14,6 @@
  */
 package org.jtalks.common.model.dao.hibernate;
 
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.dao.GroupDao;
@@ -33,7 +28,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+import java.util.List;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertNull;
+import static org.testng.Assert.assertTrue;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -64,7 +68,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
 
         session.evict(testGroup);
         Group savedGroup = (Group) session.get(Group.class, testGroup.getId());
-        
+
         assertReflectionEquals(testGroup, savedGroup);
     }
 
@@ -110,6 +114,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     @Test
     public void testGetMatchedByNameWhenNameIsNull() {
         List<Group> listAll = dao.getAll();
+        @SuppressWarnings({"NullableProblems"})
         List<Group> listReturned = dao.getMatchedByName(null);
         assertEquals(listAll, listReturned);
     }

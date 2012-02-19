@@ -14,16 +14,14 @@
  */
 package org.jtalks.common.model.dao.hibernate;
 
-import java.util.List;
-
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
+
+import java.util.List;
 
 /**
  * Hibernate implementation of {@link GroupDao}
- * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
@@ -43,12 +41,19 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
         if (name == null) {
             return getAll();
         }
-        
+
         Query query = getSession().createQuery("from Group g where g.name like ?");
         query.setString(0, "%" + name + "%");
-        
-        @SuppressWarnings("unchecked")
-        List<Group> list = query.list();
-        return list;
+
+        return query.list();
+    }
+
+    @Override
+    public void delete(Group pGroup) {
+        getSession().update(pGroup);
+
+        pGroup.getUsers().clear();
+        saveOrUpdate(pGroup);
+        super.delete(pGroup.getId());
     }
 }

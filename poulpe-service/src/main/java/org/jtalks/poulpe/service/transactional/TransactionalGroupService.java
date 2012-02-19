@@ -14,28 +14,27 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
 import org.jtalks.common.model.dao.GroupDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.service.GroupService;
 
+import java.util.List;
+
 
 /**
- * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
         implements GroupService {
-     private final EntityValidator validator;
+    private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
-     *
-     * @param branchDao - data access object, which should be able do all CRUD operations.
+     * @param groupDao  - data access object, which should be able do all CRUD operations.
+     * @param validator - an entity validator
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
         this.dao = groupDao;
@@ -49,7 +48,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     public List<Group> getAll() {
         return dao.getAll();
     }
-    
+
     @Override
     public List<Group> getAllMatchedByName(String name) {
         return dao.getMatchedByName(name);
@@ -60,8 +59,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      */
     @Override
     public void deleteGroup(Group group) {
-          // TODO: check returned value? 
-          dao.delete(group.getId());
+        // TODO: check returned value?
+        if (group == null) {
+            throw new IllegalArgumentException();
+        }
+        dao.delete(group);
     }
 
     /**
@@ -72,8 +74,6 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         validator.throwOnValidationFailure(selectedGroup);
         dao.saveOrUpdate(selectedGroup);
     }
-    
-    
-  
-  
+
+
 }

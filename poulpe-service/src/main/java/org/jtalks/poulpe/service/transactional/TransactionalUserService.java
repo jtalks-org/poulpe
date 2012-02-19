@@ -54,9 +54,6 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
 
     private void checkUsers(Collection<User> users) {
         if (users == null) {
-            System.out.println("NULL");
-            System.out.println("NULL");
-            System.out.println("NULL");
             throw new IllegalArgumentException("Users can't be null");
         }
     }
@@ -101,7 +98,6 @@ public class TransactionalUserService extends AbstractTransactionalEntityService
     @Override
     public void updateLastLoginTime(org.jtalks.common.model.entity.User user) {
         if (!(user instanceof User)) {
-
             return;
         }
         user.updateLastLoginTime();
