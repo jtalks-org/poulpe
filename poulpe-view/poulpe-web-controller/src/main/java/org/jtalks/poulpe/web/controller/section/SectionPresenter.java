@@ -121,12 +121,14 @@ public class SectionPresenter {
     }
 
     private BranchSectionVisitor deleteVisitor = new BranchSectionVisitor() {
+        /** {@inheritDoc} */
         @Override
         public void visitSection(PoulpeSection section) {
             deleteSectionDialogPresenter.show(section);
             updateView();
         }
-
+        
+        /** {@inheritDoc} */
         @Override
         public void visitBranch(PoulpeBranch branch) {
             dialogManager.confirmDeletion(branch.getName(), perfomableFactory.deleteBranch(branch));
@@ -231,12 +233,37 @@ public class SectionPresenter {
 
     /**
      * Save section
-     * 
      * @param section the section to save
      */
     public void saveSection(PoulpeSection section) {
         sectionService.saveSection(section);
     }
+    
+    /**
+     * Opens dialog for moderating a selected branch
+     */
+    public void openModerationWindow() {
+        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
+        selectedObject.apply(openModeratorDialogVisitor);
+    }
+    
+    /**
+     * Visitor which opens moderation dialog only for branches
+     */
+    private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
+        /** {@inheritDoc} */
+        @Override
+        public void visitSection(PoulpeSection section) {
+            // do nothing because moderators windows is not applicable for
+            // sections
+        }
+
+        /** {@inheritDoc} */
+        @Override
+        public void visitBranch(PoulpeBranch branch) {
+            openModerationDialog(branch);
+        }
+    };
 
     /**
      * @param entityValidator the entityValidator to set
@@ -270,30 +297,19 @@ public class SectionPresenter {
         this.currentSectionTreeComponent = currentSectionTreeComponent;
     }
 
+    /**
+     * @param perfomableFactory instance to set
+     */
     public void setPerfomableFactory(PerfomableFactory perfomableFactory) {
         this.perfomableFactory = perfomableFactory;
     }
 
+    /**
+     * @param deleteSectionDialogPresenter delete dialog presenter
+     */
     public void setDeleteSectionDialogPresenter(DeleteSectionDialogPresenter deleteSectionDialogPresenter) {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
     }
 
-    public void openModerationWindow() {
-        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
-        selectedObject.apply(openModeratorDialogVisitor);
-    }
-
-    private BranchSectionVisitor openModeratorDialogVisitor = new BranchSectionVisitor() {
-        @Override
-        public void visitSection(PoulpeSection section) {
-            // do nothing because moderators windows is not applicable for
-            // sections
-        }
-
-        @Override
-        public void visitBranch(PoulpeBranch branch) {
-            openModerationDialog(branch);
-        }
-    };
 
 }
