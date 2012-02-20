@@ -61,7 +61,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView, Afte
 
         userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
             @Override
-            public void render(Comboitem item, User user) throws Exception {
+            public void render(Comboitem item, User user, int index) throws Exception {
                 item.setLabel(user.getUsername());
                 item.setValue(user);
             }
@@ -69,7 +69,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView, Afte
 
         usersToBan.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, User user) throws Exception {
+            public void render(Listitem item, User user, int index) throws Exception {
                 Listcell cell_1 = new Listcell(user.getUsername());
                 Listcell cell_2 = new Listcell(user.getEmail());
                 Listcell cell_3 = new Listcell("NOT IMPLEMENTED YET");

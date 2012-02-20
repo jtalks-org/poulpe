@@ -16,16 +16,17 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Section;
 import org.zkoss.zul.DefaultTreeNode;
 
 /**
+ * Tree node for displaying {@linkplain Section sections} and {@linkplain Branch branches}
+ * 
  * @author Konstantin Akimov
- * */
+ */
 public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
 
-    /**
-     * 
-     */
     private static final long serialVersionUID = -3198582085335476694L;
 
     /**

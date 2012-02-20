@@ -59,7 +59,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      * */
     private static ListitemRenderer<PoulpeBranch> branchRenderer = new ListitemRenderer<PoulpeBranch>() {
         @Override
-        public void render(Listitem item, PoulpeBranch branch) {
+        public void render(Listitem item, PoulpeBranch branch, int index) {
             Listcell cell = new Listcell();
             Label name = new Label(branch.getName());
             Label desc = new Label(branch.getDescription());

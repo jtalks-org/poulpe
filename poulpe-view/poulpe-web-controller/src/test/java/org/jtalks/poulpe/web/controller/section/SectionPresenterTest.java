@@ -105,14 +105,14 @@ public class SectionPresenterTest {
         presenter.openEditDialog(currentSectionTreeComponent);
 
         verify(view, never()).openEditBranchDialog(any(PoulpeBranch.class));
-        verify(view, never()).openEditSectionDialog(anyString(), anyString());
+        verify(view, never()).openEditSectionDialog(null);
     }
 
     @Test
     public void testOpenEditSectionDialog() {
         givenSectionSelected();
         presenter.openEditDialog(currentSectionTreeComponent);
-        verify(view).openEditSectionDialog(section.getName(), section.getDescription());
+        verify(view).openEditSectionDialog(null);
     }
 
     @Test

@@ -61,7 +61,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
 
     static class SectionComboboxItemRenderer implements ComboitemRenderer<PoulpeSection> {
         @Override
-        public void render(Comboitem item, PoulpeSection section) throws Exception {
+        public void render(Comboitem item, PoulpeSection section, int index) throws Exception {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }

@@ -79,7 +79,7 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListView, 
     private void initializeTopicTypeListbox() {
         topicTypeListbox.setItemRenderer(new ListitemRenderer<TopicType>() {
             @Override
-            public void render(Listitem item, final TopicType topicType) throws Exception {
+            public void render(Listitem item, final TopicType topicType, int index) throws Exception {
                 Listcell cellWithName  = new Listcell();
                 Listcell cellWithDesc  = new Listcell();
                 cellWithName.setLabel(topicType.getTitle());

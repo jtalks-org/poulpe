@@ -31,6 +31,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
+ * Zk-based implementation of {@link SectionView}
  * 
  * @author unascribed
  * @author Alexey Grigorev
@@ -50,6 +51,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     private boolean forEditing = false;
 
+    /** {@inheritDoc} */
     @Override
     public void afterCompose() {
         zkHelper.wireByConvention();
@@ -58,16 +60,19 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         hide();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void validationFailure(ValidationResult result) {
         handler.validationFailure(result);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showSection(PoulpeSection section) {
         addSection(section);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void showSections(List<PoulpeSection> sections) {
         removeOldSections();
@@ -91,10 +96,12 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         zkHelper.addComponent(new ZkSectionTreeComponent(section, presenter));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void removeSection(PoulpeSection section) {
     }
 
+    /** {@inheritDoc} */
     @Override
     public void openNewSectionDialog() {
         forEditing = false;
@@ -107,9 +114,9 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     }
 
     @Override
-    public void openEditSectionDialog(String name, String description) {
+    public void openEditSectionDialog(PoulpeSection section) {
         forEditing = true;
-        setData(name, description);
+        setData(section.getName(), section.getDescription());
         show();
     }
 
@@ -144,6 +151,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         editSectionDialog.setVisible(false);
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeEditSectionDialog() {
         hide();
@@ -162,6 +170,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         return editSectionDialog$sectionDescription.getText();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void closeDialogs() {
         closeEditSectionDialog();
@@ -247,10 +256,18 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         this.presenter = presenter;
     }
 
+    /**
+     * Package-private for DI in tests
+     * @param handler validator instance
+     */
     void setValidationFailureHandler(ValidationFailureHandler handler) {
         this.handler = handler;
     }
 
+    /**
+     * Package-private for DI in tests
+     * @param zkHelper helper instance
+     */
     void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
     }

@@ -58,7 +58,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
 
         groupsListbox.setItemRenderer(new ListitemRenderer<Group>() {
             @Override
-            public void render(Listitem listItem, Group group) throws Exception {
+            public void render(Listitem listItem, Group group, int index) throws Exception {
                 new Listcell(group.getName()).setParent(listItem);
                 new Listcell("Not specified yet").setParent(listItem);
                 listItem.setId(String.valueOf(group.getId()));

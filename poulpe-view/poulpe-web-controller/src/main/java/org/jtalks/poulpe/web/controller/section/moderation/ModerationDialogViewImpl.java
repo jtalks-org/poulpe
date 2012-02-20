@@ -54,7 +54,7 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
 
     private static ComboitemRenderer<User> userComboboxItemRenderer = new ComboitemRenderer<User>() {
         @Override
-        public void render(Comboitem item, User user) throws Exception {
+        public void render(Comboitem item, User user, int index) throws Exception {
             item.setLabel(user.getUsername());
             item.setValue(user);
         }
@@ -62,7 +62,7 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
     
     private static ListitemRenderer<User> userListItemRenderer = new ListitemRenderer<User>() {
         @Override
-        public void render(Listitem item, User user) throws Exception {
+        public void render(Listitem item, User user, int index) throws Exception {
             item.appendChild(new Listcell(user.getUsername()));
             item.appendChild(new Listcell(user.getEmail()));
             item.appendChild(new Listcell("NOT IMPLEMENTED YET"));

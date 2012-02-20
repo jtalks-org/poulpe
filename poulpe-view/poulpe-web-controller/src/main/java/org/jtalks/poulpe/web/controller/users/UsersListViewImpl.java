@@ -74,7 +74,7 @@ private static final long serialVersionUID = 1L;
     private void initializeUsersListbox() {
         usersListbox.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, final User user) throws Exception {
+            public void render(Listitem item, final User user, int index) throws Exception {
                 item.setValue(user);
                 new Listcell(user.getUsername()).setParent(item);
                 new Listcell(user.getEmail()).setParent(item);

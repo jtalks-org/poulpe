@@ -31,6 +31,7 @@ import org.zkoss.zul.ListitemRenderer;
  * 
  * @author Dmitriy Sukharev
  * @author Alexey Grigorev
+ * 
  * @see ZkListItemRenderer#ZkListItemRenderer(ZkListView)
  */
 class ZkListItemRenderer implements ListitemRenderer<Component> {
@@ -55,7 +56,7 @@ class ZkListItemRenderer implements ListitemRenderer<Component> {
     }
 
     @Override
-    public void render(Listitem listItem, final Component component) {
+    public void render(Listitem listItem, final Component component, int index) {
         listItem.appendChild(boldName(component));
         listItem.appendChild(description(component));
         listItem.appendChild(componentType(component));
@@ -83,5 +84,4 @@ class ZkListItemRenderer implements ListitemRenderer<Component> {
     private Listcell componentType(Component component) {
         return new Listcell(component.getComponentType().toString());
     }
-
-};
+}

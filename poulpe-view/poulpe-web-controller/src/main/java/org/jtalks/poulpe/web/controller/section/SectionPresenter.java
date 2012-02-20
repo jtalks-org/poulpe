@@ -48,11 +48,14 @@ public class SectionPresenter {
 
     private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
+    /**
+     * Creates actions to be executed for creating, deleting, editing Sections and Branches
+     * after user presses 'YES' in dialog manager
+     */
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
 
     /**
      * initialize main view SectionView instance
-     * 
      * @param view instance
      */
     public void initView(SectionView view) {
@@ -97,7 +100,7 @@ public class SectionPresenter {
     private BranchSectionVisitor editVisitor = new BranchSectionVisitor() {
         @Override
         public void visitSection(PoulpeSection section) {
-            sectionView.openEditSectionDialog(section.getName(), section.getDescription());
+            sectionView.openEditSectionDialog(section);
         }
 
         @Override

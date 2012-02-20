@@ -96,7 +96,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private static ComboitemRenderer<PoulpeSection> sectionItemRenderer = new ComboitemRenderer<PoulpeSection>() {
 
         @Override
-        public void render(Comboitem item, PoulpeSection section) {
+        public void render(Comboitem item, PoulpeSection section, int index) {
             item.setLabel(section.getName());
             item.setDescription(section.getDescription());
         }

@@ -32,7 +32,7 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
     }
 
     @Override
-    public void render(Treeitem treeItem, ExtendedTreeNode<BranchSectionVisitable> node) throws Exception {
+    public void render(Treeitem treeItem, ExtendedTreeNode<BranchSectionVisitable> node, int index) throws Exception {
         BranchSectionVisitable data = node.getData();
 
         treeItem.setOpen(node.isExpanded());
@@ -48,10 +48,9 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
             for (Treecell treecell : treecells) {
                 data.apply(new TreeSellTitleSetterVisitor(treecell));
             }
-        }
-
+        }        
     }
-
+    
     private List<Treecell> findTreeCells(final Treeitem treeItem) {
         List<Treecell> treecells = new ArrayList<Treecell>();
 
@@ -89,4 +88,5 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
             treecell.setLabel(branch.getName());
         }
     }
+
 }

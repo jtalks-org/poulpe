@@ -16,7 +16,7 @@ public interface SectionView {
 
     void closeEditSectionDialog();
 
-    void openEditSectionDialog(String name, String description);
+    void openEditSectionDialog(PoulpeSection section);
 
     void closeDialogs();
 
