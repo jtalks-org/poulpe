@@ -129,7 +129,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
     }
 
     public Group getSelectedGroup() {
-        return (Group) groupsListboxModel.getElementAt(groupsListbox.getSelectedIndex());
+        return groupsListboxModel.getElementAt(groupsListbox.getSelectedIndex());
     }
 
     private void enableRemoveAndEditButtons() {

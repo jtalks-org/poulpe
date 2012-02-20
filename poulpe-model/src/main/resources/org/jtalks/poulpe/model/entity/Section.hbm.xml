@@ -38,10 +38,9 @@
      <!-- inverse is false because otherwise indexes are saved as null -->
       <!-- (even if you save branch and just after that section). -->
       <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
-      <cache usage="nonstrict-read-write" />
-      
-      <key column="SECTION_ID" foreign-key="FK_SECTION" />
-      <list-index column="POSITION" />
+        <cache usage="nonstrict-read-write" />
+        <key column="SECTION_ID" foreign-key="FK_SECTION" />
+        <list-index column="POSITION" />
         <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch" />
       </list>
    </subclass>

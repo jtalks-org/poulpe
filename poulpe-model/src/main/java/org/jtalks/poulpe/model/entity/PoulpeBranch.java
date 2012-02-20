@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.annotations.UniqueConstraint;
 
 /**
@@ -28,6 +29,7 @@ import org.jtalks.common.validation.annotations.UniqueConstraint;
 @UniqueConstraint
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     private List<User> moderators = new ArrayList<User>();
+    private List<Group> groups = new ArrayList<Group>();
 
     public PoulpeBranch() {
         super();
@@ -129,9 +131,46 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     public boolean isModeratedBy(User user) {
         return moderators.contains(user);
     }
+
+    /**
+     * Returns a list of user {@link Group}s of this branch.
+     * 
+     * @return list of user groups
+     */
+    public List<Group> getGroups() {
+        return groups;
+    }
+
+    /**
+     * Assigns a list of user {@link Group}s for this branch.
+     * 
+     * @param groups - list of user groups
+     */
+    public void setGroups(List<Group> groups) {
+        this.groups = groups;
+    }
+
+    /**
+     * Adds a user {@link Group} for this branch.
+     * 
+     * @param group - user group to add
+     */
+    public void addGroup(Group group) {
+        this.groups.add(group);
+    }
     
     @Override
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitBranch(this);
+    }
+
+    public void addOrUpdateGroup(Group group) {
+        for(int i = 0; i < groups.size(); i++) {
+            if(group.getId() == groups.get(i).getId()) {
+                groups.set(i, group);
+                return;
+            }
+        }
+        addGroup(group);        
     }
 }
