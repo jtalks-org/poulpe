@@ -125,7 +125,7 @@ public class ZkDeleteSectionDialogViewTest {
         SectionComboboxItemRenderer renderer = new SectionComboboxItemRenderer();
         Comboitem item = mock(Comboitem.class);
         
-        renderer.render(item, section);
+        renderer.render(item, section, 0);
         
         verify(item).setLabel(section.getName());
         verify(item).setDescription(section.getDescription());
