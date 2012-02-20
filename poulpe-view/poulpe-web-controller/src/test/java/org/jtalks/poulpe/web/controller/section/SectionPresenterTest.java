@@ -112,7 +112,7 @@ public class SectionPresenterTest {
     public void testOpenEditSectionDialog() {
         givenSectionSelected();
         presenter.openEditDialog(currentSectionTreeComponent);
-        verify(view).openEditSectionDialog(null);
+        verify(view).openEditSectionDialog(section);
     }
 
     @Test

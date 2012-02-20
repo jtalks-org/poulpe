@@ -55,6 +55,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     @Override
     public void afterCompose() {
         zkHelper.wireByConvention();
+        
         handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         presenter.initView(this);
         hide();
@@ -270,6 +271,18 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
      */
     void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
+    }
+    
+    /**
+     * Package-private for DI in tests
+     * @param editSectionDialog window which holds textboxes
+     * @param sectionName textbox with section name
+     * @param sectionDescription textbox with section description
+     */
+    void setUiElements(Window editSectionDialog, Textbox sectionName, Textbox sectionDescription) {
+        this.editSectionDialog = editSectionDialog;
+        this.editSectionDialog$sectionName = sectionName;
+        this.editSectionDialog$sectionDescription = sectionDescription;
     }
 
 }
