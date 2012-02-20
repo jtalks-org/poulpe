@@ -70,6 +70,11 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         init(section, presenter);
     }
 
+    /**
+     * Initializes the component, wires variables to corresponding ZUL file
+     * @param section to be holded to component
+     * @param presenter section presenter
+     */
     public void init(PoulpeSection section, SectionPresenter presenter) {
         zkInitializer.wireToZul(ZUL_REF);
         zkInitializer.wireByConvention();

@@ -132,7 +132,7 @@ public class PerfomableFactory {
         public void execute() {
             sectionService.saveSection(section);
             sectionView.showSection(section);
-            sectionView.closeNewSectionDialog();
+            sectionView.closeEditSectionDialog();
         }
     }
 

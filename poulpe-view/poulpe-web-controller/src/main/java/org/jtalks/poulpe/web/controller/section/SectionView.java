@@ -18,8 +18,6 @@ public interface SectionView {
 
     void openEditSectionDialog(PoulpeSection section);
 
-    void closeDialogs();
-
     @Deprecated
     void openNewBranchDialog();
 
@@ -27,8 +25,6 @@ public interface SectionView {
     void openEditBranchDialog(PoulpeBranch branch);
 
     void showSections(List<PoulpeSection> sections);
-
-    void closeNewSectionDialog();
 
     void openModerationDialog(PoulpeBranch branch);
 

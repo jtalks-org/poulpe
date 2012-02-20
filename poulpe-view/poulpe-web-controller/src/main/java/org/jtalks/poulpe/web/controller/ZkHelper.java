@@ -48,7 +48,13 @@ public class ZkHelper {
         Executions.createComponents(zul, component, null);
     }
 
-    public <E extends Component> List<Component> filterOut(Class<E> classToFilterOut) {
+    public <E extends Component> void removeAll(Class<E> cls) {
+        List<Component> childrenToSave = filterOut(cls);
+        removeAllChildComponents();
+        addComponents(childrenToSave);
+    }
+    
+    private <E extends Component> List<Component> filterOut(Class<E> classToFilterOut) {
         List<Component> forKeeping = new ArrayList<Component>();
         for (Component cmp : component.getChildren()) {
             if (!classToFilterOut.isInstance(cmp)) {
@@ -58,7 +64,7 @@ public class ZkHelper {
         return forKeeping;
     }
 
-    public void removeAllChildComponents() {
+    private void removeAllChildComponents() {
         component.getChildren().clear();
     }
 
@@ -69,5 +75,6 @@ public class ZkHelper {
     public void addComponents(List<Component> components) {
         component.getChildren().addAll(components);
     }
+
 
 }
