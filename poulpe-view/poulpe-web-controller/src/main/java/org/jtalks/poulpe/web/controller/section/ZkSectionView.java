@@ -71,15 +71,18 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     /** {@inheritDoc} */
     @Override
-    public void showSection(PoulpeSection section) {
-        addSection(section);
+    public void addSection(PoulpeSection section) {
+        zkHelper.addComponent(treeComponentFactory.sectionTreeComponent(section));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void showSections(List<PoulpeSection> sections) {
+    public void addSections(List<PoulpeSection> sections) {
         removeOldSections();
-        addSections(sections);
+        
+        for (PoulpeSection section : sections) {
+            addSection(section);
+        }
     }
 
     /**
@@ -87,22 +90,6 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
      */
     private void removeOldSections() {
         zkHelper.removeAll(ZkSectionTreeComponent.class);
-    }
-
-    /**
-     * @param sections to be added to view
-     */
-    private void addSections(List<PoulpeSection> sections) {
-        for (PoulpeSection section : sections) {
-            addSection(section);
-        }
-    }
-
-    /**
-     * @param section to be added to view
-     */
-    private void addSection(PoulpeSection section) {
-        zkHelper.addComponent(treeComponentFactory.sectionTreeComponent(section));
     }
 
     /** {@inheritDoc} */

@@ -76,7 +76,7 @@ public class SectionPresenterTest {
     
     @Test
     public void testInitView() {
-        verify(view).showSections(sections);
+        verify(view).addSections(sections);
     }
 
     @Test

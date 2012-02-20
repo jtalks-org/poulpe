@@ -14,6 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.Collections;
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -33,11 +36,9 @@ import org.zkoss.zul.Tree;
 import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.TreeNode;
 
-import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-
 /**
+ * Tree component for rendering sections
+ * 
  * @author Konstantin Akimov
  * @author Guram Savinov
  * @author Alexey Grigorev
@@ -50,34 +51,39 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      */
     public static final String ZUL_REF = "WEB-INF/pages/sectionTree.zul";
 
-    private ZkHelper zkInitializer;
+    private ZkHelper zkHelper;
 
     private SectionPresenter presenter;
 
     private Tree sectionTree;
     private DefaultTreeNode<PoulpeSection> treeNode;
 
-    ZkSectionTreeComponent(ZkHelper zkInitializer) {
-        this.zkInitializer = zkInitializer;
+    /**
+     * Package-private for initializing from tests
+     * @param zkHelper zkHelper instance
+     */
+    ZkSectionTreeComponent(ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;
     }
 
     /**
-     * @param section   for which will be build tree
+     * @param section for which will be build tree
      * @param presenter instance section presenter
      */
     public ZkSectionTreeComponent(PoulpeSection section, SectionPresenter presenter) {
-        this.zkInitializer = new ZkHelper(this);
+        this.zkHelper = new ZkHelper(this);
         init(section, presenter);
     }
 
     /**
      * Initializes the component, wires variables to corresponding ZUL file
+     * 
      * @param section to be holded to component
      * @param presenter section presenter
      */
     public void init(PoulpeSection section, SectionPresenter presenter) {
-        zkInitializer.wireToZul(ZUL_REF);
-        zkInitializer.wireByConvention();
+        zkHelper.wireToZul(ZUL_REF);
+        zkHelper.wireByConvention();
 
         this.presenter = presenter;
 
@@ -88,14 +94,34 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         sectionTree.setItemRenderer(new SectionBranchTreeitemRenderer(presenter));
     }
 
+    /**
+     * Prepares a model for given tree node with section
+     * @param treeNode to be wrapped
+     * @return tree model for given tree node
+     */
+    private static DefaultTreeModel<PoulpeSection> prepareTreeModel(DefaultTreeNode<PoulpeSection> treeNode) {
+        List<DefaultTreeNode<PoulpeSection>> defaultTreeNodes = Collections.singletonList(treeNode);
+        DefaultTreeNode<PoulpeSection> root = new DefaultTreeNode<PoulpeSection>(null, defaultTreeNodes);
+        return new DefaultTreeModel<PoulpeSection>(root);
+    }
+    
+    /**
+     * Shows dialog for creating a new branch
+     */
     public void newBranchDialog() {
         presenter.openNewBranchDialog(this);
     }
 
+    /**
+     * Shows a dialog for editing a branch
+     */
     public void editDialog() {
         presenter.openEditDialog(this);
     }
 
+    /**
+     * Shows moderation dialog
+     */
     public void moderationDialog() {
         presenter.openModerationWindow();
     }
@@ -105,12 +131,6 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      */
     public void updateSectionInView(PoulpeSection section) {
         treeNode.setData(section);
-    }
-
-    private static DefaultTreeModel<PoulpeSection> prepareTreeModel(DefaultTreeNode<PoulpeSection> treeNode) {
-        List<DefaultTreeNode<PoulpeSection>> defaultTreeNodes = Collections.singletonList(treeNode);
-        DefaultTreeNode<PoulpeSection> root = new DefaultTreeNode<PoulpeSection>(null, defaultTreeNodes);
-        return new DefaultTreeModel<PoulpeSection>(root);
     }
 
     /**
@@ -124,23 +144,35 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         return null;
     }
 
+    /**
+     * Show permission window for selected element. Selected element should be a
+     * {@link PoulpeBranch}
+     */
     public void showPermissionsWindow() {
         BranchSectionVisitable selectedObject = getSelectedObject();
         selectedObject.apply(showPermissionsVisitor);
     }
 
+    /**
+     * Redirects for branches when permission button is clicked
+     */
     private static BranchSectionVisitor showPermissionsVisitor = new BranchSectionVisitor() {
+        /** {@inheritDoc} */
         @Override
         public void visitSection(PoulpeSection section) {
             Messagebox.show("This action not provided for section, please select a branch");
         }
 
+        /** {@inheritDoc} */
         @Override
         public void visitBranch(PoulpeBranch branch) {
             Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + branch.getId());
         }
     };
 
+    /**
+     * Shows deletion dialog
+     */
     public void deleteDialog() {
         BranchSectionVisitable selectedObject = getSelectedOrFirstElement();
         presenter.openDeleteDialog(selectedObject);
@@ -148,7 +180,8 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
 
     /**
      * (Open for spying)
-     * @return
+     * 
+     * @return selected element, or first one if none selected
      */
     public BranchSectionVisitable getSelectedOrFirstElement() {
         BranchSectionVisitable selectedObject = getSelectedObject();
@@ -160,6 +193,9 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         return selectedObject;
     }
 
+    /**
+     * @return first element
+     */
     private BranchSectionVisitable getFirstElement() {
         TreeModel<DefaultTreeNode<BranchSectionVisitable>> model = sectionTree.getModel();
         DefaultTreeNode<BranchSectionVisitable> root = model.getRoot();
@@ -175,6 +211,10 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         addDisablingForSections();
     }
 
+    /**
+     * For all components adds listened which disables/enables UI elements based
+     * on their types
+     */
     private void addDisablingForSections() {
         sectionTree.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
             @Override
@@ -184,6 +224,12 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         });
     }
 
+    /**
+     * Decides on whether branch permission button should be disabled or not.
+     * For branches it should be enabled, for section - disabled.
+     * 
+     * @param visitable to be visited
+     */
     public void disablePermissionsButtonIfNeeded(BranchSectionVisitable visitable) {
         visitable.apply(new BranchSectionVisitor() {
             @Override
@@ -198,6 +244,9 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         });
     }
 
+    /**
+     * @return permission button
+     */
     Button getBranchPermissionsButton() {
         return (Button) sectionTree.getFellow("permissionsButton");
     }
@@ -231,7 +280,10 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         deleteDialog();
     }
 
-    public void onClick$permissionsButton() throws IOException {
+    /**
+     * Event which happen when user click on permissions button
+     */
+    public void onClick$permissionsButton() {
         showPermissionsWindow();
     }
 

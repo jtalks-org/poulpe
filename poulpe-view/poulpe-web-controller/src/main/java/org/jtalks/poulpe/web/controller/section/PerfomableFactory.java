@@ -131,7 +131,7 @@ public class PerfomableFactory {
         @Override
         public void execute() {
             sectionService.saveSection(section);
-            sectionView.showSection(section);
+            sectionView.addSection(section);
             sectionView.closeEditSectionDialog();
         }
     }

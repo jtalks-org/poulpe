@@ -38,7 +38,7 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
 
     private static final long serialVersionUID = -4999382692611273729L;
 
-    private ZkHelper zkInitializer = new ZkHelper(this);
+    private ZkHelper zkHelper = new ZkHelper(this);
 
     private Radiogroup deleteMode;
     private Radio removeAndMoveMode;
@@ -53,12 +53,15 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
      */
     @Override
     public void afterCompose() {
-        zkInitializer.wireByConvention();
+        zkHelper.wireByConvention();
 
         presenter.setView(this);
         selectedSection.setItemRenderer(new SectionComboboxItemRenderer());
     }
 
+    /**
+     * Renderer for combobox items with sections
+     */
     static class SectionComboboxItemRenderer implements ComboitemRenderer<PoulpeSection> {
         @Override
         public void render(Comboitem item, PoulpeSection section, int index) throws Exception {
@@ -92,6 +95,10 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         return SectionDeleteMode.fromString(mode);
     }
 
+    /**
+     * @return delete mode 
+     * @see SectionDeleteMode
+     */
     private String getDeleteModeValue() {
         return deleteMode.getItemAtIndex(deleteMode.getSelectedIndex()).getValue();
     }
@@ -135,6 +142,9 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         selectedSection.setModel(model);
     }
 
+    /**
+     * Shows the dialog
+     */
     private void show() {
         setVisible(true);
     }
@@ -147,10 +157,16 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         setVisible(false);
     }
 
+    /**
+     * Deletes selected section
+     */
     public void deleteSection() {
         presenter.delete();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initSectionsCombobox(List<PoulpeSection> selectableSections) {
         ListModelList<PoulpeSection> modelList = new ListModelList<PoulpeSection>(selectableSections);
@@ -162,7 +178,10 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
 
         removeAndMoveMode.setDisabled(false);
     }
-
+    
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void initEmptyAndDisabledCombobox() {
         selectedSection.setModel(null);
@@ -203,10 +222,20 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         this.presenter = presenter;
     }
 
-    void setZkInitializer(ZkHelper zkInitializer) {
-        this.zkInitializer = zkInitializer;
+    /**
+     * Package-private for DI in tests
+     * @param zkHelper instance of helper
+     */
+    void setZkHelper(ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;
     }
 
+    /**
+     * Package-private for DI in tests
+     * @param deleteMode radio group with modes
+     * @param removeAndMoveMode radio to select delete mode (see {@link SectionDeleteMode}
+     * @param selectedSection combobox with sections
+     */
     void setUiElements(Radiogroup deleteMode, Radio removeAndMoveMode, Combobox selectedSection) {
         this.deleteMode = deleteMode;
         this.removeAndMoveMode = removeAndMoveMode;

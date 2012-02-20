@@ -69,7 +69,7 @@ public class SectionPresenter {
      * */
     public void updateView() {
         List<PoulpeSection> sections = sectionService.getAll();
-        sectionView.showSections(sections);
+        sectionView.addSections(sections);
     }
 
     /**

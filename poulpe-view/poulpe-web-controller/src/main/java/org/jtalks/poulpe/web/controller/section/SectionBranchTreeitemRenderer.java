@@ -31,6 +31,9 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
         this.presenter = presenter;
     }
 
+    /**
+     * Renders sections and branches
+     */
     @Override
     public void render(Treeitem treeItem, ExtendedTreeNode<BranchSectionVisitable> node, int index) throws Exception {
         BranchSectionVisitable data = node.getData();
@@ -51,6 +54,13 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
         }        
     }
     
+    /**
+     * For each {@link Treerow} in the tree it looks for {@link Treecell}s - and returns
+     * all of them, if any found 
+     *  
+     * @param treeItem in which {@link Treecell}s are looked
+     * @return list of found {@link Treecell}s 
+     */
     private List<Treecell> findTreeCells(final Treeitem treeItem) {
         List<Treecell> treecells = new ArrayList<Treecell>();
 

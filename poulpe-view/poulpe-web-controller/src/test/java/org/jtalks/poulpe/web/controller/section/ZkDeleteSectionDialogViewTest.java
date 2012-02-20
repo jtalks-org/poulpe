@@ -43,7 +43,7 @@ public class ZkDeleteSectionDialogViewTest {
         MockitoAnnotations.initMocks(this);
         
         deleteSectionDialogView = new ZkDeleteSectionDialogView();
-        deleteSectionDialogView.setZkInitializer(zkInitializer);
+        deleteSectionDialogView.setZkHelper(zkInitializer);
         deleteSectionDialogView.setPresenter(presenter);
         deleteSectionDialogView.setUiElements(deleteMode, removeAndMoveMode, selectedSection);
         

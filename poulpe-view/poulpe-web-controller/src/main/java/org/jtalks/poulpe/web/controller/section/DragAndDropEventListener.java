@@ -17,10 +17,17 @@ class DragAndDropEventListener extends GenericEventListener<Event> {
 
     private final SectionPresenter presenter;
 
+    /**
+     * @param presenter section presenter
+     */
     public DragAndDropEventListener(SectionPresenter presenter) {
         this.presenter = presenter;
     }
 
+    /**
+     * Invoked when drop event occurred. Once section has changed its status, it
+     * is saved.
+     */
     @Override
     public void onEvent(Event evt) throws Exception {
         if (!(evt instanceof DropEvent)) {

@@ -83,7 +83,7 @@ public class ZkSectionViewTest {
     
     @Test
     public void showSection() {
-        sectionView.showSection(section);
+        sectionView.addSection(section);
         
         verify(zkHelper).addComponent(any(ZkSectionTreeComponent.class));
         verify(treeComponentFactory).sectionTreeComponent(section);
@@ -91,7 +91,7 @@ public class ZkSectionViewTest {
     
     @Test
     public void showSections() {
-        sectionView.showSections(sections);
+        sectionView.addSections(sections);
         
         verify(zkHelper).removeAll(ZkSectionTreeComponent.class);
         verify(zkHelper).addComponent(any(ZkSectionTreeComponent.class));

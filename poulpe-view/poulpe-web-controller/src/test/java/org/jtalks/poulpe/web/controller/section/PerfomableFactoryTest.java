@@ -44,7 +44,7 @@ public class PerfomableFactoryTest {
         
         perf.execute();
 
-        verify(view).showSection(section);
+        verify(view).addSection(section);
         verify(view).closeEditSectionDialog();
         verify(service).saveSection(section);
     }
