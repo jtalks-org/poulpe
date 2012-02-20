@@ -127,9 +127,9 @@ public class ZkDeleteSectionDialogView extends Window implements DeleteSectionDi
         model.clearSelection();
 
         if (!model.isEmpty()) {
-            model.addSelection(model.get(0));
+            model.addToSelection(model.get(0));
         } else {
-            model.addSelection(null);
+            model.addToSelection(null);
         }
 
         selectedSection.setModel(model);

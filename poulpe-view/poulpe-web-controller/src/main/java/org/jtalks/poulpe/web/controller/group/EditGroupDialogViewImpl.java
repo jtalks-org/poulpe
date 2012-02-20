@@ -17,8 +17,8 @@ package org.jtalks.poulpe.web.controller.group;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
@@ -44,14 +44,15 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
     // private Combobox sectionList;
 
     private ValidationFailureHandler handler;
-
+    
+    private ZkHelper zkHelper = new ZkHelper(this);
     /**
      * {@inheritDoc}
      * */
     @Override
     public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
+        
         presenter.initView(this, null);
 
         handler = new ValidationFailureHandler("name", groupName);

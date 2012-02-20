@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.users;
 import java.util.List;
 
 import org.jtalks.poulpe.model.entity.User;
-import org.zkoss.zk.ui.Components;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -37,13 +37,14 @@ import org.zkoss.zul.Window;
  */
 public class UsersListViewImpl extends Window implements UsersListView, AfterCompose {
 
-private static final long serialVersionUID = 1L;
-    
+    private static final long serialVersionUID = 1L;
+    private ZkHelper zkHelper = new ZkHelper(this);
+
     private Listbox usersListbox;
     private UsersListPresenter presenter;
 
     private Textbox searchTextbox;
-    
+
     @Override
     public void showSearchString(String searchString) {
         searchTextbox.setText(searchString);
@@ -65,7 +66,7 @@ private static final long serialVersionUID = 1L;
 
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
         Events.addEventListeners(this, presenter);
         initializeUsersListbox();
         presenter.initView(this);
@@ -80,14 +81,15 @@ private static final long serialVersionUID = 1L;
                 new Listcell(user.getEmail()).setParent(item);
                 new Listcell(user.getFirstName()).setParent(item);
                 new Listcell(user.getLastName()).setParent(item);
-                new Listcell(user.getRole()).setParent(item);   
+                new Listcell(user.getRole()).setParent(item);
                 item.addEventListener(Events.ON_DOUBLE_CLICK, new EventListener<Event>() {
                     @Override
                     public void onEvent(Event event) throws Exception {
                         presenter.onEditAction(user);
                     }
                 });
-            }});
+            }
+        });
         usersListbox.setMultiple(false);
     }
 }

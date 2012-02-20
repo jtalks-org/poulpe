@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.utils;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.mockito.ArgumentMatcher;
 
+@Deprecated
 public class BranchMatcher extends ArgumentMatcher<PoulpeBranch>{
     PoulpeBranch branch;
 

@@ -28,11 +28,11 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.util.Assert;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
+import org.zkoss.zk.ui.util.ConventionWires;
 import org.zkoss.zul.Window;
 
 /**
@@ -54,7 +54,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     private Component workArea;
     private Component currentWindow;
-
+    
     /** {@inheritDoc} */
     @Override
     public void showEditComponentWindow(long componentId, Object listener) {
@@ -131,7 +131,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     private Component createComponent(String pathToZulFile) {
         Component component = Executions.createComponents(pathToZulFile, null, null);
-        Components.wireVariables(component, component);
+        ConventionWires.wireVariables(component, component);
         return component;
     }
 

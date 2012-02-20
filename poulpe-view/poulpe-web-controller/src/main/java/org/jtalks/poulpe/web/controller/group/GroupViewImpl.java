@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.group;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Group;
-import org.zkoss.zk.ui.Components;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -34,18 +34,20 @@ import org.zkoss.zul.Window;
 /**
  * @author Konstantin Akimov
  * @author Vyacheslav Zhivaev
- *
  */
 @SuppressWarnings("serial")
 public class GroupViewImpl extends Window implements AfterCompose {
 
     private GroupPresenter presenter;
 
+    private ZkHelper zkHelper = new ZkHelper(this);
+    
     private Window editDialog;
 
     private Listbox groupsListbox;
     private ListModelList<Group> groupsListboxModel;
     private Textbox searchTextbox;
+    
 
     public void setPresenter(GroupPresenter presenter) {
         this.presenter = presenter;
@@ -53,8 +55,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
 
     @Override
     public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
 
         groupsListbox.setItemRenderer(new ListitemRenderer<Group>() {
             @Override

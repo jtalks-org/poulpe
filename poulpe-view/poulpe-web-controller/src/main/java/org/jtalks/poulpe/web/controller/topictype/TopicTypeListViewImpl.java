@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.zkoss.zk.ui.Components;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
@@ -41,6 +41,8 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListView, 
 
     private static final long serialVersionUID = 1L;
 
+    private ZkHelper zkHelper = new ZkHelper(this);
+    
     private Listbox topicTypeListbox;
     private TopicTypeListPresenter presenter;
 
@@ -50,7 +52,7 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListView, 
 
     @Override
     public void showTopicTypeList(List<TopicType> list) {
-        ListModelList<TopicType> listModelList = new BindingListModelList(list, true);
+        ListModelList<TopicType> listModelList = new BindingListModelList<TopicType>(list, true);
         topicTypeListbox.setModel(listModelList);
         
     }
@@ -70,7 +72,7 @@ public class TopicTypeListViewImpl extends Window implements TopicTypeListView, 
 
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
         Events.addEventListeners(this, presenter);
         initializeTopicTypeListbox();
         presenter.initView(this);

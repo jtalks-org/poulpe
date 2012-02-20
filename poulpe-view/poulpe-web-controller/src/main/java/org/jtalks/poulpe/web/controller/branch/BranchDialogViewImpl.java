@@ -20,8 +20,8 @@ import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -39,8 +39,7 @@ import org.zkoss.zul.Window;
  * @author Bekrenev Dmitry
  * @author Vyacheslav Zhivaev
  * */
-public class BranchDialogViewImpl extends Window implements BranchDialogView, 
-        AfterCompose {
+public class BranchDialogViewImpl extends Window implements BranchDialogView, AfterCompose {
 
     private static final long serialVersionUID = 7388638074018815713L;
 
@@ -51,40 +50,40 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     private Button rejectButton;
     private PoulpeBranch branch;
     private Combobox sectionList;
-    
+
+    private ZkHelper zkHelper = new ZkHelper(this);
+
     private ValidationFailureHandler validationHandler;
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
+
         presenter.setView(this);
         presenter.initView();
 
         sectionList.setItemRenderer(sectionItemRenderer);
-        
+
         validationHandler = new ValidationFailureHandler("name", branchName);
     }
-    
-    
+
     /**
      * set default section in combobox for select section when branch will be
      * stored
      * 
-     * @param section
-     *            default section
-     * */
+     * @param section default section
+     */
     private void setDefaultSection(PoulpeSection section) {
         @SuppressWarnings("unchecked")
         ListModelList<PoulpeSection> model = (ListModelList<PoulpeSection>) sectionList.getModel();
         model.clearSelection();
         if (section != null) {
-            model.addSelection(section);
+            model.addToSelection(section);
         } else {
-            model.addSelection(model.get(0));
+            model.addToSelection(model.get(0));
         }
         sectionList.setModel(model);
 
@@ -92,7 +91,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * This class render items Combobox list
-     * */
+     */
     private static ComboitemRenderer<PoulpeSection> sectionItemRenderer = new ComboitemRenderer<PoulpeSection>() {
 
         @Override
@@ -106,16 +105,15 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
      * Set presenter
      * 
      * @see BranchEditorPresenter
-     * @param presenter
-     *            instance presenter for view
-     * */
+     * @param presenter instance presenter for view
+     */
     public void setPresenter(BranchPresenter presenter) {
         this.presenter = presenter;
     }
 
     /**
      * Handle event when user click on confirm button
-     * */
+     */
     public void onClick$confirmButton() {
         branchName.setConstraint("no empty");
         presenter.saveBranch();
@@ -124,42 +122,39 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * Handle event when user click on reject button
-     * */
+     */
     public void onClick$rejectButton() {
         hide();
     }
 
     /**
      * Handle event when branch name field in focus
-     * */
+     */
     public void onFocus$branchName() {
         branchName.clearErrorMessage();
     }
 
     /**
      * Handle event from main window for open add new branch dialog
-     * */
+     */
     public void onOpenAddDialog() {
         show();
     }
 
     /**
      * Handle event from main window for open edit branch dialog
-     * 
-     * @param event
-     *            information about event
-     * */
+     * @param event information about event
+     */
     public void onOpenEditDialog(Event event) {
         show((PoulpeBranch) event.getData());
     }
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public PoulpeSection getSection() {
-        PoulpeSection section = (PoulpeSection) sectionList.getModel().getElementAt(
-                sectionList.getSelectedIndex());
+        PoulpeSection section = (PoulpeSection) sectionList.getModel().getElementAt(sectionList.getSelectedIndex());
         return section;
     }
 
@@ -172,7 +167,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void hide() {
         setVisible(false);
@@ -186,7 +181,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void show() {
         presenter.initView();
@@ -203,7 +198,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void show(PoulpeBranch branch) {
         presenter.initView();
@@ -221,16 +216,15 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void notUniqueBranchName() {
-        throw new WrongValueException(branchName,
-                Labels.getLabel("branches.error.branch_name_already_exists"));
+        throw new WrongValueException(branchName, Labels.getLabel("branches.error.branch_name_already_exists"));
     }
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void initSectionList(List<PoulpeSection> sections) {
         sectionList.setModel(new ListModelList<PoulpeSection>(sections));
@@ -239,14 +233,20 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView,
     PoulpeBranch createBranch() {
         return branch = new PoulpeBranch();
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void openErrorPopupInNewSectionDialog(String label) {
         final String message = Labels.getLabel(label);
         branchName.setErrorMessage(message);
-        
+
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validationFailure(ValidationResult result) {
         validationHandler.validationFailure(result);

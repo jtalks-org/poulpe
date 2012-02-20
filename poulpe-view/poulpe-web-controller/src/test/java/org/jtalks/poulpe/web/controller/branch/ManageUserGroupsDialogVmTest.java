@@ -150,7 +150,7 @@ public class ManageUserGroupsDialogVmTest {
      */
     @Test(dataProvider = "testGroups")
     public void testMoveAllToAddedGroups(List<Group> testGroups) throws Exception {
-        vm.setAvailableGroups(testGroups).getAvailableGroups().addSelection(testGroups.get(1));
+        vm.setAvailableGroups(testGroups).getAvailableGroups().addToSelection(testGroups.get(1));
         Set<Group> moved = vm.moveAllToAddedGroups();
         assertTrue(vm.getAvailableGroups().isEmpty());
         assertEquals(moved.size(), testGroups.size());
@@ -168,7 +168,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @Test(dataProvider = "testGroups")
     public void testMoveAllFromAddedGroups(List<Group> testGroups) throws Exception {
-        vm.setAddedGroups(testGroups).getAddedGroups().addSelection(testGroups.get(1));
+        vm.setAddedGroups(testGroups).getAddedGroups().addToSelection(testGroups.get(1));
         Set<Group> moved = vm.moveAllFromAddedGroups();
         assertTrue(vm.getAddedGroups().isEmpty());
         assertEquals(vm.getAvailableGroups().size(), testGroups.size());
@@ -197,7 +197,7 @@ public class ManageUserGroupsDialogVmTest {
      * @return the groups been moved
      */
     private Collection<Group> moveFromAdded(ManageUserGroupsDialogVm vm, Group toMove) {
-        vm.getAddedGroups().addSelection(toMove);
+        vm.getAddedGroups().addToSelection(toMove);
         return vm.moveSelectedFromAddedGroups();
     }
 
@@ -210,7 +210,7 @@ public class ManageUserGroupsDialogVmTest {
      * @return the groups been moved
      */
     private Collection<Group> moveToAdded(ManageUserGroupsDialogVm vm, Group toMove) {
-        vm.getAvailableGroups().addSelection(toMove);
+        vm.getAvailableGroups().addToSelection(toMove);
         return vm.moveSelectedToAddedGroups();
     }
 }

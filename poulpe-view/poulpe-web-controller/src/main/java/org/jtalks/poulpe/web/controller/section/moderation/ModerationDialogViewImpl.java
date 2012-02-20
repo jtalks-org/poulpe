@@ -16,10 +16,10 @@ package org.jtalks.poulpe.web.controller.section.moderation;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
@@ -36,7 +36,8 @@ import org.zkoss.zul.Window;
 public class ModerationDialogViewImpl extends Window implements ModerationDialogView, AfterCompose {
 
     private ModerationDialogPresenter presenter;
-
+    private ZkHelper zkHelper = new ZkHelper(this);
+    
     private ListModelList<User> modelUsers;
 
     // COMPONENTS
@@ -45,9 +46,7 @@ public class ModerationDialogViewImpl extends Window implements ModerationDialog
 
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
-
+        zkHelper.wireByConvention();
         userCombobox.setItemRenderer(userComboboxItemRenderer);
         users.setItemRenderer(userListItemRenderer);
     }

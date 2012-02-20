@@ -16,8 +16,8 @@ package org.jtalks.poulpe.web.controller.topictype;
 
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
@@ -38,11 +38,12 @@ public class TopicTypeViewImpl extends Window implements TopicTypeView, AfterCom
     private Button createButton;
     
     private ValidationFailureHandler handler;
+    
+    private ZkHelper zkHelper = new ZkHelper(this);
 
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
+        zkHelper.wireByConvention();
         
         handler = new ValidationFailureHandler("title", titleTextbox);
     }

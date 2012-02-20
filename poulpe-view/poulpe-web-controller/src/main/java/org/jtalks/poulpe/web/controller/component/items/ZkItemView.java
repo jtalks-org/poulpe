@@ -21,9 +21,9 @@ import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
 import org.zkoss.zul.Longbox;
@@ -50,15 +50,14 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     private Combobox componentType;
 
     private ValidationFailureHandler validationHandler;
+    
+    private ZkHelper zkHelper = new ZkHelper(this);
 
     /** {@inheritDoc} */
     @Override
     public void afterCompose() {
-        Components.wireVariables(this, this);
-        Components.addForwards(this, this);
-        
+        zkHelper.wireByConvention();
         presenter.setView(this);
-
         validationHandler = new ValidationFailureHandler("name", name, "componentType", componentType);
     }
     

@@ -33,8 +33,9 @@ public class BranchPresenter {
     private SectionService sectionService;
     private EntityValidator entityValidator;
     private BranchDialogView view;
-    private BranchService branchService;
     private SectionPresenter sectionPresenter;
+    
+    private BranchService branchService;
 
     public SectionPresenter getSectionPresenter() {
         return sectionPresenter;

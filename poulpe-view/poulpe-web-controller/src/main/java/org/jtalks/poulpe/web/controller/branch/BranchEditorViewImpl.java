@@ -19,8 +19,8 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManagerImpl;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -51,6 +51,8 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
     private transient BranchEditorPresenter presenter;
 
     private ListModelList<PoulpeBranch> branchesListModel;
+    
+    private ZkHelper zkHelper = new ZkHelper(this);
 
     /**
      * Use for render ListItem This class draws two labels for branch name and
@@ -80,8 +82,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
      * */
     @Override
     public void afterCompose() {
-        Components.addForwards(this, this);
-        Components.wireVariables(this, this);
+        zkHelper.wireByConvention();
 
         branchesListModel = new ListModelList<PoulpeBranch>();
         branchesList.setModel(branchesListModel);

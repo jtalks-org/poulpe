@@ -41,17 +41,12 @@ public class ModerationDialogPresenterTest {
 
     private ModerationDialogPresenter presenter;
 
-    @Mock
-    private ModerationDialogView view;
-    @Mock
-    private UserService userService;
-    @Mock
-    private BranchService branchService;
-    @Mock
-    private DialogManager dialogManager;
+    @Mock ModerationDialogView view;
+    @Mock UserService userService;
+    @Mock BranchService branchService;
+    @Mock DialogManager dialogManager;
     
-    @Mock 
-    EntityValidator entityValidator;
+    @Mock EntityValidator entityValidator;
 
     private PoulpeBranch branch;
 

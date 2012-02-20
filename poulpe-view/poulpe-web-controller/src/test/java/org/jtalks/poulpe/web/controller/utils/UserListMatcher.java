@@ -19,6 +19,7 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.User;
 import org.mockito.ArgumentMatcher;
 
+@Deprecated
 public class UserListMatcher extends ArgumentMatcher<List<User>> {
 
     List<User> users;

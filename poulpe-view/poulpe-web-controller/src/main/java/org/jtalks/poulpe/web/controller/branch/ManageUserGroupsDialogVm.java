@@ -35,14 +35,16 @@ import java.util.*;
  */
 @NotThreadSafe
 public class ManageUserGroupsDialogVm {
-    @SuppressWarnings("unchecked")
-    private final ListModelList<Group> availableListModel = new BindingListModelList(new ArrayList(), false);
-    @SuppressWarnings("unchecked")
-    private final ListModelList<Group> addedListModel = new BindingListModelList(new ArrayList(), false);
+    private final ListModelList<Group> availableListModel = 
+            new BindingListModelList<Group>(new ArrayList<Group>(), false);
+    private final ListModelList<Group> addedListModel = 
+            new BindingListModelList<Group>(new ArrayList<Group>(), false);
+    
     private final Comparator<Group> byNameComparator = new Group.ByNameComparator();
     private final Set<Group> originallyAdded = new HashSet<Group>();
     private final JtalksPermission permission;
     private final boolean allowAccess;
+    
     private boolean addedListAscendingSorting = true;
     private boolean availableListAscendingSorting = true;
 
