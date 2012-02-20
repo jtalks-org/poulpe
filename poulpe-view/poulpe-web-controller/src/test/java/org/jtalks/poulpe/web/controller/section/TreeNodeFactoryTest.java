@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
@@ -60,7 +61,7 @@ public class TreeNodeFactoryTest {
 
     @Test
     public void getTreeNodeNull() {
-        ExtendedTreeNode<?> testNode = TreeNodeFactory.getTreeNode(null);
+        ExtendedTreeNode<?> testNode = TreeNodeFactory.getTreeNode((Entity) null);
         assertNull(testNode);
     }
 
