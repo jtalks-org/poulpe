@@ -36,10 +36,8 @@ public class DeleteSectionDialogPresenterTest {
 
     DeleteSectionDialogPresenter presenter;
 
-    @Mock
-    SectionService sectionService;
-    @Mock
-    DeleteSectionDialogView view;
+    @Mock SectionService sectionService;
+    @Mock DeleteSectionDialogView view;
 
     private List<PoulpeSection> sections = fakeSections();
     private PoulpeSection section = sectionWithBranches();
