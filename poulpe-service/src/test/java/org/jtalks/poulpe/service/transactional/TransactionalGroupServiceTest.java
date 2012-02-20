@@ -14,6 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
+
+import java.util.Collections;
+import java.util.Set;
+
 import org.jtalks.common.model.dao.GroupDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
@@ -25,35 +32,22 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertTrue;
-
+/**
+ * Test for {@link TransactionalGroupService}
+ */
 public class TransactionalGroupServiceTest {
     private TransactionalGroupService service;
-    @Mock
-    private GroupDao dao;
-    @Mock
-    EntityValidator entityValidator;
-    private List<Group> list, listByName;
-    final private String name = "name";
-    final Group group = new Group("new group");
+    
+    @Mock GroupDao dao;
+    @Mock EntityValidator entityValidator;
+    
+    private String name = "name";
+    private Group group = new Group("new group");
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
         service = new TransactionalGroupService(dao, entityValidator);
-        list = new ArrayList<Group>();
-        listByName = new ArrayList<Group>();
-        when(dao.getAll()).thenReturn(list);
-        when(dao.getMatchedByName(name)).thenReturn(listByName);
     }
 
     @Test
@@ -64,22 +58,28 @@ public class TransactionalGroupServiceTest {
 
     @Test
     public void getAll() {
-        assertTrue(service.getAll().equals(list));
+        service.getAll();
+        verify(dao).getAll();
     }
 
     @Test
     public void getAllMatchedByName() {
-        assertTrue(service.getAllMatchedByName(name).equals(listByName));
+        service.getAllMatchedByName(name);
+        verify(dao).getMatchedByName(name);
     }
 
     @Test
     public void saveGroup() {
         service.saveGroup(group);
+        verifyEntityValidated();
+    }
+
+    private void verifyEntityValidated() {
         verify(entityValidator).throwOnValidationFailure(group);
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void saveGroupWithException() {
+    public void saveNotValidGroup() {
         givenConstraintsViolations();
         service.saveGroup(group);
     }
