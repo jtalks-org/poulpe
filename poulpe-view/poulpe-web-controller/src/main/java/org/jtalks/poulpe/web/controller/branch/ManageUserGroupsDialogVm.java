@@ -14,15 +14,21 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.JtalksPermission;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModelList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
-import java.util.*;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.zkoss.zkplus.databind.BindingListModelList;
+import org.zkoss.zul.ListModelList;
 
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
@@ -35,13 +41,13 @@ import java.util.*;
  */
 @NotThreadSafe
 public class ManageUserGroupsDialogVm {
-    private final ListModelList<Group> availableListModel = 
-            new BindingListModelList<Group>(new ArrayList<Group>(), false);
-    private final ListModelList<Group> addedListModel = 
-            new BindingListModelList<Group>(new ArrayList<Group>(), false);
+    private final ListModelList<PoulpeGroup> availableListModel = 
+            new BindingListModelList<PoulpeGroup>(new ArrayList<PoulpeGroup>(), false);
+    private final ListModelList<PoulpeGroup> addedListModel = 
+            new BindingListModelList<PoulpeGroup>(new ArrayList<PoulpeGroup>(), false);
     
-    private final Comparator<Group> byNameComparator = new Group.ByNameComparator();
-    private final Set<Group> originallyAdded = new HashSet<Group>();
+    private final Comparator<PoulpeGroup> byNameComparator = new PoulpeGroup.ByNameComparator<PoulpeGroup>();
+    private final Set<PoulpeGroup> originallyAdded = new HashSet<PoulpeGroup>();
     private final JtalksPermission permission;
     private final boolean allowAccess;
     
@@ -59,9 +65,9 @@ public class ManageUserGroupsDialogVm {
      *
      * @return the groups that were moved from list of available groups to the list of those that were added
      */
-    public Set<Group> moveSelectedToAddedGroups() {
-        Set<Group> selection = new HashSet<Group>(availableListModel.getSelection());
-        for (Group nextSelectedItem : selection) {
+    public Set<PoulpeGroup> moveSelectedToAddedGroups() {
+        Set<PoulpeGroup> selection = new HashSet<PoulpeGroup>(availableListModel.getSelection());
+        for (PoulpeGroup nextSelectedItem : selection) {
             addedListModel.add(nextSelectedItem);
             availableListModel.remove(nextSelectedItem);
         }
@@ -75,9 +81,9 @@ public class ManageUserGroupsDialogVm {
      *
      * @return those selected groups that were moved
      */
-    public Set<Group> moveSelectedFromAddedGroups() {
-        Set<Group> selection = new HashSet<Group>(addedListModel.getSelection());
-        for (Group nextSelectedItem : selection) {
+    public Set<PoulpeGroup> moveSelectedFromAddedGroups() {
+        Set<PoulpeGroup> selection = new HashSet<PoulpeGroup>(addedListModel.getSelection());
+        for (PoulpeGroup nextSelectedItem : selection) {
             availableListModel.add(nextSelectedItem);
             addedListModel.remove(nextSelectedItem);
         }
@@ -90,9 +96,9 @@ public class ManageUserGroupsDialogVm {
      *
      * @return the groups that were moved
      */
-    public Set<Group> moveAllToAddedGroups() {
-        Set<Group> innerAvailableList = new HashSet<Group>(availableListModel.getInnerList());
-        for (Group nextSelectedItem : innerAvailableList) {
+    public Set<PoulpeGroup> moveAllToAddedGroups() {
+        Set<PoulpeGroup> innerAvailableList = new HashSet<PoulpeGroup>(availableListModel.getInnerList());
+        for (PoulpeGroup nextSelectedItem : innerAvailableList) {
             addedListModel.add(nextSelectedItem);
             availableListModel.remove(nextSelectedItem);
         }
@@ -105,9 +111,9 @@ public class ManageUserGroupsDialogVm {
      *
      * @return the groups that were moved
      */
-    public Set<Group> moveAllFromAddedGroups() {
-        Set<Group> innerAddedList = new HashSet<Group>(addedListModel.getInnerList());
-        for (Group nextSelectedItem : innerAddedList) {
+    public Set<PoulpeGroup> moveAllFromAddedGroups() {
+        Set<PoulpeGroup> innerAddedList = new HashSet<PoulpeGroup>(addedListModel.getInnerList());
+        for (PoulpeGroup nextSelectedItem : innerAddedList) {
             availableListModel.add(nextSelectedItem);
             addedListModel.remove(nextSelectedItem);
         }
@@ -137,7 +143,7 @@ public class ManageUserGroupsDialogVm {
      * @param availableGroups new group list to feed the list box of groups that are available for adding
      * @return this
      */
-    public ManageUserGroupsDialogVm setAvailableGroups(@Nonnull List<Group> availableGroups) {
+    public ManageUserGroupsDialogVm setAvailableGroups(@Nonnull List<PoulpeGroup> availableGroups) {
         this.availableListModel.clear();
         this.availableListModel.addAll(availableGroups);
         return this;
@@ -150,7 +156,7 @@ public class ManageUserGroupsDialogVm {
      * @param addedGroups new group list to feed the list box of groups that are already granted to the permission
      * @return this
      */
-    public ManageUserGroupsDialogVm setAddedGroups(@Nonnull List<Group> addedGroups) {
+    public ManageUserGroupsDialogVm setAddedGroups(@Nonnull List<PoulpeGroup> addedGroups) {
         this.addedListModel.clear();
         this.addedListModel.addAll(addedGroups);
         this.originallyAdded.clear();
@@ -165,7 +171,7 @@ public class ManageUserGroupsDialogVm {
      * @return the elements that were removed by the moment from the added list
      */
     @SuppressWarnings("unchecked")
-    public Collection<Group> getRemovedFromAdded() {
+    public Collection<PoulpeGroup> getRemovedFromAdded() {
         return CollectionUtils.subtract(originallyAdded, addedListModel.getInnerList());
     }
 
@@ -176,7 +182,7 @@ public class ManageUserGroupsDialogVm {
      * @return the elements that were added by the moment to the list of added groups
      */
     @SuppressWarnings("unchecked")
-    public Collection<Group> getNewAdded() {
+    public Collection<PoulpeGroup> getNewAdded() {
         return CollectionUtils.subtract(addedListModel.getInnerList(), originallyAdded);
     }
 
@@ -185,7 +191,7 @@ public class ManageUserGroupsDialogVm {
      *
      * @return groups that are available to be granted to the permission
      */
-    public ListModelList<Group> getAvailableGroups() {
+    public ListModelList<PoulpeGroup> getAvailableGroups() {
         return availableListModel;
     }
 
@@ -194,7 +200,7 @@ public class ManageUserGroupsDialogVm {
      *
      * @return groups that are available to be granted to the permission
      */
-    public ListModelList<Group> getAddedGroups() {
+    public ListModelList<PoulpeGroup> getAddedGroups() {
         return addedListModel;
     }
 

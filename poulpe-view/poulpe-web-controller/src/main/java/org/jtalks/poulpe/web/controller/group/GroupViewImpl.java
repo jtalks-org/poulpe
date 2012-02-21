@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.group;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -45,7 +45,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
     private Window editDialog;
 
     private Listbox groupsListbox;
-    private ListModelList<Group> groupsListboxModel;
+    private ListModelList<PoulpeGroup> groupsListboxModel;
     private Textbox searchTextbox;
     
 
@@ -57,9 +57,9 @@ public class GroupViewImpl extends Window implements AfterCompose {
     public void afterCompose() {
         zkHelper.wireByConvention();
 
-        groupsListbox.setItemRenderer(new ListitemRenderer<Group>() {
+        groupsListbox.setItemRenderer(new ListitemRenderer<PoulpeGroup>() {
             @Override
-            public void render(Listitem listItem, Group group, int index) throws Exception {
+            public void render(Listitem listItem, PoulpeGroup group, int index) throws Exception {
                 new Listcell(group.getName()).setParent(listItem);
                 new Listcell("Not specified yet").setParent(listItem);
                 listItem.setId(String.valueOf(group.getId()));
@@ -77,8 +77,8 @@ public class GroupViewImpl extends Window implements AfterCompose {
         presenter.initView(this);
     }
 
-    public void updateView(List<Group> groups) {
-        groupsListboxModel = new ListModelList<Group>(groups);
+    public void updateView(List<PoulpeGroup> groups) {
+        groupsListboxModel = new ListModelList<PoulpeGroup>(groups);
         groupsListbox.setModel(groupsListboxModel);
         disableRemoveAndEditButtons();
     }
@@ -119,7 +119,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
         return (EditGroupDialogViewImpl) getDesktop().getPage("GroupDialog").getFellow("editWindow");
     }
 
-    public void openEditDialog(Group group) {
+    public void openEditDialog(PoulpeGroup group) {
         EditGroupDialogView component = getEditView();
         component.show(group);
     }
@@ -128,7 +128,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
         presenter.updateView();
     }
 
-    public Group getSelectedGroup() {
+    public PoulpeGroup getSelectedGroup() {
         return groupsListboxModel.getElementAt(groupsListbox.getSelectedIndex());
     }
 

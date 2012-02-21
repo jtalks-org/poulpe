@@ -16,12 +16,12 @@ package org.jtalks.poulpe.logic;
 
 import com.google.common.collect.Lists;
 
-import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.UserGroupSid;
+import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -78,8 +78,8 @@ public class BranchPermissionManagerTest {
     @DataProvider
     public Object[][] accessChanges() {
         BranchAccessChanges accessChanges = new BranchAccessChanges(BranchPermission.CREATE_TOPICS);
-        accessChanges.setNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
-        accessChanges.setRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
+        accessChanges.setNewlyAddedGroups(newArrayList(new PoulpeGroup("new1"), new PoulpeGroup("new2")));
+        accessChanges.setRemovedGroups(newArrayList(new PoulpeGroup("removed1"), new PoulpeGroup("removed2")));
         return new Object[][]{{accessChanges}};
     }
 

@@ -26,11 +26,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -85,7 +85,7 @@ public class BranchPresenterTest {
         presenter.saveBranch(branch);
         
         assertEquals(branch.getGroups().size(), 1);
-        Group group = branch.getGroups().get(0);
+        PoulpeGroup group = branch.getGroups().get(0);
         assertEquals(group.getName(), BRANCH_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
@@ -98,7 +98,7 @@ public class BranchPresenterTest {
         branch.setName(BRANCH_NEW_NAME);
         presenter.saveBranch(branch);
         
-        Group group = branch.getGroups().get(0);
+        PoulpeGroup group = branch.getGroups().get(0);
         assertEquals(group.getName(), BRANCH_NEW_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService, times(2)).saveSection(any(PoulpeSection.class));
@@ -151,13 +151,13 @@ public class BranchPresenterTest {
     }
 
     private void givenGroupConstraintViolated() {
-        when(entityValidator.validate(any(Group.class))).thenReturn(resultWithGroupErrors);
+        when(entityValidator.validate(any(PoulpeGroup.class))).thenReturn(resultWithGroupErrors);
     }
 
     private ValidationResult resultWithGroupErrors = resultWithGroupErrors();
 
     private ValidationResult resultWithGroupErrors() {
-        ValidationError error = new ValidationError("group", Group.GROUP_ALREADY_EXISTS);
+        ValidationError error = new ValidationError("group", PoulpeGroup.GROUP_ALREADY_EXISTS);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }

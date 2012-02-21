@@ -17,17 +17,19 @@
 -->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <class name="org.jtalks.common.model.entity.Group" table="GROUPS">
-    <cache usage="nonstrict-read-write"/>
-    
+  <class name="org.jtalks.common.model.entity.Group" table="GROUPS" abstract="true">
+    <cache usage="nonstrict-read-write" />
+
     <id column="GROUP_ID" name="id" unsaved-value="0">
       <generator class="native" />
     </id>
-    
+
+    <discriminator column="type" type="string"/>
+
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" />
     <property column="DESCRIPTION" name="description" />
-    
+
     <bag name="users" table="GROUP_USER_REF" inverse="false" lazy="true" fetch="select" cascade="all">
       <cache usage="nonstrict-read-write" />
       <key column="GROUP_ID" not-null="true" />
@@ -35,9 +37,12 @@
         <column name="USER_ID" not-null="true" />
       </many-to-many>
     </bag>
-    
-    <many-to-one column="BRANCH_ID" name="branch" class="org.jtalks.poulpe.model.entity.PoulpeBranch"
-      lazy="false" update="false" insert="false" />
-    
   </class>
+
+  <subclass name="org.jtalks.poulpe.model.entity.PoulpeGroup" extends="org.jtalks.common.model.entity.Group"
+    discriminator-value="group">
+    <many-to-one column="BRANCH_ID" name="branch" class="org.jtalks.poulpe.model.entity.PoulpeBranch" lazy="false"
+      update="false" insert="false" />
+  </subclass>
+  
 </hibernate-mapping>

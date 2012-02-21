@@ -24,8 +24,8 @@ import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -51,9 +51,9 @@ public class EditGroupMembersVM {
     private WindowManager windowManager;
 
     /**
-     * Group to be edited
+     * PoulpeGroup to be edited
      */
-    private Group groupToEdit;
+    private PoulpeGroup groupToEdit;
 
     /**
      * Lists represents state of group members after editing
@@ -78,13 +78,13 @@ public class EditGroupMembersVM {
      */
     @SuppressWarnings("unchecked")
     public EditGroupMembersVM(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity) throws NotFoundException {
+            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) throws NotFoundException {
         this.windowManager = windowManager;
         this.groupService = groupService;
         this.userService = userService;
         this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
 
-        usersInGroupAfterEdit = groupToEdit.getUsers();
+        usersInGroupAfterEdit = groupToEdit.getPoulpeUsers();
 
         filterAvail = "";
         filterExist = "";
@@ -153,9 +153,9 @@ public class EditGroupMembersVM {
     /**
      * Gets group to be edited.
      *
-     * @return the {@link Group} instance
+     * @return the {@link PoulpeGroup} instance
      */
-    public Group getGroupToEdit() {
+    public PoulpeGroup getGroupToEdit() {
         return groupToEdit;
     }
 
@@ -250,7 +250,7 @@ public class EditGroupMembersVM {
      */
     @Command
     public void save() {
-        groupToEdit.setUsers(usersInGroupAfterEdit);
+        groupToEdit.setPoulpeUsers(usersInGroupAfterEdit);
         groupService.saveGroup(groupToEdit);
         switchToGroupWindow();
     }

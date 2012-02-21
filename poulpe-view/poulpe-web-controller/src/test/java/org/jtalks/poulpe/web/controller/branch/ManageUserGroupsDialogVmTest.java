@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -37,19 +37,19 @@ public class ManageUserGroupsDialogVmTest {
     }
 
     @Test(dataProvider = "testGroups")
-    public void testGetRemovedFromAdded(List<Group> testGroups) throws Exception {
+    public void testGetRemovedFromAdded(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups);
         moveFromAdded(vm, testGroups.get(0));
-        Collection<Group> removedFromAdded = vm.getRemovedFromAdded();
+        Collection<PoulpeGroup> removedFromAdded = vm.getRemovedFromAdded();
         assertEquals(removedFromAdded.size(), 1);
         assertSame(removedFromAdded.iterator().next(), testGroups.get(0));
     }
 
     @Test(dataProvider = "testGroups")
-    public void testGetNewInAdded(List<Group> testGroups) throws Exception {
+    public void testGetNewInAdded(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAvailableGroups(testGroups);
         moveToAdded(vm, testGroups.get(1));
-        Collection<Group> newInAdded = vm.getNewAdded();
+        Collection<PoulpeGroup> newInAdded = vm.getNewAdded();
         assertEquals(newInAdded.size(), 1);
         assertSame(newInAdded.iterator().next(), testGroups.get(1));
     }
@@ -66,7 +66,7 @@ public class ManageUserGroupsDialogVmTest {
      * @throws Exception who would care
      */
     @Test(dataProvider = "testGroups")
-    public void testGetNewInAdded_afterElementReturnedBack(List<Group> testGroups) throws Exception {
+    public void testGetNewInAdded_afterElementReturnedBack(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups);
         moveFromAdded(vm, testGroups.get(0));
         moveToAdded(vm, testGroups.get(0));
@@ -75,9 +75,9 @@ public class ManageUserGroupsDialogVmTest {
     }
 
     @Test(dataProvider = "testGroups")
-    public void testMoveSelectedToAddedGroups(List<Group> testGroups) throws Exception {
+    public void testMoveSelectedToAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAvailableGroups(testGroups);
-        Collection<Group> movedGroups = moveToAdded(vm, testGroups.get(0));
+        Collection<PoulpeGroup> movedGroups = moveToAdded(vm, testGroups.get(0));
         //check sizes of after moving the moving
         assertEquals(movedGroups.size(), 1);
         assertEquals(vm.getAvailableGroups().size(), testGroups.size() - 1);
@@ -89,9 +89,9 @@ public class ManageUserGroupsDialogVmTest {
     }
 
     @Test(dataProvider = "testGroups")
-    public void testMoveSelectedToAddedGroups_withNoSelection(List<Group> testGroups) throws Exception {
+    public void testMoveSelectedToAddedGroups_withNoSelection(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAvailableGroups(testGroups);
-        Collection<Group> movedGroups = vm.moveSelectedToAddedGroups();
+        Collection<PoulpeGroup> movedGroups = vm.moveSelectedToAddedGroups();
         assertTrue(movedGroups.isEmpty());
         assertEquals(vm.getAvailableGroups().size(), testGroups.size());
         assertEquals(vm.getAddedGroups().size(), 0);
@@ -99,16 +99,16 @@ public class ManageUserGroupsDialogVmTest {
 
     @Test
     public void testMoveSelectedToAddedGroups_withNoElements() throws Exception {
-        Set<Group> movedGroups = vm.moveSelectedToAddedGroups();
+        Set<PoulpeGroup> movedGroups = vm.moveSelectedToAddedGroups();
         assertTrue(movedGroups.isEmpty());
         assertEquals(vm.getAvailableGroups().size(), 0);
         assertEquals(vm.getAddedGroups().size(), 0);
     }
 
     @Test(dataProvider = "testGroups")
-    public void testMoveSelectedFromAddedGroups(List<Group> testGroups) throws Exception {
+    public void testMoveSelectedFromAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups);
-        Collection<Group> movedGroups = moveFromAdded(vm, testGroups.get(1));
+        Collection<PoulpeGroup> movedGroups = moveFromAdded(vm, testGroups.get(1));
         //check sizes of after moving the moving
         assertEquals(movedGroups.size(), 1);
         assertEquals(vm.getAvailableGroups().size(), 1);
@@ -120,10 +120,10 @@ public class ManageUserGroupsDialogVmTest {
     }
 
     @Test(dataProvider = "testGroups")
-    public void testMoveSelectedFromAddedGroups_withNoSelection(List<Group> testGroups) throws Exception {
+    public void testMoveSelectedFromAddedGroups_withNoSelection(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups);
         vm.getAddedGroups();
-        Collection<Group> movedGroups = vm.moveSelectedFromAddedGroups();
+        Collection<PoulpeGroup> movedGroups = vm.moveSelectedFromAddedGroups();
 
         assertTrue(movedGroups.isEmpty());
         assertTrue(vm.getAvailableGroups().isEmpty());
@@ -132,7 +132,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @Test
     public void testMoveSelectedFromAddedGroups_withNoElements() throws Exception {
-        Set<Group> movedGroups = vm.moveSelectedFromAddedGroups();
+        Set<PoulpeGroup> movedGroups = vm.moveSelectedFromAddedGroups();
         assertTrue(movedGroups.isEmpty());
         assertEquals(vm.getAvailableGroups().size(), 0);
         assertEquals(vm.getAddedGroups().size(), 0);
@@ -149,9 +149,9 @@ public class ManageUserGroupsDialogVmTest {
      * @throws Exception who cares
      */
     @Test(dataProvider = "testGroups")
-    public void testMoveAllToAddedGroups(List<Group> testGroups) throws Exception {
+    public void testMoveAllToAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAvailableGroups(testGroups).getAvailableGroups().addToSelection(testGroups.get(1));
-        Set<Group> moved = vm.moveAllToAddedGroups();
+        Set<PoulpeGroup> moved = vm.moveAllToAddedGroups();
         assertTrue(vm.getAvailableGroups().isEmpty());
         assertEquals(moved.size(), testGroups.size());
         assertEquals(vm.getAddedGroups().size(), testGroups.size());
@@ -159,7 +159,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @Test
     public void testMoveAllToAddedGroups_withEmptyList() throws Exception {
-        Set<Group> moved = vm.moveAllToAddedGroups();
+        Set<PoulpeGroup> moved = vm.moveAllToAddedGroups();
         assertTrue(vm.getAvailableGroups().isEmpty());
         assertTrue(moved.isEmpty());
         assertTrue(vm.getAddedGroups().isEmpty());
@@ -167,9 +167,9 @@ public class ManageUserGroupsDialogVmTest {
 
 
     @Test(dataProvider = "testGroups")
-    public void testMoveAllFromAddedGroups(List<Group> testGroups) throws Exception {
+    public void testMoveAllFromAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups).getAddedGroups().addToSelection(testGroups.get(1));
-        Set<Group> moved = vm.moveAllFromAddedGroups();
+        Set<PoulpeGroup> moved = vm.moveAllFromAddedGroups();
         assertTrue(vm.getAddedGroups().isEmpty());
         assertEquals(vm.getAvailableGroups().size(), testGroups.size());
         assertEquals(moved.size(), testGroups.size());
@@ -177,7 +177,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @Test
     public void testMoveAllFromAddedGroups_withEmptyList() throws Exception {
-        Set<Group> moved = vm.moveAllFromAddedGroups();
+        Set<PoulpeGroup> moved = vm.moveAllFromAddedGroups();
         assertTrue(vm.getAvailableGroups().isEmpty());
         assertTrue(vm.getAddedGroups().isEmpty());
         assertTrue(moved.isEmpty());
@@ -185,7 +185,7 @@ public class ManageUserGroupsDialogVmTest {
 
     @DataProvider(name = "testGroups")
     public Object[][] provideTestGroups() {
-        return new Object[][]{{Group.createGroupsWithNames("1", "2", "3")}};
+        return new Object[][]{{PoulpeGroup.createGroupsWithNames("1", "2", "3")}};
     }
 
     /**
@@ -196,7 +196,7 @@ public class ManageUserGroupsDialogVmTest {
      * @param toMove an element to move from the added list to the list of available groups
      * @return the groups been moved
      */
-    private Collection<Group> moveFromAdded(ManageUserGroupsDialogVm vm, Group toMove) {
+    private Collection<PoulpeGroup> moveFromAdded(ManageUserGroupsDialogVm vm, PoulpeGroup toMove) {
         vm.getAddedGroups().addToSelection(toMove);
         return vm.moveSelectedFromAddedGroups();
     }
@@ -209,7 +209,7 @@ public class ManageUserGroupsDialogVmTest {
      * @param toMove an element to move from the available list to the list of added groups
      * @return the groups been moved
      */
-    private Collection<Group> moveToAdded(ManageUserGroupsDialogVm vm, Group toMove) {
+    private Collection<PoulpeGroup> moveToAdded(ManageUserGroupsDialogVm vm, PoulpeGroup toMove) {
         vm.getAvailableGroups().addToSelection(toMove);
         return vm.moveSelectedToAddedGroups();
     }

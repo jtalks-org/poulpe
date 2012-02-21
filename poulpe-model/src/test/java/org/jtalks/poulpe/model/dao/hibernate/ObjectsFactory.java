@@ -19,8 +19,8 @@ import java.util.UUID;
 
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Rank;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -76,8 +76,8 @@ public final class ObjectsFactory {
         return new User(random, random, random, random);
     }
 
-    public static Group createGroup() {
-        return new Group(random(), "desc");
+    public static PoulpeGroup createGroup() {
+        return new PoulpeGroup(random(), "desc");
     }
 
     private static String random() {

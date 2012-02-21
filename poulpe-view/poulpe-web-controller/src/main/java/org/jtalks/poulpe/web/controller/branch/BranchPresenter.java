@@ -17,11 +17,11 @@ package org.jtalks.poulpe.web.controller.branch;
 import java.util.Collections;
 
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -105,7 +105,7 @@ public class BranchPresenter {
         if (validate(branch)) {
             PoulpeSection section = branch.getPoulpeSection();
             section.addOrUpdateBranch(branch);
-            Group group = addOrUpdateGroup(branch);
+            PoulpeGroup group = addOrUpdateGroup(branch);
             sectionService.saveSection(section);
             setBranchPermissions(branch, group);
             view.hide();
@@ -125,12 +125,12 @@ public class BranchPresenter {
         }
     }
 
-    private Group addOrUpdateGroup(PoulpeBranch branch) {
-        Group group;
+    private PoulpeGroup addOrUpdateGroup(PoulpeBranch branch) {
+        PoulpeGroup group;
         if(branch.getGroups().size() > 0) {
             group = branch.getGroups().get(0);
         } else {
-            group = new Group();
+            group = new PoulpeGroup();
         }
         group.setName(branch.getName() + GROUP_SUFFIX);
         if(validate(group)) {
@@ -139,7 +139,7 @@ public class BranchPresenter {
         return group;
     }
 
-    private void setBranchPermissions(PoulpeBranch branch, Group group) {
+    private void setBranchPermissions(PoulpeBranch branch, PoulpeGroup group) {
         for(BranchPermission permission : BranchPermission.values()) {
             BranchAccessChanges branchAccess = new BranchAccessChanges(permission);
             branchAccess.setNewlyAddedGroups(Collections.singleton(group));

@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.model.dto.branches;
 
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -24,38 +24,38 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class GroupAccessList {
-    private final List<Group> allowed = new ArrayList<Group>();
-    private final List<Group> restricted = new ArrayList<Group>();
+    private final List<PoulpeGroup> allowed = new ArrayList<PoulpeGroup>();
+    private final List<PoulpeGroup> restricted = new ArrayList<PoulpeGroup>();
 
-    public List<Group> getAllowed() {
+    public List<PoulpeGroup> getAllowed() {
         return allowed;
     }
 
-    public GroupAccessList addAllowed(@Nullable Group group) {
+    public GroupAccessList addAllowed(@Nullable PoulpeGroup group) {
         if (group != null) {
             allowed.add(group);
         }
         return this;
     }
 
-    public GroupAccessList addRestricted(Group group) {
+    public GroupAccessList addRestricted(PoulpeGroup group) {
         if (group != null) {
             restricted.add(group);
         }
         return this;
     }
 
-    public GroupAccessList setAllowed(List<Group> allowed) {
+    public GroupAccessList setAllowed(List<PoulpeGroup> allowed) {
         this.allowed.clear();
         this.allowed.addAll(allowed);
         return this;
     }
 
-    public List<Group> getRestricted() {
+    public List<PoulpeGroup> getRestricted() {
         return restricted;
     }
 
-    public GroupAccessList setRestricted(List<Group> restricted) {
+    public GroupAccessList setRestricted(List<PoulpeGroup> restricted) {
         this.restricted.clear();
         this.restricted.addAll(restricted);
         return this;

@@ -16,36 +16,34 @@ package org.jtalks.poulpe.service;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
- * @author Vitaliy Kravchenko
- * @author Kirill Afonin
  */
-public interface GroupService extends EntityService<Group> {
+public interface GroupService extends EntityService<PoulpeGroup> {
 
     /**
      * Get list of all persistence objects T currently present in database.
      *
      * @return - list of persistence objects T.
      */
-    List<Group> getAll();
+    List<PoulpeGroup> getAll();
     
-    List<Group> getAllMatchedByName(String name);
+    List<PoulpeGroup> getAllMatchedByName(String name);
 
     /**
      * Delete group
      * @param selectedBranch branch to delete
      */
-    void deleteGroup(Group selectedGroup);
+    void deleteGroup(PoulpeGroup selectedGroup);
 
     /**
      * Save or update group.
      * @param selectedGroup instance to save
      * @throws NotUniqueException if group with the same name already exists
      */
-    void saveGroup(Group selectedGroup);   
+    void saveGroup(PoulpeGroup selectedGroup);   
     
 
 }

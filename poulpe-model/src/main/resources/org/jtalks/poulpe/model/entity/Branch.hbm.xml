@@ -48,7 +48,7 @@
     <list name="groups" inverse="false" lazy="false" cascade="all-delete-orphan">
       <key column="BRANCH_ID" foreign-key="FK_BRANCH" />
       <list-index column="POSITION" />
-      <one-to-many class="org.jtalks.common.model.entity.Group" />
+      <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeGroup" />
     </list>
     
   </subclass>

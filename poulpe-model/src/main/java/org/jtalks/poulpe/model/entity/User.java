@@ -17,7 +17,6 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
 
 /**
  * Stores information about the user.
@@ -29,7 +28,7 @@ public class User extends org.jtalks.common.model.entity.User {
 
     private static final long serialVersionUID = -6429539956660665057L;
 
-    private List<Group> groups = new ArrayList<Group>();
+    private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
 
     /**
      * Only for hibernate usage.
@@ -68,7 +67,7 @@ public class User extends org.jtalks.common.model.entity.User {
      *
      * @return the list of groups assigned to user
      */
-    public List<Group> getGroups() {
+    public List<PoulpeGroup> getGroups() {
         return groups;
     }
 
@@ -77,7 +76,7 @@ public class User extends org.jtalks.common.model.entity.User {
      *
      * @param groups the new list of groups to set
      */
-    public void setGroups(List<Group> groups) {
+    public void setGroups(List<PoulpeGroup> groups) {
         this.groups = groups;
     }
 

@@ -19,7 +19,7 @@ import static org.mockito.Mockito.verify;
 import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
@@ -45,13 +45,13 @@ public class GroupPresenterTest {
     
     @Test
     public void testInitView() throws Exception {
-        List<Group> emptyList = Collections.emptyList();
+        List<PoulpeGroup> emptyList = Collections.emptyList();
         verify(viewMock).updateView(emptyList);
     }
     
     @Test
     public void testOnEditGroup() {
-        Group group = new Group();
+        PoulpeGroup group = new PoulpeGroup();
         presenter.onEditGroup(group);
         verify(viewMock).openEditDialog(group);
     }

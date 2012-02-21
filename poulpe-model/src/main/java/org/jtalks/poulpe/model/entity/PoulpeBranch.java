@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.annotations.UniqueConstraint;
 
 /**
@@ -29,7 +28,7 @@ import org.jtalks.common.validation.annotations.UniqueConstraint;
 @UniqueConstraint
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     private List<User> moderators = new ArrayList<User>();
-    private List<Group> groups = new ArrayList<Group>();
+    private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
 
     public PoulpeBranch() {
         super();
@@ -133,29 +132,29 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     }
 
     /**
-     * Returns a list of user {@link Group}s of this branch.
+     * Returns a list of user {@link PoulpeGroup}s of this branch.
      * 
      * @return list of user groups
      */
-    public List<Group> getGroups() {
+    public List<PoulpeGroup> getGroups() {
         return groups;
     }
 
     /**
-     * Assigns a list of user {@link Group}s for this branch.
+     * Assigns a list of user {@link PoulpeGroup}s for this branch.
      * 
      * @param groups - list of user groups
      */
-    public void setGroups(List<Group> groups) {
+    public void setGroups(List<PoulpeGroup> groups) {
         this.groups = groups;
     }
 
     /**
-     * Adds a user {@link Group} for this branch.
+     * Adds a user {@link PoulpeGroup} for this branch.
      * 
      * @param group - user group to add
      */
-    public void addGroup(Group group) {
+    public void addGroup(PoulpeGroup group) {
         this.groups.add(group);
     }
     
@@ -164,7 +163,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
         visitor.visitBranch(this);
     }
 
-    public void addOrUpdateGroup(Group group) {
+    public void addOrUpdateGroup(PoulpeGroup group) {
         for(int i = 0; i < groups.size(); i++) {
             if(group.getId() == groups.get(i).getId()) {
                 groups.set(i, group);

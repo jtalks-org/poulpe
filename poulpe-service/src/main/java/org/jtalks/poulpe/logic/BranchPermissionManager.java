@@ -14,18 +14,21 @@
  */
 package org.jtalks.poulpe.logic;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.jtalks.common.model.dao.GroupDao;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.security.acl.UserGroupSid;
+import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions related to the
@@ -72,13 +75,31 @@ public class BranchPermissionManager {
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
-
     public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
         List<GroupAce> groupAces = aclManager.getBranchPermissions(branch);
         for(GroupAce groupAce: groupAces){
-            branchAccessList.put(groupAce.getBranchPermission(), groupAce.getGroup(groupDao), groupAce.isGranting());
+            branchAccessList.put(groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
         }
         return branchAccessList;
     }
+
+    private PoulpeGroup getGroup(GroupAce groupAce) {
+        long groupId = extractGroupId(groupAce);
+        return groupDao.get(groupId);
+    }
+    
+    // TODO: get rid of it once GroupAce#getGroupId() is created
+    private static long extractGroupId(GroupAce groupAce) {
+        try {
+            Class<GroupAce> groupAceClass = GroupAce.class;
+            Field aceField = groupAceClass.getDeclaredField("ace");
+            UserGroupSid userGroupSid = (UserGroupSid) aceField.get(groupAce);
+
+            return Long.parseLong(userGroupSid.getGroupId());
+        } catch (Exception e) {
+            throw new RuntimeException("Error accessing to ace private field, nested exception: ", e);
+        }
+    }
+    
 }

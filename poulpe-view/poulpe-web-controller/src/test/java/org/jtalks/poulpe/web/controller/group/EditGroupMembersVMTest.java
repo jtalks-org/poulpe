@@ -32,8 +32,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -58,11 +58,11 @@ public class EditGroupMembersVMTest {
     // SUT
     private EditGroupMembersVM viewModel;
 
-    private Group groupToEdit;
+    private PoulpeGroup groupToEdit;
     private List<User> usersAvailable;
     private Set<User> usersSelectedInAvailable;
     private Set<User> usersSelectedInExist;
-    private SelectedEntity<Group> selectedEntity;
+    private SelectedEntity<PoulpeGroup> selectedEntity;
 
     @Mock
     private GroupService groupService;
@@ -83,7 +83,7 @@ public class EditGroupMembersVMTest {
         usersSelectedInAvailable = Sets.newHashSet(usersAvailable.get(0));
         usersSelectedInExist = Sets.newHashSet(usersAlreadyInGroup.get(0));
 
-        selectedEntity = new SelectedEntity<Group>();
+        selectedEntity = new SelectedEntity<PoulpeGroup>();
         selectedEntity.setEntity(groupToEdit);
 
         givenGroupExistInPersistent();
@@ -179,8 +179,8 @@ public class EditGroupMembersVMTest {
         verify(userService, never()).setTemporaryBanStatus(anyCollectionOf(User.class), anyInt(), anyString());
         verify(userService, never()).updateUser(any(User.class));
 
-        verify(groupService, never()).saveGroup(any(Group.class));
-        verify(groupService, never()).deleteGroup(any(Group.class));
+        verify(groupService, never()).saveGroup(any(PoulpeGroup.class));
+        verify(groupService, never()).deleteGroup(any(PoulpeGroup.class));
     }
 
     private void givenGroupExistInPersistent() throws NotFoundException {
@@ -197,9 +197,9 @@ public class EditGroupMembersVMTest {
         when(viewModel.getExistSelected()).thenReturn(usersSelectedInExist);
     }
 
-    private Group createGroupWithUsers(List<User> usersInGroup) {
-        Group group = new Group(RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20));
-        group.setUsers(usersInGroup);
+    private PoulpeGroup createGroupWithUsers(List<User> usersInGroup) {
+        PoulpeGroup group = new PoulpeGroup(RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20));
+        group.setPoulpeUsers(usersInGroup);
         return group;
     }
 

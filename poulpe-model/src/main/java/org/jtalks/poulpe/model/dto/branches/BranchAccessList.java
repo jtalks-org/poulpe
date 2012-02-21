@@ -16,8 +16,8 @@ package org.jtalks.poulpe.model.dto.branches;
 
 import com.google.common.collect.Maps;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import java.util.List;
 import java.util.Map;
@@ -37,30 +37,30 @@ public class BranchAccessList {
         accessListMap.putAll(addToAccessList);
     }
 
-    public BranchAccessList put(BranchPermission permission, Group toAllow, Group toRestrict) {
+    public BranchAccessList put(BranchPermission permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
         this.accessListMap.putIfAbsent(permission, new GroupAccessList());
         GroupAccessList accessList = this.accessListMap.get(permission);
         accessList.addAllowed(toAllow).addRestricted(toRestrict);
         return this;
     }
 
-    public BranchAccessList addAllowed(BranchPermission permission, Group group) {
+    public BranchAccessList addAllowed(BranchPermission permission, PoulpeGroup group) {
         return put(permission, group, null);
     }
 
-    public BranchAccessList addRestricted(BranchPermission permission, Group group) {
+    public BranchAccessList addRestricted(BranchPermission permission, PoulpeGroup group) {
         return put(permission, null, group);
     }
 
-    public BranchAccessList put(BranchPermission permission, Group group, boolean allow) {
+    public BranchAccessList put(BranchPermission permission, PoulpeGroup group, boolean allow) {
         return allow ? addAllowed(permission, group) : addRestricted(permission, group);
     }
 
-    public List<Group> getAllowed(BranchPermission permission) {
+    public List<PoulpeGroup> getAllowed(BranchPermission permission) {
         return accessListMap.get(permission).getAllowed();
     }
 
-    public List<Group> getRestricted(BranchPermission permission) {
+    public List<PoulpeGroup> getRestricted(BranchPermission permission) {
         return accessListMap.get(permission).getRestricted();
     }
 

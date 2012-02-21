@@ -16,8 +16,8 @@ package org.jtalks.poulpe.model.dto.branches;
 
 import com.google.common.collect.ImmutableList;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,8 +28,8 @@ import java.util.List;
  */
 public class BranchAccessChanges {
     private final JtalksPermission permission;
-    private final List<Group> newlyAddedGroups = new ArrayList<Group>();
-    private final List<Group> removedGroups = new ArrayList<Group>();
+    private final List<PoulpeGroup> newlyAddedGroups = new ArrayList<PoulpeGroup>();
+    private final List<PoulpeGroup> removedGroups = new ArrayList<PoulpeGroup>();
 
     public BranchAccessChanges(JtalksPermission permission) {
         this.permission = permission;
@@ -37,41 +37,41 @@ public class BranchAccessChanges {
 
     /**
      * Get newly added permissions
-     * @return Group[] with newly permissions
+     * @return PoulpeGroup[] with newly permissions
      */
-    public Group[] getNewlyAddedGroupsAsArray() {
-        return newlyAddedGroups.toArray(new Group[newlyAddedGroups.size()]);
+    public PoulpeGroup[] getNewlyAddedGroupsAsArray() {
+        return newlyAddedGroups.toArray(new PoulpeGroup[newlyAddedGroups.size()]);
     }
 
     /**
      * Set newly added permissions
      * @param newlyAddedGroups - list of newly added permissions
      */
-    public void setNewlyAddedGroups(Collection<Group> newlyAddedGroups) {
+    public void setNewlyAddedGroups(Collection<PoulpeGroup> newlyAddedGroups) {
         this.newlyAddedGroups.addAll(newlyAddedGroups);
     }
 
     /**
      * Get removed permissions
-     * @return Group[] with removed permissions
+     * @return PoulpeGroup[] with removed permissions
      */
-    public List<Group> getRemovedGroups() {
+    public List<PoulpeGroup> getRemovedGroups() {
         return ImmutableList.copyOf(removedGroups);
     }
 
     /**
      * Get removed permissions
-     * @return Group[] with removed permissions
+     * @return PoulpeGroup[] with removed permissions
      */
-    public Group[] getRemovedGroupsAsArray() {
-        return removedGroups.toArray(new Group[removedGroups.size()]);
+    public PoulpeGroup[] getRemovedGroupsAsArray() {
+        return removedGroups.toArray(new PoulpeGroup[removedGroups.size()]);
     }
 
     /**
      * Set removed permissions
      * @param removedGroups - list with removed permissions
      */
-    public void setRemovedGroups(Collection<Group> removedGroups) {
+    public void setRemovedGroups(Collection<PoulpeGroup> removedGroups) {
         this.removedGroups.addAll(removedGroups);
     }
 

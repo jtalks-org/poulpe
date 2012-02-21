@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.GroupService;
 
 import java.util.List;
@@ -27,7 +27,7 @@ import java.util.List;
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
+public class TransactionalGroupService extends AbstractTransactionalEntityService<PoulpeGroup, GroupDao>
         implements GroupService {
     private final EntityValidator validator;
 
@@ -45,12 +45,12 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getAll() {
+    public List<PoulpeGroup> getAll() {
         return dao.getAll();
     }
 
     @Override
-    public List<Group> getAllMatchedByName(String name) {
+    public List<PoulpeGroup> getAllMatchedByName(String name) {
         return dao.getMatchedByName(name);
     }
 
@@ -58,7 +58,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public void deleteGroup(Group group) {
+    public void deleteGroup(PoulpeGroup group) {
         // TODO: check returned value?
         if (group == null) {
             throw new IllegalArgumentException();
@@ -70,7 +70,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public void saveGroup(Group selectedGroup) {
+    public void saveGroup(PoulpeGroup selectedGroup) {
         validator.throwOnValidationFailure(selectedGroup);
         dao.saveOrUpdate(selectedGroup);
     }

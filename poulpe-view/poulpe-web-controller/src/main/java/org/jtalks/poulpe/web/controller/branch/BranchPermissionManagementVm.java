@@ -17,12 +17,12 @@ package org.jtalks.poulpe.web.controller.branch;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -81,7 +81,7 @@ public class BranchPermissionManagementVm {
         String permissionName = parsedParams.get("permissionName");
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
-        List<Group> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
+        List<PoulpeGroup> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
         Window branchWindow = (Window) getComponent("branchPermissionManagementWindow");
         groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
                 branchPermissionManagementBlock.getPermission());
@@ -149,7 +149,7 @@ public class BranchPermissionManagementVm {
         return branch;
     }
 
-    private List<Group> getGroupsDependingOnMode(String mode,
+    private List<PoulpeGroup> getGroupsDependingOnMode(String mode,
                                                  BranchPermissionManagementBlock branchPermissionManagementBlock) {
         if ("allow".equalsIgnoreCase(mode)) {
             return branchPermissionManagementBlock.getAllowRow().getGroups();
@@ -168,9 +168,9 @@ public class BranchPermissionManagementVm {
         return parsedParams;
     }
 
-    private ManageUserGroupsDialogVm createDialogData(List<Group> addedGroups, boolean allowAccess,
+    private ManageUserGroupsDialogVm createDialogData(List<PoulpeGroup> addedGroups, boolean allowAccess,
                                                       JtalksPermission permission) {
-        List<Group> allGroups = groupService.getAll();
+        List<PoulpeGroup> allGroups = groupService.getAll();
         allGroups.removeAll(addedGroups);
         return new ManageUserGroupsDialogVm(permission, allowAccess)
                 .setAvailableGroups(allGroups).setAddedGroups(addedGroups);

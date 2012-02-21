@@ -12,48 +12,50 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.common.model.dao.hibernate;
-
-import org.hibernate.Query;
-import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.entity.Group;
+package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.List;
+
+import org.hibernate.Query;
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * Hibernate implementation of {@link GroupDao}
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
+public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeGroup> implements GroupDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<Group> getAll() {
-        return getSession().createQuery("from Group").list();
+    public List<PoulpeGroup> getAll() {
+        return getSession().createQuery("from PoulpeGroup").list();
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public List<Group> getMatchedByName(String name) {
+    public List<PoulpeGroup> getMatchedByName(String name) {
         if (name == null) {
             return getAll();
         }
 
-        Query query = getSession().createQuery("from Group g where g.name like ?");
+        Query query = getSession().createQuery("from PoulpeGroup g where g.name like ?");
         query.setString(0, "%" + name + "%");
 
         return query.list();
     }
 
     @Override
-    public void delete(Group pGroup) {
-        getSession().update(pGroup);
+    public void delete(PoulpeGroup poulpeGroup) {
+        getSession().update(poulpeGroup);
 
-        pGroup.getUsers().clear();
-        saveOrUpdate(pGroup);
-        super.delete(pGroup.getId());
+        poulpeGroup.getUsers().clear();
+        saveOrUpdate(poulpeGroup);
+        super.delete(poulpeGroup.getId());
     }
 }

@@ -16,9 +16,9 @@ package org.jtalks.common.model.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -48,7 +48,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     @Autowired
     private GroupDao dao;
 
-    private Group group;
+    private PoulpeGroup group;
     private Session session;
 
     @BeforeMethod
@@ -61,13 +61,13 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
      * Straightforward saving of the group
      */
     public void testSave() {
-        Group testGroup = ObjectsFactory.createGroup();
+        PoulpeGroup testGroup = ObjectsFactory.createGroup();
         session.save(testGroup);
 
         assertNotSame(testGroup.getId(), 0, "ID is not created");
 
         session.evict(testGroup);
-        Group savedGroup = (Group) session.get(Group.class, testGroup.getId());
+        PoulpeGroup savedGroup = (PoulpeGroup) session.get(PoulpeGroup.class, testGroup.getId());
 
         assertReflectionEquals(testGroup, savedGroup);
     }
@@ -76,21 +76,21 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     public void testGetAll() {
         group = ObjectsFactory.createGroup();
         session.save(group);
-        List<Group> list = dao.getAll();
+        List<PoulpeGroup> list = dao.getAll();
         assertTrue(list.contains(group));
     }
 
     @Test(expectedExceptions = DataIntegrityViolationException.class)
     public void testSaveGroupWithNullName() {
-        Group testGroup = new Group();
+        PoulpeGroup testGroup = new PoulpeGroup();
         dao.saveOrUpdate(testGroup);
     }
 
     public void testGetById() {
-        Group group = ObjectsFactory.createGroup();
+        PoulpeGroup group = ObjectsFactory.createGroup();
         session.save(group);
 
-        Group result = dao.get(group.getId());
+        PoulpeGroup result = dao.get(group.getId());
 
         assertNotNull(result);
         assertEquals(result.getId(), group.getId());
@@ -98,7 +98,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
 
     @Test
     public void testGetInvalidId() {
-        Group result = dao.get(-567890L);
+        PoulpeGroup result = dao.get(-567890L);
         assertNull(result);
     }
 
@@ -106,16 +106,15 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     public void testGetMatchedByName() {
         group = ObjectsFactory.createGroup();
         session.save(group);
-        List<Group> list = dao.getMatchedByName(group.getName());
+        List<PoulpeGroup> list = dao.getMatchedByName(group.getName());
         assertTrue(list.contains(group));
 
     }
 
     @Test
     public void testGetMatchedByNameWhenNameIsNull() {
-        List<Group> listAll = dao.getAll();
-        @SuppressWarnings({"NullableProblems"})
-        List<Group> listReturned = dao.getMatchedByName(null);
+        List<PoulpeGroup> listAll = dao.getAll();
+        List<PoulpeGroup> listReturned = dao.getMatchedByName(null);
         assertEquals(listAll, listReturned);
     }
 

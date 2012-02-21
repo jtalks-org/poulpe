@@ -12,25 +12,25 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.common.model.dao;
+package org.jtalks.poulpe.model.dao;
 
 import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * @author Konstantin Akimov
  */
 
-public interface GroupDao extends ParentRepository<Group> {
+public interface GroupDao extends ParentRepository<PoulpeGroup> {
 
     /**
      * Get the list of all groups.
      *
      * @return list of groups
      */
-    List<Group> getAll();
+    List<PoulpeGroup> getAll();
     
     
     /**
@@ -38,5 +38,5 @@ public interface GroupDao extends ParentRepository<Group> {
      * @param name
      * @return list of groups
      */
-    List<Group> getMatchedByName(String name);
+    List<PoulpeGroup> getMatchedByName(String name);
 }
