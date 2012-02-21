@@ -36,5 +36,8 @@
       </many-to-many>
     </bag>
     
+    <many-to-one column="BRANCH_ID" name="branch" class="org.jtalks.poulpe.model.entity.PoulpeBranch"
+      lazy="false" update="false" insert="false" />
+    
   </class>
 </hibernate-mapping>

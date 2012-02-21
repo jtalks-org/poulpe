@@ -26,6 +26,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.validation.annotations.UniqueConstraint;
 import org.jtalks.common.validation.annotations.UniqueField;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.User;
 
 /**
@@ -60,6 +61,7 @@ public class Group extends Entity {
     
     private String description;
     private List<User> users = new ArrayList<User>();
+    private PoulpeBranch branch;
 
     /**
      * Creates {@link Group} with empty users list
@@ -140,6 +142,24 @@ public class Group extends Entity {
     }
 
     /**
+     * Returns branch of this group.
+     *
+     * @return branch of this group
+     */
+    public PoulpeBranch getBranch() {
+		return branch;
+	}
+
+    /**
+     * Sets branch for this group.
+     *
+     * @param branch branch to set for the group
+     */
+	public void setBranch(PoulpeBranch branch) {
+		this.branch = branch;
+	}
+
+	/**
      * A handy method to create a number of groups with specified names.
      *
      * @param names the names you want resulting groups to be with

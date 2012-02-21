@@ -14,8 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.Collections;
+
+import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -30,12 +36,12 @@ import org.jtalks.poulpe.web.controller.section.SectionPresenter;
  */
 public class BranchPresenter {
 
+    public static final String GROUP_SUFFIX = " Moderators";
+    private SectionPresenter sectionPresenter;
     private SectionService sectionService;
+    private BranchService branchService;
     private EntityValidator entityValidator;
     private BranchDialogView view;
-    private SectionPresenter sectionPresenter;
-    
-    private BranchService branchService;
 
     public SectionPresenter getSectionPresenter() {
         return sectionPresenter;
@@ -88,15 +94,56 @@ public class BranchPresenter {
         return saveBranch(branch);
     }
 
+    /**
+     * When a new branch is saved, then a new group is created using this branch's name: '[New_branch_name] Moderators'.
+     * When editing branch (its name), its group's name changed respectively.
+     * 
+     * @param branch branch to save/edit
+     * @return true on success creation/modification, false on branch or group validation failure
+     */
     protected boolean saveBranch(PoulpeBranch branch) {
         if (validate(branch)) {
             PoulpeSection section = branch.getPoulpeSection();
             section.addOrUpdateBranch(branch);
+            Group group = addOrUpdateGroup(branch);
             sectionService.saveSection(section);
+            setBranchPermissions(branch, group);
             view.hide();
             return true;
         } else {
             return false;
+        }
+    }
+    
+    private boolean validate(Entity entity) {
+        ValidationResult result = entityValidator.validate(entity);
+        if (result.hasErrors()) {
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private Group addOrUpdateGroup(PoulpeBranch branch) {
+        Group group;
+        if(branch.getGroups().size() > 0) {
+            group = branch.getGroups().get(0);
+        } else {
+            group = new Group();
+        }
+        group.setName(branch.getName() + GROUP_SUFFIX);
+        if(validate(group)) {
+            branch.addOrUpdateGroup(group);
+        }
+        return group;
+    }
+
+    private void setBranchPermissions(PoulpeBranch branch, Group group) {
+        for(BranchPermission permission : BranchPermission.values()) {
+            BranchAccessChanges branchAccess = new BranchAccessChanges(permission);
+            branchAccess.setNewlyAddedGroups(Collections.singleton(group));
+            branchService.changeGrants(branch, branchAccess);
         }
     }
     
@@ -105,17 +152,6 @@ public class BranchPresenter {
      */
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
-    }
-    
-    private boolean validate(PoulpeBranch branch) {
-        ValidationResult result = entityValidator.validate(branch);
-
-        if (result.hasErrors()) {
-            view.validationFailure(result);
-            return false;
-        } else {
-            return true;
-        }
     }
 
 }

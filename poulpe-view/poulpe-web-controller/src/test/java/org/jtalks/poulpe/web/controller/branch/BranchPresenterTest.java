@@ -14,18 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import static org.jtalks.poulpe.web.controller.branch.BranchPresenter.GROUP_SUFFIX;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -39,29 +44,23 @@ import org.testng.annotations.Test;
  * @author Bekrenev Dmitry
  * */
 public class BranchPresenterTest {
-    @Mock
-    SectionService service;
-    @Mock
-    BranchDialogView view;
-    @Mock
-    BranchService branchService;
-    @Mock 
-    EntityValidator entityValidator;
+    private static final String BRANCH_NAME = "TestBranch";
+    private static final String BRANCH_NEW_NAME = "NewTestBranch2";
     private PoulpeSection section = new PoulpeSection("sectionName", "sectionDescription");
     BranchPresenter presenter = new BranchPresenter();
-    
-    private ValidationResult resultWithErrors = resultWithErrors();
-
-    private ValidationResult resultWithErrors() {
-        ValidationError error = new ValidationError("name", PoulpeBranch.BRANCH_ALREADY_EXISTS);
-        Set<ValidationError> errors = Collections.singleton(error);
-        return new ValidationResult(errors);
-    }
+    @Mock
+    SectionService sectionService;
+    @Mock
+    BranchService branchService;
+    @Mock
+    BranchDialogView view;
+    @Mock 
+    EntityValidator entityValidator;
 
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        presenter.setSectionService(service);
+        presenter.setSectionService(sectionService);
         presenter.setView(view);
         presenter.setBranchService(branchService);
         presenter.setEntityValidator(entityValidator);
@@ -70,7 +69,7 @@ public class BranchPresenterTest {
     @Test
     public void testInitView() {
         List<PoulpeSection> sections = Collections.nCopies(4, section);
-        when(service.getAll()).thenReturn(sections);
+        when(sectionService.getAll()).thenReturn(sections);
 
         presenter.initView();
 
@@ -81,28 +80,86 @@ public class BranchPresenterTest {
     public void testSaveBranch() {
         givenNoConstraintsViolated();
         
-        PoulpeBranch branch = new PoulpeBranch();
-        branch.setSection(new PoulpeSection());
+        PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
+        branch.setSection(section);
         presenter.saveBranch(branch);
+        
+        assertEquals(branch.getGroups().size(), 1);
+        Group group = branch.getGroups().get(0);
+        assertEquals(group.getName(), BRANCH_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
-        verify(service).saveSection(any(PoulpeSection.class));
+        verify(sectionService).saveSection(any(PoulpeSection.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+    }
+
+    @Test
+    public void testRenameBranch() {
+        PoulpeBranch branch = createNewBranch();
+        branch.setName(BRANCH_NEW_NAME);
+        presenter.saveBranch(branch);
+        
+        Group group = branch.getGroups().get(0);
+        assertEquals(group.getName(), BRANCH_NEW_NAME + GROUP_SUFFIX);
+        verify(view, never()).validationFailure(any(ValidationResult.class));
+        verify(sectionService, times(2)).saveSection(any(PoulpeSection.class));
+        verify(branchService, times(6)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+    }
+
+    @Test
+    public void testSaveBranchWhenBranchExceptionHappen()  {
+        PoulpeBranch branch = new PoulpeBranch();
+        givenBranchConstraintViolated();
+       
+        presenter.saveBranch(branch);
+        verify(sectionService, never()).saveSection(any(PoulpeSection.class));
+        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+    }
+    
+    @Test
+    public void testSaveBranchWhenGroupExceptionHappen()  {
+        PoulpeBranch branch = new PoulpeBranch();
+        givenGroupConstraintViolated();
+       
+        presenter.saveBranch(branch);
+        verify(sectionService, never()).saveSection(any(PoulpeSection.class));
+        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+    }
+
+    private PoulpeBranch createNewBranch() {
+        givenNoConstraintsViolated();
+        
+        PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
+        branch.setSection(section);
+        presenter.saveBranch(branch);
+        return branch;
     }
     
     private void givenNoConstraintsViolated() {
         when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(ValidationResult.EMPTY);
     }
 
-  @Test
-    public void testSaveBranchWhenExceptionHappen()  {
-       PoulpeBranch branch = new PoulpeBranch();
-       givenConstraintViolated();
-       
-        presenter.saveBranch(branch);
-        verify(branchService, never()).saveBranch(any(PoulpeBranch.class));
+    private void givenBranchConstraintViolated() {
+        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(resultWithBranchErrors);
     }
 
-    private void givenConstraintViolated() {
-        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(resultWithErrors);
+    private ValidationResult resultWithBranchErrors = resultWithBranchErrors();
+
+    private ValidationResult resultWithBranchErrors() {
+        ValidationError error = new ValidationError("name", PoulpeBranch.BRANCH_ALREADY_EXISTS);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
+    }
+
+    private void givenGroupConstraintViolated() {
+        when(entityValidator.validate(any(Group.class))).thenReturn(resultWithGroupErrors);
+    }
+
+    private ValidationResult resultWithGroupErrors = resultWithGroupErrors();
+
+    private ValidationResult resultWithGroupErrors() {
+        ValidationError error = new ValidationError("group", Group.GROUP_ALREADY_EXISTS);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
     }
 
 }
