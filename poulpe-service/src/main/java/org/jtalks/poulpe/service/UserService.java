@@ -17,8 +17,7 @@ package org.jtalks.poulpe.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.jtalks.common.security.user.LastLoginTimeServiceMixin;
-import org.jtalks.common.service.EntityService;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
 
 /**
@@ -28,7 +27,7 @@ import org.jtalks.poulpe.model.entity.User;
  * @author Vyacheslav Zhivaev
  *
  */
-public interface UserService extends EntityService<User>, LastLoginTimeServiceMixin {
+public interface UserService {
 
     /**
      * Sets permanent ban status for the user list.
@@ -62,5 +61,12 @@ public interface UserService extends EntityService<User>, LastLoginTimeServiceMi
      * Update corresponding user
      */
     void updateUser(User user);
+
+    /**
+     * 
+     * @param id
+     * @return
+     */
+    User get(long id) throws NotFoundException;
 
 }

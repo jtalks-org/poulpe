@@ -70,7 +70,7 @@ public class TransactionalUserServiceTest {
     public void testGetAll() {
         userService.getAll();
 
-        verify(userDao).getAll();
+        verify(userDao).getAllPoulpeUsers();
     }
 
     @Test
@@ -79,7 +79,7 @@ public class TransactionalUserServiceTest {
 
         userService.getUsersByUsernameWord(word);
 
-        verify(userDao).getByUsernamePart(word);
+        verify(userDao).getPoulpeUserByUsernamePart(word);
     }
     
     @Test
@@ -91,7 +91,7 @@ public class TransactionalUserServiceTest {
         verify(userDao).update(user);
     }
     
-    @Test
+    /*@Test
     public void testUpdateLastLoginTime() {
         User user = mock(User.class);
         
@@ -99,7 +99,7 @@ public class TransactionalUserServiceTest {
         
         verify(user).updateLastLoginTime();
         verify(userDao).update(user);
-    }
+    }*/
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetTemporaryBanStatusIllegalArgument() {

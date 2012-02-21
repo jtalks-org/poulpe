@@ -80,7 +80,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
     public void testGetByUsername() {
         givenUserSavedAndEvicted();
 
-        User actual = dao.getByUsername(user.getUsername());
+        User actual = dao.getPoulpeUserByUsername(user.getUsername());
 
         assertEquals(actual, user);
     }
@@ -91,7 +91,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
         givenUserSavedAndEvicted();
 
-        List<User> users = dao.getByUsernamePart(user.getUsername().substring(0, 8));
+        List<User> users = dao.getPoulpeUserByUsernamePart(user.getUsername().substring(0, 8));
         assertTrue(users.contains(user));
     }
 
@@ -111,7 +111,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
         String encodedUsername = user.getEncodedUsername();
 
-        assertEquals(dao.getByEncodedUsername(encodedUsername), user);
+        assertEquals(dao.getPoulpeUserByEncodedUsername(encodedUsername), user);
     }
 
     @Test
@@ -131,7 +131,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
     public void testGetAll() {
         givenUserSavedAndEvicted();
 
-        List<User> users = dao.getAll();
+        List<User> users = dao.getAllPoulpeUsers();
 
         assertTrue(users.size() == 1);
         assertTrue(users.contains(user));

@@ -16,7 +16,6 @@ package org.jtalks.poulpe.model.dao;
 
 import java.util.List;
 
-import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.User;
 
 /**
@@ -25,61 +24,40 @@ import org.jtalks.poulpe.model.entity.User;
  * @author Vyacheslav Zhivaev
  * 
  */
-public interface UserDao extends ParentRepository<User> {
+public interface UserDao extends org.jtalks.common.model.dao.UserDao {
 
     /**
      * Get {@link User} with corresponding username.
      * 
-     * @param username
-     *            name of requested user.
+     * @param username name of requested user.
      * @return {@link User} with given username.
      * @see User
      */
-    User getByUsername(String username);
+    User getPoulpeUserByUsername(String username);
 
     /**
      * Find all users whose username contains specified string.
      * 
-     * @param substring
-     *            or symbol in user name of requested user.
+     * @param substring or symbol in user name of requested user.
      * @return List of users with given string in username.
      * @see User
      */
-    List<User> getByUsernamePart(String substring);
-
-    /**
-     * Check if {@link User} with given username exist.
-     * 
-     * @param username
-     *            username
-     * @return {@code true} if {@link User} with given username exist or {@code false}
-     */
-    boolean isUserWithUsernameExist(String username);
+    List<User> getPoulpeUserByUsernamePart(String substring);
 
     /**
      * Get {@link User} with corresponding encodedUsername.
      * 
-     * @param encodedUsername
-     *            encoded name of requested user.
+     * @param encodedUsername encoded name of requested user.
      * @return {@link User} with given encodedUsername.
      * @see User
      */
-    User getByEncodedUsername(String encodedUsername);
-
-    /**
-     * Check if {@link User} with given email exist.
-     * 
-     * @param email
-     *            email
-     * @return {@code true} if {@link User} with given email exist or {@code false}
-     */
-    boolean isUserWithEmailExist(String email);
+    User getPoulpeUserByEncodedUsername(String encodedUsername);
 
     /**
      * Get {@link List} with all Users.
      * 
      * @return {@code List<User>}
      */
-    List<User> getAll();
+    List<User> getAllPoulpeUsers();
 
 }
