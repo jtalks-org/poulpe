@@ -19,6 +19,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -61,7 +62,7 @@ public class ManageUserGroupsDialogVmTest {
      * 3.Moves the same element back.
      * 4.Checks that {@link ManageUserGroupsDialogVm#getNewAdded()} returns empty list.
      * </pre>
-     *
+     * 
      * @param testGroups 2 random test groups
      * @throws Exception who would care
      */
@@ -78,11 +79,11 @@ public class ManageUserGroupsDialogVmTest {
     public void testMoveSelectedToAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAvailableGroups(testGroups);
         Collection<PoulpeGroup> movedGroups = moveToAdded(vm, testGroups.get(0));
-        //check sizes of after moving the moving
+        // check sizes of after moving the moving
         assertEquals(movedGroups.size(), 1);
         assertEquals(vm.getAvailableGroups().size(), testGroups.size() - 1);
         assertEquals(vm.getAddedGroups().size(), 1);
-        //check elements actually moved
+        // check elements actually moved
         assertSame(movedGroups.iterator().next(), testGroups.get(0));
         assertSame(vm.getAvailableGroups().iterator().next(), testGroups.get(1));
         assertSame(vm.getAddedGroups().iterator().next(), testGroups.get(0));
@@ -109,11 +110,11 @@ public class ManageUserGroupsDialogVmTest {
     public void testMoveSelectedFromAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups);
         Collection<PoulpeGroup> movedGroups = moveFromAdded(vm, testGroups.get(1));
-        //check sizes of after moving the moving
+        // check sizes of after moving the moving
         assertEquals(movedGroups.size(), 1);
         assertEquals(vm.getAvailableGroups().size(), 1);
         assertEquals(vm.getAddedGroups().size(), testGroups.size() - 1);
-        //check elements actually moved
+        // check elements actually moved
         assertSame(movedGroups.iterator().next(), testGroups.get(1));
         assertSame(vm.getAvailableGroups().iterator().next(), testGroups.get(1));
         assertSame(vm.getAddedGroups().iterator().next(), testGroups.get(0));
@@ -144,7 +145,7 @@ public class ManageUserGroupsDialogVmTest {
      * 2. Select some of elements just for to ensure this doesn't impact anything
      * 3. Check all elements moved to added list
      * </pre>
-     *
+     * 
      * @param testGroups 2 random test groups
      * @throws Exception who cares
      */
@@ -165,7 +166,6 @@ public class ManageUserGroupsDialogVmTest {
         assertTrue(vm.getAddedGroups().isEmpty());
     }
 
-
     @Test(dataProvider = "testGroups")
     public void testMoveAllFromAddedGroups(List<PoulpeGroup> testGroups) throws Exception {
         vm.setAddedGroups(testGroups).getAddedGroups().addToSelection(testGroups.get(1));
@@ -185,15 +185,17 @@ public class ManageUserGroupsDialogVmTest {
 
     @DataProvider(name = "testGroups")
     public Object[][] provideTestGroups() {
-        return new Object[][]{{PoulpeGroup.createGroupsWithNames("1", "2", "3")}};
+        return new Object[][] { { Arrays.asList(new PoulpeGroup("1"), new PoulpeGroup("2"), new PoulpeGroup("3")) } };
     }
 
     /**
-     * Selects the element at added groups and invokes {@link ManageUserGroupsDialogVm#moveSelectedFromAddedGroups()} to
-     * make the view model move the elements from the Added List.
-     *
-     * @param vm     a view model to change its lists
-     * @param toMove an element to move from the added list to the list of available groups
+     * Selects the element at added groups and invokes
+     * {@link ManageUserGroupsDialogVm#moveSelectedFromAddedGroups()} to make
+     * the view model move the elements from the Added List.
+     * 
+     * @param vm a view model to change its lists
+     * @param toMove an element to move from the added list to the list of
+     * available groups
      * @return the groups been moved
      */
     private Collection<PoulpeGroup> moveFromAdded(ManageUserGroupsDialogVm vm, PoulpeGroup toMove) {
@@ -202,11 +204,13 @@ public class ManageUserGroupsDialogVmTest {
     }
 
     /**
-     * Selects the element in available groups and invokes {@link ManageUserGroupsDialogVm#moveSelectedToAddedGroups ()}
-     * to make the view model move the elements to the Added List.
-     *
-     * @param vm     a view model to change its lists
-     * @param toMove an element to move from the available list to the list of added groups
+     * Selects the element in available groups and invokes
+     * {@link ManageUserGroupsDialogVm#moveSelectedToAddedGroups ()} to make the
+     * view model move the elements to the Added List.
+     * 
+     * @param vm a view model to change its lists
+     * @param toMove an element to move from the available list to the list of
+     * added groups
      * @return the groups been moved
      */
     private Collection<PoulpeGroup> moveToAdded(ManageUserGroupsDialogVm vm, PoulpeGroup toMove) {
