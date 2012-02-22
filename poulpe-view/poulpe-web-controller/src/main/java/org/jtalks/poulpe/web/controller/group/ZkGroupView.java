@@ -36,22 +36,17 @@ import org.zkoss.zul.Window;
  * @author Vyacheslav Zhivaev
  */
 @SuppressWarnings("serial")
-public class GroupViewImpl extends Window implements AfterCompose {
+public class ZkGroupView extends Window implements AfterCompose {
 
     private GroupPresenter presenter;
 
     private ZkHelper zkHelper = new ZkHelper(this);
-    
+
     private Window editDialog;
 
     private Listbox groupsListbox;
     private ListModelList<PoulpeGroup> groupsListboxModel;
     private Textbox searchTextbox;
-    
-
-    public void setPresenter(GroupPresenter presenter) {
-        this.presenter = presenter;
-    }
 
     @Override
     public void afterCompose() {
@@ -65,7 +60,7 @@ public class GroupViewImpl extends Window implements AfterCompose {
                 listItem.setId(String.valueOf(group.getId()));
             }
         });
-        
+
         groupsListbox.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
             @Override
             public void onEvent(Event event) throws Exception {
@@ -109,14 +104,14 @@ public class GroupViewImpl extends Window implements AfterCompose {
     }
 
     private EditGroupDialogView getEditView() {
-        EditGroupDialogViewImpl component = getEditDialogComponent();
+        ZkEditGroupDialogView component = getEditDialogComponent();
         component.setAttribute("presenter", presenter);
         component.setAttribute("backWindow", this);
         return component;
     }
 
-    private EditGroupDialogViewImpl getEditDialogComponent() {
-        return (EditGroupDialogViewImpl) getDesktop().getPage("GroupDialog").getFellow("editWindow");
+    private ZkEditGroupDialogView getEditDialogComponent() {
+        return (ZkEditGroupDialogView) getDesktop().getPage("GroupDialog").getFellow("editWindow");
     }
 
     public void openEditDialog(PoulpeGroup group) {
@@ -140,6 +135,10 @@ public class GroupViewImpl extends Window implements AfterCompose {
     private void disableRemoveAndEditButtons() {
         ((Button) getFellow("removeButton")).setDisabled(true);
         ((Button) getFellow("editMembersButton")).setDisabled(true);
+    }
+
+    public void setPresenter(GroupPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }

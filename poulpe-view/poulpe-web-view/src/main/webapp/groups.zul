@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <zk>
-  <window title="Groups" border="normal" use="org.jtalks.poulpe.web.controller.group.GroupViewImpl" presenter="${groupPresenter}"
+  <window title="Groups" border="normal" use="org.jtalks.poulpe.web.controller.group.ZkGroupView" presenter="${groupPresenter}"
     id="mainWindow">
 
     <hbox>

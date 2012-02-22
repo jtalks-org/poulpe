@@ -38,7 +38,6 @@ import org.springframework.security.acls.model.AccessControlEntry;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManager {
-    private static final String UserGroupSid = null;
     private final AclManager aclManager;
     private final GroupDao groupDao;
 

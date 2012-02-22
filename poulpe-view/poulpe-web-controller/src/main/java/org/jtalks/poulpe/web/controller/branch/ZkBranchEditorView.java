@@ -37,28 +37,21 @@ import org.zkoss.zul.Window;
  * This class is implementation view for show list branches
  * 
  * @author Bekrenev Dmitry
- * */
+ */
+@SuppressWarnings("serial")
+public class ZkBranchEditorView extends Window implements BranchEditorView, AfterCompose {
 
-public class BranchEditorViewImpl extends Window implements BranchEditorView, AfterCompose {
-
-    private static final long serialVersionUID = -7175904766962858866L;
     private Listbox branchesList;
-
-    /**
-     * Important! If we are going to serialize/deserialize this class, this
-     * field must be initialized explicitly during deserialization
-     */
-    private transient BranchEditorPresenter presenter;
-
     private ListModelList<PoulpeBranch> branchesListModel;
-    
+
+    private transient BranchEditorPresenter presenter;
     private ZkHelper zkHelper = new ZkHelper(this);
 
     /**
      * Use for render ListItem This class draws two labels for branch name and
      * description for change view attributes branch list item use css classes:
      * .branch-name and .branch-description
-     * */
+     */
     private static ListitemRenderer<PoulpeBranch> branchRenderer = new ListitemRenderer<PoulpeBranch>() {
         @Override
         public void render(Listitem item, PoulpeBranch branch, int index) {
@@ -79,7 +72,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void afterCompose() {
         zkHelper.wireByConvention();
@@ -93,19 +86,8 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
     }
 
     /**
-     * Set presenter
-     * 
-     * @see BranchEditorPresenter
-     * @param presenter
-     *            instance presenter for view
-     * */
-    public void setPresenter(BranchEditorPresenter presenter) {
-        this.presenter = presenter;
-    }
-
-    /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public void showBranches(List<PoulpeBranch> branches) {
         branchesListModel.clear();
@@ -114,7 +96,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
 
     /**
      * Handle click on add button
-     * */
+     */
     public void onClick$addBranchButton() {
         Component component = getDesktop().getPage("BranchDialog").getFellow("editWindow");
         component.setAttribute("presenter", presenter);
@@ -123,7 +105,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
 
     /**
      * Handle click on del button
-     * */
+     */
     public void onClick$delBranchButton() {
         if (branchesList.getSelectedCount() == 1) {
             PoulpeBranch branch = getSelectedBranch();
@@ -141,7 +123,7 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
 
     /**
      * Handle double click on branch list
-     * */
+     */
     public void onDoubleClick$branchesList() {
         Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
                 getSelectedBranch()));
@@ -149,17 +131,24 @@ public class BranchEditorViewImpl extends Window implements BranchEditorView, Af
 
     /**
      * Handle event when child dialog was hiding
-     * */
+     */
     public void onHideDialog() {
         presenter.updateView();
     }
 
     /**
      * {@inheritDoc}
-     * */
+     */
     @Override
     public PoulpeBranch getSelectedBranch() {
         return (PoulpeBranch) branchesListModel.get(branchesList.getSelectedIndex());
+    }
+
+    /**
+     * @param presenter instance presenter for view
+     */
+    public void setPresenter(BranchEditorPresenter presenter) {
+        this.presenter = presenter;
     }
 
 }

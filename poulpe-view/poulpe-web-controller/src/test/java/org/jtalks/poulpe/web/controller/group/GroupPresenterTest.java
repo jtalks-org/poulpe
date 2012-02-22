@@ -32,7 +32,7 @@ public class GroupPresenterTest {
     
     @Mock DialogManager dialogManager;
     @Mock GroupService service;
-    @Mock GroupViewImpl viewMock;
+    @Mock ZkGroupView viewMock;
 
     @BeforeMethod
     public void beforeMethod() {

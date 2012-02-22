@@ -30,8 +30,8 @@ import org.zkoss.zul.Window;
  * 
  * @author Bekrenev Dmitry
  * @author Vyacheslav Zhivaev
- * */
-public class EditGroupDialogViewImpl extends Window implements EditGroupDialogView, AfterCompose {
+ */
+public class ZkEditGroupDialogView extends Window implements EditGroupDialogView, AfterCompose {
 
     private static final long serialVersionUID = 7388638074018815713L;
 
@@ -106,7 +106,7 @@ public class EditGroupDialogViewImpl extends Window implements EditGroupDialogVi
     @Override
     public void hide() {
         setVisible(false);
-        GroupViewImpl view = (GroupViewImpl) getAttribute("backWindow");
+        ZkGroupView view = (ZkGroupView) getAttribute("backWindow");
         if (view == null) {
             return;
         }

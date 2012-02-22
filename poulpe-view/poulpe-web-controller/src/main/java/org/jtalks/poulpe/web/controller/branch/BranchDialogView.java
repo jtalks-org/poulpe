@@ -24,52 +24,50 @@ import org.jtalks.poulpe.validator.ValidationFailure;
  * Interface for representation view single branch
  * 
  * @author Bekrenev Dmitry
- * */
+ */
 public interface BranchDialogView extends ValidationFailure {
 
     /**
      * Get new or edited branch from view
      * 
      * @return PoulpeBranch new or edited branch
-     * */
+     */
     PoulpeSection getSection();
 
     /**
      * Cause hiding current dialog
-     * */
+     */
     void hide();
 
     /**
+     * Show dialog
+     */
+    void show();
+    
+    /**
      * Show dialog and fill fields name and description
      * 
-     * @param branch
-     *            name and description current branch will fill dialog fields
-     * */
+     * @param branch name and description current branch will fill dialog fields
+     */
     void show(PoulpeBranch branch);
+
+    /**
+     * 
+     * @param label
+     */
     void openErrorPopupInNewSectionDialog(String label);
-
-    /**
-     * Show dialog
-     * */
-    void show();
-
-    /**
-     * Cause throw exception for popup error message
-     * */
-    void notUniqueBranchName();
 
     /**
      * Init PoulpeSection combobox list
      * 
-     * @param sections
-     *            list sections
-     * */
+     * @param sections list sections
+     */
     void initSectionList(List<PoulpeSection> sections);
-    
+
     /**
      * Get branch from view
      * 
      * @return PoulpeBranch branch
-     * */
-    PoulpeBranch getBranch (PoulpeSection section);
+     */
+    PoulpeBranch getBranch(PoulpeSection section);
 }

@@ -22,7 +22,6 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
@@ -38,8 +37,8 @@ import org.zkoss.zul.Window;
  * 
  * @author Bekrenev Dmitry
  * @author Vyacheslav Zhivaev
- * */
-public class BranchDialogViewImpl extends Window implements BranchDialogView, AfterCompose {
+ */
+public class ZkBranchDialogView extends Window implements BranchDialogView, AfterCompose {
 
     private static final long serialVersionUID = 7388638074018815713L;
 
@@ -218,20 +217,8 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView, Af
      * {@inheritDoc}
      */
     @Override
-    public void notUniqueBranchName() {
-        throw new WrongValueException(branchName, Labels.getLabel("branches.error.branch_name_already_exists"));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void initSectionList(List<PoulpeSection> sections) {
         sectionList.setModel(new ListModelList<PoulpeSection>(sections));
-    }
-
-    PoulpeBranch createBranch() {
-        return branch = new PoulpeBranch();
     }
 
     /**
@@ -239,7 +226,7 @@ public class BranchDialogViewImpl extends Window implements BranchDialogView, Af
      */
     @Override
     public void openErrorPopupInNewSectionDialog(String label) {
-        final String message = Labels.getLabel(label);
+        String message = Labels.getLabel(label);
         branchName.setErrorMessage(message);
 
     }

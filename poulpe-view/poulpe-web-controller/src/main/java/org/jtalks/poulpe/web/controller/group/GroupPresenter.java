@@ -30,7 +30,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
  */
 public class GroupPresenter {
 
-    private GroupViewImpl view;
+    private ZkGroupView view;
     private GroupService groupService;
     private DialogManager dialogManager;
     private WindowManager windowManager;
@@ -56,11 +56,11 @@ public class GroupPresenter {
     }
 
     /**
-     * Sets {@link GroupViewImpl} for this presenter and update it.
+     * Sets {@link ZkGroupView} for this presenter and update it.
      * 
      * @param view
      */
-    public void initView(GroupViewImpl view) {
+    public void initView(ZkGroupView view) {
         this.view = view;
         updateView(null);
     }

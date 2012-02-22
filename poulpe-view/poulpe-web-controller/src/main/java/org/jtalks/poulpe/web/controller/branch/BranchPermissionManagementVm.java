@@ -180,8 +180,8 @@ public class BranchPermissionManagementVm {
         return Executions.getCurrent().getDesktop().getFirstPage().getFellow(id);
     }
 
-    public ListModel getBlocksListModel() {
-        return new BindingListModelList(Lists.newArrayList(blocks.values()), true);
+    public ListModel<BranchPermissionManagementBlock> getBlocksListModel() {
+        return new BindingListModelList<BranchPermissionManagementBlock>(getBlocks(), true);
     }
 
     public ManageUserGroupsDialogVm getGroupsDialogVm() {
