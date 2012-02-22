@@ -24,6 +24,8 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
+import com.google.common.base.Optional;
+
 /**
  * This class provides implementation for the moderation dialog presenter in pattern Model-View-Presenter.
  */
@@ -70,13 +72,13 @@ public class ModerationDialogPresenter {
     /**
      * Validate the specified user, on success sets him as a moderator for the branch, on failure shows error message.
      * 
-     *  @param user - candidate for the moderator
-     * */
+     * @param user - candidate for the moderator
+     */
     public void addUser(User user) {
-        UserValidator validator = validateUser(user);
+        Optional<String> error = validateUser(user);
 
-        if (validator.hasError()) {
-            view.showComboboxErrorMessage(validator.getError());
+        if (error.isPresent()) {
+            view.showComboboxErrorMessage(error.get());
         } else {
             branch.addModerator(user);
             refreshView();
@@ -104,10 +106,12 @@ public class ModerationDialogPresenter {
      *  @param user - user to validate
      *  @return validator - new validator for the user
      */
-    public UserValidator validateUser(User user) {
-        UserValidator validator = new UserValidator(branch);
-        validator.validate(user);
-        return validator;
+    public Optional<String> validateUser(User user) {
+        if (branch.isModeratedBy(user)) {
+            return Optional.of(ModerationDialogPresenter.USER_ALREADY_MODERATOR);
+        } else {
+            return Optional.absent();
+        }
     }
     
     /**

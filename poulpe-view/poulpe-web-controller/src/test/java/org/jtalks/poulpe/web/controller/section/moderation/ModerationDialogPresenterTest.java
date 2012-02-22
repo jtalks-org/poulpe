@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section.moderation;
 
-import static org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter.*;
+import static org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter.USER_ALREADY_MODERATOR;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -26,8 +26,8 @@ import java.util.Set;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -36,6 +36,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.google.common.base.Optional;
 
 public class ModerationDialogPresenterTest {
 
@@ -181,15 +183,15 @@ public class ModerationDialogPresenterTest {
     @Test
     public void validateUserWhenUserIsAlreadyModerator() {
         branch.addModerator(user1);
-        UserValidator validator = presenter.validateUser(user1);
-        assertEquals(validator.getError(), USER_ALREADY_MODERATOR);
+        Optional<String> error = presenter.validateUser(user1);
+        assertEquals(error.get(), USER_ALREADY_MODERATOR);
     }
        
     @Test
     public void validateUserWhenUserIsNotAModerator() {
         branch.addModerator(user1);
-        UserValidator validator = presenter.validateUser(user2);
-        assertFalse(validator.hasError());
+        Optional<String> error = presenter.validateUser(user2);
+        assertFalse(error.isPresent());
     }
     
 }

@@ -29,6 +29,7 @@ import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.springframework.security.acls.model.AccessControlEntry;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions related to the
@@ -37,6 +38,7 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManager {
+    private static final String UserGroupSid = null;
     private final AclManager aclManager;
     private final GroupDao groupDao;
 
@@ -94,9 +96,13 @@ public class BranchPermissionManager {
         try {
             Class<GroupAce> groupAceClass = GroupAce.class;
             Field aceField = groupAceClass.getDeclaredField("ace");
-            UserGroupSid userGroupSid = (UserGroupSid) aceField.get(groupAce);
-
-            return Long.parseLong(userGroupSid.getGroupId());
+            aceField.setAccessible(true);
+            
+            AccessControlEntry ace = (AccessControlEntry) aceField.get(groupAce);
+            UserGroupSid sid = (UserGroupSid) ace.getSid();
+            
+            return Long.parseLong(sid.getGroupId());
+            
         } catch (Exception e) {
             throw new RuntimeException("Error accessing to ace private field, nested exception: ", e);
         }
