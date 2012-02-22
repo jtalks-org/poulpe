@@ -91,6 +91,7 @@ public class ModerationDialogPresenter {
     public void confirm() {
         ValidationResult result = entityValidator.validate(branch);
 
+        // FIXME: what if the error has nothing to do with item's existence? 
         if (result.hasErrors()) {
             dialogManager.notify("item.already.exist");
         } else {
