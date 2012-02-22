@@ -40,37 +40,40 @@ public class ZkGroupView extends Window implements AfterCompose {
 
     private GroupPresenter presenter;
 
+    private ListModelList<PoulpeGroup> groupsListboxModel;
     private ZkHelper zkHelper = new ZkHelper(this);
 
     private Window editDialog;
+    private Button removeButton;
+    private Button editMembersButton;
 
     private Listbox groupsListbox;
-    private ListModelList<PoulpeGroup> groupsListboxModel;
     private Textbox searchTextbox;
 
     @Override
     public void afterCompose() {
         zkHelper.wireByConvention();
 
-        groupsListbox.setItemRenderer(new ListitemRenderer<PoulpeGroup>() {
-            @Override
-            public void render(Listitem listItem, PoulpeGroup group, int index) throws Exception {
-                new Listcell(group.getName()).setParent(listItem);
-                new Listcell("Not specified yet").setParent(listItem);
-                listItem.setId(String.valueOf(group.getId()));
-            }
-        });
+        groupsListbox.setItemRenderer(groupListRenderer);
 
         groupsListbox.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
             @Override
             public void onEvent(Event event) throws Exception {
                 enableRemoveAndEditButtons();
             }
-
         });
 
         presenter.initView(this);
     }
+    
+    private static final ListitemRenderer<PoulpeGroup> groupListRenderer = new ListitemRenderer<PoulpeGroup>() {
+        @Override
+        public void render(Listitem listItem, PoulpeGroup group, int index) throws Exception {
+            listItem.appendChild(new Listcell(group.getName()));
+            listItem.appendChild(new Listcell("Not specified yet"));
+            listItem.setId(String.valueOf(group.getId()));
+        }
+    };
 
     public void updateView(List<PoulpeGroup> groups) {
         groupsListboxModel = new ListModelList<PoulpeGroup>(groups);
@@ -128,13 +131,13 @@ public class ZkGroupView extends Window implements AfterCompose {
     }
 
     private void enableRemoveAndEditButtons() {
-        ((Button) getFellow("removeButton")).setDisabled(false);
-        ((Button) getFellow("editMembersButton")).setDisabled(false);
+        removeButton.setDisabled(false);
+        editMembersButton.setDisabled(false);
     }
 
     private void disableRemoveAndEditButtons() {
-        ((Button) getFellow("removeButton")).setDisabled(true);
-        ((Button) getFellow("editMembersButton")).setDisabled(true);
+        removeButton.setDisabled(true);
+        editMembersButton.setDisabled(true);
     }
 
     public void setPresenter(GroupPresenter presenter) {
