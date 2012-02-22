@@ -27,29 +27,23 @@ import org.zkoss.zul.Messagebox;
  * different types of dialog messages.
  * 
  * @author Dmitriy Sukharev
- * 
  */
 public class DialogManagerImpl implements DialogManager {
 
     /** {@inheritDoc} */
     @Override
     public void notify(String str) {
-            Messagebox.show(Labels.getLabel(str),
-                    Labels.getLabel("dialogmanager.warning"), Messagebox.OK,
-                    Messagebox.EXCLAMATION);
+        Messagebox.show(Labels.getLabel(str), Labels.getLabel("dialogmanager.warning"), Messagebox.OK,
+                Messagebox.EXCLAMATION);
     }
 
     /** {@inheritDoc} */
     @Override
-    public void confirmDeletion(final String victim,
-            final DialogManager.Performable confirmable) {
-        final String title = String.format(
-                Labels.getLabel("dialogmanager.delete.title"), victim);
-        final String text = String.format(
-                Labels.getLabel("dialogmanager.delete.question"), victim);
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
-                    Messagebox.QUESTION, Messagebox.NO,
-                    new DialogActionListener(confirmable));
+    public void confirmDeletion(String victim, DialogManager.Performable confirmable) {
+        String title = String.format(Labels.getLabel("dialogmanager.delete.title"), victim);
+        String text = String.format(Labels.getLabel("dialogmanager.delete.question"), victim);
+        Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
+                new DialogActionListener(confirmable));
     }
 
     @Override
@@ -59,8 +53,7 @@ public class DialogManagerImpl implements DialogManager {
             return;
         }
         String title = Labels.getLabel("dialogmanager.delete.multiple.title");
-        StringBuilder builder = new StringBuilder(
-                Labels.getLabel("item.delete.question"));
+        StringBuilder builder = new StringBuilder(Labels.getLabel("item.delete.question"));
         for (String victim : victimList) {
             builder.append("\n");
             builder.append(victim);
@@ -68,49 +61,36 @@ public class DialogManagerImpl implements DialogManager {
         showConfirmDeleteDialog(confirmable, title, builder.toString());
     }
 
-    private void showConfirmDeleteDialog(
-            final DialogManager.Performable confirmable, final String title,
-            final String text) throws AssertionError {
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
-                    Messagebox.QUESTION, Messagebox.CANCEL,
-                    new DialogDeleteListener(confirmable));
+    private void showConfirmDeleteDialog(DialogManager.Performable confirmable, String title, String text)
+            throws AssertionError {
+        Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.CANCEL,
+                new DialogDeleteListener(confirmable));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void confirmCreation(final String target,
-            final DialogManager.Performable confirmable) {
-        final String title = String.format(
-                Labels.getLabel("dialogmanager.create.title"), target);
-        final String text = String.format(
-                Labels.getLabel("dialogmanager.create.question"), target);
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
-                    Messagebox.QUESTION, Messagebox.NO,
-                    new DialogActionListener(confirmable));
+    public void confirmCreation(String target, DialogManager.Performable confirmable) {
+        String title = String.format(Labels.getLabel("dialogmanager.create.title"), target);
+        String text = String.format(Labels.getLabel("dialogmanager.create.question"), target);
+        Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
+                new DialogActionListener(confirmable));
     }
 
     /** {@inheritDoc} */
     @Override
-    public void confirmEdition(final String target,
-            final DialogManager.Performable confirmable) {
-        final String title = String.format(
-                Labels.getLabel("dialogmanager.edit.title"), target);
-        final String text = String.format(
-                Labels.getLabel("dialogmanager.edit.question"), target);
-            Messagebox.show(text, title, Messagebox.YES | Messagebox.NO,
-                    Messagebox.QUESTION, Messagebox.NO,
-                    new DialogActionListener(confirmable));
+    public void confirmEdition(String target, DialogManager.Performable confirmable) {
+        String title = String.format(Labels.getLabel("dialogmanager.edit.title"), target);
+        String text = String.format(Labels.getLabel("dialogmanager.edit.question"), target);
+        Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
+                new DialogActionListener(confirmable));
     }
 
     @Override
-    public void confirmBan(List<User> usersToBan, String reason,
-            Performable performable) {
+    public void confirmBan(List<User> usersToBan, String reason, Performable performable) {
 
-        final String title = String.format(Labels
-                .getLabel("dialogmanager.userbanning.title"));
+        String title = String.format(Labels.getLabel("dialogmanager.userbanning.title"));
 
-        final String delimeterBetweenUsers = Labels
-                .getLabel("dialogmanager.userbanning.delim");
+        String delimeterBetweenUsers = Labels.getLabel("dialogmanager.userbanning.delim");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < usersToBan.size(); i++) {
             User user = usersToBan.get(i);
@@ -119,12 +99,9 @@ public class DialogManagerImpl implements DialogManager {
                 sb.append(delimeterBetweenUsers);
             }
         }
-        final String text = String.format(
-                Labels.getLabel("dialogmanager.userbanning.question"),
-                sb.toString());
-            Messagebox.show(text.toString(), title, Messagebox.YES
-                    | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
-                    new DialogActionListener(performable));
+        String text = String.format(Labels.getLabel("dialogmanager.userbanning.question"), sb.toString());
+        Messagebox.show(text.toString(), title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.NO,
+                new DialogActionListener(performable));
     }
 
     /**
@@ -142,8 +119,8 @@ public class DialogManagerImpl implements DialogManager {
          * Constructor of the listener which initialises the object whose
          * {@code execute} method will be invoked.
          * 
-         * @param confirmable
-         *            the object whose {@code execute} method will be invoked
+         * @param confirmable the object whose {@code execute} method will be
+         * invoked
          */
         public DialogActionListener(Performable confirmable) {
             this.confirmable = confirmable;
@@ -173,8 +150,8 @@ public class DialogManagerImpl implements DialogManager {
          * Constructor of the listener which initialises the object whose
          * {@code execute} method will be invoked.
          * 
-         * @param confirmable
-         *            the object whose {@code execute} method will be invoked
+         * @param confirmable the object whose {@code execute} method will be
+         * invoked
          */
         public DialogDeleteListener(Performable confirmable) {
             this.confirmable = confirmable;
