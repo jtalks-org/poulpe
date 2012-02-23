@@ -19,7 +19,10 @@ import java.util.List;
 import org.jtalks.poulpe.model.entity.Branch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.validation.EntityValidator;
 import org.jtalks.poulpe.validation.ValidationResult;
@@ -32,6 +35,7 @@ import org.jtalks.poulpe.web.controller.DialogManager;
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
  * @author Grigorev Alexey
+ * @author Guram Savinov
  */
 public class SectionPresenter {
 
@@ -41,6 +45,7 @@ public class SectionPresenter {
 
     // injected
     private SectionService sectionService;
+    private ComponentService componentService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
     private DialogManager dialogManager;
@@ -65,7 +70,8 @@ public class SectionPresenter {
      * Use when need update view
      * */
     public void updateView() {
-        List<Section> sections = sectionService.getAll();
+    	Jcommune forum = (Jcommune) componentService.getByType(ComponentType.FORUM);
+        List<Section> sections = forum.getSections();
         sectionView.showSections(sections);
     }
 
@@ -248,6 +254,14 @@ public class SectionPresenter {
     public void setSectionService(SectionService service) {
         perfomableFactory.setSectionService(service);
         this.sectionService = service;
+    }
+
+    /**
+     * @param service set component service instance
+     */
+    public void setComponentService(ComponentService service) {
+    	perfomableFactory.setComponentService(service);
+    	this.componentService = service;
     }
 
     /**

@@ -1,7 +1,10 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -13,12 +16,14 @@ import org.jtalks.poulpe.web.controller.DialogManager.Performable;
  * sections.
  * 
  * @author Alexey Grigorev
+ * @author Guram Savinov
  */
 public class PerfomableFactory {
 
     private final SectionPresenter sectionPresenter;
 
     private SectionService sectionService;
+    private ComponentService componentService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
 
@@ -130,7 +135,9 @@ public class PerfomableFactory {
 
         @Override
         public void execute() {
-            sectionService.saveSection(section);
+        	Jcommune forum = (Jcommune) componentService.getByType(ComponentType.FORUM);
+        	forum.addSection(section);
+            componentService.saveComponent(forum);
             sectionView.showSection(section);
             sectionView.closeNewSectionDialog();
         }
@@ -188,6 +195,13 @@ public class PerfomableFactory {
      */
     public void setSectionService(SectionService service) {
         this.sectionService = service;
+    }
+
+    /**
+     * @param service set component service instance
+     */
+    public void setComponentService(ComponentService service) {
+        this.componentService = service;
     }
 
     /**
