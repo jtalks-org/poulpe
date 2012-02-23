@@ -15,6 +15,8 @@
 package org.jtalks.poulpe.web.controller.component.items;
 
 import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 
 /**
  * It's used for converting {@link ItemDataView} instances to corresponding
@@ -22,6 +24,7 @@ import org.jtalks.common.model.entity.Component;
  * 
  * @author Alexey Grigorev
  * @author Dmitriy Sukharev
+ * @author Guram Savinov
  */
 class ViewToEntityConverter {
 
@@ -39,8 +42,13 @@ class ViewToEntityConverter {
      * @return <i>new</i> {@link Component} converted from view
      */
     public static Component view2Model(ItemDataView view) {
-        Component component = new Component();
-        component.setId(view.getComponentId());
+    	Component component;
+    	if (view.getComponentType() == ComponentType.FORUM) {
+    		component = new Jcommune();
+    	} else {
+            component = new Component();
+    	}
+    	component.setId(view.getComponentId());
         return view2Model(view, component);
     }
 
