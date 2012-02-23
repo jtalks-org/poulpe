@@ -11,6 +11,8 @@ import org.zkoss.zul.Treeitem;
 
 /**
  * Listener for Drag'n'Drop event.
+ * 
+ * @author Guram Savinov
  */
 class BranchDragAndDropEventListener extends GenericEventListener<Event> {
 
