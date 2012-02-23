@@ -11,6 +11,8 @@ import java.util.List;
 
 /**
  * Listener for Drag'n'Drop event.
+ * 
+ * @author Guram Savinov
  */
 @SuppressWarnings("serial")
 class BranchDragAndDropEventListener extends GenericEventListener<Event> {
