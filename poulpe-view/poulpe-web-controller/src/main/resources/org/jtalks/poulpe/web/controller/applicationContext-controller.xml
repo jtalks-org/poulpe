@@ -82,7 +82,6 @@
 
   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
     <property name="sectionService" ref="sectionService" />
-    <property name="branchService" ref="branchService" />
     <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
     <property name="deleteSectionDialogPresenter" ref="deleteSectionDialogPresenter" />
