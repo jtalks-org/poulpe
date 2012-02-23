@@ -16,18 +16,24 @@ package org.jtalks.common.model.entity;
 
 /**
  * Type of the {@link Component}
- *
+ * 
  * @author Pavel Vervenko
+ * @author Vyacheslav Zhivaev
  * @see Component
  */
 public enum ComponentType {
     /**
-     * Specifies that the component is Forum
+     * Specifies that the component is Forum.
      */
-    FORUM, 
-    
+    FORUM,
+
     /**
-     * Specifies that the component is Article
+     * Specifies that the component is Article.
      */
-    ARTICLE;
+    ARTICLE,
+
+    /**
+     * Specifies that the component is Administrator Panel.
+     */
+    ADMIN_PANEL;
 }
