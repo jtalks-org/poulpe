@@ -14,11 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.rank;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
@@ -31,7 +26,10 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Textbox;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * View Model for rank management page.
@@ -42,22 +40,21 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     private ListModelList<Rank> items;
     private Rank selected;
-    private Textbox rankName;
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
-    
+
     private ValidationFailureHandler handler;
 
     /**
      * Construct the object with injected service.
      *
-     * @param rankService rankService to manipulate with ranks objects
+     * @param rankService     rankService to manipulate with ranks objects
      * @param entityValidator for validation
-     * @param dialogManager used to show confirmation
+     * @param dialogManager   used to show confirmation
      */
     public RankManagementVM(@Nonnull RankService rankService,
-            EntityValidator entityValidator, DialogManager dialogManager) {
+                            EntityValidator entityValidator, DialogManager dialogManager) {
         this.rankService = rankService;
         this.entityValidator = entityValidator;
         this.dialogManager = dialogManager;
@@ -82,6 +79,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     /**
      * Get selected item.
+     *
      * @return current selected item
      */
     public Rank getSelected() {
@@ -90,6 +88,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     /**
      * Set selected Rank.
+     *
      * @param selected selected rank
      */
     public void setSelected(Rank selected) {
@@ -109,10 +108,9 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void dialogClosed() {
-        //TODO: add code to close dialog
         Component window = getCurrentWindow("RankEditorCreatorWindow");
-        window = (window != null) ? window : getCurrentWindow("RankEditorModifierWindow"); 
-        window.setVisible(false);
+        window = (window != null) ? window : getCurrentWindow("RankEditorModifierWindow");
+        window.detach();
     }
 
     /**
@@ -126,6 +124,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         }
         dialogClosed();
         initData();
+    }
+
+    @Command
+    public void cancel() {
+        dialogClosed();
     }
 
     private boolean validate(Rank rank) {
@@ -151,7 +154,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void newItem() {
-        selected = new Rank("new", 100);
+        selected = new Rank("", 100);
         openEditorCreator();
     }
 
@@ -166,6 +169,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     /**
      * Find the window by id.
+     *
      * @param id window Id
      * @return found component or null
      */
@@ -180,6 +184,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     /**
      * Prepare list of String for confirmation window.
+     *
      * @return names list of selected items
      */
     private List<String> getSelectionAsStringList() {
@@ -197,6 +202,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     private void openEditorCreator() {
         Executions.getCurrent().createComponents("/RankEditorCreator.zul", getCurrentWindow("rankManagementWindow"), null);
     }
+
     /**
      * Execute Delete operation.
      */
@@ -208,7 +214,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
             items.remove(current);
         }
     }
-    
+
     /**
      * @param entityValidator the entityValidator to set
      */
