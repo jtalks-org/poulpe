@@ -1,7 +1,10 @@
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -19,6 +22,7 @@ public class PerfomableFactory {
     private final SectionPresenter sectionPresenter;
 
     private SectionService sectionService;
+    private BranchService branchService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
 
@@ -175,11 +179,20 @@ public class PerfomableFactory {
         public void execute() {
             // TODO: move away to service
             PoulpeSection section = branch.getPoulpeSection();
+            deleteBranchPermissions();
             section.getBranches().remove(branch);
 
             sectionService.saveSection(section);
 
             sectionPresenter.updateView();
+        }
+
+        private void deleteBranchPermissions() {
+            for(BranchPermission permission : BranchPermission.values()) {
+                BranchAccessChanges branchAccess = new BranchAccessChanges(permission);
+                branchAccess.setRemovedGroups(branch.getGroups());
+                branchService.changeGrants(branch, branchAccess);
+            }
         }
     }
 
@@ -188,6 +201,13 @@ public class PerfomableFactory {
      */
     public void setSectionService(SectionService service) {
         this.sectionService = service;
+    }
+
+    /**
+     * @param branchService set branch service instance
+     */
+    public void setBranchService(BranchService branchService) {
+        this.branchService = branchService;
     }
 
     /**

@@ -14,6 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.rank;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
@@ -25,11 +30,9 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
-
-import javax.annotation.Nonnull;
-import java.util.LinkedList;
-import java.util.List;
+import org.zkoss.zul.Textbox;
 
 /**
  * View Model for rank management page.
@@ -40,6 +43,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     private ListModelList<Rank> items;
     private Rank selected;
+    private Rank lastSelected;
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
@@ -83,6 +87,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      * @return current selected item
      */
     public Rank getSelected() {
+        enableOrDisableDeleteButton();
         return selected;
     }
 
@@ -96,21 +101,21 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     }
 
     /**
+     * Command for creating new Rank.
+     */
+    @Command
+    public void newItem() {
+        lastSelected = selected;
+        selected = new Rank("", 100);
+        openEditorCreator();
+    }
+
+    /**
      * Open the editor window.
      */
     @Command
     public void edit() {
         openEditorModifier();
-    }
-
-    /**
-     * Close the editor dialog
-     */
-    @Command
-    public void dialogClosed() {
-        Component window = getCurrentWindow("RankEditorCreatorWindow");
-        window = (window != null) ? window : getCurrentWindow("RankEditorModifierWindow");
-        window.detach();
     }
 
     /**
@@ -121,14 +126,90 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     public void save() {
         if (validate(selected)) {
             rankService.saveRank(selected);
+            dialogClosed();
+            initData();
         }
-        dialogClosed();
-        initData();
     }
 
     @Command
+    @NotifyChange("selected")
     public void cancel() {
         dialogClosed();
+        selected = lastSelected;
+        enableOrDisableDeleteButton();
+    }
+
+    /**
+     * Close the editor dialog
+     */
+    @Command
+    public void dialogClosed() {
+        Component window = getCurrentComponent("RankEditorCreatorWindow");
+        window = (window != null) ? window : getCurrentComponent("RankEditorModifierWindow");
+        window.detach();
+    }
+
+    @Override
+    public void validationFailure(ValidationResult result) {
+        //  new ValidationFailureHandler("name", rankName)
+        // TODO: add initialization - now it causes NPE because rankName is null
+        handler = new ValidationFailureHandler("rankName", (Textbox) getCurrentComponent("rankName"));
+        handler.validationFailure(result);
+    }
+
+    /**
+     * Delete selected ranks.
+     */
+    @NotifyChange({"items", "selected"})
+    @Command
+    public void delete() {
+        dialogManager.confirmDeletion(getSelectionAsStringList(), this);
+    }
+
+    /**
+     * Execute Delete operation.
+     */
+    @Override
+    @NotifyChange({"items", "selected"})
+    public void execute() {
+        for (Rank current : items.getSelection()) {
+            rankService.deleteRank(current);
+            items.remove(current);
+        }
+        selected = null;
+    }
+
+    private void enableOrDisableDeleteButton() {
+        Button deleteButton = (Button) getCurrentComponent("deleteButton");
+        if(selected == null) {
+            deleteButton.setDisabled(true);
+        } else {
+            deleteButton.setDisabled(false);
+        }
+    }
+
+    private void openEditorCreator() {
+        Executions.getCurrent().createComponents("/RankEditorCreator.zul", getCurrentComponent("rankManagementWindow"), null);
+    }
+
+    private void openEditorModifier() {
+        Executions.getCurrent().createComponents("/RankEditorModifier.zul", getCurrentComponent("rankManagementWindow"), null);
+    }
+
+    /**
+     * Find the component by id.
+     *
+     * @param id component's Id
+     * @return found component or null
+     */
+    private Component getCurrentComponent(String id) {
+        if(true);
+        for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
+            if (c.getId().equals(id)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     private boolean validate(Rank rank) {
@@ -142,46 +223,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         }
     }
 
-    @Override
-    public void validationFailure(ValidationResult result) {
-        //  new ValidationFailureHandler("name", rankName)
-        // TODO: add initialization - now it causes NPE because rankName is null
-        handler.validationFailure(result);
-    }
-
-    /**
-     * Command for creating new Rank.
-     */
-    @Command
-    public void newItem() {
-        selected = new Rank("", 100);
-        openEditorCreator();
-    }
-
-    /**
-     * Delete selected ranks.
-     */
-    @NotifyChange({"items", "selected"})
-    @Command
-    public void delete() {
-        dialogManager.confirmDeletion(getSelectionAsStringList(), this);
-    }
-
-    /**
-     * Find the window by id.
-     *
-     * @param id window Id
-     * @return found component or null
-     */
-    private Component getCurrentWindow(String id) {
-        for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
-            if (c.getId().equals(id)) {
-                return c;
-            }
-        }
-        return null;
-    }
-
     /**
      * Prepare list of String for confirmation window.
      *
@@ -193,26 +234,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
             list.add(current.getRankName());
         }
         return list;
-    }
-
-    private void openEditorModifier() {
-        Executions.getCurrent().createComponents("/RankEditorModifier.zul", getCurrentWindow("rankManagementWindow"), null);
-    }
-
-    private void openEditorCreator() {
-        Executions.getCurrent().createComponents("/RankEditorCreator.zul", getCurrentWindow("rankManagementWindow"), null);
-    }
-
-    /**
-     * Execute Delete operation.
-     */
-    @Override
-    @NotifyChange({"items", "selected"})
-    public void execute() {
-        for (Rank current : items.getSelection()) {
-            rankService.deleteRank(current);
-            items.remove(current);
-        }
     }
 
     /**

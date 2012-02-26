@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <window width="30%" apply="org.zkoss.bind.BindComposer" id="rankManagementWindow"
-   title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
+      title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
         <listbox multiple="true" model="@bind(vm.items)" height="300px" selectedItem="@bind(vm.selected)">
             <listhead>
                 <listheader label="${labels.rank.name}"/>
@@ -21,7 +21,7 @@
             <listfoot>
                 <listfooter>
                     <button onClick="@command('newItem')" label="${labels.rank.add}" sclass="ranks.addButton" />
-                    <button onClick="@command('delete')" label="${labels.rank.delete}" sclass="ranks.deleteButton" />
+                    <button id="deleteButton" onClick="@command('delete')" label="${labels.rank.delete}" sclass="ranks.deleteButton" />
                 </listfooter>
             </listfoot>
         </listbox>

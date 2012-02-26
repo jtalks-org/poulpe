@@ -18,10 +18,11 @@ import java.util.List;
 
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 
@@ -41,6 +42,7 @@ public class SectionPresenter {
 
     // injected
     private SectionService sectionService;
+    private BranchService branchService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
     private DialogManager dialogManager;
@@ -278,6 +280,11 @@ public class SectionPresenter {
     public void setSectionService(SectionService service) {
         perfomableFactory.setSectionService(service);
         this.sectionService = service;
+    }
+
+    public void setBranchService(BranchService branchService) {
+        perfomableFactory.setBranchService(branchService);
+        this.branchService = branchService;
     }
 
     /**

@@ -7,7 +7,7 @@
         </columns>
         <rows>
             <row>Rank Name
-                <textbox value="@bind(vm.selected.rankName)"/>
+                <textbox id="rankName" value="@bind(vm.selected.rankName)"/>
             </row>
             <row>Auto Assigned
                 <checkbox checked="@bind(vm.selected.autoAssigned)"/>

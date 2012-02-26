@@ -2,10 +2,14 @@ package org.jtalks.poulpe.web.controller.section;
 
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
+import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.mockito.Mock;
@@ -22,6 +26,7 @@ public class PerfomableFactoryTest {
     
     @Mock SectionPresenter presenter;
     @Mock SectionService service;
+    @Mock BranchService branchService;
     @Mock ZkSectionView view;
     @Mock ZkSectionTreeComponent currentSectionTreeComponent;
 
@@ -35,6 +40,7 @@ public class PerfomableFactoryTest {
         perfomableFactory = new PerfomableFactory(presenter);
         perfomableFactory.setCurrentSectionTreeComponent(currentSectionTreeComponent);
         perfomableFactory.setSectionService(service);
+        perfomableFactory.setBranchService(branchService);
         perfomableFactory.setSectionView(view);
     }
     
@@ -65,6 +71,7 @@ public class PerfomableFactoryTest {
         Performable perf = perfomableFactory.deleteBranch(branch);
         perf.execute();
         verify(service).saveSection(section);
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
         verify(presenter).updateView();
     }
 

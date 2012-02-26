@@ -24,7 +24,7 @@ public class ValidationFailureHandler implements ValidationFailure {
     /**
      * Creates handler with only one input element
      * 
-     * @param name of the field associated with the imput element
+     * @param name of the field associated with the input element
      * @param input element with input data near which alert will be shown
      */
     public ValidationFailureHandler(String name, InputElement input) {
