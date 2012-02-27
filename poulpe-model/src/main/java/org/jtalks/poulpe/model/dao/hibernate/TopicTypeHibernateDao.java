@@ -16,38 +16,20 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.List;
 
-import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
  * @author Vladimir Bukhtoyarov
  */
 public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<TopicType>
-        implements org.jtalks.poulpe.model.dao.TopicTypeDao {
+        implements TopicTypeDao {
 
     @SuppressWarnings("unchecked")
     @Override
     public List<TopicType> getAll() {
         return getSession().createQuery("from TopicType").list();
     }
-
-    @Override
-    public boolean isTopicTypeNameExists(String topicTypeName) {
-        String hql = "select count(*) from TopicType t where t.title = ?";
-        Query query = getSession().createQuery(hql);
-        query.setString(0, topicTypeName);        
-        Number count = (Number) query.uniqueResult();
-        return count.intValue() != 0;
-    }
     
-    @Override
-    public boolean isTopicTypeNameExists(String topicTypeName, long ignorableTopicTypeID) {
-        String hql = "select count(*) from TopicType t where t.title = ? and t.id != ?";
-        Query query = getSession().createQuery(hql);
-        query.setString(0, topicTypeName);
-        query.setLong(1, ignorableTopicTypeID);
-        Number count = (Number) query.uniqueResult();
-        return count.intValue() != 0;
-    }
 }
