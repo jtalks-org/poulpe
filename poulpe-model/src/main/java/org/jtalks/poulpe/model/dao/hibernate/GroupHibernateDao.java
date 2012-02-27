@@ -21,6 +21,8 @@ import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
+import ru.javatalks.utils.general.Assert;
+
 /**
  * Hibernate implementation of {@link GroupDao}
  * @author Vitaliy Kravchenko
@@ -40,9 +42,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeG
     @SuppressWarnings("unchecked")
     @Override
     public List<PoulpeGroup> getMatchedByName(String name) {
-        if (name == null) {
-            return getAll();
-        }
+        Assert.throwIfNull(name, "name");
 
         Query query = getSession().createQuery("from PoulpeGroup g where g.name like ?");
         query.setString(0, "%" + name + "%");

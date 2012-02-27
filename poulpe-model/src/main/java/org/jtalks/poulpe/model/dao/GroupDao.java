@@ -20,23 +20,25 @@ import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
+ * Dao interface for accessing {@link PoulpeGroup} objects
+ * 
  * @author Konstantin Akimov
  */
-
 public interface GroupDao extends ParentRepository<PoulpeGroup> {
 
     /**
      * Get the list of all groups.
-     *
+     * 
      * @return list of groups
      */
     List<PoulpeGroup> getAll();
-    
-    
+
     /**
      * Get the list of all groups which match to the specified name
+     * 
      * @param name
      * @return list of groups
+     * @exception IllegalArgumentException if name is null
      */
     List<PoulpeGroup> getMatchedByName(String name);
 }
