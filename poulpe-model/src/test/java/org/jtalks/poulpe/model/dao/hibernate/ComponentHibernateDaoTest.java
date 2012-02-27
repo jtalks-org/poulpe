@@ -58,7 +58,8 @@ public class ComponentHibernateDaoTest extends
     private ComponentHibernateDao dao;
     private Session session;
 
-    private Jcommune forum;
+    private Component forum;
+    private Jcommune jcommune;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -66,33 +67,33 @@ public class ComponentHibernateDaoTest extends
         dao.setSessionFactory(sessionFactory);
 
         session = sessionFactory.getCurrentSession();
-        forum = createForum();
+        jcommune = ObjectsFactory.createJcommune(10);
     }
 
     @Test
     public void testSave() {
-        dao.saveOrUpdate(forum);
-        assertNotSame(forum.getId(), 0, "Id not created");
-        Component actual = ObjectRetriever.retrieveUpdated(forum, session);
-        assertReflectionEquals(forum, actual);
+        dao.saveOrUpdate(jcommune);
+        assertNotSame(jcommune.getId(), 0, "Id not created");
+        Jcommune actual = ObjectRetriever.retrieveUpdated(jcommune, session);
+        assertReflectionEquals(jcommune, actual);
     }
 
     @Test
     public void testGet() {
-        session.save(forum);
-        Component actual = (Component) dao.get(forum.getId());
-        assertReflectionEquals(forum, actual);
+        session.save(jcommune);
+        Jcommune actual = (Jcommune) dao.get(jcommune.getId());
+        assertReflectionEquals(jcommune, actual);
     }
 
     @Test
     public void testUpdate() {
         String newName = "new Jcommune name";
 
-        session.save(forum);
-        forum.setName(newName);
-        dao.saveOrUpdate(forum);
+        session.save(jcommune);
+        jcommune.setName(newName);
+        dao.saveOrUpdate(jcommune);
 
-        String actual = ObjectRetriever.retrieveUpdated(forum, session)
+        String actual = ObjectRetriever.retrieveUpdated(jcommune, session)
                 .getName();
         assertEquals(actual, newName);
     }
@@ -120,8 +121,8 @@ public class ComponentHibernateDaoTest extends
         session.save(createArticle());
     }
 
-    private Jcommune createForum() {
-        return ObjectsFactory.createJcommune(10);
+    private Component createForum() {
+        return ObjectsFactory.createComponent(ComponentType.FORUM);
     }
 
     private Component createArticle() {
@@ -158,23 +159,15 @@ public class ComponentHibernateDaoTest extends
     @Test
     public void testSectionPositions() {
         for (int i = 0; i < 5; i++) {
-            List<Section> expected = forum.getSections();
+            List<PoulpeSection> expected = jcommune.getSections();
             Collections.shuffle(expected);
 
-            dao.saveOrUpdate(forum);
+            dao.saveOrUpdate(jcommune);
 
-            forum = ObjectRetriever.retrieveUpdated(forum, session);
-            List<Section> actual = forum.getSections();
+            jcommune = ObjectRetriever.retrieveUpdated(jcommune, session);
+            List<PoulpeSection> actual = jcommune.getSections();
 
             assertEquals(actual, expected);
         }
     }
-
-    @Test
-    public void testGetForum() {
-    	givenTwoComponents();
-    	Component actual = dao.getByType(ComponentType.FORUM);
-    	assertReflectionEquals(forum, actual);
-    }
-
 }

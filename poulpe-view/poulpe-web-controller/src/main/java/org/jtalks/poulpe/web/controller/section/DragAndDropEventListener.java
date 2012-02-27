@@ -11,18 +11,16 @@ import java.util.List;
 
 /**
  * Listener for Drag'n'Drop event.
- * 
- * @author Guram Savinov
  */
 @SuppressWarnings("serial")
-class BranchDragAndDropEventListener extends GenericEventListener<Event> {
+class DragAndDropEventListener extends GenericEventListener<Event> {
 
     private final SectionPresenter presenter;
 
     /**
      * @param presenter section presenter
      */
-    public BranchDragAndDropEventListener(SectionPresenter presenter) {
+    public DragAndDropEventListener(SectionPresenter presenter) {
         this.presenter = presenter;
     }
 

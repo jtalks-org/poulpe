@@ -55,13 +55,5 @@ public interface ComponentService extends EntityService<Component> {
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
-
-    /**
-     * Gets component by it's type.
-     * 
-     * @param the component's type 
-     * @return the component
-     */
-    Component getByType(ComponentType type);
-
+    
 }

@@ -53,12 +53,5 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
 
         return result;
     }
-
-    @Override
-    public Component getByType(ComponentType type) {
-        return (Component) getSession().createQuery(
-                "from Component where componentType = :type").setParameter(
-                "type", type).uniqueResult();
-    }
-
+    
 }
