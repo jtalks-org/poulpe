@@ -203,7 +203,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      * @return found component or null
      */
     private Component getCurrentComponent(String id) {
-        if(true);
         for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
             if (c.getId().equals(id)) {
                 return c;
