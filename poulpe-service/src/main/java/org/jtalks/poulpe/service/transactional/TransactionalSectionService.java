@@ -27,14 +27,14 @@ import org.jtalks.poulpe.service.SectionService;
  * @author tanya birina
  * 
  */
-public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao> implements
-        SectionService {
+public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao>
+        implements SectionService {
     private final EntityValidator validator;
+
     /**
      * Create an instance of entity based service
      * 
-     * @param sectionDao
-     *            - data access object
+     * @param sectionDao - data access object
      */
     public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
         this.dao = sectionDao;
@@ -45,18 +45,9 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionExists(PoulpeSection section) {
-        return dao.isSectionNameExists(section);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public List<PoulpeSection> getAll() {
         return dao.getAll();
     }
-
 
     /**
      * {@inheritDoc}

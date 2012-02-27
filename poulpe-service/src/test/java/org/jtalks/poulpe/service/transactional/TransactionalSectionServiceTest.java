@@ -107,13 +107,6 @@ public class TransactionalSectionServiceTest {
         verify(sectionDao).getAll();
     }
 
-    @Test
-    public void testIsSectionExists() {
-        PoulpeSection section = buildFakeSection();
-        sectionService.isSectionExists(section);
-        verify(sectionDao).isSectionNameExists(section);
-    }
-
     private void givenConstraintsViolations() {
         Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeSection.class));

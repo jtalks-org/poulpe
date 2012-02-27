@@ -37,14 +37,6 @@ public interface SectionService extends EntityService<PoulpeSection> {
     void saveSection(PoulpeSection section);
 
     /**
-     * Check if section with given name exists.
-     *
-     * @param section name for check
-     * @return true if exists
-     */
-    boolean isSectionExists(PoulpeSection section);
-
-    /**
      * Removes the section and all its branches.
      *
      * @param victim the removed section

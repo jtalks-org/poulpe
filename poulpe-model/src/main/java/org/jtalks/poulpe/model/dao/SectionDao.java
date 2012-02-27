@@ -20,11 +20,14 @@ import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
+ * Dao interface for accessing {@link PoulpeSection} objects
+ * 
  * @author tanya birina
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
  */
 public interface SectionDao extends ParentRepository<PoulpeSection> {
+
     /**
      * Get the list of all sections.
      * 
@@ -33,19 +36,9 @@ public interface SectionDao extends ParentRepository<PoulpeSection> {
     List<PoulpeSection> getAll();
 
     /**
-     * Method to check if section name is already exists.
-     * 
-     * @param section
-     *            name for check
-     * @return true if section with such name already exists
-     */
-    boolean isSectionNameExists(PoulpeSection section);
-
-    /**
      * Removes the section and all its branches.
      * 
-     * @param id
-     *            the identifier of the removed section
+     * @param id the identifier of the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
     boolean deleteRecursively(PoulpeSection section);
@@ -53,10 +46,8 @@ public interface SectionDao extends ParentRepository<PoulpeSection> {
     /**
      * Removes the section and move all its branches to another section.
      * 
-     * @param victimId
-     *            the identifier of the removed section
-     * @param recipientId
-     *            the identifier of the section that will take branches
+     * @param victimId the identifier of the removed section
+     * @param recipientId the identifier of the section that will take branches
      * @return {@code true} if section was removed, {@code false} otherwise
      */
     boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient);

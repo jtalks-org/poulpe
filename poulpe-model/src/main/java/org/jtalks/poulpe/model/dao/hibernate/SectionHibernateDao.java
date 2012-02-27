@@ -36,26 +36,12 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Poulp
         return getSession().createQuery("from PoulpeSection").list();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isSectionNameExists(PoulpeSection section) {        
-        return ((Number) getSession()
-                .createQuery("select count(*) from PoulpeSection s where s.name = ?")
-                .setString(0, section.getName()).uniqueResult()).intValue() != 0;
-    }
-
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(PoulpeSection section) {
         PoulpeSection victim = (PoulpeSection) getSession().load(PoulpeSection.class, section.getId());
         getSession().delete(victim);
-        // There's no use catching HibernateException to get to know if any section was deleted. I
-        // read source code of Hibernate delete method, such case just is logged (in trace
-        // level) and ignored there. So there is no way we can get to know if any section was
-        // deleted. I can't use HQL here as well. So I'm just returning true.
-        return true;
+        return true; // otherwise exception is thrown by Hibernate
     }
 
     /** {@inheritDoc} */
