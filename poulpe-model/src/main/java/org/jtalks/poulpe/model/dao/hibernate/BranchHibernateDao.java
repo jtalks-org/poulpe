@@ -21,11 +21,12 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import java.util.List;
 
 /**
+ * Hibernate implementation of {@link BranchDao}
+ * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class BranchHibernateDao extends AbstractHibernateParentRepository<PoulpeBranch> implements
-        BranchDao {
+public class BranchHibernateDao extends AbstractHibernateParentRepository<PoulpeBranch> implements BranchDao {
 
     /**
      * {@inheritDoc}
@@ -36,15 +37,4 @@ public class BranchHibernateDao extends AbstractHibernateParentRepository<Poulpe
         return getSession().createQuery("from PoulpeBranch").list();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isBranchDuplicated(PoulpeBranch branch) {
-        return ((Number) getSession()
-                .createQuery(
-                        "select count(*) from PoulpeBranch b where b.name = ? and b.id != ?")
-                .setString(0, branch.getName()).setLong(1, branch.getId())
-                .uniqueResult()).intValue() != 0;
-    }
 }

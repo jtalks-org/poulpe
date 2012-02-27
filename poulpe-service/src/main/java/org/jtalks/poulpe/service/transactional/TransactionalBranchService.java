@@ -77,14 +77,6 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
         dao.delete(victim.getId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isDuplicated(PoulpeBranch branch) {
-        return dao.isBranchDuplicated(branch);
-    }
-
     @Override
     public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         return branchPermissionManager.getGroupAccessListFor(branch);

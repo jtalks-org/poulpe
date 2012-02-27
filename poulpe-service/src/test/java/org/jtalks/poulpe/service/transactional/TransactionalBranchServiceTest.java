@@ -15,11 +15,8 @@
 package org.jtalks.poulpe.service.transactional;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,17 +46,16 @@ import org.testng.annotations.Test;
  * @author Kirill Afonin
  */
 public class TransactionalBranchServiceTest {
-
-    @Mock
-    BranchDao branchDao;
-    @Mock
-    EntityValidator entityValidator;
-    @Mock
-    AclManager aclManager;
-    @Mock
-    BranchPermissionManager branchPermissionManager;
-    private long BRANCH_ID = 1L;
+    
     private BranchService branchService;
+    
+    @Mock BranchDao branchDao;
+    @Mock EntityValidator entityValidator;
+    @Mock AclManager aclManager;
+    @Mock BranchPermissionManager branchPermissionManager;
+    
+    private long BRANCH_ID = 1L;
+    
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -112,17 +108,8 @@ public class TransactionalBranchServiceTest {
         PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeRestrictions(branch, accessChanges);
-        
+
         verify(branchPermissionManager).changeRestrictions(branch, accessChanges);
-    }
-
-    @Test
-    public void testIsDuplicated() {
-        PoulpeBranch branch = new PoulpeBranch();
-
-        when(branchDao.isBranchDuplicated(branch)).thenReturn(true);
-
-        assertTrue(branchService.isDuplicated(branch));
     }
 
     @Test
@@ -176,6 +163,7 @@ public class TransactionalBranchServiceTest {
 
     private void givenConstraintsViolations() {
         Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeBranch.class));
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(
+                any(PoulpeBranch.class));
     }
 }

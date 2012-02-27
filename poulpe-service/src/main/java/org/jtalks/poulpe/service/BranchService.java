@@ -29,45 +29,38 @@ public interface BranchService extends EntityService<PoulpeBranch> {
 
     /**
      * Get list of all persistence objects T currently present in database.
-     *
+     * 
      * @return - list of persistence objects T.
      */
     List<PoulpeBranch> getAll();
 
     /**
      * Save or update branch.
-     *
+     * 
      * @param selectedBranch instance to save
      */
     void saveBranch(PoulpeBranch selectedBranch);
 
     /**
-     * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
-     *
+     * Removes all topics inside {@code victim} and then removes {@code victim}
+     * branch itself.
+     * 
      * @param victim the branch to be removed
      */
     void deleteBranchRecursively(PoulpeBranch victim);
 
     /**
-     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim}
-     * branch.
-     *
-     * @param victim    the branch to be removed
+     * Moves all topics inside {@code victim} to another {@code recipient}
+     * branch and then removes {@code victim} branch.
+     * 
+     * @param victim the branch to be removed
      * @param recipient the branch to take topics of {@code victim}
      */
     void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient);
 
     /**
-     * Checks if the branch is duplicated.
-     *
-     * @param branch branch to check
-     * @return true if branch is Duplicated
-     */
-    boolean isDuplicated(PoulpeBranch branch);
-
-    /**
      * Return access list for branch
-     *
+     * 
      * @param branch branch which will be returned access list
      * @return access list
      */
@@ -75,16 +68,16 @@ public interface BranchService extends EntityService<PoulpeBranch> {
 
     /**
      * Change grants for branch
-     *
-     * @param branch  branch to which grants will be changed
+     * 
+     * @param branch branch to which grants will be changed
      * @param changes grants for branch
      */
     void changeGrants(PoulpeBranch branch, BranchAccessChanges changes);
 
     /**
      * Change restriction for branch
-     *
-     * @param branch  branch to which restriction will be changed
+     * 
+     * @param branch branch to which restriction will be changed
      * @param changes new restriction for branch
      */
     void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes);
