@@ -31,27 +31,30 @@ public interface TopicTypeService extends EntityService<TopicType> {
 
     /**
      * Get all topic types.
+     * 
      * @return the list of the TopicType
      */
     List<TopicType> getAll();
 
     /**
      * Delete the specified TopicType.
+     * 
      * @param topicType topicType to delete
      */
     void deleteTopicType(TopicType topicType);
-    
+
     /**
      * Save new TopicType.
+     * 
      * @param topicType topicType to save
      * @exception ValidationException
      */
     void saveOrUpdate(TopicType topicType);
 
     /**
-     * TODO: find out why it's needed
-     * @param topicTypes
+     * @param topicTypes objects to be deleted
      */
+    // TODO: find out why it's needed
     void deleteTopicTypes(Collection<TopicType> topicTypes);
-    
+
 }

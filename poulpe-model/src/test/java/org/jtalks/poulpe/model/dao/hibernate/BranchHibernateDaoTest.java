@@ -70,19 +70,19 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
         assertBranchSaved();
     }
-    
+
     private void givenParentSection() {
         branch = ObjectsFactory.createBranch();
         session.save(branch.getSection());
     }
-    
+
     private void assertBranchSaved() throws AssertionFailedError {
         assertNotSame(branch.getId(), 0, "Id not created");
         PoulpeBranch actual = retrieveActualBranch();
         actual.setSection(branch.getSection());
         assertReflectionEquals(branch, actual);
     }
-    
+
     private PoulpeBranch retrieveActualBranch() {
         return ObjectRetriever.retrieveUpdated(branch, session);
     }
@@ -123,7 +123,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         branch.setName(newName);
 
         dao.saveOrUpdate(branch);
-        
+
         assertNameChanged(newName);
     }
 
@@ -146,7 +146,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
         boolean result = dao.delete(branch.getId());
         assertTrue(result, "Entity is not deleted");
-        
+
         assertBranchDeleted();
     }
 
@@ -154,7 +154,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         int branchCount = retrieveActualBranchesAmount();
         assertEquals(branchCount, 0);
     }
-    
+
     private int retrieveActualBranchesAmount() {
         String countQuery = "select count(*) from PoulpeBranch";
         Number count = (Number) session.createQuery(countQuery).uniqueResult();
@@ -216,14 +216,14 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         PoulpeBranch branch = ObjectsFactory.createBranch();
         PoulpeSection section = ObjectsFactory.createSection();
         session.save(section);
-        
+
         section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());
         branch.setSection(section);
         section.addOrUpdateBranch(branch);
         session.save(branch);
-        
+
         assertTrue(branch.getId() != 0);
-        
+
         section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());
         assertEquals(section.getBranches().size(), 1);
         assertReflectionEquals(branch, section.getBranches().get(0));

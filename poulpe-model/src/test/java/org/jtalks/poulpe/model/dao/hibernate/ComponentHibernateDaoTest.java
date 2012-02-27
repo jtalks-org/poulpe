@@ -49,8 +49,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-public class ComponentHibernateDaoTest extends
-        AbstractTransactionalTestNGSpringContextTests {
+public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -93,8 +92,7 @@ public class ComponentHibernateDaoTest extends
         jcommune.setName(newName);
         dao.saveOrUpdate(jcommune);
 
-        String actual = ObjectRetriever.retrieveUpdated(jcommune, session)
-                .getName();
+        String actual = ObjectRetriever.retrieveUpdated(jcommune, session).getName();
         assertEquals(actual, newName);
     }
 
@@ -137,8 +135,7 @@ public class ComponentHibernateDaoTest extends
     }
 
     private void assertAllTypesAvailable(Set<ComponentType> availableTypes) {
-        List<ComponentType> allActualTypes = Arrays.asList(ComponentType
-                .values());
+        List<ComponentType> allActualTypes = Arrays.asList(ComponentType.values());
         assertEquals(availableTypes.size(), allActualTypes.size());
         assertTrue(availableTypes.containsAll(allActualTypes));
     }

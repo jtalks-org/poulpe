@@ -24,13 +24,17 @@ import org.jtalks.poulpe.service.RankService;
 
 /**
  * Transactional Rank Service implementation.
+ * 
  * @author Pavel Vervenko
  */
 public class TransactionalRankService extends AbstractTransactionalEntityService<Rank, RankDao> implements RankService {
     private final EntityValidator validator;
+
     /**
-     * Create an instance of service.
+     * Create an instance of service
+     * 
      * @param rankDao rank DAO
+     * @param validator entity validator
      */
     public TransactionalRankService(RankDao rankDao, EntityValidator validator) {
         this.dao = rankDao;

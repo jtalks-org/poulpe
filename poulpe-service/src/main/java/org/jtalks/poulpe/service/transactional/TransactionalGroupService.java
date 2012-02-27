@@ -20,20 +20,25 @@ import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.GroupService;
 
+import ru.javatalks.utils.general.Assert;
+
 import java.util.List;
 
-
 /**
+ * Implementation of {@link GroupService}
+ * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class TransactionalGroupService extends AbstractTransactionalEntityService<PoulpeGroup, GroupDao>
-        implements GroupService {
+public class TransactionalGroupService extends AbstractTransactionalEntityService<PoulpeGroup, GroupDao> implements
+        GroupService {
     private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
-     * @param groupDao  - data access object, which should be able do all CRUD operations.
+     * 
+     * @param groupDao - data access object, which should be able do all CRUD
+     * operations.
      * @param validator - an entity validator
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
@@ -49,6 +54,9 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         return dao.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<PoulpeGroup> getAllMatchedByName(String name) {
         return dao.getMatchedByName(name);
@@ -59,10 +67,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      */
     @Override
     public void deleteGroup(PoulpeGroup group) {
-        // TODO: check returned value?
-        if (group == null) {
-            throw new IllegalArgumentException();
-        }
+        Assert.throwIfNull(group, "group");
         dao.delete(group);
     }
 
@@ -70,10 +75,10 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public void saveGroup(PoulpeGroup selectedGroup) {
-        validator.throwOnValidationFailure(selectedGroup);
-        dao.saveOrUpdate(selectedGroup);
+    public void saveGroup(PoulpeGroup group) {
+        Assert.throwIfNull(group, "group");
+        validator.throwOnValidationFailure(group);
+        dao.saveOrUpdate(group);
     }
-
 
 }

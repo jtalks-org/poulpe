@@ -22,6 +22,8 @@ import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 
+import ru.javatalks.utils.general.Assert;
+
 /**
  * User service class, contains methods needed to manipulate with {@code User}
  * persistent entity.
@@ -43,6 +45,9 @@ public class TransactionalUserService implements UserService {
         this.userDao = userDao;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason) {
         checkUsers(users);
@@ -56,12 +61,26 @@ public class TransactionalUserService implements UserService {
         }
     }
 
-    private void checkUsers(Collection<User> users) {
-        if (users == null) {
-            throw new IllegalArgumentException("Users can't be null");
+    /**
+     * @param users to be checked
+     * @exception IllegalArgumentException if users is null
+     */
+    private static void checkUsers(Collection<User> users) {
+        Assert.throwIfNull(users, "users");
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    private static void checkDays(int days) {
+        if (days <= 0) {
+            throw new IllegalArgumentException("Days must be positive");
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void setTemporaryBanStatus(Collection<User> users, int days, String banReason) {
         checkUsers(users);
@@ -78,27 +97,33 @@ public class TransactionalUserService implements UserService {
         }
     }
 
-    private void checkDays(int days) {
-        if (days <= 0) {
-            throw new IllegalArgumentException("Days must be positive");
-        }
-    }
-
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getAll() {
         return userDao.getAllPoulpeUsers();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<User> getUsersByUsernameWord(String word) {
         return userDao.getPoulpeUserByUsernamePart(word);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void updateUser(User user) {
         userDao.update(user);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public User get(long id) {
         return (User) userDao.get(id);

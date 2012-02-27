@@ -20,30 +20,37 @@ import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
+ * Service for dealing with {@link PoulpeGroup} objects
+ * 
+ * @author unascribed
  */
 public interface GroupService extends EntityService<PoulpeGroup> {
 
     /**
-     * Get list of all persistence objects T currently present in database.
-     *
-     * @return - list of persistence objects T.
+     * @return list of all {@link PoulpeGroup} objects
      */
     List<PoulpeGroup> getAll();
-    
+
+    /**
+     * @param name to look up
+     * @return list of groups that names match the given name
+     */
     List<PoulpeGroup> getAllMatchedByName(String name);
 
     /**
      * Delete group
-     * @param selectedBranch branch to delete
+     * 
+     * @param group to be delete
+     * @exception IllegalArgumentException if group is null
      */
-    void deleteGroup(PoulpeGroup selectedGroup);
+    void deleteGroup(PoulpeGroup group);
 
     /**
      * Save or update group.
+     * 
      * @param selectedGroup instance to save
-     * @throws NotUniqueException if group with the same name already exists
+     * @exception IllegalArgumentException if group is null
      */
-    void saveGroup(PoulpeGroup selectedGroup);   
-    
+    void saveGroup(PoulpeGroup selectedGroup);
 
 }

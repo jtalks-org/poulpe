@@ -20,19 +20,22 @@ import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.service.EntityService;
 
 /**
- *
- * @author Temdegon
+ * Service for dealing with {@link Rank} object
+ * 
+ * @author Pavel Vervenko
  */
 public interface RankService extends EntityService<Rank> {
 
     /**
      * Get all ranks.
+     * 
      * @return the list of the ranks
      */
     List<Rank> getAll();
 
     /**
      * Delete the specified rank.
+     * 
      * @param rank rank to delete
      */
     void deleteRank(Rank rank);

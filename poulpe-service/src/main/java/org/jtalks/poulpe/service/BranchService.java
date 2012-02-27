@@ -22,15 +22,15 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import java.util.List;
 
 /**
+ * Service for dealing with {@link PoulpeBranch} objects
+ * 
  * @author Vitaliy Kravchenko
  * @author Kirill Afonin
  */
 public interface BranchService extends EntityService<PoulpeBranch> {
 
     /**
-     * Get list of all persistence objects T currently present in database.
-     * 
-     * @return - list of persistence objects T.
+     * @return list of all {@link PoulpeBranch} objects
      */
     List<PoulpeBranch> getAll();
 

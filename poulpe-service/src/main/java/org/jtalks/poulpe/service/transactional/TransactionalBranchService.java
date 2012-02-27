@@ -26,6 +26,8 @@ import org.jtalks.poulpe.service.BranchService;
 import java.util.List;
 
 /**
+ * Implementation of {@link BranchService}
+ * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
@@ -36,6 +38,11 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
 
     /**
      * Create an instance of entity based service
+     * 
+     * @param branchDao instance of {@link BranchDao}
+     * @param branchPermissionManager instance of
+     * {@link BranchPermissionManager}
+     * @param validator instance of {@link EntityValidator}
      */
     public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager,
             EntityValidator validator) {
@@ -77,16 +84,25 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
         dao.delete(victim.getId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         return branchPermissionManager.getGroupAccessListFor(branch);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeGrants(branch, changes);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
         branchPermissionManager.changeRestrictions(branch, changes);

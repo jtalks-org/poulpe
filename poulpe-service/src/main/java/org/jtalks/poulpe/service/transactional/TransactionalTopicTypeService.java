@@ -24,46 +24,61 @@ import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 
 /**
+ * Implementation of {@link TopicType}
+ * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  */
-public class TransactionalTopicTypeService extends
-        AbstractTransactionalEntityService<TopicType, TopicTypeDao> implements TopicTypeService {
-    
+public class TransactionalTopicTypeService extends AbstractTransactionalEntityService<TopicType, TopicTypeDao>
+        implements TopicTypeService {
+
     private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
-     *
-     * @param topicDao - data access object, which should be able do all CRUD operations.
-     * @param validator TODO
+     * 
+     * @param topicDao - data access object, which should be able do all CRUD
+     * operations.
+     * @param validator entity validator
      */
-    public TransactionalTopicTypeService(TopicTypeDao topicDao, EntityValidator validator){
+    public TransactionalTopicTypeService(TopicTypeDao topicDao, EntityValidator validator) {
         dao = topicDao;
         this.validator = validator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<TopicType> getAll() {
         return dao.getAll();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteTopicType(TopicType topicType) {
         dao.delete(topicType.getId());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public void saveOrUpdate(TopicType topicType)  {
+    public void saveOrUpdate(TopicType topicType) {
         validator.throwOnValidationFailure(topicType);
         dao.saveOrUpdate(topicType);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void deleteTopicTypes(Collection<TopicType> topicTypes) {
-        for (TopicType topicType: topicTypes) {
+        for (TopicType topicType : topicTypes) {
             deleteTopicType(topicType);
         }
     }
-    
+
 }

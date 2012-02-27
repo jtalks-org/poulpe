@@ -22,16 +22,15 @@ import org.jtalks.poulpe.model.entity.User;
 
 /**
  * Service interface for operations with {@code User} persistent entity.
- *
+ * 
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
- *
  */
 public interface UserService {
 
     /**
      * Sets permanent ban status for the user list.
-     *
+     * 
      * @param users the users to update ban status
      * @param permanentBan the permanent ban status
      * @param banReason the ban reason description
@@ -40,7 +39,7 @@ public interface UserService {
 
     /**
      * Sets temporary ban status for the user list.
-     *
+     * 
      * @param users the users to update ban status
      * @param days the length of the temporary ban status in days
      * @param banReason the ban reason description
@@ -49,23 +48,29 @@ public interface UserService {
 
     /**
      * Gets all Users from the database
+     * @return list of all users
      */
     List<User> getAll();
 
     /**
      * Gets Users with corresponding word in user name
+     * @param word to look up
+     * @return list of users with the word in the name
      */
     List<User> getUsersByUsernameWord(String word);
 
     /**
-     * Update corresponding user
+     * Updates the user
+     * @param user entity to be updated
      */
     void updateUser(User user);
 
     /**
+     * Retrieves user by its id
      * 
-     * @param id
-     * @return
+     * @param id to look up
+     * @return retrieved {@link User} instance
+     * @throws NotFoundException when user can't be found
      */
     User get(long id) throws NotFoundException;
 

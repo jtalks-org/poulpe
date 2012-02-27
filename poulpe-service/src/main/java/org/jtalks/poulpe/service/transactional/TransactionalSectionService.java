@@ -23,9 +23,9 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
 
 /**
+ * Implementation of {@link SectionService}
  * 
- * @author tanya birina
- * 
+ * @author Tatiana Birina
  */
 public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao>
         implements SectionService {
@@ -35,6 +35,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * Create an instance of entity based service
      * 
      * @param sectionDao - data access object
+     * @param validator entity validator
      */
     public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
         this.dao = sectionDao;

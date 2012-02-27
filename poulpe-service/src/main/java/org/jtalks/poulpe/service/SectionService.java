@@ -19,26 +19,30 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 import java.util.List;
 
+/**
+ * Service for dealing with {@link PoulpeSection} objects
+ * 
+ * @author unascribed
+ */
 public interface SectionService extends EntityService<PoulpeSection> {
 
     /**
      * Get list of all Sections.
-     *
-     * @return - list of Sections.
+     * 
+     * @return - list of all {@link PoulpeSection} objects.
      */
     List<PoulpeSection> getAll();
 
-
     /**
      * Save or update section.
-     *
+     * 
      * @param section instance to save
      */
     void saveSection(PoulpeSection section);
 
     /**
      * Removes the section and all its branches.
-     *
+     * 
      * @param victim the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
@@ -46,8 +50,8 @@ public interface SectionService extends EntityService<PoulpeSection> {
 
     /**
      * Removes the section and move all its branches to another section.
-     *
-     * @param victim    the removed section
+     * 
+     * @param victim the removed section
      * @param recipient the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
      */

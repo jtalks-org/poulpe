@@ -32,15 +32,22 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.springframework.security.acls.model.AccessControlEntry;
 
 /**
- * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions related to the
- * Branches.
- *
+ * Responsible for allowing, restricting or deleting the permissions of the User
+ * Groups to actions related to the Branches.
+ * 
  * @author stanislav bashkirtsev
  */
 public class BranchPermissionManager {
     private final AclManager aclManager;
     private final GroupDao groupDao;
 
+    /**
+     * Constructs {@link BranchPermissionManager} with given {@link AclManager}
+     * and {@link GroupDao}
+     * 
+     * @param aclManager manager instance
+     * @param groupDao group dao instance
+     */
     public BranchPermissionManager(@Nonnull AclManager aclManager, @Nonnull GroupDao groupDao) {
         this.aclManager = aclManager;
         this.groupDao = groupDao;
@@ -48,10 +55,11 @@ public class BranchPermissionManager {
 
     /**
      * Changes the granted permissions according to the specified changes.
-     *
-     * @param branch  the branch to change permissions to
-     * @param changes contains a permission itself, a list of groups to be granted to the permission and the list of
-     *                groups to remove their granted privileges
+     * 
+     * @param branch the branch to change permissions to
+     * @param changes contains a permission itself, a list of groups to be
+     * granted to the permission and the list of groups to remove their granted
+     * privileges
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
@@ -63,10 +71,11 @@ public class BranchPermissionManager {
 
     /**
      * Changes the restricting permissions according to the specified changes.
-     *
-     * @param branch  the branch to change permissions to
-     * @param changes contains a permission itself, a list of groups to be restricted from the permission and the list
-     *                of groups to remove their restricting privileges
+     * 
+     * @param branch the branch to change permissions to
+     * @param changes contains a permission itself, a list of groups to be
+     * restricted from the permission and the list of groups to remove their
+     * restricting privileges
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
@@ -76,35 +85,43 @@ public class BranchPermissionManager {
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
+    /**
+     * @param branch object identity
+     * @return {@link BranchAccessList} for given branch
+     */
     public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
         BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
         List<GroupAce> groupAces = aclManager.getBranchPermissions(branch);
-        for(GroupAce groupAce: groupAces){
+        for (GroupAce groupAce : groupAces) {
             branchAccessList.put(groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
         }
         return branchAccessList;
     }
 
+    /**
+     * @param groupAce from which if of group should be extracted
+     * @return {@link PoulpeGroup} extracted from {@link GroupAce}
+     */
     private PoulpeGroup getGroup(GroupAce groupAce) {
         long groupId = extractGroupId(groupAce);
         return groupDao.get(groupId);
     }
-    
-    // TODO: get rid of it once GroupAce#getGroupId() is created
+
+    // TODO: get rid of it once GroupAce#getGroupId() is created!!!!!
     private static long extractGroupId(GroupAce groupAce) {
         try {
             Class<GroupAce> groupAceClass = GroupAce.class;
             Field aceField = groupAceClass.getDeclaredField("ace");
             aceField.setAccessible(true);
-            
+
             AccessControlEntry ace = (AccessControlEntry) aceField.get(groupAce);
             UserGroupSid sid = (UserGroupSid) ace.getSid();
-            
+
             return Long.parseLong(sid.getGroupId());
-            
+
         } catch (Exception e) {
             throw new RuntimeException("Error accessing to ace private field, nested exception: ", e);
         }
     }
-    
+
 }
