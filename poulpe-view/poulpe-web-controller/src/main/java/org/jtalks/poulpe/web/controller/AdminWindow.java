@@ -20,14 +20,15 @@ import org.zkoss.zul.Center;
 
 /**
  * Server-side representation of view for main 'Admin Window'.
- *
+ * 
  * @author Vladimir Bukhoyarov
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
 public class AdminWindow extends GenericForwardComposer<Component> {
 
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 7658211471084280646L;
+    
     private Center workArea;
     private WindowManager windowManager;
 
@@ -68,14 +69,17 @@ public class AdminWindow extends GenericForwardComposer<Component> {
         windowManager.open("sections.zul");
     }
 
-    public void onShowUserBanning(){
+    /**
+     * Shows user banning window
+     */
+    public void onShowUserBanning() {
         windowManager.open("userbanning.zul");
     }
 
     /**
      * Shows User Groups window that allows admins to CRUD groups.
      */
-    public void onShowUserGroups(){
+    public void onShowUserGroups() {
         windowManager.open("groups.zul");
     }
 
@@ -94,8 +98,6 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     }
 
     /**
-     * Sets window manager.
-     *
      * @param windowManager the new window manager
      */
     public void setWindowManager(WindowManager windowManager) {

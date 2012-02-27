@@ -228,7 +228,6 @@ public class ZkBranchDialogView extends Window implements BranchDialogView, Afte
     public void openErrorPopupInNewSectionDialog(String label) {
         String message = Labels.getLabel(label);
         branchName.setErrorMessage(message);
-
     }
 
     /**

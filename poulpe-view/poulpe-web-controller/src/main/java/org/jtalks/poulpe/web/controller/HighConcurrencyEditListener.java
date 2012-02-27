@@ -15,33 +15,42 @@
 package org.jtalks.poulpe.web.controller;
 
 /**
- * The listener which should be used in case of a high probability of concurrent data modifications by several users
+ * The listener which should be used in case of a high probability of concurrent
+ * data modifications by several users
+ * 
  * @author Vladimir Bukhtoyarov
- *
+ * 
  * @param <T>
  */
 public abstract class HighConcurrencyEditListener<T> implements EditListener<T> {
 
+    /** {@inheritDoc} */
     @Override
     public void onCreate(T entity) {
         refreshData();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onDelete(T entity) {
         refreshData();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onUpdate(T entity) {
         refreshData();
     }
 
+    /** {@inheritDoc} */
     @Override
     public void onCloseEditorWithoutChanges() {
         refreshData();
     }
-    
+
+    /**
+     * Action to be reformed on every event
+     */
     protected abstract void refreshData();
 
 }

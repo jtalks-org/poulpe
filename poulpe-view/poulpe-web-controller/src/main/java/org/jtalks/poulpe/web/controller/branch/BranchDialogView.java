@@ -43,7 +43,7 @@ public interface BranchDialogView extends ValidationFailure {
      * Show dialog
      */
     void show();
-    
+
     /**
      * Show dialog and fill fields name and description
      * 

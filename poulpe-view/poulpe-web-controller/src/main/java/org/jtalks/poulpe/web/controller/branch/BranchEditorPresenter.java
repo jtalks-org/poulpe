@@ -18,24 +18,22 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 
 /**
- * This class is implementation the branch editor presenter in pattern Model-View-Presenter
+ * This class is implementation the branch editor presenter in pattern
+ * Model-View-Presenter
  * 
  * @author Bekrenev Dmitry
- * */
-
+ */
 public class BranchEditorPresenter {
 
     private BranchEditorView view;
     private BranchService branchService;
 
-
     /**
      * Sets the service instance which is used for manipulating with stored
      * branches
      * 
-     * @param service
-     *            The instance branch service
-     * */
+     * @param service The instance branch service
+     */
     public void setBranchService(BranchService service) {
         branchService = service;
     }
@@ -43,25 +41,23 @@ public class BranchEditorPresenter {
     /**
      * Sets the view instance which represent User interface
      * 
-     * @param view
-     *            The instance BranchEditorView
-     * */
+     * @param view The instance BranchEditorView
+     */
     public void setView(BranchEditorView view) {
         this.view = view;
     }
 
-
     /**
      * Invocation this method makes view update branch list
-     * */
+     */
     public void updateView() {
         view.showBranches(branchService.getAll());
-
     }
 
     /**
-     * Invocation this method makes get selected branch in branch list and delete it 
-     * */
+     * Invocation this method makes get selected branch in branch list and
+     * delete it
+     */
     public void deleteBranch() {
         PoulpeBranch branch = view.getSelectedBranch();
         branchService.deleteBranchRecursively(branch);

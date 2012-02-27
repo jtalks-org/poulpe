@@ -31,7 +31,8 @@ public class SelectedEntity<E extends Entity> {
     /**
      * Gets currently selected entity.
      * 
-     * @return the selected entity, can return {@code null} if nothing was selected
+     * @return the selected entity, can return {@code null} if nothing was
+     * selected
      */
     public E getEntity() {
         return entity;
@@ -40,8 +41,7 @@ public class SelectedEntity<E extends Entity> {
     /**
      * Sets entity wich currently selected in UI.
      * 
-     * @param entity
-     *            the new instance entity to set
+     * @param entity the new instance entity to set
      */
     public void setEntity(@Nonnull E entity) {
         this.entity = entity;

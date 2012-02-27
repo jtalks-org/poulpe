@@ -37,10 +37,10 @@ import org.zkoss.zul.Window;
 
 /**
  * The class which is responsible for creating and closing application windows.
- *
+ * 
  * @author Dmitriy Sukharev
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
 public final class WindowManagerImpl implements WindowManager, ApplicationContextAware {
 
@@ -54,7 +54,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     private Component workArea;
     private Component currentWindow;
-    
+
     /** {@inheritDoc} */
     @Override
     public void showEditComponentWindow(long componentId, Object listener) {
@@ -92,7 +92,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     @Override
     public void openTopicTypeWindowForCreate(EditListener<TopicType> listener) {
         Window win = (Window) createComponent("topictype.zul");
-        TopicTypePresenter  presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
+        TopicTypePresenter presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
         doModal(win);
         presenter.initializeForCreate((TopicTypeView) win, listener);
     }
@@ -101,7 +101,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     @Override
     public void openUserWindowForEdit(User user, EditListener<User> listener) {
         Window win = (Window) createComponent(EDIT_USER_URL);
-        UserPresenter  presenter = (UserPresenter) getBean("userPresenter", win);
+        UserPresenter presenter = (UserPresenter) getBean("userPresenter", win);
         doModal(win);
         presenter.initializeForEdit((UserView) win, user, listener);
     }
@@ -110,7 +110,7 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
     @Override
     public void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener) {
         Window win = (Window) createComponent("topictype.zul");
-        TopicTypePresenter  presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
+        TopicTypePresenter presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
         doModal(win);
         presenter.initializeForEdit((TopicTypeView) win, topicType, listener);
     }
@@ -121,6 +121,13 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         this.applicationContext = applicationContext;
     }
 
+    /**
+     * Retrieves a bean from the context
+     * 
+     * @param beanName name of the bean
+     * @param comp to be wired
+     * @return bean
+     */
     private Object getBean(String beanName, Component comp) {
         assertBeanDefined(beanName);
         assertBeanPrototype(beanName);
@@ -129,20 +136,35 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         return presenter;
     }
 
+    /**
+     * @param pathToZulFile path to the file
+     * @return new Component
+     */
     private Component createComponent(String pathToZulFile) {
         Component component = Executions.createComponents(pathToZulFile, null, null);
         ConventionWires.wireVariables(component, component);
         return component;
     }
 
+    /**
+     * @param beanName name of the bean
+     * @exception IllegalArgumentException if the bean does not exist
+     */
     private void assertBeanDefined(String beanName) {
         Assert.isTrue(applicationContext.containsBean(beanName));
     }
 
+    /**
+     * @param beanName name of the bean
+     * @exception IllegalArgumentException if the bean is not prototype
+     */
     private void assertBeanPrototype(String beanName) {
         Assert.isTrue(applicationContext.isPrototype(beanName));
     }
 
+    /**
+     * @param win to be opened
+     */
     private void doModal(Window win) {
         try {
             win.doModal();

@@ -22,17 +22,20 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
  * Interface for representation view branches list
  * 
  * @author Bekrenev Dmitry
- * */
+ */
 public interface BranchEditorView {
 
-    /**Show branch list
+    /**
+     * Show branch list
+     * 
      * @param branches List branches for showing
-     * */
+     */
     void showBranches(List<PoulpeBranch> branches);
 
     /**
      * Get selected branch from branch list
+     * 
      * @return PoulpeBranch selected branch
-     * */
+     */
     PoulpeBranch getSelectedBranch();
 }

@@ -46,6 +46,7 @@ public class DialogManagerImpl implements DialogManager {
                 new DialogActionListener(confirmable));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void confirmDeletion(List<String> victimList, Performable confirmable) {
         if (victimList.size() == 1) {
@@ -61,8 +62,14 @@ public class DialogManagerImpl implements DialogManager {
         showConfirmDeleteDialog(confirmable, title, builder.toString());
     }
 
-    private void showConfirmDeleteDialog(DialogManager.Performable confirmable, String title, String text)
-            throws AssertionError {
+    /**
+     * Displays confirm delete dialog
+     * 
+     * @param confirmable action to be performed
+     * @param title of the dialog
+     * @param text in the dialog
+     */
+    private void showConfirmDeleteDialog(DialogManager.Performable confirmable, String title, String text) {
         Messagebox.show(text, title, Messagebox.YES | Messagebox.NO, Messagebox.QUESTION, Messagebox.CANCEL,
                 new DialogDeleteListener(confirmable));
     }
@@ -85,6 +92,7 @@ public class DialogManagerImpl implements DialogManager {
                 new DialogActionListener(confirmable));
     }
 
+    /** {@inheritDoc} */
     @Override
     public void confirmBan(List<User> usersToBan, String reason, Performable performable) {
 

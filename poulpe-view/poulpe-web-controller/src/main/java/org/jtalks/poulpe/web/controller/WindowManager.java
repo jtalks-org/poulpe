@@ -20,51 +20,67 @@ import org.zkoss.zk.ui.Component;
 
 /**
  * The interface for creation and closing application windows.
- *
+ * 
  * @author Dmitriy Sukharev
  * @author Vyacheslav Zhivaev
- *
  */
 public interface WindowManager {
 
     /**
      * Creates and shows new window which is responsible for editing components.
-     *
-     * @param componentId
-     *            identifier of the {@link Component} to be edited, or
-     *            {@code -1L} to create a new one
-     * @param listener
-     *            listener to be invoked after window is closed. It's actually
-     *            might be the object of any class, writing the implementation
-     *            of WindowManager you should document what type it has.
+     * 
+     * @param componentId identifier of the {@link Component} to be edited, or
+     * {@code -1L} to create a new one
+     * @param listener listener to be invoked after window is closed. It's
+     * actually might be the object of any class, writing the implementation of
+     * WindowManager you should document what type it has.
      */
     void showEditComponentWindow(long componentId, Object listener);
 
     /**
      * Closes the {@code window} window and invokes its "onDetach" listener.
-     *
-     * @param window
-     *            the window to be closed
+     * 
+     * @param window the window to be closed
      */
     void closeWindow(Object window);
 
+    /**
+     * Opens a window for creating topic types
+     * 
+     * @param listener edit listener
+     */
     void openTopicTypeWindowForCreate(EditListener<TopicType> listener);
 
+    /**
+     * Opens a window for editing topic types
+     * 
+     * @param topicType to edit
+     * @param listener edit listener
+     */
     void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
 
+    /**
+     * Opens a window for editing users
+     * 
+     * @param user to edit
+     * @param listener edit listener
+     */
     void openUserWindowForEdit(User user, EditListener<User> listener);
 
     /**
-     * Sets work-area component which will be used as parent component for newly created windows.
-     *
+     * Sets work-area component which will be used as parent component for newly
+     * created windows.
+     * 
      * @param workArea the work area component
      */
     void setWorkArea(Component workArea);
 
     /**
-     * Opens and shows new window in work area. Previous window will be forcibly detached.
-     *
-     * @param pathToZulFile the path to *.zul config file which describes new window
+     * Opens and shows new window in work area. Previous window will be forcibly
+     * detached.
+     * 
+     * @param pathToZulFile the path to *.zul config file which describes new
+     * window
      */
     void open(String pathToZulFile);
 
