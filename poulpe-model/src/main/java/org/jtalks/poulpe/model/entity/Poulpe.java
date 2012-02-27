@@ -21,7 +21,6 @@ import org.jtalks.common.model.entity.ComponentType;
  * Poulpe entity which represents Administrator Panel as itself.
  * 
  * @author Vyacheslav Zhivaev
- *
  */
 public class Poulpe extends Component {
 

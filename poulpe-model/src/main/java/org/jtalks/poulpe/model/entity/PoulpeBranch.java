@@ -20,20 +20,23 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.validation.annotations.UniqueConstraint;
 
 /**
+ * Forum branch that contains topics
+ * 
  * @author Pavel Vervenko
  */
-@UniqueConstraint
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     private List<User> moderators = new ArrayList<User>();
     private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
 
+    /**
+     * Creates an empty branch, all fields are set to null,
+     */
     public PoulpeBranch() {
         super();
     }
-    
+
     /**
      * Create PoulpeBranch with name and empty description
      * 
@@ -42,7 +45,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     public PoulpeBranch(String name) {
         super(name, "");
     }
-    
+
     /**
      * Create PoulpeBranch with name and description
      * 
@@ -52,7 +55,11 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     public PoulpeBranch(String name, String description) {
         super(name, description);
     }
-    
+
+    /**
+     * Should be used in preference of {@link #getSection()}
+     * @return {@link PoulpeSection}
+     */
     public PoulpeSection getPoulpeSection() {
         return (PoulpeSection) getSection();
     }
@@ -157,19 +164,27 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     public void addGroup(PoulpeGroup group) {
         this.groups.add(group);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitBranch(this);
     }
 
+    /**
+     * Adds a new group, or updates, if it already has it
+     * 
+     * @param group to be added
+     */
     public void addOrUpdateGroup(PoulpeGroup group) {
-        for(int i = 0; i < groups.size(); i++) {
-            if(group.getId() == groups.get(i).getId()) {
+        for (int i = 0; i < groups.size(); i++) {
+            if (group.getId() == groups.get(i).getId()) {
                 groups.set(i, group);
                 return;
             }
         }
-        addGroup(group);        
+        addGroup(group);
     }
 }

@@ -20,20 +20,25 @@ import org.jtalks.common.model.entity.Rank;
 
 /**
  * Dao for the forum rank {@link Rank}.
+ * 
  * @author Pavel Vervenko
  */
 public interface RankDao extends ParentRepository<Rank> {
 
     /**
      * Get the list of all ranks.
+     * 
      * @return ranks list
      */
     List<Rank> getAll();
 
     /**
      * Check if the name is already taken.
+     * 
      * @param name name to check
      * @return true if exists
+     * @deprecated use validator for that
      */
+    @Deprecated
     boolean isRankNameExists(String name);
 }

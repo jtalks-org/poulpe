@@ -31,6 +31,10 @@ public class BranchAccessChanges {
     private final List<PoulpeGroup> newlyAddedGroups = new ArrayList<PoulpeGroup>();
     private final List<PoulpeGroup> removedGroups = new ArrayList<PoulpeGroup>();
 
+    /**
+     * Constructs the object with given {@link JtalksPermission} instance
+     * @param permission type of permission
+     */
     public BranchAccessChanges(JtalksPermission permission) {
         this.permission = permission;
     }

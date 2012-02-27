@@ -41,6 +41,10 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
         super(name);
     }
     
+    /**
+     * Should be used if preference of {@link #getBranches()}
+     * @return list of {@link PoulpeBranch} objects
+     */
     @SuppressWarnings("unchecked")
     public List<PoulpeBranch> getPoulpeBranches() {
         List<?> branches = getBranches();
@@ -57,6 +61,9 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
         super(name, description);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitSection(this);

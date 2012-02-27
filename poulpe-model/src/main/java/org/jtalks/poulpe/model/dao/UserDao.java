@@ -22,7 +22,6 @@ import org.jtalks.poulpe.model.entity.User;
  * This interface provides persistence operations for {@link User} objects.
  * 
  * @author Vyacheslav Zhivaev
- * 
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao {
 

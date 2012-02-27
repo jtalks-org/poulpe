@@ -25,9 +25,10 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.annotations.UniqueConstraint;
 
 /**
- * User Groups is the class that can join users into groups. After that permissions can be assigned to the groups and
- * all users in this group will have that permission while browsing components.
- *
+ * User Groups is the class that can join users into groups. After that
+ * permissions can be assigned to the groups and all users in this group will
+ * have that permission while browsing components.
+ * 
  * @author Akimov Konstantin
  * @author Vyacheslav Zhivaev
  */
@@ -36,10 +37,18 @@ public class PoulpeGroup extends Group {
 
     private PoulpeBranch branch;
 
+    /**
+     * Creates a group with all fields set to null
+     */
     public PoulpeGroup() {
         super();
     }
-    
+
+    /**
+     * Creates a group with the given name
+     * 
+     * @param name of the group
+     */
     public PoulpeGroup(String name) {
         super(name);
     }
@@ -54,41 +63,44 @@ public class PoulpeGroup extends Group {
     }
 
     /**
-     * Returns branch of this group.
-     *
      * @return branch of this group
      */
     public PoulpeBranch getBranch() {
-		return branch;
-	}
+        return branch;
+    }
 
     /**
-     * Sets branch for this group.
-     *
-     * @param branch branch to set for the group
+     * @param branch to set for the group
      */
-	public void setBranch(PoulpeBranch branch) {
-		this.branch = branch;
-	}
-	
-	public List<User> getPoulpeUsers() {
-	    List<?> users = getUsers();
-	    @SuppressWarnings("unchecked")
-        List<User> poulpeUsers = (List<User>) users;
-	    return poulpeUsers;
-	}
-	
-	public void setPoulpeUsers(Collection<? extends org.jtalks.common.model.entity.User> users) {
-	    setUsers(new ArrayList<org.jtalks.common.model.entity.User>(users));
-	}
-	
+    public void setBranch(PoulpeBranch branch) {
+        this.branch = branch;
+    }
+
     /**
-     * Lets the Group classes be comparable by their names. Throws NPE if anything is {@code null} whether it's a group
-     * itself or its name.
-     *
+     * Should be used in preference of {@link #getUsers()}
+     * @return the list of {@link User} object
+     */
+    public List<User> getPoulpeUsers() {
+        List<?> users = getUsers();
+        @SuppressWarnings("unchecked")
+        List<User> poulpeUsers = (List<User>) users;
+        return poulpeUsers;
+    }
+
+    /**
+     * @param users to be added to the group
+     */
+    public void setPoulpeUsers(Collection<? extends org.jtalks.common.model.entity.User> users) {
+        setUsers(new ArrayList<org.jtalks.common.model.entity.User>(users));
+    }
+
+    /**
+     * Lets the Group classes be comparable by their names. Throws NPE if
+     * anything is {@code null} whether it's a group itself or its name.
+     * 
      * @author stanislav bashkirtsev
      */
-	static public class ByNameComparator<T extends Group> implements Comparator<T> {
+    static public class ByNameComparator<T extends Group> implements Comparator<T> {
         /**
          * {@inheritDoc}
          */

@@ -23,13 +23,15 @@ import org.jtalks.poulpe.model.entity.TopicType;
 /**
  * @author Vladimir Bukhtoyarov
  */
-public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<TopicType>
-        implements TopicTypeDao {
-
+public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<TopicType> implements TopicTypeDao {
+    
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<TopicType> getAll() {
         return getSession().createQuery("from TopicType").list();
     }
-    
+
 }

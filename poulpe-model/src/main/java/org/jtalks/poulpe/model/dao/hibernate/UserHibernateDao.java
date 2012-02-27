@@ -26,10 +26,8 @@ import org.jtalks.poulpe.model.entity.User;
  * Hibernate implementation of UserDao.
  * 
  * @author Vyacheslav Zhivaev
- * 
  */
 public class UserHibernateDao implements UserDao {
-
     /**
      * Class on which hibernate mapping is set
      */
@@ -95,11 +93,17 @@ public class UserHibernateDao implements UserDao {
                 .setString(0, param).list();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public org.jtalks.common.model.entity.User getByUsername(String username) {
         return getPoulpeUserByUsername(username);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<org.jtalks.common.model.entity.User> getByUsernamePart(String substring) {
         List<?> poulpeUserByUsernamePart = getPoulpeUserByUsernamePart(substring);
@@ -108,11 +112,17 @@ public class UserHibernateDao implements UserDao {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public org.jtalks.common.model.entity.User getByEncodedUsername(String encodedUsername) {
         return getPoulpeUserByEncodedUsername(encodedUsername);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<org.jtalks.common.model.entity.User> getAll() {
         List<?> allPoulpeUsers = getAllPoulpeUsers();
@@ -121,32 +131,50 @@ public class UserHibernateDao implements UserDao {
         return result;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void saveOrUpdate(org.jtalks.common.model.entity.User entity) {
         getSession().saveOrUpdate(entity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean delete(Long id) {
         return getSession().createQuery("delete " + type.getSimpleName() + " u where u.id=:id").setCacheable(true)
                 .setLong("id", id).executeUpdate() != 0;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(org.jtalks.common.model.entity.User entity) {
         getSession().delete(entity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void update(org.jtalks.common.model.entity.User entity) {
         getSession().update(entity);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public org.jtalks.common.model.entity.User get(Long id) {
         return (org.jtalks.common.model.entity.User) getSession().get(type, id);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean isExist(Long id) {
         return get(id) != null;

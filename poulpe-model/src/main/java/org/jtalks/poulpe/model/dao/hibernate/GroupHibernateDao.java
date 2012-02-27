@@ -25,6 +25,7 @@ import ru.javatalks.utils.general.Assert;
 
 /**
  * Hibernate implementation of {@link GroupDao}
+ * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
@@ -39,6 +40,9 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeG
         return getSession().createQuery("from PoulpeGroup").list();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @SuppressWarnings("unchecked")
     @Override
     public List<PoulpeGroup> getMatchedByName(String name) {
@@ -50,6 +54,9 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeG
         return query.list();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void delete(PoulpeGroup poulpeGroup) {
         getSession().update(poulpeGroup);

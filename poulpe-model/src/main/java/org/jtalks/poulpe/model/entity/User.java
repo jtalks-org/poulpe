@@ -17,12 +17,11 @@ package org.jtalks.poulpe.model.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Stores information about the user.
- *
+ * 
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
 public class User extends org.jtalks.common.model.entity.User {
 
@@ -39,9 +38,9 @@ public class User extends org.jtalks.common.model.entity.User {
 
     /**
      * Create instance with requiered fields.
-     *
+     * 
      * @param username username
-     * @param email    email
+     * @param email email
      * @param password password
      * @deprecated
      */
@@ -52,11 +51,11 @@ public class User extends org.jtalks.common.model.entity.User {
 
     /**
      * Create instance with requiered fields.
-     *
+     * 
      * @param username username
-     * @param email    email
+     * @param email email
      * @param password password
-     * @param salt     salt
+     * @param salt salt
      */
     public User(String username, String email, String password, String salt) {
         super(username, email, password, salt);
@@ -64,7 +63,7 @@ public class User extends org.jtalks.common.model.entity.User {
 
     /**
      * Gets list of groups assigned to user.
-     *
+     * 
      * @return the list of groups assigned to user
      */
     public List<PoulpeGroup> getGroups() {
@@ -73,7 +72,7 @@ public class User extends org.jtalks.common.model.entity.User {
 
     /**
      * Sets list of groups assigned to user.
-     *
+     * 
      * @param groups the new list of groups to set
      */
     public void setGroups(List<PoulpeGroup> groups) {
