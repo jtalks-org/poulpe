@@ -15,16 +15,18 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.Collections;
+import java.util.List;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 
@@ -40,6 +42,7 @@ public class BranchPresenter {
     private SectionPresenter sectionPresenter;
     private SectionService sectionService;
     private BranchService branchService;
+    private GroupService groupService;
     private EntityValidator entityValidator;
     private BranchDialogView view;
 
@@ -63,6 +66,10 @@ public class BranchPresenter {
      */
     public void setSectionService(SectionService service) {
         sectionService = service;
+    }
+
+    public void setGroupService(GroupService groupService) {
+        this.groupService = groupService;
     }
 
     public void updateView() {
@@ -96,6 +103,7 @@ public class BranchPresenter {
 
     /**
      * When a new branch is saved, then a new group is created using this branch's name: '[New_branch_name] Moderators'.
+     * And branch is added permissions with this group.
      * When editing branch (its name), its group's name changed respectively.
      * 
      * @param branch branch to save/edit
@@ -105,7 +113,12 @@ public class BranchPresenter {
         if (validate(branch)) {
             PoulpeSection section = branch.getPoulpeSection();
             section.addOrUpdateBranch(branch);
-            PoulpeGroup group = addOrUpdateGroup(branch);
+            PoulpeGroup group = createOrGetExistingGroup(branch);
+            if(validate(group)) {
+                branch.addOrUpdateGroup(group);
+            } else {
+                return false;
+            }
             sectionService.saveSection(section);
             setBranchPermissions(branch, group);
             view.hide();
@@ -114,7 +127,7 @@ public class BranchPresenter {
             return false;
         }
     }
-    
+
     private boolean validate(Entity entity) {
         ValidationResult result = entityValidator.validate(entity);
         if (result.hasErrors()) {
@@ -125,17 +138,34 @@ public class BranchPresenter {
         }
     }
 
-    private PoulpeGroup addOrUpdateGroup(PoulpeBranch branch) {
-        PoulpeGroup group;
+    private PoulpeGroup createOrGetExistingGroup(PoulpeBranch branch) {
+        String groupName = branch.getName() + GROUP_SUFFIX;
+        PoulpeGroup group = null;
         if(branch.getGroups().size() > 0) {
             group = branch.getGroups().get(0);
         } else {
-            group = new PoulpeGroup();
+            group = getGroupMatchedByName(groupName);
+            if(group == null) {
+                group = createNewGroup();
+            }
         }
-        group.setName(branch.getName() + GROUP_SUFFIX);
-        if(validate(group)) {
-            branch.addOrUpdateGroup(group);
+        group.setName(groupName);
+        return group;
+    }
+
+    private PoulpeGroup getGroupMatchedByName(String groupName) {
+        List<PoulpeGroup> groups = groupService.getAllMatchedByName(groupName);
+        for(PoulpeGroup group : groups) {
+            if(groupName.equals(group.getName())) {
+                return group;
+            }
         }
+        return null;
+    }
+
+    private PoulpeGroup createNewGroup() {
+        PoulpeGroup group = new PoulpeGroup();
+        group.setDescription("");
         return group;
     }
 
@@ -146,7 +176,7 @@ public class BranchPresenter {
             branchService.changeGrants(branch, branchAccess);
         }
     }
-    
+
     /**
      * @param entityValidator the entityValidator to set
      */

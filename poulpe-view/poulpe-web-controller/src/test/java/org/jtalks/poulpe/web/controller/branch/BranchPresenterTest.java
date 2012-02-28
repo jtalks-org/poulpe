@@ -30,10 +30,11 @@ import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.SectionService;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -53,6 +54,8 @@ public class BranchPresenterTest {
     @Mock
     BranchService branchService;
     @Mock
+    GroupService groupService;
+    @Mock
     BranchDialogView view;
     @Mock 
     EntityValidator entityValidator;
@@ -63,6 +66,7 @@ public class BranchPresenterTest {
         presenter.setSectionService(sectionService);
         presenter.setView(view);
         presenter.setBranchService(branchService);
+        presenter.setGroupService(groupService);
         presenter.setEntityValidator(entityValidator);
     }
 
@@ -89,6 +93,7 @@ public class BranchPresenterTest {
         assertEquals(group.getName(), BRANCH_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
+        verify(groupService).getAllMatchedByName(any(String.class));
         verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
     }
 

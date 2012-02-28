@@ -63,6 +63,7 @@
   <bean id="branchPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchPresenter" scope="prototype">
     <property name="sectionService" ref="sectionService" />
     <property name="branchService" ref="branchService" />
+    <property name="groupService" ref="groupService" />
     <property name="sectionPresenter" ref="sectionPresenter" />
     <property name="entityValidator" ref="entityValidator" />
   </bean>

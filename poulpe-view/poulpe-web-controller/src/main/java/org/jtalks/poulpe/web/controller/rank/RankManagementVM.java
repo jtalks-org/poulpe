@@ -115,6 +115,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
+        lastSelected = selected;
         openEditorModifier();
     }
 

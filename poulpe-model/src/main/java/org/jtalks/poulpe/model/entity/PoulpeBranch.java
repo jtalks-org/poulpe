@@ -186,5 +186,6 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
             }
         }
         addGroup(group);
+//        group.setBranch(this);
     }
 }
