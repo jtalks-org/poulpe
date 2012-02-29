@@ -30,6 +30,7 @@ public class DeleteSectionDialogPresenter {
 
     private SectionService sectionService;
     private DeleteSectionDialogView view;
+    private SectionPresenter sectionPresenter;
 
     /**
      * Use for initialize combobox which contains sections
@@ -56,6 +57,7 @@ public class DeleteSectionDialogPresenter {
         }
 
         view.closeDialog();
+        sectionPresenter.updateView();
     }
 
     private boolean deleteAllBranches() {
@@ -88,6 +90,13 @@ public class DeleteSectionDialogPresenter {
      */
     public void setSectionService(SectionService sectionService) {
         this.sectionService = sectionService;
+    }
+
+    /**
+     * @param sectionPresenter The instance of {@link SectionPresenter}
+     */
+    public void setSectionPresenter(SectionPresenter sectionPresenter) {
+        this.sectionPresenter = sectionPresenter;
     }
 
 }

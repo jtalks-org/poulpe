@@ -62,7 +62,7 @@ public class GroupPresenter {
      */
     public void initView(ZkGroupView view) {
         this.view = view;
-        updateView(null);
+        updateView("%");
     }
 
     /**

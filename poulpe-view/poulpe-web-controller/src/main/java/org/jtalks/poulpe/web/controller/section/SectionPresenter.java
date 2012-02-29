@@ -316,6 +316,7 @@ public class SectionPresenter {
      */
     public void setDeleteSectionDialogPresenter(DeleteSectionDialogPresenter deleteSectionDialogPresenter) {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
+        this.deleteSectionDialogPresenter.setSectionPresenter(this);
     }
 
 

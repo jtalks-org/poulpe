@@ -38,6 +38,7 @@ public class DeleteSectionDialogPresenterTest {
 
     @Mock SectionService sectionService;
     @Mock DeleteSectionDialogView view;
+    @Mock SectionPresenter sectionPresenter;
 
     private List<PoulpeSection> sections = fakeSections();
     private PoulpeSection section = sectionWithBranches();
@@ -51,6 +52,7 @@ public class DeleteSectionDialogPresenterTest {
 
         presenter.setView(view);
         presenter.setSectionService(sectionService);
+        presenter.setSectionPresenter(sectionPresenter);
     }
 
     @Test
@@ -77,6 +79,7 @@ public class DeleteSectionDialogPresenterTest {
 
         verify(sectionService).deleteRecursively(section);
         verify(view).closeDialog();
+        verify(sectionPresenter).updateView();
     }
 
     private void givenDeleteAllMode() {
@@ -92,6 +95,7 @@ public class DeleteSectionDialogPresenterTest {
 
         verify(sectionService).deleteAndMoveBranchesTo(section, recipient);
         verify(view).closeDialog();
+        verify(sectionPresenter).updateView();
     }
 
     private void givenDeleteAndMoveMode() {

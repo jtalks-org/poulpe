@@ -22,6 +22,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +48,7 @@ import org.testng.annotations.Test;
 public class BranchPresenterTest {
     private static final String BRANCH_NAME = "TestBranch";
     private static final String BRANCH_NEW_NAME = "NewTestBranch2";
+    private static final String GROUP_NAME = BRANCH_NAME + GROUP_SUFFIX;
     private PoulpeSection section = new PoulpeSection("sectionName", "sectionDescription");
     BranchPresenter presenter = new BranchPresenter();
     @Mock
@@ -83,9 +85,9 @@ public class BranchPresenterTest {
     @Test
     public void testSaveBranch() {
         givenNoConstraintsViolated();
-        
         PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
         branch.setSection(section);
+        
         presenter.saveBranch(branch);
         
         assertEquals(branch.getGroups().size(), 1);
@@ -101,6 +103,7 @@ public class BranchPresenterTest {
     public void testRenameBranch() {
         PoulpeBranch branch = createNewBranch();
         branch.setName(BRANCH_NEW_NAME);
+        
         presenter.saveBranch(branch);
         
         PoulpeGroup group = branch.getGroups().get(0);
@@ -111,11 +114,39 @@ public class BranchPresenterTest {
     }
 
     @Test
+    public void testSaveBranchWithExistingMatchingGroup() {
+        givenNoConstraintsViolated();
+        PoulpeGroup group = createMatchingGroup();
+        PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
+        branch.setSection(section);
+        
+        presenter.saveBranch(branch);
+        
+        assertEquals(branch.getGroups().size(), 1);
+        PoulpeGroup existGroup = branch.getGroups().get(0);
+        assertEquals(existGroup.getName(), GROUP_NAME);
+        assertEquals(group, existGroup);
+        verify(view, never()).validationFailure(any(ValidationResult.class));
+        verify(sectionService).saveSection(any(PoulpeSection.class));
+        verify(groupService).getAllMatchedByName(any(String.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+    }
+
+    private PoulpeGroup createMatchingGroup() {
+        PoulpeGroup group = new PoulpeGroup(GROUP_NAME, "");
+        List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
+        groups.add(group);
+        when(groupService.getAllMatchedByName(GROUP_NAME)).thenReturn(groups);
+        return group;
+    }
+
+    @Test
     public void testSaveBranchWhenBranchExceptionHappen()  {
         PoulpeBranch branch = new PoulpeBranch();
         givenBranchConstraintViolated();
        
         presenter.saveBranch(branch);
+        
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
         verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
     }
@@ -126,13 +157,13 @@ public class BranchPresenterTest {
         givenGroupConstraintViolated();
        
         presenter.saveBranch(branch);
+        
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
         verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
     }
 
     private PoulpeBranch createNewBranch() {
         givenNoConstraintsViolated();
-        
         PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
         branch.setSection(section);
         presenter.saveBranch(branch);
