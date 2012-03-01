@@ -25,14 +25,17 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
+import org.zkoss.zk.ui.Executions;
 
 /**
- * This class is used as Presenter layer in Model-View-Presenter pattern for
- * managing PoulpeSection entities
+ * This class is used as Presenter layer in Model-View-Presenter pattern for managing PoulpeSection entities
  * 
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
  * @author Grigorev Alexey
+ * @author Vyacheslav Zhivaev
  */
 public class SectionPresenter {
 
@@ -46,18 +49,21 @@ public class SectionPresenter {
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
     private DialogManager dialogManager;
+    private WindowManager windowManager;
     private EntityValidator entityValidator;
+    private SelectedEntity<PoulpeBranch> selectedEntity;
 
     private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
     /**
-     * Creates actions to be executed for creating, deleting, editing Sections and Branches
-     * after user presses 'YES' in dialog manager
+     * Creates actions to be executed for creating, deleting, editing Sections and Branches after user presses 'YES' in
+     * dialog manager
      */
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
 
     /**
      * initialize main view SectionView instance
+     * 
      * @param view instance
      */
     public void initView(SectionView view) {
@@ -86,8 +92,7 @@ public class SectionPresenter {
     /**
      * This method is used to show dialog for editing section or branch
      * 
-     * @param currentSectionTreeComponentImpl from this instance we get selected
-     * object
+     * @param currentSectionTreeComponentImpl from this instance we get selected object
      */
     public void openEditDialog(ZkSectionTreeComponent currentSectionTreeComponentImpl) {
         BranchSectionVisitable visitable = currentSectionTreeComponentImpl.getSelectedObject();
@@ -129,7 +134,7 @@ public class SectionPresenter {
             deleteSectionDialogPresenter.show(section);
             updateView();
         }
-        
+
         /** {@inheritDoc} */
         @Override
         public void visitBranch(PoulpeBranch branch) {
@@ -154,6 +159,11 @@ public class SectionPresenter {
         sectionView.openNewSectionDialog();
     }
 
+    public void openBranchPermissionsDialog(PoulpeBranch branch) {
+        selectedEntity.setEntity(branch);
+        windowManager.open("/sections/BranchPermissionManagement.zul");
+    }
+
     /**
      * This method is invoked when the user saves editions and push edit button
      * 
@@ -176,9 +186,8 @@ public class SectionPresenter {
     }
 
     /**
-     * Create new PoulpeSection object and save it if there no any Sections with the
-     * same name in other cases (the name is already) should display error
-     * dialog
+     * Create new PoulpeSection object and save it if there no any Sections with the same name in other cases (the name
+     * is already) should display error dialog
      * 
      * @param name section
      * @param description section
@@ -197,8 +206,8 @@ public class SectionPresenter {
     /**
      * Delete section via sectionService
      * 
-     * @param recipient if specified than all branches should be add as children
-     * to this section. If null then all children should be also deleted
+     * @param recipient if specified than all branches should be add as children to this section. If null then all
+     * children should be also deleted
      */
     public void deleteSection(PoulpeSection recipient) {
         BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
@@ -235,12 +244,13 @@ public class SectionPresenter {
 
     /**
      * Save section
+     * 
      * @param section the section to save
      */
     public void saveSection(PoulpeSection section) {
         sectionService.saveSection(section);
     }
-    
+
     /**
      * Opens dialog for moderating a selected branch
      */
@@ -248,7 +258,7 @@ public class SectionPresenter {
         BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
         selectedObject.apply(openModeratorDialogVisitor);
     }
-    
+
     /**
      * Visitor which opens moderation dialog only for branches
      */
@@ -295,8 +305,14 @@ public class SectionPresenter {
     }
 
     /**
-     * @param currentSectionTreeComponent is current
-     * <code>ZkSectionTreeComponent</code> that will process actions from
+     * @param windowManager the windowManager to set
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
+    /**
+     * @param currentSectionTreeComponent is current <code>ZkSectionTreeComponent</code> that will process actions from
      * presenter
      */
     public void setCurrentSectionTreeComponentImpl(ZkSectionTreeComponent currentSectionTreeComponent) {
@@ -318,6 +334,12 @@ public class SectionPresenter {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
         this.deleteSectionDialogPresenter.setSectionPresenter(this);
     }
-
+    
+    /**
+     * @param selectedEntity the selectedEntity to set
+     */
+    public void setSelectedEntity(SelectedEntity<PoulpeBranch> selectedEntity) {
+        this.selectedEntity = selectedEntity;
+    }
 
 }

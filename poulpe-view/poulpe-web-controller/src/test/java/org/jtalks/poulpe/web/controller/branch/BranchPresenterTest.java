@@ -30,7 +30,7 @@ import java.util.Set;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -96,7 +96,7 @@ public class BranchPresenterTest {
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
         verify(groupService).getAllMatchedByName(any(String.class));
-        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
     }
 
     @Test
@@ -110,7 +110,7 @@ public class BranchPresenterTest {
         assertEquals(group.getName(), BRANCH_NEW_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService, times(2)).saveSection(any(PoulpeSection.class));
-        verify(branchService, times(6)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, times(6)).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
     }
 
     @Test
@@ -148,7 +148,7 @@ public class BranchPresenterTest {
         presenter.saveBranch(branch);
         
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
-        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
     }
     
     @Test
@@ -159,7 +159,7 @@ public class BranchPresenterTest {
         presenter.saveBranch(branch);
         
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
-        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
     }
 
     private PoulpeBranch createNewBranch() {

@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -189,7 +189,7 @@ public class PerfomableFactory {
 
         private void deleteBranchPermissions() {
             for(BranchPermission permission : BranchPermission.values()) {
-                BranchAccessChanges branchAccess = new BranchAccessChanges(permission);
+                AclChangeset branchAccess = new AclChangeset(permission);
                 branchAccess.setRemovedGroups(branch.getGroups());
                 branchService.changeGrants(branch, branchAccess);
             }

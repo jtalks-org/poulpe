@@ -24,10 +24,11 @@
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
   <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity" />
 
-  <bean id="branchPermissionManagementVm" scope="desktop"
+  <bean id="branchPermissionManagementVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
     <constructor-arg ref="branchService" />
     <constructor-arg index="1" ref="groupService"/>
+    <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
 
   <bean id="rankManagementVm" scope="desktop"
@@ -48,6 +49,12 @@
     <constructor-arg type="GroupService" ref="groupService" />
     <constructor-arg type="UserService" ref="userService" />
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
+  </bean>
+
+  <bean id="groupsPermissionsVM" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVM">
+    <constructor-arg type="WindowManager" ref="windowManager" />
+    <constructor-arg type="GroupService" ref="groupService" />
+    <constructor-arg type="AclManager" ref="aclManager" />
   </bean>
 
   <bean id="adminWindow" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
@@ -87,6 +94,8 @@
     <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
     <property name="deleteSectionDialogPresenter" ref="deleteSectionDialogPresenter" />
+    <property name="windowManager" ref="windowManager" />
+    <property name="selectedEntity" ref="selectedEntity" />
   </bean>
 
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter"

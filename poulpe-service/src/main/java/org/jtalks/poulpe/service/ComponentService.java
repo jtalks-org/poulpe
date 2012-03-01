@@ -17,7 +17,6 @@ package org.jtalks.poulpe.service;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.service.EntityService;
-
 import java.util.List;
 import java.util.Set;
 
@@ -31,12 +30,14 @@ public interface ComponentService extends EntityService<Component> {
 
     /**
      * Get all components.
+     * 
      * @return the list of the components
      */
     List<Component> getAll();
 
     /**
      * Delete the specified component.
+     * 
      * @param component component to delete
      */
     void deleteComponent(Component component);
@@ -48,12 +49,12 @@ public interface ComponentService extends EntityService<Component> {
      * @exception ValidationException when entity being saved violates validation constraints
      */
     void saveComponent(Component component);
-    
-    
+
     /**
      * Get the set of unoccupied ComponentType.
+     * 
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
-    
+
 }

@@ -16,9 +16,9 @@ package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.poulpe.logic.BranchPermissionManager;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
@@ -33,7 +33,7 @@ import java.util.List;
  */
 public class TransactionalBranchService extends AbstractTransactionalEntityService<PoulpeBranch, BranchDao> implements
         BranchService {
-    private final BranchPermissionManager branchPermissionManager;
+    private final PermissionManager branchPermissionManager;
     private final EntityValidator validator;
 
     /**
@@ -41,10 +41,10 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * 
      * @param branchDao instance of {@link BranchDao}
      * @param branchPermissionManager instance of
-     * {@link BranchPermissionManager}
+     * {@link PermissionManager}
      * @param validator instance of {@link EntityValidator}
      */
-    public TransactionalBranchService(BranchDao branchDao, BranchPermissionManager branchPermissionManager,
+    public TransactionalBranchService(BranchDao branchDao, PermissionManager branchPermissionManager,
             EntityValidator validator) {
         this.dao = branchDao;
         this.branchPermissionManager = branchPermissionManager;
@@ -96,7 +96,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
+    public void changeGrants(PoulpeBranch branch, AclChangeset changes) {
         branchPermissionManager.changeGrants(branch, changes);
     }
 
@@ -104,7 +104,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
+    public void changeRestrictions(PoulpeBranch branch, AclChangeset changes) {
         branchPermissionManager.changeRestrictions(branch, changes);
     }
 

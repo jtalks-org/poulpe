@@ -20,7 +20,7 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.mockito.Mock;
@@ -43,16 +43,16 @@ public class BranchPermissionManagerTest {
     GroupDao groupDao;
     @Mock
     AclManager aclManager;
-    BranchPermissionManager manager;
+    PermissionManager manager;
 
     @BeforeMethod
     public void initMocks() {
         MockitoAnnotations.initMocks(this);
-        manager = new BranchPermissionManager(aclManager, groupDao);
+        manager = new PermissionManager(aclManager, groupDao);
     }
 
     @Test(dataProvider = "accessChanges")
-    public void testChangeGrants(BranchAccessChanges changes) throws Exception {
+    public void testChangeGrants(AclChangeset changes) throws Exception {
         PoulpeBranch branch = new PoulpeBranch("test branch", "");
         manager.changeGrants(branch, changes);
         verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
@@ -60,7 +60,7 @@ public class BranchPermissionManagerTest {
     }
 
     @Test(dataProvider = "accessChanges")
-    public void testChangeRestriction(BranchAccessChanges changes) throws Exception {
+    public void testChangeRestriction(AclChangeset changes) throws Exception {
         PoulpeBranch branch = new PoulpeBranch("test branch");
         manager.changeRestrictions(branch, changes);
         verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
@@ -77,7 +77,7 @@ public class BranchPermissionManagerTest {
 
     @DataProvider
     public Object[][] accessChanges() {
-        BranchAccessChanges accessChanges = new BranchAccessChanges(BranchPermission.CREATE_TOPICS);
+        AclChangeset accessChanges = new AclChangeset(BranchPermission.CREATE_TOPICS);
         accessChanges.setNewlyAddedGroups(newArrayList(new PoulpeGroup("new1"), new PoulpeGroup("new2")));
         accessChanges.setRemovedGroups(newArrayList(new PoulpeGroup("removed1"), new PoulpeGroup("removed2")));
         return new Object[][]{{accessChanges}};
@@ -88,11 +88,11 @@ public class BranchPermissionManagerTest {
         return new Object[][]{{new PoulpeBranch()}};
     }
 
-    private List<UserGroupSid> getNewlyAddedSids(BranchAccessChanges accessChanges) {
+    private List<UserGroupSid> getNewlyAddedSids(AclChangeset accessChanges) {
         return UserGroupSid.create(accessChanges.getNewlyAddedGroupsAsArray());
     }
 
-    private List<UserGroupSid> getRemovedSids(BranchAccessChanges accessChanges) {
+    private List<UserGroupSid> getRemovedSids(AclChangeset accessChanges) {
         return UserGroupSid.create(accessChanges.getRemovedGroupsAsArray());
     }
 

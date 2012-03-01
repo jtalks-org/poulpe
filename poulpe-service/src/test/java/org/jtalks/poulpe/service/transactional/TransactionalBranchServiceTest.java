@@ -28,9 +28,9 @@ import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
-import org.jtalks.poulpe.logic.BranchPermissionManager;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.mockito.ArgumentCaptor;
@@ -52,7 +52,7 @@ public class TransactionalBranchServiceTest {
     @Mock BranchDao branchDao;
     @Mock EntityValidator entityValidator;
     @Mock AclManager aclManager;
-    @Mock BranchPermissionManager branchPermissionManager;
+    @Mock PermissionManager branchPermissionManager;
     
     private long BRANCH_ID = 1L;
     
@@ -78,7 +78,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testChangeGrants() {
-        BranchAccessChanges accessChanges = new BranchAccessChanges(null);
+        AclChangeset accessChanges = new AclChangeset(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeGrants(branch, accessChanges);
@@ -104,7 +104,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testChangeRestrictions() {
-        BranchAccessChanges accessChanges = new BranchAccessChanges(null);
+        AclChangeset accessChanges = new AclChangeset(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeRestrictions(branch, accessChanges);

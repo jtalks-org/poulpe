@@ -23,12 +23,14 @@ import javax.annotation.Nonnull;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
@@ -49,6 +51,7 @@ import com.google.common.collect.Maps;
  * with the specific branch and what user groups can do them.
  * 
  * @author stanislav bashkirtsev
+ * @author Vyacheslav Zhivaev
  */
 public class BranchPermissionManagementVm {
     private final GroupService groupService;
@@ -67,9 +70,10 @@ public class BranchPermissionManagementVm {
      * @param branchService branch service
      * @param groupService group service
      */
-    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService) {
+    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService, @Nonnull SelectedEntity<PoulpeBranch> selectedEntity) {
         this.groupService = groupService;
         this.branchService = branchService;
+        branch = selectedEntity.getEntity();
         initDataForView();
     }
 
@@ -137,7 +141,7 @@ public class BranchPermissionManagementVm {
      */
     @Command
     public void saveDialogState() {
-        BranchAccessChanges accessChanges = new BranchAccessChanges(groupsDialogVm.getPermission());
+        AclChangeset accessChanges = new AclChangeset(groupsDialogVm.getPermission());
         accessChanges.setNewlyAddedGroups(groupsDialogVm.getNewAdded());
         accessChanges.setRemovedGroups(groupsDialogVm.getRemovedFromAdded());
         if (groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
@@ -207,15 +211,15 @@ public class BranchPermissionManagementVm {
      * @return currently selected branch
      */
     public PoulpeBranch getSelectedBranch() {
-        String stringBranchId = Executions.getCurrent().getParameter("branchId");
-        Long branchId = Long.parseLong(stringBranchId);
-        PoulpeBranch branch;
+//        String stringBranchId = Executions.getCurrent().getParameter("branchId");
+//        Long branchId = Long.parseLong(stringBranchId);
+        PoulpeBranch branchLocal;
         try {
-            branch = branchService.get(branchId);
+            branchLocal = branchService.get(branch.getId());
         } catch (NotFoundException e) {
-            throw new IllegalArgumentException("There is no branch with id: " + stringBranchId);
+            throw new IllegalArgumentException("There is no branch with id: " + branch.getId());
         }
-        return branch;
+        return branchLocal;
     }
 
     /**

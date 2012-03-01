@@ -3,9 +3,9 @@
 <?component name="user-groups-block" macroURI="/WEB-INF/zkmacros/add-usergroups-block.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <style src="/resources/css/all.css" />
   <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
           viewModel="@id('vm') @init(branchPermissionManagementVm)" border="normal">
+    <style src="/resources/css/all.css" />
     <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}" />
   </window>
 </zk>

@@ -64,7 +64,7 @@
     <constructor-arg index="1" ref="entityValidator" />
   </bean>
 
-  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.BranchPermissionManager">
+  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
     <constructor-arg index="0" ref="aclManager" />
     <constructor-arg index="1" ref="groupDao" />
   </bean>

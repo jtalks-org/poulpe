@@ -102,4 +102,5 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     public PropertyLoader getPropertyLoader() {
         return propertyLoader;
     }
+
 }
