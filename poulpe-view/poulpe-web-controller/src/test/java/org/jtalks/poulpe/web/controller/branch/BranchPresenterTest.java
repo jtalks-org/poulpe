@@ -129,7 +129,7 @@ public class BranchPresenterTest {
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
         verify(groupService).getAllMatchedByName(any(String.class));
-        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
     }
 
     private PoulpeGroup createMatchingGroup() {
