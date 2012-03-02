@@ -43,6 +43,8 @@ public class SectionPresenter {
     public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
     public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
+    public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "/sections/BranchPermissionManagement.zul";
+
     // injected
     private SectionService sectionService;
     private BranchService branchService;
@@ -161,7 +163,7 @@ public class SectionPresenter {
 
     public void openBranchPermissionsDialog(PoulpeBranch branch) {
         selectedEntity.setEntity(branch);
-        windowManager.open("/sections/BranchPermissionManagement.zul");
+        windowManager.open(BRANCH_PERMISSION_MANAGEMENT_ZUL);
     }
 
     /**
@@ -334,7 +336,7 @@ public class SectionPresenter {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
         this.deleteSectionDialogPresenter.setSectionPresenter(this);
     }
-    
+
     /**
      * @param selectedEntity the selectedEntity to set
      */

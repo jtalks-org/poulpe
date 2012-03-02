@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.branches.AclChangeset;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -30,7 +29,6 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
@@ -47,8 +45,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 /**
- * A View Model for page that allows user to specify what actions can be done
- * with the specific branch and what user groups can do them.
+ * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
+ * groups can do them.
  * 
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
@@ -70,7 +68,8 @@ public class BranchPermissionManagementVm {
      * @param branchService branch service
      * @param groupService group service
      */
-    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService, @Nonnull SelectedEntity<PoulpeBranch> selectedEntity) {
+    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService,
+            @Nonnull SelectedEntity<PoulpeBranch> selectedEntity) {
         this.groupService = groupService;
         this.branchService = branchService;
         branch = selectedEntity.getEntity();
@@ -78,8 +77,7 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Changes the sorting of the list of added groups to the opposite side
-     * (e.g. was desc, and will become asc.).
+     * Changes the sorting of the list of added groups to the opposite side (e.g. was desc, and will become asc.).
      */
     @Command
     public void sortAddedList() {
@@ -87,8 +85,7 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Changes the sorting of the list of available groups to the opposite side
-     * (e.g. was desc, and will become asc.).
+     * Changes the sorting of the list of available groups to the opposite side (e.g. was desc, and will become asc.).
      */
     @Command
     public void sortAvailableList() {
@@ -156,9 +153,8 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Searches for the list items that were selected in the list of available
-     * groups and removes them from that list; then it adds those items to the
-     * list of already added groups.
+     * Searches for the list items that were selected in the list of available groups and removes them from that list;
+     * then it adds those items to the list of already added groups.
      */
     @Command
     public void moveSelectedToAdded() {
@@ -166,9 +162,8 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Searches for the list items that were selected in the list of added
-     * groups and removes them from that list; then it adds those items to the
-     * list of available groups.
+     * Searches for the list items that were selected in the list of added groups and removes them from that list; then
+     * it adds those items to the list of available groups.
      */
     @Command
     public void moveSelectedFromAdded() {
@@ -176,8 +171,7 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Moves all the list items from the list of available groups to the list of
-     * added.
+     * Moves all the list items from the list of available groups to the list of added.
      */
     @Command
     public void moveAllToAdded() {
@@ -185,8 +179,7 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * Moves all the list items from the list of added to the list of available
-     * groups.
+     * Moves all the list items from the list of added to the list of available groups.
      */
     @Command
     public void moveAllFromAdded() {
@@ -197,7 +190,6 @@ public class BranchPermissionManagementVm {
      * Initializes the data for view
      */
     private void initDataForView() {
-        branch = getSelectedBranch();
         BranchAccessList groupAccessList = branchService.getGroupAccessListFor(branch);
         for (BranchPermission permission : groupAccessList.getPermissions()) {
             BranchPermissionRow allowRow = BranchPermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
@@ -205,21 +197,6 @@ public class BranchPermissionManagementVm {
                     .getRestricted(permission));
             blocks.put(permission.getName(), new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
         }
-    }
-
-    /**
-     * @return currently selected branch
-     */
-    public PoulpeBranch getSelectedBranch() {
-//        String stringBranchId = Executions.getCurrent().getParameter("branchId");
-//        Long branchId = Long.parseLong(stringBranchId);
-        PoulpeBranch branchLocal;
-        try {
-            branchLocal = branchService.get(branch.getId());
-        } catch (NotFoundException e) {
-            throw new IllegalArgumentException("There is no branch with id: " + branch.getId());
-        }
-        return branchLocal;
     }
 
     /**
@@ -280,4 +257,14 @@ public class BranchPermissionManagementVm {
     public List<BranchPermissionManagementBlock> getBlocks() {
         return Lists.newArrayList(blocks.values());
     }
+
+    /**
+     * Gets current branch for edit.
+     * 
+     * @return the branch to edit
+     */
+    public PoulpeBranch getBranch() {
+        return branch;
+    }
+
 }

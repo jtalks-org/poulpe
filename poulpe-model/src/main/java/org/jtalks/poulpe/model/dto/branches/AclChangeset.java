@@ -14,16 +14,18 @@
  */
 package org.jtalks.poulpe.model.dto.branches;
 
-import com.google.common.collect.ImmutableList;
-
-import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+
+import com.google.common.collect.ImmutableList;
+
 /**
+ * DTO container represents changes which needs to be provided by ACL level for specified {@link JtalksPermission}.
+ * 
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
@@ -33,7 +35,8 @@ public class AclChangeset {
     private final List<PoulpeGroup> removedGroups = new ArrayList<PoulpeGroup>();
 
     /**
-     * Constructs the object with given {@link JtalksPermission} instance
+     * Constructs the object with given {@link JtalksPermission} instance.
+     * 
      * @param permission type of permission
      */
     public AclChangeset(JtalksPermission permission) {
@@ -41,7 +44,8 @@ public class AclChangeset {
     }
 
     /**
-     * Get newly added permissions
+     * Gets newly added permissions.
+     * 
      * @return PoulpeGroup[] with newly permissions
      */
     public PoulpeGroup[] getNewlyAddedGroupsAsArray() {
@@ -49,7 +53,8 @@ public class AclChangeset {
     }
 
     /**
-     * Set newly added permissions
+     * Sets newly added permissions.
+     * 
      * @param newlyAddedGroups - list of newly added permissions
      */
     public void setNewlyAddedGroups(Collection<PoulpeGroup> newlyAddedGroups) {
@@ -57,7 +62,8 @@ public class AclChangeset {
     }
 
     /**
-     * Get removed permissions
+     * Gets removed permissions.
+     * 
      * @return PoulpeGroup[] with removed permissions
      */
     public List<PoulpeGroup> getRemovedGroups() {
@@ -65,7 +71,8 @@ public class AclChangeset {
     }
 
     /**
-     * Get removed permissions
+     * Gets removed permissions.
+     * 
      * @return PoulpeGroup[] with removed permissions
      */
     public PoulpeGroup[] getRemovedGroupsAsArray() {
@@ -73,7 +80,8 @@ public class AclChangeset {
     }
 
     /**
-     * Set removed permissions
+     * Sets removed permissions.
+     * 
      * @param removedGroups - list with removed permissions
      */
     public void setRemovedGroups(Collection<PoulpeGroup> removedGroups) {
@@ -81,7 +89,8 @@ public class AclChangeset {
     }
 
     /**
-     * Get permission
+     * Gets permission.
+     * 
      * @return {@link JtalksPermission}
      */
     public JtalksPermission getPermission() {
@@ -89,7 +98,8 @@ public class AclChangeset {
     }
 
     /**
-     * Check {@link AclChangeset} is empty
+     * Checks {@link AclChangeset} is empty.
+     * 
      * @return {@code true} if empty, else return {@code false}
      */
     public boolean isEmpty() {
