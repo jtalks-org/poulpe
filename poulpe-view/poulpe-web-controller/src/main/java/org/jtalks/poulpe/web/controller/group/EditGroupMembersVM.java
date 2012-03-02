@@ -32,6 +32,7 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVM;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 
 import com.google.common.collect.Lists;
@@ -66,19 +67,17 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
             @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) {
         super();
 
-        this.windowManager = windowManager;
-        this.groupService = groupService;
-        this.userService = userService;
-
         try {
             this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
         } catch (NotFoundException e) {
             throw new IllegalArgumentException("Illegal state of 'groupToEdit'", e);
         }
 
-        afterEdit = groupToEdit.getPoulpeUsers();
+        this.windowManager = windowManager;
+        this.groupService = groupService;
+        this.userService = userService;
 
-        updateVm();
+        afterEdit = groupToEdit.getPoulpeUsers();
     }
 
     // -- Accessors ------------------------------
@@ -125,7 +124,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     public void save() {
         groupToEdit.setPoulpeUsers(afterEdit);
         groupService.saveGroup(groupToEdit);
-        switchToGroupWindow();
+        switchToGroupsWindow();
     }
 
     /**
@@ -133,7 +132,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
      */
     @Command
     public void cancel() {
-        switchToGroupWindow();
+        switchToGroupsWindow();
     }
 
     /**
@@ -147,11 +146,12 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     }
 
     // -- Utility methods ------------------------
-
+    
     /**
      * {@inheritDoc}
      */
-    protected void updateVm() {
+    @Init
+    public void updateVm() {
         filterAvail();
         filterExist();
     }
@@ -159,7 +159,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     /**
      * Closes currently opened window and opens window with group list.
      */
-    private void switchToGroupWindow() {
+    private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
         windowManager.open("groups.zul");
     }
