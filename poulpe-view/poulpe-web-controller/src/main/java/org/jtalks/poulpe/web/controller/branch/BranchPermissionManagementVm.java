@@ -21,23 +21,20 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
+import org.jtalks.poulpe.model.dto.AclMode;
+import org.jtalks.poulpe.model.dto.AclModePermission;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModel;
-import org.zkoss.zul.Window;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -52,15 +49,21 @@ import com.google.common.collect.Maps;
  * @author Vyacheslav Zhivaev
  */
 public class BranchPermissionManagementVm {
-    private final GroupService groupService;
+
+    public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/ManageGroupsDialog.zul";
+
+//    private final GroupService groupService;
     private final BranchService branchService;
+    private final WindowManager windowManager;
     private final Map<String, BranchPermissionManagementBlock> blocks = Maps.newLinkedHashMap();
 
     /**
      * Created each time {@link #showGroupsDialog(String)} is invoked.
      */
     private ManageUserGroupsDialogVm groupsDialogVm;
-    private PoulpeBranch branch;
+    
+    private final SelectedEntity<Object> selectedEntity;
+    private final PoulpeBranch branch;
 
     /**
      * Constructs the VM with given dependencies
@@ -69,28 +72,13 @@ public class BranchPermissionManagementVm {
      * @param groupService group service
      */
     public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService,
-            @Nonnull SelectedEntity<PoulpeBranch> selectedEntity) {
-        this.groupService = groupService;
+            @Nonnull WindowManager windowManager, @Nonnull SelectedEntity<Object> selectedEntity) {
+//        this.groupService = groupService;
         this.branchService = branchService;
-        branch = selectedEntity.getEntity();
+        this.windowManager = windowManager;
+        this.selectedEntity = selectedEntity;
+        this.branch = (PoulpeBranch) selectedEntity.getEntity();
         initDataForView();
-    }
-
-    /**
-     * Changes the sorting of the list of added groups to the opposite side (e.g. was desc, and will become asc.).
-     */
-    @Command
-    public void sortAddedList() {
-        groupsDialogVm.revertSortingOfAddedList();
-    }
-
-    /**
-     * Changes the sorting of the list of available groups to the opposite side (e.g. was desc, and will become asc.).
-     */
-    @Command
-    public void sortAvailableList() {
-        groupsDialogVm.revertSortingOfAvailableList();
-
     }
 
     /**
@@ -102,11 +90,17 @@ public class BranchPermissionManagementVm {
         String permissionName = parsedParams.get("permissionName");
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
-        List<PoulpeGroup> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
-        Window branchWindow = (Window) getComponent("branchPermissionManagementWindow");
-        groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
-                branchPermissionManagementBlock.getPermission());
-        Executions.createComponents("/sections/ManageGroupsDialog.zul", branchWindow, null);
+//        List<PoulpeGroup> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
+//        Window branchWindow = (Window) getComponent("branchPermissionManagementWindow");
+//        groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
+//                branchPermissionManagementBlock.getPermission());
+//        Executions.createComponents("/sections/ManageGroupsDialog.zul", branchWindow, null);
+        
+        AclMode aclMode = ("allow".equalsIgnoreCase(mode)) ? AclMode.ALLOWED : AclMode.RESTRICTED;
+        AclModePermission modePermission = new AclModePermission(branch, aclMode, branchPermissionManagementBlock.getPermission());
+        
+        selectedEntity.setEntity(modePermission);
+        windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
     }
 
     /**
@@ -125,66 +119,6 @@ public class BranchPermissionManagementVm {
         return parsedParams.build();
     }
 
-    /**
-     * Closes the dialog
-     */
-    @Command
-    public void dialogClosed() {
-        groupsDialogVm = null;
-    }
-
-    /**
-     * Saves the state
-     */
-    @Command
-    public void saveDialogState() {
-        AclChangeset accessChanges = new AclChangeset(groupsDialogVm.getPermission());
-        accessChanges.setNewlyAddedGroups(groupsDialogVm.getNewAdded());
-        accessChanges.setRemovedGroups(groupsDialogVm.getRemovedFromAdded());
-        if (groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
-            branchService.changeGrants(branch, accessChanges);
-        } else if (!groupsDialogVm.isAllowAccess() && !accessChanges.isEmpty()) {
-            branchService.changeRestrictions(branch, accessChanges);
-        }
-        dialogClosed();
-
-        // reloading the page, couldn't find a better way yet
-        Executions.getCurrent().sendRedirect("");
-    }
-
-    /**
-     * Searches for the list items that were selected in the list of available groups and removes them from that list;
-     * then it adds those items to the list of already added groups.
-     */
-    @Command
-    public void moveSelectedToAdded() {
-        groupsDialogVm.moveSelectedToAddedGroups();
-    }
-
-    /**
-     * Searches for the list items that were selected in the list of added groups and removes them from that list; then
-     * it adds those items to the list of available groups.
-     */
-    @Command
-    public void moveSelectedFromAdded() {
-        groupsDialogVm.moveSelectedFromAddedGroups();
-    }
-
-    /**
-     * Moves all the list items from the list of available groups to the list of added.
-     */
-    @Command
-    public void moveAllToAdded() {
-        groupsDialogVm.moveAllToAddedGroups();
-    }
-
-    /**
-     * Moves all the list items from the list of added to the list of available groups.
-     */
-    @Command
-    public void moveAllFromAdded() {
-        groupsDialogVm.moveAllFromAddedGroups();
-    }
 
     /**
      * Initializes the data for view
@@ -197,44 +131,6 @@ public class BranchPermissionManagementVm {
                     .getRestricted(permission));
             blocks.put(permission.getName(), new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
         }
-    }
-
-    /**
-     * @param mode restriction mode
-     * @param branchPermissionManagementBlock from which groups are retrieved
-     * @return list of groups
-     */
-    private List<PoulpeGroup> getGroupsDependingOnMode(String mode,
-            BranchPermissionManagementBlock branchPermissionManagementBlock) {
-        if ("allow".equalsIgnoreCase(mode)) {
-            return branchPermissionManagementBlock.getAllowRow().getGroups();
-        } else {
-            return branchPermissionManagementBlock.getRestrictRow().getGroups();
-        }
-    }
-
-    /**
-     * Prepares data for the dialog
-     * 
-     * @param addedGroups
-     * @param allowAccess
-     * @param permission
-     * @return {@link ManageUserGroupsDialogVm} instance
-     */
-    private ManageUserGroupsDialogVm createDialogData(List<PoulpeGroup> addedGroups, boolean allowAccess,
-            JtalksPermission permission) {
-        List<PoulpeGroup> allGroups = groupService.getAll();
-        allGroups.removeAll(addedGroups);
-        return new ManageUserGroupsDialogVm(permission, allowAccess).setAvailableGroups(allGroups).setAddedGroups(
-                addedGroups);
-    }
-
-    /**
-     * @param id of the component
-     * @return {@link Component}
-     */
-    private Component getComponent(String id) {
-        return Executions.getCurrent().getDesktop().getFirstPage().getFellow(id);
     }
 
     /**
