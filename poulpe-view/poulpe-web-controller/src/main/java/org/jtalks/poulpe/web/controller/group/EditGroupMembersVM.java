@@ -77,7 +77,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
         this.groupService = groupService;
         this.userService = userService;
 
-        afterEdit = groupToEdit.getPoulpeUsers();
+        consistentState = groupToEdit.getPoulpeUsers();
     }
 
     // -- Accessors ------------------------------
@@ -101,7 +101,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterAvail() {
         List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
-        users.removeAll(afterEdit);
+        users.removeAll(consistentState);
         avail.clear();
         avail.addAll(users);
     }
@@ -114,7 +114,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterExist() {
         exist.clear();
-        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), afterEdit));
+        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), consistentState));
     }
 
     /**
@@ -122,7 +122,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
      */
     @Command
     public void save() {
-        groupToEdit.setPoulpeUsers(afterEdit);
+        groupToEdit.setPoulpeUsers(consistentState);
         groupService.saveGroup(groupToEdit);
         switchToGroupsWindow();
     }
@@ -146,7 +146,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     }
 
     // -- Utility methods ------------------------
-    
+
     /**
      * {@inheritDoc}
      */

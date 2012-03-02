@@ -25,21 +25,21 @@ import org.jtalks.common.model.permissions.JtalksPermission;
  */
 @Immutable
 public class AclModePermission {
-    private final Entity dest;
+    private final Entity target;
     private final AclMode mode;
     private final JtalksPermission permission;
 
-    public AclModePermission(Entity dest, AclMode mode, JtalksPermission permission) {
-        this.dest = dest;
+    public AclModePermission(Entity target, AclMode mode, JtalksPermission permission) {
+        this.target = target;
         this.mode = mode;
         this.permission = permission;
     }
 
     /**
-     * @return the dest
+     * @return the target
      */
-    public Entity getDest() {
-        return dest;
+    public Entity getTarget() {
+        return target;
     }
 
     /**

@@ -32,11 +32,11 @@
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
   
-  <bean id="manageUserGroupsDialogVM" scope="prototype"
-        class="org.jtalks.poulpe.web.controller.branch.ManageUserGroupsDialogVm">
+  <bean id="editGroupsForBranchPermissionVM" scope="prototype"
+        class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVM">
+    <constructor-arg type="WindowManager" ref="windowManager" />
     <constructor-arg type="BranchService" ref="branchService" />
     <constructor-arg type="GroupService" ref="groupService" />
-    <constructor-arg type="WindowManager" ref="windowManager" />
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
 

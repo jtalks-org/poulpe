@@ -50,7 +50,7 @@ import com.google.common.collect.Maps;
  */
 public class BranchPermissionManagementVm {
 
-    public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/ManageGroupsDialog.zul";
+    public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/EditGroupsForBranchPermission.zul";
 
 //    private final GroupService groupService;
     private final BranchService branchService;
@@ -60,7 +60,7 @@ public class BranchPermissionManagementVm {
     /**
      * Created each time {@link #showGroupsDialog(String)} is invoked.
      */
-    private ManageUserGroupsDialogVm groupsDialogVm;
+    private EditGroupsForBranchPermissionVM groupsDialogVm;
     
     private final SelectedEntity<Object> selectedEntity;
     private final PoulpeBranch branch;
@@ -141,9 +141,9 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * @return {@link ManageUserGroupsDialogVm} instance
+     * @return {@link EditGroupsForBranchPermissionVM} instance
      */
-    public ManageUserGroupsDialogVm getGroupsDialogVm() {
+    public EditGroupsForBranchPermissionVM getGroupsDialogVm() {
         return groupsDialogVm;
     }
 
