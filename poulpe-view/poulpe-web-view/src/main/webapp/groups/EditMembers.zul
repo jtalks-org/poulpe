@@ -16,8 +16,8 @@
           <panel title="${labels.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVM.filterAvail)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchAvail')"
+                <textbox value="@bind(editGroupMembersVM.availFilterTxt)" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVM.avail)" onSelect="@command('listSelected')"
@@ -55,11 +55,10 @@
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVM.filterExist)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('searchExist')"
+                <textbox value="@bind(editGroupMembersVM.existFilterTxt)" />
+                <button label="${labels.groups.edit_members.search}" onClick="@command('filterExist')"
                     sclass="edit.members.searchExistButton" />
               </hbox>
-              <checkbox></checkbox>
               <listbox model="@bind(editGroupMembersVM.exist)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" height="240px">
                 <listhead>

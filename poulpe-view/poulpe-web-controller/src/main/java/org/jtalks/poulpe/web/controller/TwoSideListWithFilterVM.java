@@ -36,11 +36,11 @@ import com.google.common.collect.Lists;
  */
 public class TwoSideListWithFilterVM<E> {
 
-    /** String represents text in filter filed for available items list. */
-    protected String availFilter;
+    /** String represents text in filter field for available items list. */
+    protected String availFilterTxt;
 
-    /** String represents text in filter filed. */
-    protected String existFilter;
+    /** String represents text in filter field for exist items list. */
+    protected String existFilterTxt;
 
     /** List of available for adding items. */
     protected ListModelList<E> avail;
@@ -48,15 +48,15 @@ public class TwoSideListWithFilterVM<E> {
     /** List of already existed (added) items. */
     protected ListModelList<E> exist;
 
-    /** List represents state of existed items after editing. */
+    /** List represents state (consistent state) of existed items after editing. */
     protected List<E> afterEdit;
 
     /**
-     * Constructs VM with simple initialization which avoiding {@code null} values.
+     * Constructs VM with simple initialization which avoiding {@code null} values in internal fields.
      */
     public TwoSideListWithFilterVM() {
-        availFilter = "";
-        existFilter = "";
+        availFilterTxt = "";
+        existFilterTxt = "";
         avail = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         exist = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         afterEdit = Lists.<E> newLinkedList();
@@ -65,45 +65,45 @@ public class TwoSideListWithFilterVM<E> {
     // -- Accessors -----------------------------
 
     /**
-     * Gets filter string for available list.
+     * Gets filter text for available list.
      * 
-     * @return String for filter field
+     * @return text for filter field
      */
-    public String getAvailFilter() {
-        return availFilter;
+    public String getAvailFilterTxt() {
+        return availFilterTxt;
     }
 
     /**
-     * Sets filter string for available list.
+     * Sets filter text for available list.
      * 
-     * @param availFilter the filter string to set
+     * @param availFilterTxt the filter text to set
      */
-    public void setAvailFilter(@Nonnull String availFilter) {
-        this.availFilter = availFilter;
+    public void setAvailFilterTxt(@Nonnull String availFilterTxt) {
+        this.availFilterTxt = availFilterTxt;
     }
 
     /**
-     * Gets filter string for a list of existing items.
+     * Gets filter text for a list of existing items.
      * 
-     * @return String for filter field
+     * @return text for filter field
      */
-    public String getExistFilter() {
-        return existFilter;
+    public String getExistFilterTxt() {
+        return existFilterTxt;
     }
 
     /**
-     * Sets filter string for a list of existing items.
+     * Sets filter text for a list of existing items.
      * 
-     * @param existFilter the filter string to set
+     * @param existFilterTxt the filter text to set
      */
-    public void setExistFilter(@Nonnull String existFilter) {
-        this.existFilter = existFilter;
+    public void setExistFilterTxt(@Nonnull String existFilterTxt) {
+        this.existFilterTxt = existFilterTxt;
     }
 
     /**
      * Gets list of available items.
      * 
-     * @return the avail
+     * @return the list of available items 
      */
     public ListModelList<E> getAvail() {
         return avail;
@@ -112,28 +112,34 @@ public class TwoSideListWithFilterVM<E> {
     /**
      * Gets list of existing items.
      * 
-     * @return the exist
+     * @return the list of existed items
      */
     public ListModelList<E> getExist() {
         return exist;
     }
 
     /**
-     * @return the afterEdit
+     * Gets list of items in consistent state (after editing).
+     * 
+     * @return the list of items in consistent state (after editing)
      */
-    public List<E> getAfterEdit() {
+    protected List<E> getAfterEdit() {
         return afterEdit;
     }
 
     /**
-     * @return
+     * Gets set of selected items in available list.
+     * 
+     * @return set of selected items in available list
      */
     public Set<E> getAvailSelected() {
         return avail.getSelection();
     }
 
     /**
-     * @return
+     * Gets set of selected items in existed list.
+     * 
+     * @return set of selected items in existed list
      */
     public Set<E> getExistSelected() {
         return exist.getSelection();
@@ -148,7 +154,7 @@ public class TwoSideListWithFilterVM<E> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void add() {
         afterEdit.addAll(getAvailSelected());
-        updateVM();
+        updateVm();
     }
 
     /**
@@ -158,7 +164,7 @@ public class TwoSideListWithFilterVM<E> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void addAll() {
         afterEdit.addAll(getAvail());
-        updateVM();
+        updateVm();
     }
 
     /**
@@ -168,7 +174,7 @@ public class TwoSideListWithFilterVM<E> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void remove() {
         afterEdit.removeAll(getExistSelected());
-        updateVM();
+        updateVm();
     }
 
     /**
@@ -178,7 +184,7 @@ public class TwoSideListWithFilterVM<E> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void removeAll() {
         afterEdit.removeAll(getExist());
-        updateVM();
+        updateVm();
     }
 
     // -- Utility methods -----------------------
@@ -186,7 +192,7 @@ public class TwoSideListWithFilterVM<E> {
     /**
      * Updates VM state after some major action.
      */
-    protected void updateVM() {
+    protected void updateVm() {
         // This is created as template, redefine it if it needs.
         // NOOP
     }

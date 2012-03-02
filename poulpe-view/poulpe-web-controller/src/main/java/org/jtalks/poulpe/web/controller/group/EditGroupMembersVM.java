@@ -20,7 +20,6 @@ import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.text.StringContains.containsString;
 
 import java.util.List;
-import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -30,22 +29,22 @@ import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVM;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModelList;
 
 import com.google.common.collect.Lists;
 
 /**
  * View-Model for 'Edit Members of group'.
- *
+ * 
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
-public class EditGroupMembersVM {
+public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
 
+    // Injected
     private GroupService groupService;
     private UserService userService;
     private WindowManager windowManager;
@@ -56,193 +55,67 @@ public class EditGroupMembersVM {
     private PoulpeGroup groupToEdit;
 
     /**
-     * Lists represents state of group members after editing
-     */
-    private List<User> usersInGroupAfterEdit;
-
-    private String filterAvail;
-    private final ListModelList<User> avail;
-
-    private String filterExist;
-    private final ListModelList<User> exist;
-
-    /**
      * Construct View-Model for 'Edit Members of group' view.
-     *
+     * 
      * @param windowManager the window manager instance
      * @param groupService the group service instance
      * @param userService the user service instance
-     * @param selectedEntity the selected entity instance, for obtaining group
-     * which to be edited
-     * @throws NotFoundException
+     * @param selectedEntity the selected entity instance, for obtaining group which to be edited
      */
-    @SuppressWarnings("unchecked")
     public EditGroupMembersVM(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) throws NotFoundException {
+            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) {
+        super();
+
         this.windowManager = windowManager;
         this.groupService = groupService;
         this.userService = userService;
-        this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
 
-        usersInGroupAfterEdit = groupToEdit.getPoulpeUsers();
+        try {
+            this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
+        } catch (NotFoundException e) {
+            throw new IllegalArgumentException("Illegal state of 'groupToEdit'", e);
+        }
 
-        filterAvail = "";
-        filterExist = "";
-        avail = new BindingListModelList(Lists.newLinkedList(), false);
-        exist = new BindingListModelList(Lists.newLinkedList(), false);
+        afterEdit = groupToEdit.getPoulpeUsers();
 
-        updateView();
+        updateVm();
     }
 
     // -- Accessors ------------------------------
 
     /**
-     * Gets text for filtering users in available for adding list.
-     *
-     * @return the text for filter text field
-     */
-    public String getFilterAvail() {
-        return filterAvail;
-    }
-
-    /**
-     * Sets text for filtering users in available for adding list.
-     *
-     * @param filterAvail the new value for filter text field
-     */
-    public void setFilterAvail(@Nonnull String filterAvail) {
-        this.filterAvail = filterAvail;
-    }
-
-    /**
-     * Gets text for filtering users which already exist in group.
-     *
-     * @return the text for filter text field
-     */
-    public String getFilterExist() {
-        return filterExist;
-    }
-
-    /**
-     * Sets text for filtering users which already exist in group.
-     *
-     * @param filterExist the new value for filter text field
-     */
-    public void setFilterExist(@Nonnull String filterExist) {
-        this.filterExist = filterExist;
-    }
-
-    /**
-     * Gets list of users available for adding in group.
-     *
-     * @return the list of users available for adding in group
-     */
-    public List<User> getAvail() {
-        return avail;
-    }
-
-    /**
-     * Gets list of users which already exist in group.
-     *
-     * @return the list of users which already exist in group
-     */
-    public List<User> getExist() {
-        return exist;
-    }
-
-    /**
      * Gets group to be edited.
-     *
+     * 
      * @return the {@link PoulpeGroup} instance
      */
     public PoulpeGroup getGroupToEdit() {
         return groupToEdit;
     }
 
-    /**
-     * Gets set of users which selected in list of available users.
-     *
-     * @return set of selected users in list of available users
-     */
-    public Set<User> getAvailSelected() {
-        return avail.getSelection();
-    }
-
-    /**
-     * Gets selected users which already exist in group.
-     *
-     * @return set of selected users which already exist in group
-     */
-    public Set<User> getExistSelected() {
-        return exist.getSelection();
-    }
-
     // -- ZK Command bindings --------------------
 
     /**
-     * Search users users available for adding in group. After executing this
-     * method list of available users would be updated with values of search
-     * result.
+     * Search users users available for adding in group. After executing this method list of available users would be
+     * updated with values of search result.
      */
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void searchAvail() {
-        List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getFilterAvail()));
-        users.removeAll(usersInGroupAfterEdit);
+    public void filterAvail() {
+        List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
+        users.removeAll(afterEdit);
         avail.clear();
         avail.addAll(users);
     }
 
     /**
-     * Search users users which already exist in group. After executing this
-     * method list of exist users would be updated with values of search result.
+     * Search users users which already exist in group. After executing this method list of exist users would be updated
+     * with values of search result.
      */
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void searchExist() {
+    public void filterExist() {
         exist.clear();
-        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getFilterExist())),
-                usersInGroupAfterEdit));
-    }
-
-    /**
-     * Add selected user in group.
-     */
-    @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void add() {
-        usersInGroupAfterEdit.addAll(getAvailSelected());
-        updateView();
-    }
-
-    /**
-     * Add all selected users in group.
-     */
-    @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void addAll() {
-        usersInGroupAfterEdit.addAll(getAvail());
-        updateView();
-    }
-
-    /**
-     * Remove selected user from group.
-     */
-    @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void remove() {
-        usersInGroupAfterEdit.removeAll(getExistSelected());
-        updateView();
-    }
-
-    /**
-     * Remove all selected user from group.
-     */
-    @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
-    public void removeAll() {
-        usersInGroupAfterEdit.removeAll(getExist());
-        updateView();
+        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), afterEdit));
     }
 
     /**
@@ -250,7 +123,7 @@ public class EditGroupMembersVM {
      */
     @Command
     public void save() {
-        groupToEdit.setPoulpeUsers(usersInGroupAfterEdit);
+        groupToEdit.setPoulpeUsers(afterEdit);
         groupService.saveGroup(groupToEdit);
         switchToGroupWindow();
     }
@@ -264,8 +137,8 @@ public class EditGroupMembersVM {
     }
 
     /**
-     * Dummy command, used only for updating state of view components via
-     * binding. It's fired when user select item in any of two list's in window.
+     * Dummy command, used only for updating state of view components via binding. It's fired when user select item in
+     * any of two list's in window.
      */
     @Command
     @NotifyChange({ "availSelected", "existSelected" })
@@ -276,11 +149,11 @@ public class EditGroupMembersVM {
     // -- Utility methods ------------------------
 
     /**
-     * Updates view.
+     * {@inheritDoc}
      */
-    private void updateView() {
-        searchAvail();
-        searchExist();
+    protected void updateVm() {
+        filterAvail();
+        filterExist();
     }
 
     /**
