@@ -187,6 +187,16 @@ public class TwoSideListWithFilterVM<E> {
         updateVm();
     }
 
+    /**
+     * Dummy command, used only for updating state of view components via binding. It's fired when user select item in
+     * any of two list's in window.
+     */
+    @Command
+    @NotifyChange({ "availSelected", "existSelected" })
+    public void listSelected() {
+        // NOOP
+    }
+
     // -- Utility methods -----------------------
 
     /**

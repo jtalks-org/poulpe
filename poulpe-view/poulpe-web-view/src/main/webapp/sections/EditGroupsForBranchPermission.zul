@@ -13,13 +13,6 @@
         <vbox hflex="1">
           <panel title="Available" border="normal">
             <panelchildren>
-              <!-- Not implemented in VM -->
-              <!-- 
-              <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupsForBranchPermissionVM.availFilterTxt)" />
-                <button label="search" onClick="@command('filterAvail')" />
-              </hbox>
-               -->
               <listbox model="@bind(editGroupsForBranchPermissionVM.avail)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" height="240px">
                 <listhead>
@@ -45,13 +38,6 @@
         <vbox hflex="1">
           <panel title="Already added" border="normal">
             <panelchildren>
-              <!-- Not implemented in VM -->
-              <!-- 
-              <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupsForBranchPermissionVM.existFilterTxt)" />
-                <button label="search" onClick="@command('filterExist')" />
-              </hbox>
-               -->
               <listbox model="@bind(editGroupsForBranchPermissionVM.exist)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" height="240px">
                 <listhead>

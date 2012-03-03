@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -21,6 +22,7 @@ import javax.annotation.Nonnull;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.AclMode;
 import org.jtalks.poulpe.model.dto.AclModePermission;
 import org.jtalks.poulpe.model.dto.branches.AclChangeset;
@@ -34,7 +36,6 @@ import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVM;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
 
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
@@ -55,9 +56,19 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
     private GroupService groupService;
     private SelectedEntity<Object> selectedEntity;
 
+    // related to internal state
     private AclModePermission aclModePermission;
     private PoulpeBranch branch;
 
+    /**
+     * Construct VM for editing group list for selected {@link BranchPermission}.
+     * 
+     * @param windowManager the window manager instance
+     * @param branchService the branch service instance
+     * @param groupService the group service instance
+     * @param selectedEntity the SelectedEntity contains {@link AclModePermission} with data needed for construction VM
+     * state
+     */
     public EditGroupsForBranchPermissionVM(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
             @Nonnull GroupService groupService, @Nonnull SelectedEntity<Object> selectedEntity) {
         super();
@@ -71,7 +82,7 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
 
         branch = (PoulpeBranch) aclModePermission.getTarget();
 
-        consistentState.addAll(getAlreadyAddedGroupsFromPersistence());
+        consistentState.addAll(getAlreadyAddedGroupsForMode(branch, aclModePermission.getMode()));
     }
 
     // -- ZK Command bindings --------------------
@@ -90,7 +101,12 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
     @Command
     public void save() {
         AclMode mode = aclModePermission.getMode();
-        AclChangeset accessChanges = buildChangeset();
+        List<PoulpeGroup> alreadyAddedGroups = getAlreadyAddedGroupsForMode(branch, mode);
+
+        @SuppressWarnings("unchecked")
+        AclChangeset accessChanges = buildChangeset(aclModePermission.getPermission(),
+                CollectionUtils.subtract(consistentState, alreadyAddedGroups),
+                CollectionUtils.subtract(alreadyAddedGroups, consistentState));
 
         if (mode == AclMode.ALLOWED && !accessChanges.isEmpty()) {
             branchService.changeGrants(branch, accessChanges);
@@ -99,16 +115,6 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
         }
 
         openBranchPermissionsWindow();
-    }
-
-    /**
-     * Dummy command, used only for updating state of view components via binding. It's fired when user select item in
-     * any of two list's in window.
-     */
-    @Command
-    @NotifyChange({ "availSelected", "existSelected" })
-    public void listSelected() {
-        // NOOP
     }
 
     // -- Utility methods ------------------------
@@ -127,17 +133,30 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
         avail.addAll(ListUtils.subtract(groupService.getAll(), consistentState));
     }
 
-    @SuppressWarnings("unchecked")
-    private AclChangeset buildChangeset() {
-        AclChangeset accessChanges = new AclChangeset(aclModePermission.getPermission());
-        List<PoulpeGroup> alreadyAddedGroups = getAlreadyAddedGroupsFromPersistence();
-        accessChanges.setNewlyAddedGroups(CollectionUtils.subtract(consistentState, alreadyAddedGroups));
-        accessChanges.setRemovedGroups(CollectionUtils.subtract(alreadyAddedGroups, consistentState));
+    /**
+     * Builds {@link AclChangeset} as result of user edition actions.
+     * 
+     * @param permission the permission which will be used for creation of {@link AclChangeset}
+     * @param newlyAddedGroups the collection of groups which added by user, but NOT EXISTS already
+     * @param removedGroups the collection of groups which removed by user AND EXISTS already
+     * @return newly created change set
+     */
+    private AclChangeset buildChangeset(JtalksPermission permission, Collection<PoulpeGroup> newlyAddedGroups,
+            Collection<PoulpeGroup> removedGroups) {
+        AclChangeset accessChanges = new AclChangeset(permission);
+        accessChanges.setNewlyAddedGroups(newlyAddedGroups);
+        accessChanges.setRemovedGroups(removedGroups);
         return accessChanges;
     }
 
-    private List<PoulpeGroup> getAlreadyAddedGroupsFromPersistence() {
-        AclMode mode = aclModePermission.getMode();
+    /**
+     * Gets list of groups which already added in persistence for current {@link PoulpeBranch} with {@link AclMode}.
+     * 
+     * @param branch the branch to get for
+     * @param mode the ACL permission mode
+     * @return list of groups already added for current {@link PoulpeBranch} with {@link AclMode}
+     */
+    private List<PoulpeGroup> getAlreadyAddedGroupsForMode(PoulpeBranch branch, AclMode mode) {
         BranchAccessList accessList = branchService.getGroupAccessListFor(branch);
         BranchPermission branchPermission = (BranchPermission) aclModePermission.getPermission();
 
@@ -150,6 +169,9 @@ public class EditGroupsForBranchPermissionVM extends TwoSideListWithFilterVM<Pou
         }
     }
 
+    /**
+     * Opens window with BranchPermissions page.
+     */
     private void openBranchPermissionsWindow() {
         selectedEntity.setEntity(branch);
         windowManager.open(BRANCH_PERMISSION_MANAGEMENT_ZUL);
