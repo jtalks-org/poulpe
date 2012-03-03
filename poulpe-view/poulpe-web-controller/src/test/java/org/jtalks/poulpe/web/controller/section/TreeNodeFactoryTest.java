@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.*;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.*;
 import static org.testng.Assert.*;
 
 import java.util.Arrays;

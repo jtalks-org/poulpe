@@ -14,9 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeBranch;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSections;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeBranch;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeSection;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeSections;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;

@@ -28,7 +28,7 @@ import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.userbanning.UserBanningPresenter.BanningDialog;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.jtalks.poulpe.web.controller.utils.UserListMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -57,7 +57,7 @@ public class UserBanningPresenterTest {
 
     @Test
     public void banBastersPermanent() {
-        List<User> fakeUsers = ObjectCreator.getFakeUsers(10);
+        List<User> fakeUsers = ObjectsFactory.getFakeUsers(10);
         final String banReason = "ban this basters";
         
         presenter.banBasters(fakeUsers, true, -1, banReason);
@@ -72,7 +72,7 @@ public class UserBanningPresenterTest {
 
     @Test
     public void banBastersTemporary() {
-        List<User> fakeUsers = ObjectCreator.getFakeUsers(10);
+        List<User> fakeUsers = ObjectsFactory.getFakeUsers(10);
         final String banReason = "ban this basters";
         final Integer banLength = 10;
         presenter.banBasters(fakeUsers, false, banLength, banReason);
@@ -88,7 +88,7 @@ public class UserBanningPresenterTest {
     
      @Test
      public void updateView() {
-         List<User> fakeUsers = ObjectCreator.getFakeUsers(10);
+         List<User> fakeUsers = ObjectsFactory.getFakeUsers(10);
          presenter.updateView(fakeUsers);
          verify(view,times(1)).updateView(argThat(new UserListMatcher(fakeUsers)));
      }

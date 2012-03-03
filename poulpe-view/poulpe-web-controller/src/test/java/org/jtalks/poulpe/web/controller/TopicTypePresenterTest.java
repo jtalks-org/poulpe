@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeTopicType;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.getFakeTopicType;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;

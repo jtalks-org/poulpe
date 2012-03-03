@@ -31,7 +31,7 @@ import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -78,7 +78,7 @@ public class ModerationDialogPresenterTest {
         presenter.initView(view);
         presenter.setEntityValidator(entityValidator);
         
-        allUsers = ObjectCreator.getFakeUsers(5);
+        allUsers = ObjectsFactory.getFakeUsers(5);
         when(userService.getAll()).thenReturn(allUsers);
         
         user1 = allUsers.get(1);

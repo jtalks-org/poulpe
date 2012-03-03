@@ -1,6 +1,6 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.*;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;

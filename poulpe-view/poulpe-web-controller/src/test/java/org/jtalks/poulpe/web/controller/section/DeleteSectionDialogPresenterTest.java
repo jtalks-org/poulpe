@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSections;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeSections;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.sectionWithBranches;
 import static org.mockito.Mockito.*;
 
 import java.util.Collections;

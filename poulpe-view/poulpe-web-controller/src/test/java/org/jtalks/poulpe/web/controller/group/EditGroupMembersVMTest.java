@@ -39,7 +39,7 @@ import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -75,7 +75,7 @@ public class EditGroupMembersVMTest {
     public void setUp() throws NotFoundException {
         MockitoAnnotations.initMocks(this);
 
-        usersAvailable = ObjectCreator.getFakeUsers(50);
+        usersAvailable = ObjectsFactory.getFakeUsers(50);
         // we are assert, that half of users already in group
         List<User> usersAlreadyInGroup = usersAvailable.subList(0, usersAvailable.size() / 2);
         groupToEdit = createGroupWithUsers(usersAlreadyInGroup);

@@ -25,7 +25,7 @@ import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -192,7 +192,7 @@ public class TopicTypeListPresenterTest {
      * @return fake TopicType instance
      */
     public TopicType buildFakeTopicType() {
-        return ObjectCreator.getFakeTopicType(RandomUtils.nextLong(),
+        return ObjectsFactory.getFakeTopicType(RandomUtils.nextLong(),
                 "test topic title", "test topic description");
     }
 

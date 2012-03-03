@@ -21,7 +21,7 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -59,8 +59,8 @@ public class BranchPermissionManagementVmTest {
         allowedPermission = BranchPermission.CREATE_TOPICS;
         restrictedPermission = BranchPermission.VIEW_TOPICS;
 
-        allowedGroup = ObjectCreator.fakeGroup();
-        restrictedGroup = ObjectCreator.fakeGroup();
+        allowedGroup = ObjectsFactory.fakeGroup();
+        restrictedGroup = ObjectsFactory.fakeGroup();
 
         Map<BranchPermission, GroupAccessList> addToAccessList = new HashMap<BranchPermission, GroupAccessList>();
         BranchAccessList groupAccessList = new BranchAccessList(addToAccessList);

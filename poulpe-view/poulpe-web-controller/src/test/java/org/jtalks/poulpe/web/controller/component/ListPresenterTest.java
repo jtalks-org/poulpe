@@ -18,7 +18,7 @@ import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -63,7 +63,7 @@ public class ListPresenterTest {
     }
 
     private void prepareTestData() {
-        components = ObjectCreator.createComponents();
+        components = ObjectsFactory.createComponents();
         when(componentService.getAll()).thenReturn(components);
         component = components.get(0);
     }
