@@ -114,7 +114,8 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterExist() {
         exist.clear();
-        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), consistentState));
+        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())),
+                consistentState));
     }
 
     /**

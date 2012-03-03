@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -111,6 +112,10 @@ public class ObjectCreator {
         TopicType topicType = new TopicType(title, description);
         topicType.setId(id);
         return topicType;
+    }
+
+    public static PoulpeGroup fakeGroup() {
+        return new PoulpeGroup(random(), random());
     }
 
     private static String random() {

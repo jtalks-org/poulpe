@@ -26,15 +26,12 @@ import org.jtalks.poulpe.model.dto.AclModePermission;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModel;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMap.Builder;
@@ -52,37 +49,33 @@ public class BranchPermissionManagementVm {
 
     public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/EditGroupsForBranchPermission.zul";
 
-//    private final GroupService groupService;
-    private final BranchService branchService;
     private final WindowManager windowManager;
+    private final BranchService branchService;
+    private final SelectedEntity<Object> selectedEntity;
+
+    private final PoulpeBranch branch;
     private final Map<String, BranchPermissionManagementBlock> blocks = Maps.newLinkedHashMap();
 
     /**
-     * Created each time {@link #showGroupsDialog(String)} is invoked.
-     */
-    private EditGroupsForBranchPermissionVM groupsDialogVm;
-    
-    private final SelectedEntity<Object> selectedEntity;
-    private final PoulpeBranch branch;
-
-    /**
-     * Constructs the VM with given dependencies
+     * Constructs the VM with given dependencies.
      * 
+     * @param windowManager the window manager instance
      * @param branchService branch service
-     * @param groupService group service
+     * @param selectedEntity the selectedEntity with PoulpeBranch to edit
      */
-    public BranchPermissionManagementVm(@Nonnull BranchService branchService, @Nonnull GroupService groupService,
-            @Nonnull WindowManager windowManager, @Nonnull SelectedEntity<Object> selectedEntity) {
-//        this.groupService = groupService;
-        this.branchService = branchService;
+    public BranchPermissionManagementVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
+            @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
+        this.branchService = branchService;
         this.selectedEntity = selectedEntity;
         this.branch = (PoulpeBranch) selectedEntity.getEntity();
         initDataForView();
     }
 
     /**
-     * @param params from zul
+     * Command for showing dialog with editing groups list for current permission.
+     * 
+     * @param params the URL-style formatted parameters from zul
      */
     @Command
     public void showGroupsDialog(@BindingParam("params") String params) {
@@ -90,21 +83,22 @@ public class BranchPermissionManagementVm {
         String permissionName = parsedParams.get("permissionName");
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
-//        List<PoulpeGroup> toFillAddedGroupsGrid = getGroupsDependingOnMode(mode, branchPermissionManagementBlock);
-//        Window branchWindow = (Window) getComponent("branchPermissionManagementWindow");
-//        groupsDialogVm = createDialogData(toFillAddedGroupsGrid, "allow".equalsIgnoreCase(mode),
-//                branchPermissionManagementBlock.getPermission());
-//        Executions.createComponents("/sections/ManageGroupsDialog.zul", branchWindow, null);
-        
+
+        if (!"allow".equalsIgnoreCase(mode) && !"restrict".equalsIgnoreCase(mode)) {
+            throw new IllegalArgumentException(
+                    "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
+        }
+
         AclMode aclMode = ("allow".equalsIgnoreCase(mode)) ? AclMode.ALLOWED : AclMode.RESTRICTED;
-        AclModePermission modePermission = new AclModePermission(branch, aclMode, branchPermissionManagementBlock.getPermission());
-        
+        AclModePermission modePermission = new AclModePermission(branch, aclMode,
+                branchPermissionManagementBlock.getPermission());
+
         selectedEntity.setEntity(modePermission);
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
     }
 
     /**
-     * Parses params from zul to map
+     * Parses URL parameters substring to map.
      * 
      * @param params string with params
      * @return map build from params
@@ -119,9 +113,8 @@ public class BranchPermissionManagementVm {
         return parsedParams.build();
     }
 
-
     /**
-     * Initializes the data for view
+     * Initializes the data for view.
      */
     private void initDataForView() {
         BranchAccessList groupAccessList = branchService.getGroupAccessListFor(branch);
@@ -134,20 +127,8 @@ public class BranchPermissionManagementVm {
     }
 
     /**
-     * @return {@link ListModel} with all block elements
-     */
-    public ListModel<BranchPermissionManagementBlock> getBlocksListModel() {
-        return new BindingListModelList<BranchPermissionManagementBlock>(getBlocks(), true);
-    }
-
-    /**
-     * @return {@link EditGroupsForBranchPermissionVM} instance
-     */
-    public EditGroupsForBranchPermissionVM getGroupsDialogVm() {
-        return groupsDialogVm;
-    }
-
-    /**
+     * Gets blocks which represents state of each permission.
+     * 
      * @return all blocks
      */
     public List<BranchPermissionManagementBlock> getBlocks() {

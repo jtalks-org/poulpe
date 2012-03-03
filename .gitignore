@@ -31,3 +31,5 @@ pom.xml.releaseBackup
 #test-output
 test-output
 
+# Spring puts here ZKComponentBeanMethods.class, it needed only in runtime scope
+poulpe-view/poulpe-web-view/src/main/webapp/WEB-INF/classes/

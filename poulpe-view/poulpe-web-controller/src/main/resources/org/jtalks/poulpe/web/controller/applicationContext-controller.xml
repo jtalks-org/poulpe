@@ -26,9 +26,9 @@
 
   <bean id="branchPermissionManagementVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-    <constructor-arg ref="branchService" />
-    <constructor-arg index="1" ref="groupService"/>
     <constructor-arg type="WindowManager" ref="windowManager" />
+    <constructor-arg type="BranchService" ref="branchService" />
+    <constructor-arg type="GroupService" ref="groupService"/>
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
   
