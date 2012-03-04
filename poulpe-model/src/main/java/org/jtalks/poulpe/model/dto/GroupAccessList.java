@@ -12,19 +12,21 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dto.branches;
+package org.jtalks.poulpe.model.dto;
 
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * Access list for {@link PoulpeGroup}
  * 
  * @author stanislav bashkirtsev
+ * @author Vyacheslav Zhivaev
  */
 public class GroupAccessList {
     private final List<PoulpeGroup> allowed = new ArrayList<PoulpeGroup>();
@@ -69,8 +71,7 @@ public class GroupAccessList {
     }
 
     /**
-     * Sets new list of restricted groups (the elements from the old are
-     * removed)
+     * Sets new list of restricted groups (the elements from the old are removed)
      * 
      * @param restricted restricted groups
      * @return this instance for providing fluent interface

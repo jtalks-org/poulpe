@@ -1,8 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<!--
+    Arguments which can be passed to this page:
+    'text' - necessary - text which will be showed as caption
+    'prefix' - optional - prefix for 'text', will be added before if present
+    'suffix' - optional - suffix for 'text', will be added after if present
+    
+    How to use:
+      1. define macro in header of your zul:
+        <?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
+  
+      2. paste in your zul new component:
+        <add-caption-block text="Some text" />
+          or:
+        <add-caption-block prefix="Label:" text="@load(vm.importantText)" />
+          or:
+        <add-caption-block prefix="Label:" text="@load(vm.importantText)" suffix=" (edit page)" />
+-->
 <?page title="Caption block" contentType="text/html; charset=UTF-8"?>
 <hbox xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd"
     style="padding: 5px">
   <label if="${not empty arg.prefix}" value="${arg.prefix}" style="font: bold 18px sans-serif" />
   <label value="${arg.text}" style="font: bold 18px sans-serif" />
+  <label if="${not empty arg.suffix}" value="${arg.suffix}" style="font: bold 18px sans-serif" />
 </hbox>

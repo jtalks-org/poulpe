@@ -33,14 +33,14 @@ import com.google.common.collect.Lists;
  * @author Vyacheslav Zhivaev
  *
  */
-public class GroupsPermissionsVM {
+public class GroupsPermissionsVm {
 
     private final WindowManager windowManager;
     private final GroupService groupService;
     private final AclManager aclManager;
     private final List<BranchPermissionManagementBlock> blocks;
 
-    public GroupsPermissionsVM(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
+    public GroupsPermissionsVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
             @Nonnull AclManager aclManager) {
         this.windowManager = windowManager;
         this.groupService = groupService;

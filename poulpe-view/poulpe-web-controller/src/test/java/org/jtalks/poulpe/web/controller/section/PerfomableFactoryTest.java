@@ -6,7 +6,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -71,7 +71,7 @@ public class PerfomableFactoryTest {
         Performable perf = perfomableFactory.deleteBranch(branch);
         perf.execute();
         verify(service).saveSection(section);
-        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(AclChangeset.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(presenter).updateView();
     }
 

@@ -18,8 +18,8 @@ import org.jtalks.common.service.transactional.AbstractTransactionalEntityServic
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 
@@ -88,7 +88,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public BranchAccessList getGroupAccessListFor(PoulpeBranch branch) {
+    public BranchPermissions getGroupAccessListFor(PoulpeBranch branch) {
         return branchPermissionManager.getGroupAccessListFor(branch);
     }
 
@@ -96,7 +96,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void changeGrants(PoulpeBranch branch, AclChangeset changes) {
+    public void changeGrants(PoulpeBranch branch, PermissionChanges changes) {
         branchPermissionManager.changeGrants(branch, changes);
     }
 
@@ -104,7 +104,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public void changeRestrictions(PoulpeBranch branch, AclChangeset changes) {
+    public void changeRestrictions(PoulpeBranch branch, PermissionChanges changes) {
         branchPermissionManager.changeRestrictions(branch, changes);
     }
 

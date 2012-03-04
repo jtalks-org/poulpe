@@ -30,7 +30,7 @@ import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.mockito.ArgumentCaptor;
@@ -78,7 +78,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testChangeGrants() {
-        AclChangeset accessChanges = new AclChangeset(null);
+        PermissionChanges accessChanges = new PermissionChanges(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeGrants(branch, accessChanges);
@@ -104,7 +104,7 @@ public class TransactionalBranchServiceTest {
 
     @Test
     public void testChangeRestrictions() {
-        AclChangeset accessChanges = new AclChangeset(null);
+        PermissionChanges accessChanges = new PermissionChanges(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
         branchService.changeRestrictions(branch, accessChanges);

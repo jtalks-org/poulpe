@@ -24,14 +24,14 @@ import org.jtalks.common.model.permissions.JtalksPermission;
  * 
  */
 @Immutable
-public class AclModePermission {
+public class PermissionForEntity {
     private final Entity target;
-    private final AclMode mode;
+    private final boolean allowed;
     private final JtalksPermission permission;
 
-    public AclModePermission(Entity target, AclMode mode, JtalksPermission permission) {
+    public PermissionForEntity(Entity target, boolean allowed, JtalksPermission permission) {
         this.target = target;
-        this.mode = mode;
+        this.allowed = allowed;
         this.permission = permission;
     }
 
@@ -43,12 +43,12 @@ public class AclModePermission {
     }
 
     /**
-     * @return the mode
+     * @return the allowedNotRestricted
      */
-    public AclMode getMode() {
-        return mode;
+    public boolean isAllowed() {
+        return allowed;
     }
-
+    
     /**
      * @return the permission
      */

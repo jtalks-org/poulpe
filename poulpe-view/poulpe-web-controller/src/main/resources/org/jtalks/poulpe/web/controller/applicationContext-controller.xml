@@ -31,8 +31,8 @@
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
   
-  <bean id="editGroupsForBranchPermissionVM" scope="prototype"
-        class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVM">
+  <bean id="editGroupsForBranchPermissionVm" scope="prototype"
+        class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
     <constructor-arg type="WindowManager" ref="windowManager" />
     <constructor-arg type="BranchService" ref="branchService" />
     <constructor-arg type="GroupService" ref="groupService" />
@@ -52,14 +52,14 @@
       <constructor-arg index="0" ref="componentService"/>
   </bean>
 
-  <bean id="editGroupMembersVM" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVM">
+  <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
     <constructor-arg type="WindowManager" ref="windowManager" />
     <constructor-arg type="GroupService" ref="groupService" />
     <constructor-arg type="UserService" ref="userService" />
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
 
-  <bean id="groupsPermissionsVM" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVM">
+  <bean id="groupsPermissionsVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">
     <constructor-arg type="WindowManager" ref="windowManager" />
     <constructor-arg type="GroupService" ref="groupService" />
     <constructor-arg type="AclManager" ref="aclManager" />

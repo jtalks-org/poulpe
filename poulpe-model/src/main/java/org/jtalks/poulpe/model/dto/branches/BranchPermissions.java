@@ -14,39 +14,40 @@
  */
 package org.jtalks.poulpe.model.dto.branches;
 
-import com.google.common.collect.Maps;
-
-import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.GroupAccessList;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+
+import com.google.common.collect.Maps;
+
 /**
  * Access list for {@link PoulpeBranch}
  * 
  * @author stanislav bashkirtsev
+ * @author Vyacheslav Zhivaev
  */
-public class BranchAccessList {
+public class BranchPermissions {
 
     private final ConcurrentMap<BranchPermission, GroupAccessList> accessListMap = Maps.newConcurrentMap();
 
     /**
      * Default constructor, sets nothing
      */
-    public BranchAccessList() {
+    public BranchPermissions() {
     }
 
     /**
-     * Constructs {@link BranchAccessList} with predefined values to be added to
-     * the access list
+     * Constructs {@link BranchPermissions} with predefined values to be added to the access list
      * 
      * @param addToAccessList
      */
-    public BranchAccessList(Map<BranchPermission, GroupAccessList> addToAccessList) {
+    public BranchPermissions(Map<BranchPermission, GroupAccessList> addToAccessList) {
         accessListMap.putAll(addToAccessList);
     }
 
@@ -58,7 +59,7 @@ public class BranchAccessList {
      * @param toRestrict group to restrict
      * @return this instance for providing fluent interface
      */
-    public BranchAccessList put(BranchPermission permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
+    public BranchPermissions put(BranchPermission permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
         this.accessListMap.putIfAbsent(permission, new GroupAccessList());
         GroupAccessList accessList = this.accessListMap.get(permission);
         accessList.addAllowed(toAllow).addRestricted(toRestrict);
@@ -72,7 +73,7 @@ public class BranchAccessList {
      * @param group group to allow
      * @return this instance for providing fluent interface
      */
-    public BranchAccessList addAllowed(BranchPermission permission, PoulpeGroup group) {
+    public BranchPermissions addAllowed(BranchPermission permission, PoulpeGroup group) {
         return put(permission, group, null);
     }
 
@@ -83,26 +84,25 @@ public class BranchAccessList {
      * @param group group to restrict
      * @return this instance for providing fluent interface
      */
-    public BranchAccessList addRestricted(BranchPermission permission, PoulpeGroup group) {
+    public BranchPermissions addRestricted(BranchPermission permission, PoulpeGroup group) {
         return put(permission, null, group);
     }
 
     /**
-     * Based on 'allow' flag, put 'allow' permission on the branch (if it's
-     * {@code true}), or puts 'restrict' permission on it (otherwise)
+     * Based on 'allow' flag, put 'allow' permission on the branch (if it's {@code true}), or puts 'restrict' permission
+     * on it (otherwise)
      * 
      * @param permission branch permission
      * @param group permission holder
      * @param allow {@code true} if allowance is needed, {@code false} otherwise
      * @return this instance for providing fluent interface
      */
-    public BranchAccessList put(BranchPermission permission, PoulpeGroup group, boolean allow) {
+    public BranchPermissions put(BranchPermission permission, PoulpeGroup group, boolean allow) {
         return allow ? addAllowed(permission, group) : addRestricted(permission, group);
     }
 
     /**
-     * For given permission, retrieves list of {@link PoulpeBranch} object that
-     * are allowed
+     * For given permission, retrieves list of {@link PoulpeBranch} object that are allowed
      * 
      * @param permission branch permission
      * @return list of {@link PoulpeBranch}
@@ -112,8 +112,7 @@ public class BranchAccessList {
     }
 
     /**
-     * For given permission, retrieves list of {@link PoulpeBranch} object that
-     * are restricted
+     * For given permission, retrieves list of {@link PoulpeBranch} object that are restricted
      * 
      * @param permission branch permission
      * @return list of {@link PoulpeBranch}
@@ -131,22 +130,20 @@ public class BranchAccessList {
 
     /**
      * 
-     * Static factory for creating {@link BranchAccessList} with given list of
-     * permissions
+     * Static factory for creating {@link BranchPermissions} with given list of permissions
      * 
      * @param permissions to be added to the access list
-     * @return new {@link BranchAccessList} object
+     * @return new {@link BranchPermissions} object
      */
-    public static BranchAccessList create(List<BranchPermission> permissions) {
-        return new BranchAccessList(withEmptyAccessList(permissions));
+    public static BranchPermissions create(List<BranchPermission> permissions) {
+        return new BranchPermissions(withEmptyAccessList(permissions));
     }
 
     /**
      * For each permission created an empty {@link GroupAccessList}
      * 
      * @param permissions to traverse
-     * @return map of permissions mapped to empty {@link GroupAccessList}
-     * objects
+     * @return map of permissions mapped to empty {@link GroupAccessList} objects
      */
     private static Map<BranchPermission, GroupAccessList> withEmptyAccessList(List<BranchPermission> permissions) {
         Map<BranchPermission, GroupAccessList> newAccessListMap = Maps.newHashMap();

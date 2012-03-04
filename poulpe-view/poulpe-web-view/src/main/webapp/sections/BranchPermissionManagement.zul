@@ -5,7 +5,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
-          viewModel="@id('vm') @init(branchPermissionManagementVm)" border="normal">
+          viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal">
     <add-caption-block prefix="${labels.branches.label.combobox}" text="${branchPermissionManagementVm.branch.name}" />
     <style src="/resources/css/all.css" />
     <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}" />

@@ -6,21 +6,21 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window mode="modal" closable="true" border="normal" width="70%" title="${labels.groups.edit_members.title}"
-      apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVM') @init(editGroupMembersVM)"
+      apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')">
     <vbox>
       <add-caption-block prefix="${labels.groups.edit_members.group_caption}"
-          text="${editGroupMembersVM.groupToEdit.name}" />
+          text="${editGroupMembersVm.groupToEdit.name}" />
       <hbox>
         <vbox hflex="1">
           <panel title="${labels.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVM.availFilterTxt)" />
+                <textbox value="@bind(editGroupMembersVm.availFilterTxt)" />
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>
-              <listbox model="@bind(editGroupMembersVM.avail)" onSelect="@command('listSelected')"
+              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" height="240px">
                 <listhead>
                   <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
@@ -42,24 +42,24 @@
           </panel>
         </vbox>
         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
-          <button onClick="@command('add')" disabled="@load(empty editGroupMembersVM.availSelected)"
+          <button onClick="@command('add')" disabled="@load(empty editGroupMembersVm.availSelected)"
               image="/resources/img/rightarrow.png" width="36px" sclass="edit.members.addButton" />
-          <button onClick="@command('addAll')" disabled="@load(empty editGroupMembersVM.avail)"
+          <button onClick="@command('addAll')" disabled="@load(empty editGroupMembersVm.avail)"
               image="/resources/img/rightrightarrow.png" width="36px" sclass="edit.members.addAllButton" />
-          <button onClick="@command('remove')" disabled="@load(empty editGroupMembersVM.existSelected)"
+          <button onClick="@command('remove')" disabled="@load(empty editGroupMembersVm.existSelected)"
               image="/resources/img/leftarrow.png" width="36px" sclass="edit.members.removeButton" />
-          <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVM.exist)"
+          <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVm.exist)"
               image="/resources/img/leftleftarrow.png" width="36px" sclass="edit.members.removeAllButton" />
         </vbox>
         <vbox hflex="1">
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVM.existFilterTxt)" />
+                <textbox value="@bind(editGroupMembersVm.existFilterTxt)" />
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterExist')"
                     sclass="edit.members.searchExistButton" />
               </hbox>
-              <listbox model="@bind(editGroupMembersVM.exist)" onSelect="@command('listSelected')"
+              <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" height="240px">
                 <listhead>
                   <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />

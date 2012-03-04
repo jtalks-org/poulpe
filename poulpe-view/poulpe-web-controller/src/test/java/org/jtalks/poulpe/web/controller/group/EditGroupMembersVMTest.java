@@ -48,7 +48,7 @@ import org.testng.annotations.Test;
 import com.google.common.collect.Sets;
 
 /**
- * Tests for {@link EditGroupMembersVM}
+ * Tests for {@link EditGroupMembersVm}
  * 
  * @author Vyacheslav Zhivaev
  * 
@@ -56,7 +56,7 @@ import com.google.common.collect.Sets;
 public class EditGroupMembersVMTest {
 
     // SUT
-    private EditGroupMembersVM viewModel;
+    private EditGroupMembersVm viewModel;
 
     private PoulpeGroup groupToEdit;
     private List<User> usersAvailable;
@@ -91,14 +91,14 @@ public class EditGroupMembersVMTest {
 
         doNothing().when(windowManager).open(anyString());
 
-        viewModel = new EditGroupMembersVM(windowManager, groupService, userService, selectedEntity);
+        viewModel = new EditGroupMembersVm(windowManager, groupService, userService, selectedEntity);
         viewModel = spy(viewModel);
 
         // givenUsersSelectedInView();
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#add()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#add()}.
      */
     @Test
     public void testAdd() {
@@ -109,7 +109,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#addAll()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#addAll()}.
      */
 // @Test
     // FIXME
@@ -123,7 +123,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#remove()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#remove()}.
      */
     // FIXME
     // @Test
@@ -137,7 +137,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#removeAll()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#removeAll()}.
      */
     // FIXME
     // @Test
@@ -151,7 +151,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#save()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#save()}.
      */
     @Test
     public void testSave() {
@@ -161,7 +161,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVM#cancel()}.
+     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#cancel()}.
      */
     @Test
     public void testCancel() {

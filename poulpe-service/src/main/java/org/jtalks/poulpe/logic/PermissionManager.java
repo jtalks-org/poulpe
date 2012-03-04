@@ -27,8 +27,8 @@ import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.springframework.security.acls.model.AccessControlEntry;
 
@@ -62,10 +62,10 @@ public class PermissionManager {
      * @param changes contains a permission itself, a list of groups to be
      * granted to the permission and the list of groups to remove their granted
      * privileges
-     * @see org.jtalks.poulpe.model.dto.branches.AclChangeset#getNewlyAddedGroupsAsArray()
-     * @see org.jtalks.poulpe.model.dto.branches.AclChangeset#getRemovedGroups()
+     * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
+     * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
-    public void changeGrants(Entity entity, AclChangeset changes) {
+    public void changeGrants(Entity entity, PermissionChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).grant(changes.getPermission())
                 .setOwner(changes.getNewlyAddedGroupsAsArray()).on(entity).flush();
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(entity).flush();
@@ -78,10 +78,10 @@ public class PermissionManager {
      * @param changes contains a permission itself, a list of groups to be
      * restricted from the permission and the list of groups to remove their
      * restricting privileges
-     * @see org.jtalks.poulpe.model.dto.branches.AclChangeset#getNewlyAddedGroupsAsArray()
-     * @see org.jtalks.poulpe.model.dto.branches.AclChangeset#getRemovedGroups()
+     * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
+     * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
-    public void changeRestrictions(Entity entity, AclChangeset changes) {
+    public void changeRestrictions(Entity entity, PermissionChanges changes) {
         BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
                 .setOwner(changes.getNewlyAddedGroupsAsArray()).on(entity).flush();
         aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(entity).flush();
@@ -89,11 +89,11 @@ public class PermissionManager {
 
     /**
      * @param branch object identity
-     * @return {@link BranchAccessList} for given branch
+     * @return {@link BranchPermissions} for given branch
      */
     // TODO: fix AclManager.getBranchPermissions()
-    public BranchAccessList getGroupAccessListFor(Entity entity) {
-        BranchAccessList branchAccessList = BranchAccessList.create(BranchPermission.getAllAsList());
+    public BranchPermissions getGroupAccessListFor(Entity entity) {
+        BranchPermissions branchAccessList = BranchPermissions.create(BranchPermission.getAllAsList());
         List<GroupAce> groupAces = aclManager.getBranchPermissions((Branch) entity);
         for (GroupAce groupAce : groupAces) {
             branchAccessList.put(groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());

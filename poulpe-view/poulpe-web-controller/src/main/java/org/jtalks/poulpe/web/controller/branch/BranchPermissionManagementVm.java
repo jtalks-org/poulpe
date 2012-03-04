@@ -21,9 +21,8 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.dto.AclMode;
-import org.jtalks.poulpe.model.dto.AclModePermission;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
+import org.jtalks.poulpe.model.dto.PermissionForEntity;
+import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -49,6 +48,7 @@ public class BranchPermissionManagementVm {
 
     public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/EditGroupsForBranchPermission.zul";
 
+    // Injected
     private final WindowManager windowManager;
     private final BranchService branchService;
     private final SelectedEntity<Object> selectedEntity;
@@ -84,13 +84,13 @@ public class BranchPermissionManagementVm {
         BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
 
-        if (!"allow".equalsIgnoreCase(mode) && !"restrict".equalsIgnoreCase(mode)) {
+        boolean allowed = "allow".equalsIgnoreCase(mode);
+        if (!allowed && !"restrict".equalsIgnoreCase(mode)) {
             throw new IllegalArgumentException(
                     "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
         }
 
-        AclMode aclMode = ("allow".equalsIgnoreCase(mode)) ? AclMode.ALLOWED : AclMode.RESTRICTED;
-        AclModePermission modePermission = new AclModePermission(branch, aclMode,
+        PermissionForEntity modePermission = new PermissionForEntity(branch, allowed,
                 branchPermissionManagementBlock.getPermission());
 
         selectedEntity.setEntity(modePermission);
@@ -117,7 +117,7 @@ public class BranchPermissionManagementVm {
      * Initializes the data for view.
      */
     private void initDataForView() {
-        BranchAccessList groupAccessList = branchService.getGroupAccessListFor(branch);
+        BranchPermissions groupAccessList = branchService.getGroupAccessListFor(branch);
         for (BranchPermission permission : groupAccessList.getPermissions()) {
             BranchPermissionRow allowRow = BranchPermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
             BranchPermissionRow restrictRow = BranchPermissionRow.newRestrictRow(groupAccessList

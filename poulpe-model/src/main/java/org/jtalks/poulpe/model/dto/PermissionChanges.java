@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dto.branches;
+package org.jtalks.poulpe.model.dto;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,7 @@ import com.google.common.collect.ImmutableList;
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
-public class AclChangeset {
+public class PermissionChanges {
     private final JtalksPermission permission;
     private final List<PoulpeGroup> newlyAddedGroups = new ArrayList<PoulpeGroup>();
     private final List<PoulpeGroup> removedGroups = new ArrayList<PoulpeGroup>();
@@ -39,8 +39,20 @@ public class AclChangeset {
      * 
      * @param permission type of permission
      */
-    public AclChangeset(JtalksPermission permission) {
+    public PermissionChanges(JtalksPermission permission) {
         this.permission = permission;
+    }
+
+    /**
+     * Constructs the object with given {@link JtalksPermission} instance.
+     * 
+     * @param permission type of permission
+     */
+    public PermissionChanges(JtalksPermission permission, Collection<PoulpeGroup> newlyAddedGroups,
+            Collection<PoulpeGroup> removedGroups) {
+        this.permission = permission;
+        this.newlyAddedGroups.addAll(newlyAddedGroups);
+        this.removedGroups.addAll(removedGroups);
     }
 
     /**
@@ -57,7 +69,7 @@ public class AclChangeset {
      * 
      * @param newlyAddedGroups - list of newly added permissions
      */
-    public void setNewlyAddedGroups(Collection<PoulpeGroup> newlyAddedGroups) {
+    public void addNewlyAddedGroups(Collection<PoulpeGroup> newlyAddedGroups) {
         this.newlyAddedGroups.addAll(newlyAddedGroups);
     }
 
@@ -84,7 +96,7 @@ public class AclChangeset {
      * 
      * @param removedGroups - list with removed permissions
      */
-    public void setRemovedGroups(Collection<PoulpeGroup> removedGroups) {
+    public void addRemovedGroups(Collection<PoulpeGroup> removedGroups) {
         this.removedGroups.addAll(removedGroups);
     }
 
@@ -98,7 +110,7 @@ public class AclChangeset {
     }
 
     /**
-     * Checks {@link AclChangeset} is empty.
+     * Checks {@link PermissionChanges} is empty.
      * 
      * @return {@code true} if empty, else return {@code false}
      */

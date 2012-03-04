@@ -29,7 +29,7 @@ import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVM;
+import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -43,17 +43,17 @@ import com.google.common.collect.Lists;
  * @author Vyacheslav Zhivaev
  * 
  */
-public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
+public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
 
     // Injected
-    private GroupService groupService;
-    private UserService userService;
-    private WindowManager windowManager;
+    private final GroupService groupService;
+    private final UserService userService;
+    private final WindowManager windowManager;
 
     /**
      * PoulpeGroup to be edited
      */
-    private PoulpeGroup groupToEdit;
+    private final PoulpeGroup groupToEdit;
 
     /**
      * Construct View-Model for 'Edit Members of group' view.
@@ -63,7 +63,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
      * @param userService the user service instance
      * @param selectedEntity the selected entity instance, for obtaining group which to be edited
      */
-    public EditGroupMembersVM(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
+    public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
             @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) {
         super();
 
@@ -77,7 +77,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
         this.groupService = groupService;
         this.userService = userService;
 
-        consistentState = groupToEdit.getPoulpeUsers();
+        stateAfterEdit = groupToEdit.getPoulpeUsers();
     }
 
     // -- Accessors ------------------------------
@@ -101,7 +101,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterAvail() {
         List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
-        users.removeAll(consistentState);
+        users.removeAll(stateAfterEdit);
         avail.clear();
         avail.addAll(users);
     }
@@ -115,7 +115,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
     public void filterExist() {
         exist.clear();
         exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())),
-                consistentState));
+                stateAfterEdit));
     }
 
     /**
@@ -123,7 +123,7 @@ public class EditGroupMembersVM extends TwoSideListWithFilterVM<User> {
      */
     @Command
     public void save() {
-        groupToEdit.setPoulpeUsers(consistentState);
+        groupToEdit.setPoulpeUsers(stateAfterEdit);
         groupService.saveGroup(groupToEdit);
         switchToGroupsWindow();
     }

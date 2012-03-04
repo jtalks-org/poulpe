@@ -21,7 +21,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -171,8 +171,8 @@ public class BranchPresenter {
 
     private void setBranchPermissions(PoulpeBranch branch, PoulpeGroup group) {
         for(BranchPermission permission : BranchPermission.values()) {
-            AclChangeset branchAccess = new AclChangeset(permission);
-            branchAccess.setNewlyAddedGroups(Collections.singleton(group));
+            PermissionChanges branchAccess = new PermissionChanges(permission);
+            branchAccess.addNewlyAddedGroups(Collections.singleton(group));
             branchService.changeGrants(branch, branchAccess);
         }
     }

@@ -15,8 +15,8 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.branches.AclChangeset;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public interface BranchService extends EntityService<PoulpeBranch> {
      * @param branch branch which will be returned access list
      * @return access list
      */
-    BranchAccessList getGroupAccessListFor(PoulpeBranch branch);
+    BranchPermissions getGroupAccessListFor(PoulpeBranch branch);
 
     /**
      * Change grants for branch
@@ -72,7 +72,7 @@ public interface BranchService extends EntityService<PoulpeBranch> {
      * @param branch branch to which grants will be changed
      * @param changes grants for branch
      */
-    void changeGrants(PoulpeBranch branch, AclChangeset changes);
+    void changeGrants(PoulpeBranch branch, PermissionChanges changes);
 
     /**
      * Change restriction for branch
@@ -80,5 +80,5 @@ public interface BranchService extends EntityService<PoulpeBranch> {
      * @param branch branch to which restriction will be changed
      * @param changes new restriction for branch
      */
-    void changeRestrictions(PoulpeBranch branch, AclChangeset changes);
+    void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
 }

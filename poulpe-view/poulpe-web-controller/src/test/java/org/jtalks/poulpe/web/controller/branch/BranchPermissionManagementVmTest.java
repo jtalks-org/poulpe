@@ -14,8 +14,8 @@ import java.util.Map;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.dto.branches.GroupAccessList;
+import org.jtalks.poulpe.model.dto.GroupAccessList;
+import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
@@ -63,7 +63,7 @@ public class BranchPermissionManagementVmTest {
         restrictedGroup = ObjectsFactory.fakeGroup();
 
         Map<BranchPermission, GroupAccessList> addToAccessList = new HashMap<BranchPermission, GroupAccessList>();
-        BranchAccessList groupAccessList = new BranchAccessList(addToAccessList);
+        BranchPermissions groupAccessList = new BranchPermissions(addToAccessList);
         groupAccessList.addAllowed(allowedPermission, allowedGroup);
         groupAccessList.addRestricted(restrictedPermission, restrictedGroup);
         when(branchService.getGroupAccessListFor(branch)).thenReturn(groupAccessList);

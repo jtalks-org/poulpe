@@ -29,12 +29,12 @@ import com.google.common.collect.Lists;
 /**
  * VM represents two list's with possibility to add or remove item's from some consistent state. It's also provides
  * filtering these list's in View for easy search. After user completed his actions we are have consistent state, stored
- * in internal field {@code consistentState}. This consistent state may be fixed (for example in persistent layer) or
+ * in internal field {@code stateAfterEdit}. This consistent state may be fixed (for example in persistent layer) or
  * ignored if VM simply closed without save action. In any time consistent state may be obtained by getter.
  * 
  * @author Vyacheslav Zhivaev
  */
-public class TwoSideListWithFilterVM<E> {
+public class TwoSideListWithFilterVm<E> {
 
     /** String represents text in filter field for available items list. */
     protected String availFilterTxt;
@@ -48,18 +48,18 @@ public class TwoSideListWithFilterVM<E> {
     /** List of already existed (added) items. */
     protected ListModelList<E> exist;
 
-    /** List represents consistent state of existed items after editing. */
-    protected List<E> consistentState;
+    /** List represents state of existed items after editing. */
+    protected List<E> stateAfterEdit;
 
     /**
      * Constructs VM with simple initialization which avoiding {@code null} values in internal fields.
      */
-    public TwoSideListWithFilterVM() {
+    public TwoSideListWithFilterVm() {
         availFilterTxt = "";
         existFilterTxt = "";
         avail = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         exist = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
-        consistentState = Lists.<E> newLinkedList();
+        stateAfterEdit = Lists.<E> newLinkedList();
     }
 
     // -- Accessors -----------------------------
@@ -124,7 +124,7 @@ public class TwoSideListWithFilterVM<E> {
      * @return the list of items in consistent state (after editing)
      */
     protected List<E> getConsistentState() {
-        return consistentState;
+        return stateAfterEdit;
     }
 
     /**
@@ -153,7 +153,7 @@ public class TwoSideListWithFilterVM<E> {
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void add() {
-        consistentState.addAll(getAvailSelected());
+        stateAfterEdit.addAll(getAvailSelected());
         updateVm();
     }
 
@@ -163,7 +163,7 @@ public class TwoSideListWithFilterVM<E> {
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void addAll() {
-        consistentState.addAll(getAvail());
+        stateAfterEdit.addAll(getAvail());
         updateVm();
     }
 
@@ -173,7 +173,7 @@ public class TwoSideListWithFilterVM<E> {
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void remove() {
-        consistentState.removeAll(getExistSelected());
+        stateAfterEdit.removeAll(getExistSelected());
         updateVm();
     }
 
@@ -183,7 +183,7 @@ public class TwoSideListWithFilterVM<E> {
     @Command
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void removeAll() {
-        consistentState.removeAll(getExist());
+        stateAfterEdit.removeAll(getExist());
         updateVm();
     }
 
@@ -203,7 +203,7 @@ public class TwoSideListWithFilterVM<E> {
      * Updates VM state after some major action.
      */
     protected void updateVm() {
-        // This is created as template, redefine it if it needs.
+        // This is created as template, redefine it for your needs.
         // NOOP
     }
 
