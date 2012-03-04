@@ -27,7 +27,6 @@ import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.zk.ui.Executions;
 
 /**
  * This class is used as Presenter layer in Model-View-Presenter pattern for managing PoulpeSection entities
@@ -134,7 +133,6 @@ public class SectionPresenter {
         @Override
         public void visitSection(PoulpeSection section) {
             deleteSectionDialogPresenter.show(section);
-            updateView();
         }
 
         /** {@inheritDoc} */
@@ -255,9 +253,10 @@ public class SectionPresenter {
 
     /**
      * Opens dialog for moderating a selected branch
+     * 
+     * @param selectedObject
      */
-    public void openModerationWindow() {
-        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
+    public void openModerationWindow(BranchSectionVisitable selectedObject) {
         selectedObject.apply(openModeratorDialogVisitor);
     }
 
@@ -268,8 +267,7 @@ public class SectionPresenter {
         /** {@inheritDoc} */
         @Override
         public void visitSection(PoulpeSection section) {
-            // do nothing because moderators windows is not applicable for
-            // sections
+            // do nothing because moderators windows is not applicable for sections
         }
 
         /** {@inheritDoc} */
@@ -304,13 +302,6 @@ public class SectionPresenter {
      */
     public void setDialogManager(DialogManager dialogManager) {
         this.dialogManager = dialogManager;
-    }
-
-    /**
-     * @param windowManager the windowManager to set
-     */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
     }
 
     /**

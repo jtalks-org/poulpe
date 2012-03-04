@@ -71,8 +71,9 @@ public class ZkSectionTreeComponentTest {
 
     @Test
     public void moderationButton() {
-        sectionTreeComponent.moderationDialog();
-        verify(presenter).openModerationWindow();
+        doReturn(section).when(spy).getSelectedOrFirstElement();
+        spy.moderationDialog();
+        verify(presenter).openModerationWindow(section);
     }
 
     @Test
@@ -84,16 +85,28 @@ public class ZkSectionTreeComponentTest {
 
     @Test
     public void disablePermissionsButtonWhenSection() {
+        Button moderatorsButton = mockModeratorsButton();
         Button permissionsButton = mockPermissionButton();
+        sectionTreeComponent.disableModeratorsButtonIfNeeded(section);
         sectionTreeComponent.disablePermissionsButtonIfNeeded(section);
+        verify(moderatorsButton).setDisabled(true);
         verify(permissionsButton).setDisabled(true);
     }
     
     @Test
     public void enablePermissionsButtonWhenBranch() {
+        Button moderatorsButton = mockModeratorsButton();
         Button permissionsButton = mockPermissionButton();
+        sectionTreeComponent.disableModeratorsButtonIfNeeded(branch);
         sectionTreeComponent.disablePermissionsButtonIfNeeded(branch);
+        verify(moderatorsButton).setDisabled(false);
         verify(permissionsButton).setDisabled(false);
+    }
+
+    private Button mockModeratorsButton() {
+        Button moderatorsButton = mock(Button.class);
+        when(sectionTree.getFellow("moderatorsButton")).thenReturn(moderatorsButton);
+        return moderatorsButton;
     }
 
     private Button mockPermissionButton() {

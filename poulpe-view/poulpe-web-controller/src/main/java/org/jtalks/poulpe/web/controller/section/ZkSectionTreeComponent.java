@@ -127,7 +127,8 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      * Shows moderation dialog
      */
     public void moderationDialog() {
-        presenter.openModerationWindow();
+        BranchSectionVisitable selectedObject = getSelectedOrFirstElement();
+        presenter.openModerationWindow(selectedObject);
     }
 
     /**
@@ -206,7 +207,28 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         sectionTree.addEventListener(Events.ON_SELECT, new EventListener<Event>() {
             @Override
             public void onEvent(Event event) throws Exception {
+                disableModeratorsButtonIfNeeded(getSelectedObject());
                 disablePermissionsButtonIfNeeded(getSelectedObject());
+            }
+        });
+    }
+
+    /**
+     * Decides on whether moderators button should be disabled or not.
+     * For branches it should be enabled, for section - disabled.
+     * 
+     * @param visitable to be visited (section or branch)
+     */
+    public void disableModeratorsButtonIfNeeded(BranchSectionVisitable visitable) {
+        visitable.apply(new BranchSectionVisitor() {
+            @Override
+            public void visitSection(PoulpeSection section) {
+                getModeratorsButton().setDisabled(true);
+            }
+
+            @Override
+            public void visitBranch(PoulpeBranch branch) {
+                getModeratorsButton().setDisabled(false);
             }
         });
     }
@@ -215,7 +237,7 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      * Decides on whether branch permission button should be disabled or not.
      * For branches it should be enabled, for section - disabled.
      * 
-     * @param visitable to be visited
+     * @param visitable to be visited (section or branch)
      */
     public void disablePermissionsButtonIfNeeded(BranchSectionVisitable visitable) {
         visitable.apply(new BranchSectionVisitor() {
@@ -231,6 +253,14 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
         });
     }
 
+
+    /**
+     * @return moderators button
+     */
+    Button getModeratorsButton() {
+        return (Button) sectionTree.getFellow("moderatorsButton");
+    }
+
     /**
      * @return permission button
      */
@@ -239,29 +269,28 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
     }
 
     /**
-     * event which happen when click on add branch button
+     * Event which happen when user click on add branch button
      */
     public void onClick$addBranchButton() {
         newBranchDialog();
     }
 
     /**
-     * event which happen when double click on section or branch
+     * Event which happen when user double click on section or branch
      */
     public void onDoubleClick$sectionTree() {
         editDialog();
     }
 
     /**
-     * Click on '*' button
+     * Event which happen when user click on moderators button
      */
-    public void onClick$moderatorButton() {
+    public void onClick$moderatorsButton() {
         moderationDialog();
     }
 
     /**
-     * Event which happen when user click on '-' button after it selected
-     * section is going to be deleted
+     * Event which happen when user click on remove button
      */
     public void onClick$delButton() {
         deleteDialog();
