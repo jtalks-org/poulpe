@@ -335,4 +335,11 @@ public class SectionPresenter {
         this.selectedEntity = selectedEntity;
     }
 
+    /**
+     * @param windowManager the windowManager to set
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
 }
