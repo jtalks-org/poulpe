@@ -15,19 +15,24 @@
 package org.jtalks.poulpe.logic;
 
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.ComponentPermission;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.springframework.security.acls.model.AccessControlEntry;
@@ -92,13 +97,40 @@ public class PermissionManager {
      * @return {@link BranchPermissions} for given branch
      */
     // TODO: fix AclManager.getBranchPermissions()
-    public BranchPermissions getGroupAccessListFor(Entity entity) {
+    public BranchPermissions getGroupAccessListFor(Branch entity) {
         BranchPermissions branchAccessList = BranchPermissions.create(BranchPermission.getAllAsList());
-        List<GroupAce> groupAces = aclManager.getBranchPermissions((Branch) entity);
+        List<GroupAce> groupAces = aclManager.getBranchPermissions(entity);
         for (GroupAce groupAce : groupAces) {
             branchAccessList.put(groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
         }
         return branchAccessList;
+    }
+    
+    /**
+     * Gets {@link PermissionsMap} for provided {@link Component}.
+     * 
+     * @param component the component to obtain PermissionsMap for
+     * @return {@link PermissionsMap} for {@link Component}
+     */
+    public PermissionsMap<ComponentPermission> getPermissionsMapFor(Component component) {
+        return getPermissionsMapFor(Arrays.asList(ComponentPermission.values()), component);
+    }
+    
+    /**
+     * Gets {@link PermissionsMap} for provided {@link Entity}.
+     * 
+     * @param permissions the list of permissions to get
+     * @param entity the entity to get for
+     * @return {@link PermissionsMap} for provided {@link Entity}
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
+        PermissionsMap<T> permissionsMap = PermissionsMap.create(permissions);
+        List<GroupAce> groupAces = aclManager.getBranchPermissions((Branch) entity);
+        for (GroupAce groupAce : groupAces) {
+            permissionsMap.put((T) groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
+        }
+        return permissionsMap;
     }
 
     /**

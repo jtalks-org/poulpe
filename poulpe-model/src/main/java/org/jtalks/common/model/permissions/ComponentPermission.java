@@ -28,7 +28,7 @@ public enum ComponentPermission implements JtalksPermission {
     /**
      * The ability of user group or user to view the component.
      */
-    VIEW_COMPONENT("10", "VIEW_COMPONENT");
+    VIEW_COMPONENT("1000", "VIEW_COMPONENT");
 
     private final String name;
     private final int mask;

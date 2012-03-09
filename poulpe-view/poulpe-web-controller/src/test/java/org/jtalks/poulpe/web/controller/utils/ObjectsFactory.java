@@ -27,6 +27,8 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.entity.User;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author unascribed
  * @author Vyacheslav Zhivaev
@@ -119,6 +121,18 @@ public class ObjectsFactory {
 
     public static PoulpeGroup fakeGroup() {
         return new PoulpeGroup(random(), random());
+    }
+
+    public static List<PoulpeGroup> fakeGroupList(int listSize) {
+        List<PoulpeGroup> result = Lists.newArrayList();
+        
+        if (listSize > 0) {
+            for (int i = 0; i < listSize; i++) {
+                result.add(fakeGroup());
+            }
+        }
+
+        return result;
     }
 
     private static String random() {

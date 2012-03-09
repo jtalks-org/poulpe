@@ -20,6 +20,7 @@ import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
@@ -27,8 +28,8 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
-import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionRow;
+import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
+import org.jtalks.poulpe.web.controller.zkmacro.PermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 
@@ -54,7 +55,7 @@ public class BranchPermissionManagementVm {
     private final SelectedEntity<Object> selectedEntity;
 
     private final PoulpeBranch branch;
-    private final Map<String, BranchPermissionManagementBlock> blocks = Maps.newLinkedHashMap();
+    private final Map<String, PermissionManagementBlock> blocks = Maps.newLinkedHashMap();
 
     /**
      * Constructs the VM with given dependencies.
@@ -81,19 +82,17 @@ public class BranchPermissionManagementVm {
     public void showGroupsDialog(@BindingParam("params") String params) {
         Map<String, String> parsedParams = parseParams(params);
         String permissionName = parsedParams.get("permissionName");
-        BranchPermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
+        PermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
         String mode = parsedParams.get("mode");
 
         boolean allowed = "allow".equalsIgnoreCase(mode);
-        if (!allowed && !"restrict".equalsIgnoreCase(mode)) {
-            throw new IllegalArgumentException(
-                    "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
-        }
+        Validate.isTrue(allowed || "restrict".equalsIgnoreCase(mode),
+                "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
 
-        PermissionForEntity modePermission = new PermissionForEntity(branch, allowed,
+        PermissionForEntity permissionForEntity = new PermissionForEntity(branch, allowed,
                 branchPermissionManagementBlock.getPermission());
 
-        selectedEntity.setEntity(modePermission);
+        selectedEntity.setEntity(permissionForEntity);
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
     }
 
@@ -119,10 +118,9 @@ public class BranchPermissionManagementVm {
     private void initDataForView() {
         BranchPermissions groupAccessList = branchService.getGroupAccessListFor(branch);
         for (BranchPermission permission : groupAccessList.getPermissions()) {
-            BranchPermissionRow allowRow = BranchPermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
-            BranchPermissionRow restrictRow = BranchPermissionRow.newRestrictRow(groupAccessList
-                    .getRestricted(permission));
-            blocks.put(permission.getName(), new BranchPermissionManagementBlock(permission, allowRow, restrictRow));
+            PermissionRow allowRow = PermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
+            PermissionRow restrictRow = PermissionRow.newRestrictRow(groupAccessList.getRestricted(permission));
+            blocks.put(permission.getName(), new PermissionManagementBlock(permission, allowRow, restrictRow));
         }
     }
 
@@ -131,7 +129,7 @@ public class BranchPermissionManagementVm {
      * 
      * @return all blocks
      */
-    public List<BranchPermissionManagementBlock> getBlocks() {
+    public List<PermissionManagementBlock> getBlocks() {
         return Lists.newArrayList(blocks.values());
     }
 

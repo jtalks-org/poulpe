@@ -39,6 +39,14 @@
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
 
+  <bean id="editGroupsForComponentPermissionVm" scope="prototype"
+        class="org.jtalks.poulpe.web.controller.component.EditGroupsForComponentPermissionVm">
+    <constructor-arg type="WindowManager" ref="windowManager" />
+    <constructor-arg type="ComponentService" ref="componentService" />
+    <constructor-arg type="GroupService" ref="groupService" />
+    <constructor-arg type="SelectedEntity" ref="selectedEntity" />
+  </bean>
+
   <bean id="rankManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
     <constructor-arg index="0" ref="rankService"/>
@@ -61,8 +69,8 @@
 
   <bean id="groupsPermissionsVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">
     <constructor-arg type="WindowManager" ref="windowManager" />
-    <constructor-arg type="GroupService" ref="groupService" />
-    <constructor-arg type="AclManager" ref="aclManager" />
+    <constructor-arg type="ComponentService" ref="componentService" />
+    <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
 
   <bean id="adminWindow" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">

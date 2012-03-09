@@ -17,12 +17,12 @@
 -->
 <?page title="Groups Permissions" contentType="text/html; charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<?component name="group-block" macroURI="/WEB-INF/zkmacros/add-usergroups-block.zul"?>
+<?component name="perm-group" macroURI="/WEB-INF/zkmacros/add-perm-management-group-block.zul"?>
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window mode="embedded" border="none" title="${labels.groups.permissions.title}"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('groupsPermissionsVm') @init(groupsPermissionsVm)">
-    <group-block forEach="${groupsPermissionsVm.blocks}" block="${each}" />
+    <perm-group forEach="${groupsPermissionsVm.groups}" group="${each}" />
   </window>
 </zk>

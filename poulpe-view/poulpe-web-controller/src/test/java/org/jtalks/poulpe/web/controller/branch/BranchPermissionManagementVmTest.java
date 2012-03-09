@@ -22,7 +22,7 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
-import org.jtalks.poulpe.web.controller.zkmacro.BranchPermissionManagementBlock;
+import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -76,9 +76,9 @@ public class BranchPermissionManagementVmTest {
      */
     @Test
     public void getBlocksTest() {
-        List<BranchPermissionManagementBlock> blocks = sut.getBlocks();
+        List<PermissionManagementBlock> blocks = sut.getBlocks();
 
-        for (BranchPermissionManagementBlock block : blocks) {
+        for (PermissionManagementBlock block : blocks) {
             JtalksPermission permission = block.getPermission();
 
             assertTrue(permission == allowedPermission || permission == restrictedPermission);

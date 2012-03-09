@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    Arguments which can be passed to this page:
+    'group' - necessary - instance of org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementGroup
+-->
+<?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <add-caption-block text="${arg.group.caption}" />
+  
+  <groupbox forEach="${arg.group.blocks}" width="100%">
+    <caption label="${each.permission.name}" />
+  
+    <!-- Allow row -->
+    <borderlayout height="30px">
+      <west border="none" width="60px">
+        <label value="${each.allowRow.rowLabel}" />
+      </west>
+      <center border="none">
+        <hbox>
+          <button forEach="${each.allowRow.groups}" label="${each.name}" sclass="usergroup-button" />
+        </hbox>
+      </center>
+      <east border="none">
+      	<variables/>
+        <button label="Change Groups" sclass="add-group-button"
+            onClick="@command('showGroupsDialog', entity=arg.group.entity, permission=each.permission, mode='allow')" />
+      </east>
+    </borderlayout>
+  
+    <!-- Restrict row -->
+    <borderlayout height="30px">
+      <west border="none" width="60px">
+        <label value="${each.restrictRow.rowLabel}" />
+      </west>
+      <center border="none">
+        <hbox>
+          <button forEach="${each.restrictRow.groups}" label="${each.name}" sclass="usergroup-button" />
+        </hbox>
+      </center>
+      <east border="none">
+        <button label="Change Groups" sclass="add-group-button"
+            onClick="@command('showGroupsDialog', entity=arg.group.entity, permission=each.permission, mode='restrict')" />
+      </east>
+    </borderlayout>
+  </groupbox>
+</zk>
