@@ -14,9 +14,13 @@
  */
 package org.jtalks.poulpe.logic;
 
+import static ch.lambdaj.Lambda.index;
+import static ch.lambdaj.Lambda.on;
+
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -38,8 +42,7 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.springframework.security.acls.model.AccessControlEntry;
 
 /**
- * Responsible for allowing, restricting or deleting the permissions of the User
- * Groups to actions.
+ * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
  * 
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
@@ -49,8 +52,7 @@ public class PermissionManager {
     private final GroupDao groupDao;
 
     /**
-     * Constructs {@link PermissionManager} with given {@link AclManager}
-     * and {@link GroupDao}
+     * Constructs {@link PermissionManager} with given {@link AclManager} and {@link GroupDao}
      * 
      * @param aclManager manager instance
      * @param groupDao group dao instance
@@ -64,9 +66,8 @@ public class PermissionManager {
      * Changes the granted permissions according to the specified changes.
      * 
      * @param entity the entity to change permissions to
-     * @param changes contains a permission itself, a list of groups to be
-     * granted to the permission and the list of groups to remove their granted
-     * privileges
+     * @param changes contains a permission itself, a list of groups to be granted to the permission and the list of
+     * groups to remove their granted privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
@@ -80,9 +81,8 @@ public class PermissionManager {
      * Changes the restricting permissions according to the specified changes.
      * 
      * @param entity the entity to change permissions to
-     * @param changes contains a permission itself, a list of groups to be
-     * restricted from the permission and the list of groups to remove their
-     * restricting privileges
+     * @param changes contains a permission itself, a list of groups to be restricted from the permission and the list
+     * of groups to remove their restricting privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
@@ -105,7 +105,7 @@ public class PermissionManager {
         }
         return branchAccessList;
     }
-    
+
     /**
      * Gets {@link PermissionsMap} for provided {@link Component}.
      * 
@@ -115,7 +115,7 @@ public class PermissionManager {
     public PermissionsMap<ComponentPermission> getPermissionsMapFor(Component component) {
         return getPermissionsMapFor(Arrays.asList(ComponentPermission.values()), component);
     }
-    
+
     /**
      * Gets {@link PermissionsMap} for provided {@link Entity}.
      * 
@@ -123,12 +123,15 @@ public class PermissionManager {
      * @param entity the entity to get for
      * @return {@link PermissionsMap} for provided {@link Entity}
      */
-    @SuppressWarnings("unchecked")
     public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
         PermissionsMap<T> permissionsMap = PermissionsMap.create(permissions);
         List<GroupAce> groupAces = aclManager.getBranchPermissions((Branch) entity);
-        for (GroupAce groupAce : groupAces) {
-            permissionsMap.put((T) groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
+        Map<Integer, GroupAce> groupAcesByMask = index(groupAces, on(GroupAce.class).getBranchPermissionMask());
+        for (T permission : permissions) {
+            GroupAce groupAce = groupAcesByMask.get(permission.getMask());
+            if (groupAce != null) {
+                permissionsMap.put(permission, getGroup(groupAce), groupAce.isGranting());
+            }
         }
         return permissionsMap;
     }
