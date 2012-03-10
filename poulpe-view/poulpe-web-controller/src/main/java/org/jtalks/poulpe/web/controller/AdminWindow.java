@@ -59,7 +59,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      * Show the topic type list view
      */
     public void onShowTopicTypes() {
-        windowManager.open("topictypelist.zul");
+        windowManager.open("topictype.zul");
     }
 
     /**
