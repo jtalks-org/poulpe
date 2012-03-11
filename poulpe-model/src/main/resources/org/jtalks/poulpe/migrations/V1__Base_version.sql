@@ -1,0 +1,43 @@
+ALTER TABLE `branches` ADD `type` varchar(255) COLLATE utf8_bin NOT NULL;
+ALTER TABLE `sections` ADD `type` varchar(255) COLLATE utf8_bin NOT NULL;
+ALTER TABLE `sections` ADD `jcommune_id` BIGINT(20) COLLATE utf8_bin NULL DEFAULT NULL;
+
+
+CREATE  TABLE IF NOT EXISTS `branch_user_ref` (
+  `BRANCH_ID` BIGINT(20) NOT NULL,
+  `USER_ID` BIGINT(20) NOT NULL,
+  CONSTRAINT `fk_branch_user_ref_users_user_id`
+    FOREIGN KEY (`USER_ID`)
+    REFERENCES `users` (`ID`),
+  CONSTRAINT `FK_BRANCH`
+    FOREIGN KEY (`BRANCH_ID`)
+    REFERENCES `branches` (`BRANCH_ID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8 COLLATE=utf8_bin;
+
+CREATE  TABLE IF NOT EXISTS `group_user_ref` (
+  `GROUP_ID` BIGINT(20) NOT NULL,
+  `USER_ID` BIGINT(20) NOT NULL,
+  CONSTRAINT `fk_group_user_ref_groups_group_id`
+    FOREIGN KEY (`GROUP_ID`)
+    REFERENCES `groups` (`GROUP_ID`),
+  CONSTRAINT `fk_group_user_ref_users_user_id`
+    FOREIGN KEY (`USER_ID`)
+    REFERENCES `users` (`ID`),
+  CONSTRAINT `fk_group_user_ref_groups_group_id`
+    FOREIGN KEY (`GROUP_ID`)
+    REFERENCES `groups` (`GROUP_ID`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8 COLLATE=utf8_bin;
+
+
+CREATE  TABLE IF NOT EXISTS `topic_types`(
+  `ID` BIGINT(20) NOT NULL AUTO_INCREMENT ,
+  `UUID` VARCHAR(255) NOT NULL ,
+  `TITLE` VARCHAR(255) NOT NULL ,
+  `DESCRIPTION` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`ID`) ,
+  UNIQUE INDEX `UUID` (`UUID` ASC) ,
+  UNIQUE INDEX `TITLE` (`TITLE` ASC))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8 COLLATE=utf8_bin;
