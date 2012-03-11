@@ -54,6 +54,11 @@
     <property name="windowManager" ref="windowManager" />
   </bean>
 
+  <bean id="topicTypeVM" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVM" scope="desktop">
+      <constructor-arg index="0" ref="topicTypeService" />
+      <constructor-arg index="1" ref="dialogManager"/>
+  </bean>
+
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
         scope="prototype">

@@ -127,7 +127,6 @@ public class SectionPresenter {
         @Override
         public void visitSection(PoulpeSection section) {
             deleteSectionDialogPresenter.show(section);
-            updateView();
         }
         
         /** {@inheritDoc} */
@@ -243,9 +242,9 @@ public class SectionPresenter {
     
     /**
      * Opens dialog for moderating a selected branch
+     * @param selectedObject 
      */
-    public void openModerationWindow() {
-        BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
+    public void openModerationWindow(BranchSectionVisitable selectedObject) {
         selectedObject.apply(openModeratorDialogVisitor);
     }
     
@@ -256,8 +255,7 @@ public class SectionPresenter {
         /** {@inheritDoc} */
         @Override
         public void visitSection(PoulpeSection section) {
-            // do nothing because moderators windows is not applicable for
-            // sections
+            // do nothing because moderators windows is not applicable for sections
         }
 
         /** {@inheritDoc} */
@@ -318,6 +316,5 @@ public class SectionPresenter {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
         this.deleteSectionDialogPresenter.setSectionPresenter(this);
     }
-
 
 }
