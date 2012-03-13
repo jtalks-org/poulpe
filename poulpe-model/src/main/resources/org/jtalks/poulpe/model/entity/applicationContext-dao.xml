@@ -53,7 +53,7 @@
     <property name="username" value="${jdbc.username:root}" />
     <property name="password" value="${jdbc.password:root}" />
   </bean>
-  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" depends-on="flyway_poulpe">
     <property name="dataSource" ref="dataSource" />
     <property name="mappingResources">
       <list>
@@ -84,29 +84,45 @@
       </props>
     </property>
   </bean>
-  
-  <bean id="flyway_common" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate"
-        depends-on="flyway_common_init">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="basePackage" value="org.jtalks.common.migrations"/>
-    <property name="baseDir" value="/org/jtalks/common/migrations"/>
-    <property name="enabled" value="${migrations_enabled}"/>
-  </bean>
-  
-  <!--TODO: remove when changes into FLywayWrapper applied-->
-  <bean id="flyway_common_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit"
-        depends-on="dataSource">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="basePackage" value="org.jtalks.common.migrations"/>
-    <property name="baseDir" value="/org/jtalks/common/migrations"/>
-    <property name="enabled" value="${migrations_enabled}"/>
-  </bean>
 
-  <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
 
-  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="location" value="classpath:/org/jtalks/poulpe/model/datasource.properties" />
-  </bean>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+        <property name="sessionFactory" ref="sessionFactory" />
+    </bean>
+
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" value="classpath:/org/jtalks/poulpe/model/datasource.properties" />
+    </bean>
+
+    <!-- Migrations, todo: 4 beans - that's weird, Ticket has been left for common to move init to one method -->
+
+    <bean id="flyway_common_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit" depends-on="dataSource">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="basePackage" value="org.jtalks.common.migrations"/>
+        <property name="baseDir" value="/org/jtalks/common/migrations"/>
+        <property name="table" value="common_schema_version"/>
+        <property name="enabled" value="${migrations_enabled}"/>
+    </bean>
+    <bean id="flyway_common" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate"
+          depends-on="flyway_common_init">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="basePackage" value="org.jtalks.common.migrations"/>
+        <property name="baseDir" value="/org/jtalks/common/migrations"/>
+        <property name="table" value="common_schema_version"/>
+        <property name="enabled" value="${migrations_enabled}"/>
+    </bean>
+    <bean id="flyway_poulpe_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit"
+          depends-on="flyway_common">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="table" value="poulpe_schema_version"/>
+        <property name="enabled" value="${migrations_enabled}"/>
+    </bean>
+    <bean id="flyway_poulpe" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate"
+          depends-on="flyway_poulpe_init">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="basePackage" value="org.jtalks.poulpe.migrations"/>
+        <property name="baseDir" value="/org/jtalks/poulpe/migrations"/>
+        <property name="table" value="poulpe_schema_version"/>
+        <property name="enabled" value="${migrations_enabled}"/>
+    </bean>
 </beans>
