@@ -29,3 +29,8 @@
 .manage-groups-dialog-vertical-buttons {
     padding-top: 50px;
 }
+
+.redAlert {
+    color:red;
+    font-weight: bold;
+}

@@ -1,16 +1,11 @@
-<zk>
-    <!--
-     <style>
-         .z-label.red {
-         color:red;
-         font-weight: bold;
-         }
+<?page id="TopicType List" title="TopicType List" contentType="text/html;charset=UTF-8"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-</style>
--->
     <window title="${labels.topictypes.list.title}" border="normal" width="100%"
             apply="org.zkoss.bind.BindComposer" viewModel="@id('ttvm') @init(topicTypeVM)"
             validationMessages="@id('vmsgs')">
+        <style src="/resources/css/all.css" />
         <vbox hflex="true">
             <listbox model="@load(ttvm.topicTypes)" selectedItem="@bind(ttvm.selected)" hflex="true" height="400px">
                 <listhead>
@@ -27,7 +22,7 @@
             <toolbar>
                 <button label="${labels.item.add}" onClick="@command('newTopicType')" />
                 <button label="${labels.item.save}" onClick="@command('saveTopicType')" disabled="@bind(empty ttvm.selected)" />
-                <button label="${labels.sections.button.delete}" onClick="@command(empty ttvm.selected.id?'deleteTopicType':'deleteFromList')" disabled="@load(empty ttvm.selected)" />
+                <button label="${labels.sections.button.delete}" onClick="@command(ttvm.selected.id eq 0?'deleteFromList':'deleteTopicType')" disabled="@load(empty ttvm.selected)" />
             </toolbar>
             <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
                 <grid hflex="true" >
@@ -45,7 +40,7 @@
                             <hlayout>
                                 <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
                                                 @validator(ttvm.titleValidator)" />
-                                <label value="@load(vmsgs[titlebox])" sclass="red" />
+                                <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
                             </hlayout>
                         </row>
                         <row>

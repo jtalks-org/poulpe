@@ -14,6 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.apache.commons.lang.StringUtils;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -26,6 +30,8 @@ import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * ViewModel for TopicType page
@@ -39,20 +45,21 @@ public class TopicTypeVM {
     private TopicType selected;
     //service
     private TopicTypeService topicTypeService;
-    //delete message
-    private String deleteMessage;
-    //dialog manageer
+    //dialog manager
     private DialogManager dialogManager;
+    //validator JSR-303
+    private EntityValidator entityValidator;
 
     /**
      * Constructor takes TopicTypeService and DialogManager as its arguments
      *
      * @param topicTypeService {@link TopicTypeService} to use
-     * @param dialogManager {@link DialogManager} to use
+     * @param dialogManager    {@link DialogManager} to use
      */
-    public TopicTypeVM(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager) {
+    public TopicTypeVM(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
         this.topicTypeService = topicTypeService;
         this.dialogManager = dialogManager;
+        this.entityValidator = entityValidator;
     }
 
     // getters & setters (you don't say!)
@@ -93,6 +100,7 @@ public class TopicTypeVM {
      *
      * @param topicTypes ListModelList<TopicType> to use
      */
+    @NotifyChange
     public void setTopicTypes(ListModelList<TopicType> topicTypes) {
         this.topicTypes = topicTypes;
     }
@@ -111,6 +119,7 @@ public class TopicTypeVM {
      *
      * @param selected is TopicType for select
      */
+    @NotifyChange
     public void setSelected(TopicType selected) {
         this.selected = selected;
     }
@@ -131,15 +140,6 @@ public class TopicTypeVM {
      */
     public void setTopicTypeService(TopicTypeService topicTypeService) {
         this.topicTypeService = topicTypeService;
-    }
-
-    /**
-     * Message, which is used to confirm deletion
-     *
-     * @return message as {@link String}
-     */
-    public String getDeleteMessage() {
-        return deleteMessage;
     }
 
     //action command
@@ -167,44 +167,66 @@ public class TopicTypeVM {
         getTopicTypeService().saveOrUpdate(selected);
     }
 
-    @NotifyChange({"selected", "topicTypes", "deleteMessage"})
+    @NotifyChange({"selected", "topicTypes"})
     @Command
     /**
      * Deletes current TopicType selected
      */
     public void deleteTopicType() {
-
-        dialogManager.confirmDeletion(selected.getTitle(), new DialogManager.Performable() {
-            @Override
-            public void execute() {
-                getTopicTypeService().deleteTopicType(selected);
-                deleteFromList();
-            }
-        });
+        getTopicTypeService().deleteTopicType(selected);
+        deleteFromList();
     }
 
-    @NotifyChange({"selected", "deleteMessage"})
+    @NotifyChange({"selected", "topicTypes"})
     @Command
     /**
-     * Creates message to ask for confirmation on delete of current TopicType.
-     * Shows dialog window.
+     * Deletes from list of TopicTypes on web-form.
      */
     public void deleteFromList() {
         getTopicTypes().remove(selected);
-        //clean the selected
-        selected = null;
-        //remove message & window
-        deleteMessage = null;
+        setSelected(null);
+    }
+
+    /**
+     * Collects errors obtained from {@link ValidationResult}
+     * and represents them as localized String
+     *
+     * @param result {@link ValidationResult}
+     * @return Errors as String
+     */
+    //TODO: Maybe that should be in some new bean? Like CommonValidator(Entity)
+    private String collectErrors(ValidationResult result) {
+        StringBuilder errorMessage = new StringBuilder();
+        Set<ValidationError> errors = result.getErrors();
+
+        for (Iterator<ValidationError> i = errors.iterator(); i.hasNext(); ) {
+            errorMessage.append(Labels.getLabel(i.next().getErrorMessageCode()));
+            if (i.hasNext()) {
+                errorMessage.append(", ");
+            }
+        }
+        ;
+
+        return errorMessage.toString();
     }
 
     //validators for prompt
-    //in progress
+
+    /**
+     * Validator for title field on web-form
+     *
+     * @return Validator for title field
+     */
     public Validator getTitleValidator() {
         return new AbstractValidator() {
             public void validate(ValidationContext ctx) {
                 String title = (String) ctx.getProperty().getValue();
-                if (title == null || title.isEmpty()) {
-                    addInvalidMessage(ctx, Labels.getLabel(TopicType.TITLE_CANT_BE_VOID));
+                TopicType test = new TopicType(title, StringUtils.EMPTY);
+
+                ValidationResult result = entityValidator.validate(test);
+
+                if (result.hasErrors()) {
+                    addInvalidMessage(ctx, collectErrors(result));
                 }
             }
         };
