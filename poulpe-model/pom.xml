@@ -146,6 +146,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.xml</include>
+          <include>**/migrations/**</include>
         </includes>
       </resource>
     </resources>
