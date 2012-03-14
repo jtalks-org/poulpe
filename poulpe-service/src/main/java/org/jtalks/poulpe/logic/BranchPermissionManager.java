@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.logic;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -23,13 +22,11 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
-import org.jtalks.common.security.acl.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
-import org.springframework.security.acls.model.AccessControlEntry;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User
@@ -103,25 +100,7 @@ public class BranchPermissionManager {
      * @return {@link PoulpeGroup} extracted from {@link GroupAce}
      */
     private PoulpeGroup getGroup(GroupAce groupAce) {
-        long groupId = extractGroupId(groupAce);
-        return groupDao.get(groupId);
-    }
-
-    // TODO: get rid of it once GroupAce#getGroupId() is created!!!!!
-    private static long extractGroupId(GroupAce groupAce) {
-        try {
-            Class<GroupAce> groupAceClass = GroupAce.class;
-            Field aceField = groupAceClass.getDeclaredField("ace");
-            aceField.setAccessible(true);
-
-            AccessControlEntry ace = (AccessControlEntry) aceField.get(groupAce);
-            UserGroupSid sid = (UserGroupSid) ace.getSid();
-
-            return Long.parseLong(sid.getGroupId());
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error accessing to ace private field, nested exception: ", e);
-        }
+        return groupDao.get(groupAce.getGroupId());
     }
 
 }

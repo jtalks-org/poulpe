@@ -17,8 +17,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.text.MessageFormat;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
 
@@ -27,13 +26,11 @@ import org.jtalks.poulpe.model.entity.User;
  * 
  * @author Vyacheslav Zhivaev
  */
-public class UserHibernateDao implements UserDao {
+public class UserHibernateDao extends AbstractHibernateParentRepository<User> implements UserDao {
     /**
      * Class on which hibernate mapping is set
      */
     private final static Class<User> type = User.class;
-
-    private SessionFactory sessionFactory;
 
     /**
      * {@inheritDoc}
@@ -51,26 +48,6 @@ public class UserHibernateDao implements UserDao {
     public User getPoulpeUserByEncodedUsername(String encodedUsername) {
         return (User) getSession().createQuery("from " + type.getSimpleName() + " u where u.encodedUsername = ?")
                 .setCacheable(true).setString(0, encodedUsername).uniqueResult();
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isUserWithUsernameExist(String username) {
-        return ((Number) getSession()
-                .createQuery("select count(*) from " + type.getSimpleName() + " u where u.username = ?")
-                .setString(0, username).uniqueResult()).intValue() != 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isUserWithEmailExist(String email) {
-        return ((Number) getSession()
-                .createQuery("select count(*) from " + type.getSimpleName() + " u where u.email = ?")
-                .setString(0, email).uniqueResult()).intValue() != 0;
     }
 
     /**
@@ -99,103 +76,6 @@ public class UserHibernateDao implements UserDao {
     @Override
     public org.jtalks.common.model.entity.User getByUsername(String username) {
         return getPoulpeUserByUsername(username);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<org.jtalks.common.model.entity.User> getByUsernamePart(String substring) {
-        List<?> poulpeUserByUsernamePart = getPoulpeUserByUsernamePart(substring);
-        @SuppressWarnings("unchecked")
-        List<org.jtalks.common.model.entity.User> result = (List<org.jtalks.common.model.entity.User>) poulpeUserByUsernamePart;
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public org.jtalks.common.model.entity.User getByEncodedUsername(String encodedUsername) {
-        return getPoulpeUserByEncodedUsername(encodedUsername);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<org.jtalks.common.model.entity.User> getAll() {
-        List<?> allPoulpeUsers = getAllPoulpeUsers();
-        @SuppressWarnings("unchecked")
-        List<org.jtalks.common.model.entity.User> result = (List<org.jtalks.common.model.entity.User>) allPoulpeUsers;
-        return result;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveOrUpdate(org.jtalks.common.model.entity.User entity) {
-        getSession().saveOrUpdate(entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean delete(Long id) {
-        return getSession().createQuery("delete " + type.getSimpleName() + " u where u.id=:id").setCacheable(true)
-                .setLong("id", id).executeUpdate() != 0;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void delete(org.jtalks.common.model.entity.User entity) {
-        getSession().delete(entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void update(org.jtalks.common.model.entity.User entity) {
-        getSession().update(entity);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public org.jtalks.common.model.entity.User get(Long id) {
-        return (org.jtalks.common.model.entity.User) getSession().get(type, id);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isExist(Long id) {
-        return get(id) != null;
-    }
-
-    /**
-     * Get current Hibernate session.
-     * 
-     * @return current Session
-     */
-    protected Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    /**
-     * Setter for Hibernate SessionFactory.
-     * 
-     * @param sessionFactory the sessionFactory to set
-     */
-    public void setSessionFactory(SessionFactory sessionFactory) {
-        this.sessionFactory = sessionFactory;
     }
 
 }

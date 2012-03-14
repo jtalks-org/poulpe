@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.UserGroupSid;
+import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
@@ -67,10 +67,9 @@ public class BranchPermissionManagerTest {
         verify(aclManager).restrict(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testGetGroupAccessListFor() throws Exception {
         PoulpeBranch branch = new PoulpeBranch();
-
 
 //        when(aclManager.getBranchPermissions(branch)).thenReturn()
     }
