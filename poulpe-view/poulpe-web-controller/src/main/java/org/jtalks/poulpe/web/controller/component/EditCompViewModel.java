@@ -57,6 +57,8 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * The post preview size of the forum
      */
     private String post_preview_size;
+   
+    private String session_timeout;
 
     /**
      * Web-form validation messages
@@ -78,7 +80,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Inits the data on the form.
      */
-    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size"})
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size", "session_timeout"})
     public void initData() {
         currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
@@ -92,6 +94,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         description = valueOf(currentComponent.getDescription());
         caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
         post_preview_size = valueOf(currentComponent.getProperty(componentType + ".post_preview_size"));
+        session_timeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
     }
 
     //    service functions
@@ -111,7 +114,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * something is wrong
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size"})
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size", "session_timeout"})
     public void save() {
         boolean correct = true;
         validationMessages.clear();
@@ -122,6 +125,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
             currentComponent.setProperty(componentType + ".name", name);
             currentComponent.setProperty(componentType + ".caption", caption);
             currentComponent.setProperty(componentType + ".post_preview_size", post_preview_size);
+            currentComponent.setProperty(componentType + ".session_timeout", session_timeout);
 
             try {
                 componentService.saveComponent(currentComponent);
@@ -141,7 +145,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size", "validationMessages"})
+    @NotifyChange({"componentName", "name", "description", "caption", "post_preview_size", "validationMessages", "session_timeout"})
     public void cancel() {
         initData();
         validationMessages.clear();
@@ -290,4 +294,21 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         this.post_preview_size = post_preview_size;
     }
 
+    /**
+     * Returns session timeout value from the web-form
+     * @return session timeout
+     */
+	public String getSession_timeout() {
+		return session_timeout;
+	}
+
+	/**
+     * Sets session timeout
+     * @param session_timeout - to set on web-form
+     */
+	public void setSession_timeout(String session_timeout) {
+		this.session_timeout = session_timeout;
+	}
+
+    
 }
