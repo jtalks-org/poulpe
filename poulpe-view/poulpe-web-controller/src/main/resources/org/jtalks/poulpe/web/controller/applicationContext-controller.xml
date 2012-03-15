@@ -30,6 +30,12 @@
     <constructor-arg index="1" ref="groupService"/>
   </bean>
 
+  <bean id="usersVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.users.UsersVm">
+    <constructor-arg index="0" ref="userService"/>
+    <constructor-arg index="1" ref="entityValidator"/>
+  </bean>
+
   <bean id="rankManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.rank.RankManagementVM">
     <constructor-arg index="0" ref="rankService"/>
