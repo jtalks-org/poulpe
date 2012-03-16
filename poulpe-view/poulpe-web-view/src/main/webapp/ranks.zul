@@ -10,9 +10,9 @@
                 <listheader label="${labels.rank.post_count}"/>
             </listhead>
             <template name="model" var="item">
-                <listitem >
-                    <listcell label="@bind(item.rankName)" onDoubleClick="@command('edit')"/>
-                    <listcell onDoubleClick="@command('edit')">
+                <listitem onDoubleClick="@command('edit')">
+                    <listcell label="@bind(item.rankName)" />
+                    <listcell>
                         <label value="${labels.rank.assigned_by_admin}" if="${item.autoAssigned=='false'}"/>
                         <label value="@bind(item.postCount)" if="${item.autoAssigned=='true'}"/>
                     </listcell>

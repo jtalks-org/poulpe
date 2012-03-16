@@ -1,23 +1,37 @@
 <?page title="Users" contentType="text/html;charset=UTF-8"?>
-
-<zk>
-  <window title="${labels.users.list.title}" border="normal" use="org.jtalks.poulpe.web.controller.users.UsersListViewImpl"
-    presenter="${usersListPresenter}">
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="usersWindow" title="${labels.users.list.title}" border="normal" hflex="true"
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)">
 
     <label value="${labels.users.label.search}" />
     :
-    <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
+    <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false" maxlength="20" />
 
-    <button label="${labels.users.label.button.search}" forward="onClick=onSearchAction" sclass="users.searchButton" />
+    <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton" />
 
-    <listbox sizedByContent="true" id="usersListbox" mold="paging" pageSize="20">
+    <listbox id="listbox" model="@bind(vm.users)" vflex="true" sizedByContent="true"
+      mold="paging" pageSize="20" pagingPosition="both">
       <listhead>
-        <listheader label="Username" sort="auto(username)" />
-        <listheader label="E-mail" sort="auto(email)" />
-        <listheader label="First name" sort="auto(firstName)" />
-        <listheader label="Last name" sort="auto(lastName)" />
-        <listheader label="Role" sort="auto(role)" />
+        <listheader label="Username" sort="auto(username)" hflex="1" />
+        <listheader label="E-mail" sort="auto(email)" hflex="1" />
+        <listheader label="First name" sort="auto(firstName)" hflex="1" />
+        <listheader label="Last name" sort="auto(lastName)" hflex="1" />
+        <listheader label="Role" sort="auto(role)" hflex="1" />
       </listhead>
+      <template name="model" var="user">
+        <listitem onDoubleClick="@command('editUser', user=user)" onOK="@command('editUser', user=user)">
+          <listcell label="@load(user.username)" hflex="1" />
+          <listcell label="@load(user.email)" hflex="1" />
+          <listcell label="@load(user.firstName)" hflex="1" />
+          <listcell label="@load(user.lastName)" hflex="1" />
+          <listcell label="@load(user.role)" hflex="1" />
+        </listitem>
+      </template>
+      <zscript><![CDATA[
+        listbox.pagingChild.mold="os";
+      ]]></zscript>
     </listbox>
   </window>
 </zk>
