@@ -468,7 +468,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zk.version>6.0.0</zk.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.12</common.version>
+    <common.version>0.13-SNAPSHOT</common.version>
   </properties>
 
   <distributionManagement>
