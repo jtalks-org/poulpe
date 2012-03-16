@@ -14,19 +14,19 @@
  */
 package org.jtalks.poulpe.logic;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.security.acl.builders.AclAction;
+import org.jtalks.common.security.acl.builders.AclBuilders;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
+
+import javax.annotation.Nonnull;
+import java.util.List;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User
@@ -61,9 +61,9 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
     public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
-        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).grant(changes.getPermission())
-                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
+        AclAction<PoulpeGroup> aclBuilder = new AclBuilders().newBuilder(aclManager);
+        aclBuilder.grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        aclBuilder.delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
     /**
@@ -77,9 +77,13 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
     public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
-        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
-                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
+        AclAction<PoulpeGroup> aclBuilder = new AclBuilders().newBuilder(aclManager);
+        aclBuilder.restrict(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        aclBuilder.delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
+
+//        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
+//                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+//        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
     /**

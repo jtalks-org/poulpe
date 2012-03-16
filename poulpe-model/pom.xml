@@ -153,8 +153,10 @@
   </build>
 
   <properties>
-    <jdbc.user>${env.JTALKS_DB_USER}</jdbc.user>
-    <jdbc.pass>${env.JTALKS_DB_PASSWORD}</jdbc.pass>
+    <!--<jdbc.user>${env.JTALKS_DB_USER}</jdbc.user>-->
+    <jdbc.user>root</jdbc.user>
+    <!--<jdbc.pass>${env.JTALKS_DB_PASSWORD}</jdbc.pass>-->
+    <jdbc.pass>root</jdbc.pass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 </project>

@@ -14,12 +14,12 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+
+import java.util.List;
+import java.util.Set;
 
 /**
  * Dao for jtalks engine {@link Component}.
@@ -40,5 +40,12 @@ public interface ComponentDao extends ParentRepository<Component> {
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
-    
+
+    /**
+     * Gets component by it's type.
+     * 
+     * @param the component's type 
+     * @return the component
+     */
+    Component getByType(ComponentType type);
 }
