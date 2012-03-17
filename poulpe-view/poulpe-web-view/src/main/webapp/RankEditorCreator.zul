@@ -1,8 +1,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window title="${labels.rank.editor.creator.title}" closable="true" border="normal"
-            forward="onClose=onCancelEditAction" mode="modal" onClose="@command('dialogClosed')"
-            id="RankEditorCreatorWindow">
-        <include src="RankEditorBody.zul"/>
-    </window>
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="rankEditorCreatorDialog" title="${labels.ranks.editor.creator.title}" closable="true" border="normal"
+    width="345px" mode="modal" onCancel="@command('dialogClosed')" onClose="@command('dialogClosed')">
+    <include src="RankEditorBody.zul" />
+  </window>
 </zk>

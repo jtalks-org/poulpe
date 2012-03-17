@@ -26,13 +26,19 @@ import org.jtalks.poulpe.service.RankService;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
+import org.zkoss.zul.Window;
 
 /**
  * View Model for rank management page.
@@ -43,10 +49,12 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     private ListModelList<Rank> items;
     private Rank selected;
-    private Rank lastSelected;
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
+    @Wire
+    private Window ranksWindow;
+    private ZkHelper zkHelper;
 
     private ValidationFailureHandler handler;
 
@@ -63,6 +71,12 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         this.entityValidator = entityValidator;
         this.dialogManager = dialogManager;
         initData();
+    }
+
+    @Init
+    public void init(@ContextParam(ContextType.VIEW) Component component) {
+        zkHelper = new ZkHelper(component);
+        zkHelper.wireComponents(component, this);
     }
 
     /**
@@ -105,7 +119,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void newItem() {
-        lastSelected = selected;
         selected = new Rank("", 100);
         openEditorCreator();
     }
@@ -115,7 +128,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
-        lastSelected = selected;
         openEditorModifier();
     }
 
@@ -136,7 +148,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     @NotifyChange("selected")
     public void cancel() {
         dialogClosed();
-        selected = lastSelected;
         enableOrDisableDeleteButton();
     }
 
@@ -145,8 +156,8 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void dialogClosed() {
-        Component window = getCurrentComponent("RankEditorCreatorWindow");
-        window = (window != null) ? window : getCurrentComponent("RankEditorModifierWindow");
+        Component window = zkHelper.findComponent("#rankEditorCreatorDialog");
+        window = (window != null) ? window : zkHelper.findComponent("#rankEditorModifierDialog");
         window.detach();
     }
 
@@ -190,11 +201,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     }
 
     private void openEditorCreator() {
-        Executions.getCurrent().createComponents("/RankEditorCreator.zul", getCurrentComponent("rankManagementWindow"), null);
+        zkHelper.wireToZul("/RankEditorCreator.zul");
     }
 
     private void openEditorModifier() {
-        Executions.getCurrent().createComponents("/RankEditorModifier.zul", getCurrentComponent("rankManagementWindow"), null);
+        zkHelper.wireToZul("/RankEditorModifier.zul");
     }
 
     /**

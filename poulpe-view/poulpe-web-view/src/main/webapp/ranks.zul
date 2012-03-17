@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window width="30%" apply="org.zkoss.bind.BindComposer" id="rankManagementWindow"
+    <window width="30%" apply="org.zkoss.bind.BindComposer" id="ranksWindow"
       title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
         <listbox multiple="true" model="@bind(vm.items)" height="300px" selectedItem="@bind(vm.selected)">
             <listhead>
@@ -10,7 +10,7 @@
                 <listheader label="${labels.rank.post_count}"/>
             </listhead>
             <template name="model" var="item">
-                <listitem onDoubleClick="@command('edit')">
+                <listitem onDoubleClick="@command('edit')" onOK="@command('edit')">
                     <listcell label="@bind(item.rankName)" />
                     <listcell>
                         <label value="${labels.rank.assigned_by_admin}" if="${item.autoAssigned=='false'}"/>
