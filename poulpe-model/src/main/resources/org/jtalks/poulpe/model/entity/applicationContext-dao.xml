@@ -50,7 +50,7 @@
         <value>/org/jtalks/poulpe/model/entity/Component.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/TopicType.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
-        <value>/org/jtalks/poulpe/model/entity/Group.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/PoulpeGroup.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Rank.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/User.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Property.hbm.xml</value>
