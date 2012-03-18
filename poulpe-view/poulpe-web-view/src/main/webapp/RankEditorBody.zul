@@ -8,7 +8,7 @@
     <rows>
       <row>
         Rank Name
-        <textbox id="rankName" value="@bind(vm.selected.rankName)" />
+        <textbox id="rankName" value="@bind(vm.selected.rankName)" width="100%" />
       </row>
       <row>
         Auto Assigned

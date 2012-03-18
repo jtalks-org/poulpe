@@ -4,29 +4,29 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="editUserDialog" title="${labels.users.edituserdialog.title}" closable="true" border="normal"
-    width="345px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
+    width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
     <grid>
       <columns>
-        <column label="${labels.field.description}" width="100px" hflex="min" />
-        <column label="${labels.field.input}" width="245px" />
+        <column label="${labels.field.description}" hflex="min" />
+        <column label="${labels.field.input}" />
       </columns>
       <rows>
         <row>
           <label value="${labels.users.label.firstname}" />
-          <textbox value="@bind(vm.selectedUser.firstName)" width="230px" focus="true" />
+          <textbox value="@bind(vm.selectedUser.firstName)" width="100%" focus="true" />
         </row>
         <row>
           <label value="${labels.users.label.lastname}" />
-          <textbox value="@bind(vm.selectedUser.lastName)" width="230px" />
+          <textbox value="@bind(vm.selectedUser.lastName)" width="100%" />
         </row>
         <row>
           <label value="${labels.users.label.email}" />
-          <textbox value="@bind(vm.selectedUser.email)" width="230px"
+          <textbox value="@bind(vm.selectedUser.email)" width="100%"
             constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
         </row>
         <row>
           <label value="${labels.users.label.password}" />
-          <textbox value="@bind(vm.selectedUser.password)" width="230px" type="password"
+          <textbox value="@bind(vm.selectedUser.password)" width="100%" type="password"
             constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
         </row>
       </rows>
