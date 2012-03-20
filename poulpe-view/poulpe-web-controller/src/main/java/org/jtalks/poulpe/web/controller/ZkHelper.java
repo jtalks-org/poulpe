@@ -47,8 +47,8 @@ public class ZkHelper {
      * 
      * @param zul file to be wired to
      */
-    public void wireToZul(String zul) {
-        Executions.createComponents(zul, component, null);
+    public Component wireToZul(String zul) {
+        return Executions.createComponents(zul, component, null);
     }
 
     public void wireComponents(Component component, Object controller) {

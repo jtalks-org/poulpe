@@ -32,6 +32,7 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -120,7 +121,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     @Command
     public void newItem() {
         selected = new Rank("", 100);
-        openEditorCreator();
+        openEditorDialog("ranks.edit.creator.title");
     }
 
     /**
@@ -128,7 +129,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
-        openEditorModifier();
+        openEditorDialog("ranks.edit.modifier.title");
     }
 
     /**
@@ -156,9 +157,8 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void dialogClosed() {
-        Component window = zkHelper.findComponent("#rankEditorCreatorDialog");
-        window = (window != null) ? window : zkHelper.findComponent("#rankEditorModifierDialog");
-        window.detach();
+        Component dialog = zkHelper.findComponent("#editRankDialog");
+        dialog.detach();
     }
 
     @Override
@@ -200,12 +200,13 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         }
     }
 
-    private void openEditorCreator() {
-        zkHelper.wireToZul("/RankEditorCreator.zul");
+    private void openEditorDialog(String title) {
+        Window editorDialog = createEditRankDialog();
+        editorDialog.setTitle(Labels.getLabel(title));
     }
 
-    private void openEditorModifier() {
-        zkHelper.wireToZul("/RankEditorModifier.zul");
+    private Window createEditRankDialog() {
+        return (Window) zkHelper.wireToZul("/WEB-INF/pages/edit_rank.zul");
     }
 
     /**
