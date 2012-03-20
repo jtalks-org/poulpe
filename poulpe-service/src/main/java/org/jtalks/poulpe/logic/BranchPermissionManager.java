@@ -61,9 +61,11 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
     public void changeGrants(PoulpeBranch branch, BranchAccessChanges changes) {
-        AclAction<PoulpeGroup> aclBuilder = new AclBuilders().newBuilder(aclManager);
-        aclBuilder.grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager)
+                .grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        builders.newBuilder(aclManager)
+                .delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
     /**
@@ -77,13 +79,11 @@ public class BranchPermissionManager {
      * @see org.jtalks.poulpe.model.dto.branches.BranchAccessChanges#getRemovedGroups()
      */
     public void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes) {
-        AclAction<PoulpeGroup> aclBuilder = new AclBuilders().newBuilder(aclManager);
-        aclBuilder.restrict(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
-        aclBuilder.delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
-
-//        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
-//                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
-//        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(branch).flush();
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager)
+                .restrict(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray()).on(branch).flush();
+        builders.newBuilder(aclManager)
+                .delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray()).on(branch).flush();
     }
 
     /**
