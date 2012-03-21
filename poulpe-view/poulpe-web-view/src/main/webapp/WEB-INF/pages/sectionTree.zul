@@ -7,9 +7,10 @@
       </treecol>
     </treecols>
   </tree>
-  <button id="moderatorsButton" label="Moderators" sclass="section.tree.moderatorsButton" disabled="true" />
-  <button id="addBranchButton" label="Add Branch" sclass="section.tree.addButton" />
-  <button id="delButton" label="Remove selected" sclass="section.tree.delButton" />
-  <button id="permissionsButton" label="Branch Permissions" onClick="openPermissionsPage" disabled="true"
-    sclass="section.tree.permissionsButton" />
+  <button id="moderatorsButton" label="${labels.sections.button.moderators}" sclass="section.tree.moderatorsButton"
+    disabled="true" />
+  <button id="addBranchButton" label="${labels.sections.button.add.branch}" sclass="section.tree.addButton" />
+  <button id="delButton" label="${labels.sections.button.remove}" sclass="section.tree.delButton" />
+  <button id="permissionsButton" label="${labels.sections.button.permissions}" onClick="openPermissionsPage"
+    disabled="true" sclass="section.tree.permissionsButton" />
 </zk>
