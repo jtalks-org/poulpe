@@ -41,7 +41,7 @@
         <cache usage="nonstrict-read-write" />
         <key column="SECTION_ID" foreign-key="FK_SECTION" />
         <list-index column="POSITION" />
-        <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch" />
+        <one-to-many class="org.jtalks.common.model.entity.Branch" />
       </list>
    </subclass>
 </hibernate-mapping>
