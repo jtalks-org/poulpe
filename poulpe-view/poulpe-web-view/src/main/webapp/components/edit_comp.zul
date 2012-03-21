@@ -34,13 +34,13 @@
                 ${labels.component.property.post_preview_size}
                 <textbox width="60%" value="@bind(vm.post_preview_size)" constraint="/[0-9]+/: Digits only!" />
             </row>
-            <row visible="@load(not empty vm.session_timeout)">
+            <row visible="@load(not empty vm.sessionTimeout)">
             ${labels.component.property.session_timeout}
-            <textbox width="60%" value="@bind(vm.session_timeout)" constraint="/[0-9]+/: Digits only!"/>
+            <intbox width="60%" value="@bind(vm.sessionTimeout)" constraint="no empty"/>
             </row>
             <row>
                 <hlayout>
-                    <button label="${labels.componentedit.save}" onClick="@command('save')" sclass="edit.comp.saveButton" />
+                    <button enabled="@load(not empty vm.sessionTimeout)" label="${labels.componentedit.save}" onClick="@command('save')" sclass="edit.comp.saveButton" />
                     <button label="${labels.componentedit.cancel}" onClick="@command('cancel')" sclass="edit.comp.cancelButton" />
                 </hlayout>
             </row>
