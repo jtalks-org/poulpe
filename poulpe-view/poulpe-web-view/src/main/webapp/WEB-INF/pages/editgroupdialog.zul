@@ -4,11 +4,11 @@
   use="org.jtalks.poulpe.web.controller.group.ZkEditGroupDialogView">
   <vbox>
     <hbox>
-      Name :
+      <label value="${labels.groups.editdialog.name}" />
       <textbox id="groupName" />
     </hbox>
     <hbox>
-      Description :
+      <label value="${labels.groups.editdialog.description}" />
       <textbox id="groupDescription" />
     </hbox>
     <hbox>

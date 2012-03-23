@@ -14,12 +14,16 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import java.util.Collections;
-import java.util.List;
+import static org.jtalks.common.model.entity.Group.GROUP_ALREADY_EXISTS;
 
-import org.jtalks.common.model.entity.Entity;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -38,6 +42,7 @@ import org.jtalks.poulpe.web.controller.section.SectionPresenter;
  */
 public class BranchPresenter {
 
+    private static final String CORRESPONDING_GROUP_ALREADY_EXISTS = "groups.validation.existing_group_name";
     public static final String GROUP_SUFFIX = " Moderators";
     private SectionPresenter sectionPresenter;
     private SectionService sectionService;
@@ -128,13 +133,38 @@ public class BranchPresenter {
         }
     }
 
-    private boolean validate(Entity entity) {
-        ValidationResult result = entityValidator.validate(entity);
+    private boolean validate(PoulpeBranch branch) {
+        ValidationResult result = entityValidator.validate(branch);
         if (result.hasErrors()) {
             view.validationFailure(result);
             return false;
         } else {
             return true;
+        }
+    }
+
+    private boolean validate(PoulpeGroup group) {
+        ValidationResult result = entityValidator.validate(group);
+        if (result.hasErrors()) {
+            correctMessageIfGroupAlreadyExists(result);
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void correctMessageIfGroupAlreadyExists(ValidationResult result) {
+        Set<ValidationError> errors = result.getErrors();
+        Iterator<ValidationError> iterator = errors.iterator();
+        while(iterator.hasNext()) {
+            ValidationError error = iterator.next();
+            if(GROUP_ALREADY_EXISTS.equals(error.getErrorMessageCode())) {
+                errors.remove(error);
+                error = new ValidationError(error.getFieldName(), CORRESPONDING_GROUP_ALREADY_EXISTS);
+                errors.add(error);
+                break;
+            }
         }
     }
 

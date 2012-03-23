@@ -14,11 +14,11 @@
     <listbox id="listbox" model="@bind(vm.users)" vflex="true" sizedByContent="true"
       mold="paging" pageSize="20" pagingPosition="both">
       <listhead>
-        <listheader label="Username" sort="auto(username)" hflex="1" />
-        <listheader label="E-mail" sort="auto(email)" hflex="1" />
-        <listheader label="First name" sort="auto(firstName)" hflex="1" />
-        <listheader label="Last name" sort="auto(lastName)" hflex="1" />
-        <listheader label="Role" sort="auto(role)" hflex="1" />
+        <listheader label="${labels.users.username}" sort="auto(username)" hflex="1" />
+        <listheader label="${labels.users.email}" sort="auto(email)" hflex="1" />
+        <listheader label="${labels.users.firstname}" sort="auto(firstName)" hflex="1" />
+        <listheader label="${labels.users.lastname}" sort="auto(lastName)" hflex="1" />
+        <listheader label="${labels.users.role}" sort="auto(role)" hflex="1" />
       </listhead>
       <template name="model" var="user">
         <listitem onDoubleClick="@command('editUser', user=user)" onOK="@command('editUser', user=user)">

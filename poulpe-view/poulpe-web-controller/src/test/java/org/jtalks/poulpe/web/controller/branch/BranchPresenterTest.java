@@ -144,9 +144,10 @@ public class BranchPresenterTest {
     public void testSaveBranchWhenBranchExceptionHappen()  {
         PoulpeBranch branch = new PoulpeBranch();
         givenBranchConstraintViolated();
-       
+        
         presenter.saveBranch(branch);
         
+        verify(view).validationFailure(any(ValidationResult.class));
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
         verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
     }
@@ -155,9 +156,10 @@ public class BranchPresenterTest {
     public void testSaveBranchWhenGroupExceptionHappen()  {
         PoulpeBranch branch = new PoulpeBranch();
         givenGroupConstraintViolated();
-       
+        
         presenter.saveBranch(branch);
         
+        verify(view).validationFailure(any(ValidationResult.class));
         verify(sectionService, never()).saveSection(any(PoulpeSection.class));
         verify(branchService, never()).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
     }

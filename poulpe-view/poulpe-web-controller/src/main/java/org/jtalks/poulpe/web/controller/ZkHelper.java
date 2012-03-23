@@ -47,8 +47,8 @@ public class ZkHelper {
      * 
      * @param zul file to be wired to
      */
-    public void wireToZul(String zul) {
-        Executions.createComponents(zul, component, null);
+    public Component wireToZul(String zul) {
+        return Executions.createComponents(zul, component, null);
     }
 
     public void wireComponents(Component component, Object controller) {
@@ -73,7 +73,10 @@ public class ZkHelper {
      * @return component matching the selector
      */
     public Component findComponent(String selector) {
-        return Selectors.find(component, selector).get(0);
+        List<Component> comps = Selectors.find(component, selector);
+        if(comps.size() > 0)
+            return comps.get(0);
+        return null;
     }
 
     /**
