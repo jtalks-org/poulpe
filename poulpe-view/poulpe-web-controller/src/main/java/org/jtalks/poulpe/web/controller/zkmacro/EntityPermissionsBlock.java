@@ -23,14 +23,14 @@ import org.jtalks.common.model.entity.Entity;
 import com.google.common.collect.Lists;
 
 /**
- * Group of blocks {@link PermissionManagementBlock}, contains list of blocks, caption and entity for which set of
- * permissions provided.
+ * Group of blocks {@link PermissionManagementBlock} related to the same entity, contains list of blocks, caption and
+ * entity for which set of permissions provided.
  * 
  * @see PermissionManagementBlock
  * @author Vyacheslav Zhivaev
  */
 @Immutable
-public class PermissionManagementGroup {
+public class EntityPermissionsBlock {
     private final Entity entity;
     private final String caption;
     private final List<PermissionManagementBlock> blocks;
@@ -38,7 +38,7 @@ public class PermissionManagementGroup {
     /**
      * Constructs set of blocks with defined caption.
      */
-    public PermissionManagementGroup(Entity entity, String caption, List<PermissionManagementBlock> blocks) {
+    public EntityPermissionsBlock(Entity entity, String caption, List<PermissionManagementBlock> blocks) {
         this.entity = entity;
         this.caption = caption;
         this.blocks = Lists.newArrayList(blocks);

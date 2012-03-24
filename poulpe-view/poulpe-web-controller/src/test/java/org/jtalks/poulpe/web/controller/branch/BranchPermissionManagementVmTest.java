@@ -106,15 +106,15 @@ public class BranchPermissionManagementVmTest {
     public void showGroupsDialogTest() {
         // provide data which already passed in VM through service layer
 
-        sut.showGroupsDialog("permissionName=" + allowedPermission.getName() + ",mode=allow");
-        sut.showGroupsDialog("permissionName=" + restrictedPermission.getName() + ",mode=restrict");
+        sut.showGroupsDialog(allowedPermission, "allow");
+        sut.showGroupsDialog(restrictedPermission, "restrict");
 
         verify(windowManager, times(2)).open(anyString());
     }
 
     @Test(expectedExceptions = { IllegalArgumentException.class })
     public void showGroupsDialogIllegalFromatTest() {
-        sut.showGroupsDialog("permissionName=" + restrictedPermission.getName() + ",mode=HERE_ILLEGAL_FORMATTED_STRING");
+        sut.showGroupsDialog(restrictedPermission, "HERE_ILLEGAL_FORMATTED_STRING");
 
         verify(windowManager, never()).open(anyString());
     }

@@ -14,25 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.ComponentPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.GroupAccessList;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.zkmacro.EntityPermissionsBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
-import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementGroup;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -54,43 +52,42 @@ public class GroupsPermissionsVm {
     private final SelectedEntity<Object> selectedEntity;
 
     // Internal state
-    private final List<PermissionManagementGroup> groups;
+    private final List<EntityPermissionsBlock> blocks;
 
     public GroupsPermissionsVm(@Nonnull WindowManager windowManager, @Nonnull ComponentService componentService,
             @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
         this.componentService = componentService;
         this.selectedEntity = selectedEntity;
-        groups = Lists.newArrayList();
+        blocks = Lists.newArrayList();
+
         updateView();
     }
 
     /**
-     * Gets list of {@link PermissionManagementGroup}.
+     * Gets list of {@link EntityPermissionsBlock}.
      * 
-     * @return the groups
+     * @return the blocks
      */
-    public List<PermissionManagementGroup> getGroups() {
-        return groups;
+    @SuppressWarnings("unchecked")
+    public List<EntityPermissionsBlock> getBlocks() {
+        return ListUtils.unmodifiableList(blocks);
     }
 
     private void updateView() {
-        groups.clear();
+        blocks.clear();
 
         for (Component component : componentService.getAll()) {
-//            PermissionsMap<ComponentPermission> permissions = componentService.getPermissionsMapFor(component);
+            PermissionsMap<ComponentPermission> permissions = componentService.getPermissionsMapFor(component);
+            List<PermissionManagementBlock> pmBlocks = Lists.newArrayList();
 
-            Map<ComponentPermission, GroupAccessList> map = new HashMap<ComponentPermission, GroupAccessList>();
-            map.put(ComponentPermission.VIEW_COMPONENT, new GroupAccessList());
-            PermissionsMap<ComponentPermission> permissions = new PermissionsMap<ComponentPermission>(map);
-
-            List<PermissionManagementBlock> blocks = Lists.newArrayList();
             for (ComponentPermission permission : permissions.getPermissions()) {
                 PermissionRow allowRow = PermissionRow.newAllowRow(permissions.getAllowed(permission));
                 PermissionRow restrictRow = PermissionRow.newRestrictRow(permissions.getRestricted(permission));
-                blocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
+                pmBlocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
             }
-            groups.add(new PermissionManagementGroup(component, "Component: " + component.getName(), blocks));
+
+            blocks.add(new EntityPermissionsBlock(component, "Component: " + component.getName(), pmBlocks));
         }
     }
 
@@ -100,7 +97,9 @@ public class GroupsPermissionsVm {
         boolean allowed = "allow".equalsIgnoreCase(mode);
         Validate.isTrue(allowed || "restrict".equalsIgnoreCase(mode),
                 "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
+
         PermissionForEntity permissionForEntity = new PermissionForEntity(entity, allowed, permission);
+
         selectedEntity.setEntity(permissionForEntity);
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
     }

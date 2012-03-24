@@ -15,13 +15,13 @@
 package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
 
 import javax.annotation.Nonnull;
 
+import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -33,10 +33,7 @@ import org.jtalks.poulpe.web.controller.zkmacro.PermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMap.Builder;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
@@ -55,7 +52,7 @@ public class BranchPermissionManagementVm {
     private final SelectedEntity<Object> selectedEntity;
 
     private final PoulpeBranch branch;
-    private final Map<String, PermissionManagementBlock> blocks = Maps.newLinkedHashMap();
+    private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
 
     /**
      * Constructs the VM with given dependencies.
@@ -79,37 +76,16 @@ public class BranchPermissionManagementVm {
      * @param params the URL-style formatted parameters from zul
      */
     @Command
-    public void showGroupsDialog(@BindingParam("params") String params) {
-        Map<String, String> parsedParams = parseParams(params);
-        String permissionName = parsedParams.get("permissionName");
-        PermissionManagementBlock branchPermissionManagementBlock = blocks.get(permissionName);
-        String mode = parsedParams.get("mode");
-
+    public void showGroupsDialog(@BindingParam("permission") JtalksPermission permission,
+            @BindingParam("mode") String mode) {
         boolean allowed = "allow".equalsIgnoreCase(mode);
         Validate.isTrue(allowed || "restrict".equalsIgnoreCase(mode),
                 "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
 
-        PermissionForEntity permissionForEntity = new PermissionForEntity(branch, allowed,
-                branchPermissionManagementBlock.getPermission());
+        PermissionForEntity permissionForEntity = new PermissionForEntity(branch, allowed, permission);
 
         selectedEntity.setEntity(permissionForEntity);
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
-    }
-
-    /**
-     * Parses URL parameters substring to map.
-     * 
-     * @param params string with params
-     * @return map build from params
-     */
-    private static Map<String, String> parseParams(String params) {
-        Builder<String, String> parsedParams = ImmutableMap.builder();
-        String[] paramRows = params.split(Pattern.quote(","));
-        for (String nextParam : paramRows) {
-            String[] splitParamRow = nextParam.trim().split(Pattern.quote("="));
-            parsedParams.put(splitParamRow[0], splitParamRow[1]);
-        }
-        return parsedParams.build();
     }
 
     /**
@@ -120,7 +96,7 @@ public class BranchPermissionManagementVm {
         for (BranchPermission permission : groupAccessList.getPermissions()) {
             PermissionRow allowRow = PermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
             PermissionRow restrictRow = PermissionRow.newRestrictRow(groupAccessList.getRestricted(permission));
-            blocks.put(permission.getName(), new PermissionManagementBlock(permission, allowRow, restrictRow));
+            blocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
         }
     }
 
@@ -129,8 +105,9 @@ public class BranchPermissionManagementVm {
      * 
      * @return all blocks
      */
+    @SuppressWarnings("unchecked")
     public List<PermissionManagementBlock> getBlocks() {
-        return Lists.newArrayList(blocks.values());
+        return ListUtils.unmodifiableList(blocks);
     }
 
     /**

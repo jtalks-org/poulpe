@@ -122,6 +122,8 @@
     <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
     <property name="deleteSectionDialogPresenter" ref="deleteSectionDialogPresenter" />
+    <property name="selectedEntity" ref="selectedEntity" />
+    <property name="windowManager" ref="windowManager" />
   </bean>
 
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter"
