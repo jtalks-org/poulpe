@@ -29,12 +29,13 @@ import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.common.model.permissions.ComponentPermission;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.AclUtil;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.builders.AclBuilders;
+import org.jtalks.common.security.acl.builders.AclOn;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
@@ -75,8 +76,9 @@ public class PermissionManager {
      */
     public void changeGrants(Entity entity, PermissionChanges changes) {
         AclBuilders builders = new AclBuilders();
-        builders.newBuilder(aclManager).grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
-                .on(entity).flush();
+        AclOn aclOn = builders.newBuilder(aclManager).grant(changes.getPermission())
+                .to(changes.getNewlyAddedGroupsAsArray());
+        aclOn.on(entity).flush();
         builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
                 .on(entity).flush();
     }
@@ -117,8 +119,8 @@ public class PermissionManager {
      * @param component the component to obtain PermissionsMap for
      * @return {@link PermissionsMap} for {@link Component}
      */
-    public PermissionsMap<ComponentPermission> getPermissionsMapFor(Component component) {
-        return getPermissionsMapFor(Arrays.asList(ComponentPermission.values()), component);
+    public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
+        return getPermissionsMapFor(Arrays.asList(GeneralPermission.values()), component);
     }
 
     /**
@@ -148,23 +150,23 @@ public class PermissionManager {
     private PoulpeGroup getGroup(GroupAce groupAce) {
         return groupDao.get(groupAce.getGroupId());
     }
-    
+
     // TODO: fix for AclManager, JIRA issue: #JTALKSCOMMON-52
     // this is temporary while org.jtalks.common.security.acl.AclManager hasn't needed logic
     private List<GroupAce> getEntityPermissions(Entity entity) {
         Field aclUtilField = null;
-        
+
         try {
             Class<? extends AclManager> clazz = aclManager.getClass();
             aclUtilField = clazz.getDeclaredField("aclUtil");
             aclUtilField.setAccessible(true);
-            
+
             AclUtil aclUtil = (AclUtil) aclUtilField.get(aclManager);
-            
+
             List<GroupAce> result = getEntityPermissions(aclUtil, entity);
-            
+
             aclUtilField.setAccessible(false);
-            
+
             return result;
         } catch (SecurityException e) {
             throw new IllegalStateException("Can't obtain permissions for entity", e);
@@ -176,10 +178,9 @@ public class PermissionManager {
             throw new IllegalStateException("Can't obtain permissions for entity", e);
         }
     }
-    
+
     // this is temporary while org.jtalks.common.security.acl.AclManager hasn't needed logic
-    private List<GroupAce> getEntityPermissions(AclUtil aclUtil, Entity entity)
-    {
+    private List<GroupAce> getEntityPermissions(AclUtil aclUtil, Entity entity) {
         MutableAcl branchAcl = aclUtil.getAclFor(entity);
         List<AccessControlEntry> originalAces = branchAcl.getEntries();
         List<GroupAce> resultingAces = new ArrayList<GroupAce>(originalAces.size());

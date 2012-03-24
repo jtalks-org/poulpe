@@ -23,15 +23,16 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window mode="embedded" border="none" title="${labels.groups.permissions.title}"
+      height="100%" contentStyle="overflow: auto"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('groupsPermissionsVm') @init(groupsPermissionsVm)">
 
-    <window forEach="${groupsPermissionsVm.blocks}">
+    <window forEach="${groupsPermissionsVm.blocks}" border="normal" width="100%">
       <caption-block text="${each.caption}" />
       
       <groupbox forEach="${each.blocks}" width="100%">
         <caption label="${each.permission.name}" />
         
-        <!-- Allow / Restrict row -->
+        <!-- Allow / Restrict rows -->
         <entity-permission-row entity="${forEachStatus.previous.each.entity}" permission="${each.permission}"
             row="${each.allowRow}" mode="allow" />
         <entity-permission-row entity="${forEachStatus.previous.each.entity}" permission="${each.permission}"

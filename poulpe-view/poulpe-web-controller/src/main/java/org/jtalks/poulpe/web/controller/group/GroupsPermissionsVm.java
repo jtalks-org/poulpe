@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.Nonnull;
 
@@ -22,7 +23,7 @@ import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.permissions.ComponentPermission;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
@@ -78,12 +79,15 @@ public class GroupsPermissionsVm {
         blocks.clear();
 
         for (Component component : componentService.getAll()) {
-            PermissionsMap<ComponentPermission> permissions = componentService.getPermissionsMapFor(component);
+            PermissionsMap<GeneralPermission> permissionsMap = componentService.getPermissionsMapFor(component);
             List<PermissionManagementBlock> pmBlocks = Lists.newArrayList();
 
-            for (ComponentPermission permission : permissions.getPermissions()) {
-                PermissionRow allowRow = PermissionRow.newAllowRow(permissions.getAllowed(permission));
-                PermissionRow restrictRow = PermissionRow.newRestrictRow(permissions.getRestricted(permission));
+            GeneralPermission permission = GeneralPermission.ADMIN;
+            Set<GeneralPermission> permissions = permissionsMap.getPermissions();
+
+            if (permissions.contains(permission)) {
+                PermissionRow allowRow = PermissionRow.newAllowRow(permissionsMap.getAllowed(permission));
+                PermissionRow restrictRow = PermissionRow.newRestrictRow(permissionsMap.getRestricted(permission));
                 pmBlocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
             }
 

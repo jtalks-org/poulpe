@@ -19,7 +19,7 @@ import java.util.Set;
 
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.permissions.ComponentPermission;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.logic.PermissionManager;
@@ -120,7 +120,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * {@inheritDoc}
      */
     @Override
-    public PermissionsMap<ComponentPermission> getPermissionsMapFor(Component component) {
+    public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
         return permissionManager.getPermissionsMapFor(component);
     }
 
