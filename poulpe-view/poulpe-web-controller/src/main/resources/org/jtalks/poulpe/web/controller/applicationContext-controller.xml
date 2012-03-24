@@ -30,7 +30,7 @@
     <constructor-arg type="BranchService" ref="branchService" />
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
   </bean>
-  
+
   <bean id="editGroupsForBranchPermissionVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
     <constructor-arg type="WindowManager" ref="windowManager" />
@@ -45,6 +45,12 @@
     <constructor-arg type="ComponentService" ref="componentService" />
     <constructor-arg type="GroupService" ref="groupService" />
     <constructor-arg type="SelectedEntity" ref="selectedEntity" />
+  </bean>
+
+  <bean id="usersVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.users.UsersVm">
+    <constructor-arg index="0" ref="userService"/>
+    <constructor-arg index="1" ref="entityValidator"/>
   </bean>
 
   <bean id="rankManagementVm" scope="desktop"
@@ -77,6 +83,12 @@
     <property name="windowManager" ref="windowManager" />
   </bean>
 
+  <bean id="topicTypeVM" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVM" scope="desktop">
+      <constructor-arg index="0" ref="topicTypeService" />
+      <constructor-arg index="1" ref="dialogManager"/>
+      <constructor-arg index="2" ref="entityValidator"/>
+  </bean>
+
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"
         scope="prototype">
@@ -106,12 +118,10 @@
 
   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
     <property name="sectionService" ref="sectionService" />
-    <property name="branchService" ref="branchService" />
+    <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
     <property name="deleteSectionDialogPresenter" ref="deleteSectionDialogPresenter" />
-    <property name="windowManager" ref="windowManager" />
-    <property name="selectedEntity" ref="selectedEntity" />
   </bean>
 
   <bean id="deleteSectionDialogPresenter" class="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogPresenter"

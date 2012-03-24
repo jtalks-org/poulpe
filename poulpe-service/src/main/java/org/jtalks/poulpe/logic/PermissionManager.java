@@ -17,7 +17,6 @@ package org.jtalks.poulpe.logic;
 import static ch.lambdaj.Lambda.index;
 import static ch.lambdaj.Lambda.on;
 
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -31,15 +30,13 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.ComponentPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.BasicAclBuilder;
 import org.jtalks.common.security.acl.GroupAce;
-import org.jtalks.common.security.acl.UserGroupSid;
+import org.jtalks.common.security.acl.builders.AclBuilders;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
-import org.springframework.security.acls.model.AccessControlEntry;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
@@ -72,9 +69,11 @@ public class PermissionManager {
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeGrants(Entity entity, PermissionChanges changes) {
-        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).grant(changes.getPermission())
-                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(entity).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(entity).flush();
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager).grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
+                .on(entity).flush();
+        builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
+                .on(entity).flush();
     }
 
     /**
@@ -87,16 +86,17 @@ public class PermissionManager {
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeRestrictions(Entity entity, PermissionChanges changes) {
-        BasicAclBuilder aclBuilder = new BasicAclBuilder(aclManager).restrict(changes.getPermission())
-                .setOwner(changes.getNewlyAddedGroupsAsArray()).on(entity).flush();
-        aclBuilder.delete(changes.getPermission()).setOwner(changes.getRemovedGroupsAsArray()).on(entity).flush();
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager).restrict(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
+                .on(entity).flush();
+        builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
+                .on(entity).flush();
     }
 
     /**
      * @param branch object identity
      * @return {@link BranchPermissions} for given branch
      */
-    // TODO: fix AclManager.getBranchPermissions()
     public BranchPermissions getGroupAccessListFor(Branch entity) {
         BranchPermissions branchAccessList = BranchPermissions.create(BranchPermission.getAllAsList());
         List<GroupAce> groupAces = aclManager.getBranchPermissions(entity);
@@ -141,25 +141,7 @@ public class PermissionManager {
      * @return {@link PoulpeGroup} extracted from {@link GroupAce}
      */
     private PoulpeGroup getGroup(GroupAce groupAce) {
-        long groupId = extractGroupId(groupAce);
-        return groupDao.get(groupId);
-    }
-
-    // TODO: get rid of it once GroupAce#getGroupId() is created!!!!!
-    private static long extractGroupId(GroupAce groupAce) {
-        try {
-            Class<GroupAce> groupAceClass = GroupAce.class;
-            Field aceField = groupAceClass.getDeclaredField("ace");
-            aceField.setAccessible(true);
-
-            AccessControlEntry ace = (AccessControlEntry) aceField.get(groupAce);
-            UserGroupSid sid = (UserGroupSid) ace.getSid();
-
-            return Long.parseLong(sid.getGroupId());
-
-        } catch (Exception e) {
-            throw new RuntimeException("Error accessing to ace private field, nested exception: ", e);
-        }
+        return groupDao.get(groupAce.getGroupId());
     }
 
 }

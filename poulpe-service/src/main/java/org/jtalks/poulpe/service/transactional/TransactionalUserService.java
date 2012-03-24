@@ -126,7 +126,7 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public User get(long id) {
-        return (User) userDao.get(id);
+        return userDao.get(id);
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.ConventionWires;
 
 /**
@@ -46,10 +47,13 @@ public class ZkHelper {
      * 
      * @param zul file to be wired to
      */
-    public void wireToZul(String zul) {
-        Executions.createComponents(zul, component, null);
+    public Component wireToZul(String zul) {
+        return Executions.createComponents(zul, component, null);
     }
 
+    public void wireComponents(Component component, Object controller) {
+        Selectors.wireComponents(component, controller, false);
+    }
     /**
      * Removes all children of the given class
      * 
@@ -59,6 +63,35 @@ public class ZkHelper {
         List<Component> childrenToSave = filterOut(cls);
         removeAllChildComponents();
         addComponents(childrenToSave);
+    }
+
+    /**
+     * Returns the first component that match the selector.
+     * 
+     * @param root the reference component for selector
+     * @param selector the selector string
+     * @return component matching the selector
+     */
+    public Component findComponent(String selector) {
+        List<Component> comps = Selectors.find(component, selector);
+        if(comps.size() > 0)
+            return comps.get(0);
+        return null;
+    }
+
+    /**
+     * Find the component by id.
+     *
+     * @param id component's Id
+     * @return found component or null
+     */
+    public Component getCurrentComponent(String id) {
+        for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
+            if (c.getId().equals(id)) {
+                return c;
+            }
+        }
+        return null;
     }
 
     /**

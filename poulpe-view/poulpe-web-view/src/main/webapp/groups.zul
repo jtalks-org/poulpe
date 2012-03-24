@@ -2,20 +2,19 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <zk>
-  <window title="Groups" border="normal" use="org.jtalks.poulpe.web.controller.group.ZkGroupView" presenter="${groupPresenter}"
-    id="mainWindow">
+  <window title="${labels.groups.title}" border="normal" use="org.jtalks.poulpe.web.controller.group.ZkGroupView"
+    presenter="${groupPresenter}" id="mainWindow">
 
     <hbox>
-      <label value="Filter" />
-      :
+      <label value="${labels.groups.filter}" />
       <textbox id="searchTextbox" width="150px" multiline="false" maxlength="20" />
-      <button label="Search" forward="onClick=onSearchAction" sclass="groups.searchButton" />
+      <button label="${labels.groups.search}" forward="onClick=onSearchAction" sclass="groups.searchButton" />
     </hbox>
 
     <listbox id="groupsListbox">
       <listhead sizable="true">
-        <listheader align="center" label="Name" sclass="boldstyle" />
-        <listheader align="center" label="Members" />
+        <listheader align="center" label="${labels.groups.name}" sclass="boldstyle" />
+        <listheader align="center" label="${labels.groups.members}" />
       </listhead>
     </listbox>
     <button id="addButton" label="+" sclass="groups.addButton" />

@@ -63,6 +63,14 @@ public interface ComponentService extends EntityService<Component> {
     Set<ComponentType> getAvailableTypes();
 
     /**
+     * Gets component by it's type.
+     * 
+     * @param the component's type
+     * @return the component
+     */
+    Component getByType(ComponentType type);
+
+    /**
      * Gets {@link PermissionsMap} for defined {@link Component}.
      * 
      * @param component the component to get for

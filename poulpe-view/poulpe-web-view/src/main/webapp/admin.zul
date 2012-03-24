@@ -12,14 +12,14 @@
       </north>
       <west splittable="true" collapsible="true">
         <listbox width="150px">
-          <listitem label="Components" forward="onClick=onShowComponents" />
-          <listitem label="Topic Types" forward="onClick=onShowTopicTypes" />
-          <listitem label="Sections" forward="onClick=onShowSections" />
-          <listitem label="Users" forward="onClick=onShowUsers" />
-          <listitem label="Ban users" forward="onClick=onShowUserBanning" />
-          <listitem label="User Groups" forward="onClick=onShowUserGroups" />
-          <listitem label="Group Permissions" forward="onClick=onShowGroupsPermissions" />
-          <listitem label="Ranks" forward="onClick=onShowRanks" />
+          <listitem label="Components" forward="onClick=onShowComponents, onOK=onShowComponents" />
+          <listitem label="Topic Types" forward="onClick=onShowTopicTypes, onOK=onShowTopicTypes" />
+          <listitem label="Sections" forward="onClick=onShowSections, onOK=onShowSections" />
+          <listitem label="Users" forward="onClick=onShowUsers, onOK=onShowUsers" />
+          <listitem label="Ban users" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
+          <listitem label="User Groups" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
+          <listitem label="Group Permissions" forward="onClick=onShowGroupsPermissions, onOK=onShowGroupsPermissions" />
+          <listitem label="Ranks" forward="onClick=onShowRanks, onOK=onShowRanks" />
           <listfoot />
         </listbox>
       </west>

@@ -14,15 +14,18 @@
  */
 package org.jtalks.poulpe.logic;
 
-import com.google.common.collect.Lists;
+import static com.google.common.collect.Lists.newArrayList;
+import static org.mockito.Mockito.verify;
+
+import java.util.List;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.UserGroupSid;
+import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.acls.model.Permission;
@@ -30,10 +33,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import java.util.List;
-
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Mockito.verify;
+import com.google.common.collect.Lists;
 
 /**
  * @author stanislav bashkirtsev

@@ -5,17 +5,17 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 
 /**
- * Factory class for producing {@link DialogManager.Performable} instances for
- * passing them to {@link DialogManager}. Used in {@link SectionPresenter} and
- * thus all operations which are returned by its factories are related to
- * sections.
+ * Factory class for producing {@link DialogManager.Performable} instances for passing them to {@link DialogManager}.
+ * Used in {@link SectionPresenter} and thus all operations which are returned by its factories are related to sections.
  * 
  * @author Alexey Grigorev
+ * @author Guram Savinov
  */
 public class PerfomableFactory {
 
@@ -25,6 +25,7 @@ public class PerfomableFactory {
     private BranchService branchService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
+    private ComponentService componentService;
 
     /**
      * @param sectionPresenter
@@ -37,8 +38,7 @@ public class PerfomableFactory {
      * Deletes the section and moves all its branches to recipient, if any specified
      * 
      * @param victim section to be deleted
-     * @param recipient section which will take all victim's branches, may be 
-     * null if no recipient is needed
+     * @param recipient section which will take all victim's branches, may be null if no recipient is needed
      * @return instance to be performed by dialog manager
      */
     public Performable deleteSection(PoulpeSection victim, PoulpeSection recipient) {
@@ -51,6 +51,7 @@ public class PerfomableFactory {
 
     /**
      * Deletes a branch
+     * 
      * @param branch to be deleted
      * @return instance to be performed by dialog manager
      */
@@ -75,8 +76,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for deleting
-     * sections and for moving its branches to the given recipient, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for deleting sections and for moving its branches to the
+     * given recipient, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -101,8 +102,7 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for deleting
-     * sections, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for deleting sections, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -120,8 +120,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for creating (i.e. saving)
-     * sections, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for creating (i.e. saving) sections, performed when user
+     * confirms deletion
      * 
      * @author unascribed
      */
@@ -141,8 +141,7 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for saving
-     * sections, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for saving sections, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -163,8 +162,7 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for deleting
-     * branches, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for deleting branches, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -188,7 +186,7 @@ public class PerfomableFactory {
         }
 
         private void deleteBranchPermissions() {
-            for(BranchPermission permission : BranchPermission.values()) {
+            for (BranchPermission permission : BranchPermission.values()) {
                 PermissionChanges branchAccess = new PermissionChanges(permission);
                 branchAccess.addRemovedGroups(branch.getGroups());
                 branchService.changeGrants(branch, branchAccess);
@@ -211,8 +209,14 @@ public class PerfomableFactory {
     }
 
     /**
-     * @param currentSectionTreeComponent that will process actions from
-     * presenter
+     * @param componentService set component service instance
+     */
+    public void setComponentService(ComponentService componentService) {
+        this.componentService = componentService;
+    }
+
+    /**
+     * @param currentSectionTreeComponent that will process actions from presenter
      */
     public void setCurrentSectionTreeComponent(ZkSectionTreeComponent currentSectionTreeComponent) {
         this.currentSectionTreeComponent = currentSectionTreeComponent;

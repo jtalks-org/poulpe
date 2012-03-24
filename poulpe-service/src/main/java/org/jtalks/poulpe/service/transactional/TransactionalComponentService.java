@@ -110,6 +110,12 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         return propertyLoader;
     }
 
+    /** {@inheritDoc} */
+    @Override
+    public Component getByType(ComponentType type) {
+        return dao.getByType(type);
+    }
+
     /**
      * {@inheritDoc}
      */

@@ -1,38 +1,55 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?page id="TopicType List" title="TopicType List" contentType="text/html;charset=UTF-8"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  
-  <window width="40%" closable="true" border="normal" title="${labels.topictypes.editor.title}"
-    use="org.jtalks.poulpe.web.controller.topictype.TopicTypeViewImpl" forward="onClose=onCancelEditAction">
-    <grid>
-      <columns>
-        <column label="${labels.field.description}" width="30%" />
-        <column label="${labels.field.input}" />
-      </columns>
-      <rows>
-        <row>
-          <label value="${labels.title}" />
-          <textbox id="titleTextbox" focus="true" width="99%" />
-        </row>
-        <row>
-          <label value="${labels.description}" />
-          <textbox id="descriptionTextbox" multiline="true" rows="5" width="99%" />
-        </row>
-      </rows>
-    </grid>
-    
-    <hbox align="end">
-      <cell>
-        <button id="editButton" label="${labels.item.save}" forward="onClick=onUpdateAction" sclass="topic.type.editButton" />
-      </cell>
-      <cell>
-        <button id="createButton" label="${labels.item.save}" forward="onClick=onCreateAction" sclass="topic.type.createButton" />
-      </cell>
-      <cell>
-        <button label="${labels.window.cancel}" forward="onClick=onCancelEditAction" sclass="topic.type.cancelButton" />
-      </cell>
-    </hbox>
-  </window>
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
+    <window title="${labels.topictypes.list.title}" border="normal" width="100%"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('ttvm') @init(topicTypeVM)"
+            validationMessages="@id('vmsgs')">
+        <style src="/resources/css/all.css" />
+        <vbox hflex="true">
+            <listbox model="@load(ttvm.topicTypes)" selectedItem="@bind(ttvm.selected)" hflex="true" height="400px">
+                <listhead>
+                    <listheader align="center" label="${labels.topictypes.list.name}" />
+                    <listheader align="center" label="${labels.topictypes.list.descr}" />
+                </listhead>
+                <template name="model" var="item">
+                    <listitem >
+                        <listcell label="@load(item.title)"/>
+                        <listcell label="@load(item.description)"/>
+                    </listitem>
+                </template>
+            </listbox>
+            <toolbar>
+                <button label="${labels.item.add}" onClick="@command('newTopicType')" />
+                <button label="${labels.item.save}" onClick="@command('saveTopicType')" disabled="@bind(empty ttvm.selected)" />
+                <button label="${labels.sections.button.delete}" onClick="@command(ttvm.selected.id eq 0?'deleteFromList':'deleteTopicType')" disabled="@load(empty ttvm.selected)" />
+            </toolbar>
+            <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
+                <grid hflex="true" >
+                    <columns>
+                        <column width="20%"/>
+                        <column width="100%"/>
+                    </columns>
+                    <rows>
+                        <row>
+                            Id
+                            <label value="@load(ttvm.selected.id)"/>
+                        </row>
+                        <row>
+                            ${labels.title}
+                            <hlayout>
+                                <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
+                                                @validator(ttvm.titleValidator)" />
+                                <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
+                            </hlayout>
+                        </row>
+                        <row>
+                            ${labels.topictypes.list.descr}
+                            <textbox value="@load(ttvm.selected.description) @save(ttvm.selected.description,before='saveTopicType')"/>
+                        </row>
+                    </rows>
+                </grid>
+            </groupbox>
+        </vbox>
+    </window>
 </zk>

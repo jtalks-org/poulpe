@@ -89,6 +89,10 @@
       <artifactId>jtalks-common-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
@@ -142,6 +146,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.xml</include>
+          <include>**/migrations/**</include>
         </includes>
       </resource>
     </resources>

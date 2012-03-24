@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.util.List;
-
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -28,6 +26,8 @@ import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+
+import java.util.List;
 
 /**
  * Zk-based implementation of {@link SectionView}
@@ -229,7 +229,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     /**
      * @deprecated use {@link DialogManager} and
-     * {@link PerfomableFactory#deleteSection(PoulpeSection)} for this
+     * {@link PerfomableFactory#deleteSection(PoulpeSection,PoulpeSection)} for this
      */
     @Deprecated
     public void openDeleteSectionDialog(PoulpeSection victim) {
