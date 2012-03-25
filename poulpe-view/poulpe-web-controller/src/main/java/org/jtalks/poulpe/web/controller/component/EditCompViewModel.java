@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.web.controller.component;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationException;
@@ -298,6 +299,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Returns session timeout value from the web-form
      * @return session timeout
      */
+    @NotEmpty(message = "Last name can not be null")
 	public String getSessionTimeout() {
 		return sessionTimeout;
 	}
