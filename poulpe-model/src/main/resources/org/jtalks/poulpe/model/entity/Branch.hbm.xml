@@ -18,7 +18,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="org.jtalks.common.model.entity.Branch" table="BRANCHES">
+    <class name="org.jtalks.poulpe.model.entity.PoulpeBranch" table="BRANCHES">
         <cache usage="nonstrict-read-write"/>
 
         <id column="BRANCH_ID" name="id" unsaved-value="0">
@@ -32,25 +32,19 @@
         <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection"
                      lazy="false" update="false" insert="false"/>
 
-        <joined-subclass name="org.jtalks.poulpe.model.entity.PoulpeBranch"
-                         table="POULPE_BRANCH">
 
-            <key column="BRANCH_ID"/>
+        <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
+            <cache usage="nonstrict-read-write"/>
+            <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
+            <many-to-many class="org.jtalks.poulpe.model.entity.User" column="USER_ID"/>
+        </bag>
 
+        <list name="groups" inverse="false" lazy="false" cascade="all-delete-orphan">
+            <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
+            <list-index column="POSITION"/>
+            <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeGroup"/>
+        </list>
 
-            <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
-                <cache usage="nonstrict-read-write"/>
-                <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
-                <many-to-many class="org.jtalks.poulpe.model.entity.User" column="USER_ID"/>
-            </bag>
-
-            <list name="groups" inverse="false" lazy="false" cascade="all-delete-orphan">
-                <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
-                <list-index column="POSITION"/>
-                <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeGroup"/>
-            </list>
-
-        </joined-subclass>
 
     </class>
 

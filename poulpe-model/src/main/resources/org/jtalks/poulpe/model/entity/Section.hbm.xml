@@ -15,33 +15,31 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <class name="org.jtalks.common.model.entity.Section" table="SECTIONS" abstract="true">
-    <cache usage="nonstrict-read-write"/>
-    
-    <id column="SECTION_ID" name="id" unsaved-value="0">
-      <generator class="native" />
-    </id>
+    <class name="org.jtalks.poulpe.model.entity.PoulpeSection" table="SECTIONS" abstract="true">
+        <cache usage="nonstrict-read-write"/>
 
-    <property column="UUID" name="uuid" not-null="true" unique="true" />
-    <property column="NAME" name="name" not-null="true" />
-    <property column="DESCRIPTION" name="description" />
-    <property column="POSITION_" name="position" />
+        <id column="SECTION_ID" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
 
-      <joined-subclass name="org.jtalks.poulpe.model.entity.PoulpeSection"
-                table="POULPE_SECTION">
-          <key column="SECTION_ID"/>
-          <!-- inverse is false because otherwise indexes are saved as null -->
-          <!-- (even if you save branch and just after that section). -->
-          <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
-              <cache usage="nonstrict-read-write" />
-              <key column="SECTION_ID" foreign-key="FK_SECTION" />
-              <list-index column="POSITION" />
-              <one-to-many class="org.jtalks.common.model.entity.Branch" />
-          </list>
-      </joined-subclass>
+        <property column="UUID" name="uuid" not-null="true" unique="true"/>
+        <property column="NAME" name="name" not-null="true"/>
+        <property column="DESCRIPTION" name="description"/>
+        <property column="POSITION" name="position"/>
 
-  </class>
+
+        <!-- inverse is false because otherwise indexes are saved as null -->
+        <!-- (even if you save branch and just after that section). -->
+        <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
+            <cache usage="nonstrict-read-write"/>
+            <key column="SECTION_ID" foreign-key="FK_SECTION"/>
+            <list-index column="POSITION"/>
+            <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
+        </list>
+
+    </class>
 
 </hibernate-mapping>

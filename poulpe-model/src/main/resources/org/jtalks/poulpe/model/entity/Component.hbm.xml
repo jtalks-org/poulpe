@@ -49,15 +49,11 @@
             <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
                 <cache usage="nonstrict-read-write"/>
 
-                <key column="JCOMMUNE_ID" foreign-key="FK_JCOMMUNE"/>
+                <key column="COMPONENT_ID" foreign-key="FK_JCOMMUNE"/>
 
                 <list-index column="POSITION"/>
                 <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeSection"/>
             </list>
-
-            <join table="POULPE_COMPONENT">
-                <key column="CMP_ID"/>
-            </join>
 
         </subclass>
 
