@@ -102,9 +102,8 @@ public final class ObjectsFactory {
     public static Jcommune createJcommune(int sectionsAmount) {
         Jcommune jcommune = Jcommune.fromComponent(createComponent(ComponentType.FORUM));
 
-        for (int position = 0; position < sectionsAmount; position++) {
+        for (int i = 0; i < sectionsAmount; i++) {
             PoulpeSection section = createSectionWithBranches();
-            section.setPosition(position);
             jcommune.addSection(section);
         }
         
