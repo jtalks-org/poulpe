@@ -28,8 +28,6 @@
         <property column="UUID" name="uuid" not-null="true" unique="true"/>
         <property column="NAME" name="name" not-null="true"/>
         <property column="DESCRIPTION" name="description"/>
-        <property column="POSITION" name="position"/>
-
 
         <!-- inverse is false because otherwise indexes are saved as null -->
         <!-- (even if you save branch and just after that section). -->
