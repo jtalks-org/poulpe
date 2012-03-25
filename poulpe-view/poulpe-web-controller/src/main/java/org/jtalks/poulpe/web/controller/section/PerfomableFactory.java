@@ -5,6 +5,7 @@ import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -16,6 +17,7 @@ import org.jtalks.poulpe.web.controller.DialogManager.Performable;
  * sections.
  * 
  * @author Alexey Grigorev
+ * @author Guram Savinov
  */
 public class PerfomableFactory {
 
@@ -25,6 +27,7 @@ public class PerfomableFactory {
     private BranchService branchService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
+    private ComponentService componentService;
 
     /**
      * @param sectionPresenter
@@ -72,6 +75,14 @@ public class PerfomableFactory {
      */
     public Performable saveSection(PoulpeSection section) {
         return new CreatePerformable(section);
+    }
+
+    /**
+     *
+     * @param branchService a branch service instance
+     */
+    public void setBranchService(BranchService branchService) {
+        this.branchService = branchService;
     }
 
     /**
@@ -134,7 +145,7 @@ public class PerfomableFactory {
 
         @Override
         public void execute() {
-            sectionService.saveSection(section);
+            sectionService.saveSection(section);;
             sectionView.addSection(section);
             sectionView.closeEditSectionDialog();
         }
@@ -204,10 +215,10 @@ public class PerfomableFactory {
     }
 
     /**
-     * @param branchService set branch service instance
+     * @param componentService set component service instance
      */
-    public void setBranchService(BranchService branchService) {
-        this.branchService = branchService;
+    public void setComponentService(ComponentService componentService) {
+        this.componentService = componentService;
     }
 
     /**

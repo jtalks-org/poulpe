@@ -14,15 +14,15 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.Collections;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.ComponentDao;
+
+import java.util.Collections;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -53,5 +53,12 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
 
         return result;
     }
-    
+
+    @Override
+    public Component getByType(ComponentType type) {
+        return (Component) getSession().createQuery(
+                "from Component where componentType = :type").setParameter(
+                "type", type).uniqueResult();
+    }
+
 }

@@ -14,17 +14,6 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertTrue;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Component;
@@ -38,6 +27,14 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
@@ -57,8 +54,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     private ComponentHibernateDao dao;
     private Session session;
 
-    private Component forum;
-    private Jcommune jcommune;
+    private Jcommune forum;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -66,33 +62,34 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         dao.setSessionFactory(sessionFactory);
 
         session = sessionFactory.getCurrentSession();
-        jcommune = ObjectsFactory.createJcommune(10);
+        forum = createForum();
     }
 
     @Test
     public void testSave() {
-        dao.saveOrUpdate(jcommune);
-        assertNotSame(jcommune.getId(), 0, "Id not created");
-        Jcommune actual = ObjectRetriever.retrieveUpdated(jcommune, session);
-        assertReflectionEquals(jcommune, actual);
+        dao.saveOrUpdate(forum);
+        assertNotSame(forum.getId(), 0, "Id not created");
+        Component actual = ObjectRetriever.retrieveUpdated(forum, session);
+        assertReflectionEquals(forum, actual);
     }
 
     @Test
     public void testGet() {
-        session.save(jcommune);
-        Jcommune actual = (Jcommune) dao.get(jcommune.getId());
-        assertReflectionEquals(jcommune, actual);
+        session.save(forum);
+        Component actual = (Component) dao.get(forum.getId());
+        assertReflectionEquals(forum, actual);
     }
 
     @Test
     public void testUpdate() {
         String newName = "new Jcommune name";
 
-        session.save(jcommune);
-        jcommune.setName(newName);
-        dao.saveOrUpdate(jcommune);
+        session.save(forum);
+        forum.setName(newName);
+        dao.saveOrUpdate(forum);
 
-        String actual = ObjectRetriever.retrieveUpdated(jcommune, session).getName();
+        String actual = ObjectRetriever.retrieveUpdated(forum, session)
+                .getName();
         assertEquals(actual, newName);
     }
 
@@ -119,8 +116,8 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         session.save(createArticle());
     }
 
-    private Component createForum() {
-        return ObjectsFactory.createComponent(ComponentType.FORUM);
+    private Jcommune createForum() {
+        return ObjectsFactory.createJcommune(10);
     }
 
     private Component createArticle() {
@@ -156,15 +153,23 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testSectionPositions() {
         for (int i = 0; i < 5; i++) {
-            List<PoulpeSection> expected = jcommune.getSections();
+            List<PoulpeSection> expected = forum.getSections();
             Collections.shuffle(expected);
 
-            dao.saveOrUpdate(jcommune);
+            dao.saveOrUpdate(forum);
 
-            jcommune = ObjectRetriever.retrieveUpdated(jcommune, session);
-            List<PoulpeSection> actual = jcommune.getSections();
+            forum = ObjectRetriever.retrieveUpdated(forum, session);
+            List<PoulpeSection> actual = forum.getSections();
 
             assertEquals(actual, expected);
         }
     }
+
+    @Test
+    public void testGetForum() {
+    	givenTwoComponents();
+    	Component actual = dao.getByType(ComponentType.FORUM);
+    	assertReflectionEquals(forum, actual);
+    }
+
 }
