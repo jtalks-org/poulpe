@@ -20,6 +20,8 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.JtalksPermission;
 
 /**
+ * DTO container for {@link JtalksPermission} and {@link Entity} for which permission is.
+ * 
  * @author Vyacheslav Zhivaev
  * 
  */
@@ -29,6 +31,13 @@ public class PermissionForEntity {
     private final boolean allowed;
     private final JtalksPermission permission;
 
+    /**
+     * Constructs container.
+     * 
+     * @param target the entity for which permission is
+     * @param allowed the allowed (when {@code true}) or restricted flag
+     * @param permission the permission
+     */
     public PermissionForEntity(Entity target, boolean allowed, JtalksPermission permission) {
         this.target = target;
         this.allowed = allowed;
@@ -36,6 +45,8 @@ public class PermissionForEntity {
     }
 
     /**
+     * Gets target entity.
+     * 
      * @return the target
      */
     public Entity getTarget() {
@@ -43,13 +54,17 @@ public class PermissionForEntity {
     }
 
     /**
+     * Is this container builded to allow permission.
+     * 
      * @return the allowedNotRestricted
      */
     public boolean isAllowed() {
         return allowed;
     }
-    
+
     /**
+     * Gets permission.
+     * 
      * @return the permission
      */
     public JtalksPermission getPermission() {

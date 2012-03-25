@@ -33,7 +33,7 @@ public class GroupAccessList {
     private final List<PoulpeGroup> restricted = new ArrayList<PoulpeGroup>();
 
     /**
-     * Adds group to the allowed access list
+     * Adds group to the allowed access list.
      * 
      * @param group to be allowed
      * @return this instance for providing fluent interface
@@ -46,12 +46,12 @@ public class GroupAccessList {
     }
 
     /**
-     * Restricts a given group
+     * Restricts a given group.
      * 
      * @param group to be restricted
      * @return this instance for providing fluent interface
      */
-    public GroupAccessList addRestricted(PoulpeGroup group) {
+    public GroupAccessList addRestricted(@Nullable PoulpeGroup group) {
         if (group != null) {
             restricted.add(group);
         }
@@ -59,7 +59,7 @@ public class GroupAccessList {
     }
 
     /**
-     * Sets new list of allowed groups (the elements from the old are removed)
+     * Sets new list of allowed groups (the elements from the old are removed).
      * 
      * @param allowed allowed groups
      * @return this instance for providing fluent interface
@@ -71,7 +71,7 @@ public class GroupAccessList {
     }
 
     /**
-     * Sets new list of restricted groups (the elements from the old are removed)
+     * Sets new list of restricted groups (the elements from the old are removed).
      * 
      * @param restricted restricted groups
      * @return this instance for providing fluent interface
@@ -83,6 +83,8 @@ public class GroupAccessList {
     }
 
     /**
+     * Gets list of restricted groups.
+     * 
      * @return unmodifiable list of restricted groups
      */
     public List<PoulpeGroup> getRestricted() {
@@ -90,10 +92,11 @@ public class GroupAccessList {
     }
 
     /**
+     * Gets list of allowed groups.
+     * 
      * @return unmodifiable list of allowed groups
      */
     public List<PoulpeGroup> getAllowed() {
         return Collections.unmodifiableList(allowed);
     }
-
 }

@@ -159,10 +159,10 @@ public class PermissionManager {
         try {
             Class<? extends AclManager> clazz = aclManager.getClass();
             aclUtilField = clazz.getDeclaredField("aclUtil");
+            
             aclUtilField.setAccessible(true);
 
             AclUtil aclUtil = (AclUtil) aclUtilField.get(aclManager);
-
             List<GroupAce> result = getEntityPermissions(aclUtil, entity);
 
             aclUtilField.setAccessible(false);
@@ -189,5 +189,4 @@ public class PermissionManager {
         }
         return resultingAces;
     }
-
 }

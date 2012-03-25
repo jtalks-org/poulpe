@@ -27,20 +27,23 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import com.google.common.collect.Maps;
 
 /**
+ * Container for permissions and related to it access lists. Contains several methods to simple management for access
+ * lists.
+ * 
  * @author Vyacheslav Zhivaev
  */
 public class PermissionsMap<T extends JtalksPermission> {
 
-    private final ConcurrentMap<T, GroupAccessList> accessListMap = Maps.newConcurrentMap();
+    protected final ConcurrentMap<T, GroupAccessList> accessListMap = Maps.newConcurrentMap();
 
     /**
-     * Default constructor, sets nothing
+     * Default constructor, sets nothing.
      */
     public PermissionsMap() {
     }
 
     /**
-     * Constructs {@link PermissionsMap} with predefined values to be added to the access list
+     * Constructs {@link PermissionsMap} with predefined values to be added to the access list.
      * 
      * @param addToAccessList
      */
@@ -119,6 +122,8 @@ public class PermissionsMap<T extends JtalksPermission> {
     }
 
     /**
+     * Gets set of permissions.
+     * 
      * @return all permissions
      */
     public Set<T> getPermissions() {
@@ -126,7 +131,6 @@ public class PermissionsMap<T extends JtalksPermission> {
     }
 
     /**
-     * 
      * Static factory for creating {@link PermissionsMap} with given list of permissions.
      * 
      * @param permissions to be added to the access list
@@ -142,12 +146,11 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param permissions to traverse
      * @return map of permissions mapped to empty {@link GroupAccessList} objects
      */
-    private static <T extends JtalksPermission> Map<T, GroupAccessList> withEmptyAccessList(List<T> permissions) {
+    protected static <T extends JtalksPermission> Map<T, GroupAccessList> withEmptyAccessList(List<T> permissions) {
         Map<T, GroupAccessList> newAccessListMap = Maps.newHashMap();
         for (T permission : permissions) {
             newAccessListMap.put(permission, new GroupAccessList());
         }
         return newAccessListMap;
     }
-
 }
