@@ -53,6 +53,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     public static final String DELETE_BUTTON_ID = "deleteButton";
     private ListModelList<Rank> items;
     private Rank selected;
+    private Rank lastSelected;
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
@@ -123,6 +124,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void newItem() {
+        lastSelected = selected;
         selected = new Rank("", 100);
         openEditorDialog(CREATOR_TITLE);
     }
@@ -132,6 +134,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
+        lastSelected = selected;
         openEditorDialog(MODIFIER_TITLE);
     }
 
@@ -155,6 +158,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     @NotifyChange("selected")
     public void cancel() {
         dialogClosed();
+        selected = lastSelected;
         enableOrDisableDeleteButton();
     }
 

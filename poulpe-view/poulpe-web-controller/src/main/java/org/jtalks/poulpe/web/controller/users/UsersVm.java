@@ -34,7 +34,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 public class UsersVm implements ValidationFailure {
-    public static final String EDIT_USER_ZUL = "/WEB-INF/pages/users/edit_user.zul";
+    public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
     private UserService userService;
     private ListModelList<User> users;
@@ -67,7 +67,7 @@ public class UsersVm implements ValidationFailure {
     @Command
     public void editUser(@BindingParam(value = "user") User user) {
         selectedUser = user;
-        zkHelper.wireToZul(EDIT_USER_ZUL);
+        zkHelper.wireToZul(EDIT_USER_URL);
     }
 
     @Command
