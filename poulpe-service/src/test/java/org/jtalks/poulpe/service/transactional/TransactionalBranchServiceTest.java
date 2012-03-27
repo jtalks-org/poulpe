@@ -96,9 +96,9 @@ public class TransactionalBranchServiceTest {
     public void testGetGroupAccessListFor() {
         PoulpeBranch branch = new PoulpeBranch();
 
-        branchService.getGroupAccessListFor(branch);
+        branchService.getPermissionsFor(branch);
 
-        verify(branchPermissionManager).getGroupAccessListFor(branch);
+        verify(branchPermissionManager).getPermissionsMapFor(branch);
 
     }
 

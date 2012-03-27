@@ -14,13 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.GeneralPermission;
@@ -55,6 +54,13 @@ public class GroupsPermissionsVm {
     // Internal state
     private final List<EntityPermissionsBlock> blocks;
 
+    /**
+     * Construct View-Model for 'Groups permissions' view.
+     * 
+     * @param windowManager the window manager instance
+     * @param componentService the component service instance
+     * @param selectedEntity the selected entity instance, for obtaining group which to be edited
+     */
     public GroupsPermissionsVm(@Nonnull WindowManager windowManager, @Nonnull ComponentService componentService,
             @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
@@ -68,13 +74,29 @@ public class GroupsPermissionsVm {
     /**
      * Gets list of {@link EntityPermissionsBlock}.
      * 
-     * @return the blocks
+     * @return the blocks, list instance is UNMODIFIABLE
      */
-    @SuppressWarnings("unchecked")
     public List<EntityPermissionsBlock> getBlocks() {
-        return ListUtils.unmodifiableList(blocks);
+        return Collections.unmodifiableList(blocks);
     }
 
+    /**
+     * Shows dialog with editing groups for selected permission.
+     * 
+     * @param entity the entity to edit permissions for
+     * @param permission the permission to edit
+     * @param mode the mode of permission, can be only 'allow' or 'restrict'
+     */
+    @Command
+    public void showGroupsDialog(@BindingParam("entity") Entity entity,
+            @BindingParam("permission") JtalksPermission permission, @BindingParam("mode") String mode) {
+        selectedEntity.setEntity(new PermissionForEntity(entity, mode, permission));
+        windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
+    }
+
+    /**
+     * Update VM state.
+     */
     private void updateView() {
         blocks.clear();
 
@@ -94,18 +116,4 @@ public class GroupsPermissionsVm {
             blocks.add(new EntityPermissionsBlock(component, "Component: " + component.getName(), pmBlocks));
         }
     }
-
-    @Command
-    public void showGroupsDialog(@BindingParam("entity") Entity entity,
-            @BindingParam("permission") JtalksPermission permission, @BindingParam("mode") String mode) {
-        boolean allowed = "allow".equalsIgnoreCase(mode);
-        Validate.isTrue(allowed || "restrict".equalsIgnoreCase(mode),
-                "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
-
-        PermissionForEntity permissionForEntity = new PermissionForEntity(entity, allowed, permission);
-
-        selectedEntity.setEntity(permissionForEntity);
-        windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
-    }
-
 }

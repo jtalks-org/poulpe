@@ -62,16 +62,14 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      * @param groupService the group service instance
      * @param userService the user service instance
      * @param selectedEntity the selected entity instance, for obtaining group which to be edited
+     * @throws NotFoundException if specified group not exist in persistence
      */
     public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity) {
+            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity)
+            throws NotFoundException {
         super();
 
-        try {
-            this.groupToEdit = groupService.get(selectedEntity.getEntity().getId());
-        } catch (NotFoundException e) {
-            throw new IllegalArgumentException("Illegal state of 'groupToEdit'", e);
-        }
+        groupToEdit = groupService.get(selectedEntity.getEntity().getId());
 
         this.windowManager = windowManager;
         this.groupService = groupService;
@@ -114,8 +112,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterExist() {
         exist.clear();
-        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())),
-                stateAfterEdit));
+        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), stateAfterEdit));
     }
 
     /**

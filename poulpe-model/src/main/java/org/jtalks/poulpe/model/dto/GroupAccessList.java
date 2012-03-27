@@ -36,7 +36,7 @@ public class GroupAccessList {
      * Adds group to the allowed access list.
      * 
      * @param group to be allowed
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList addAllowed(@Nullable PoulpeGroup group) {
         if (group != null) {
@@ -49,7 +49,7 @@ public class GroupAccessList {
      * Restricts a given group.
      * 
      * @param group to be restricted
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList addRestricted(@Nullable PoulpeGroup group) {
         if (group != null) {
@@ -62,7 +62,7 @@ public class GroupAccessList {
      * Sets new list of allowed groups (the elements from the old are removed).
      * 
      * @param allowed allowed groups
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList setAllowed(List<PoulpeGroup> allowed) {
         this.allowed.clear();
@@ -74,7 +74,7 @@ public class GroupAccessList {
      * Sets new list of restricted groups (the elements from the old are removed).
      * 
      * @param restricted restricted groups
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList setRestricted(List<PoulpeGroup> restricted) {
         this.restricted.clear();

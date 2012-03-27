@@ -22,7 +22,7 @@ import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
@@ -120,9 +120,9 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Pou
     /**
      * {@inheritDoc}
      */
+    @SuppressWarnings("unchecked")
     @Init
     @Override
-    @SuppressWarnings("unchecked")
     public void updateVm() {
         exist.clear();
         exist.addAll(stateAfterEdit);
@@ -135,13 +135,12 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Pou
      * Gets list of groups which already added in persistence for current {@link PoulpeBranch} with {@link AclMode}.
      * 
      * @param branch the branch to get for
-     * @param mode the ACL permission mode
-     * @return list of groups already added for current {@link PoulpeBranch} with {@link AclMode}
+     * @param allowed the permission mode (allowed or restricted)
+     * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<PoulpeGroup> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
-        BranchPermissions accessList = branchService.getGroupAccessListFor(branch);
-        BranchPermission branchPermission = (BranchPermission) permissionForEntity.getPermission();
-        return (allowed) ? accessList.getAllowed(branchPermission) : accessList.getRestricted(branchPermission);
+        PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
+        return permissionsMap.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }
 
     /**

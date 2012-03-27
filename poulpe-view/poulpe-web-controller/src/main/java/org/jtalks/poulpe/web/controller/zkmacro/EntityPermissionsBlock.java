@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.zkmacro;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.concurrent.Immutable;
@@ -31,6 +32,7 @@ import com.google.common.collect.Lists;
  */
 @Immutable
 public class EntityPermissionsBlock {
+
     private final Entity entity;
     private final String caption;
     private final List<PermissionManagementBlock> blocks;
@@ -65,9 +67,9 @@ public class EntityPermissionsBlock {
     /**
      * Gets blocks of {@link PermissionManagementBlock}.
      * 
-     * @return the blocks
+     * @return the blocks, list instance is UNMODIFIABLE
      */
     public List<PermissionManagementBlock> getBlocks() {
-        return blocks;
+        return Collections.unmodifiableList(blocks);
     }
 }

@@ -14,16 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import org.apache.commons.collections.ListUtils;
-import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -67,47 +66,30 @@ public class BranchPermissionManagementVm {
         this.branchService = branchService;
         this.selectedEntity = selectedEntity;
         this.branch = (PoulpeBranch) selectedEntity.getEntity();
+
         initDataForView();
     }
 
     /**
      * Command for showing dialog with editing groups list for current permission.
      * 
-     * @param params the URL-style formatted parameters from zul
+     * @param permission the permission for which editing window shows
+     * @param mode the mode for permission, can be only {@code "allow"} or {@code "restrict"}
      */
     @Command
     public void showGroupsDialog(@BindingParam("permission") JtalksPermission permission,
             @BindingParam("mode") String mode) {
-        boolean allowed = "allow".equalsIgnoreCase(mode);
-        Validate.isTrue(allowed || "restrict".equalsIgnoreCase(mode),
-                "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict'");
-
-        PermissionForEntity permissionForEntity = new PermissionForEntity(branch, allowed, permission);
-
-        selectedEntity.setEntity(permissionForEntity);
+        selectedEntity.setEntity(new PermissionForEntity(branch, mode, permission));
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
-    }
-
-    /**
-     * Initializes the data for view.
-     */
-    private void initDataForView() {
-        BranchPermissions groupAccessList = branchService.getGroupAccessListFor(branch);
-        for (BranchPermission permission : groupAccessList.getPermissions()) {
-            PermissionRow allowRow = PermissionRow.newAllowRow(groupAccessList.getAllowed(permission));
-            PermissionRow restrictRow = PermissionRow.newRestrictRow(groupAccessList.getRestricted(permission));
-            blocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
-        }
     }
 
     /**
      * Gets blocks which represents state of each permission.
      * 
-     * @return all blocks
+     * @return all blocks, list instance is UNMODIFIABLE
      */
-    @SuppressWarnings("unchecked")
     public List<PermissionManagementBlock> getBlocks() {
-        return ListUtils.unmodifiableList(blocks);
+        return Collections.unmodifiableList(blocks);
     }
 
     /**
@@ -117,6 +99,18 @@ public class BranchPermissionManagementVm {
      */
     public PoulpeBranch getBranch() {
         return branch;
+    }
+
+    /**
+     * Initializes the data for view.
+     */
+    private void initDataForView() {
+        PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
+        for (BranchPermission permission : permissionsMap.getPermissions()) {
+            PermissionRow allowRow = PermissionRow.newAllowRow(permissionsMap.getAllowed(permission));
+            PermissionRow restrictRow = PermissionRow.newRestrictRow(permissionsMap.getRestricted(permission));
+            blocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
+        }
     }
 
 }

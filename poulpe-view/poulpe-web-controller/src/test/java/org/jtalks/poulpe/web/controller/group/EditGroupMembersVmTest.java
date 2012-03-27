@@ -25,9 +25,11 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -53,13 +55,13 @@ import com.google.common.collect.Sets;
  * @author Vyacheslav Zhivaev
  * 
  */
-public class EditGroupMembersVMTest {
+public class EditGroupMembersVmTest {
 
     // SUT
     private EditGroupMembersVm viewModel;
 
     private PoulpeGroup groupToEdit;
-    private List<User> usersAvailable;
+    private List<User> usersAll;
     private Set<User> usersSelectedInAvailable;
     private Set<User> usersSelectedInExist;
     private SelectedEntity<PoulpeGroup> selectedEntity;
@@ -75,12 +77,12 @@ public class EditGroupMembersVMTest {
     public void setUp() throws NotFoundException {
         MockitoAnnotations.initMocks(this);
 
-        usersAvailable = ObjectsFactory.getFakeUsers(50);
+        usersAll = ObjectsFactory.getFakeUsers(50);
         // we are assert, that half of users already in group
-        List<User> usersAlreadyInGroup = usersAvailable.subList(0, usersAvailable.size() / 2);
+        List<User> usersAlreadyInGroup = new ArrayList<User>(usersAll.subList(0, usersAll.size() / 2));
         groupToEdit = createGroupWithUsers(usersAlreadyInGroup);
 
-        usersSelectedInAvailable = Sets.newHashSet(usersAvailable.get(0));
+        usersSelectedInAvailable = Sets.newHashSet(usersAll.get(0));
         usersSelectedInExist = Sets.newHashSet(usersAlreadyInGroup.get(0));
 
         selectedEntity = new SelectedEntity<PoulpeGroup>();
@@ -94,11 +96,21 @@ public class EditGroupMembersVMTest {
         viewModel = new EditGroupMembersVm(windowManager, groupService, userService, selectedEntity);
         viewModel = spy(viewModel);
 
-        // givenUsersSelectedInView();
+        viewModel.updateVm();
+
+        givenUsersSelectedInView();
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#add()}.
+     * Test method for {@link EditGroupMembersVm#getGroupToEdit()}.
+     */
+    @Test
+    public void testGetGroupToEdit() {
+        assertEquals(viewModel.getGroupToEdit(), groupToEdit);
+    }
+
+    /**
+     * Test method for {@link EditGroupMembersVm#add()}.
      */
     @Test
     public void testAdd() {
@@ -109,10 +121,9 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#addAll()}.
+     * Test method for {@link EditGroupMembersVm#addAll()}.
      */
-// @Test
-    // FIXME
+    @Test
     public void testAddAll() {
         List<User> selected = viewModel.getAvail();
 
@@ -123,10 +134,9 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#remove()}.
+     * Test method for {@link EditGroupMembersVm#remove()}.
      */
-    // FIXME
-    // @Test
+    @Test
     public void testRemove() {
         givenUsersSelectedInView();
 
@@ -137,10 +147,9 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#removeAll()}.
+     * Test method for {@link EditGroupMembersVm#removeAll()}.
      */
-    // FIXME
-    // @Test
+    @Test
     public void testRemoveAll() {
         List<User> selected = viewModel.getExist();
 
@@ -151,7 +160,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#save()}.
+     * Test method for {@link EditGroupMembersVm#save()}.
      */
     @Test
     public void testSave() {
@@ -161,7 +170,7 @@ public class EditGroupMembersVMTest {
     }
 
     /**
-     * Test method for {@link org.jtalks.poulpe.web.controller.group.EditGroupMembersVm#cancel()}.
+     * Test method for {@link EditGroupMembersVm#cancel()}.
      */
     @Test
     public void testCancel() {
@@ -184,8 +193,8 @@ public class EditGroupMembersVMTest {
     }
 
     private void givenAvailableUsersExist() {
-        when(userService.getUsersByUsernameWord(anyString())).thenReturn(usersAvailable);
-        when(userService.getAll()).thenReturn(usersAvailable);
+        when(userService.getUsersByUsernameWord(anyString())).thenReturn(usersAll);
+        when(userService.getAll()).thenReturn(usersAll);
     }
 
     private void givenUsersSelectedInView() {
@@ -199,5 +208,4 @@ public class EditGroupMembersVMTest {
         group.setPoulpeUsers(usersInGroup);
         return group;
     }
-
 }

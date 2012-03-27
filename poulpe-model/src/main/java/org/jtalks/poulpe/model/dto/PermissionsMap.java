@@ -14,41 +14,54 @@
  */
 package org.jtalks.poulpe.model.dto;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
-import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import com.google.common.collect.Maps;
 
 /**
- * Container for permissions and related to it access lists. Contains several methods to simple management for access
+ * Container for permissions and related to it access lists. Contains several methods to simple management of access
  * lists.
  * 
  * @author Vyacheslav Zhivaev
  */
 public class PermissionsMap<T extends JtalksPermission> {
 
-    protected final ConcurrentMap<T, GroupAccessList> accessListMap = Maps.newConcurrentMap();
+    private final ConcurrentMap<T, GroupAccessList> accessListMap = Maps.newConcurrentMap();
 
     /**
-     * Default constructor, sets nothing.
+     * Constructs {@link PermissionsMap} with empty internal state. Use add* methods to fill this map.
      */
     public PermissionsMap() {
+        // NOOP
     }
 
     /**
-     * Constructs {@link PermissionsMap} with predefined values to be added to the access list.
+     * Constructs {@link PermissionsMap} with given list of permissions and empty restrict\allow data.
      * 
-     * @param addToAccessList
+     * @param permissions to be added to the access lists
+     * @return new {@link PermissionsMap} object
      */
-    public PermissionsMap(Map<T, GroupAccessList> addToAccessList) {
-        accessListMap.putAll(addToAccessList);
+    public PermissionsMap(List<T> permissions) {
+        for (T permission : permissions) {
+            accessListMap.put(permission, new GroupAccessList());
+        }
+    }
+
+    /**
+     * Constructs {@link PermissionsMap} with predefined values to be added to the access lists.
+     * 
+     * @param accessLists values to initialize this container
+     * @return new {@link PermissionsMap} object
+     */
+    public PermissionsMap(Map<T, GroupAccessList> accessLists) {
+        accessListMap.putAll(accessLists);
     }
 
     /**
@@ -57,100 +70,86 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param permission to be added
      * @param toAllow group to allow
      * @param toRestrict group to restrict
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> put(T permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
-        this.accessListMap.putIfAbsent(permission, new GroupAccessList());
-        GroupAccessList accessList = this.accessListMap.get(permission);
-        accessList.addAllowed(toAllow).addRestricted(toRestrict);
+    public PermissionsMap<T> add(T permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
+        accessListMap.putIfAbsent(permission, new GroupAccessList());
+        accessListMap.get(permission).addAllowed(toAllow).addRestricted(toRestrict);
         return this;
     }
 
     /**
      * Adds new 'allowed' permission.
      * 
-     * @param permission the permission
-     * @param group group to allow
-     * @return this instance for providing fluent interface
+     * @param permission the permission to add
+     * @param group the group for which permission added
+     * @return {@code this} instance for providing fluent interface
      */
     public PermissionsMap<T> addAllowed(T permission, PoulpeGroup group) {
-        return put(permission, group, null);
+        return add(permission, group, null);
     }
 
     /**
      * Adds new 'restricted' permission.
      * 
-     * @param permission the permission
-     * @param group group to restrict
-     * @return this instance for providing fluent interface
+     * @param permission the permission to add
+     * @param group the group for which permission added
+     * @return {@code this} instance for providing fluent interface
      */
     public PermissionsMap<T> addRestricted(T permission, PoulpeGroup group) {
-        return put(permission, null, group);
+        return add(permission, null, group);
     }
 
     /**
-     * Based on 'allow' flag, put 'allow' permission on the branch (if it's {@code true}), or puts 'restrict' permission
-     * on it (otherwise).
+     * Based on 'allow' flag, add 'allow' permission (if it's {@code true}), or 'restrict' permission on it (otherwise).
      * 
-     * @param permission the permission
-     * @param group permission holder
+     * @param permission the permission to add
+     * @param group the group for which permission added
      * @param allow {@code true} if allowance is needed, {@code false} otherwise
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> put(T permission, PoulpeGroup group, boolean allow) {
-        return allow ? addAllowed(permission, group) : addRestricted(permission, group);
+    public PermissionsMap<T> add(T permission, PoulpeGroup group, boolean allow) {
+        return (allow) ? addAllowed(permission, group) : addRestricted(permission, group);
     }
 
     /**
-     * For given permission, retrieves list of {@link Component} object that are allowed.
+     * For given permission, retrieves list of {@link PoulpeGroup} that are allowed.
      * 
-     * @param permission the permission
-     * @return list of {@link PoulpeBranch}
+     * @param permission the permission to get for
+     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
      */
     public List<PoulpeGroup> getAllowed(T permission) {
-        return accessListMap.get(permission).getAllowed();
+        return Collections.unmodifiableList(accessListMap.get(permission).getAllowed());
     }
 
     /**
-     * For given permission, retrieves list of {@link Component} object that are restricted.
+     * For given permission, retrieves list of {@link PoulpeGroup} that are restricted.
      * 
-     * @param permission the permission
-     * @return list of {@link PoulpeBranch}
+     * @param permission the permission to get for
+     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
      */
     public List<PoulpeGroup> getRestricted(T permission) {
-        return accessListMap.get(permission).getRestricted();
+        return Collections.unmodifiableList(accessListMap.get(permission).getRestricted());
     }
 
     /**
-     * Gets set of permissions.
+     * For given permission, retrieves list of {@link PoulpeGroup} that are allowed or restricted relative to parameter
+     * {@code allowed}.
      * 
-     * @return all permissions
+     * @param permission the permission to get for
+     * @param allowed the flag indicating which type of groups needed: allowed (if {@code true}) or restricted
+     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
+     */
+    public List<PoulpeGroup> get(T permission, boolean allowed) {
+        return (allowed) ? getAllowed(permission) : getRestricted(permission);
+    }
+
+    /**
+     * Gets all permissions defined in this map.
+     * 
+     * @return set of all permissions defined in this map, set instance is UNMODIFIABLE
      */
     public Set<T> getPermissions() {
-        return accessListMap.keySet();
-    }
-
-    /**
-     * Static factory for creating {@link PermissionsMap} with given list of permissions.
-     * 
-     * @param permissions to be added to the access list
-     * @return new {@link PermissionsMap} object
-     */
-    public static <T extends JtalksPermission> PermissionsMap<T> create(List<T> permissions) {
-        return new PermissionsMap<T>(withEmptyAccessList(permissions));
-    }
-
-    /**
-     * For each permission created an empty {@link GroupAccessList}.
-     * 
-     * @param permissions to traverse
-     * @return map of permissions mapped to empty {@link GroupAccessList} objects
-     */
-    protected static <T extends JtalksPermission> Map<T, GroupAccessList> withEmptyAccessList(List<T> permissions) {
-        Map<T, GroupAccessList> newAccessListMap = Maps.newHashMap();
-        for (T permission : permissions) {
-            newAccessListMap.put(permission, new GroupAccessList());
-        }
-        return newAccessListMap;
+        return Collections.unmodifiableSet(accessListMap.keySet());
     }
 }

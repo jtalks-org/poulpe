@@ -16,6 +16,7 @@ package org.jtalks.poulpe.model.dto;
 
 import javax.annotation.concurrent.Immutable;
 
+import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.JtalksPermission;
 
@@ -41,6 +42,23 @@ public class PermissionForEntity {
     public PermissionForEntity(Entity target, boolean allowed, JtalksPermission permission) {
         this.target = target;
         this.allowed = allowed;
+        this.permission = permission;
+    }
+
+    /**
+     * Constructs container.
+     * 
+     * @param target the entity for which permission is
+     * @param mode the mode of permission, can be only {@code "allow"} or {@code "restrict"} (case ignored)
+     * @param permission the permission
+     */
+    public PermissionForEntity(Entity target, String mode, JtalksPermission permission) {
+        boolean allowedLocal = "allow".equalsIgnoreCase(mode);
+        Validate.isTrue(allowedLocal || "restrict".equalsIgnoreCase(mode),
+                "Illegal format of parameter 'mode', it can be only 'allow' or 'restrict' (case ignored)");
+
+        this.target = target;
+        this.allowed = allowedLocal;
         this.permission = permission;
     }
 

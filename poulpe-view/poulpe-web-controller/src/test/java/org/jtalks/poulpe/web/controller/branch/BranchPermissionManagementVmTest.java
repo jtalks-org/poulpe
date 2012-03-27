@@ -8,14 +8,11 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.GroupAccessList;
-import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
@@ -28,6 +25,12 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * Tests for {@link BranchPermissionManagementVm}.
+ * 
+ * @author Vyacheslav Zhivaev
+ * 
+ */
 public class BranchPermissionManagementVmTest {
 
     // SUT
@@ -62,11 +65,11 @@ public class BranchPermissionManagementVmTest {
         allowedGroup = ObjectsFactory.fakeGroup();
         restrictedGroup = ObjectsFactory.fakeGroup();
 
-        Map<BranchPermission, GroupAccessList> addToAccessList = new HashMap<BranchPermission, GroupAccessList>();
-        BranchPermissions groupAccessList = new BranchPermissions(addToAccessList);
-        groupAccessList.addAllowed(allowedPermission, allowedGroup);
-        groupAccessList.addRestricted(restrictedPermission, restrictedGroup);
-        when(branchService.getGroupAccessListFor(branch)).thenReturn(groupAccessList);
+        PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>();
+        permissionsMap.addAllowed(allowedPermission, allowedGroup);
+        permissionsMap.addRestricted(restrictedPermission, restrictedGroup);
+
+        when(branchService.getPermissionsFor(branch)).thenReturn(permissionsMap);
 
         sut = new BranchPermissionManagementVm(windowManager, branchService, selectedEntity);
     }
@@ -75,7 +78,7 @@ public class BranchPermissionManagementVmTest {
      * Checks that we are have all data passed in VM.
      */
     @Test
-    public void getBlocksTest() {
+    public void testGetBlocks() {
         List<PermissionManagementBlock> blocks = sut.getBlocks();
 
         for (PermissionManagementBlock block : blocks) {
@@ -95,7 +98,7 @@ public class BranchPermissionManagementVmTest {
      * What we are provide, that we must get back in same state.
      */
     @Test
-    public void getBranchTest() {
+    public void testGetBranch() {
         assertEquals(sut.getBranch(), branch);
     }
 
@@ -103,9 +106,7 @@ public class BranchPermissionManagementVmTest {
      * Check that dialog really opens.
      */
     @Test
-    public void showGroupsDialogTest() {
-        // provide data which already passed in VM through service layer
-
+    public void testShowGroupsDialog() {
         sut.showGroupsDialog(allowedPermission, "allow");
         sut.showGroupsDialog(restrictedPermission, "restrict");
 
@@ -113,7 +114,7 @@ public class BranchPermissionManagementVmTest {
     }
 
     @Test(expectedExceptions = { IllegalArgumentException.class })
-    public void showGroupsDialogIllegalFromatTest() {
+    public void testShowGroupsDialog_IllegalFormat() {
         sut.showGroupsDialog(restrictedPermission, "HERE_ILLEGAL_FORMATTED_STRING");
 
         verify(windowManager, never()).open(anyString());

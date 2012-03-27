@@ -14,14 +14,7 @@
  */
 package org.jtalks.poulpe.logic;
 
-import static ch.lambdaj.Lambda.index;
-import static ch.lambdaj.Lambda.on;
-
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
@@ -32,17 +25,12 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.AclUtil;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.builders.AclBuilders;
-import org.jtalks.common.security.acl.builders.AclOn;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.dto.branches.BranchPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
-import org.springframework.security.acls.model.AccessControlEntry;
-import org.springframework.security.acls.model.MutableAcl;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
@@ -76,9 +64,8 @@ public class PermissionManager {
      */
     public void changeGrants(Entity entity, PermissionChanges changes) {
         AclBuilders builders = new AclBuilders();
-        AclOn aclOn = builders.newBuilder(aclManager).grant(changes.getPermission())
-                .to(changes.getNewlyAddedGroupsAsArray());
-        aclOn.on(entity).flush();
+        builders.newBuilder(aclManager).grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
+                .on(entity).flush();
         builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
                 .on(entity).flush();
     }
@@ -104,13 +91,8 @@ public class PermissionManager {
      * @param branch object identity
      * @return {@link BranchPermissions} for given branch
      */
-    public BranchPermissions getGroupAccessListFor(Branch entity) {
-        BranchPermissions branchAccessList = BranchPermissions.create(BranchPermission.getAllAsList());
-        List<GroupAce> groupAces = aclManager.getBranchPermissions(entity);
-        for (GroupAce groupAce : groupAces) {
-            branchAccessList.put(groupAce.getBranchPermission(), getGroup(groupAce), groupAce.isGranting());
-        }
-        return branchAccessList;
+    public PermissionsMap<BranchPermission> getPermissionsMapFor(Branch branch) {
+        return getPermissionsMapFor(BranchPermission.getAllAsList(), branch);
     }
 
     /**
@@ -120,7 +102,7 @@ public class PermissionManager {
      * @return {@link PermissionsMap} for {@link Component}
      */
     public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
-        return getPermissionsMapFor(Arrays.asList(GeneralPermission.values()), component);
+        return getPermissionsMapFor(GeneralPermission.getAllAsList(), component);
     }
 
     /**
@@ -131,13 +113,13 @@ public class PermissionManager {
      * @return {@link PermissionsMap} for provided {@link Entity}
      */
     public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
-        PermissionsMap<T> permissionsMap = PermissionsMap.create(permissions);
-        List<GroupAce> groupAces = getEntityPermissions(entity);
-        Map<Integer, GroupAce> groupAcesByMask = index(groupAces, on(GroupAce.class).getBranchPermissionMask());
+        PermissionsMap<T> permissionsMap = new PermissionsMap<T>(permissions);
+        List<GroupAce> groupAces = aclManager.getGroupPermissionsOn(entity);
         for (T permission : permissions) {
-            GroupAce groupAce = groupAcesByMask.get(permission.getMask());
-            if (groupAce != null) {
-                permissionsMap.put(permission, getGroup(groupAce), groupAce.isGranting());
+            for (GroupAce groupAce : groupAces) {
+                if (groupAce.getBranchPermissionMask() == permission.getMask()) {
+                    permissionsMap.add(permission, getGroup(groupAce), groupAce.isGranting());
+                }
             }
         }
         return permissionsMap;
@@ -149,44 +131,5 @@ public class PermissionManager {
      */
     private PoulpeGroup getGroup(GroupAce groupAce) {
         return groupDao.get(groupAce.getGroupId());
-    }
-
-    // TODO: fix for AclManager, JIRA issue: #JTALKSCOMMON-52
-    // this is temporary while org.jtalks.common.security.acl.AclManager hasn't needed logic
-    private List<GroupAce> getEntityPermissions(Entity entity) {
-        Field aclUtilField = null;
-
-        try {
-            Class<? extends AclManager> clazz = aclManager.getClass();
-            aclUtilField = clazz.getDeclaredField("aclUtil");
-            
-            aclUtilField.setAccessible(true);
-
-            AclUtil aclUtil = (AclUtil) aclUtilField.get(aclManager);
-            List<GroupAce> result = getEntityPermissions(aclUtil, entity);
-
-            aclUtilField.setAccessible(false);
-
-            return result;
-        } catch (SecurityException e) {
-            throw new IllegalStateException("Can't obtain permissions for entity", e);
-        } catch (NoSuchFieldException e) {
-            throw new IllegalStateException("Can't obtain permissions for entity", e);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalStateException("Can't obtain permissions for entity", e);
-        } catch (IllegalAccessException e) {
-            throw new IllegalStateException("Can't obtain permissions for entity", e);
-        }
-    }
-
-    // this is temporary while org.jtalks.common.security.acl.AclManager hasn't needed logic
-    private List<GroupAce> getEntityPermissions(AclUtil aclUtil, Entity entity) {
-        MutableAcl branchAcl = aclUtil.getAclFor(entity);
-        List<AccessControlEntry> originalAces = branchAcl.getEntries();
-        List<GroupAce> resultingAces = new ArrayList<GroupAce>(originalAces.size());
-        for (AccessControlEntry entry : originalAces) {
-            resultingAces.add(new GroupAce(entry));
-        }
-        return resultingAces;
     }
 }

@@ -34,7 +34,7 @@ public class SelectedEntity<E> {
      * @return the selected entity, can return {@code null} if nothing was already selected
      */
     @Nullable
-    public E getEntity() {
+    public synchronized E getEntity() {
         return entity;
     }
 

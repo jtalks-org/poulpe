@@ -47,6 +47,8 @@ public class PermissionChanges {
      * Constructs the object with given {@link JtalksPermission} instance.
      * 
      * @param permission type of permission
+     * @param newlyAddedGroups the collection of newly added groups
+     * @param removedGroups the collection of removed groups
      */
     public PermissionChanges(JtalksPermission permission, Collection<PoulpeGroup> newlyAddedGroups,
             Collection<PoulpeGroup> removedGroups) {
