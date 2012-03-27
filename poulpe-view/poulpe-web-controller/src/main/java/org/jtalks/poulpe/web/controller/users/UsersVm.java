@@ -34,8 +34,8 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 public class UsersVm implements ValidationFailure {
-    public static final String EDIT_USER_DIALOG = "#editUserDialog";
     public static final String EDIT_USER_ZUL = "/WEB-INF/pages/users/edit_user.zul";
+    public static final String EDIT_USER_DIALOG = "#editUserDialog";
     private UserService userService;
     private ListModelList<User> users;
     private String searchString;

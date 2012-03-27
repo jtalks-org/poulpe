@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
@@ -133,6 +134,16 @@ public class ZkHelper {
      */
     public void addComponents(Collection<Component> components) {
         component.getChildren().addAll(components);
+    }
+
+    /**
+     * Returns the label of the specified key based on the current Locale, or null if no found. 
+     *
+     * @param key
+     * @return
+     */
+    public String getLabel(String key) {
+        return Labels.getLabel(key);
     }
 
 }
