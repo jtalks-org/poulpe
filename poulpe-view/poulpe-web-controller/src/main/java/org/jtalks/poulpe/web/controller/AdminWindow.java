@@ -14,7 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import java.util.Locale;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
+import org.zkoss.web.Attributes;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Center;
 
@@ -39,6 +47,13 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
         windowManager.setWorkArea(workArea);
+        Locale preferredLocale = null; //decide the locale (from, say, database)
+        Session session = Executions.getCurrent().getDesktop().getSession();
+        session.setAttribute(Attributes.PREFERRED_LOCALE, preferredLocale);
+        
+        // onButtonClick
+        HttpServletResponse response = (HttpServletResponse) Executions.getCurrent().getNativeResponse();
+        response.addCookie(new Cookie("my.locale", "value"));
     }
 
     /**

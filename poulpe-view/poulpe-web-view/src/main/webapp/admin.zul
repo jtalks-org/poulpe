@@ -7,7 +7,8 @@
   <window apply="${adminWindow}" width="100%" height="100%">
     <borderlayout>
       <north>
-        <label style="font-size=30px" value="Admin Panel" />
+        <label style="font-size=30px" value="${labels.admin.title}" />
+        <!-- <button label="ru" align="right" /> -->
       </north>
       <west splittable="true" collapsible="true">
         <listbox width="150px">

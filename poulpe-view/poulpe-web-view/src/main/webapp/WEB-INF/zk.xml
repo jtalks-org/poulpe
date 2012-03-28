@@ -19,4 +19,8 @@
   <system-config>
     <label-location>/WEB-INF/i18n/poulpe.properties</label-location>
   </system-config>
+  <library-property>
+    <name>org.zkoss.web.preferred.locale</name>
+    <value>en</value>
+  </library-property>
 </zk>
