@@ -60,10 +60,18 @@ public class TopicTypeVMTest {
     }
 
     @Test
+    public void testEditTopicType() {
+        topicTypeVM.editTopicType();
+
+        //due to static - message is null
+        assertNull(topicTypeVM.getEditMessage());
+    }
+
+    @Test
     public void testSaveTopicType() {
         topicTypeVM.saveTopicType();
 
-        verify(topicTypeService).saveOrUpdate(topicTypeVM.getSelected());
+        verify(topicTypeService).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
@@ -71,6 +79,14 @@ public class TopicTypeVMTest {
         topicTypeVM.deleteTopicType();
 
         verify(topicTypeService).deleteTopicType(any(TopicType.class));
+    }
+
+    @Test
+    public void testCancelEditTopicType() {
+        topicTypeVM.cancelEditTopicType();
+
+        assertNull(topicTypeVM.getEditMessage());
+        assertNull(topicTypeVM.getSelected());
     }
 
     @Test
@@ -82,4 +98,6 @@ public class TopicTypeVMTest {
         assertFalse(topicTypeVM.getTopicTypes().contains(selected));
         assertNull(topicTypeVM.getSelected());
     }
+
+
 }
