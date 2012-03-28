@@ -28,9 +28,9 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
-import org.jtalks.poulpe.web.controller.zkmacro.PermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.util.resource.Labels;
 
 import com.google.common.collect.Lists;
 
@@ -107,9 +107,8 @@ public class BranchPermissionManagementVm {
     private void initDataForView() {
         PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
         for (BranchPermission permission : permissionsMap.getPermissions()) {
-            PermissionRow allowRow = PermissionRow.newAllowRow(permissionsMap.getAllowed(permission));
-            PermissionRow restrictRow = PermissionRow.newRestrictRow(permissionsMap.getRestricted(permission));
-            blocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
+            blocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels
+                    .getLabel("permissions.allow_label"), Labels.getLabel("permissions.restrict_label")));
         }
     }
 

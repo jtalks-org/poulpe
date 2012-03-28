@@ -14,15 +14,16 @@
  */
 package org.jtalks.poulpe.web.controller.zkmacro;
 
-
-import org.jtalks.common.model.permissions.JtalksPermission;
-
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+
+import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 
 /**
  * The page of editing branch permission consists of several blocks, each block represents a single permission and the
  * lists of groups that are granted to that permission (allowed) or restricted to it. The example of such block:
+ * 
  * <pre>
  *  _____________________________________
  * |Create New Topics in the PoulpeBranch|
@@ -31,10 +32,11 @@ import javax.annotation.concurrent.Immutable;
  * |Restricted: Banned Users             |
  * |_____________________________________|
  * </pre>
+ * 
  * There can be plenty of such blocks, they all look the same, but the permission, allowed & restricted groups are
  * always different. This class represents a model (data) for such block. Note, that each row of groups is represented
  * with {@link PermissionRow}.
- *
+ * 
  * @author stanislav bashkirtsev.
  * @author Vyacheslav Zhivaev
  * @see PermissionRow
@@ -54,12 +56,12 @@ public final class PermissionManagementBlock {
     /**
      * Creates a block with permission and without any restricted/allowed groups. Note, that since the class is
      * immutable, you won't be able to set the allowed and restricted rows in the very same instance, for these purposes
-     * you'll need to use {@link #addAllowRow(PermissionRow)} & {@link
-     * #addRestrictRow(PermissionRow)} which create and return new instances each time. By default,
-     * empty rows will be created for both allowed and restricted groups, this is the perfect case for brand new branch
-     * where no groups were specified neither as restricted, nor as allowed.
-     *
-     * @param permission the permission this block represents
+     * you'll need to use {@link #addAllowRow(PermissionRow)} & {@link #addRestrictRow(PermissionRow)} which create and
+     * return new instances each time. By default, empty rows will be created for both allowed and restricted groups,
+     * this is the perfect case for brand new branch where no groups were specified neither as restricted, nor as
+     * allowed.
+     * 
+     * @param permission the permission which this block represents
      */
     public PermissionManagementBlock(@Nonnull JtalksPermission permission) {
         this(permission, PermissionRow.newAllowRow(), PermissionRow.newRestrictRow());
@@ -67,22 +69,37 @@ public final class PermissionManagementBlock {
 
     /**
      * Creates the whole instance with all the required information ready to feed the page.
-     *
-     * @param permission  the permission this block represents
-     * @param allowRow    the set of groups that are granted to the specified {@code permission}
+     * 
+     * @param permission the permission which this block represents
+     * @param allowRow the set of groups that are granted to the specified {@code permission}
      * @param restrictRow the set of groups that are restricted (not allowed) to use the specified {@code permission}
      */
-    public PermissionManagementBlock(@Nonnull JtalksPermission permission,
-                                           @Nonnull PermissionRow allowRow,
-                                           @Nonnull PermissionRow restrictRow) {
+    public PermissionManagementBlock(JtalksPermission permission, PermissionRow allowRow, PermissionRow restrictRow) {
         this.permission = permission;
         this.allowRow = allowRow;
         this.restrictRow = restrictRow;
     }
-    
+
+    /**
+     * Creates a block with permission and restricted/allowed groups which gets from specified {@link PermissionsMap}.
+     * Rows of restricted/allowed groups will be constructed automatically with defined {@code allowedRowLabel} and
+     * {@code restrictedRowLabel}.
+     * 
+     * @param permission the permission which this block represents
+     * @param permissionsMap the permissions map for building internal state
+     * @param allowedRowLabel the label for Allow row
+     * @param restrictedRowLabel the label for Restrict row
+     */
+    public <T extends JtalksPermission> PermissionManagementBlock(T permission,
+            @Nonnull PermissionsMap<T> permissionsMap, String allowedRowLabel, String restrictedRowLabel) {
+        this.permission = permission;
+        this.allowRow = new PermissionRow(allowedRowLabel, permissionsMap.getAllowed(permission));
+        this.restrictRow = new PermissionRow(restrictedRowLabel, permissionsMap.getRestricted(permission));
+    }
+
     /**
      * Gets the permission this block is all about.
-     *
+     * 
      * @return the permission this block is all about
      */
     public JtalksPermission getPermission() {
@@ -91,7 +108,7 @@ public final class PermissionManagementBlock {
 
     /**
      * Replaces the originally specified permission with the new instance.
-     *
+     * 
      * @param permission the new permission this block should refer to
      * @return new instance with new permission specified and others are kept previous
      */
@@ -102,7 +119,7 @@ public final class PermissionManagementBlock {
     /**
      * Gets the row that represents the granted groups (those that are allowed to do the action the {@link #permission}
      * is about).
-     *
+     * 
      * @return the row that represents the granted groups
      */
     public PermissionRow getAllowRow() {
@@ -111,7 +128,7 @@ public final class PermissionManagementBlock {
 
     /**
      * Adds the row of groups that are granted to the {@link #permission}.
-     *
+     * 
      * @param allowRow the row of groups that are granted to the {@link #permission}
      * @return new instance with new argument specified and others are kept previous
      */
@@ -120,9 +137,9 @@ public final class PermissionManagementBlock {
     }
 
     /**
-     * Gets the row that represents the restricted groups (those that are not allowed to do the action the {@link
-     * #permission} is about).
-     *
+     * Gets the row that represents the restricted groups (those that are not allowed to do the action the
+     * {@link #permission} is about).
+     * 
      * @return the row that represents the restricted groups
      */
     public PermissionRow getRestrictRow() {
@@ -131,7 +148,7 @@ public final class PermissionManagementBlock {
 
     /**
      * Adds the row of groups that are restricted to execute the {@link #permission}.
-     *
+     * 
      * @param restrictRow the row of groups that are not allowed to fulfill the {@link #permission}
      * @return new instance with new argument specified and others are kept previous
      */

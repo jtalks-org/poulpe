@@ -18,12 +18,12 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <borderlayout height="30px">
-    <west border="none" width="60px">
+    <west border="none" width="80px">
       <label value="${arg.row.rowLabel}" />
     </west>
     <center border="none">
       <hbox>
-        <button forEach="${arg.row.groups}" label="${each.name}" sclass="usergroup-button" />
+        <label forEach="${arg.row.groups}" value="${each.name}" sclass="manage-permissions-added-group-label" />
       </hbox>
     </center>
     <east border="none">
@@ -39,7 +39,7 @@
       but here in anyway it not work (i don't now why). I forced to use custom-attributes.
       // Vyacheslav Zhivaev
       -->
-      <button label="Change Groups" sclass="add-group-button"
+      <button label="${labels.groups.button.edit}" sclass="add-group-button"
           onClick="@command('showGroupsDialog', permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
         <custom-attributes permission="${arg.permission}" />
         <custom-attributes mode="${arg.mode}" />

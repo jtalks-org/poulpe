@@ -18,7 +18,7 @@
 <?component name="groups-row" macroURI="/WEB-INF/zkmacros/add-usergroups-row.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <groupbox width="100%">
+  <groupbox>
     <caption label="${arg.block.permission.name}" />
     <groups-row permission="${arg.block.permission}" row="${arg.block.allowRow}" mode="allow" />
     <groups-row permission="${arg.block.permission}" row="${arg.block.restrictRow}" mode="restrict" />

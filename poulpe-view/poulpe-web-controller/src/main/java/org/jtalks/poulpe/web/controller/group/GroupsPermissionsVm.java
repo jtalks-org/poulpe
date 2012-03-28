@@ -31,9 +31,9 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.EntityPermissionsBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
-import org.jtalks.poulpe.web.controller.zkmacro.PermissionRow;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.util.resource.Labels;
 
 import com.google.common.collect.Lists;
 
@@ -108,12 +108,12 @@ public class GroupsPermissionsVm {
             Set<GeneralPermission> permissions = permissionsMap.getPermissions();
 
             if (permissions.contains(permission)) {
-                PermissionRow allowRow = PermissionRow.newAllowRow(permissionsMap.getAllowed(permission));
-                PermissionRow restrictRow = PermissionRow.newRestrictRow(permissionsMap.getRestricted(permission));
-                pmBlocks.add(new PermissionManagementBlock(permission, allowRow, restrictRow));
+                pmBlocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels
+                        .getLabel("permissions.allow_label"), Labels.getLabel("permissions.restrict_label")));
             }
 
-            blocks.add(new EntityPermissionsBlock(component, "Component: " + component.getName(), pmBlocks));
+            blocks.add(new EntityPermissionsBlock(component, Labels.getLabel("component.title", "") + ": "
+                    + component.getName(), pmBlocks));
         }
     }
 }

@@ -46,7 +46,6 @@ public class PermissionsMap<T extends JtalksPermission> {
      * Constructs {@link PermissionsMap} with given list of permissions and empty restrict\allow data.
      * 
      * @param permissions to be added to the access lists
-     * @return new {@link PermissionsMap} object
      */
     public PermissionsMap(List<T> permissions) {
         for (T permission : permissions) {
@@ -58,7 +57,6 @@ public class PermissionsMap<T extends JtalksPermission> {
      * Constructs {@link PermissionsMap} with predefined values to be added to the access lists.
      * 
      * @param accessLists values to initialize this container
-     * @return new {@link PermissionsMap} object
      */
     public PermissionsMap(Map<T, GroupAccessList> accessLists) {
         accessListMap.putAll(accessLists);

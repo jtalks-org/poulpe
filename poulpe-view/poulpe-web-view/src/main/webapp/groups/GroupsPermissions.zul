@@ -26,6 +26,8 @@
       height="100%" contentStyle="overflow: auto"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('groupsPermissionsVm') @init(groupsPermissionsVm)">
 
+    <style src="/resources/css/all.css" />
+
     <window forEach="${groupsPermissionsVm.blocks}" border="normal" width="100%">
       <caption-block text="${each.caption}" />
       
