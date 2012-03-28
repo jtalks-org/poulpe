@@ -36,7 +36,9 @@ public class ZkHelper {
     }
 
     /**
-     * Wires zk objects to their ui representation
+     * Wires zk objects to their ui representation for events handling.<br>
+     * Adds forward conditions to myid source component so onXxx source event received by myid component can be
+     * forwarded to the specified target component with the target event name onXxx$myid.
      */
     public void wireByConvention() {
         ConventionWires.wireVariables(component, component);
@@ -52,6 +54,12 @@ public class ZkHelper {
         return Executions.createComponents(zul, component, null);
     }
 
+    /**
+     * Wire components to controller.
+     * 
+     * @param component the reference component for selector
+     * @param controller the controller object to be injected with variables
+     */
     public void wireComponents(Component component, Object controller) {
         Selectors.wireComponents(component, controller, false);
     }

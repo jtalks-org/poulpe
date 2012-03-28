@@ -59,7 +59,6 @@ public class RanksManagementVmTest {
         vm.newItem();
         
         verify(zkHelper).wireToZul(EDIT_RANK_ZUL);
-        verify(zkHelper).getLabel(CREATOR_TITLE);
         verify(rankDialog).setTitle(CREATOR_TITLE_LABEL);
     }
 
@@ -71,13 +70,12 @@ public class RanksManagementVmTest {
         vm.edit();
         
         verify(zkHelper).wireToZul(EDIT_RANK_ZUL);
-        verify(zkHelper).getLabel(MODIFIER_TITLE);
         verify(rankDialog).setTitle(MODIFIER_TITLE_LABEL);
     }
 
     @Test
     public void testSave() throws Exception {
-        when(zkHelper.findComponent(anyString())).thenReturn(new Window());
+        when(zkHelper.findComponent(EDIT_RANK_DIALOG)).thenReturn(rankDialog);
         when(entityValidator.validate(any(Rank.class))).thenReturn(ValidationResult.EMPTY);
         Rank rank = new Rank("rank");
         vm.setSelected(rank);
@@ -85,13 +83,14 @@ public class RanksManagementVmTest {
         vm.save();
 
         verify(service).saveRank(rank);
-        verify(zkHelper).findComponent(EDIT_RANK_DIALOG);
+        verify(rankDialog).detach();
         verify(service, times(2)).getAll();
     }
 
     @Test
     public void testDelete() {
         vm.delete();
+        
         verify(dialogManager).confirmDeletion(Collections.<String> emptyList(), vm);
     }
 
@@ -101,7 +100,6 @@ public class RanksManagementVmTest {
         
         vm.dialogClosed();
         
-        verify(zkHelper).findComponent(EDIT_RANK_DIALOG);
         verify(rankDialog).detach();
     }
 
@@ -112,9 +110,7 @@ public class RanksManagementVmTest {
         
         vm.cancel();
         
-        verify(zkHelper).findComponent(EDIT_RANK_DIALOG);
         verify(rankDialog).detach();
-        verify(zkHelper).getCurrentComponent(DELETE_BUTTON_ID);
         verify(button).setDisabled(true);
         
     }

@@ -40,13 +40,16 @@ public class UsersVmTest {
     @Test
     public void testSearchUser() {
         vm.setSearchString(SEARCH_STRING);
+        
         vm.searchUser();
+        
         verify(service).getUsersByUsernameWord(SEARCH_STRING);
     }
 
     @Test
     public void testEditUser() throws Exception {
         vm.editUser(new User());
+        
         verify(zkHelper).wireToZul(EDIT_USER_URL);
     }
 
@@ -59,7 +62,6 @@ public class UsersVmTest {
         vm.saveUser(user);
 
         verify(service).updateUser(user);
-        verify(zkHelper).findComponent(EDIT_USER_DIALOG);
         verify(userDialog).detach();
     }
 
@@ -69,7 +71,6 @@ public class UsersVmTest {
         
         vm.cancelEdit();
         
-        verify(zkHelper).findComponent(EDIT_USER_DIALOG);
         verify(userDialog).detach();
     }
 }
