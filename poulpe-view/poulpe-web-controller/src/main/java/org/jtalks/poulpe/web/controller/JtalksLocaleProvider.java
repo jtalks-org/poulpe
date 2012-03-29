@@ -19,6 +19,8 @@ public class JtalksLocaleProvider implements RequestInterceptor {
             for (int j = cookies.length; --j >= 0;) {
                if (cookies[j].getName().equals("my.locale")) {
                     String val = cookies[j].getValue();
+                    val = "ru";
+                    System.out.println("val!:"+val);
                     Locale locale = org.zkoss.util.Locales.getLocale(val);
                     sess.setAttribute(Attributes.PREFERRED_LOCALE, locale);
                     return;

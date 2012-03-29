@@ -19,8 +19,19 @@
   <system-config>
     <label-location>/WEB-INF/i18n/poulpe.properties</label-location>
   </system-config>
+  
   <library-property>
     <name>org.zkoss.web.preferred.locale</name>
     <value>en</value>
   </library-property>
+  
+  <listener>
+    <description>Request Interceptor for setting locale for each user based on his/her preferences</description>
+    <listener-class>org.jtalks.poulpe.web.controller.JtalksLocaleProvider</listener-class>
+  </listener>
+  
+  <!-- <library-property>
+    <name>org.zkoss.util.label.web.charset</name>
+    <value>Another.charset</value>
+  </library-property> -->
 </zk>
