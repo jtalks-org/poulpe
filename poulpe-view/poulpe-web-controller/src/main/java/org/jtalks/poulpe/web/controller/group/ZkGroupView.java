@@ -70,7 +70,7 @@ public class ZkGroupView extends Window implements AfterCompose {
         @Override
         public void render(Listitem listItem, PoulpeGroup group, int index) throws Exception {
             listItem.appendChild(new Listcell(group.getName()));
-            listItem.appendChild(new Listcell("Not specified yet"));
+            listItem.appendChild(new Listcell(Integer.toString(group.getUsers().size())));
             listItem.setId(String.valueOf(group.getId()));
         }
     };
