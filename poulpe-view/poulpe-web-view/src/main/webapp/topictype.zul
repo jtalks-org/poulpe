@@ -21,35 +21,41 @@
             </listbox>
             <toolbar>
                 <button label="${labels.item.add}" onClick="@command('newTopicType')" />
-                <button label="${labels.item.save}" onClick="@command('saveTopicType')" disabled="@bind(empty ttvm.selected)" />
+                <button label="${labels.item.edit}" onClick="@command('editTopicType')" disabled="@bind(empty ttvm.selected)" />
                 <button label="${labels.sections.button.delete}" onClick="@command(ttvm.selected.id eq 0?'deleteFromList':'deleteTopicType')" disabled="@load(empty ttvm.selected)" />
             </toolbar>
-            <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
-                <grid hflex="true" >
-                    <columns>
-                        <column width="20%"/>
-                        <column width="100%"/>
-                    </columns>
-                    <rows>
-                        <row>
-                            Id
-                            <label value="@load(ttvm.selected.id)"/>
-                        </row>
-                        <row>
-                            ${labels.title}
-                            <hlayout>
-                                <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
-                                                @validator(ttvm.titleValidator)" />
-                                <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
-                            </hlayout>
-                        </row>
-                        <row>
-                            ${labels.topictypes.list.descr}
-                            <textbox value="@load(ttvm.selected.description) @save(ttvm.selected.description,before='saveTopicType')"/>
-                        </row>
-                    </rows>
-                </grid>
-            </groupbox>
+            <window title="@load(ttvm.editMessage)" mode="modal" border="normal" width="600px" visible="@load(not empty ttvm.editMessage)">
+                <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
+                    <grid hflex="true" >
+                        <columns>
+                            <column width="20%"/>
+                            <column width="100%"/>
+                        </columns>
+                        <rows>
+                            <row>
+                                Id
+                                <label value="@load(ttvm.selected.id)"/>
+                            </row>
+                            <row>
+                                ${labels.title}
+                                <hlayout>
+                                    <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
+                                                    @validator(ttvm.titleValidator)" />
+                                    <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
+                                </hlayout>
+                            </row>
+                            <row>
+                                ${labels.topictypes.list.descr}
+                                <textbox value="@load(ttvm.selected.description) @save(ttvm.selected.description,before='saveTopicType')"/>
+                            </row>
+                        </rows>
+                    </grid>
+                </groupbox>
+                <toolbar>
+                    <button label="${labels.item.save}" onClick="@command('saveTopicType')" disabled="@bind(empty ttvm.selected)" />
+                    <button label="${labels.item.delete.dialog.cancel}" onClick="@command('cancelEditTopicType')" />
+                </toolbar>
+            </window>
         </vbox>
     </window>
 </zk>
