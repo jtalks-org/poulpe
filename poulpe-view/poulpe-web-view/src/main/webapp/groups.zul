@@ -14,7 +14,7 @@
     <listbox id="groupsListbox">
       <listhead sizable="true">
         <listheader align="center" label="${labels.groups.name}" sclass="boldstyle" />
-        <listheader align="center" label="${labels.groups.members}" />
+        <listheader align="center" label="${labels.groups.memberCount}" />
       </listhead>
     </listbox>
     <button id="addButton" label="+" sclass="groups.addButton" />
