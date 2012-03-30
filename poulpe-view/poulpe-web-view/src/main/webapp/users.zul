@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="usersWindow" title="${labels.users.list.title}" border="normal" hflex="true"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)" vflex="true">
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)" vflex="false">
 
     <label value="${labels.users.label.search}" />
     :
