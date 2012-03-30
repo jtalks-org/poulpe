@@ -10,9 +10,8 @@
     <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false" maxlength="20" />
 
     <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton" />
-
     <listbox id="listbox" model="@bind(vm.users)" vflex="true" sizedByContent="true"
-      mold="paging" pageSize="20" pagingPosition="both">
+      mold="paging" pageSize="20" pagingPosition="both" height="500px">
       <listhead>
         <listheader label="${labels.users.username}" sort="auto(username)" hflex="1" />
         <listheader label="${labels.users.email}" sort="auto(email)" hflex="1" />
