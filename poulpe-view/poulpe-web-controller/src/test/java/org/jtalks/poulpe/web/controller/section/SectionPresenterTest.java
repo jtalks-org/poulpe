@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.section;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeBranch;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
 import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSections;
+import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeForum;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -26,11 +27,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -45,7 +50,8 @@ public class SectionPresenterTest {
 
     private SectionPresenter presenter;
 
-    @Mock SectionService service;
+    @Mock SectionService sectionService;
+    @Mock ComponentService componentService;
     @Mock ZkSectionView view;
     @Mock DialogManager dialogManager;
     @Mock EntityValidator entityValidator;
@@ -54,7 +60,8 @@ public class SectionPresenterTest {
     @Mock DeleteSectionDialogPresenter dialogPresenter;
     
     
-    private List<PoulpeSection> sections = fakeSections();
+    private Jcommune forum = fakeForum();
+    private List<PoulpeSection> sections = forum.getSections();
     private PoulpeSection section = sections.get(0);
     private PoulpeBranch branch = fakeBranch();
     
@@ -63,14 +70,16 @@ public class SectionPresenterTest {
         MockitoAnnotations.initMocks(this);
         
         presenter = new SectionPresenter();
-        presenter.setSectionService(service);
+        presenter.setSectionService(sectionService);
+        presenter.setComponentService(componentService);
         presenter.setDialogManager(dialogManager);
         presenter.setEntityValidator(entityValidator);
         presenter.setCurrentSectionTreeComponentImpl(currentSectionTreeComponent);
         presenter.setPerfomableFactory(perfomableFactory);
         presenter.setDeleteSectionDialogPresenter(dialogPresenter);
         
-        when(service.getAll()).thenReturn(sections);
+        when(sectionService.getAll()).thenReturn(sections);
+        when(componentService.getByType(ComponentType.FORUM)).thenReturn(forum);
         presenter.initView(view);
     }
     
@@ -194,7 +203,7 @@ public class SectionPresenterTest {
     @Test 
     public void saveSection() {
         presenter.saveSection(section);
-        verify(service).saveSection(section);
+        verify(sectionService).saveSection(section);
     }
 
 }
