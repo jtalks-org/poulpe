@@ -4,32 +4,36 @@ import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
+import org.zkoss.util.Locales;
 import org.zkoss.web.Attributes;
 import org.zkoss.zk.ui.Session;
 import org.zkoss.zk.ui.util.RequestInterceptor;
 
-public class JtalksLocaleProvider implements RequestInterceptor {
+/**
+ * Request Interceptor for setting locale for each user based on user's preferences.
+ */
+public class LocaleProvider implements RequestInterceptor {
 
+    public static final String USER_LOCALE = "userLocale";
+
+    /**
+     * Restore locale from the previous user request and sets it for the current session, i.e. overrides default language for all users.
+     */
     @Override
     public void request(Session sess, Object request, Object response) {
         final Cookie[] cookies = ((HttpServletRequest)request).getCookies();
         if (cookies != null) {
             for (int j = cookies.length; --j >= 0;) {
-               if (cookies[j].getName().equals("my.locale")) {
-                    String val = cookies[j].getValue();
-                    val = "ru";
-                    System.out.println("val!:"+val);
-                    Locale locale = org.zkoss.util.Locales.getLocale(val);
+               if (cookies[j].getName().equals(USER_LOCALE)) {
+                    String localeString = cookies[j].getValue();
+                    Locale locale = Locales.getLocale(localeString);
                     sess.setAttribute(Attributes.PREFERRED_LOCALE, locale);
                     return;
                 }
             }
         }
         
-        HttpServletResponse resp = (HttpServletResponse) response;
-        resp.addCookie(new Cookie("my.locale", "value"));
     }
 
 }

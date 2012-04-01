@@ -21,17 +21,13 @@
   </system-config>
   
   <library-property>
+    <description>Sets English as default language for all users</description>
     <name>org.zkoss.web.preferred.locale</name>
     <value>en</value>
   </library-property>
   
   <listener>
-    <description>Request Interceptor for setting locale for each user based on his/her preferences</description>
-    <listener-class>org.jtalks.poulpe.web.controller.JtalksLocaleProvider</listener-class>
+    <description>Request Interceptor for setting locale for each user based on user's preferences</description>
+    <listener-class>org.jtalks.poulpe.web.controller.LocaleProvider</listener-class>
   </listener>
-  
-  <!-- <library-property>
-    <name>org.zkoss.util.label.web.charset</name>
-    <value>Another.charset</value>
-  </library-property> -->
 </zk>

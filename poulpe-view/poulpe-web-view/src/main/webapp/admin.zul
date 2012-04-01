@@ -7,7 +7,14 @@
   <window apply="${adminWindow}" width="100%" height="100%">
     <borderlayout>
       <north>
-        <label style="font-size=30px" value="${labels.admin.title}" />
+        <groupbox>
+          <style>
+            .lang {float: right}
+          </style>
+          <label style="font-size=30px" value="${labels.admin.title}" />
+          <a href="#" forward="onClick=onChangeLocaleRu" image="/resources/img/russia.png" sclass="lang" />
+          <a href="#" forward="onClick=onChangeLocaleEn" image="/resources/img/great britain.png" sclass="lang" />
+        </groupbox>
       </north>
       <west splittable="true" collapsible="true">
         <listbox width="150px">
@@ -18,9 +25,7 @@
           <listitem label="${labels.admin.ban.users}" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
           <listitem label="${labels.admin.user.groups}" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
           <listitem label="${labels.admin.ranks}" forward="onClick=onShowRanks, onOK=onShowRanks" />
-          <listitem label="ru" forward="onClick=onChangeLocale" />
           <listfoot />
-          <!-- <button label="ru" forward="onClick=onChangeLocale" /> -->
         </listbox>
       </west>
       <center id="workArea" border="0" />

@@ -148,8 +148,7 @@ public class BranchPermissionManagementVm {
         dialogClosed();
 
         // reloading the page, couldn't find a better way yet
-//        Executions.getCurrent().sendRedirect("");
-        Executions.sendRedirect(null);
+        Executions.getCurrent().sendRedirect("");
     }
 
     /**

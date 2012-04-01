@@ -13,19 +13,15 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.jtalks.poulpe.web.controller;
+import static org.jtalks.poulpe.web.controller.LocaleProvider.USER_LOCALE;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
-import org.zkoss.util.Locales;
-import org.zkoss.web.Attributes;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.util.Clients;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Center;
 
@@ -50,26 +46,39 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     public void doAfterCompose(Component comp) throws Exception {
         super.doAfterCompose(comp);
         windowManager.setWorkArea(workArea);
-        Locale locale = null; //decide the locale (from, say, database)
-        Session session = Executions.getCurrent().getDesktop().getSession();
-        session.setAttribute(Attributes.PREFERRED_LOCALE, locale);
-        
-        // onButtonClick
+        // TODO get user language from DB
+        /*
+        String localeLanguage = ...; //decide the locale (from, say, database) 
+        setCookie(localeLanguage);
+        */
     }
 
-    public void onChangeLocale() throws IOException {
+    /**
+     * Sets Russian language.
+     * @throws IOException
+     */
+    public void onChangeLocaleRu() throws IOException {
+        setCookieAndRedirect("ru");
+    }
+
+    /**
+     * Sets English language.
+     * @throws IOException
+     */
+    public void onChangeLocaleEn() throws IOException {
+        setCookieAndRedirect("en");
+    }
+
+    private void setCookieAndRedirect(String localeLanguage) {
+        setCookie(localeLanguage);
+        Executions.sendRedirect(null); //reload the page
+    }
+
+    private void setCookie(String localeLanguage) {
         HttpServletResponse response = (HttpServletResponse) Executions.getCurrent().getNativeResponse();
-        response.addCookie(new Cookie("my.locale", "value"));
-        
-        Locale locale = null; //decide the locale (from, say, database)
-        session.setAttribute(Attributes.PREFERRED_LOCALE, locale);
-
-        Clients.reloadMessages(locale);
-        Locales.setThreadLocal(locale);
-        
-//        Labels.reset();
-//        Executions.sendRedirect(null); //reload the same page
+        response.addCookie(new Cookie(USER_LOCALE, localeLanguage));
     }
+
     /**
      * Show the component list view
      */
