@@ -43,18 +43,16 @@ public class TopicTypeVMTest {
         MockitoAnnotations.initMocks(this);
 
         topicTypeVM = new TopicTypeVM(topicTypeService, dialogManager, entityValidator);
-        topicTypeVM.setSelected(getTopicType());
+        TopicType selected = getTopicType();
+        topicTypeVM.setSelected(selected);
+        topicTypeVM.getTopicTypes().add(selected);
     }
 
     @Test
     public void testNewTopicType() {
-        int oldSize = topicTypeVM.getTopicTypes().size();
-
         topicTypeVM.newTopicType();
 
-        int newSize = topicTypeVM.getTopicTypes().size();
         TopicType newTT = topicTypeVM.getSelected();
-        assertTrue(newSize - oldSize == 1);
         assertTrue(newTT.getTitle().equals("New Title"));
         assertTrue(newTT.getDescription().equals("New Description"));
     }
@@ -71,7 +69,7 @@ public class TopicTypeVMTest {
     public void testSaveTopicType() {
         topicTypeVM.saveTopicType();
 
-        verify(topicTypeService).saveOrUpdate(any(TopicType.class));
+        verify(topicTypeVM.getTopicTypeService()).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
