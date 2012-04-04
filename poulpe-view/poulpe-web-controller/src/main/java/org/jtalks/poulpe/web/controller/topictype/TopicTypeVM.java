@@ -44,11 +44,11 @@ public class TopicTypeVM {
     //the selected topicType
     private TopicType selected;
     //service
-    private TopicTypeService topicTypeService;
+    private final TopicTypeService topicTypeService;
     //dialog manager
-    private DialogManager dialogManager;
+    private final DialogManager dialogManager;
     //validator JSR-303
-    private EntityValidator entityValidator;
+    private final EntityValidator entityValidator;
     //dialogMessage when new window is opened
     private String editMessage;
     //messages for creating and editing topicType
@@ -76,12 +76,9 @@ public class TopicTypeVM {
     @NotifyChange({"selected", "topicTypes", "editMessage"})
     @Command
     public void newTopicType() {
-        TopicType topicType = new TopicType();
-        //select the new one
-        selected = topicType;
+        selected = new TopicType();
         selected.setTitle("New Title");
         selected.setDescription("New Description");
-        getTopicTypes().add(topicType);
         editMessage = Labels.getLabel(NEW_TOPIC_TYPE);
     }
 
@@ -102,6 +99,10 @@ public class TopicTypeVM {
     @Command
     public void saveTopicType() {
         getTopicTypeService().saveOrUpdate(selected);
+        //check out if selected is just created
+        if (!topicTypes.contains(selected)) {
+            getTopicTypes().add(selected);
+        }
         cancelEditTopicType();
     }
 
@@ -195,15 +196,6 @@ public class TopicTypeVM {
     }
 
     /**
-     * Sets DialogManager to iteract with user
-     *
-     * @param dialogManager new DialogManager to use
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
-
-    /**
      * Returns ListModelList<TopicType>
      *
      * @return ListModelList to use on web-form
@@ -250,15 +242,6 @@ public class TopicTypeVM {
      */
     public TopicTypeService getTopicTypeService() {
         return topicTypeService;
-    }
-
-    /**
-     * Sets {@link TopicTypeService} to use
-     *
-     * @param topicTypeService is new TopicTypeService to use
-     */
-    public void setTopicTypeService(TopicTypeService topicTypeService) {
-        this.topicTypeService = topicTypeService;
     }
 
     /**

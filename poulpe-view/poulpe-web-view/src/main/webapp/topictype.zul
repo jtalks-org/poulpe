@@ -52,7 +52,7 @@
                     </grid>
                 </groupbox>
                 <toolbar>
-                    <button label="${labels.item.save}" onClick="@command('saveTopicType')" disabled="@bind(empty ttvm.selected)" />
+                    <button label="${labels.item.save}" onClick="@command('saveTopicType')" />
                     <button label="${labels.item.delete.dialog.cancel}" onClick="@command('cancelEditTopicType')" />
                 </toolbar>
             </window>
