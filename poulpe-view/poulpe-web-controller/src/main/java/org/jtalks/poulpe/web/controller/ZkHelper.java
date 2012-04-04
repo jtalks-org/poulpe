@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
@@ -152,6 +154,32 @@ public class ZkHelper {
      */
     public String getLabel(String key) {
         return Labels.getLabel(key);
+    }
+
+    /**
+     * Sends a temporary redirect response to the client using the specified redirect location URL by use of the
+     * current execution, {@link Executions#getCurrent}. 
+     * 
+     * @param uri the URI to redirect to, or null to reload the same page
+     */
+    public void sendRedirect(String uri) {
+        Executions.sendRedirect(uri);
+    }
+
+    /**
+     * Reloads current page.
+     */
+    public void reloadPage() {
+        Executions.sendRedirect(null);
+    }
+
+    /**
+     * Returns an instance of javax.servlet.ServletResponse, or null if not available.
+     * 
+     * @return the native response
+     */
+    public HttpServletResponse getResponse() {
+        return (HttpServletResponse) Executions.getCurrent().getNativeResponse();
     }
 
 }

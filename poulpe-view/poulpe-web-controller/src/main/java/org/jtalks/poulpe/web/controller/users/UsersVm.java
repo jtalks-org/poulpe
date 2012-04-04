@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.User;
@@ -33,6 +35,11 @@ import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+/**
+ * ViewModel for users page.
+ * 
+ * @author dim42
+ */
 public class UsersVm implements ValidationFailure {
     public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
@@ -46,30 +53,48 @@ public class UsersVm implements ValidationFailure {
     private EntityValidator entityValidator;
     private ValidationFailureHandler handler;
 
-    public UsersVm(UserService userService, EntityValidator entityValidator) {
+    public UsersVm(@Nonnull UserService userService, EntityValidator entityValidator) {
         this.userService = userService;
         this.entityValidator = entityValidator;
         this.users = new BindingListModelList<User>(userService.getAll(), true);
     }
 
+    /**
+     * Wires users window to this ViewModel. 
+     * 
+     * @param component users window
+     */
     @Init
     public void init(@ContextParam(ContextType.VIEW) Component component) {
         zkHelper = new ZkHelper(component);
         zkHelper.wireComponents(component, this);
     }
 
+    /**
+     * Look for the users matching specified pattern from the search textbox.
+     */
     @Command
     public void searchUser() {
         users.clear();
         users.addAll(userService.getUsersByUsernameWord(searchString));
     }
 
+    /**
+     * Opens edit user dialog.
+     * 
+     * @param user selected user
+     */
     @Command
     public void editUser(@BindingParam(value = "user") User user) {
         selectedUser = user;
         zkHelper.wireToZul(EDIT_USER_URL);
     }
 
+    /**
+     * Validates editing user, on success saves him, on failure shows the error message.
+     * 
+     * @param user editing user
+     */
     @Command
     public void saveUser(@BindingParam(value = "user") User user) {
         if (validate(user)) {
@@ -78,6 +103,9 @@ public class UsersVm implements ValidationFailure {
         }
     }
 
+    /**
+     * Closes edit user dialog.
+     */
     @Command
     public void cancelEdit() {
         closeEditDialog();

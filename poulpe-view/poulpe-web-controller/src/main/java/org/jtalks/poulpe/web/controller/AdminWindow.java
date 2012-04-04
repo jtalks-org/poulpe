@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.jtalks.poulpe.web.controller;
-import static org.jtalks.poulpe.web.controller.LocaleProvider.USER_LOCALE;
+import static org.jtalks.poulpe.web.controller.LocaleProvidingRequestInterceptor.USER_LOCALE;
 
 import java.io.IOException;
 
@@ -21,7 +21,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Center;
 
@@ -35,9 +34,13 @@ import org.zkoss.zul.Center;
 public class AdminWindow extends GenericForwardComposer<Component> {
 
     private static final long serialVersionUID = 7658211471084280646L;
-    
+
+    public static final String RU_LOCALE_LANG = "ru";
+    public static final String EN_LOCALE_LANG = "en";
+
     private Center workArea;
     private WindowManager windowManager;
+    private ZkHelper zkHelper = new ZkHelper(self);
 
     /**
      * {@inheritDoc}
@@ -49,33 +52,33 @@ public class AdminWindow extends GenericForwardComposer<Component> {
         // TODO get user language from DB
         /*
         String localeLanguage = ...; //decide the locale (from, say, database) 
-        setCookie(localeLanguage);
+        saveLocaleInCookie(localeLanguage);
         */
     }
 
     /**
-     * Sets Russian language.
+     * Sets Russian language for the admin panel.
      * @throws IOException
      */
-    public void onChangeLocaleRu() throws IOException {
-        setCookieAndRedirect("ru");
+    public void onChangeLocaleToRu() throws IOException {
+        changeLocaleAndReload(RU_LOCALE_LANG);
     }
 
     /**
-     * Sets English language.
+     * Sets English language for the admin panel.
      * @throws IOException
      */
-    public void onChangeLocaleEn() throws IOException {
-        setCookieAndRedirect("en");
+    public void onChangeLocaleToEn() throws IOException {
+        changeLocaleAndReload(EN_LOCALE_LANG);
     }
 
-    private void setCookieAndRedirect(String localeLanguage) {
-        setCookie(localeLanguage);
-        Executions.sendRedirect(null); //reload the page
+    private void changeLocaleAndReload(String localeLanguage) {
+        saveLocaleInCookie(localeLanguage);
+        zkHelper.reloadPage();
     }
 
-    private void setCookie(String localeLanguage) {
-        HttpServletResponse response = (HttpServletResponse) Executions.getCurrent().getNativeResponse();
+    private void saveLocaleInCookie(String localeLanguage) {
+        HttpServletResponse response = zkHelper.getResponse();
         response.addCookie(new Cookie(USER_LOCALE, localeLanguage));
     }
 
@@ -140,6 +143,13 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      */
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
+    }
+
+    /**
+     * @param zkHelper the zkHelper to set
+     */
+    public void setZkHelper(ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;
     }
 
 }

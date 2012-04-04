@@ -27,7 +27,6 @@
   </library-property>
   
   <listener>
-    <description>Request Interceptor for setting locale for each user based on user's preferences</description>
-    <listener-class>org.jtalks.poulpe.web.controller.LocaleProvider</listener-class>
+    <listener-class>org.jtalks.poulpe.web.controller.LocaleProvidingRequestInterceptor</listener-class>
   </listener>
 </zk>

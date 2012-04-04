@@ -4,16 +4,14 @@
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <style src="/resources/css/all.css" />
   <window apply="${adminWindow}" width="100%" height="100%">
     <borderlayout>
       <north>
         <groupbox>
-          <style>
-            .lang {float: right}
-          </style>
           <label style="font-size=30px" value="${labels.admin.title}" />
-          <a href="#" forward="onClick=onChangeLocaleRu" image="/resources/img/russia.png" sclass="lang" />
-          <a href="#" forward="onClick=onChangeLocaleEn" image="/resources/img/great britain.png" sclass="lang" />
+          <a href="#" forward="onClick=onChangeLocaleToRu" image="/resources/img/russia.png" sclass="language-button" />
+          <a href="#" forward="onClick=onChangeLocaleToEn" image="/resources/img/great britain.png" sclass="language-button" />
         </groupbox>
       </north>
       <west splittable="true" collapsible="true">

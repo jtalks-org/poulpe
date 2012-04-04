@@ -40,7 +40,7 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
- * View Model for rank management page.
+ * ViewModel for rank management page.
  *
  * @author Pavel Vervenko
  */
@@ -78,6 +78,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         initData();
     }
 
+    /**
+     * Wires ranks window to this ViewModel. 
+     * 
+     * @param component ranks window
+     */
     @Init
     public void init(@ContextParam(ContextType.VIEW) Component component) {
         zkHelper = new ZkHelper(component);

@@ -34,3 +34,7 @@
     color:red;
     font-weight: bold;
 }
+
+.language-button {
+    float: right
+}
