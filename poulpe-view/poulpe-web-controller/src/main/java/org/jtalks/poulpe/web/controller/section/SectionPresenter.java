@@ -14,10 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -74,7 +76,7 @@ public class SectionPresenter {
      * Use when need update view
      * */
     public void updateView() {
-        List<PoulpeSection> sections = sectionService.getAll();
+    	List<PoulpeSection> sections = getForum().getSections();
         sectionView.addSections(sections);
     }
 
@@ -190,7 +192,7 @@ public class SectionPresenter {
         PoulpeSection section = new PoulpeSection(name, description);
 
         if (validate(section)) {
-            dialogManager.confirmCreation(name, perfomableFactory.saveSection(section));
+            dialogManager.confirmCreation(name, perfomableFactory.saveSection(section, getForum()));
             return true;
         } else {
             return false;
@@ -327,6 +329,10 @@ public class SectionPresenter {
     public void setDeleteSectionDialogPresenter(DeleteSectionDialogPresenter deleteSectionDialogPresenter) {
         this.deleteSectionDialogPresenter = deleteSectionDialogPresenter;
         this.deleteSectionDialogPresenter.setSectionPresenter(this);
+    }
+
+    private Jcommune getForum() {
+    	return (Jcommune) componentService.getByType(ComponentType.FORUM);
     }
 
 }

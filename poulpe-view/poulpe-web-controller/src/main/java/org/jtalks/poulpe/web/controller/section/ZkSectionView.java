@@ -22,8 +22,10 @@ import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.EventListener;
 import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
+import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
@@ -60,6 +62,15 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         treeComponentFactory = new TreeComponentFactory(presenter);
         
         presenter.initView(this);
+        Button button = new Button("+");
+        button.setId("addSectionButtonBottom");
+        button.addEventListener("onClick", new EventListener<Event>() {
+			@Override
+			public void onEvent(Event arg0) throws Exception {
+				openNewSectionDialog();
+			}
+		});
+        zkHelper.addComponent(button);
         hide();
     }
 

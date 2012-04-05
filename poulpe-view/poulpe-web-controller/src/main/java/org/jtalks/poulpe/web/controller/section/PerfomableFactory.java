@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
@@ -73,8 +74,8 @@ public class PerfomableFactory {
      * @param section to be saved
      * @return instance to be performed by dialog manager
      */
-    public Performable saveSection(PoulpeSection section) {
-        return new CreatePerformable(section);
+    public Performable saveSection(PoulpeSection section, Jcommune forum) {
+        return new CreatePerformable(section, forum);
     }
 
     /**
@@ -138,14 +139,17 @@ public class PerfomableFactory {
      */
     private class CreatePerformable implements DialogManager.Performable {
         private final PoulpeSection section;
+        private final Jcommune forum;
 
-        public CreatePerformable(PoulpeSection section) {
+        public CreatePerformable(PoulpeSection section, Jcommune forum) {
             this.section = section;
+            this.forum = forum;
         }
 
         @Override
         public void execute() {
-            sectionService.saveSection(section);;
+        	forum.addSection(section);
+        	componentService.saveComponent(forum);
             sectionView.addSection(section);
             sectionView.closeEditSectionDialog();
         }
