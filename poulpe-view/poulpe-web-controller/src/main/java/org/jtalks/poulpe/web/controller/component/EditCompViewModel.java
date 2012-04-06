@@ -17,6 +17,7 @@ import java.util.Map;
 
 /**
  * ViewModel class for EditComponent View
+ * 
  * @author Vahluev Vyacheslav
  */
 public class EditCompViewModel extends AbstractComponentPresenter {
@@ -28,8 +29,8 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Current component we are working with
      */
-    private Component currentComponent =
-            (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
+    private Component currentComponent = (Component) Executions.getCurrent().getDesktop()
+            .getAttribute("componentToEdit");
 
     /**
      * The name of the component
@@ -58,19 +59,19 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * The post preview size of the forum
      */
     private String postPreviewSize;
-   
+
     private String sessionTimeout;
 
     /**
      * Web-form validation messages
      */
-    private Map<String, String> validationMessages =
-            new HashMap<String, String>();
+    private Map<String, String> validationMessages = new HashMap<String, String>();
 
     //    constructor
 
     /**
      * Default constructor. Inits the data on the form.
+     * 
      * @param componentService service we use to access components
      */
     public EditCompViewModel(@Nonnull ComponentService componentService) {
@@ -81,7 +82,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     /**
      * Inits the data on the form.
      */
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout"})
+    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
     public void initData() {
         currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
@@ -102,6 +103,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns all components.
+     * 
      * @return the list of the components
      */
     public List<Component> getComponents() {
@@ -111,11 +113,10 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     //    commands
 
     /**
-     * Saves a component. Shows validation messages, if
-     * something is wrong
+     * Saves a component. Shows validation messages, if something is wrong
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout"})
+    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
     public void save() {
         boolean correct = true;
         validationMessages.clear();
@@ -146,7 +147,8 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "validationMessages", "sessionTimeout"})
+    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "validationMessages",
+            "sessionTimeout" })
     public void cancel() {
         initData();
         validationMessages.clear();
@@ -156,11 +158,10 @@ public class EditCompViewModel extends AbstractComponentPresenter {
     //    helpers
 
     /**
-     * Returns string value of the field or
-     * empty string if string is null
+     * Returns string value of the field or empty string if string is null
+     * 
      * @param value value of the string
-     * @return string value of the field or
-     *         empty string if string is null
+     * @return string value of the field or empty string if string is null
      */
     public String valueOf(String value) {
         return (value == null) ? "" : value;
@@ -168,6 +169,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Check if input data is correct
+     * 
      * @return true if input is correct, else otherwise
      */
     public boolean checkCorrect() {
@@ -186,11 +188,11 @@ public class EditCompViewModel extends AbstractComponentPresenter {
         return correct;
     }
 
-
     //    getters & setters for web-form
 
     /**
      * Returns the title for current component
+     * 
      * @return name value from web-form
      */
     public String getName() {
@@ -199,6 +201,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the title for the current component
+     * 
      * @param name value to set
      */
     public void setName(String name) {
@@ -207,6 +210,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns the description for the current component
+     * 
      * @return description value from web-form
      */
     public String getDescription() {
@@ -215,6 +219,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the description for the current component
+     * 
      * @param description to set on web-form
      */
     public void setDescription(String description) {
@@ -223,6 +228,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns the name of the current component
+     * 
      * @return component name value from web-form
      */
     public String getComponentName() {
@@ -231,6 +237,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the name for current component
+     * 
      * @param componentName new component name value on web-form
      */
     public void setComponentName(String componentName) {
@@ -239,6 +246,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns validation messages for data input
+     * 
      * @return validation messages
      */
     public Map<String, String> getValidationMessages() {
@@ -249,6 +257,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Gets the current component we edit
+     * 
      * @return current component
      */
     public Component getCurrentComponent() {
@@ -257,6 +266,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the current component we edit
+     * 
      * @param currentComponent - to set
      */
     public void setCurrentComponent(Component currentComponent) {
@@ -265,6 +275,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns caption from the web-form
+     * 
      * @return caption
      */
     public String getCaption() {
@@ -273,6 +284,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the current caption
+     * 
      * @param caption - to set on web-form
      */
     public void setCaption(String caption) {
@@ -281,6 +293,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns post preview size from the web-form
+     * 
      * @return post preview size
      */
     public String getPostPreviewSize() {
@@ -289,6 +302,7 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Sets the current component we edit
+     * 
      * @param postPreviewSize- to set on web-form
      */
     public void setPostPreviewSize(String postPreviewSize) {
@@ -297,20 +311,21 @@ public class EditCompViewModel extends AbstractComponentPresenter {
 
     /**
      * Returns session timeout value from the web-form
+     * 
      * @return session timeout
      */
     @NotEmpty(message = "Last name can not be null")
-	public String getSessionTimeout() {
-		return sessionTimeout;
-	}
+    public String getSessionTimeout() {
+        return sessionTimeout;
+    }
 
-	/**
+    /**
      * Sets session timeout
+     * 
      * @param sessionTimeout - to set on web-form
      */
-	public void setSessionTimeout(String sessionTimeout) {
-		this.sessionTimeout = sessionTimeout;
-	}
+    public void setSessionTimeout(String sessionTimeout) {
+        this.sessionTimeout = sessionTimeout;
+    }
 
-    
 }

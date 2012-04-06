@@ -30,8 +30,7 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 import java.util.List;
 
 /**
- * This class is used as Presenter layer in Model-View-Presenter pattern for
- * managing PoulpeSection entities
+ * This class is used as Presenter layer in Model-View-Presenter pattern for managing PoulpeSection entities
  * 
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
@@ -55,8 +54,8 @@ public class SectionPresenter {
     private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
     /**
-     * Creates actions to be executed for creating, deleting, editing Sections and Branches
-     * after user presses 'YES' in dialog manager
+     * Creates actions to be executed for creating, deleting, editing Sections and Branches after user presses 'YES' in
+     * dialog manager
      */
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
     private BranchService branchService;
@@ -76,7 +75,7 @@ public class SectionPresenter {
      * Use when need update view
      * */
     public void updateView() {
-    	List<PoulpeSection> sections = getForum().getSections();
+        List<PoulpeSection> sections = getForum().getSections();
         sectionView.addSections(sections);
     }
 
@@ -92,8 +91,7 @@ public class SectionPresenter {
     /**
      * This method is used to show dialog for editing section or branch
      * 
-     * @param currentSectionTreeComponentImpl from this instance we get selected
-     * object
+     * @param currentSectionTreeComponentImpl from this instance we get selected object
      */
     public void openEditDialog(ZkSectionTreeComponent currentSectionTreeComponentImpl) {
         BranchSectionVisitable visitable = currentSectionTreeComponentImpl.getSelectedObject();
@@ -134,7 +132,7 @@ public class SectionPresenter {
         public void visitSection(PoulpeSection section) {
             deleteSectionDialogPresenter.show(section);
         }
-        
+
         /** {@inheritDoc} */
         @Override
         public void visitBranch(PoulpeBranch branch) {
@@ -181,9 +179,8 @@ public class SectionPresenter {
     }
 
     /**
-     * Create new PoulpeSection object and save it if there no any Sections with the
-     * same name in other cases (the name is already) should display error
-     * dialog
+     * Create new PoulpeSection object and save it if there no any Sections with the same name in other cases (the name
+     * is already) should display error dialog
      * 
      * @param name section
      * @param description section
@@ -202,8 +199,8 @@ public class SectionPresenter {
     /**
      * Delete section via sectionService
      * 
-     * @param recipient if specified than all branches should be add as children
-     * to this section. If null then all children should be also deleted
+     * @param recipient if specified than all branches should be add as children to this section. If null then all
+     * children should be also deleted
      */
     public void deleteSection(PoulpeSection recipient) {
         BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
@@ -240,20 +237,22 @@ public class SectionPresenter {
 
     /**
      * Save section
+     * 
      * @param section the section to save
      */
     public void saveSection(PoulpeSection section) {
         sectionService.saveSection(section);
     }
-    
+
     /**
      * Opens dialog for moderating a selected branch
-     * @param selectedObject 
+     * 
+     * @param selectedObject
      */
     public void openModerationWindow(BranchSectionVisitable selectedObject) {
         selectedObject.apply(openModeratorDialogVisitor);
     }
-    
+
     /**
      * Visitor which opens moderation dialog only for branches
      */
@@ -290,8 +289,8 @@ public class SectionPresenter {
      * @param service set component service instance
      */
     public void setComponentService(ComponentService service) {
-    	perfomableFactory.setComponentService(service);
-    	this.componentService = service;
+        perfomableFactory.setComponentService(service);
+        this.componentService = service;
     }
 
     public void setBranchService(BranchService branchService) {
@@ -307,8 +306,7 @@ public class SectionPresenter {
     }
 
     /**
-     * @param currentSectionTreeComponent is current
-     * <code>ZkSectionTreeComponent</code> that will process actions from
+     * @param currentSectionTreeComponent is current <code>ZkSectionTreeComponent</code> that will process actions from
      * presenter
      */
     public void setCurrentSectionTreeComponentImpl(ZkSectionTreeComponent currentSectionTreeComponent) {
@@ -332,7 +330,7 @@ public class SectionPresenter {
     }
 
     private Jcommune getForum() {
-    	return (Jcommune) componentService.getByType(ComponentType.FORUM);
+        return (Jcommune) componentService.getByType(ComponentType.FORUM);
     }
 
 }

@@ -34,14 +34,15 @@ public class LocaleProvidingRequestInterceptor implements RequestInterceptor {
     public static final String USER_LOCALE = "userLocale";
 
     /**
-     * Restore locale from the previous user request and sets it for the current session, i.e. overrides default language for all users.
+     * Restore locale from the previous user request and sets it for the current session, i.e. overrides default
+     * language for all users.
      */
     @Override
     public void request(Session sess, Object request, Object response) {
-        final Cookie[] cookies = ((HttpServletRequest)request).getCookies();
+        final Cookie[] cookies = ((HttpServletRequest) request).getCookies();
         if (cookies != null) {
             for (int j = cookies.length; --j >= 0;) {
-               if (cookies[j].getName().equals(USER_LOCALE)) {
+                if (cookies[j].getName().equals(USER_LOCALE)) {
                     String localeString = cookies[j].getValue();
                     Locale locale = Locales.getLocale(localeString);
                     sess.setAttribute(Attributes.PREFERRED_LOCALE, locale);
@@ -49,7 +50,7 @@ public class LocaleProvidingRequestInterceptor implements RequestInterceptor {
                 }
             }
         }
-        
+
     }
 
 }

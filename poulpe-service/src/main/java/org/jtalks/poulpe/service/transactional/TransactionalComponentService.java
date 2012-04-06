@@ -26,8 +26,7 @@ import java.util.List;
 import java.util.Set;
 
 /**
- * Transactional implementation of {@link ComponentService}. Transactions are
- * provided by AOP.
+ * Transactional implementation of {@link ComponentService}. Transactions are provided by AOP.
  * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
@@ -40,6 +39,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /**
      * Creates new instance of the service
+     * 
      * @param dao dao we use for Component
      * @param validator used to validate entites
      */
@@ -64,7 +64,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         dao.delete(component.getId());
     }
 
-    
     /** {@inheritDoc} */
     @Override
     public void saveComponent(Component component) {
@@ -75,7 +74,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         }
         dao.saveOrUpdate(component);
     }
-    
+
     /**
      * {@inheritDoc}
      */
@@ -86,7 +85,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /**
      * Sets property loader. See {@link PropertyLoader}
-     *
+     * 
      * @param propertyLoader property loader to set
      */
     public void setPropertyLoader(PropertyLoader propertyLoader) {
@@ -94,9 +93,8 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     }
 
     /**
-     * Gets currently used property loader.
-     * See {@link PropertyLoader}
-     *
+     * Gets currently used property loader. See {@link PropertyLoader}
+     * 
      * @return property loader
      */
     public PropertyLoader getPropertyLoader() {
@@ -104,8 +102,8 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     }
 
     /** {@inheritDoc} */
-	@Override
-	public Component getByType(ComponentType type) {
-		return dao.getByType(type);
-	}
+    @Override
+    public Component getByType(ComponentType type) {
+        return dao.getByType(type);
+    }
 }

@@ -19,8 +19,7 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 
 /**
- * It's used for converting {@link ItemDataView} instances to corresponding
- * {@link Component} item.
+ * It's used for converting {@link ItemDataView} instances to corresponding {@link Component} item.
  * 
  * @author Alexey Grigorev
  * @author Dmitriy Sukharev
@@ -28,38 +27,36 @@ import org.jtalks.poulpe.model.entity.Jcommune;
  */
 class ViewToEntityConverter {
 
-    private ViewToEntityConverter() {}
+    private ViewToEntityConverter() {
+    }
 
     /**
-     * Converts the component from the view representation to the model
-     * representation.<br>
+     * Converts the component from the view representation to the model representation.<br>
      * <br>
      * 
-     * <b>Note:</b> the created component is new - this means that it doesn't
-     * yet have an id, and it's unique.
+     * <b>Note:</b> the created component is new - this means that it doesn't yet have an id, and it's unique.
      * 
      * @param view view to take instance from
      * @return <i>new</i> {@link Component} converted from view
      */
     public static Component view2Model(ItemDataView view) {
-    	Component component;
-    	if (view.getComponentType() == ComponentType.FORUM) {
-    		component = new Jcommune();
-    	} else {
+        Component component;
+        if (view.getComponentType() == ComponentType.FORUM) {
+            component = new Jcommune();
+        } else {
             component = new Component();
-    	}
-    	component.setId(view.getComponentId());
+        }
+        component.setId(view.getComponentId());
         return view2Model(view, component);
     }
 
     /**
-     * Converts the component from the view representation to the model
-     * representation.<br><br>
+     * Converts the component from the view representation to the model representation.<br>
+     * <br>
      * 
      * The returning object will have the same id and uuid as the original one.<br>
      * 
-     * <b>Note:</b> The operation is performed on the given object, so the
-     * passed parameter will be changed.
+     * <b>Note:</b> The operation is performed on the given object, so the passed parameter will be changed.
      * 
      * @param view instance with component's data
      * @param component original entity being edited

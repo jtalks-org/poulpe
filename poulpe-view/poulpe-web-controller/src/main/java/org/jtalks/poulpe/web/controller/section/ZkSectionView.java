@@ -57,19 +57,19 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     @Override
     public void afterCompose() {
         zkHelper.wireByConvention();
-        
+
         handler = new ValidationFailureHandler("name", editSectionDialog$sectionName);
         treeComponentFactory = new TreeComponentFactory(presenter);
-        
+
         presenter.initView(this);
         Button button = new Button("+");
         button.setId("addSectionButtonBottom");
         button.addEventListener("onClick", new EventListener<Event>() {
-			@Override
-			public void onEvent(Event arg0) throws Exception {
-				openNewSectionDialog();
-			}
-		});
+            @Override
+            public void onEvent(Event arg0) throws Exception {
+                openNewSectionDialog();
+            }
+        });
         zkHelper.addComponent(button);
         hide();
     }
@@ -90,14 +90,14 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     @Override
     public void addSections(List<PoulpeSection> sections) {
         removeOldSections();
-        
+
         for (PoulpeSection section : sections) {
             addSection(section);
         }
     }
 
     /**
-     * Removes all sections and doesn't do anything with another components 
+     * Removes all sections and doesn't do anything with another components
      */
     private void removeOldSections() {
         zkHelper.removeAll(ZkSectionTreeComponent.class);
@@ -142,9 +142,9 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     }
 
     /**
-     * Saves or creates a {@link PoulpeSection}, depending on what 
-     * action was called. If {@link #openNewSectionDialog()}, then {@link #createSection()}
-     * is called, if {@link #openEditSectionDialog(PoulpeSection)}, then - {@link #saveSection()}
+     * Saves or creates a {@link PoulpeSection}, depending on what action was called. If {@link #openNewSectionDialog()}
+     * , then {@link #createSection()} is called, if {@link #openEditSectionDialog(PoulpeSection)}, then -
+     * {@link #saveSection()}
      */
     public void save() {
         if (forEditing) {
@@ -213,24 +213,22 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     // UI EVENT HANDLERS
 
     /**
-     * Event which happen when user click on '+' buttton opens dialog for adding
-     * new section
+     * Event which happen when user click on '+' buttton opens dialog for adding new section
      */
     public void onClick$addSectionButton() {
         openNewSectionDialog();
     }
 
     /**
-     * Event which happen when user click on add button in new branch dialog
-     * window this cause save new branch
+     * Event which happen when user click on add button in new branch dialog window this cause save new branch
      */
     public void onClick$editButton$editSectionDialog() {
         save();
     }
 
     /**
-     * Event which happen when user click on cancel button in new branch dialog
-     * window this cause close new branch dialog
+     * Event which happen when user click on cancel button in new branch dialog window this cause close new branch
+     * dialog
      */
     public void onClick$closeButton$editSectionDialog() {
         closeEditSectionDialog();
@@ -239,22 +237,22 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     // CUSTOM EVENT HANDLER
 
     /**
-     * @deprecated use {@link DialogManager} and
-     * {@link PerfomableFactory#deleteSection(PoulpeSection,PoulpeSection)} for this
+     * @deprecated use {@link DialogManager} and {@link PerfomableFactory#deleteSection(PoulpeSection,PoulpeSection)}
+     * for this
      */
     @Deprecated
     public void openDeleteSectionDialog(PoulpeSection victim) {
         Events.postEvent(new Event("onOpenDeleteSectionDialog", getDesktop().getPage("sectionDeleteDialog").getFellow(
                 "deleteWindow"), victim));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
     public void openNewBranchDialog() {
         Events.postEvent(new Event("onOpenAddDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow")));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
@@ -262,7 +260,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
         Events.postEvent(new Event("onOpenEditDialog", getDesktop().getPage("BranchDialog").getFellow("editWindow"),
                 branch));
     }
-    
+
     /** {@inheritDoc} */
     @Override
     @Deprecated
@@ -285,14 +283,16 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     public void setPresenter(SectionPresenter presenter) {
         this.presenter = presenter;
     }
-    
+
     /**
      * Package-private for DI in tests
+     * 
      * @param handler validator instance
      * @param zkHelper helper instance
      * @param treeComponentFactory
      */
-    void setTestDependencies(ValidationFailureHandler handler, ZkHelper zkHelper, TreeComponentFactory treeComponentFactory) {
+    void setTestDependencies(ValidationFailureHandler handler, ZkHelper zkHelper,
+            TreeComponentFactory treeComponentFactory) {
         this.handler = handler;
         this.zkHelper = zkHelper;
         this.treeComponentFactory = treeComponentFactory;
@@ -300,6 +300,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
     /**
      * Package-private for DI in tests
+     * 
      * @param editSectionDialog window which holds textboxes
      * @param sectionName textbox with section name
      * @param sectionDescription textbox with section description
@@ -313,6 +314,7 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
 
 /**
  * Factory for initializing TreeComponentFactory, used in tests
+ * 
  * @author Alexey Grigorev
  */
 class TreeComponentFactory {
@@ -324,7 +326,7 @@ class TreeComponentFactory {
     public TreeComponentFactory(SectionPresenter presenter) {
         this.presenter = presenter;
     }
-    
+
     /**
      * @param section for which component is created
      * @return {@link ZkSectionTreeComponent} instance
