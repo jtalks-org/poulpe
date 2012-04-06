@@ -41,7 +41,8 @@
   </bean>
   <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao" />
-    <constructor-arg index="1" ref="entityValidator" />
+    <constructor-arg index="1" ref="branchPermissionManager" />
+    <constructor-arg index="2" ref="entityValidator" />
     <property name="propertyLoader" ref="propertyLoader" />
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
@@ -64,7 +65,7 @@
     <constructor-arg index="1" ref="entityValidator" />
   </bean>
 
-  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.BranchPermissionManager">
+  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
     <constructor-arg index="0" ref="aclManager" />
     <constructor-arg index="1" ref="groupDao" />
   </bean>

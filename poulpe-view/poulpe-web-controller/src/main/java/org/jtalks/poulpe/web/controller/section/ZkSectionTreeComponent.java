@@ -17,11 +17,14 @@ package org.jtalks.poulpe.web.controller.section;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.ObjectUtils;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitable;
 import org.jtalks.poulpe.model.entity.BranchSectionVisitor;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.ZkHelper;
+import org.springframework.util.TypeUtils;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.IdSpace;
 import org.zkoss.zk.ui.event.Event;
@@ -42,6 +45,7 @@ import org.zkoss.zul.TreeNode;
  * @author Konstantin Akimov
  * @author Guram Savinov
  * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
  */
 public class ZkSectionTreeComponent extends Div implements IdSpace {
     private static final long serialVersionUID = -1083425488934932487L;
@@ -150,26 +154,9 @@ public class ZkSectionTreeComponent extends Div implements IdSpace {
      * {@link PoulpeBranch}
      */
     public void showPermissionsWindow() {
-        BranchSectionVisitable selectedObject = getSelectedObject();
-        selectedObject.apply(showPermissionsVisitor);
+        PoulpeBranch branch = (PoulpeBranch) getSelectedObject();
+        presenter.openBranchPermissionsDialog(branch);
     }
-
-    /**
-     * Redirects for branches when permission button is clicked
-     */
-    private static BranchSectionVisitor showPermissionsVisitor = new BranchSectionVisitor() {
-        /** {@inheritDoc} */
-        @Override
-        public void visitSection(PoulpeSection section) {
-            Messagebox.show("This action not provided for section, please select a branch");
-        }
-
-        /** {@inheritDoc} */
-        @Override
-        public void visitBranch(PoulpeBranch branch) {
-            Executions.sendRedirect("/sections/BranchPermissionManagement.zul?branchId=" + branch.getId());
-        }
-    };
 
     /**
      * Shows deletion dialog

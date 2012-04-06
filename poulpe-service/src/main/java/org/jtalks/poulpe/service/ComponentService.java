@@ -16,7 +16,10 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 
 import java.util.List;
 import java.util.Set;
@@ -26,17 +29,20 @@ import java.util.Set;
  * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
  */
 public interface ComponentService extends EntityService<Component> {
 
     /**
      * Get all components.
+     * 
      * @return the list of the components
      */
     List<Component> getAll();
 
     /**
      * Delete the specified component.
+     * 
      * @param component component to delete
      */
     void deleteComponent(Component component);
@@ -48,10 +54,10 @@ public interface ComponentService extends EntityService<Component> {
      * @exception ValidationException when entity being saved violates validation constraints
      */
     void saveComponent(Component component);
-    
-    
+
     /**
      * Get the set of unoccupied ComponentType.
+     * 
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
@@ -59,9 +65,34 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param the component's type 
+     * @param the component's type
      * @return the component
      */
     Component getByType(ComponentType type);
+
+    /**
+     * Gets {@link PermissionsMap} for defined {@link Component}.
+     * 
+     * @param component the component to get for
+     * @return {@link PermissionsMap} for defined {@link Component}
+     */
+    PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component);
+
+    /**
+     * Change grants for component.
+     * 
+     * @see PermissionChanges
+     * @param component the component to change for
+     * @param changes the {@link PermissionChanges} which needs to be applied
+     */
+    void changeGrants(Component component, PermissionChanges changes);
+
+    /**
+     * Change restrictions for component.
+     * 
+     * @param component the component to change for
+     * @param changes the {@link PermissionChanges} which needs to be applied
+     */
+    void changeRestrictions(Component component, PermissionChanges changes);
 
 }

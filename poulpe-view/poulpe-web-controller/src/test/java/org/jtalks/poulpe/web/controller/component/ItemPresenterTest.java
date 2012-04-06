@@ -30,7 +30,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.createComponents;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.createComponents;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;

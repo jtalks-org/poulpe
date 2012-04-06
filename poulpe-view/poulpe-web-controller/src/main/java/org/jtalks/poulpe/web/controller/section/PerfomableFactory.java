@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -12,8 +12,10 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 
 /**
- * Factory class for producing {@link DialogManager.Performable} instances for passing them to {@link DialogManager}.
- * Used in {@link SectionPresenter} and thus all operations which are returned by its factories are related to sections.
+ * Factory class for producing {@link DialogManager.Performable} instances for
+ * passing them to {@link DialogManager}. Used in {@link SectionPresenter} and
+ * thus all operations which are returned by its factories are related to
+ * sections.
  * 
  * @author Alexey Grigorev
  * @author Guram Savinov
@@ -39,7 +41,8 @@ public class PerfomableFactory {
      * Deletes the section and moves all its branches to recipient, if any specified
      * 
      * @param victim section to be deleted
-     * @param recipient section which will take all victim's branches, may be null if no recipient is needed
+     * @param recipient section which will take all victim's branches, may be 
+     * null if no recipient is needed
      * @return instance to be performed by dialog manager
      */
     public Performable deleteSection(PoulpeSection victim, PoulpeSection recipient) {
@@ -111,7 +114,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for deleting sections, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for deleting
+     * sections, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -129,8 +133,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for creating (i.e. saving) sections, performed when user
-     * confirms deletion
+     * Implementation of {@link DialogManager.Performable} for creating (i.e. saving)
+     * sections, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -153,7 +157,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for saving sections, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for saving
+     * sections, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -174,7 +179,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * Implementation of {@link DialogManager.Performable} for deleting branches, performed when user confirms deletion
+     * Implementation of {@link DialogManager.Performable} for deleting
+     * branches, performed when user confirms deletion
      * 
      * @author unascribed
      */
@@ -199,9 +205,9 @@ public class PerfomableFactory {
 
         private void deleteBranchPermissions() {
             for (BranchPermission permission : BranchPermission.values()) {
-                BranchAccessChanges branchAccess = new BranchAccessChanges(permission);
-                branchAccess.setRemovedGroups(branch.getGroups());
-                branchService.changeGrants(branch, branchAccess);
+                PermissionChanges permissionChanges = new PermissionChanges(permission);
+                permissionChanges.addRemovedGroups(branch.getGroups());
+                branchService.changeGrants(branch, permissionChanges);
             }
         }
     }
@@ -221,7 +227,8 @@ public class PerfomableFactory {
     }
 
     /**
-     * @param currentSectionTreeComponent that will process actions from presenter
+     * @param currentSectionTreeComponent that will process actions from
+     * presenter
      */
     public void setCurrentSectionTreeComponent(ZkSectionTreeComponent currentSectionTreeComponent) {
         this.currentSectionTreeComponent = currentSectionTreeComponent;

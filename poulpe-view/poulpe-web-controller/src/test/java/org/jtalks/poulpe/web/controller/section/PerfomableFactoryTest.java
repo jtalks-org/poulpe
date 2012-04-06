@@ -1,12 +1,12 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeSection;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.sectionWithBranches;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -77,7 +77,7 @@ public class PerfomableFactoryTest {
         Performable perf = perfomableFactory.deleteBranch(branch);
         perf.execute();
         verify(sectionService).saveSection(section);
-        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(BranchAccessChanges.class));
+        verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(presenter).updateView();
     }
 

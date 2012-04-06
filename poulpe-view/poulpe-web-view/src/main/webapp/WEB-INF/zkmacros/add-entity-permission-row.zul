@@ -15,6 +15,13 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
+<!--
+    Arguments which can be passed to this page:
+      'row' - necessary - instance of org.jtalks.poulpe.web.controller.zkmacro.PermissionRow
+      'entity' - necessary - instance of org.jtalks.common.model.entity.Entity
+      'permission' - necessary - instance of org.jtalks.common.model.permissions.JtalksPermission
+      'mode' - necessary - string "allow" or "restrict"
+-->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <borderlayout height="30px">
@@ -27,20 +34,9 @@
       </hbox>
     </center>
     <east border="none">
-      <!--
-      There is no other way to pass parameters that are evaluated by EL ${}, it simply doesn't work with @command.
-      I raised JIRA for this, but ZK team doesn't seem to be keen implementing this:
-      http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
-      button, and then we can pass the ID to the @command() where we can parse it in Java.
-      -->
-      <!--
-      In later versions of ZK this problem was solved and we can simply pass parameters:
-        onClick="@command('showGroupsDialog', permission=arg.permission, mode=arg.mode)"
-      but here in anyway it not work (i don't now why). I forced to use custom-attributes.
-      // Vyacheslav Zhivaev
-      -->
       <button label="${labels.groups.button.edit}" sclass="add-group-button"
-          onClick="@command('showGroupsDialog', permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
+          onClick="@command('showGroupsDialog', entity=self.getAttribute('entity'), permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
+        <custom-attributes entity="${arg.entity}" />
         <custom-attributes permission="${arg.permission}" />
         <custom-attributes mode="${arg.mode}" />
       </button>

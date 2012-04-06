@@ -12,29 +12,31 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dto.branches;
+package org.jtalks.poulpe.model.dto;
 
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
-
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
+
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * Access list for {@link PoulpeGroup}
  * 
  * @author stanislav bashkirtsev
+ * @author Vyacheslav Zhivaev
  */
 public class GroupAccessList {
     private final List<PoulpeGroup> allowed = new ArrayList<PoulpeGroup>();
     private final List<PoulpeGroup> restricted = new ArrayList<PoulpeGroup>();
 
     /**
-     * Adds group to the allowed access list
+     * Adds group to the allowed access list.
      * 
      * @param group to be allowed
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList addAllowed(@Nullable PoulpeGroup group) {
         if (group != null) {
@@ -44,12 +46,12 @@ public class GroupAccessList {
     }
 
     /**
-     * Restricts a given group
+     * Restricts a given group.
      * 
      * @param group to be restricted
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
-    public GroupAccessList addRestricted(PoulpeGroup group) {
+    public GroupAccessList addRestricted(@Nullable PoulpeGroup group) {
         if (group != null) {
             restricted.add(group);
         }
@@ -57,10 +59,10 @@ public class GroupAccessList {
     }
 
     /**
-     * Sets new list of allowed groups (the elements from the old are removed)
+     * Sets new list of allowed groups (the elements from the old are removed).
      * 
      * @param allowed allowed groups
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList setAllowed(List<PoulpeGroup> allowed) {
         this.allowed.clear();
@@ -69,11 +71,10 @@ public class GroupAccessList {
     }
 
     /**
-     * Sets new list of restricted groups (the elements from the old are
-     * removed)
+     * Sets new list of restricted groups (the elements from the old are removed).
      * 
      * @param restricted restricted groups
-     * @return this instance for providing fluent interface
+     * @return {@code this} instance for providing fluent interface
      */
     public GroupAccessList setRestricted(List<PoulpeGroup> restricted) {
         this.restricted.clear();
@@ -82,6 +83,8 @@ public class GroupAccessList {
     }
 
     /**
+     * Gets list of restricted groups.
+     * 
      * @return unmodifiable list of restricted groups
      */
     public List<PoulpeGroup> getRestricted() {
@@ -89,10 +92,11 @@ public class GroupAccessList {
     }
 
     /**
+     * Gets list of allowed groups.
+     * 
      * @return unmodifiable list of allowed groups
      */
     public List<PoulpeGroup> getAllowed() {
         return Collections.unmodifiableList(allowed);
     }
-
 }

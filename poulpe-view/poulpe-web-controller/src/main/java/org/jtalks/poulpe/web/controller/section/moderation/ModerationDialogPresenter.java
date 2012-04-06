@@ -178,7 +178,7 @@ public class ModerationDialogPresenter {
     public void setBranch(PoulpeBranch branch) {
         this.branch = branch;
     }
-    
+
     /**
      * Mutator to set the {@link EntityValidator} for this presenter.
      * 

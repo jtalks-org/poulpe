@@ -35,6 +35,15 @@
     font-weight: bold;
 }
 
+.manage-permissions-added-group-label {
+	display: block;
+    padding: 1px 2px;
+    border: 1px solid #505050;
+    -webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
 .language-button {
     float: right
 }

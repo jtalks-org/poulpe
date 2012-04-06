@@ -26,15 +26,19 @@ import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
 
 import java.util.List;
 
 /**
- * This class is used as Presenter layer in Model-View-Presenter pattern for managing PoulpeSection entities
+ * This class is used as Presenter layer in Model-View-Presenter pattern for
+ * managing PoulpeSection entities
  * 
  * @author Konstantin Akimov
  * @author Vahluev Vyacheslav
  * @author Grigorev Alexey
+ * @author Vyacheslav Zhivaev
  * @author Guram Savinov
  */
 public class SectionPresenter {
@@ -43,19 +47,23 @@ public class SectionPresenter {
     public static final String ERROR_LABEL_SECTION_NAME_CANT_BE_VOID = "sections.error.section_name_cant_be_void";
     public static final String ERROR_LABEL_SECTION_NAME_VERY_LONG = "sections.editsection.name.err";
 
+    public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "/sections/BranchPermissionManagement.zul";
+
     // injected
     private SectionService sectionService;
     private ComponentService componentService;
     private SectionView sectionView;
     private ZkSectionTreeComponent currentSectionTreeComponent;
     private DialogManager dialogManager;
+    private WindowManager windowManager;
     private EntityValidator entityValidator;
+    private SelectedEntity<PoulpeBranch> selectedEntity;
 
     private DeleteSectionDialogPresenter deleteSectionDialogPresenter;
 
     /**
-     * Creates actions to be executed for creating, deleting, editing Sections and Branches after user presses 'YES' in
-     * dialog manager
+     * Creates actions to be executed for creating, deleting, editing Sections and Branches
+     * after user presses 'YES' in dialog manager
      */
     private PerfomableFactory perfomableFactory = new PerfomableFactory(this);
     private BranchService branchService;
@@ -75,7 +83,7 @@ public class SectionPresenter {
      * Use when need update view
      * */
     public void updateView() {
-        List<PoulpeSection> sections = getForum().getSections();
+    	List<PoulpeSection> sections = getForum().getSections();
         sectionView.addSections(sections);
     }
 
@@ -91,7 +99,8 @@ public class SectionPresenter {
     /**
      * This method is used to show dialog for editing section or branch
      * 
-     * @param currentSectionTreeComponentImpl from this instance we get selected object
+     * @param currentSectionTreeComponentImpl from this instance we get selected
+     * object
      */
     public void openEditDialog(ZkSectionTreeComponent currentSectionTreeComponentImpl) {
         BranchSectionVisitable visitable = currentSectionTreeComponentImpl.getSelectedObject();
@@ -157,6 +166,11 @@ public class SectionPresenter {
         sectionView.openNewSectionDialog();
     }
 
+    public void openBranchPermissionsDialog(PoulpeBranch branch) {
+        selectedEntity.setEntity(branch);
+        windowManager.open(BRANCH_PERMISSION_MANAGEMENT_ZUL);
+    }
+
     /**
      * This method is invoked when the user saves editions and push edit button
      * 
@@ -179,8 +193,9 @@ public class SectionPresenter {
     }
 
     /**
-     * Create new PoulpeSection object and save it if there no any Sections with the same name in other cases (the name
-     * is already) should display error dialog
+     * Create new PoulpeSection object and save it if there no any Sections with the
+     * same name in other cases (the name is already) should display error
+     * dialog
      * 
      * @param name section
      * @param description section
@@ -199,8 +214,8 @@ public class SectionPresenter {
     /**
      * Delete section via sectionService
      * 
-     * @param recipient if specified than all branches should be add as children to this section. If null then all
-     * children should be also deleted
+     * @param recipient if specified than all branches should be add as children
+     * to this section. If null then all children should be also deleted
      */
     public void deleteSection(PoulpeSection recipient) {
         BranchSectionVisitable selectedObject = currentSectionTreeComponent.getSelectedObject();
@@ -306,7 +321,8 @@ public class SectionPresenter {
     }
 
     /**
-     * @param currentSectionTreeComponent is current <code>ZkSectionTreeComponent</code> that will process actions from
+     * @param currentSectionTreeComponent is current
+     * <code>ZkSectionTreeComponent</code> that will process actions from
      * presenter
      */
     public void setCurrentSectionTreeComponentImpl(ZkSectionTreeComponent currentSectionTreeComponent) {
@@ -329,8 +345,22 @@ public class SectionPresenter {
         this.deleteSectionDialogPresenter.setSectionPresenter(this);
     }
 
+    /**
+     * @param selectedEntity the selectedEntity to set
+     */
+    public void setSelectedEntity(SelectedEntity<PoulpeBranch> selectedEntity) {
+        this.selectedEntity = selectedEntity;
+    }
+
+    /**
+     * @param windowManager the windowManager to set
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
     private Jcommune getForum() {
-        return (Jcommune) componentService.getByType(ComponentType.FORUM);
+    	return (Jcommune) componentService.getByType(ComponentType.FORUM);
     }
 
 }

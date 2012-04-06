@@ -22,12 +22,19 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.User;
 
-public class ObjectCreator {
+import com.google.common.collect.Lists;
+
+/**
+ * @author unascribed
+ * @author Vyacheslav Zhivaev
+ */
+public class ObjectsFactory {
     public static Component createComponent(long id, String name, String description, ComponentType type) {
         Component comp = new Component(name, description, type);
         comp.setId(id);
@@ -36,12 +43,12 @@ public class ObjectCreator {
 
     public static List<Component> createComponents() {
         List<Component> list = new ArrayList<Component>();
-        
+
         for (ComponentType type : ComponentType.values()) {
             String random = random();
             list.add(new Component(random, random, type));
         }
-        
+
         return list;
     }
 
@@ -54,8 +61,7 @@ public class ObjectCreator {
     }
 
     /**
-     * @deprecated use {@link PoulpeSection#Section(String, String)} constructor
-     * instead
+     * @deprecated use {@link PoulpeSection#Section(String, String)} constructor instead
      */
     @Deprecated
     public static PoulpeSection getFakeSection(String name, String description) {
@@ -83,7 +89,7 @@ public class ObjectCreator {
     public static PoulpeSection sectionWithBranches() {
         return sectionWithBranches(10);
     }
-    
+
     /**
      * @deprecated use {@link PoulpeBranch#Branch(String, String)} constructor instead
      */
@@ -94,7 +100,7 @@ public class ObjectCreator {
         branch.setDescription(description);
         return branch;
     }
-    
+
     public static PoulpeBranch fakeBranch() {
         return new PoulpeBranch(random(), random());
     }
@@ -112,6 +118,22 @@ public class ObjectCreator {
         TopicType topicType = new TopicType(title, description);
         topicType.setId(id);
         return topicType;
+    }
+
+    public static PoulpeGroup fakeGroup() {
+        return new PoulpeGroup(random(), random());
+    }
+
+    public static List<PoulpeGroup> fakeGroupList(int listSize) {
+        List<PoulpeGroup> result = Lists.newArrayList();
+        
+        if (listSize > 0) {
+            for (int i = 0; i < listSize; i++) {
+                result.add(fakeGroup());
+            }
+        }
+
+        return result;
     }
 
     private static String random() {

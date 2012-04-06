@@ -14,36 +14,36 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import javax.annotation.Nonnull;
-
-import org.jtalks.common.model.entity.Entity;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
 
 /**
- * This class represents state of currently selected in view entity.
+ * This is DTO which represents state of currently selected in view entity. Instance's of this class managed by
+ * application context. It's can be used for cross-component interaction, i.e. transfer entity's from one VM to another.
  * 
  * @author Vyacheslav Zhivaev
- * 
  */
-public class SelectedEntity<E extends Entity> {
+@ThreadSafe
+public class SelectedEntity<E> {
 
-    private E entity = null;
+    private volatile E entity = null;
 
     /**
      * Gets currently selected entity.
      * 
-     * @return the selected entity, can return {@code null} if nothing was
-     * selected
+     * @return the selected entity, can return {@code null} if nothing was already selected
      */
-    public E getEntity() {
+    @Nullable
+    public synchronized E getEntity() {
         return entity;
     }
 
     /**
-     * Sets entity wich currently selected in UI.
+     * Sets entity which currently selected in UI.
      * 
-     * @param entity the new instance entity to set
+     * @param entity the new instance entity to set, can be {@code null} for omitting previous data
      */
-    public void setEntity(@Nonnull E entity) {
+    public synchronized void setEntity(E entity) {
         this.entity = entity;
     }
 

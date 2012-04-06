@@ -14,10 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeBranch;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSection;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeSections;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeForum;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeBranch;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeForum;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeSection;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
@@ -35,7 +34,6 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectCreator;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;

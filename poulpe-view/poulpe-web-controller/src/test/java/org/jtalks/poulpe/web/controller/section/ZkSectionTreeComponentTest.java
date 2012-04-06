@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.fakeBranch;
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.sectionWithBranches;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.fakeBranch;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.sectionWithBranches;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

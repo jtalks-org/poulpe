@@ -14,18 +14,20 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessChanges;
-import org.jtalks.poulpe.model.dto.branches.BranchAccessList;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-
 import java.util.List;
+
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 /**
  * Service for dealing with {@link PoulpeBranch} objects
  * 
  * @author Vitaliy Kravchenko
  * @author Kirill Afonin
+ * @author Vyacheslav Zhivaev
  */
 public interface BranchService extends EntityService<PoulpeBranch> {
 
@@ -42,16 +44,15 @@ public interface BranchService extends EntityService<PoulpeBranch> {
     void saveBranch(PoulpeBranch selectedBranch);
 
     /**
-     * Removes all topics inside {@code victim} and then removes {@code victim}
-     * branch itself.
+     * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
      * 
      * @param victim the branch to be removed
      */
     void deleteBranchRecursively(PoulpeBranch victim);
 
     /**
-     * Moves all topics inside {@code victim} to another {@code recipient}
-     * branch and then removes {@code victim} branch.
+     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim}
+     * branch.
      * 
      * @param victim the branch to be removed
      * @param recipient the branch to take topics of {@code victim}
@@ -59,26 +60,26 @@ public interface BranchService extends EntityService<PoulpeBranch> {
     void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient);
 
     /**
-     * Return access list for branch
+     * Return access lists for branch.
      * 
      * @param branch branch which will be returned access list
      * @return access list
      */
-    BranchAccessList getGroupAccessListFor(PoulpeBranch branch);
+    PermissionsMap<BranchPermission> getPermissionsFor(PoulpeBranch branch);
 
     /**
-     * Change grants for branch
+     * Change grants for branch.
      * 
      * @param branch branch to which grants will be changed
      * @param changes grants for branch
      */
-    void changeGrants(PoulpeBranch branch, BranchAccessChanges changes);
+    void changeGrants(PoulpeBranch branch, PermissionChanges changes);
 
     /**
-     * Change restriction for branch
+     * Change restriction for branch.
      * 
      * @param branch branch to which restriction will be changed
      * @param changes new restriction for branch
      */
-    void changeRestrictions(PoulpeBranch branch, BranchAccessChanges changes);
+    void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
 }

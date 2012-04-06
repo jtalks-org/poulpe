@@ -19,8 +19,11 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.service.PropertyLoader;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,22 +34,30 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
-* @author Pavel Vervenko
-* @author Alexey Grigorev
-*/
+ * @author Pavel Vervenko
+ * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
+ */
 public class TransactionalComponentServiceTest {
 
-    private ComponentDao componentDao;
     private TransactionalComponentService componentService;
+    
+    @Mock
+    private ComponentDao componentDao;
+    @Mock
+    private PermissionManager permissionManager;
+    @Mock
     private EntityValidator validator;
-
+    
     Component component = new Component("", "", ComponentType.FORUM);
 
     @BeforeMethod
     public void setUp() throws Exception {
+        MockitoAnnotations.initMocks(this);
+        
         componentDao = mock(ComponentDao.class);
         validator = mock(EntityValidator.class);
-        componentService = new TransactionalComponentService(componentDao, validator);
+        componentService = new TransactionalComponentService(componentDao, permissionManager, validator);
         PropertyLoader propertyLoader = mock(PropertyLoader.class);
         componentService.setPropertyLoader(propertyLoader);
     }

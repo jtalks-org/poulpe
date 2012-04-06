@@ -17,4 +17,4 @@
  * Package contains implementations of DTO for ACL related entities.
  *
  */
-package org.jtalks.poulpe.model.dto.branches;
+package org.jtalks.poulpe.model.dto;

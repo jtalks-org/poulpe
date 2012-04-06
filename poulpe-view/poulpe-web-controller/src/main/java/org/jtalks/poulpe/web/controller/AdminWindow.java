@@ -139,6 +139,13 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     }
 
     /**
+     * Show Group Permissions page.
+     */
+    public void onShowGroupsPermissions() {
+        windowManager.open("groups/GroupsPermissions.zul");
+    }
+
+    /**
      * @param windowManager the new window manager
      */
     public void setWindowManager(WindowManager windowManager) {

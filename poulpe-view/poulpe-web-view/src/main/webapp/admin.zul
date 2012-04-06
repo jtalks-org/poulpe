@@ -2,6 +2,7 @@
 <?page title="${labels.admin.title}" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
+<?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <style src="/resources/css/all.css" />
@@ -23,6 +24,8 @@
           <listitem label="${labels.admin.ban.users}" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
           <listitem label="${labels.admin.user.groups}" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
           <listitem label="${labels.admin.ranks}" forward="onClick=onShowRanks, onOK=onShowRanks" />
+          <listitem label="${labels.admin.group_permissions}"
+            forward="onClick=onShowGroupsPermissions, onOK=onShowGroupsPermissions" />
           <listfoot />
         </listbox>
       </west>
