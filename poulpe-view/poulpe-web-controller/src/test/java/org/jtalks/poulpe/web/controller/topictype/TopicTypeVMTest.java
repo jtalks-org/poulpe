@@ -43,27 +43,33 @@ public class TopicTypeVMTest {
         MockitoAnnotations.initMocks(this);
 
         topicTypeVM = new TopicTypeVM(topicTypeService, dialogManager, entityValidator);
-        topicTypeVM.setSelected(getTopicType());
+        TopicType selected = getTopicType();
+        topicTypeVM.setSelected(selected);
+        topicTypeVM.getTopicTypes().add(selected);
     }
 
     @Test
     public void testNewTopicType() {
-        int oldSize = topicTypeVM.getTopicTypes().size();
-
         topicTypeVM.newTopicType();
 
-        int newSize = topicTypeVM.getTopicTypes().size();
         TopicType newTT = topicTypeVM.getSelected();
-        assertTrue(newSize - oldSize == 1);
         assertTrue(newTT.getTitle().equals("New Title"));
         assertTrue(newTT.getDescription().equals("New Description"));
+    }
+
+    @Test
+    public void testEditTopicType() {
+        topicTypeVM.editTopicType();
+
+        //due to static - message is null
+        assertNull(topicTypeVM.getEditMessage());
     }
 
     @Test
     public void testSaveTopicType() {
         topicTypeVM.saveTopicType();
 
-        verify(topicTypeService).saveOrUpdate(topicTypeVM.getSelected());
+        verify(topicTypeVM.getTopicTypeService()).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
@@ -71,6 +77,14 @@ public class TopicTypeVMTest {
         topicTypeVM.deleteTopicType();
 
         verify(topicTypeService).deleteTopicType(any(TopicType.class));
+    }
+
+    @Test
+    public void testCancelEditTopicType() {
+        topicTypeVM.cancelEditTopicType();
+
+        assertNull(topicTypeVM.getEditMessage());
+        assertNull(topicTypeVM.getSelected());
     }
 
     @Test
@@ -82,4 +96,6 @@ public class TopicTypeVMTest {
         assertFalse(topicTypeVM.getTopicTypes().contains(selected));
         assertNull(topicTypeVM.getSelected());
     }
+
+
 }

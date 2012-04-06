@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.Selectors;
@@ -35,7 +38,9 @@ public class ZkHelper {
     }
 
     /**
-     * Wires zk objects to their ui representation
+     * Wires zk objects to their ui representation for events handling.<br>
+     * Adds forward conditions to myid source component so onXxx source event received by myid component can be
+     * forwarded to the specified target component with the target event name onXxx$myid.
      */
     public void wireByConvention() {
         ConventionWires.wireVariables(component, component);
@@ -51,6 +56,12 @@ public class ZkHelper {
         return Executions.createComponents(zul, component, null);
     }
 
+    /**
+     * Wire components to controller.
+     * 
+     * @param component the reference component for selector
+     * @param controller the controller object to be injected with variables
+     */
     public void wireComponents(Component component, Object controller) {
         Selectors.wireComponents(component, controller, false);
     }
@@ -133,6 +144,42 @@ public class ZkHelper {
      */
     public void addComponents(Collection<Component> components) {
         component.getChildren().addAll(components);
+    }
+
+    /**
+     * Returns the label of the specified key based on the current Locale, or null if no found. 
+     *
+     * @param key
+     * @return
+     */
+    public String getLabel(String key) {
+        return Labels.getLabel(key);
+    }
+
+    /**
+     * Sends a temporary redirect response to the client using the specified redirect location URL by use of the
+     * current execution, {@link Executions#getCurrent}. 
+     * 
+     * @param uri the URI to redirect to, or null to reload the same page
+     */
+    public void sendRedirect(String uri) {
+        Executions.sendRedirect(uri);
+    }
+
+    /**
+     * Reloads current page.
+     */
+    public void reloadPage() {
+        Executions.sendRedirect(null);
+    }
+
+    /**
+     * Returns an instance of javax.servlet.ServletResponse, or null if not available.
+     * 
+     * @return the native response
+     */
+    public HttpServletResponse getResponse() {
+        return (HttpServletResponse) Executions.getCurrent().getNativeResponse();
     }
 
 }

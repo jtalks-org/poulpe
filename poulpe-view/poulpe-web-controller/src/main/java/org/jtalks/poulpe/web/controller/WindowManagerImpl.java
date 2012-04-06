@@ -18,11 +18,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
-import org.jtalks.poulpe.web.controller.users.UserPresenter;
-import org.jtalks.poulpe.web.controller.users.UserView;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -46,9 +43,6 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     /** The path to the web-page for adding / editing component. */
     private static final String EDIT_COMPONENT_URL = "/WEB-INF/pages/edit_component.zul";
-
-    /** The path to the web-page for editing user. */
-    private static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
 
     private ApplicationContext applicationContext;
 
@@ -95,15 +89,6 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
         TopicTypePresenter presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
         doModal(win);
         presenter.initializeForCreate((TopicTypeView) win, listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void openUserWindowForEdit(User user, EditListener<User> listener) {
-        Window win = (Window) createComponent(EDIT_USER_URL);
-        UserPresenter presenter = (UserPresenter) getBean("userPresenter", win);
-        doModal(win);
-        presenter.initializeForEdit((UserView) win, user, listener);
     }
 
     /** {@inheritDoc} */

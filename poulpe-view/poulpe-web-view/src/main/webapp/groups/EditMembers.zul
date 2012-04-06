@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?page title="Edit Members of Groups" contentType="text/html; charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window mode="modal" closable="true" border="normal" width="70%" title="${labels.groups.edit_members.title}"
+  <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.title}"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')">
     <vbox>
-      <add-caption-block prefix="${labels.groups.edit_members.group_caption}"
-          text="${editGroupMembersVm.groupToEdit.name}" />
+      <hbox style="padding: 5px">
+        <label value="${labels.groups.edit_members.group_caption}" style="font: bold 18px sans-serif" />
+        <label value="@load(editGroupMembersVm.groupToEdit.name)" style="font: bold 18px sans-serif" />
+      </hbox>
       <hbox>
-        <vbox hflex="1">
+        <vbox>
           <panel title="${labels.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
@@ -21,11 +22,11 @@
                     sclass="edit.members.searchAvailButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" height="240px">
+                  multiple="true" checkmark="true" width="515px" height="350px">
                 <listhead>
-                  <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
-                  <listheader label="${labels.groups.edit_members.full_name}" />
-                  <listheader label="${labels.groups.edit_members.email}" />
+                  <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
+                  <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
+                  <listheader width="230px" label="${labels.groups.edit_members.email}" />
                 </listhead>
                 <template name="model" var="user">
                   <listitem>
@@ -51,7 +52,7 @@
           <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVm.exist)"
               image="/resources/img/leftleftarrow.png" width="36px" sclass="edit.members.removeAllButton" />
         </vbox>
-        <vbox hflex="1">
+        <vbox>
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
@@ -60,11 +61,11 @@
                     sclass="edit.members.searchExistButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" height="240px">
+                  multiple="true" checkmark="true" width="515px" height="350px">
                 <listhead>
-                  <listheader label="${labels.groups.edit_members.username}" sclass="boldstyle" />
-                  <listheader label="${labels.groups.edit_members.full_name}" />
-                  <listheader label="${labels.groups.edit_members.email}" />
+                  <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
+                  <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
+                  <listheader width="230px" label="${labels.groups.edit_members.email}" />
                 </listhead>
                 <template name="model" var="user">
                   <listitem>

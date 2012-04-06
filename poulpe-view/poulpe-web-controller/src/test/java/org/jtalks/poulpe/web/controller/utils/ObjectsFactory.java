@@ -21,6 +21,7 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -139,4 +140,9 @@ public class ObjectsFactory {
         return RandomStringUtils.randomAlphanumeric(10);
     }
 
+    public static Jcommune fakeForum() {
+    	Jcommune forum = new Jcommune();
+    	forum.setSections(fakeSections());
+    	return forum;
+    }
 }

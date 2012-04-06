@@ -32,9 +32,7 @@ import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
@@ -42,14 +40,20 @@ import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
- * View Model for rank management page.
+ * ViewModel for rank management page.
  *
  * @author Pavel Vervenko
  */
 public class RankManagementVM implements DialogManager.Performable, ValidationFailure {
 
+    public static final String EDIT_RANK_ZUL = "/WEB-INF/pages/edit_rank.zul";
+    public static final String EDIT_RANK_DIALOG = "#editRankDialog";
+    public static final String CREATOR_TITLE = "ranks.edit.creator.title";
+    public static final String MODIFIER_TITLE = "ranks.edit.modifier.title";
+    public static final String DELETE_BUTTON_ID = "deleteButton";
     private ListModelList<Rank> items;
     private Rank selected;
+    private Rank lastSelected;
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
@@ -74,6 +78,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         initData();
     }
 
+    /**
+     * Wires ranks window to this ViewModel. 
+     * 
+     * @param component ranks window
+     */
     @Init
     public void init(@ContextParam(ContextType.VIEW) Component component) {
         zkHelper = new ZkHelper(component);
@@ -120,8 +129,9 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void newItem() {
+        lastSelected = selected;
         selected = new Rank("", 100);
-        openEditorDialog("ranks.edit.creator.title");
+        openEditorDialog(CREATOR_TITLE);
     }
 
     /**
@@ -129,7 +139,8 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void edit() {
-        openEditorDialog("ranks.edit.modifier.title");
+        lastSelected = selected;
+        openEditorDialog(MODIFIER_TITLE);
     }
 
     /**
@@ -145,10 +156,14 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
         }
     }
 
+    /**
+     * Closes the rank dialog without saving and enable/disable delete button.
+     */
     @Command
     @NotifyChange("selected")
     public void cancel() {
         dialogClosed();
+        selected = lastSelected;
         enableOrDisableDeleteButton();
     }
 
@@ -157,15 +172,13 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     @Command
     public void dialogClosed() {
-        Component dialog = zkHelper.findComponent("#editRankDialog");
+        Component dialog = zkHelper.findComponent(EDIT_RANK_DIALOG);
         dialog.detach();
     }
 
     @Override
     public void validationFailure(ValidationResult result) {
-        //  new ValidationFailureHandler("name", rankName)
-        // TODO: add initialization - now it causes NPE because rankName is null
-        handler = new ValidationFailureHandler("rankName", (Textbox) getCurrentComponent("rankName"));
+        handler = new ValidationFailureHandler("rankName", (Textbox) zkHelper.getCurrentComponent("rankName"));
         handler.validationFailure(result);
     }
 
@@ -192,7 +205,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     }
 
     private void enableOrDisableDeleteButton() {
-        Button deleteButton = (Button) getCurrentComponent("deleteButton");
+        Button deleteButton = (Button) zkHelper.getCurrentComponent(DELETE_BUTTON_ID);
         if(selected == null) {
             deleteButton.setDisabled(true);
         } else {
@@ -202,26 +215,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     private void openEditorDialog(String title) {
         Window editorDialog = createEditRankDialog();
-        editorDialog.setTitle(Labels.getLabel(title));
+        editorDialog.setTitle(zkHelper.getLabel(title));
     }
 
     private Window createEditRankDialog() {
-        return (Window) zkHelper.wireToZul("/WEB-INF/pages/edit_rank.zul");
-    }
-
-    /**
-     * Find the component by id.
-     *
-     * @param id component's Id
-     * @return found component or null
-     */
-    private Component getCurrentComponent(String id) {
-        for (Component c : Executions.getCurrent().getDesktop().getComponents()) {
-            if (c.getId().equals(id)) {
-                return c;
-            }
-        }
-        return null;
+        return (Window) zkHelper.wireToZul(EDIT_RANK_ZUL);
     }
 
     private boolean validate(Rank rank) {
@@ -253,6 +251,15 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
      */
     public void setEntityValidator(EntityValidator entityValidator) {
         this.entityValidator = entityValidator;
+    }
+
+    /**
+     * Sets helper for zk operations.
+     * 
+     * @param zkHelper the zkHelper to set
+     */
+    public void setZkHelper(ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;        
     }
 
 }

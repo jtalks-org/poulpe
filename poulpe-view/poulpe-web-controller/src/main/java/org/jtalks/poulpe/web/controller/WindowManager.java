@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.web.controller;
 
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.model.entity.User;
 import org.zkoss.zk.ui.Component;
 
 /**
@@ -58,14 +57,6 @@ public interface WindowManager {
      * @param listener edit listener
      */
     void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
-
-    /**
-     * Opens a window for editing users
-     * 
-     * @param user to edit
-     * @param listener edit listener
-     */
-    void openUserWindowForEdit(User user, EditListener<User> listener);
 
     /**
      * Sets work-area component which will be used as parent component for newly

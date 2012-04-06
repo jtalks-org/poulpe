@@ -44,17 +44,23 @@ public class TopicTypeVM {
     //the selected topicType
     private TopicType selected;
     //service
-    private TopicTypeService topicTypeService;
+    private final TopicTypeService topicTypeService;
     //dialog manager
-    private DialogManager dialogManager;
+    private final DialogManager dialogManager;
     //validator JSR-303
-    private EntityValidator entityValidator;
+    private final EntityValidator entityValidator;
+    //dialogMessage when new window is opened
+    private String editMessage;
+    //messages for creating and editing topicType
+    public static final String NEW_TOPIC_TYPE = "item.add";
+    public static final String EDIT_TOPIC_TYPE = "item.edit";
 
     /**
      * Constructor takes TopicTypeService and DialogManager as its arguments
      *
      * @param topicTypeService {@link TopicTypeService} to use
      * @param dialogManager    {@link DialogManager} to use
+     * @param entityValidator    {@link EntityValidator} to use
      */
     public TopicTypeVM(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
         this.topicTypeService = topicTypeService;
@@ -62,126 +68,69 @@ public class TopicTypeVM {
         this.entityValidator = entityValidator;
     }
 
-    // getters & setters (you don't say!)
-
-    /**
-     * Returns current DialogManager to iteract with user
-     *
-     * @return current DialogManager used
-     */
-    public DialogManager getDialogManager() {
-        return dialogManager;
-    }
-
-    /**
-     * Sets DialogManager to iteract with user
-     *
-     * @param dialogManager new DialogManager to use
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
-
-    /**
-     * Returns ListModelList<TopicType>
-     *
-     * @return ListModelList to use on web-form
-     */
-    public ListModelList<TopicType> getTopicTypes() {
-        if (topicTypes == null) {
-            //init the list
-            topicTypes = new ListModelList<TopicType>(getTopicTypeService().getAll());
-        }
-        return topicTypes;
-    }
-
-    /**
-     * Sets new ListModelList<TopicType> to use on form
-     *
-     * @param topicTypes ListModelList<TopicType> to use
-     */
-    @NotifyChange
-    public void setTopicTypes(ListModelList<TopicType> topicTypes) {
-        this.topicTypes = topicTypes;
-    }
-
-    /**
-     * Returns current {@link TopicType} selected
-     *
-     * @return TopicType selected
-     */
-    public TopicType getSelected() {
-        return selected;
-    }
-
-    /**
-     * Sets {@link TopicType} to select
-     *
-     * @param selected is TopicType for select
-     */
-    @NotifyChange
-    public void setSelected(TopicType selected) {
-        this.selected = selected;
-    }
-
-    /**
-     * Returns {@link TopicTypeService} used
-     *
-     * @return {@link TopicTypeService} to use
-     */
-    public TopicTypeService getTopicTypeService() {
-        return topicTypeService;
-    }
-
-    /**
-     * Sets {@link TopicTypeService} to use
-     *
-     * @param topicTypeService is new TopicTypeService to use
-     */
-    public void setTopicTypeService(TopicTypeService topicTypeService) {
-        this.topicTypeService = topicTypeService;
-    }
-
     //action command
-    @NotifyChange({"selected", "topicTypes"})
-    @Command
+
     /**
      * Creates new TopicType and adds it on form
      */
+    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @Command
     public void newTopicType() {
-        TopicType topicType = new TopicType();
-        //select the new one
-        selected = topicType;
+        selected = new TopicType();
         selected.setTitle("New Title");
         selected.setDescription("New Description");
-        getTopicTypes().add(topicType);
+        editMessage = Labels.getLabel(NEW_TOPIC_TYPE);
     }
 
-    @NotifyChange("selected")
+    /**
+     * Edits the TopicType selected, shows Dialog Window
+     */
+    @NotifyChange({"selected", "topicTypes", "editMessage"})
     @Command
+    public void editTopicType() {
+        editMessage = Labels.getLabel(EDIT_TOPIC_TYPE);
+    }
+
     /**
      * Saves current TopicType selected. Doesn't save other if changed.
      * Shows warning or error messages if something is wrong
      */
+    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @Command
     public void saveTopicType() {
         getTopicTypeService().saveOrUpdate(selected);
+        //check out if selected is just created
+        if (!topicTypes.contains(selected)) {
+            getTopicTypes().add(selected);
+        }
+        cancelEditTopicType();
     }
 
-    @NotifyChange({"selected", "topicTypes"})
+    /**
+     * Hides window for editing or creating of TopicType
+     */
+    @NotifyChange({"selected", "topicTypes", "editMessage"})
     @Command
+    public void cancelEditTopicType() {
+        editMessage = null;
+        selected = null;
+    }
+
     /**
      * Deletes current TopicType selected
      */
+    @NotifyChange({"selected", "topicTypes"})
+    @Command
     public void deleteTopicType() {
         getTopicTypeService().deleteTopicType(selected);
         deleteFromList();
     }
 
-    @NotifyChange({"selected", "topicTypes"})
-    @Command
     /**
      * Deletes from list of TopicTypes on web-form.
      */
+    @NotifyChange({"selected", "topicTypes"})
+    @Command
     public void deleteFromList() {
         getTopicTypes().remove(selected);
         setSelected(null);
@@ -205,7 +154,6 @@ public class TopicTypeVM {
                 errorMessage.append(", ");
             }
         }
-        ;
 
         return errorMessage.toString();
     }
@@ -221,7 +169,11 @@ public class TopicTypeVM {
         return new AbstractValidator() {
             public void validate(ValidationContext ctx) {
                 String title = (String) ctx.getProperty().getValue();
+                Long id = selected.getId();
+                //TopicType for test should be similar in meaningful fields
+                // to what we're going to save - (id, title)
                 TopicType test = new TopicType(title, StringUtils.EMPTY);
+                test.setId(id);
 
                 ValidationResult result = entityValidator.validate(test);
 
@@ -232,4 +184,73 @@ public class TopicTypeVM {
         };
     }
 
+    // getters & setters (you don't say!)
+
+    /**
+     * Returns current DialogManager to iteract with user
+     *
+     * @return current DialogManager used
+     */
+    public DialogManager getDialogManager() {
+        return dialogManager;
+    }
+
+    /**
+     * Returns ListModelList<TopicType>
+     *
+     * @return ListModelList to use on web-form
+     */
+    public ListModelList<TopicType> getTopicTypes() {
+        if (topicTypes == null) {
+            //init the list
+            topicTypes = new ListModelList<TopicType>(getTopicTypeService().getAll());
+        }
+        return topicTypes;
+    }
+
+    /**
+     * Sets new ListModelList<TopicType> to use on form
+     *
+     * @param topicTypes ListModelList<TopicType> to use
+     */
+    public void setTopicTypes(ListModelList<TopicType> topicTypes) {
+        this.topicTypes = topicTypes;
+    }
+
+    /**
+     * Returns current {@link TopicType} selected
+     *
+     * @return TopicType selected
+     */
+    public TopicType getSelected() {
+        return selected;
+    }
+
+    /**
+     * Sets {@link TopicType} to select
+     *
+     * @param selected is TopicType for select
+     */
+    public void setSelected(TopicType selected) {
+        this.selected = selected;
+    }
+
+    /**
+     * Returns {@link TopicTypeService} used
+     *
+     * @return {@link TopicTypeService} to use
+     */
+    public TopicTypeService getTopicTypeService() {
+        return topicTypeService;
+    }
+
+    /**
+     * Returns message shown when window for create or
+     * edit is opened.
+     *
+     * @return message as {@link String}
+     */
+    public String getEditMessage() {
+        return editMessage;
+    }
 }

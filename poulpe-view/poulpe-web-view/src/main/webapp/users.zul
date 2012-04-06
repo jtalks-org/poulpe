@@ -3,34 +3,34 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="usersWindow" title="${labels.users.list.title}" border="normal" hflex="true"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)">
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)" vflex="false">
 
     <label value="${labels.users.label.search}" />
     :
     <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false" maxlength="20" />
 
     <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton" />
-
-    <listbox id="listbox" model="@bind(vm.users)" vflex="true" sizedByContent="true"
-      mold="paging" pageSize="20" pagingPosition="both">
+    <listbox id="listbox" model="@bind(vm.users)" vflex="true"
+      mold="paging" pageSize="50" pagingPosition="both" height="500px">
       <listhead>
-        <listheader label="${labels.users.username}" sort="auto(username)" hflex="1" />
-        <listheader label="${labels.users.email}" sort="auto(email)" hflex="1" />
-        <listheader label="${labels.users.firstname}" sort="auto(firstName)" hflex="1" />
-        <listheader label="${labels.users.lastname}" sort="auto(lastName)" hflex="1" />
-        <listheader label="${labels.users.role}" sort="auto(role)" hflex="1" />
+        <listheader label="${labels.users.username}" sort="auto(username)"  />
+        <listheader label="${labels.users.email}" sort="auto(email)"  />
+        <listheader label="${labels.users.firstname}" sort="auto(firstName)"  />
+        <listheader label="${labels.users.lastname}" sort="auto(lastName)" />
+        <listheader label="${labels.users.role}" sort="auto(role)" />
       </listhead>
       <template name="model" var="user">
         <listitem onDoubleClick="@command('editUser', user=user)" onOK="@command('editUser', user=user)">
-          <listcell label="@load(user.username)" hflex="1" />
-          <listcell label="@load(user.email)" hflex="1" />
-          <listcell label="@load(user.firstName)" hflex="1" />
-          <listcell label="@load(user.lastName)" hflex="1" />
-          <listcell label="@load(user.role)" hflex="1" />
+          <listcell label="@load(user.username)" />
+          <listcell label="@load(user.email)"  />
+          <listcell label="@load(user.firstName)" />
+          <listcell label="@load(user.lastName)" />
+          <listcell label="@load(user.role)" />
         </listitem>
       </template>
       <zscript><![CDATA[
         listbox.pagingChild.mold="os";
+        listbox.paginal.pageIncrement=10;
       ]]></zscript>
     </listbox>
   </window>

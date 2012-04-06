@@ -3,8 +3,8 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <zk>
-  <window title="User banning" presenter="${userBanningPresenter}" use="org.jtalks.poulpe.web.controller.userbanning.UserBanningViewImpl"
-    id="mainWindow">
+  <window title="${labels.userbanning.title}" presenter="${userBanningPresenter}"
+    use="org.jtalks.poulpe.web.controller.userbanning.UserBanningViewImpl" id="mainWindow">
     <vlayout>
       <hbox>
         <combobox id="userCombobox" autodrop="true" buttonVisible="false" />

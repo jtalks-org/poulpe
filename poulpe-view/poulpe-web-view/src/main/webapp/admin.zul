@@ -1,25 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?page title="Admin Panel" contentType="text/html;charset=UTF-8"?>
+<?page title="${labels.admin.title}" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <?init class="org.zkoss.zkplus.databind.AnnotateDataBinderInit" ?>
 <?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <style src="/resources/css/all.css" />
   <window apply="${adminWindow}" width="100%" height="100%">
     <borderlayout>
       <north>
-        <add-caption-block text="Admin Panel" />
+        <groupbox>
+          <label style="font-size=30px" value="${labels.admin.title}" />
+          <a href="#" forward="onClick=onChangeLocaleToRu" image="/resources/img/russia.png" sclass="language-button" />
+          <a href="#" forward="onClick=onChangeLocaleToEn" image="/resources/img/great britain.png" sclass="language-button" />
+        </groupbox>
       </north>
       <west splittable="true" collapsible="true">
         <listbox width="150px">
-          <listitem label="Components" forward="onClick=onShowComponents, onOK=onShowComponents" />
-          <listitem label="Topic Types" forward="onClick=onShowTopicTypes, onOK=onShowTopicTypes" />
-          <listitem label="Sections" forward="onClick=onShowSections, onOK=onShowSections" />
-          <listitem label="Users" forward="onClick=onShowUsers, onOK=onShowUsers" />
-          <listitem label="Ban users" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
-          <listitem label="User Groups" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
-          <listitem label="Group Permissions" forward="onClick=onShowGroupsPermissions, onOK=onShowGroupsPermissions" />
-          <listitem label="Ranks" forward="onClick=onShowRanks, onOK=onShowRanks" />
+          <listitem label="${labels.admin.components}" forward="onClick=onShowComponents, onOK=onShowComponents" />
+          <listitem label="${labels.admin.topic.types}" forward="onClick=onShowTopicTypes, onOK=onShowTopicTypes" />
+          <listitem label="${labels.admin.sections}" forward="onClick=onShowSections, onOK=onShowSections" />
+          <listitem label="${labels.admin.users}" forward="onClick=onShowUsers, onOK=onShowUsers" />
+          <listitem label="${labels.admin.ban.users}" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
+          <listitem label="${labels.admin.user.groups}" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
+          <listitem label="${labels.admin.ranks}" forward="onClick=onShowRanks, onOK=onShowRanks" />
+          <listitem label="${labels.admin.group_permissions}"
+            forward="onClick=onShowGroupsPermissions, onOK=onShowGroupsPermissions" />
           <listfoot />
         </listbox>
       </west>

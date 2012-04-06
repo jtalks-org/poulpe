@@ -7,9 +7,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.mockito.Mock;
@@ -25,10 +27,12 @@ public class PerfomableFactoryTest {
     private PerfomableFactory perfomableFactory;
     
     @Mock SectionPresenter presenter;
-    @Mock SectionService service;
+    @Mock SectionService sectionService;
+    @Mock ComponentService componentService;
     @Mock BranchService branchService;
     @Mock ZkSectionView view;
     @Mock ZkSectionTreeComponent currentSectionTreeComponent;
+    @Mock Jcommune forum;
 
     private PoulpeSection section = sectionWithBranches();
     private PoulpeBranch branch = (PoulpeBranch) section.getBranches().get(0);
@@ -39,20 +43,22 @@ public class PerfomableFactoryTest {
 
         perfomableFactory = new PerfomableFactory(presenter);
         perfomableFactory.setCurrentSectionTreeComponent(currentSectionTreeComponent);
-        perfomableFactory.setSectionService(service);
+        perfomableFactory.setSectionService(sectionService);
+        perfomableFactory.setComponentService(componentService);
         perfomableFactory.setBranchService(branchService);
         perfomableFactory.setSectionView(view);
     }
     
     @Test
     public void testCreatePerformableCreateSection() {
-        Performable perf = perfomableFactory.saveSection(section);
+        Performable perf = perfomableFactory.saveSection(section, forum);
         
         perf.execute();
 
+        verify(forum).addSection(section);
+        verify(componentService).saveComponent(forum);
         verify(view).addSection(section);
         verify(view).closeEditSectionDialog();
-        verify(service).saveSection(section);
     }
 
     @Test
@@ -63,14 +69,14 @@ public class PerfomableFactoryTest {
 
         verify(currentSectionTreeComponent).updateSectionInView(section);
         verify(view).closeEditSectionDialog();
-        verify(service).saveSection(section);
+        verify(sectionService).saveSection(section);
     }
 
     @Test
     public void testDeleteBranchPerformable() {
         Performable perf = perfomableFactory.deleteBranch(branch);
         perf.execute();
-        verify(service).saveSection(section);
+        verify(sectionService).saveSection(section);
         verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(presenter).updateView();
     }
@@ -82,7 +88,7 @@ public class PerfomableFactoryTest {
 
         perf.execute();
 
-        verify(service).deleteAndMoveBranchesTo(section1, section2);
+        verify(sectionService).deleteAndMoveBranchesTo(section1, section2);
     }
 
     @Test
@@ -90,7 +96,7 @@ public class PerfomableFactoryTest {
         Performable perf = perfomableFactory.deleteSection(section, null);
 
         perf.execute();
-        verify(service).deleteRecursively(section);
+        verify(sectionService).deleteRecursively(section);
     }
 
 }
