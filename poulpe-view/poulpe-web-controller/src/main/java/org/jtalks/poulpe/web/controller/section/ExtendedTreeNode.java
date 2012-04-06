@@ -16,12 +16,11 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Section;
 import org.zkoss.zul.DefaultTreeNode;
 
 /**
- * Tree node for displaying {@linkplain Section sections} and {@linkplain Branch branches}
+ * Tree node for displaying {@linkplain org.jtalks.common.model.entity.Section sections} and
+ * {@linkplain org.jtalks.common.model.entity.Branch branches}
  * 
  * @author Konstantin Akimov
  */
@@ -30,8 +29,7 @@ public class ExtendedTreeNode<T> extends DefaultTreeNode<T> {
     private static final long serialVersionUID = -3198582085335476694L;
 
     /**
-     * this flag is used to determine if the node is going to be expanded by
-     * defaults
+     * this flag is used to determine if the node is going to be expanded by defaults
      */
     private boolean isExpanded = true;
 

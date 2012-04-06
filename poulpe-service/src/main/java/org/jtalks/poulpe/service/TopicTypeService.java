@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.service.EntityService;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
@@ -47,7 +46,7 @@ public interface TopicTypeService extends EntityService<TopicType> {
      * Save new TopicType.
      * 
      * @param topicType topicType to save
-     * @exception ValidationException
+     * @exception org.jtalks.common.validation.ValidationException
      */
     void saveOrUpdate(TopicType topicType);
 

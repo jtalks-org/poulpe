@@ -22,7 +22,6 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.jtalks.poulpe.web.controller.component.ListPresenter;
 import org.jtalks.poulpe.web.controller.component.ListView;
 import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Combobox;
@@ -133,7 +132,7 @@ public class ZkItemView extends Window implements ItemView, AfterCompose {
     /**
      * Tells to presenter to check if name of created or edited component is a
      * duplicate.
-     * @see ListPresenter
+     * @see org.jtalks.poulpe.web.controller.component.ListPresenter
      */
     public void onBlur$name() {
         presenter.checkComponent();

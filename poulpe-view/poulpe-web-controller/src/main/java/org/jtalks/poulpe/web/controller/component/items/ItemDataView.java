@@ -16,11 +16,10 @@ package org.jtalks.poulpe.web.controller.component.items;
 
 import java.util.Set;
 
-import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 
 /**
- * Represents {@link Component}'s data. Implementation should refresh the view
+ * Represents {@link org.jtalks.common.model.entity.Component Component}'s data. Implementation should refresh the view
  * when set methods are invoked
  * 
  * @author Dmitriy Sukharev

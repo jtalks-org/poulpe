@@ -19,7 +19,6 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -237,8 +236,8 @@ public class ZkSectionView extends Window implements AfterCompose, SectionView, 
     // CUSTOM EVENT HANDLER
 
     /**
-     * @deprecated use {@link DialogManager} and {@link PerfomableFactory#deleteSection(PoulpeSection,PoulpeSection)}
-     * for this
+     * @deprecated use {@link org.jtalks.poulpe.web.controller.DialogManager DialogManager} and
+     * {@link PerfomableFactory#deleteSection(PoulpeSection,PoulpeSection)} for this
      */
     @Deprecated
     public void openDeleteSectionDialog(PoulpeSection victim) {
