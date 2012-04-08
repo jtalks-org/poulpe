@@ -59,7 +59,7 @@ public class TwoSideListWithFilterVm<E> {
         existFilterTxt = "";
         avail = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         exist = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
-        stateAfterEdit = Lists.<E> newLinkedList();
+        stateAfterEdit = Lists.newLinkedList();
     }
 
     // -- Accessors -----------------------------

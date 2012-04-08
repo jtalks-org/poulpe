@@ -66,7 +66,7 @@ class SectionBranchTreeitemRenderer implements TreeitemRenderer<ExtendedTreeNode
 
         for (Component cmp : treeItem.getChildren()) {
             if (cmp instanceof Treerow) {
-                for (Object oCell : ((Treerow) cmp).getChildren()) {
+                for (Object oCell : cmp.getChildren()) {
                     if (oCell instanceof Treecell) {
                         treecells.add((Treecell) oCell);
                     }

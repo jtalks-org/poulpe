@@ -141,7 +141,7 @@ public class ZkBranchEditorView extends Window implements BranchEditorView, Afte
      */
     @Override
     public PoulpeBranch getSelectedBranch() {
-        return (PoulpeBranch) branchesListModel.get(branchesList.getSelectedIndex());
+        return branchesListModel.get(branchesList.getSelectedIndex());
     }
 
     /**
