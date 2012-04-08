@@ -76,7 +76,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testGet() {
         session.save(forum);
-        Component actual = (Component) dao.get(forum.getId());
+        Component actual = dao.get(forum.getId());
         assertReflectionEquals(forum, actual);
     }
 

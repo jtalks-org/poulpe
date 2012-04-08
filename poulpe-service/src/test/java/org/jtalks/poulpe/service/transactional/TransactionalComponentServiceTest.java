@@ -45,8 +45,6 @@ public class TransactionalComponentServiceTest {
     @Mock
     private ComponentDao componentDao;
     @Mock
-    private PermissionManager permissionManager;
-    @Mock
     private EntityValidator validator;
     
     Component component = new Component("", "", ComponentType.FORUM);
@@ -57,7 +55,7 @@ public class TransactionalComponentServiceTest {
         
         componentDao = mock(ComponentDao.class);
         validator = mock(EntityValidator.class);
-        componentService = new TransactionalComponentService(componentDao, permissionManager, validator);
+        componentService = new TransactionalComponentService(componentDao, mock(PermissionManager.class), validator);
         PropertyLoader propertyLoader = mock(PropertyLoader.class);
         componentService.setPropertyLoader(propertyLoader);
     }
@@ -83,7 +81,7 @@ public class TransactionalComponentServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> empty = Collections.<ValidationError> emptySet();
+        Set<ValidationError> empty = Collections.emptySet();
         doThrow(new ValidationException(empty)).when(validator).throwOnValidationFailure(any(Component.class));
     }
 

@@ -75,7 +75,7 @@ public class TransactionalRankServiceTest {
     }
     
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        Set<ValidationError> dontCare = Collections.emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Rank.class));
     }
 }

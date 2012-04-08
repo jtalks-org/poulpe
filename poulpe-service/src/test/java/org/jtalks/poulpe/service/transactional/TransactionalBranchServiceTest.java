@@ -14,16 +14,6 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
@@ -39,23 +29,34 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+
 /**
  * This test class is intended to test all topic-related forum branch facilities
- * 
+ *
  * @author Kravchenko Vitaliy
  * @author Kirill Afonin
  */
 public class TransactionalBranchServiceTest {
-    
+
     private BranchService branchService;
-    
-    @Mock BranchDao branchDao;
-    @Mock EntityValidator entityValidator;
-    @Mock AclManager aclManager;
-    @Mock PermissionManager branchPermissionManager;
-    
+
+    @Mock
+    BranchDao branchDao;
+    @Mock
+    EntityValidator entityValidator;
+    @Mock
+    PermissionManager branchPermissionManager;
+
     private long BRANCH_ID = 1L;
-    
+
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -86,7 +87,7 @@ public class TransactionalBranchServiceTest {
         verify(branchPermissionManager).changeGrants(branch, accessChanges);
     }
 
-    @Test(expectedExceptions = { NotFoundException.class })
+    @Test(expectedExceptions = {NotFoundException.class})
     public void testGetIncorrectId() throws NotFoundException {
         when(branchDao.isExist(BRANCH_ID)).thenReturn(false);
         branchService.get(BRANCH_ID);
@@ -162,7 +163,7 @@ public class TransactionalBranchServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        Set<ValidationError> dontCare = Collections.emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(
                 any(PoulpeBranch.class));
     }

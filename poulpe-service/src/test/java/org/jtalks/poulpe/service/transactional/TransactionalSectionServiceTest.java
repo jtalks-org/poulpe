@@ -77,9 +77,8 @@ public class TransactionalSectionServiceTest {
     @Test (expectedExceptions=IllegalArgumentException.class)
     public void deleteAndMoveBranchesToExceptionTest() {
         final long victimId = SECTION_ID;
-        final long recipientId = victimId;
         PoulpeSection victim = buildFakeSection(victimId);
-        PoulpeSection recipient = buildFakeSection(recipientId);
+        PoulpeSection recipient = buildFakeSection(victimId);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
@@ -108,7 +107,7 @@ public class TransactionalSectionServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        Set<ValidationError> dontCare = Collections.emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeSection.class));
     }
 

@@ -47,8 +47,6 @@ public class UsersVm implements ValidationFailure {
     private ListModelList<User> users;
     private String searchString;
     private User selectedUser;
-    @Wire
-    private Window usersWindow;
     private ZkHelper zkHelper;
     private EntityValidator entityValidator;
     private ValidationFailureHandler handler;

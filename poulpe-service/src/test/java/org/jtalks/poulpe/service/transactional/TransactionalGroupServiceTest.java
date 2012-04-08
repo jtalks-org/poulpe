@@ -40,8 +40,7 @@ public class TransactionalGroupServiceTest {
     
     @Mock GroupDao dao;
     @Mock EntityValidator entityValidator;
-    
-    private String name = "name";
+
     private PoulpeGroup group = new PoulpeGroup("new group");
 
     @BeforeMethod
@@ -64,8 +63,8 @@ public class TransactionalGroupServiceTest {
 
     @Test
     public void getAllMatchedByName() {
-        service.getAllMatchedByName(name);
-        verify(dao).getMatchedByName(name);
+        service.getAllMatchedByName("name");
+        verify(dao).getMatchedByName("name");
     }
 
     @Test
@@ -85,7 +84,7 @@ public class TransactionalGroupServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError>emptySet();
+        Set<ValidationError> dontCare = Collections.emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
     }
 }

@@ -84,7 +84,7 @@ public class TransactionalTopicTypeServiceTest {
     }
 
     private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.<ValidationError> emptySet();
+        Set<ValidationError> dontCare = Collections.emptySet();
         doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
     }
 

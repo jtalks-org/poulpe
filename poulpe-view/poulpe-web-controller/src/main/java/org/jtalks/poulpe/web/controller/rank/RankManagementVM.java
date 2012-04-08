@@ -14,11 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.rank;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
@@ -27,17 +22,16 @@ import org.jtalks.poulpe.validator.ValidationFailure;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+
+import javax.annotation.Nonnull;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * ViewModel for rank management page.
@@ -57,8 +51,6 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     private RankService rankService;
     private EntityValidator entityValidator;
     private final DialogManager dialogManager;
-    @Wire
-    private Window ranksWindow;
     private ZkHelper zkHelper;
 
     private ValidationFailureHandler handler;
@@ -79,8 +71,8 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
     }
 
     /**
-     * Wires ranks window to this ViewModel. 
-     * 
+     * Wires ranks window to this ViewModel.
+     *
      * @param component ranks window
      */
     @Init
@@ -206,7 +198,7 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     private void enableOrDisableDeleteButton() {
         Button deleteButton = (Button) zkHelper.getCurrentComponent(DELETE_BUTTON_ID);
-        if(selected == null) {
+        if (selected == null) {
             deleteButton.setDisabled(true);
         } else {
             deleteButton.setDisabled(false);
@@ -255,11 +247,11 @@ public class RankManagementVM implements DialogManager.Performable, ValidationFa
 
     /**
      * Sets helper for zk operations.
-     * 
+     *
      * @param zkHelper the zkHelper to set
      */
     public void setZkHelper(ZkHelper zkHelper) {
-        this.zkHelper = zkHelper;        
+        this.zkHelper = zkHelper;
     }
 
 }
