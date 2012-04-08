@@ -67,9 +67,9 @@ public class PropertyLoader {
      */
     public void loadDefaults(Component component) {
         String componentType = component.getComponentType().toString().toLowerCase();
-        final String PATH = pathToProperties + componentType + ".properties";
+        String path = pathToProperties + componentType + ".properties";
 
-        Resource propertiesFile = new ClassPathResource(PATH);
+        Resource propertiesFile = new ClassPathResource(path);
         Properties properties = new Properties();
         try {
             properties.load(propertiesFile.getInputStream());
