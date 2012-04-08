@@ -82,7 +82,8 @@ public class PoulpeGroup extends Group {
      */
     @SuppressWarnings("unchecked")
     public List<User> getPoulpeUsers() {
-        return (List<User>) getUsers();
+        List<?> users = getUsers();
+        return (List<User>) users;
     }
 
     /**
