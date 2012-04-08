@@ -47,8 +47,7 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
      */
     @SuppressWarnings("unchecked")
     public List<PoulpeBranch> getPoulpeBranches() {
-        List<?> branches = getBranches();
-        return (List<PoulpeBranch>) branches;
+        return (List<PoulpeBranch>) getBranches();
     }
     
     /**

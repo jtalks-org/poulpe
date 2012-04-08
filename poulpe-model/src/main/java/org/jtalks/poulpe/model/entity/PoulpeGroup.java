@@ -80,11 +80,9 @@ public class PoulpeGroup extends Group {
      * Should be used in preference of {@link #getUsers()}
      * @return the list of {@link User} object
      */
+    @SuppressWarnings("unchecked")
     public List<User> getPoulpeUsers() {
-        List<?> users = getUsers();
-        @SuppressWarnings("unchecked")
-        List<User> poulpeUsers = (List<User>) users;
-        return poulpeUsers;
+        return (List<User>) getUsers();
     }
 
     /**
