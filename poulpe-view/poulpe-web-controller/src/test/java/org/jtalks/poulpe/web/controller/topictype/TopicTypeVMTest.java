@@ -15,13 +15,13 @@ import static org.testng.Assert.*;
 
 /**
  * Tests for TopicType ViewModel
- * See {@see TopicTypeVM}
+ * See {@see TopicTypeVm}
  *
  * @author Vahluev Vyacheslav
  */
-public class TopicTypeVMTest {
+public class TopicTypeVmTest {
 
-    private TopicTypeVM topicTypeVM;
+    private TopicTypeVm topicTypeVm;
     @Mock
     private TopicTypeService topicTypeService;
     @Mock
@@ -42,59 +42,59 @@ public class TopicTypeVMTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        topicTypeVM = new TopicTypeVM(topicTypeService, dialogManager, entityValidator);
+        topicTypeVm = new TopicTypeVm(topicTypeService, dialogManager, entityValidator);
         TopicType selected = getTopicType();
-        topicTypeVM.setSelected(selected);
-        topicTypeVM.getTopicTypes().add(selected);
+        topicTypeVm.setSelected(selected);
+        topicTypeVm.getTopicTypes().add(selected);
     }
 
     @Test
     public void testNewTopicType() {
-        topicTypeVM.newTopicType();
+        topicTypeVm.newTopicType();
 
-        TopicType newTT = topicTypeVM.getSelected();
-        assertTrue(newTT.getTitle().equals("New Title"));
-        assertTrue(newTT.getDescription().equals("New Description"));
+        TopicType newTT = topicTypeVm.getSelected();
+        assertEquals(newTT.getTitle(), "New Title");
+        assertEquals(newTT.getDescription(),"New Description");
     }
 
     @Test
     public void testEditTopicType() {
-        topicTypeVM.editTopicType();
+        topicTypeVm.editTopicType();
 
         //due to static - message is null
-        assertNull(topicTypeVM.getEditMessage());
+        assertNull(topicTypeVm.getEditMessage());
     }
 
     @Test
     public void testSaveTopicType() {
-        topicTypeVM.saveTopicType();
+        topicTypeVm.saveTopicType();
 
-        verify(topicTypeVM.getTopicTypeService()).saveOrUpdate(any(TopicType.class));
+        verify(topicTypeVm.getTopicTypeService()).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
     public void testDeleteTopicType() {
-        topicTypeVM.deleteTopicType();
+        topicTypeVm.deleteTopicType();
 
         verify(topicTypeService).deleteTopicType(any(TopicType.class));
     }
 
     @Test
     public void testCancelEditTopicType() {
-        topicTypeVM.cancelEditTopicType();
+        topicTypeVm.cancelEditTopicType();
 
-        assertNull(topicTypeVM.getEditMessage());
-        assertNull(topicTypeVM.getSelected());
+        assertNull(topicTypeVm.getEditMessage());
+        assertNull(topicTypeVm.getSelected());
     }
 
     @Test
     public void testDeleteFromList() {
-        TopicType selected = topicTypeVM.getSelected();
+        TopicType selected = topicTypeVm.getSelected();
 
-        topicTypeVM.deleteFromList();
+        topicTypeVm.deleteFromList(selected);
 
-        assertFalse(topicTypeVM.getTopicTypes().contains(selected));
-        assertNull(topicTypeVM.getSelected());
+        assertFalse(topicTypeVm.getTopicTypes().contains(selected));
+        assertNull(topicTypeVm.getSelected());
     }
 
 

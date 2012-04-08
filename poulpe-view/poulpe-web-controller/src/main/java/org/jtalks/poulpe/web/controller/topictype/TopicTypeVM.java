@@ -38,7 +38,7 @@ import java.util.Set;
  *
  * @author Vahluev Vyacheslav
  */
-public class TopicTypeVM {
+public class TopicTypeVm {
     //list on form
     private ListModelList<TopicType> topicTypes;
     //the selected topicType
@@ -60,15 +60,14 @@ public class TopicTypeVM {
      *
      * @param topicTypeService {@link TopicTypeService} to use
      * @param dialogManager    {@link DialogManager} to use
-     * @param entityValidator    {@link EntityValidator} to use
+     * @param entityValidator  {@link EntityValidator} to use
      */
-    public TopicTypeVM(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
+    public TopicTypeVm(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
         this.topicTypeService = topicTypeService;
         this.dialogManager = dialogManager;
         this.entityValidator = entityValidator;
     }
 
-    //action command
 
     /**
      * Creates new TopicType and adds it on form
@@ -123,7 +122,7 @@ public class TopicTypeVM {
     @Command
     public void deleteTopicType() {
         getTopicTypeService().deleteTopicType(selected);
-        deleteFromList();
+        deleteFromList(selected);
     }
 
     /**
@@ -131,7 +130,7 @@ public class TopicTypeVM {
      */
     @NotifyChange({"selected", "topicTypes"})
     @Command
-    public void deleteFromList() {
+    public void deleteFromList(TopicType selected) {
         getTopicTypes().remove(selected);
         setSelected(null);
     }
@@ -158,7 +157,6 @@ public class TopicTypeVM {
         return errorMessage.toString();
     }
 
-    //validators for prompt
 
     /**
      * Validator for title field on web-form
@@ -183,8 +181,6 @@ public class TopicTypeVM {
             }
         };
     }
-
-    // getters & setters (you don't say!)
 
     /**
      * Returns current DialogManager to iteract with user

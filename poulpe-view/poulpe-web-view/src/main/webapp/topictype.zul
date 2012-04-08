@@ -3,7 +3,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
     <window title="${labels.topictypes.list.title}" border="normal" width="100%"
-            apply="org.zkoss.bind.BindComposer" viewModel="@id('ttvm') @init(topicTypeVM)"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('ttvm') @init(topicTypeVm)"
             validationMessages="@id('vmsgs')">
         <style src="/resources/css/all.css" />
         <vbox hflex="true">

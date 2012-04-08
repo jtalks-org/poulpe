@@ -83,7 +83,7 @@
     <property name="windowManager" ref="windowManager" />
   </bean>
 
-  <bean id="topicTypeVM" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVM" scope="desktop">
+  <bean id="topicTypeVm" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVm" scope="desktop">
       <constructor-arg index="0" ref="topicTypeService" />
       <constructor-arg index="1" ref="dialogManager"/>
       <constructor-arg index="2" ref="entityValidator"/>
