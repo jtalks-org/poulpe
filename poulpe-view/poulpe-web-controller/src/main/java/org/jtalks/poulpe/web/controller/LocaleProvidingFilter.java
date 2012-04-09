@@ -14,43 +14,58 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import java.io.IOException;
 import java.util.Locale;
 
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.zkoss.util.Locales;
 import org.zkoss.web.Attributes;
-import org.zkoss.zk.ui.Session;
-import org.zkoss.zk.ui.util.RequestInterceptor;
 
 /**
- * Request Interceptor for setting locale for each user based on user's preferences.
+ * Filter for setting locale for each user based on user's preferences.
  * 
  * @author dim42
  */
-public class LocaleProvidingRequestInterceptor implements RequestInterceptor {
+public class LocaleProvidingFilter implements Filter {
 
     public static final String USER_LOCALE = "userLocale";
+
+    @Override
+    public void init(FilterConfig filterConfig) throws ServletException {
+    }
 
     /**
      * Restore locale from the previous user request and sets it for the current session, i.e. overrides default
      * language for all users.
      */
     @Override
-    public void request(Session sess, Object request, Object response) {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
+            ServletException {
         final Cookie[] cookies = ((HttpServletRequest) request).getCookies();
         if (cookies != null) {
             for (int j = cookies.length; --j >= 0;) {
                 if (cookies[j].getName().equals(USER_LOCALE)) {
                     String localeString = cookies[j].getValue();
                     Locale locale = Locales.getLocale(localeString);
-                    sess.setAttribute(Attributes.PREFERRED_LOCALE, locale);
-                    return;
+                    HttpSession session = ((HttpServletRequest) request).getSession();
+                    session.setAttribute(Attributes.PREFERRED_LOCALE, locale);
+                    break;
                 }
             }
         }
-
+        chain.doFilter(request, response);
     }
 
+    @Override
+    public void destroy() {
+    }
 }

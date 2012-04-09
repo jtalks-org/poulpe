@@ -25,8 +25,4 @@
     <name>org.zkoss.web.preferred.locale</name>
     <value>en</value>
   </library-property>
-  
-  <listener>
-    <listener-class>org.jtalks.poulpe.web.controller.LocaleProvidingRequestInterceptor</listener-class>
-  </listener>
 </zk>

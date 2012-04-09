@@ -13,11 +13,11 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 package org.jtalks.poulpe.web.controller;
-import static org.jtalks.poulpe.web.controller.LocaleProvidingRequestInterceptor.USER_LOCALE;
+
+import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
 
 import java.io.IOException;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 import org.zkoss.zk.ui.Component;
@@ -79,7 +79,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
 
     private void saveLocaleInCookie(String localeLanguage) {
         HttpServletResponse response = zkHelper.getResponse();
-        response.addCookie(new Cookie(USER_LOCALE, localeLanguage));
+        response.addCookie(zkHelper.createCookie(USER_LOCALE, localeLanguage));
     }
 
     /**
