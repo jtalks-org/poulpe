@@ -22,9 +22,11 @@
             <toolbar>
                 <button label="${labels.item.add}" onClick="@command('newTopicType')" />
                 <button label="${labels.item.edit}" onClick="@command('editTopicType')" disabled="@bind(empty ttvm.selected)" />
-                <button label="${labels.sections.button.delete}" onClick="@command(ttvm.selected.id eq 0?'deleteFromList':'deleteTopicType')" disabled="@load(empty ttvm.selected)" />
+                <button label="${labels.sections.button.delete}"
+                        onClick="@command(ttvm.selected.id eq 0?'deleteFromList':'deleteTopicType')" disabled="@load(empty ttvm.selected)" />
             </toolbar>
-            <window title="@load(ttvm.editMessage)" mode="modal" border="normal" width="600px" visible="@load(not empty ttvm.editMessage)">
+            <window title="ttvm.selected.id eq 0? '${labels.item.add}' : '${labels.item.edit}'" mode="modal" border="normal" width="600px"
+                    visible="@load(ttvm.showPopUp)">
                 <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
                     <grid hflex="true" >
                         <columns>
@@ -40,7 +42,7 @@
                                 ${labels.title}
                                 <hlayout>
                                     <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
-                                                    @validator(ttvm.titleValidator)" />
+                                    @validator('beanValidator')" />
                                     <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
                                 </hlayout>
                             </row>

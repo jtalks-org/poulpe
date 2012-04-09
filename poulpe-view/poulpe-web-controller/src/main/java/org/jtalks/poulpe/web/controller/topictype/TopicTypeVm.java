@@ -14,24 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import org.apache.commons.lang.StringUtils;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.zkoss.bind.ValidationContext;
-import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.bind.validator.AbstractValidator;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * ViewModel for TopicType page
@@ -47,55 +37,49 @@ public class TopicTypeVm {
     private final TopicTypeService topicTypeService;
     //dialog manager
     private final DialogManager dialogManager;
-    //validator JSR-303
-    private final EntityValidator entityValidator;
-    //dialogMessage when new window is opened
-    private String editMessage;
-    //messages for creating and editing topicType
-    public static final String NEW_TOPIC_TYPE = "item.add";
-    public static final String EDIT_TOPIC_TYPE = "item.edit";
+    // boolean to show window for creating or editing
+    private Boolean showPopUp;
+
 
     /**
      * Constructor takes TopicTypeService and DialogManager as its arguments
      *
      * @param topicTypeService {@link TopicTypeService} to use
      * @param dialogManager    {@link DialogManager} to use
-     * @param entityValidator  {@link EntityValidator} to use
      */
     public TopicTypeVm(@Nonnull TopicTypeService topicTypeService,
-                       @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
+                       @Nonnull DialogManager dialogManager) {
         this.topicTypeService = topicTypeService;
         this.dialogManager = dialogManager;
-        this.entityValidator = entityValidator;
     }
 
 
     /**
      * Creates new TopicType and adds it on form
      */
-    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @NotifyChange({"selected", "showPopUp"})
     @Command
     public void newTopicType() {
         selected = new TopicType();
         selected.setTitle("New Title");
         selected.setDescription("New Description");
-        editMessage = Labels.getLabel(NEW_TOPIC_TYPE);
+        showPopUp = true;
     }
 
     /**
      * Edits the TopicType selected, shows Dialog Window
      */
-    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @NotifyChange({"showPopUp"})
     @Command
     public void editTopicType() {
-        editMessage = Labels.getLabel(EDIT_TOPIC_TYPE);
+        showPopUp = true;
     }
 
     /**
      * Saves current TopicType selected. Doesn't save other if changed. Shows warning or error messages if something is
      * wrong
      */
-    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @NotifyChange({"selected", "topicTypes", "showPopUp"})
     @Command
     public void saveTopicType() {
         getTopicTypeService().saveOrUpdate(selected);
@@ -109,10 +93,10 @@ public class TopicTypeVm {
     /**
      * Hides window for editing or creating of TopicType
      */
-    @NotifyChange({"selected", "topicTypes", "editMessage"})
+    @NotifyChange({"selected", "showPopUp"})
     @Command
     public void cancelEditTopicType() {
-        editMessage = null;
+        showPopUp = null;
         selected = null;
     }
 
@@ -134,52 +118,6 @@ public class TopicTypeVm {
     public void deleteFromList(TopicType selected) {
         getTopicTypes().remove(selected);
         setSelected(null);
-    }
-
-    /**
-     * Collects errors obtained from {@link ValidationResult} and represents them as localized String
-     *
-     * @param result {@link ValidationResult}
-     * @return Errors as String
-     */
-    //TODO: Maybe that should be in some new bean? Like CommonValidator(Entity)
-    private String collectErrors(ValidationResult result) {
-        StringBuilder errorMessage = new StringBuilder();
-        Set<ValidationError> errors = result.getErrors();
-
-        for (Iterator<ValidationError> i = errors.iterator(); i.hasNext(); ) {
-            errorMessage.append(Labels.getLabel(i.next().getErrorMessageCode()));
-            if (i.hasNext()) {
-                errorMessage.append(", ");
-            }
-        }
-
-        return errorMessage.toString();
-    }
-
-
-    /**
-     * Validator for title field on web-form
-     *
-     * @return Validator for title field
-     */
-    public Validator getTitleValidator() {
-        return new AbstractValidator() {
-            public void validate(ValidationContext ctx) {
-                String title = (String) ctx.getProperty().getValue();
-                Long id = selected.getId();
-                //TopicType for test should be similar in meaningful fields
-                // to what we're going to save - (id, title)
-                TopicType test = new TopicType(title, StringUtils.EMPTY);
-                test.setId(id);
-
-                ValidationResult result = entityValidator.validate(test);
-
-                if (result.hasErrors()) {
-                    addInvalidMessage(ctx, collectErrors(result));
-                }
-            }
-        };
     }
 
     /**
@@ -240,12 +178,7 @@ public class TopicTypeVm {
         return topicTypeService;
     }
 
-    /**
-     * Returns message shown when window for create or edit is opened.
-     *
-     * @return message as {@link String}
-     */
-    public String getEditMessage() {
-        return editMessage;
+    public Boolean getShowPopUp() {
+        return showPopUp;
     }
 }

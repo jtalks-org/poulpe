@@ -1,17 +1,17 @@
 /**
- * Copyright (C) 2011  JTalks.org Team
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
- */
+* Copyright (C) 2011  JTalks.org Team
+* This library is free software; you can redistribute it and/or
+* modify it under the terms of the GNU Lesser General Public
+* License as published by the Free Software Foundation; either
+* version 2.1 of the License, or (at your option) any later version.
+* This library is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+* Lesser General Public License for more details.
+* You should have received a copy of the GNU Lesser General Public
+* License along with this library; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+*/
 package org.jtalks.poulpe.web.controller.topictype;
 
 import org.jtalks.common.validation.EntityValidator;
@@ -28,11 +28,11 @@ import static org.mockito.Mockito.verify;
 import static org.testng.Assert.*;
 
 /**
- * Tests for TopicType ViewModel
- * See {@see TopicTypeVm}
- *
- * @author Vahluev Vyacheslav
- */
+* Tests for TopicType ViewModel
+* See {@see TopicTypeVm}
+*
+* @author Vahluev Vyacheslav
+*/
 public class TopicTypeVmTest {
 
     private TopicTypeVm topicTypeVm;
@@ -40,8 +40,6 @@ public class TopicTypeVmTest {
     private TopicTypeService topicTypeService;
     @Mock
     private DialogManager dialogManager;
-    @Mock
-    private EntityValidator entityValidator;
 
     public TopicType getTopicType() {
         TopicType topicType = new TopicType();
@@ -56,7 +54,7 @@ public class TopicTypeVmTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
-        topicTypeVm = new TopicTypeVm(topicTypeService, dialogManager, entityValidator);
+        topicTypeVm = new TopicTypeVm(topicTypeService, dialogManager);
         TopicType selected = getTopicType();
         topicTypeVm.setSelected(selected);
         topicTypeVm.getTopicTypes().add(selected);
@@ -76,7 +74,7 @@ public class TopicTypeVmTest {
         topicTypeVm.editTopicType();
 
         //due to static - message is null
-        assertNull(topicTypeVm.getEditMessage());
+        assertNotNull(topicTypeVm.getShowPopUp());
     }
 
     @Test
@@ -97,7 +95,7 @@ public class TopicTypeVmTest {
     public void testCancelEditTopicType() {
         topicTypeVm.cancelEditTopicType();
 
-        assertNull(topicTypeVm.getEditMessage());
+        assertNull(topicTypeVm.getShowPopUp());
         assertNull(topicTypeVm.getSelected());
     }
 

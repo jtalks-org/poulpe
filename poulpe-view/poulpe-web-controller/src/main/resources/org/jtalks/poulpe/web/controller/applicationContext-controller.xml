@@ -86,7 +86,6 @@
   <bean id="topicTypeVm" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVm" scope="desktop">
       <constructor-arg index="0" ref="topicTypeService" />
       <constructor-arg index="1" ref="dialogManager"/>
-      <constructor-arg index="2" ref="entityValidator"/>
   </bean>
 
   <!--Declaration of presenters -->
