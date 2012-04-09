@@ -15,9 +15,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-
-<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
+<configuration debug="false" xmlns="http://jakarta.apache.org/log4j/"
+               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xsi:schemaLocation="http://jakarta.apache.org/log4j/ http://www.felixgolubov.com/XMLEditor/xml/Log4j/log4j.xsd">
   <!-- Appenders -->
   <appender name="BULK" class="org.apache.log4j.DailyRollingFileAppender">
     <param name="File" value="logs/bulk.log"/>
@@ -37,8 +37,8 @@
   </appender>
 
   <appender name="APPLICATION" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="logs/application.log"/>
-    <param name="MaxFileSize" value="100MB"/>
+    <param name="File" value="logs/poulpe.log"/>
+    <param name="MaxFileSize" value="20MB"/>
     <param name="MaxBackupIndex" value="10"/>
     <param name="Encoding" value="UTF-8"/>
     <layout class="org.apache.log4j.EnhancedPatternLayout">
@@ -68,4 +68,4 @@
     <appender-ref ref="BULK"/>
   </root>
 
-</log4j:configuration>
+</configuration>

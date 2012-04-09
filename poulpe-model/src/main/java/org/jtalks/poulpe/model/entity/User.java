@@ -42,19 +42,6 @@ public class User extends org.jtalks.common.model.entity.User {
      * @param username username
      * @param email email
      * @param password password
-     * @deprecated
-     */
-    @Deprecated
-    public User(String username, String email, String password) {
-        super(username, email, password);
-    }
-
-    /**
-     * Create instance with requiered fields.
-     * 
-     * @param username username
-     * @param email email
-     * @param password password
      * @param salt salt
      */
     public User(String username, String email, String password, String salt) {

@@ -62,7 +62,8 @@ public class TopicTypeVm {
      * @param dialogManager    {@link DialogManager} to use
      * @param entityValidator  {@link EntityValidator} to use
      */
-    public TopicTypeVm(@Nonnull TopicTypeService topicTypeService, @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
+    public TopicTypeVm(@Nonnull TopicTypeService topicTypeService,
+                       @Nonnull DialogManager dialogManager, @Nonnull EntityValidator entityValidator) {
         this.topicTypeService = topicTypeService;
         this.dialogManager = dialogManager;
         this.entityValidator = entityValidator;
@@ -91,8 +92,8 @@ public class TopicTypeVm {
     }
 
     /**
-     * Saves current TopicType selected. Doesn't save other if changed.
-     * Shows warning or error messages if something is wrong
+     * Saves current TopicType selected. Doesn't save other if changed. Shows warning or error messages if something is
+     * wrong
      */
     @NotifyChange({"selected", "topicTypes", "editMessage"})
     @Command
@@ -136,8 +137,7 @@ public class TopicTypeVm {
     }
 
     /**
-     * Collects errors obtained from {@link ValidationResult}
-     * and represents them as localized String
+     * Collects errors obtained from {@link ValidationResult} and represents them as localized String
      *
      * @param result {@link ValidationResult}
      * @return Errors as String
@@ -241,8 +241,7 @@ public class TopicTypeVm {
     }
 
     /**
-     * Returns message shown when window for create or
-     * edit is opened.
+     * Returns message shown when window for create or edit is opened.
      *
      * @return message as {@link String}
      */
