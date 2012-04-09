@@ -33,7 +33,7 @@ public class TopicType extends Entity {
 
     public static final String TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
     public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
-    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "sections.editsection.name.err";
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "{sections.editsection.name.err}";
     
     @NotNull(message = TITLE_CANT_BE_VOID)
     @NotEmpty(message = TITLE_CANT_BE_VOID)
