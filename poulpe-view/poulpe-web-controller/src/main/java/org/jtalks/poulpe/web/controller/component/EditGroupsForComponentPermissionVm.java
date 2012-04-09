@@ -14,6 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.text.StringContains.containsString;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -32,6 +37,7 @@ import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
 
 /**
  * View Model for editing groups for component permission.
@@ -71,12 +77,33 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
         this.windowManager = windowManager;
         this.componentService = componentService;
         this.groupService = groupService;
-
-        // firstly initialize this state
-        stateAfterEdit.addAll(getAlreadyAddedGroups());
     }
 
     // -- ZK Command bindings --------------------
+
+    /**
+     * Search groups available for adding in group with specified part of name. After executing this method list of
+     * available users would be updated with values of search result.
+     */
+    @Command
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    public void filterAvail() {
+        @SuppressWarnings("unchecked")
+        List<PoulpeGroup> notAddedGroups = ListUtils.subtract(groupService.getAll(), stateAfterEdit);
+        avail.clear();
+        avail.addAll(filterGroups(notAddedGroups, getAvailFilterTxt()));
+    }
+
+    /**
+     * Search groups which already exist in group with specified part of name. After executing this method list of exist
+     * users would be updated with values of search result.
+     */
+    @Command
+    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    public void filterExist() {
+        exist.clear();
+        exist.addAll(filterGroups(stateAfterEdit, getExistFilterTxt()));
+    }
 
     /**
      * Closes the dialog.
@@ -112,17 +139,21 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     // -- Utility methods ------------------------
 
     /**
-     * {@inheritDoc}
+     * Initialize VM after it created.
      */
     @Init
-    @Override
-    @SuppressWarnings("unchecked")
-    public void updateVm() {
-        exist.clear();
-        exist.addAll(stateAfterEdit);
+    public void initVM() {
+        stateAfterEdit.addAll(getAlreadyAddedGroups());
+        updateVm();
+    }
 
-        avail.clear();
-        avail.addAll(ListUtils.subtract(groupService.getAll(), stateAfterEdit));
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateVm() {
+        filterExist();
+        filterAvail();
     }
 
     /**
@@ -133,8 +164,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     private List<PoulpeGroup> getAlreadyAddedGroups() {
         GeneralPermission permission = (GeneralPermission) permissionForEntity.getPermission();
         PermissionsMap<GeneralPermission> accessList = componentService.getPermissionsMapFor(component);
-        return (permissionForEntity.isAllowed()) ? accessList.getAllowed(permission) : accessList
-                .getRestricted(permission);
+        return accessList.get(permission, permissionForEntity.isAllowed());
     }
 
     /**
@@ -142,6 +172,17 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      */
     private void openGroupsPermissionsWindow() {
         windowManager.open(GROUPS_PERMISSIONS_ZUL);
+    }
+
+    /**
+     * Filter list of groups with specified {@code filterTxt}.
+     * 
+     * @param groups the list to filter
+     * @param filterTxt the text used for filtering
+     * @return filtered list of groups
+     */
+    private List<PoulpeGroup> filterGroups(List<PoulpeGroup> groups, String filterTxt) {
+        return filter(having(on(PoulpeGroup.class).getName(), containsString(filterTxt)), groups);
     }
 
 }
