@@ -73,5 +73,11 @@ public interface UserService {
      * @throws NotFoundException when user can't be found
      */
     User get(long id) throws NotFoundException;
+    
+    /**
+     * Gets all banned users from the database
+     * @return list of all users
+     */
+    List<User> getAllBannedUsers();
 
 }

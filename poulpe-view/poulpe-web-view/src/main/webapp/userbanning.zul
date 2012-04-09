@@ -1,33 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?page id="mainPage" title="User banning" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-
-<zk>
-  <window title="${labels.userbanning.title}" presenter="${userBanningPresenter}"
-    use="org.jtalks.poulpe.web.controller.userbanning.UserBanningViewImpl" id="mainWindow">
-    <vlayout>
-      <hbox>
-        <combobox id="userCombobox" autodrop="true" buttonVisible="false" />
-        <button id="addButton" label="${labels.userbanning.add}" sclass="users.banning.addButton" />
-      </hbox>
-      <listbox id="usersToBan">
-        <listhead sizable="true">
-          <listheader align="center" label="${labels.userbanning.username}" sclass="boldstyle" />
-          <listheader align="center" label="${labels.userbanning.email}" />
-          <listheader align="center" label="${labels.userbanning.posts}" />
-          <listheader align="center" label="${labels.userbanning.registrationDate}" />
-        </listhead>
-      </listbox>
-      <checkbox id="permanent" label="${labels.userbanning.permanentBan}" checked="false" />
-      ${labels.userbanning.banPeriod}
-      <intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1" />
-      ${labels.userbanning.banReason}
-      <textbox id="banReason" rows="6" width="370px;">
-      </textbox>
-    </vlayout>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     
-    <button label="${labels.userbanning.submit}" id="submitButton" sclass="users.banning.submitButton" />
-    <button label="${labels.userbanning.reset}" id="resetButton" sclass="users.banning.resetButton" />
-  </window>
-</zk>
+<window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%" apply="org.zkoss.bind.BindComposer" 
+      viewModel="@id('workingAreaVm') @init(userBanningVM)">
 
+
+<combobox id="userCombobox" autodrop="true" buttonVisible="false" />
+<button id="addButton" label="${labels.userbanning.add}" onClick="@command('addBannedUser')" />
+
+<grid model="@load(workingAreaVm.bannedUsers)">
+ <columns>
+        <column label="${labels.userbanning.username}"/>
+        <column label="${labels.userbanning.email}"/>
+        <column label="${labels.userbanning.posts}"/>
+        <column label="${labels.userbanning.registrationDate}"/>        
+      </columns>
+
+ <template name="model" var="user">
+        <row onDoubleClick="@command('editBannedUser', user=user)">
+          <label value="@load(user.username)"/>
+          <label value="@load(user.email)"/>
+          <label value="NOT IMPLEMENTED YET"/>
+          <label value="NOT IMPLEMENTED YET"/>
+        </row>
+      </template>
+</grid>
+
+
+
+</window>
+ </zk>
