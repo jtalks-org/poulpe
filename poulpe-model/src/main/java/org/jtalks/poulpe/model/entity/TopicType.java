@@ -35,9 +35,6 @@ public class TopicType extends Entity {
     public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
     public static final String ERROR_LABEL_SECTION_NAME_WRONG = "{sections.editsection.name.err}";
     
-    @NotNull(message = TITLE_CANT_BE_VOID)
-    @NotEmpty(message = TITLE_CANT_BE_VOID)
-    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     @UniqueField(message = TITLE_ALREADY_EXISTS)
     private String title;
     
@@ -77,6 +74,9 @@ public class TopicType extends Entity {
      * Get the title of the TopicType.
      * @return title
      */
+    @NotNull(message = TITLE_CANT_BE_VOID)
+    @NotEmpty(message = TITLE_CANT_BE_VOID)
+    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     public String getTitle() {
         return title;
     }
