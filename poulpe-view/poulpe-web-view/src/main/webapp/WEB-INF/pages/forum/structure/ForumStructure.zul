@@ -1,0 +1,14 @@
+<?page id="forumStructurePage" title="Forum Structure" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window viewModel="@id('vm') @init('forumStructureVm')" apply="org.zkoss.bind.BindComposer">
+    <tree model="@bind(vm.sections)">
+      <treechildren>
+        <template name="model" var="section">
+          <treeitem label="@load(section.name)"/>
+        </template>
+      </treechildren>
+    </tree>
+  </window>
+</zk>
