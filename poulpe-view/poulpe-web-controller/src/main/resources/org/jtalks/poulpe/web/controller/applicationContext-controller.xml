@@ -89,6 +89,12 @@
       <constructor-arg index="0" ref="topicTypeService" />
       <constructor-arg index="1" ref="dialogManager"/>
   </bean>
+  
+  <bean id="userBanningVM"
+        scope="desktop"
+        class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVM">
+      <constructor-arg index="0" ref="userService"/>
+  </bean> 
 
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"

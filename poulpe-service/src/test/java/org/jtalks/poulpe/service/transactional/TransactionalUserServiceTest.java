@@ -133,6 +133,17 @@ public class TransactionalUserServiceTest {
             verify(userDao).saveOrUpdate(user);
         }
     }
+    
+    @Test
+    public void testGetAllBannedUsers() {
+        User user = new User("username", "email", "password", "salt");
+        ArrayList<User> bannedUsers = new ArrayList<User>();
+        bannedUsers.add(user);
+        userService.setTemporaryBanStatus(bannedUsers, 5, BAN_REASON);
+        
+        userService.getAllBannedUsers();
+        verify(userDao).getAllBannedUsers();
+    }
 
     /**
      * Creates and return the {@link User} entity with default username, email

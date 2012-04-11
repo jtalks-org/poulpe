@@ -128,5 +128,10 @@ public class TransactionalUserService implements UserService {
     public User get(long id) {
         return userDao.get(id);
     }
+    
+    @Override
+	public List<User> getAllBannedUsers() {
+		return userDao.getAllBannedUsers();
+	}
 
 }
