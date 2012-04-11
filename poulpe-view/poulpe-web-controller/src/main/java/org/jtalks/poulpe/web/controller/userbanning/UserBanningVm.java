@@ -9,36 +9,38 @@ import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.SimpleListModel;
 import org.zkoss.zul.Window;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 
-public class UserBanningVM {
+public class UserBanningVm {
     @Wire
     private Window customersWindow;
     private UserService userService;
 
     private User selectedUser;
+    private ListModelList<User> users = new BindingListModelList<User>(
+            new ArrayList<User>(), true);
     private ListModelList<User> bannedUsers = new BindingListModelList<User>(
             new ArrayList<User>(), true);
 
-    public UserBanningVM(UserService userService) {
+    public UserBanningVm(UserService userService) {
         this.userService = userService;
         initData();
     }
 
     public void initData() {
-
+    	users.addAll(userService.getAll());
         bannedUsers.addAll(userService.getAllBannedUsers());
     }
 
     @Command
     public void addBannedUser() {
-
         openEditUserDialog(customersWindow);
     }
-
+    
     @Command
     public void editBannedUser(@Nonnull @BindingParam("user") User user) {
         this.selectedUser = user;
@@ -70,5 +72,13 @@ public class UserBanningVM {
     public void setBannedUsers(ListModelList<User> bannedUsers) {
         this.bannedUsers = bannedUsers;
     }
+
+	public ListModelList<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(ListModelList<User> users) {
+		this.users = users;
+	}
 
 }

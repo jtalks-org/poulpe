@@ -4,10 +4,15 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     
 <window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%" apply="org.zkoss.bind.BindComposer" 
-      viewModel="@id('workingAreaVm') @init(userBanningVM)">
+      viewModel="@id('workingAreaVm') @init(userBanningVm)">
 
 
-<combobox id="userCombobox" autodrop="true" buttonVisible="false" />
+<combobox id="userCombobox" model="@load(workingAreaVm.users)" autodrop="true" selectedItem="@bind(workingAreaVm.selectedUser)" >
+<template name="model" var="user">
+                    <comboitem label="@load(user.username)"/>
+                </template>
+</combobox>
+
 <button id="addButton" label="${labels.userbanning.add}" onClick="@command('addBannedUser')" />
 
 <grid model="@load(workingAreaVm.bannedUsers)">

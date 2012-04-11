@@ -90,9 +90,9 @@
       <constructor-arg index="1" ref="dialogManager"/>
   </bean>
   
-  <bean id="userBanningVM"
+  <bean id="userBanningVm"
         scope="desktop"
-        class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVM">
+        class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
       <constructor-arg index="0" ref="userService"/>
   </bean> 
 
