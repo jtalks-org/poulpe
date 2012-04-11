@@ -26,10 +26,10 @@ import org.zkoss.zul.Center;
 
 /**
  * Server-side representation of view for main 'Admin Window'.
- * 
+ *
  * @author Vladimir Bukhoyarov
  * @author Vyacheslav Zhivaev
- * 
+ *
  */
 public class AdminWindow extends GenericForwardComposer<Component> {
 
@@ -108,6 +108,12 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      */
     public void onShowSections() {
         windowManager.open("sections.zul");
+    }
+    /**
+     * Points to the new implementation of Sections & Branches. Now it's called Forum Structure.
+     */
+    public void onShowForumStructure() {
+        windowManager.open("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
 
     /**
