@@ -18,14 +18,14 @@ import static org.testng.Assert.assertSame;
 /**
  * @author stanislav bashkirtsev
  */
-public class SectionsAndBranchesVmTest {
+public class ForumStructureVmTest {
     private ComponentService componentService;
-    private SectionsAndBranchesVm vm;
+    private ForumStructureVm vm;
 
     @BeforeMethod
     public void setUp() throws Exception {
         componentService = mock(ComponentService.class);
-        vm = new SectionsAndBranchesVm(componentService);
+        vm = new ForumStructureVm(componentService);
     }
 
     @Test(dataProvider = "provideRandomJcommuneWithSections")

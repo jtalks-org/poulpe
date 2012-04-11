@@ -16,12 +16,12 @@ import java.util.ArrayList;
  *
  * @author stanislav bashkirtsev
  */
-public class SectionsAndBranchesVm {
+public class ForumStructureVm {
     private final ComponentService componentService;
     private final ListModelList<PoulpeSection> sections =
             new BindingListModelList<PoulpeSection>(new ArrayList<PoulpeSection>(), true);
 
-    public SectionsAndBranchesVm(@NotNull ComponentService componentService) {
+    public ForumStructureVm(@NotNull ComponentService componentService) {
         this.componentService = componentService;
     }
 

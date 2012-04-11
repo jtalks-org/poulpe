@@ -24,6 +24,7 @@
           <listitem label="${labels.admin.ban.users}" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
           <listitem label="${labels.admin.user.groups}" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />
           <listitem label="${labels.admin.ranks}" forward="onClick=onShowRanks, onOK=onShowRanks" />
+          <listitem label="Forum Structure" forward="onClick=onShowForumStructure" />
           <listitem label="${labels.admin.group_permissions}"
             forward="onClick=onShowGroupsPermissions, onOK=onShowGroupsPermissions" />
           <listfoot />
