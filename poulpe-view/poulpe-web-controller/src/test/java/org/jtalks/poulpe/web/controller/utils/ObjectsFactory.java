@@ -27,6 +27,7 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 
 import com.google.common.collect.Lists;
 
@@ -126,7 +127,7 @@ public class ObjectsFactory {
 
     public static List<PoulpeGroup> fakeGroupList(int listSize) {
         List<PoulpeGroup> result = Lists.newArrayList();
-        
+
         if (listSize > 0) {
             for (int i = 0; i < listSize; i++) {
                 result.add(fakeGroup());
@@ -141,8 +142,20 @@ public class ObjectsFactory {
     }
 
     public static Jcommune fakeForum() {
-    	Jcommune forum = new Jcommune();
-    	forum.setSections(fakeSections());
-    	return forum;
+        Jcommune forum = new Jcommune();
+        forum.setSections(fakeSections());
+        return forum;
+    }
+
+    /**
+     * Create {@link SelectedEntity} instance with predefined internal {@code SelectedEntity.entity}.
+     * 
+     * @param entity the entity to set
+     * @return new instance of {@link SelectedEntity}
+     */
+    public static <T> SelectedEntity<T> createSelectedEntity(T entity) {
+        SelectedEntity<T> result = new SelectedEntity<T>();
+        result.setEntity(entity);
+        return result;
     }
 }
