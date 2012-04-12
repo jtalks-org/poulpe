@@ -14,16 +14,16 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Branch;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Branch;
-
 /**
- * Forum branch that contains topics
- * 
+ * Forum branch that contains topics.
+ *
  * @author Pavel Vervenko
  */
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
@@ -39,7 +39,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Create PoulpeBranch with name and empty description
-     * 
+     *
      * @param name - name for new PoulpeBranch
      */
     public PoulpeBranch(String name) {
@@ -48,8 +48,8 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Create PoulpeBranch with name and description
-     * 
-     * @param name - name for new PoulpeBranch
+     *
+     * @param name        - name for new PoulpeBranch
      * @param description - description for new PoulpeBranch
      */
     public PoulpeBranch(String name, String description) {
@@ -58,6 +58,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Should be used in preference of {@link #getSection()}
+     *
      * @return {@link PoulpeSection}
      */
     public PoulpeSection getPoulpeSection() {
@@ -65,8 +66,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     }
 
     /**
-     * @return an unmodifiable list of {@link User} which are signed to moderate
-     * this branch
+     * @return an unmodifiable list of {@link User} which are signed to moderate this branch
      */
     public List<User> getModeratorsList() {
         return Collections.unmodifiableList(moderators);
@@ -74,7 +74,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Protected for using only by hibernate.
-     * 
+     *
      * @return the list of moderators.
      */
     protected List<User> getModerators() {
@@ -82,9 +82,8 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     }
 
     /**
-     * Sets the list of users which will be signed to moderate this branch.
-     * Protected for using only by hibernate.
-     * 
+     * Sets the list of users which will be signed to moderate this branch. Protected for using only by hibernate.
+     *
      * @param moderators a list of {@link User}
      */
     protected void setModerators(List<User> moderators) {
@@ -93,7 +92,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Assigns {@link User} to moderate this branch
-     * 
+     *
      * @param user to be assigned
      */
     public void addModerator(User user) {
@@ -102,7 +101,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Assigns a list of {@link User} to moderate this branch
-     * 
+     *
      * @param users - list of moderators
      */
     public void addModerators(List<User> users) {
@@ -110,9 +109,8 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     }
 
     /**
-     * Assigns a list of {@link User} to moderate this branch. This method
-     * mainly for using in tests
-     * 
+     * Assigns a list of {@link User} to moderate this branch. This method mainly for using in tests
+     *
      * @param users - arrays of moderators
      */
     public void addModerators(User... users) {
@@ -121,7 +119,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Removes an assignment for {@link User} to moderate this branch
-     * 
+     *
      * @param user to be removed from moderators
      */
     public void removeModerator(User user) {
@@ -130,7 +128,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Checks if {@link User} is assigned to moderate this branch
-     * 
+     *
      * @param user - user for check
      * @return {@code true} if assigned, {@code false} otherwise
      */
@@ -140,7 +138,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Returns a list of user {@link PoulpeGroup}s of this branch.
-     * 
+     *
      * @return list of user groups
      */
     public List<PoulpeGroup> getGroups() {
@@ -149,7 +147,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Assigns a list of user {@link PoulpeGroup}s for this branch.
-     * 
+     *
      * @param groups - list of user groups
      */
     public void setGroups(List<PoulpeGroup> groups) {
@@ -158,7 +156,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Adds a user {@link PoulpeGroup} for this branch.
-     * 
+     *
      * @param group - user group to add
      */
     public void addGroup(PoulpeGroup group) {
@@ -175,7 +173,7 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
 
     /**
      * Adds a new group, or updates, if it already has it
-     * 
+     *
      * @param group to be added
      */
     public void addOrUpdateGroup(PoulpeGroup group) {
@@ -186,5 +184,16 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
             }
         }
         addGroup(group);
+    }
+
+    /**
+     * Unlike usual situation, in our case this method is used by presentation layer to depict forum structure, so this
+     * method should be changed only if this presentation changed the way it shows branches.
+     *
+     * @return {@link #getName()}
+     */
+    @Override
+    public String toString() {
+        return getName();
     }
 }
