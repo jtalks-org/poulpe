@@ -1,39 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    
-<window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%" apply="org.zkoss.bind.BindComposer" 
-      viewModel="@id('workingAreaVm') @init(userBanningVm)">
 
+  <window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%"
+      apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
-<combobox id="userCombobox" model="@load(workingAreaVm.users)" autodrop="true" selectedItem="@bind(workingAreaVm.selectedUser)" >
-<template name="model" var="user">
-                    <comboitem label="@load(user.username)"/>
-                </template>
-</combobox>
+    <!-- Adding user to ban state: user selection -->
+    <hbox style="padding: 10px">
+      <combobox autodrop="true" width="300px" model="@load(userBanningVm.availableUsers)"
+          selectedItem="@bind(userBanningVm.selectedUser)">
+        <template name="model" var="user">
+          <comboitem label="@load(user.username)"/>
+        </template>
+      </combobox>
 
-<button id="addButton" label="${labels.userbanning.add}" onClick="@command('addBannedUser')" />
+      <button label="${labels.userbanning.add}" onClick="@command('banSelectedUser')" />
+    </hbox>
 
-<grid model="@load(workingAreaVm.bannedUsers)">
- <columns>
-        <column label="${labels.userbanning.username}"/>
-        <column label="${labels.userbanning.email}"/>
-        <column label="${labels.userbanning.posts}"/>
-        <column label="${labels.userbanning.registrationDate}"/>        
-      </columns>
+    <!-- Banned users list -->
+    <hbox>
+      <grid model="@load(userBanningVm.bannedUsers)">
+        <columns>
+          <column label="${labels.userbanning.username}"/>
+          <column label="${labels.userbanning.email}"/>
+          <column label="${labels.userbanning.posts}"/>
+          <column label="${labels.userbanning.registrationDate}"/>
+          <column label="_Ban Managing_"/>
+        </columns>
+        <template name="model" var="user">
+          <row onDoubleClick="@command('editBan', user=user)">
+            <label value="@load(user.username)"/>
+            <label value="@load(user.email)"/>
+            <label value="NOT IMPLEMENTED YET"/>
+            <label value="NOT IMPLEMENTED YET"/>
+            <hbox>
+              <button label="_Edit_" onClick="@command('editBan', user=user)" />
+              <button label="_Revoke_" onClick="@command('revokeBan')" />
+            </hbox>
+          </row>
+        </template>
+      </grid>
+    </hbox>
 
- <template name="model" var="user">
-        <row onDoubleClick="@command('editBannedUser', user=user)">
-          <label value="@load(user.username)"/>
-          <label value="@load(user.email)"/>
-          <label value="NOT IMPLEMENTED YET"/>
-          <label value="NOT IMPLEMENTED YET"/>
-        </row>
-      </template>
-</grid>
+    <!-- Window to edit ban properties -->
+    <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
+    <window visible="@load(userBanningVm.editBanWindowOpened)"></window>
 
-
-
-</window>
- </zk>
+  </window>
+</zk>

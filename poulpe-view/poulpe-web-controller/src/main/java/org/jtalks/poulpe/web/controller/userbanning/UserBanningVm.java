@@ -1,60 +1,44 @@
 package org.jtalks.poulpe.web.controller.userbanning;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
-import org.zkoss.zk.ui.select.annotation.Wire;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.SimpleListModel;
-import org.zkoss.zul.Window;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import org.zkoss.bind.annotation.NotifyChange;
 
 public class UserBanningVm {
-    @Wire
-    private Window customersWindow;
+
+    // Injected
     private UserService userService;
 
+    /**
+     * User selected in list of available users.
+     */
     private User selectedUser;
-    private ListModelList<User> users = new BindingListModelList<User>(
-            new ArrayList<User>(), true);
-    private ListModelList<User> bannedUsers = new BindingListModelList<User>(
-            new ArrayList<User>(), true);
 
-    public UserBanningVm(UserService userService) {
+    /**
+     * Flag variable which indicates that window to edit ban properties should be shown.
+     */
+    private boolean editBanWindowOpened = false;
+
+    public UserBanningVm(@Nonnull UserService userService) {
         this.userService = userService;
-        initData();
     }
 
-    public void initData() {
-    	users.addAll(userService.getAll());
-        bannedUsers.addAll(userService.getAllBannedUsers());
+    //-- Accessors ------------------------------
+
+    public List<User> getAvailableUsers() {
+        List<User> users = userService.getAll();
+        users.removeAll(userService.getAllBannedUsers());
+        return users;
     }
 
-    @Command
-    public void addBannedUser() {
-        openEditUserDialog(customersWindow);
-    }
-    
-    @Command
-    public void editBannedUser(@Nonnull @BindingParam("user") User user) {
-        this.selectedUser = user;
-        openEditUserDialog(customersWindow);
-    }
-
-    private Component openEditUserDialog(Window customersWindow) {
-        return Executions.createComponents(
-                "/WEB-INF/pages/edit_banned_user.zul", customersWindow, null);
-    }
-
-    @Command
-    public void deleteBannedUser() {
-
+    public List<User> getBannedUsers() {
+        return userService.getAllBannedUsers();
     }
 
     public User getSelectedUser() {
@@ -65,20 +49,61 @@ public class UserBanningVm {
         this.selectedUser = selectedUser;
     }
 
-    public ListModelList<User> getBannedUsers() {
-        return bannedUsers;
+    /**
+     * @return the editBanWindowOpened
+     */
+    public boolean isEditBanWindowOpened() {
+        return editBanWindowOpened;
     }
 
-    public void setBannedUsers(ListModelList<User> bannedUsers) {
-        this.bannedUsers = bannedUsers;
+    /**
+     * @param editBanWindowOpened the editBanWindowOpened to set
+     */
+    public void setEditBanWindowOpened(boolean editBanWindowOpened) {
+        this.editBanWindowOpened = editBanWindowOpened;
     }
 
-	public ListModelList<User> getUsers() {
-		return users;
-	}
+    //-- ZK bindings ----------------------------
 
-	public void setUsers(ListModelList<User> users) {
-		this.users = users;
-	}
+    /**
+     * Set banned state to selected user.
+     */
+    @Command
+    @NotifyChange({ "editBanWindowOpened" })
+    public void banSelectedUser() {
+        editBan(selectedUser);
+    }
+
+    /**
+     * Revoke ban for specified user.
+     * 
+     * @param user the user to revoke for
+     */
+    @Command
+    public void revokeBan(@Nonnull @BindingParam("user") User user) {
+        // now not implemented
+    }
+
+    /**
+     * Edit ban properties for specified user.
+     * 
+     * @param user the user to edit for
+     */
+    @Command
+    public void editBan(@Nonnull @BindingParam("user") User user) {
+        // now not implemented
+
+        // here must be initialization actions, setting internal state, etc.
+
+        // we must have:
+        // * permanent ban flag
+        // * ban length(days)
+        // * ban reason text
+
+        // after all
+        // editBanWindowOpened = true;
+    }
+
+    //-- Utility methods -------------------------
 
 }
