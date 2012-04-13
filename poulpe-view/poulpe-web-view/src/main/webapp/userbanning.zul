@@ -23,36 +23,36 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style="padding: 10px">
+    <hbox style="padding: 10px" width="100%">
       <combobox autodrop="true" width="300px" model="@load(userBanningVm.availableUsers)"
           selectedItem="@bind(userBanningVm.selectedUser)">
         <template name="model" var="user">
-          <comboitem label="@load(user.username)"/>
+          <comboitem label="@load(user.username)" />
         </template>
       </combobox>
 
-      <button label="${labels.userbanning.add}" onClick="@command('banSelectedUser')" />
+      <button label="${labels.userbanning.add}" onClick="@command('addBanToSelectedUser')" />
     </hbox>
 
     <!-- Banned users list -->
-    <hbox>
-      <grid model="@load(userBanningVm.bannedUsers)">
+    <hbox width="100%">
+      <grid model="@load(userBanningVm.bannedUsers)" hflex="1">
         <columns>
-          <column label="${labels.userbanning.username}"/>
-          <column label="${labels.userbanning.email}"/>
-          <column label="${labels.userbanning.posts}"/>
-          <column label="${labels.userbanning.registrationDate}"/>
-          <column label="_Ban Managing_"/>
+          <column label="${labels.userbanning.username}" />
+          <column label="${labels.userbanning.email}" />
+          <column label="${labels.userbanning.posts}" />
+          <column label="${labels.userbanning.registrationDate}" />
+          <column label="${labels.userbanning.managing}" />
         </columns>
         <template name="model" var="user">
           <row onDoubleClick="@command('editBan', user=user)">
-            <label value="@load(user.username)"/>
-            <label value="@load(user.email)"/>
-            <label value="NOT IMPLEMENTED YET"/>
-            <label value="NOT IMPLEMENTED YET"/>
-            <hbox>
-              <button label="_Edit_" onClick="@command('editBan', user=user)" />
-              <button label="_Revoke_" onClick="@command('revokeBan')" />
+            <label value="@load(user.username)" />
+            <label value="@load(user.email)" />
+            <label value="NOT IMPLEMENTED YET" />
+            <label value="NOT IMPLEMENTED YET" />
+            <hbox width="auto">
+              <button label="${labels.userbanning.edit}" onClick="@command('editBan', user=user)" />
+              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', user=user)" />
             </hbox>
           </row>
         </template>
@@ -61,7 +61,14 @@
 
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
-    <window visible="@load(userBanningVm.editBanWindowOpened)"></window>
+    <window visible="@load(userBanningVm.editBanWindowOpened)">
+      <!-- 
+        we must have:
+        * permanent ban flag
+        * ban length(days)
+        * ban reason text
+       -->
+    </window>
 
   </window>
 </zk>

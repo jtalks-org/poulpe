@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.web.controller.userbanning;
 
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -34,11 +35,11 @@ public class UserBanningVm {
     public List<User> getAvailableUsers() {
         List<User> users = userService.getAll();
         users.removeAll(userService.getAllBannedUsers());
-        return users;
+        return Collections.unmodifiableList(users);
     }
 
     public List<User> getBannedUsers() {
-        return userService.getAllBannedUsers();
+        return Collections.unmodifiableList(userService.getAllBannedUsers());
     }
 
     public User getSelectedUser() {
@@ -70,7 +71,7 @@ public class UserBanningVm {
      */
     @Command
     @NotifyChange({ "editBanWindowOpened" })
-    public void banSelectedUser() {
+    public void addBanToSelectedUser() {
         editBan(selectedUser);
     }
 
@@ -80,8 +81,10 @@ public class UserBanningVm {
      * @param user the user to revoke for
      */
     @Command
+    @NotifyChange({ "availableUsers", "bannedUsers" })
     public void revokeBan(@Nonnull @BindingParam("user") User user) {
-        // now not implemented
+        user.setBanReason(null);
+        userService.updateUser(user);
     }
 
     /**
@@ -90,15 +93,11 @@ public class UserBanningVm {
      * @param user the user to edit for
      */
     @Command
+    @NotifyChange({ "availableUsers", "bannedUsers" })
     public void editBan(@Nonnull @BindingParam("user") User user) {
         // now not implemented
 
         // here must be initialization actions, setting internal state, etc.
-
-        // we must have:
-        // * permanent ban flag
-        // * ban length(days)
-        // * ban reason text
 
         // after all
         // editBanWindowOpened = true;
