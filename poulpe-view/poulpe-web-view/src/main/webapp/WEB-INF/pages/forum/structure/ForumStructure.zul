@@ -13,12 +13,16 @@
       </treechildren>
     </tree>
     <window title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
-            forward="onClose=onCancel"
-            onCancel="@command('showNewSectionDialog', show=false)"
+            onClose="self.visible=false;event.stopPropagation();"
+            onCancel="self.visible=false;event.stopPropagation();"
             visible="@load(vm.showCreateSectionDialog)" height="200px" width="300px">
       <vlayout form="@id('section') @bind(vm.selectedSection)">
         <cell>
           <textbox value="@bind(section.name)"/>
+        </cell>
+        <cell>
+          <button id="saveButton" label="Save"/>
+          <button id="cancelButton" label="Cancel"/>
         </cell>
       </vlayout>
     </window>
