@@ -32,7 +32,7 @@ public class ForumStructureVmTest {
     @Test(dataProvider = "provideRandomJcommuneWithSections")
     public void testGetSections(Jcommune jcommune) throws Exception {
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-        vm.initTree();
+        vm.initForumStructure();
         TreeModel treeModel = vm.getSections();
 
         TreeNode root = (TreeNode) treeModel.getRoot();

@@ -2,9 +2,10 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window viewModel="@id('vm') @init(forumStructureVm)"
+  <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
-    <button label="${labels.forum_structure.create_section_button}" onClick="@command('showNewSectionDialog', show=true)"/>
+    <button label="${labels.forum_structure.create_section_button}"
+            onClick="@command('showNewSectionDialog', show=true)"/>
     <tree model="@bind(vm.sections)">
       <treechildren>
         <template name="model" var="section">
@@ -12,17 +13,26 @@
         </template>
       </treechildren>
     </tree>
-    <window title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
+    <window id="editSectionDialog"
+            title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false;event.stopPropagation();"
             visible="@load(vm.showCreateSectionDialog)" height="200px" width="300px">
-      <vlayout form="@id('section') @bind(vm.selectedSection)">
+      <vlayout form="@id('fx') @save(vm.selectedSection, before='saveSection')
+                     @load(vm.selectedSection) @validator('beanValidator')">
         <cell>
-          <textbox value="@bind(section.name)"/>
+          ${labels.forum_structure.create_section_dialog.section_name}
+          <textbox id="sectionNameText" value="@bind(fx.name) @validator('beanValidator')"/>
+          <label value="@load(vmsgs[sectionNameText])" sclass="red"/>
+        </cell>
+        <cell height="50%">
+          ${labels.forum_structure.create_section_dialog.section_description}
+          <textbox id="sectionDescriptionText" value="@bind(fx.description) @validator('beanValidator')"/>
+          <label value="@load(vmsgs[sectionDescriptionText])" sclass="red"/>
         </cell>
         <cell>
-          <button id="saveButton" label="Save"/>
-          <button id="cancelButton" label="Cancel"/>
+          <button label="${labels.dialogs.save_button}" onClick="@command('saveSection')"/>
+          <button label="${labels.dialogs.cancel_button}" onClick="editSectionDialog.visible=false;"/>
         </cell>
       </vlayout>
     </window>

@@ -24,7 +24,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ForumStructureVm {
     private final ComponentService componentService;
-    private TreeModel sections;
+    private Jcommune jcommune;
     private boolean showCreateSectionDialog;
     private PoulpeSection selectedSection;
 
@@ -41,10 +41,17 @@ public class ForumStructureVm {
         }
     }
 
+    @Command
+    @NotifyChange("sections")
+    public void saveSection(){
+        jcommune.addSection(selectedSection);
+        componentService.saveComponent(jcommune);
+        selectedSection = null;
+    }
+
     @Init
-    @SuppressWarnings("unchecked")
-    public void initTree(){
-        sections = new DefaultTreeModel(TreeNodeFactory.buildForumStructure(getJcommune()));
+    public void initForumStructure(){
+        jcommune = getJcommune();
     }
 
     /**
@@ -53,8 +60,9 @@ public class ForumStructureVm {
      * @return all the sections in our database in order they are actually sorted or empty list if there are no
      *         sections. Can't return {@code null}.
      */
+    @SuppressWarnings("unchecked")
     public TreeModel getSections() {
-        return sections;
+        return new DefaultTreeModel(TreeNodeFactory.buildForumStructure(jcommune));
     }
 
     public boolean isShowCreateSectionDialog() {
