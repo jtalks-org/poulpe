@@ -17,6 +17,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.util.Random;
 import java.util.UUID;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Rank;
@@ -35,7 +36,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
 public final class ObjectsFactory {
 
     public static PoulpeBranch createBranch() {
-        PoulpeBranch newBranch = new PoulpeBranch(random(), "desc");
+        PoulpeBranch newBranch = new PoulpeBranch(RandomStringUtils.random(15), "desc");
         newBranch.setSection(createSection());
         return newBranch;
     }
@@ -68,7 +69,7 @@ public final class ObjectsFactory {
     }
 
     public static PoulpeSection createSection() {
-        return new PoulpeSection(random());
+        return new PoulpeSection(RandomStringUtils.random(15));
     }
 
     public static User createUser() {

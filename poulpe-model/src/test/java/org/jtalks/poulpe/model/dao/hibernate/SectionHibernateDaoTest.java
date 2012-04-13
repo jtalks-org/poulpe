@@ -38,6 +38,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * The test for {@link SectionHibernateDao}.
  * 
@@ -81,7 +83,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         return ObjectRetriever.retrieveUpdated(section, session);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void saveSectionWithNameNotNullViolationTest() {
         PoulpeSection nullTitleSection = new PoulpeSection();
         dao.saveOrUpdate(nullTitleSection);
@@ -121,7 +123,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         assertEquals(actual.getName(), newName);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void UpdateNotNullViolationTest() {
         givenSection();
         section.setName(null);

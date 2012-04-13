@@ -40,6 +40,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * @author Kirill Afonin
  * @author Alexey Grigorev
@@ -87,7 +89,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         return ObjectRetriever.retrieveUpdated(branch, session);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void testSaveBranchWithNameNotNullViolation() {
         PoulpeBranch branch = new PoulpeBranch();
         dao.saveOrUpdate(branch);
@@ -132,7 +134,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         assertEquals(result.getName(), newName);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void testUpdateNotNullViolation() {
         givenBranch();
         branch.setName(null);
