@@ -2,7 +2,9 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window viewModel="@id('vm') @init(forumStructureVm)" apply="org.zkoss.bind.BindComposer">
+  <window viewModel="@id('vm') @init(forumStructureVm)"
+          apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
+    <button label="${labels.forum_structure.create_section_button}" onClick="@command('showNewSectionDialog', show=true)"/>
     <tree model="@bind(vm.sections)">
       <treechildren>
         <template name="model" var="section">
@@ -10,5 +12,15 @@
         </template>
       </treechildren>
     </tree>
+    <window title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
+            forward="onClose=onCancel"
+            onCancel="@command('showNewSectionDialog', show=false)"
+            visible="@load(vm.showCreateSectionDialog)" height="200px" width="300px">
+      <vlayout form="@id('section') @bind(vm.selectedSection)">
+        <cell>
+          <textbox value="@bind(section.name)"/>
+        </cell>
+      </vlayout>
+    </window>
   </window>
 </zk>
