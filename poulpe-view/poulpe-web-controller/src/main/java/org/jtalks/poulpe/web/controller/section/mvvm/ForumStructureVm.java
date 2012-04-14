@@ -42,11 +42,12 @@ public class ForumStructureVm {
     }
 
     @Command
-    @NotifyChange("sections")
+    @NotifyChange({"sections", "showCreateSectionDialog", "selectedSection"})
     public void saveSection(){
         jcommune.addSection(selectedSection);
         componentService.saveComponent(jcommune);
         selectedSection = null;
+        showCreateSectionDialog = false;
     }
 
     @Init
