@@ -14,53 +14,85 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
+
 import java.util.List;
 import java.util.Set;
-
-import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
 
 /**
  * Service for some operations with {@link Component}.
  * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
  */
 public interface ComponentService extends EntityService<Component> {
 
     /**
      * Get all components.
+     * 
      * @return the list of the components
      */
     List<Component> getAll();
 
     /**
      * Delete the specified component.
+     * 
      * @param component component to delete
      */
     void deleteComponent(Component component);
 
     /**
-     * Save new or update existent component.
-     * @param component component to save
-     * @throws NotUniqueFieldsException when saving entity to the date source cause violations of DB constraints
+     * Saves new component or updates existent
+     * 
+     * @param component to save
+     * @exception ValidationException when entity being saved violates validation constraints
      */
-    void saveComponent(Component component) throws NotUniqueFieldsException;
+    void saveComponent(Component component);
 
     /**
      * Get the set of unoccupied ComponentType.
+     * 
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
-    
+
     /**
-     * Obtains the set of such fields which ought to be unique and whose uniqueness will be violated
-     * after adding {@code component} to the data source.
-     * @param component the component object
-     * @return the set of fields whose uniqueness will be violated after adding {@code component}
-     *         to the data source
+     * Gets component by it's type.
+     * 
+     * @param the component's type
+     * @return the component
      */
-    Set<DuplicatedField> getDuplicateFieldsFor(Component component);
+    Component getByType(ComponentType type);
+
+    /**
+     * Gets {@link PermissionsMap} for defined {@link Component}.
+     * 
+     * @param component the component to get for
+     * @return {@link PermissionsMap} for defined {@link Component}
+     */
+    PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component);
+
+    /**
+     * Change grants for component.
+     * 
+     * @see PermissionChanges
+     * @param component the component to change for
+     * @param changes the {@link PermissionChanges} which needs to be applied
+     */
+    void changeGrants(Component component, PermissionChanges changes);
+
+    /**
+     * Change restrictions for component.
+     * 
+     * @param component the component to change for
+     * @param changes the {@link PermissionChanges} which needs to be applied
+     */
+    void changeRestrictions(Component component, PermissionChanges changes);
+
 }

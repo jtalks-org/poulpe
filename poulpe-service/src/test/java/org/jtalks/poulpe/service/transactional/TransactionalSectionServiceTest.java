@@ -14,14 +14,24 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
+import java.util.Collections;
+import java.util.Set;
+
+import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -29,24 +39,24 @@ import org.testng.annotations.Test;
  * The test for {@link TransactionalSectionService}.
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
+ * @author Vyacheslav Zhivaev
  */
 public class TransactionalSectionServiceTest {
-
+    @Mock EntityValidator entityValidator;
+    @Mock SectionDao sectionDao;
     private static final long SECTION_ID = 1L;
-    private SectionDao sectionDao;
     private SectionService sectionService;
 
     @BeforeMethod
     public void setUp() {
-        sectionDao = mock(SectionDao.class);
-        sectionService = new TransactionalSectionService(sectionDao);
+        MockitoAnnotations.initMocks(this);
+        sectionService = new TransactionalSectionService(sectionDao, entityValidator);
     }
 
     @Test
     public void deleteRecursivelyTest() {
         boolean expected = true;
-        Section victim = mock(Section.class);
-        when(victim.getId()).thenReturn(SECTION_ID);
+        PoulpeSection victim = buildFakeSection();
         when(sectionDao.deleteRecursively(victim)).thenReturn(expected);
         boolean actual = sectionService.deleteRecursively(victim);
         verify(sectionDao).deleteRecursively(victim);
@@ -55,12 +65,8 @@ public class TransactionalSectionServiceTest {
 
     @Test
     public void deleteAndMoveBranchesToTest() {
-        final long victimId = SECTION_ID;
-        final long recipientId = SECTION_ID + 1;
-        Section victim = mock(Section.class);
-        Section recipient = mock(Section.class);
-        when(victim.getId()).thenReturn(victimId);
-        when(recipient.getId()).thenReturn(recipientId);
+        PoulpeSection victim = buildFakeSection(SECTION_ID);
+        PoulpeSection recipient = buildFakeSection(SECTION_ID + 1);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
@@ -71,15 +77,49 @@ public class TransactionalSectionServiceTest {
     @Test (expectedExceptions=IllegalArgumentException.class)
     public void deleteAndMoveBranchesToExceptionTest() {
         final long victimId = SECTION_ID;
-        final long recipientId = victimId;
-        Section victim = mock(Section.class);
-        Section recipient = mock(Section.class);
-        when(victim.getId()).thenReturn(victimId);
-        when(recipient.getId()).thenReturn(recipientId);
+        PoulpeSection victim = buildFakeSection(victimId);
+        PoulpeSection recipient = buildFakeSection(victimId);
         boolean expected = true;
         when(sectionDao.deleteAndMoveBranchesTo(victim, recipient)).thenReturn(expected);
         boolean actual = sectionService.deleteAndMoveBranchesTo(victim, recipient);
         verify(sectionDao).deleteAndMoveBranchesTo(victim, recipient);
         assertEquals(actual, expected);
     }
+
+    @Test
+    public void testSaveSection(){
+         PoulpeSection section = buildFakeSection();
+         sectionService.saveSection(section);
+         verify(entityValidator).throwOnValidationFailure(section);
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void saveSectionWithConstraintsViolations() {
+        PoulpeSection section = buildFakeSection();
+        givenConstraintsViolations();
+        sectionService.saveSection(section);
+    }
+
+    @Test
+    public void testGetAll() {
+        sectionService.getAll();
+        verify(sectionDao).getAll();
+    }
+
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeSection.class));
+    }
+
+    private PoulpeSection buildFakeSection() {
+        return buildFakeSection(SECTION_ID);
+    }
+
+    private PoulpeSection buildFakeSection(long id) {
+        PoulpeSection section = new PoulpeSection(RandomStringUtils.randomAlphanumeric(10),
+                RandomStringUtils.randomAlphanumeric(20));
+        section.setId(id);
+        return section;
+    }
+
 }

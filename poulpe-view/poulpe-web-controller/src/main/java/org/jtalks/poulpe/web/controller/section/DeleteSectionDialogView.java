@@ -16,54 +16,59 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
- * @author Bekrenev Dmitry
+ * This interface for representation view delete section dialog
  * 
- *         This interface for representation view delete section dialog
- * */
+ * @author Bekrenev Dmitry
+ * @author Alexey Grigorev
+ */
 public interface DeleteSectionDialogView {
 
     /**
-     * Get victim section
-     * 
-     * @return Section which will be deleted
-     * */
-    Section getDeleteSection();
+     * @return section which will be deleted
+     */
+    PoulpeSection getSectionToDelete();
 
     /**
      * Get selected section in combobox
      * 
-     * @return Section which will be recipient
-     * */
-    Section getSelectedSection();
+     * @return section which will receive branches of the section being deleted,
+     * or null if none selected
+     */
+    PoulpeSection getRecipientSection();
 
     /**
-     * Get delete mode
-     * 
-     * @return String deleting mode. Now available only 2 modes: "deleteAll" -
-     *         which mean delete section with she branches. "deleteAndMove" -
-     *         which mean delete section and move branches in recipient section
-     * */
-    String getDeleteMode();
+     * @return deleting mode
+     */
+    SectionDeleteMode getDeleteMode();
 
     /**
-     * Cause showing dialog
-     * 
-     * */
+     * Causes the dialog to show
+     */
     void showDialog();
+    
+    /**
+     * Causes the dialog to show
+     */
+    void showDialog(PoulpeSection section);
 
     /**
-     * Cause close dialog
-     * */
+     * Causes the dialog to close
+     */
     void closeDialog();
 
     /**
-     * Initialize combobox available section
+     * Initializes combobox with available section
      * 
-     * @param selectableSections
-     *            list available sections
-     * */
-    void initSectionList(List<Section> selectableSections);
+     * @param sections list available sections
+     */
+    void initSectionsCombobox(List<PoulpeSection> sections);
+
+    /**
+     * Cleans the combobox with sections and disables it, used when no 
+     * sections are available
+     */
+    void initEmptyAndDisabledCombobox();
 }

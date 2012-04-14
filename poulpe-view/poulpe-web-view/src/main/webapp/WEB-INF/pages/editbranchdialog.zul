@@ -1,7 +1,7 @@
 <?page id="BranchDialog" title="Branch" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <window id="editWindow" border="normal" mode="modal" visible="false" presenter="${branchPresenter}"
-  use="org.jtalks.poulpe.web.controller.branch.BranchDialogViewImpl">
+  use="org.jtalks.poulpe.web.controller.branch.ZkBranchDialogView">
   <vbox>
     <hbox>
       ${labels.branches.label.combobox}
@@ -16,8 +16,8 @@
       <textbox id="branchDescription" />
     </hbox>
     <hbox>
-      <button id="confirmButton" />
-      <button id="rejectButton" />
+      <button id="confirmButton" sclass="edit.branch.confirmButton" />
+      <button id="rejectButton" sclass="edit.branch.rejectButton" />
     </hbox>
   </vbox>
 </window>

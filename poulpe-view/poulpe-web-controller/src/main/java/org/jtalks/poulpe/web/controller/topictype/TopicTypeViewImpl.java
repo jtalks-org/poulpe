@@ -14,33 +14,55 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.validator.ValidationFailureHandler;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.ext.AfterCompose;
 import org.zkoss.zul.Button;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 /**
- *
  * @author Pavel Vervenko
  * @author Vahluev Vyacheslav
+ * @author Alexey Grigorev
  */
-public class TopicTypeViewImpl extends Window implements TopicTypePresenter.TopicTypeView {
+public class TopicTypeViewImpl extends Window implements TopicTypeView, AfterCompose {
 
-    /**
-     * Generated uid
-     */
     private static final long serialVersionUID = 1657959037954482623L;
-    
+
     private Textbox titleTextbox;
     private Textbox descriptionTextbox;
     private Button editButton;
     private Button createButton;
+    
+    private ValidationFailureHandler handler;
+    
+    private ZkHelper zkHelper = new ZkHelper(this);
 
+    @Override
+    public void afterCompose() {
+        zkHelper.wireByConvention();
+        
+        handler = new ValidationFailureHandler("title", titleTextbox);
+    }
+    
+    @Override
+    public void validationFailure(ValidationResult result) {
+        handler.validationFailure(result);
+    }
+    
     @Override
     public void showTypeTitle(String title) {
         titleTextbox.setText(title);
     }
-    
+
+    public void showErrorMessage(String text) {
+        final String message = Labels.getLabel(text);
+        titleTextbox.setErrorMessage(message);
+    }
+
     @Override
     public String getTypeTitle() {
         return titleTextbox.getText();
@@ -68,8 +90,8 @@ public class TopicTypeViewImpl extends Window implements TopicTypePresenter.Topi
 
     @Override
     public void openErrorPopupInTopicTypeDialog(String label) {
-        final String message = Labels.getLabel(label);
+        String message = Labels.getLabel(label);
         titleTextbox.setErrorMessage(message);
     }
-    
+
 }

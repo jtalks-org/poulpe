@@ -14,84 +14,204 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import static org.jtalks.common.model.entity.Group.GROUP_ALREADY_EXISTS;
+
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+import org.jtalks.poulpe.web.controller.section.SectionPresenter;
 
 /**
  * This class is implementation the branch presenter in pattern
  * Model-View-Presenter
  * 
  * @author Bekrenev Dmitry
- * */
+ */
 public class BranchPresenter {
 
-	private SectionService sectionService;
-	private BranchDialogView view;
-	private BranchService branchService;
+    private static final String CORRESPONDING_GROUP_ALREADY_EXISTS = "groups.validation.existing_group_name";
+    public static final String GROUP_SUFFIX = " Moderators";
+    private SectionPresenter sectionPresenter;
+    private SectionService sectionService;
+    private BranchService branchService;
+    private GroupService groupService;
+    private EntityValidator entityValidator;
+    private BranchDialogView view;
 
-	/**
-	 * Sets the Branch instance
-	 * 
-	 * @param service
-	 *            The instance branch service
-	 * */
-	public void setBranchService(BranchService service) {
-		branchService = service;
-	}
+    public SectionPresenter getSectionPresenter() {
+        return sectionPresenter;
+    }
 
-	/**
-	 * Sets the Section instance
-	 * 
-	 * @param service
-	 *            The instance section service
-	 * */
-	public void setSectionService(SectionService service) {
-		sectionService = service;
-	}
+    public void setSectionPresenter(SectionPresenter sectionPresenter) {
+        this.sectionPresenter = sectionPresenter;
+    }
 
-	/**
-	 * Sets the view instance which represent User interface
-	 * 
-	 * @param view
-	 *            The instance BranchEditorView
-	 * */
-	public void setView(BranchDialogView view) {
-		this.view = view;
-	}
+    /**
+     * Sets the PoulpeBranch instance
+     */
+    public void setBranchService(BranchService service) {
+        branchService = service;
+    }
 
-	/**
-	 * Init view initial data
-	 * */
-	public void initView() {
-		view.initSectionList(sectionService.getAll());
-	}
+    /**
+     * Sets the PoulpeSection instance
+     */
+    public void setSectionService(SectionService service) {
+        sectionService = service;
+    }
 
-	/**
-	 * Save new or edited branch in db In case when branch with equal name
-	 * exists, cause open error popup in view.
-	 * */
-	public void saveBranch() {
-		Section section = view.getSection();
-		Branch branch = view.getBranch(section);
-		saveBranch(section, branch);
-	}
+    public void setGroupService(GroupService groupService) {
+        this.groupService = groupService;
+    }
 
-	public void saveBranch(Section section, Branch branch) {
-		boolean isDuplicated = branchService.isDuplicated(branch);
-		if (!isDuplicated) {
-			section.addBranch(branch);
-			try {
-                sectionService.saveSection(section);
-			} catch (NotUniqueException e) {
-				view.notUniqueBranchName();
-			}
-		} else
-			view.notUniqueBranchName();
+    public void updateView() {
+        sectionPresenter.updateView();
+    }
 
-		view.hide();
-	}
+    /**
+     * Sets the view instance which represent User interface
+     */
+    public void setView(BranchDialogView view) {
+        this.view = view;
+    }
+
+    /**
+     * Init view initial data
+     */
+    public void initView() {
+        view.initSectionList(sectionService.getAll());
+    }
+
+
+    /**
+     * Save new or edited branch in db In case when branch with equal name
+     * exists, cause open error popup in view.
+     */
+    public boolean saveBranch() {
+        PoulpeSection section = view.getSection();
+        PoulpeBranch branch = view.getBranch(section);
+        return saveBranch(branch);
+    }
+
+    /**
+     * When a new branch is saved, then a new group is created using this branch's name: '[New_branch_name] Moderators'.
+     * And branch is added permissions with this group.
+     * When editing branch (its name), its group's name changed respectively.
+     * 
+     * @param branch branch to save/edit
+     * @return true on success creation/modification, false on branch or group validation failure
+     */
+    protected boolean saveBranch(PoulpeBranch branch) {
+        if (validate(branch)) {
+            PoulpeSection section = branch.getPoulpeSection();
+            section.addOrUpdateBranch(branch);
+            PoulpeGroup group = createOrGetExistingGroup(branch);
+            if(validate(group)) {
+                branch.addOrUpdateGroup(group);
+            } else {
+                return false;
+            }
+            sectionService.saveSection(section);
+            setBranchPermissions(branch, group);
+            view.hide();
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private boolean validate(PoulpeBranch branch) {
+        ValidationResult result = entityValidator.validate(branch);
+        if (result.hasErrors()) {
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean validate(PoulpeGroup group) {
+        ValidationResult result = entityValidator.validate(group);
+        if (result.hasErrors()) {
+            correctMessageIfGroupAlreadyExists(result);
+            view.validationFailure(result);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private void correctMessageIfGroupAlreadyExists(ValidationResult result) {
+        Set<ValidationError> errors = result.getErrors();
+        Iterator<ValidationError> iterator = errors.iterator();
+        while(iterator.hasNext()) {
+            ValidationError error = iterator.next();
+            if(GROUP_ALREADY_EXISTS.equals(error.getErrorMessageCode())) {
+                errors.remove(error);
+                error = new ValidationError(error.getFieldName(), CORRESPONDING_GROUP_ALREADY_EXISTS);
+                errors.add(error);
+                break;
+            }
+        }
+    }
+
+    private PoulpeGroup createOrGetExistingGroup(PoulpeBranch branch) {
+        String groupName = branch.getName() + GROUP_SUFFIX;
+        PoulpeGroup group = null;
+        if(branch.getGroups().size() > 0) {
+            group = branch.getGroups().get(0);
+        } else {
+            group = getGroupMatchedByName(groupName);
+            if(group == null) {
+                group = createNewGroup();
+            }
+        }
+        group.setName(groupName);
+        return group;
+    }
+
+    private PoulpeGroup getGroupMatchedByName(String groupName) {
+        List<PoulpeGroup> groups = groupService.getAllMatchedByName(groupName);
+        for(PoulpeGroup group : groups) {
+            if(groupName.equals(group.getName())) {
+                return group;
+            }
+        }
+        return null;
+    }
+
+    private PoulpeGroup createNewGroup() {
+        PoulpeGroup group = new PoulpeGroup();
+        group.setDescription("");
+        return group;
+    }
+
+    private void setBranchPermissions(PoulpeBranch branch, PoulpeGroup group) {
+        for(BranchPermission permission : BranchPermission.values()) {
+            PermissionChanges branchAccess = new PermissionChanges(permission);
+            branchAccess.addNewlyAddedGroups(Collections.singleton(group));
+            branchService.changeGrants(branch, branchAccess);
+        }
+    }
+
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
 
 }

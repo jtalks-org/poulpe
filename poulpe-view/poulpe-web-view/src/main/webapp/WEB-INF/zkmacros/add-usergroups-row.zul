@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <borderlayout height="30px">
+    <west border="none" width="80px">
+      <label value="${arg.row.rowLabel}" />
+    </west>
+    <center border="none">
+      <hbox>
+        <label forEach="${arg.row.groups}" value="${each.name}" sclass="manage-permissions-added-group-label" />
+      </hbox>
+    </center>
+    <east border="none">
+      <!--
+      There is no other way to pass parameters that are evaluated by EL ${}, it simply doesn't work with @command.
+      I raised JIRA for this, but ZK team doesn't seem to be keen implementing this:
+      http://tracker.zkoss.org/browse/ZK-703 So as a workaround, the arguments are evaluated and set to ID of the
+      button, and then we can pass the ID to the @command() where we can parse it in Java.
+      -->
+      <!--
+      In later versions of ZK this problem was solved and we can simply pass parameters:
+        onClick="@command('showGroupsDialog', permission=arg.permission, mode=arg.mode)"
+      but here in anyway it not work (i don't now why). I forced to use custom-attributes.
+      // Vyacheslav Zhivaev
+      -->
+      <button label="${labels.groups.button.edit}" sclass="add-group-button"
+          onClick="@command('showGroupsDialog', permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
+        <custom-attributes permission="${arg.permission}" />
+        <custom-attributes mode="${arg.mode}" />
+      </button>
+    </east>
+  </borderlayout>
+</zk>

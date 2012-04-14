@@ -15,44 +15,50 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
+
+import ru.javatalks.utils.general.Assert;
 
 import java.util.List;
 
-
 /**
+ * Implementation of {@link GroupService}
  * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
-        implements GroupService {
+public class TransactionalGroupService extends AbstractTransactionalEntityService<PoulpeGroup, GroupDao> implements
+        GroupService {
+    private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
-     *
-     * @param branchDao - data access object, which should be able do all CRUD operations.
+     * 
+     * @param groupDao - data access object, which should be able do all CRUD
+     * operations.
+     * @param validator - an entity validator
      */
-    public TransactionalGroupService(GroupDao groupDao) {
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
         this.dao = groupDao;
+        this.validator = validator;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getAll() {
+    public List<PoulpeGroup> getAll() {
         return dao.getAll();
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    public List<Group> getAllMatchedByName(String name) {
+    public List<PoulpeGroup> getAllMatchedByName(String name) {
         return dao.getMatchedByName(name);
     }
 
@@ -60,24 +66,19 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public void deleteGroup(Group group) {
-          // TODO: check returned value? 
-          dao.delete(group.getId());
+    public void deleteGroup(PoulpeGroup group) {
+        Assert.throwIfNull(group, "group");
+        dao.delete(group);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public void saveGroup(Group selectedGroup) throws NotUniqueException {
-        if(dao.isGroupDuplicated(selectedGroup)){
-            throw new NotUniqueException();
-        }
-        
-        dao.saveOrUpdate(selectedGroup);
+    public void saveGroup(PoulpeGroup group) {
+        Assert.throwIfNull(group, "group");
+        validator.throwOnValidationFailure(group);
+        dao.saveOrUpdate(group);
     }
-    
-    
-  
-  
+
 }

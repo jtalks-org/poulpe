@@ -15,19 +15,28 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationException;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.entity.Branch;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.mockito.ArgumentCaptor;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * This test class is intended to test all topic-related forum branch facilities
@@ -37,78 +46,125 @@ import static org.testng.Assert.*;
  */
 public class TransactionalBranchServiceTest {
 
-    private long BRANCH_ID = 1L;
-    private BranchDao branchDao;
     private BranchService branchService;
+
+    @Mock
+    BranchDao branchDao;
+    @Mock
+    EntityValidator entityValidator;
+    @Mock
+    PermissionManager branchPermissionManager;
+
+    private long BRANCH_ID = 1L;
+
 
     @BeforeMethod
     public void setUp() throws Exception {
-        branchDao = mock(BranchDao.class);
-        branchService = new TransactionalBranchService(branchDao);
+        MockitoAnnotations.initMocks(this);
+        branchService = new TransactionalBranchService(branchDao, branchPermissionManager, entityValidator);
     }
 
     @Test
     public void testGet() throws NotFoundException {
-        Branch expectedBranch = new Branch();
+        PoulpeBranch expectedBranch = new PoulpeBranch();
         when(branchDao.isExist(BRANCH_ID)).thenReturn(true);
         when(branchDao.get(BRANCH_ID)).thenReturn(expectedBranch);
 
-        Branch branch = branchService.get(BRANCH_ID);
+        PoulpeBranch branch = branchService.get(BRANCH_ID);
 
         assertEquals(branch, expectedBranch, "Branches aren't equals");
         verify(branchDao).isExist(BRANCH_ID);
         verify(branchDao).get(BRANCH_ID);
     }
 
+    @Test
+    public void testChangeGrants() {
+        PermissionChanges accessChanges = new PermissionChanges(null);
+        PoulpeBranch branch = new PoulpeBranch("name");
+
+        branchService.changeGrants(branch, accessChanges);
+
+        verify(branchPermissionManager).changeGrants(branch, accessChanges);
+    }
+
     @Test(expectedExceptions = {NotFoundException.class})
     public void testGetIncorrectId() throws NotFoundException {
         when(branchDao.isExist(BRANCH_ID)).thenReturn(false);
-
         branchService.get(BRANCH_ID);
     }
 
     @Test
+    public void testGetGroupAccessListFor() {
+        PoulpeBranch branch = new PoulpeBranch();
+
+        branchService.getPermissionsFor(branch);
+
+        verify(branchPermissionManager).getPermissionsMapFor(branch);
+
+    }
+
+    @Test
+    public void testChangeRestrictions() {
+        PermissionChanges accessChanges = new PermissionChanges(null);
+        PoulpeBranch branch = new PoulpeBranch("name");
+
+        branchService.changeRestrictions(branch, accessChanges);
+
+        verify(branchPermissionManager).changeRestrictions(branch, accessChanges);
+    }
+
+    @Test
+    public void testDeleteBranchMovingTopic() {
+        PoulpeBranch victim = new PoulpeBranch("Victim");
+        PoulpeBranch recepient = new PoulpeBranch("Recepient");
+
+        branchService.deleteBranchMovingTopics(victim, recepient);
+
+        verify(branchDao).delete(victim.getId());
+
+    }
+
+    @Test
     public void getAllTest() {
-        List<Branch> expectedBranchList = new ArrayList<Branch>();
-        expectedBranchList.add(new Branch());
+        List<PoulpeBranch> expectedBranchList = new ArrayList<PoulpeBranch>();
+        expectedBranchList.add(new PoulpeBranch());
         when(branchDao.getAll()).thenReturn(expectedBranchList);
-
-        List<Branch> actualBranchList = branchService.getAll();
-
+        List<PoulpeBranch> actualBranchList = branchService.getAll();
         assertEquals(actualBranchList, expectedBranchList);
         verify(branchDao).getAll();
     }
 
     @Test
     public void testDeleteBranch() {
-        Branch branch = new Branch();
-
-        branchService.deleteBranch(branch);
-
+        PoulpeBranch branch = new PoulpeBranch();
+        branchService.deleteBranchRecursively(branch);
         verify(branchDao).delete(branch.getId());
     }
-    
+
     @Test
-    public void testSaveBranchWitoutException() throws NotUniqueException{
-        Branch branch = new Branch();
+    public void testSaveBranchWitoutException() {
+        PoulpeBranch branch = new PoulpeBranch();
         branch.setName("new branch");
         branch.setDescription("new description");
-        ArgumentCaptor<Branch> branchCaptor = ArgumentCaptor.forClass(Branch.class);
-        
+        ArgumentCaptor<PoulpeBranch> branchCaptor = ArgumentCaptor.forClass(PoulpeBranch.class);
+
         branchService.saveBranch(branch);
-        
+
         verify(branchDao).saveOrUpdate(branchCaptor.capture());
         assertEquals(branchCaptor.getValue().getName(), "new branch");
     }
-    
-    @Test(expectedExceptions=NotUniqueException.class)
-    public void testSaveBranchWithException() throws NotUniqueException{
-        Branch branch = new Branch();
-        branch.setName("not unique name");
-        branch.setDescription("new description");
-        
-        when(branchDao.isBranchDuplicated(branch)).thenReturn(true);
-        
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testSaveBranchWithException() {
+        PoulpeBranch branch = new PoulpeBranch();
+
+        givenConstraintsViolations();
         branchService.saveBranch(branch);
+    }
+
+    private void givenConstraintsViolations() {
+        Set<ValidationError> dontCare = Collections.emptySet();
+        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(
+                any(PoulpeBranch.class));
     }
 }

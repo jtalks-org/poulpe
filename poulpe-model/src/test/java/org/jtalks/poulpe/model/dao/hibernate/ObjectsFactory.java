@@ -14,84 +14,101 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.model.entity.Section;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Rank;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 
 /**
  * @author Kirill Afonin
+ * @author Alexey Grigorev
+ *
  */
-// TODO: split this class on 2: objects factory and persisted objects factory
 public final class ObjectsFactory {
 
-    public static Branch getDefaultBranch() {
-        Branch newBranch = new Branch();
-        
-        String uniqueName = "branch name " + UUID.randomUUID();
-        newBranch.setName(uniqueName);
-        newBranch.setDescription("branch description");
+    public static PoulpeBranch createBranch() {
+        PoulpeBranch newBranch = new PoulpeBranch(RandomStringUtils.random(15), "desc");
         newBranch.setSection(createSection());
-        newBranch.setModerators(new ArrayList<User>());
         return newBranch;
     }
 
-    /**
-     * Create type of topic with random title, it may be useful when need to
-     * persist many object in testing.
-     * 
-     * @return type of topic
-     */
-    public static TopicType createTopicTypeWithRandomTitle() {
-        TopicType topicType = new TopicType();
-        String randomTitle = "topic type title" + RandomStringUtils.random(10);
-        topicType.setTitle(randomTitle);
-        topicType.setDescription("topic type description");
-        return topicType;
+    public static TopicType topicType() {
+        return new TopicType(random(), "desc");
     }
-    
+
     public static Component createComponent(ComponentType type) {
-        Component component = new Component();
-        component.setName(RandomStringUtils.random(10));
-        component.setComponentType(type);
-        return component;
+        Component c = new Component(random(), "desc", type);
+        c.addProperty("prop.name", "prop.value");
+        return c;
     }
-    
-    public static Section createSectionWithBranches() {
-        Section section = new Section();
-        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
-        section.setBranches(new ArrayList<Branch>());
-        int branchesAmount = new Random().nextInt(10) + 1;
-        for (int i = 0; i < branchesAmount ; i++) {
-            Branch branch = getDefaultBranch();
+
+    public static PoulpeSection createSectionWithBranches() {
+        return createSectionWithBranches(randomInt());
+    }
+
+    public static PoulpeSection createSectionWithBranches(int branchesAmount) {
+        PoulpeSection section = new PoulpeSection(random());
+
+        for (int i = 0; i < branchesAmount; i++) {
+            PoulpeBranch branch = createBranch();
             branch.setSection(section);
-            section.addBranch(branch);
+            branch.setPosition(i);
+            section.addOrUpdateBranch(branch);
         }
+
         return section;
     }
-    
-    public static Section createSection() {
-        Section section = new Section();
-        section.setName("Section" + UUID.randomUUID()); // I prefer UUID 'cause it's more robust
-        section.setBranches(new ArrayList<Branch>());
-        return section;
+
+    public static PoulpeSection createSection() {
+        return new PoulpeSection(RandomStringUtils.random(15));
     }
-    
-    public static User createUser(){
-        User user = new User("User" + UUID.randomUUID(), "User" + UUID.randomUUID(), "User" + UUID.randomUUID());
-        return user;
+
+    public static User createUser() {
+        String random = random();
+        return new User(random, random, random, random);
     }
-    
-    public static Group createGroup(){
-        Group group = new Group("Group" + UUID.randomUUID(), "Group" + UUID.randomUUID());
-        return group;
+
+    public static PoulpeGroup createGroup() {
+        return new PoulpeGroup(random(), "desc");
     }
+
+    private static String random() {
+        return UUID.randomUUID().toString();
+    }
+
+    private static int randomInt() {
+        return new Random().nextInt(10) + 1;
+    }
+
+    /**
+     * Create rank with random name and postCount.
+     * 
+     * @return new rank
+     */
+    public static Rank createRank() {
+        int randNum = new Random().nextInt();
+        Rank rank = new Rank("Rank" + randNum, randNum);
+        return rank;
+    }
+
+    public static Jcommune createJcommune(int sectionsAmount) {
+        Jcommune jcommune = Jcommune.fromComponent(createComponent(ComponentType.FORUM));
+
+        for (int i = 0; i < sectionsAmount; i++) {
+            PoulpeSection section = createSectionWithBranches();
+            jcommune.addSection(section);
+        }
+        
+        return jcommune;
+    }
+
 }

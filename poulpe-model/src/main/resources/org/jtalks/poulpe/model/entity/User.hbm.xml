@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+  <class name="org.jtalks.poulpe.model.entity.User" table="USERS">
+    <cache usage="nonstrict-read-write"/>
+    
+    <id column="ID" name="id" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    
+    <property column="UUID" name="uuid" unique="true" not-null="true"/>
+    
+    <property column="FIRST_NAME" name="firstName"/>
+    <property column="LAST_NAME" name="lastName"/>
+    
+    <property column="USERNAME" name="username" unique="true" not-null="true"/>
+    <property column="ENCODED_USERNAME" name="encodedUsername" not-null="true"/>
+    
+    <property column="EMAIL" name="email" unique="true" not-null="true"/>
+    <property column="PASSWORD" name="password" not-null="true"/>
+    
+    <property column="ROLE" name="role"/>
+    
+    <property column="LAST_LOGIN" name="lastLogin"
+        type="org.joda.time.contrib.hibernate.PersistentDateTime" not-null="false" />
+        
+    <property name="avatar" lazy="true" not-null="false">
+      <column name="AVATAR" sql-type="blob"/>
+    </property>
+    
+    <property column="PERMANENT_BAN" name="permanentBan" not-null="true"/>
+    <property column="BAN_EXPIRATION_DATE" name="banExpirationDate"
+        type="org.joda.time.contrib.hibernate.PersistentDateTime" not-null="false"/>
+    <property column="BAN_REASON" name="banReason" type="text" not-null="false"/>
+    
+    <property column="SALT" name="salt" not-null="true"/>
+    
+    <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
+      <cache usage="nonstrict-read-write" />
+      <key column="USER_ID" not-null="true" />
+      <many-to-many class="org.jtalks.poulpe.model.entity.PoulpeGroup">
+        <column name="GROUP_ID" not-null="true" />
+      </many-to-many>
+    </bag>
+    
+  </class>
+</hibernate-mapping>

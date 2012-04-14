@@ -14,22 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import static org.jtalks.poulpe.web.controller.utils.ObjectCreator.getFakeTopicType;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.anyLong;
+import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.getFakeTopicType;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter.*;
+
+import java.util.Collections;
+import java.util.Set;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationError;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter.TopicTypeView;
+import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -41,133 +42,102 @@ import org.testng.annotations.Test;
  * @author Vahluev Vyacheslav
  */
 public class TopicTypePresenterTest {
-    
+
     private TopicTypePresenter presenter = new TopicTypePresenter();
-    @Mock
-    private TopicTypeView view;
-    @Mock
-    private TopicTypeService topicTypeService;
-    @Mock
-    private WindowManager windowManager;
-    @Mock
-    protected EditListener<TopicType> listener;
     
+    @Mock TopicTypeView view;
+    @Mock TopicTypeService topicTypeService;
+    @Mock WindowManager windowManager;
+    @Mock EditListener<TopicType> listener;
+    @Mock EntityValidator entityValidator;
+
     private static final String title = "title";
     private static final String desc = "desc";
     private static final int topicTypeId = 12;
-    private TopicType fake = getFakeTopicType(topicTypeId, title, desc);
+
+    private TopicType activeTopicType = getFakeTopicType(topicTypeId, title, desc);
+
+    private ValidationResult resultWithErrors = resultWithErrors();
+
+    private ValidationResult resultWithErrors() {
+        ValidationError error = new ValidationError("title", TopicType.TITLE_ALREADY_EXISTS);
+        Set<ValidationError> errors = Collections.singleton(error);
+        return new ValidationResult(errors);
+    }
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        
         presenter.setTopicTypeService(topicTypeService);
         presenter.initView(view);
         presenter.setWindowManager(windowManager);
         presenter.setListener(listener);
-    }
-
-    @Test
-    public void validateTopicTypeEmptyTitleTest() {
-        TopicType topicType = new TopicType("", "");
-
-        assertEquals(presenter.validateTopicType(topicType), ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
-    }
-
-    @Test
-    public void validateTopicTypeNullTitleTest() {
-        TopicType topicType = new TopicType(); // title is null
-
-        assertEquals(presenter.validateTopicType(topicType), ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
-    }
-
-    @Test
-    public void validateTopicTypeCorrectTitleTest() {
-        TopicType topicType = new TopicType(title, desc);
-
-        assertEquals(presenter.validateTopicType(topicType), null);
+        presenter.setEntityValidator(entityValidator);
     }
 
     @Test
     public void initializeForCreateTest() {
         presenter.initializeForCreate(view, listener);
-
         verify(view).hideEditAction();
     }
 
     @Test
     public void initializeForEditTestOK() throws NotFoundException {
-        when(topicTypeService.get(Long.valueOf(topicTypeId))).thenReturn(fake);
+        when(topicTypeService.get(Long.valueOf(topicTypeId))).thenReturn(activeTopicType);
 
-        presenter.initializeForEdit(view, fake, listener);
+        presenter.initializeForEdit(view, activeTopicType, listener);
 
         verify(view).hideCreateAction();
-        verify(view).showTypeTitle(fake.getTitle());
-        verify(view).showTypeDescription(fake.getDescription());
+        verify(view).showTypeTitle(activeTopicType.getTitle());
+        verify(view).showTypeDescription(activeTopicType.getDescription());
     }
-    
 
     @Test
     public void initializeForEditTestError() throws NotFoundException {
         when(topicTypeService.get(Long.valueOf(topicTypeId))).thenThrow(new NotFoundException());
 
-        presenter.initializeForEdit(view, fake, listener);
+        presenter.initializeForEdit(view, activeTopicType, listener);
 
         verify(view).hideCreateAction();
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS);
-        verify(view, never()).showTypeTitle(fake.getTitle());
-        verify(view, never()).showTypeTitle(fake.getDescription());
-    }
-
-    @Test
-    public void onTitleLoseFocusTestError() {
-        when(topicTypeService.isTopicTypeNameExists(anyString(), anyLong())).thenReturn(true);
-        when(view.getTypeTitle()).thenReturn(title);
-
-        presenter.onTitleLoseFocus();
-
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
-    }
-
-    @Test
-    public void onTitleLoseFocusTestOK() {
-        when(topicTypeService.isTopicTypeNameExists(anyString(), anyLong())).thenReturn(false);
-        when(view.getTypeTitle()).thenReturn(title);
-
-        presenter.onTitleLoseFocus();
-
-        verify(view, never()).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
+        verify(view, never()).showTypeTitle(activeTopicType.getTitle());
+        verify(view, never()).showTypeTitle(activeTopicType.getDescription());
     }
 
     @Test
     public void closeViewTest() {
         presenter.closeView();
 
-        verify(windowManager).closeWindow(any(TopicTypeView.class));
+        verify(windowManager).closeWindow(view);
     }
 
     @Test
     public void onCreateActionTestOK() {
-        givenTopicType();
+        givenNoConstraintsViolated();
 
         presenter.onCreateAction();
 
-        verify(windowManager).closeWindow(any(TopicTypeView.class));
+        verify(windowManager).closeWindow(view);
         verify(listener).onCreate(any(TopicType.class));
+    }
+
+    private void givenNoConstraintsViolated() {
+        when(entityValidator.validate(any(TopicType.class))).thenReturn(ValidationResult.EMPTY);
     }
 
     @Test
     public void onCreateActionTestEmptyName() {
-        givenTopicTypeWithEmptyTitle();
+        givenConstraintViolated();
 
         presenter.onCreateAction();
 
-        verify(windowManager, never()).closeWindow(any(TopicTypeView.class));
+        verify(windowManager, never()).closeWindow(view);
         verify(listener, never()).onCreate(any(TopicType.class));
     }
 
     @Test
     public void onUpdateActionTestOK() {
-        givenTopicType();
+        givenNoConstraintsViolated();
 
         presenter.onUpdateAction();
 
@@ -177,69 +147,63 @@ public class TopicTypePresenterTest {
 
     @Test
     public void onUpdateActionTestEmptyName() {
-        givenTopicTypeWithEmptyTitle();
+        givenConstraintViolated();
 
         presenter.onUpdateAction();
 
-        verify(windowManager, never()).closeWindow(any(TopicTypeView.class));
+        verify(windowManager, never()).closeWindow(view);
         verify(listener, never()).onUpdate(any(TopicType.class));
+    }
+
+    private void givenConstraintViolated() {
+        when(entityValidator.validate(any(TopicType.class))).thenReturn(resultWithErrors);
     }
 
     @Test
     public void onCancelEditActionTest() {
         presenter.onCancelEditAction();
 
-        verify(windowManager).closeWindow(any(TopicTypeView.class));
+        verify(windowManager).closeWindow(view);
         verify(listener).onCloseEditorWithoutChanges();
     }
 
     @Test
-    public void saveTestOK() throws NotUniqueException {
-        givenTopicType();
+    public void saveTestOK() {
+        givenNoConstraintsViolated();
 
         presenter.save();
 
-        verify(view, never()).openErrorPopupInTopicTypeDialog(anyString());
-        verify(topicTypeService).saveTopicType(any(TopicType.class));
+        verify(view, never()).validationFailure(any(ValidationResult.class));
+        verify(topicTypeService).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
-    public void saveTestError() throws NotUniqueException {
-        givenTopicTypeWithEmptyTitle();
+    public void saveTestError() {
+        givenConstraintViolated();
 
         presenter.save();
 
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
-        verify(topicTypeService, never()).saveTopicType(any(TopicType.class));
+        verify(topicTypeService, never()).saveOrUpdate(any(TopicType.class));
     }
 
     @Test
-    public void updateTestOK() throws NotUniqueException {
-        givenTopicType();
+    public void onTitleLoseFocusConstraintsViolated() {
+        givenConstraintViolated();
 
-        presenter.update();
+        presenter.onTitleLoseFocus();
 
-        verify(view, never()).openErrorPopupInTopicTypeDialog(anyString());
-        verify(topicTypeService).updateTopicType(any(TopicType.class));
-    }
-
-    @Test
-    public void updateTestError() throws NotUniqueException {
-        givenTopicTypeWithEmptyTitle();
-
-        presenter.update();
-
-        verify(view).openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_CANT_BE_VOID);
-        verify(topicTypeService, never()).updateTopicType(any(TopicType.class));
-    }
-
-    private void givenTopicType() {
-        when(view.getTypeTitle()).thenReturn(title);
-        when(view.getTypeDescription()).thenReturn(desc);
+        verify(view).validationFailure(resultWithErrors);
     }
     
-    private void givenTopicTypeWithEmptyTitle() {
-        when(view.getTypeTitle()).thenReturn("");
-        when(view.getTypeDescription()).thenReturn(desc);
+    @Test
+    public void onTitleLoseFocusOk() {
+        givenNoConstraintsViolated();
+        
+        presenter.onTitleLoseFocus();
+
+        verify(view, never()).validationFailure(any(ValidationResult.class));
     }
+    
+        
+
 }

@@ -14,41 +14,32 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import java.util.List;
-
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-import org.jtalks.poulpe.model.entity.Section;
-import org.zkoss.zk.ui.WrongValueException;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
- * Interface for representation view single branch
  * 
- * @author Bekrenev Dmitry
- * */
-public interface EditGroupDialogView {
+ */
+public interface EditGroupDialogView extends ValidationFailure {
 
     /**
      * Cause hiding current dialog
-     * */
+     */
     void hide();
 
     /**
-     * Show dialog and fill fields name and description
-     * 
-     * @param branch
-     *            name and description current branch will fill dialog fields
-     * */
-    void show(Group group);
+     */
+    void show(PoulpeGroup group);
 
     /**
      * Show dialog
      * */
     void show();
 
+    
     /**
-     * Cause throw exception for popup error message
-     * */
-    void notUniqueGroupName();
-
+     * Show popup window with error text
+     */
+    public void openErrorPopupInEditGroupDialog(String label);
+    
 }

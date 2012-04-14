@@ -14,39 +14,31 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-
 import java.util.List;
 
+import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+
 /**
+ * Dao interface for accessing {@link PoulpeGroup} objects
+ * 
  * @author Konstantin Akimov
  */
-
-public interface GroupDao extends ParentRepository<Group> {
+public interface GroupDao extends ParentRepository<PoulpeGroup> {
 
     /**
      * Get the list of all groups.
-     *
+     * 
      * @return list of groups
      */
-    List<Group> getAll();
-    
-    
-    
-    /**
-     * Method to check is branch used.
-     * @param branch
-     * @return true if branch with such name already exists and branch id not equal
-     */
-    boolean isGroupDuplicated(Group branch);
-    
-    
+    List<PoulpeGroup> getAll();
+
     /**
      * Get the list of all groups which match to the specified name
+     * 
      * @param name
      * @return list of groups
+     * @exception IllegalArgumentException if name is null
      */
-    List<Group> getMatchedByName(String name);
+    List<PoulpeGroup> getMatchedByName(String name);
 }

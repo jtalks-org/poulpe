@@ -16,43 +16,37 @@ package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
 
 /**
+ * Implementation of {@link SectionService}
  * 
- * @author tanya birina
- * 
+ * @author Tatiana Birina
  */
-public class TransactionalSectionService extends AbstractTransactionalEntityService<Section, SectionDao> implements
-        SectionService {
+public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao>
+        implements SectionService {
+    private final EntityValidator validator;
+
     /**
      * Create an instance of entity based service
      * 
-     * @param sectionDao
-     *            - data access object
+     * @param sectionDao - data access object
+     * @param validator entity validator
      */
-    public TransactionalSectionService(SectionDao sectionDao) {
+    public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
         this.dao = sectionDao;
+        this.validator = validator;
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isSectionExists(Section section) {
-        return dao.isSectionNameExists(section);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<Section> getAll() {
+    public List<PoulpeSection> getAll() {
         return dao.getAll();
     }
 
@@ -60,32 +54,20 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * {@inheritDoc}
      */
     @Override
-    public boolean deleteSection(Section section) {
-        return dao.delete(section.getId());
-
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void saveSection(Section section) throws NotUniqueException {
-        try {
-            dao.saveOrUpdate(section);
-        } catch (ConstraintViolationException e) {
-            throw new NotUniqueException(e);
-        }
+    public void saveSection(PoulpeSection section) {
+        validator.throwOnValidationFailure(section);
+        dao.saveOrUpdate(section);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteRecursively(Section victim) {
+    public boolean deleteRecursively(PoulpeSection victim) {
         return dao.deleteRecursively(victim);
     }
 
     /** {@inheritDoc} */
     @Override
-    public boolean deleteAndMoveBranchesTo(Section victim, Section recipient) {
+    public boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient) {
         if (victim.getId() == recipient.getId()) {
             throw new IllegalArgumentException("Victim and recipient can't be the same section");
         }

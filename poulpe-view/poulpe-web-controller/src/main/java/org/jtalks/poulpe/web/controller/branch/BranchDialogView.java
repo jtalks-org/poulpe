@@ -16,58 +16,58 @@ package org.jtalks.poulpe.web.controller.branch;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
  * Interface for representation view single branch
  * 
  * @author Bekrenev Dmitry
- * */
-public interface BranchDialogView {
+ */
+public interface BranchDialogView extends ValidationFailure {
 
     /**
      * Get new or edited branch from view
      * 
-     * @return Branch new or edited branch
-     * */
-    Section getSection();
+     * @return PoulpeBranch new or edited branch
+     */
+    PoulpeSection getSection();
 
     /**
      * Cause hiding current dialog
-     * */
+     */
     void hide();
+
+    /**
+     * Show dialog
+     */
+    void show();
 
     /**
      * Show dialog and fill fields name and description
      * 
-     * @param branch
-     *            name and description current branch will fill dialog fields
-     * */
-    void show(Branch branch);
+     * @param branch name and description current branch will fill dialog fields
+     */
+    void show(PoulpeBranch branch);
 
     /**
-     * Show dialog
-     * */
-    void show();
-
-    /**
-     * Cause throw exception for popup error message
-     * */
-    void notUniqueBranchName();
-
-    /**
-     * Init Section combobox list
      * 
-     * @param sections
-     *            list sections
-     * */
-    void initSectionList(List<Section> sections);
-    
+     * @param label
+     */
+    void openErrorPopupInNewSectionDialog(String label);
+
+    /**
+     * Init PoulpeSection combobox list
+     * 
+     * @param sections list sections
+     */
+    void initSectionList(List<PoulpeSection> sections);
+
     /**
      * Get branch from view
      * 
-     * @return Branch branch
-     * */
-    Branch getBranch (Section section);
+     * @return PoulpeBranch branch
+     */
+    PoulpeBranch getBranch(PoulpeSection section);
 }

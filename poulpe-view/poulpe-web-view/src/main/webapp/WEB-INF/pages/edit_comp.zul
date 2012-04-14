@@ -1,0 +1,31 @@
+<!-- works with ZK 6 and later only -->
+<window border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer" 
+  	viewModel="@id('vm') @init('org.jtalks.poulpe.web.controller.component.EditCompViewModel')">
+	
+	<grid>
+		<columns>
+			<column width="20%" />
+			<column width="80%" />
+		</columns>
+		<rows>
+			<row> 
+				${labels.component.title}
+				<hlayout>
+					<textbox width="100%" value="@bind(vm.title) @validator(vm.titleValidator)" />
+					<label value="@load(vm.validationMessages['title'])" sclass="red" />
+				</hlayout>
+			</row>
+			<row> 
+				${labels.component.description}				
+				<textbox width="60%" value="@bind(vm.description)" />       
+			</row>
+			<row>
+				<hlayout>
+					<button label="${labels.componentedit.save}" onClick="@command('showHello')" sclass="edit.comp.saveButton" />
+					<button label="${labels.componentedit.cancel}" onClick="@command('showHello')" sclass="edit.comp.cancelButton" />
+				</hlayout>
+			</row>
+		</rows> 		
+	</grid>
+	
+</window>

@@ -17,27 +17,44 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dao.DuplicatedField;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueFieldsException;
+import org.jtalks.poulpe.service.PropertyLoader;
 
 /**
- *
+ * Transactional implementation of {@link ComponentService}. Transactions are provided by AOP.
+ * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
+ * @author Vyacheslav Zhivaev
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
 
+    private final PermissionManager permissionManager;
+    private final EntityValidator validator;
+    private PropertyLoader propertyLoader;
+
     /**
-     * Create new instance of the service.
-     * @param dao need it for CRUD operations
+     * Creates new instance of the service
+     * 
+     * @param dao dao we use for Component
+     * @param permissionManager the permission manager, instance of {@link PermissionManager}
+     * @param validator used to validate entites
      */
-    public TransactionalComponentService(ComponentDao dao) {
+    public TransactionalComponentService(ComponentDao dao, PermissionManager permissionManager,
+            EntityValidator validator) {
         this.dao = dao;
+        this.permissionManager = permissionManager;
+        this.validator = validator;
     }
 
     /**
@@ -58,10 +75,11 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /** {@inheritDoc} */
     @Override
-    public void saveComponent(Component component) throws NotUniqueFieldsException {
-        Set<DuplicatedField> set = dao.getDuplicateFieldsFor(component);
-        if (set != null) {
-            throw new NotUniqueFieldsException(set);
+    public void saveComponent(Component component) {
+        validator.throwOnValidationFailure(component);
+
+        if (component.getId() == 0) {
+            propertyLoader.loadDefaults(component);
         }
         dao.saveOrUpdate(component);
     }
@@ -74,9 +92,52 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         return dao.getAvailableTypes();
     }
 
+    /**
+     * Sets property loader. See {@link PropertyLoader}
+     * 
+     * @param propertyLoader property loader to set
+     */
+    public void setPropertyLoader(PropertyLoader propertyLoader) {
+        this.propertyLoader = propertyLoader;
+    }
+
+    /**
+     * Gets currently used property loader. See {@link PropertyLoader}
+     * 
+     * @return property loader
+     */
+    public PropertyLoader getPropertyLoader() {
+        return propertyLoader;
+    }
+
     /** {@inheritDoc} */
     @Override
-    public Set<DuplicatedField> getDuplicateFieldsFor(Component component) {
-        return dao.getDuplicateFieldsFor(component);
+    public Component getByType(ComponentType type) {
+        return dao.getByType(type);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
+        return permissionManager.getPermissionsMapFor(component);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeGrants(Component component, PermissionChanges changes) {
+        permissionManager.changeGrants(component, changes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeRestrictions(Component component, PermissionChanges changes) {
+        permissionManager.changeRestrictions(component, changes);
+    }
+
 }

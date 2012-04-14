@@ -17,61 +17,67 @@ package org.jtalks.poulpe.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.jtalks.common.model.entity.User;
-import org.jtalks.common.service.EntityService;
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.User;
 
 /**
  * Service interface for operations with {@code User} persistent entity.
  * 
  * @author Guram Savinov
+ * @author Vyacheslav Zhivaev
  */
-public interface UserService extends EntityService<User> {
+public interface UserService {
 
     /**
      * Sets permanent ban status for the user list.
      * 
-     * @param users
-     *            the users to update ban status
-     * @param permanentBan
-     *            the permanent ban status
-     * @param banReason
-     *            the ban reason description
+     * @param users the users to update ban status
+     * @param permanentBan the permanent ban status
+     * @param banReason the ban reason description
      */
-    public void setPermanentBanStatus(Collection<User> users, boolean permanentBan,
-            String banReason);
+    void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason);
 
     /**
      * Sets temporary ban status for the user list.
      * 
-     * @param users
-     *            the users to update ban status
-     * @param days
-     *            the length of the temporary ban status in days
-     * @param banReason
-     *            the ban reason description
+     * @param users the users to update ban status
+     * @param days the length of the temporary ban status in days
+     * @param banReason the ban reason description
      */
-    public void setTemporaryBanStatus(Collection<User> users, int days,
-            String banReason);
-    
+    void setTemporaryBanStatus(Collection<User> users, int days, String banReason);
+
     /**
      * Gets all Users from the database
-     * 
-     * @return <code>List<User></code>
+     * @return list of all users
      */
-    public List<User> getAll();
-    
+    List<User> getAll();
+
     /**
      * Gets Users with corresponding word in user name
-     * 
-     * @return <code>List<User></code>
+     * @param word to look up
+     * @return list of users with the word in the name
      */
-    public List<User> getUsersByUsernameWord(String word);
+    List<User> getUsersByUsernameWord(String word);
+
+    /**
+     * Updates the user
+     * @param user entity to be updated
+     */
+    void updateUser(User user);
+
+    /**
+     * Retrieves user by its id
+     * 
+     * @param id to look up
+     * @return retrieved {@link User} instance
+     * @throws NotFoundException when user can't be found
+     */
+    User get(long id) throws NotFoundException;
     
     /**
-     * Update corresponding user
-     * 
-     * @param <code>User</code>
+     * Gets all banned users from the database
+     * @return list of all users
      */
-    public void updateUser(User user);
+    List<User> getAllBannedUsers();
 
 }

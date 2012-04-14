@@ -16,25 +16,35 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.zkoss.zk.ui.Executions;
 
 /**
  * The class for mediating between model and view representation of components.
+ *
  * @author Dmitriy Sukharev
+ * @author Vahluev Vyacheslav
+ * @author Vyacheslav Zhivaev
  */
-public class ListPresenter extends AbstractPresenter {
+public class ListPresenter extends AbstractComponentPresenter {
+
+    private static final String NO_SELECTED_ITEM = "item.no.selected.item";
+    private static final String NO_AVAILABLE_TYPES = "component.error.no_available_types";
+    private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
 
     /** The object that is responsible for updating view of the component list. */
     private ListView view;
 
     /**
-     * Initialises the object that is responsible for updating view of the component list.
-     * @param listView the object that is responsible for updating view of the component list
+     * Initialises the object that is responsible for updating view of the
+     * component list.
+     * @param listView the object that is responsible for updating view of the
+     * component list
      */
     public void initView(ListView listView) {
-        this.view = listView;
-        listView.createModel(getComponents());
+        view = listView;
+        view.createModel(getComponents());
     }
 
     /**
@@ -45,25 +55,61 @@ public class ListPresenter extends AbstractPresenter {
         return getComponentService().getAll();
     }
 
-    /** Removes the selected component from the component list. */
-    public void deleteComponent() {
-        if (!view.hasSelectedItem()) {
-            getDialogManager().notify("item.no.selected.item");
+    public void addComponent() {
+        if (getComponentService().getAvailableTypes().size() > 0) {
+            view.showEditor();
         } else {
-            Component victim = view.getSelectedItem();
-            DeletePerformable dc = new DeletePerformable();
-            getDialogManager().confirmDeletion(victim.getName(), dc);
+            getDialogManager().notify(NO_AVAILABLE_TYPES);
         }
     }
 
-    /** Updates the list of components. */
+    /**
+     * Removes the selected component from the component list.
+     */
+    public void deleteComponent() {
+        if (view.hasSelectedItem()) {
+            // TODO: view.getSelectedItem() is invoked twice, one time here
+            // and the second - in DeletePerformable#execute().
+            // get rid of it
+            Component victim = view.getSelectedItem();
+            getDialogManager().confirmDeletion(victim.getName(), new DeletePerformable());
+        } else {
+            getDialogManager().notify(NO_SELECTED_ITEM);
+        }
+    }
+
+    /**
+     * Opening a new window to configure a component
+     * or shows a message if none were selected
+     */
+    public void configureComponent() {
+        if (!view.hasSelectedItem()) {
+            dialogManager.notify(NO_SELECTED_ITEM);
+        } else {
+            showEditWindow();
+        }
+    }
+
+    /**
+     * Shows a component edit window
+     */
+    private void showEditWindow () {
+        Component cm = view.getSelectedItem();
+        Executions.getCurrent().getDesktop().setAttribute("componentToEdit", cm);
+
+        windowManager.open(EDIT_COMPONENT_LOCATION);
+    }
+
+    /**
+     * Updates the list of components.
+     */
     public void updateList() {
         view.updateList(getComponents());
     }
 
     /**
-     * The class for executing deletion of the selected item, delegates this task to the component
-     * service and view.
+     * The class for executing deletion of the selected item, delegates this
+     * task to the component service and view.
      * @author Dmitriy Sukharev
      */
     class DeletePerformable implements DialogManager.Performable {

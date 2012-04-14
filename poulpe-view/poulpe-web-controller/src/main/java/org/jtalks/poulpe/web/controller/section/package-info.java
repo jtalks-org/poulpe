@@ -14,5 +14,5 @@
  */
 /**
  *  This package contains presenter and view implementation classes 
- * */
+ */
 package org.jtalks.poulpe.web.controller.section;

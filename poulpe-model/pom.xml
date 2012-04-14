@@ -1,17 +1,17 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>poulpe</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>poulpe-model</artifactId>
   <name>${project.artifactId}</name>
   <url>www.jtalks.org</url>
-  
+
   <description>
     This module contains domain model of the project, and also - persistence layer.
   </description>
@@ -20,6 +20,10 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-orm</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-acl</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>
@@ -73,17 +77,56 @@
       <artifactId>unitils-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.hibernate</groupId>
-      <artifactId>hibernate-annotations</artifactId>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-all</artifactId>
     </dependency>
     <dependency>
       <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-model</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
     </dependency>
+    <dependency>
+      <groupId>ru.javatalks.utils</groupId>
+      <artifactId>core-utils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.googlecode.lambdaj</groupId>
+      <artifactId>lambdaj</artifactId>
+    </dependency>
+      <dependency>
+      <groupId>commons-beanutils</groupId>
+      <artifactId>commons-beanutils</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>javax.validation</groupId>
+      <artifactId>validation-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-validator</artifactId>
+    </dependency>
+    
+    <!-- Cache -->
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.sf.ehcache</groupId>
+      <artifactId>ehcache-jgroupsreplication</artifactId>
+    </dependency>
+    
   </dependencies>
 
   <build>
@@ -99,6 +142,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>**/*.xml</include>
+          <include>**/migrations/**</include>
         </includes>
       </resource>
     </resources>

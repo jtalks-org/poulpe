@@ -14,72 +14,47 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+
 import java.util.List;
 
-import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.Section;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-
-public interface SectionService extends EntityService<Section> {
+/**
+ * Service for dealing with {@link PoulpeSection} objects
+ * 
+ * @author unascribed
+ */
+public interface SectionService extends EntityService<PoulpeSection> {
 
     /**
      * Get list of all Sections.
      * 
-     * @return - list of Sections.
+     * @return - list of all {@link PoulpeSection} objects.
      */
-    List<Section> getAll();
-
-    // TODO WTF It doesn't work when has child branches, so why is it here?
-    // Remove it or describe
-    // why it is necessary.
-    // Marked as deprecated meanwhile. (sukharevd, 2011/08/21 02:49)
-    /**
-     * Mark the section as deleted.
-     * 
-     * @param section
-     *            section to delete
-     * @deprecated use other two delete methods instead
-     * @return true if section delete successfully
-     */
-    boolean deleteSection(Section section);
+    List<PoulpeSection> getAll();
 
     /**
      * Save or update section.
      * 
-     * @param section
-     *            instance to save
-     * @throws NotUniqueException
-     *             if section with the same name already exists
+     * @param section instance to save
      */
-    void saveSection(Section section) throws NotUniqueException;
-
-    /**
-     * Check if section with given name exists.
-     * 
-     * @param section
-     *            name for check
-     * @return true if exists
-     */
-    boolean isSectionExists(Section section);
+    void saveSection(PoulpeSection section);
 
     /**
      * Removes the section and all its branches.
      * 
-     * @param victim
-     *            the removed section
+     * @param victim the removed section
      * @return {@code true} if section was removed, {@code false} otherwise
      */
-    boolean deleteRecursively(Section victim);
+    boolean deleteRecursively(PoulpeSection victim);
 
     /**
      * Removes the section and move all its branches to another section.
      * 
-     * @param victim
-     *            the removed section
-     * @param recipient
-     *            the section that will take orphan branches
+     * @param victim the removed section
+     * @param recipient the section that will take orphan branches
      * @return {@code true} if the section was removed, {@code false} otherwise
      */
-    boolean deleteAndMoveBranchesTo(Section victim, Section recipient);
+    boolean deleteAndMoveBranchesTo(PoulpeSection victim, PoulpeSection recipient);
 
 }

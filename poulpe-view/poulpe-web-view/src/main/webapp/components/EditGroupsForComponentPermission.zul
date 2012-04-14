@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Edit Groups For Component Permission" contentType="text/html; charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<!-- works with ZK 6 and later only -->
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window title="${labels.permission_groups.title}" closable="true" border="normal" mode="modal"
+      onClose="@command('cancel')" apply="org.zkoss.bind.BindComposer"
+      viewModel="@id('editGroupsForComponentPermissionVm') @init(editGroupsForComponentPermissionVm)">
+    <vbox>
+      <hbox>
+        <vbox>
+          <panel title="${labels.permission_groups.available}" border="normal" width="300px">
+            <panelchildren>
+              <hbox style="margin: 10px">
+                <textbox value="@bind(editGroupsForComponentPermissionVm.availFilterTxt)" width="180px" />
+                <button onClick="@command('filterAvail')" label="${labels.permission_groups.search}" />
+              </hbox>
+              <listbox model="@bind(editGroupsForComponentPermissionVm.avail)" onSelect="@command('listSelected')"
+                  multiple="true" checkmark="true" height="250px">
+                <listhead>
+                  <listheader label="${labels.permission_groups.group_name}" sclass="boldstyle" />
+                </listhead>
+                <template name="model" var="group">
+                  <listitem label="@load(group.name)" />
+                </template>
+              </listbox>
+            </panelchildren>
+          </panel>
+        </vbox>
+        <vbox style="padding-top: 100px" align="center">
+          <button onClick="@command('add')" disabled="@load(empty editGroupsForComponentPermissionVm.availSelected)"
+              image="/resources/img/rightarrow.png" />
+          <button onClick="@command('addAll')" disabled="@load(empty editGroupsForComponentPermissionVm.avail)"
+              image="/resources/img/rightrightarrow.png" />
+          <button onClick="@command('remove')" disabled="@load(empty editGroupsForComponentPermissionVm.existSelected)"
+              image="/resources/img/leftarrow.png" />
+          <button onClick="@command('removeAll')" disabled="@load(empty editGroupsForComponentPermissionVm.exist)"
+              image="/resources/img/leftleftarrow.png" />
+        </vbox>
+        <vbox>
+          <panel title="${labels.permission_groups.already_added}" border="normal" width="300px">
+            <panelchildren>
+              <hbox style="margin: 10px">
+                <textbox value="@bind(editGroupsForComponentPermissionVm.existFilterTxt)" width="180px" />
+                <button onClick="@command('filterExist')" label="${labels.permission_groups.search}" />
+              </hbox>
+              <listbox model="@bind(editGroupsForComponentPermissionVm.exist)" onSelect="@command('listSelected')"
+                  multiple="true" checkmark="true" height="250px">
+                <listhead>
+                  <listheader label="${labels.permission_groups.group_name}" sclass="boldstyle" />
+                </listhead>
+                <template name="model" var="group">
+                  <listitem label="@load(group.name)" />
+                </template>
+              </listbox>
+            </panelchildren>
+          </panel>
+        </vbox>
+      </hbox>
+      <hbox align="center" pack="center" width="100%">
+        <button onClick="@command('save')" label="${labels.window.save}" width="100px" />
+        <button onClick="@command('cancel')" label="${labels.window.cancel}" width="100px" />
+      </hbox>
+    </vbox>
+  </window>
+</zk>

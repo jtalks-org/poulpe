@@ -14,120 +14,43 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.common.validation.EntityValidator;
+import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.EditListener;
 import org.jtalks.poulpe.web.controller.WindowManager;
 
 /**
  * Presenter of TopicType list page.
+ * 
  * @author Pavel Vervenko
  * @author Vahluev Vyacheslav
  * @author Vyacheslav Zhivaev
- * 
+ * @author Alexey Grigorev
  */
 public class TopicTypePresenter {
-	    
-    public interface TopicTypeView {
 
-        /**
-         * Shows type title
-         * 
-         * @param title the title
-         */
-        void showTypeTitle(String title);
+    public static final String TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
 
-        /**
-         * Shows type description
-         * 
-         * @param description the description
-         */
-        void showTypeDescription(String description);
+    private TopicTypeService topicTypeService;
+    private EntityValidator entityValidator;
 
-        /**
-         * Gets type title
-         * 
-         * @return type title
-         */
-        String getTypeTitle();
-        
-        /**
-         * Gets type description
-         * 
-         * @return type description
-         */
-        String getTypeDescription();
-        
-        /**
-         * Hide edit action
-         */
-        void hideEditAction();
-        
-        /**
-         * Hide create action
-         */
-        void hideCreateAction();
-        
-        /**
-         * Show error popup dialog
-         * 
-         * @param label for dialog
-         */
-        void openErrorPopupInTopicTypeDialog(String label);
-    }
+    private EditListener<TopicType> listener;
+    private WindowManager windowManager;
+
+    private TopicTypeView view;
+    private TopicType topicType;
+
 
     /**
      * Save and init view.
-     * @param view view
      */
     public void initView(TopicTypeView view) {
         this.view = view;
     }
-    
-    public static final String ERROR_TOPICTYPE_TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
-    public static final String ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
-    public static final String ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS = "topictypes.error.topictype_name_doesnt_exists";
-    
-    protected DialogManager dialogManager;
-    protected WindowManager windowManager;
-    protected TopicTypeService topicTypeService;
-    protected TopicTypeView view;
-    protected TopicType topicType;
-    protected EditListener<TopicType> listener;
 
-    /**
-     * Set the TopicTypeService implementation.
-     * @param topicTypeService impl of TopicTypeService
-     */
-    public void setTopicTypeService(TopicTypeService topicTypeService) {
-        this.topicTypeService = topicTypeService;
-    }
-    
-    /**
-     * Sets the dialog manager
-     * 
-     * @param dialogManager is dialog manager
-     */
-     public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
-    
-     /**
-      * Sets the window manager
-      * 
-      * @param windowManager is window manager
-      */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
-    
-    public void setListener(EditListener<TopicType> listener) {
-        this.listener = listener;
-    }
-    
     /**
      * Initialize presenter for create topic type
      * 
@@ -143,8 +66,6 @@ public class TopicTypePresenter {
 
     /**
      * Initialize presenter for edit topic type
-     * 
-     * @param view new view
      * @param topicType target topic type
      * @param listener event listener
      */
@@ -152,26 +73,27 @@ public class TopicTypePresenter {
         this.view = view;
         this.listener = listener;
         view.hideCreateAction();
-        try {        	
-            this.topicType = topicTypeService.get(topicType.getId());            
-        } catch (NotFoundException e) {       	        	
-        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_DOESNT_EXISTS);
+
+        try {
+            this.topicType = topicTypeService.get(topicType.getId());
+        } catch (NotFoundException e) {
+            view.openErrorPopupInTopicTypeDialog(TITLE_DOESNT_EXISTS);
             return;
         }
+
         view.showTypeTitle(this.topicType.getTitle());
         view.showTypeDescription(this.topicType.getDescription());
     }
-    
+
     /**
      * Action handler on title loose focus
      */
     public void onTitleLoseFocus() {
         String title = view.getTypeTitle();
-        if (topicTypeService.isTopicTypeNameExists(title, topicType.getId())) {
-        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
-        }    	
+        topicType.setTitle(title);
+        validate(topicType);
     }
-    
+
     /**
      * Action handler on create action
      */
@@ -181,17 +103,17 @@ public class TopicTypePresenter {
             listener.onCreate(topicType);
         }
     }
-    
+
     /**
      * Action handler on update action
      */
     public void onUpdateAction() {
-        if (update()) {
+        if (save()) {
             closeView();
             listener.onUpdate(topicType);
         }
     }
-    
+
     /**
      * Action handler on cancel edit action
      */
@@ -199,7 +121,7 @@ public class TopicTypePresenter {
         closeView();
         listener.onCloseEditorWithoutChanges();
     }
-    
+
     /**
      * Close view
      */
@@ -210,57 +132,57 @@ public class TopicTypePresenter {
     /**
      * Save action
      * 
-     * @return <code>true</code> if saving done and none errors occurred, <code>false</code> in otherwise
+     * @return <code>true</code> if saving done and none errors occurred,
+     * <code>false</code> in otherwise
      */
-    public boolean save() {    	
+    public boolean save() {
         topicType.setTitle(view.getTypeTitle());
-        topicType.setDescription(view.getTypeDescription());        
-        try {
-        	String errorLabel = validateTopicType(topicType);
-        	if (errorLabel != null) {
-        		view.openErrorPopupInTopicTypeDialog(errorLabel);
-        		return false;
-        	}
-            topicTypeService.saveTopicType(topicType);            
+        topicType.setDescription(view.getTypeDescription());
+
+        if (validate(topicType)) {
+            topicTypeService.saveOrUpdate(topicType);
             return true;
-        } catch (NotUniqueException e) {
-        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
+        } else {
             return false;
         }
     }
-    
-    /**
-     * Update action
-     * 
-     * @return <code>true</code> if updating done and none errors occurred, <code>false</code> in otherwise
-     */
-    public boolean update() {
-    	topicType.setTitle(view.getTypeTitle());
-        topicType.setDescription(view.getTypeDescription());
-        try {
-        	String errorLabel = validateTopicType(topicType);        	
-        	if (errorLabel != null) {
-        		view.openErrorPopupInTopicTypeDialog(errorLabel);
-        		return false;
-        	}
-            topicTypeService.updateTopicType(topicType);
-            return true;
-        } catch (NotUniqueException e) {
-        	view.openErrorPopupInTopicTypeDialog(ERROR_TOPICTYPE_TITLE_ALREADY_EXISTS);
+
+    private boolean validate(TopicType topicType) {
+        ValidationResult result = entityValidator.validate(topicType);
+
+        if (result.hasErrors()) {
+            view.validationFailure(result);
             return false;
+        } else {
+            return true;
         }
-    }    
+    }
 
     /**
-     * Validate topic type
-     * 
-     * @param topicType topicType we want to validate
-     * @return null if TopicType has a valid title or error message otherwise 
+     * Set the TopicTypeService implementation.
      */
-    public String validateTopicType(TopicType topicType) {
-        if (topicType.getTitle() == null || topicType.getTitle().equals("")) {
-            return ERROR_TOPICTYPE_TITLE_CANT_BE_VOID;
-        }
-        return null;
+    public void setTopicTypeService(TopicTypeService topicTypeService) {
+        this.topicTypeService = topicTypeService;
+    }
+
+    /**
+     * @param entityValidator the entityValidator to set
+     */
+    public void setEntityValidator(EntityValidator entityValidator) {
+        this.entityValidator = entityValidator;
+    }
+
+    /**
+     * Sets the window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
+
+    /**
+     * @param listener
+     */
+    public void setListener(EditListener<TopicType> listener) {
+        this.listener = listener;
     }
 }

@@ -12,6 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 /**
  * Entities package for Poulpe. Contains classes that should be persists into the database. There are also other similar
  * class, that are in JTALKS-COMMON modules, they also might be the model of Poulpe and can be used by other projects

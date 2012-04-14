@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <zk>
-  <window presenter="${branchEditorPresenter}" use="org.jtalks.poulpe.web.controller.branch.BranchEditorViewImpl"
+  <window presenter="${branchEditorPresenter}" use="org.jtalks.poulpe.web.controller.branch.ZkBranchEditorView"
     title="${labels.branches.brancheditor.title}" width="30%" border="normal" position="center,top" id="mainWindow">
     <style>
       .branch-name {
@@ -18,8 +18,8 @@
     <vbox width="100%">
       <listbox sizedByContent="true" id="branchesList" />
       <span>
-        <button id="addBranchButton" label="+" />
-        <button id="delBranchButton" label="-" />
+        <button id="addBranchButton" label="+" sclass="branch.editor.addBranchButton" />
+        <button id="delBranchButton" label="-" sclass="branch.editor.delBranchButton" />
       </span>
     </vbox>
   </window>

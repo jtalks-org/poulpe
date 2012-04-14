@@ -16,18 +16,19 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
 import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
@@ -37,10 +38,15 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * The test for {@link SectionHibernateDao}.
+ * 
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
+ * @author Alexey Grigorev
+ * @author Guram Savinov
  */
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -51,134 +57,120 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     private SessionFactory sessionFactory;
     @Autowired
     private SectionDao dao;
+    
     private Session session;
-
+    private PoulpeSection section;
+    
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
+        section = ObjectsFactory.createSectionWithBranches(10);
     }
 
-    @Test
-    public void deleteRecursevelyTest() {
-        Section section = ObjectsFactory.createSectionWithBranches();
-        session.save(section);
-        dao.deleteRecursively(section);
-        Long actualAmount = (Long) session
-                .createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id")
-                .setLong("id", section.getId()).uniqueResult();
-        assertEquals(actualAmount, (Long) 0L);
-    }
-
-    @Test
-    public void deleteAndMoveBranchesToTest() {
-        Section victim = ObjectsFactory.createSectionWithBranches();
-        Section recipient = ObjectsFactory.createSectionWithBranches();
-        Long victimBranchesAmount = (long) victim.getBranches().size();
-        recipient.getBranches().clear();
-        session.save(victim);
-        session.save(recipient);
-        
-        boolean isDeleted = dao.deleteAndMoveBranchesTo(victim, recipient);
-        assertTrue(isDeleted);
-        Long actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",victim.getId()).uniqueResult();
-        assertEquals(actualAmount, (Long)0L);
-        actualAmount = (Long) session.createQuery("SELECT count(b) FROM Section s JOIN s.branches b WHERE s.id=:id").setLong("id",recipient.getId()).uniqueResult();
-        assertEquals(actualAmount, victimBranchesAmount);
-    }
-    
-    
     @Test
     public void saveSectionTest() {
-        Section section = ObjectsFactory.createSection();
-
         dao.saveOrUpdate(section);
+        assertSectionSaved();
+    }
 
+    private void assertSectionSaved() {
         assertNotSame(section.getId(), 0, "Id not created");
-
-        session.evict(section);
-        Section result = (Section) session.get(Section.class, section.getId());
-
-        assertReflectionEquals(section, result);
+        PoulpeSection actual = retrieveActualSection();
+        assertReflectionEquals(section, actual);
     }
     
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    private PoulpeSection retrieveActualSection() {
+        return ObjectRetriever.retrieveUpdated(section, session);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void saveSectionWithNameNotNullViolationTest() {
-        Section section = new Section();
-
-        dao.saveOrUpdate(section);
+        PoulpeSection nullTitleSection = new PoulpeSection();
+        dao.saveOrUpdate(nullTitleSection);
     }
-    
+
     @Test
     public void getTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
-
-        Section result = dao.get(section.getId());
-
-        assertNotNull(result);
-        assertEquals(result.getId(), section.getId());
+        givenSection();
+        PoulpeSection actual = dao.get(section.getId());
+        assertReflectionEquals(section, actual);
     }
-    
+
+    private void givenSection() {
+        session.save(section);
+    }
+
     @Test
     public void getInvalidIdTest() {
-        Section result = dao.get(-567890L);
-
+        PoulpeSection result = dao.get(-567890L);
         assertNull(result);
     }
-    
+
     @Test
     public void updateTest() {
+        givenSection();
+
         String newName = "new section name";
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
         section.setName(newName);
 
         dao.saveOrUpdate(section);
-        session.evict(section);
-        Section result = (Section) session.get(Section.class, section.getId());
-
-        assertEquals(result.getName(), newName);
+        
+        assertNameChanged(newName);
     }
-    
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
-    public void UpdateNotNullViolationTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
-        section.setName(null);
 
+    private void assertNameChanged(String newName) {
+        PoulpeSection actual = retrieveActualSection();
+        assertEquals(actual.getName(), newName);
+    }
+
+    @Test(expectedExceptions = ConstraintViolationException.class)
+    public void UpdateNotNullViolationTest() {
+        givenSection();
+        section.setName(null);
         dao.saveOrUpdate(section);
     }
-    
+
     @Test
     public void getAllTest() {
-        Section section1 = ObjectsFactory.createSection();
-        session.save(section1);
-        Section section2 = ObjectsFactory.createSection();
-        session.save(section2);
-
-        List<Section> sections = dao.getAll();
-
+        givenTwoSections();
+        List<PoulpeSection> sections = dao.getAll();
         assertEquals(sections.size(), 2);
     }
-    
+
+    private void givenTwoSections() {
+        session.save(ObjectsFactory.createSection());
+        session.save(ObjectsFactory.createSection());
+    }
+
     @Test
     public void GetAllWhenTableIsEmptyTest() {
-        List<Section> sections = dao.getAll();
-
+        List<PoulpeSection> sections = dao.getAll();
         assertTrue(sections.isEmpty());
     }
 
     @Test
     public void isSectionExistTest() {
-        Section section = ObjectsFactory.createSection();
-        session.save(section);
-
+        givenSection();
         assertTrue(dao.isExist(section.getId()));
     }
 
-      
     @Test
-    public void NotExistingSectionTest() {
-     assertFalse(dao.isExist(99999L));
+    public void notExistingSectionTest() {
+        assertFalse(dao.isExist(99999L));
+    }
+
+    @Test
+    public void testBranchPositions() {
+        for (int i = 0; i < 5; i++) {
+            List<PoulpeBranch> expected = section.getPoulpeBranches();
+            Collections.shuffle(expected);
+
+            dao.saveOrUpdate(section);
+
+            section = ObjectRetriever.retrieveUpdated(section, session);
+            List<PoulpeBranch> actual = section.getPoulpeBranches();
+
+            assertEquals(actual, expected);
+        }
     }
 }

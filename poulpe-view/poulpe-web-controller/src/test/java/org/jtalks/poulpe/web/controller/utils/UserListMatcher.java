@@ -16,10 +16,10 @@ package org.jtalks.poulpe.web.controller.utils;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.User;
 import org.mockito.ArgumentMatcher;
 
+@Deprecated
 public class UserListMatcher extends ArgumentMatcher<List<User>> {
 
     List<User> users;

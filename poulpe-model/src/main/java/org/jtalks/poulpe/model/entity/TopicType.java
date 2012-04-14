@@ -14,37 +14,46 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import javax.validation.constraints.NotNull;
+
+import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.validation.annotations.UniqueConstraint;
+import org.jtalks.common.validation.annotations.UniqueField;
 
 /**
  * Represent topic types on the page of general configuration
  * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
  */
+@UniqueConstraint
 public class TopicType extends Entity {
 
+    public static final String TITLE_CANT_BE_VOID = "topictypes.error.topictype_name_cant_be_void";
+    public static final String TITLE_ALREADY_EXISTS = "topictypes.error.topictype_name_already_exists";
+    public static final String ERROR_LABEL_SECTION_NAME_WRONG = "{sections.editsection.name.err}";
+    
+    @UniqueField(message = TITLE_ALREADY_EXISTS)
     private String title;
+    
     private String description;
 
     /**
-     * Default constructor of entity.
+     * Default constructor, sets nothing
      */
     public TopicType() {
     }
 
     /**
      * Construct TopicType with specified title and description.
-     * @param title title
-     * @param description description 
      */
     public TopicType(String title, String description) {
-        if (title == null){
-            throw new IllegalArgumentException();
-        }
         this.title = title;
         this.description = description;
     }
-
+    
     /**
      * Get the TopicType description.
      * @return description
@@ -65,6 +74,9 @@ public class TopicType extends Entity {
      * Get the title of the TopicType.
      * @return title
      */
+    @NotNull(message = TITLE_CANT_BE_VOID)
+    @NotEmpty(message = TITLE_CANT_BE_VOID)
+    @Length(min = 1, max = 254, message = ERROR_LABEL_SECTION_NAME_WRONG)
     public String getTitle() {
         return title;
     }

@@ -1,28 +1,28 @@
 <?xml version="1.0"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  
+
   <parent>
     <artifactId>poulpe-view</artifactId>
     <groupId>org.jtalks.poulpe</groupId>
-    <version>0.10-SNAPSHOT</version>
+    <version>0.14-SNAPSHOT</version>
   </parent>
-  
+
   <artifactId>poulpe-web-controller</artifactId>
   <name>${project.artifactId}</name>
   <url>wwww.jtalks.org</url>
-  
+
   <description>
     This module is responsible for event handling of the web-view module.
   </description>
-  
+
   <repositories>
     <repository>
       <id>ZK CE</id>
       <url>http://mavensync.zkoss.org/maven2</url>
     </repository>
   </repositories>
-  
+
   <dependencies>
     <!--poulpe -->
     <dependency>
@@ -54,18 +54,26 @@
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zkplus</artifactId>
     </dependency>
-    <!--utils -->
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava-collections</artifactId>
+      <groupId>org.zkoss.zk</groupId>
+      <artifactId>zkbind</artifactId>
     </dependency>
+    <!--utils -->
     <dependency>
       <groupId>com.google.code.findbugs</groupId>
       <artifactId>jsr305</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
+    <dependency>
       <groupId>commons-lang</groupId>
       <artifactId>commons-lang</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
     </dependency>
   </dependencies>
 

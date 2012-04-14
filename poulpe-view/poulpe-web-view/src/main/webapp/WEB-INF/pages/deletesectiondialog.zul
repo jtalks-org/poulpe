@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <window id="deleteWindow" border="normal" mode="modal" title="${labels.sections.deletesectiondialog.title}"
-  visible="false" presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.DeleteSectionDialogViewImpl">
+  visible="false" presenter="${deleteSectionDialogPresenter}" use="org.jtalks.poulpe.web.controller.section.ZkDeleteSectionDialogView">
   <vbox>
     ${labels.sections.deletedialog.message}
     <radiogroup id="deleteMode">
@@ -14,8 +14,8 @@
     </radiogroup>
     <combobox id="selectedSection" readonly="true" />
     <hbox>
-      <button id="confirmButton" label="${labels.sections.button.ok}" />
-      <button id="rejectButton" label="${labels.sections.button.cancel}" />
+      <button id="confirmButton" label="${labels.sections.button.ok}" sclass="delete.section.okButton" />
+      <button id="rejectButton" label="${labels.sections.button.cancel}" sclass="delete.section.cancelButton" />
     </hbox>
   </vbox>
 </window>

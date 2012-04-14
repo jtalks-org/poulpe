@@ -14,58 +14,72 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.service.exceptions.NotUniqueException;
-import org.jtalks.poulpe.model.entity.Branch;
-
 import java.util.List;
 
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+
 /**
+ * Service for dealing with {@link PoulpeBranch} objects
+ * 
  * @author Vitaliy Kravchenko
  * @author Kirill Afonin
+ * @author Vyacheslav Zhivaev
  */
-public interface BranchService extends EntityService<Branch> {
+public interface BranchService extends EntityService<PoulpeBranch> {
 
     /**
-     * Get list of all persistence objects T currently present in database.
-     *
-     * @return - list of persistence objects T.
+     * @return list of all {@link PoulpeBranch} objects
      */
-    List<Branch> getAll();
-
-    /**
-     * Mark the branch as deleted.
-     * @param selectedBranch branch to delete
-     * @deprecated because there are two other delete methods
-     */
-    void deleteBranch(Branch selectedBranch);
+    List<PoulpeBranch> getAll();
 
     /**
      * Save or update branch.
+     * 
      * @param selectedBranch instance to save
-     * @throws NotUniqueException if branch with the same name already exists
      */
-    void saveBranch(Branch selectedBranch) throws NotUniqueException;
-    
-    /**
-     * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
-     * @param victim the branch to be removed
-     */
-    void deleteBranchRecursively(Branch victim);
+    void saveBranch(PoulpeBranch selectedBranch);
 
     /**
-     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim} branch.
+     * Removes all topics inside {@code victim} and then removes {@code victim} branch itself.
+     * 
+     * @param victim the branch to be removed
+     */
+    void deleteBranchRecursively(PoulpeBranch victim);
+
+    /**
+     * Moves all topics inside {@code victim} to another {@code recipient} branch and then removes {@code victim}
+     * branch.
+     * 
      * @param victim the branch to be removed
      * @param recipient the branch to take topics of {@code victim}
      */
-    void deleteBranchMovingTopics(Branch victim, Branch recipient);
-    
+    void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient);
+
     /**
-     * Checks if the branch is duplicated.
+     * Return access lists for branch.
      * 
-     * @param branch
-     *            branch to check
-     * 
+     * @param branch branch which will be returned access list
+     * @return access list
      */
-    boolean isDuplicated(Branch branch);
+    PermissionsMap<BranchPermission> getPermissionsFor(PoulpeBranch branch);
+
+    /**
+     * Change grants for branch.
+     * 
+     * @param branch branch to which grants will be changed
+     * @param changes grants for branch
+     */
+    void changeGrants(PoulpeBranch branch, PermissionChanges changes);
+
+    /**
+     * Change restriction for branch.
+     * 
+     * @param branch branch to which restriction will be changed
+     * @param changes new restriction for branch
+     */
+    void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
 }

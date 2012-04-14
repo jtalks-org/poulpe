@@ -1,0 +1,28 @@
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="editRankDialog" closable="true" border="normal" width="345px" mode="modal"
+    onCancel="@command('cancel')" onClose="@command('cancel')">
+    <grid>
+      <columns>
+        <column width="120px" />
+        <column />
+      </columns>
+      <rows>
+        <row>
+          <label value="${labels.ranks.edit.name}" />
+          <textbox id="rankName" value="@bind(vm.selected.rankName)" width="100%" />
+        </row>
+        <row>
+          <label value="${labels.ranks.edit.auto}" />
+          <checkbox checked="@bind(vm.selected.autoAssigned)" />
+        </row>
+        <row>
+          <label value="${labels.ranks.edit.post.count}" />
+          <intbox value="@bind(vm.selected.postCount)" disabled="@load(not vm.selected.autoAssigned)" />
+        </row>
+      </rows>
+    </grid>
+    <button onClick="@command('save')" label="${labels.ranks.edit.save}" sclass="ranks.editor.saveButton" />
+    <button onClick="@command('cancel')" label="${labels.ranks.edit.cancel}" sclass="ranks.editor.saveButton" />
+  </window>
+</zk>

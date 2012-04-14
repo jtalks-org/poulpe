@@ -1,0 +1,49 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+.usergroup-button {
+    border: none;
+    border-radius: 25px;
+    background: rgb(204, 204, 204);
+}
+
+.usergroup-button:hover {
+    background: rgb(204, 204, 204);
+}
+
+.manage-groups-dialog-vertical-buttons img {
+    cursor: pointer;
+}
+
+.manage-groups-dialog-vertical-buttons {
+    padding-top: 50px;
+}
+
+.redAlert {
+    color:red;
+    font-weight: bold;
+}
+
+.manage-permissions-added-group-label {
+	display: block;
+    padding: 1px 2px;
+    border: 1px solid #505050;
+    -webkit-border-radius: 3px;
+	-moz-border-radius: 3px;
+	border-radius: 3px;
+}
+
+.language-button {
+    float: right
+}

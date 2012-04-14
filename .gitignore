@@ -7,6 +7,7 @@
 .classpath
 .project
 .metadata
+.mymetadata
 
 # IntelliJ Idea project files
 .idea
@@ -27,3 +28,6 @@ logs
 # Maven release plugin files
 release.properties
 pom.xml.releaseBackup
+
+#test-output
+test-output

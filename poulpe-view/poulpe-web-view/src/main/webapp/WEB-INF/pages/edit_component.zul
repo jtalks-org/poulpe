@@ -2,7 +2,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 
 <window id="editCompWindow" title="${labels.componentedit.title}" border="normal" width="430px"
-  presenter="${componentItemPresenter}" mode="modal" visible="false" use="org.jtalks.poulpe.web.controller.component.ItemViewImpl">
+  presenter="${componentItemPresenter}" mode="modal" visible="false" use="org.jtalks.poulpe.web.controller.component.items.ZkItemView">
   <longbox id="cid" visible="false" />
   <grid>
     <columns>
@@ -25,8 +25,8 @@
       <row align="right">
         <div />
         <div>
-          <button id="saveCompButton" label="${labels.componentedit.save}" />
-          <button id="cancelButton" label="${labels.componentedit.cancel}" />
+          <button id="saveCompButton" label="${labels.componentedit.save}" sclass="edit.component.okButton" />
+          <button id="cancelButton" label="${labels.componentedit.cancel}" sclass="edit.component.cancelButton" />
         </div>
       </row>
     </rows>

@@ -16,141 +16,67 @@ package org.jtalks.poulpe.web.controller.section;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.validator.ValidationFailure;
 
 /**
+ * Interface for displaying {@link PoulpeSection} and {@link PoulpeBranch} objects
+ * 
  * @author Konstantin Akimov
- * */
-public interface SectionView {
+ * @author Alexey Grigorev
+ */
+public interface SectionView extends ValidationFailure {
 
     /**
-     * Remove specified section from view TODO the implied way to remove section
-     * from view is to find proper SectionTreeComponent and remove it from
-     * SectionView children
-     * 
-     * @param section for remove
+     * Adds a new section to view
+     * @param section to be added
      */
-    void removeSection(Section section);
+    void addSection(PoulpeSection section);
 
     /**
-     * Show the section specified in argument in view
-     * 
-     * @param section instance for show
+     * Adds a list of sections to view
+     * @param sections to be added
      */
-    void showSection(Section section);
-
+    void addSections(List<PoulpeSection> sections);
+    
     /**
-     * Show sections specified in argument in view
-     * 
-     * @param sections list for show
+     * @param section to be removed
+     * @deprecated while it's not used (there's empty implementation in ZkSectionView)
      */
-    void showSections(List<Section> sections);
+    @Deprecated
+    void removeSection(PoulpeSection section);
 
     /**
-     * Ask view to show EditSectionDialog
-     * @param name section
-     * @param description section
-     */
-    void openEditSectionDialog(String name, String description);
-
-    /**
-     * Ask view to hide EditSectionDialog
-     */
-   void closeEditSectionDialog();
-
-    /**
-     * Ask view to show NewSectionDialog
+     * Opens edit section dialog for creating a new section
      */
     void openNewSectionDialog();
 
     /**
-     * Invoking this method causes to close NewSectionDialog
+     * Opens edit section dialog for saving a  section
+     * @param section to be edited
      */
-    void closeNewSectionDialog();
+    void openEditSectionDialog(PoulpeSection section);
 
     /**
-     * Ask the view to close all dialogs
+     * Closes edit dialog
      */
-    void closeDialogs();
+    void closeEditSectionDialog();
 
     /**
-     * Show error message in the NewSectionDialog
-     * @param error description
+     * Opens edit branch dialog for creating a new branch
      */
-   void openErrorPopupInNewSectionDialog(String error);
-
-    /**
-     * Show error message in the EditSectionDialog  
-     * @param error description 
-     */
-    public void openErrorPopupInEditSectionDialog(String error);
-
-    /**
-     * Close delete dialog for section
-     */
-    void closeDeleteSectionDialog();
-
-    /**
-     * Show delete section dialog
-     * 
-     * @param victim
-     *            list of sections that might take branches of the section being
-     *            deleted
-     */
-    void openDeleteSectionDialog(Section victim);
-
-    /**
-     * open dialog for create new branch
-     * */
     void openNewBranchDialog();
 
     /**
-     * close dialog for create new branch
-     * */
-    void closeNewBranchDialog();
-
-    /**
-     * open dialog for edit selected branch
-     * @param branch for edit
-     * */
-    void openEditBranchDialog(Branch branch);
-
-    /**
-     * close dialog for edit selected branch
-     * */
-    void closeEditBranchDialog();
-
-    /**
-     * open dialog for delete branch
-     * @param branch for delete
-     * */
-    void openDeleteBranchDialog(Branch branch);
-
-    /**
-     * Check edit section dialog opened
-     * @return true if dialog open and false otherwise 
-     */
-    boolean isEditDialogOpen();
-    /**
-     * Check new section dialog opened
-     * @return true if dialog open and false otherwise 
-     */
-    boolean isNewDialogOpen();
-    /**
-     * Check edit dialog opened
-     * @return always return false
-     */
-    boolean isDeleteDialogOpen();
-    
-    /**
-     * Open the moderator dialog
+     * Opens edit branch dialog for editing a branch
      * @param branch
      */
-    void openModeratorDialog(Branch branch);
-    /**
-     * Close the moderator dialog
-     */
-    void closeModeratorDialog();    
+    void openEditBranchDialog(PoulpeBranch branch);
 
+    /**
+     * Opens moderation dialog for assigning to the branch users who will moderate it
+     * @param branch to be moderated
+     */
+    void openModerationDialog(PoulpeBranch branch);
 }

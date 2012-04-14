@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
-  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
@@ -20,24 +36,41 @@
   <!--Declaration services bean -->
   <bean id="branchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
     <constructor-arg index="0" ref="branchDao" />
-  </bean>
-  <bean id="topicBranchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
-    <constructor-arg index="0" ref="branchDao" />
+    <constructor-arg index="1" ref="branchPermissionManager" />
+    <constructor-arg index="2" ref="entityValidator" />
   </bean>
   <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao" />
+    <constructor-arg index="1" ref="branchPermissionManager" />
+    <constructor-arg index="2" ref="entityValidator" />
+    <property name="propertyLoader" ref="propertyLoader" />
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
   <bean id="topicTypeService" class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
     <constructor-arg index="0" ref="topicTypeDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
   <bean id="userService" class="org.jtalks.poulpe.service.transactional.TransactionalUserService">
     <constructor-arg index="0" ref="userDao" />
   </bean>
-
   <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
     <constructor-arg index="0" ref="groupDao" />
+    <constructor-arg index="1" ref="entityValidator" />
   </bean>
+  <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
+    <constructor-arg index="0" ref="rankDao" />
+    <constructor-arg index="1" ref="entityValidator" />
+  </bean>
+
+  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
+    <constructor-arg index="0" ref="aclManager" />
+    <constructor-arg index="1" ref="groupDao" />
+  </bean>
+    
+    <bean id="propertyLoader" class="org.jtalks.poulpe.service.PropertyLoader">
+        <property name="pathToProperties" value="org/jtalks/poulpe/service/config/" />
+    </bean>
 </beans>

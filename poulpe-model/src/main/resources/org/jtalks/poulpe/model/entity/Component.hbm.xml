@@ -1,20 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Component" table="COMPONENT">
-    <id column="CMP_ID" name="id" unsaved-value="0">
-      <generator class="native" />
-    </id>
-    
-    <property column="UUID" name="uuid" not-null="true" unique="true" />
-    <property column="NAME" name="name" not-null="true" unique="true" />
-    <property column="DESCRIPTION" name="description" />
-    
-    <property name="componentType" column="C_TYPE" unique="true">
-      <type name="org.hibernate.type.EnumType">
-        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
-      </type>
-    </property>
-  </class>
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.jtalks.common.model.entity.Component" table="COMPONENTS">
+        <cache usage="nonstrict-read-write"/>
+
+        <id column="CMP_ID" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+
+        <discriminator column="COMPONENT_TYPE"/>
+
+        <property column="UUID" name="uuid" not-null="true" unique="true"/>
+        <property column="NAME" name="name" not-null="true" unique="true"/>
+        <property column="DESCRIPTION" name="description"/>
+
+        <bag name="properties" cascade="all-delete-orphan" inverse="false" lazy="false">
+            <cache usage="nonstrict-read-write"/>
+            <key column="CMP_ID" foreign-key="FK_COMPONENT"/>
+            <one-to-many class="org.jtalks.common.model.entity.Property"/>
+        </bag>
+
+        <property name="componentType" column="C_TYPE" unique="true">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
+            </type>
+        </property>
+
+
+        <subclass name="org.jtalks.poulpe.model.entity.Jcommune" discriminator-value="JCOMMUNE">
+
+            <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
+                <cache usage="nonstrict-read-write"/>
+
+                <key column="COMPONENT_ID" foreign-key="FK_JCOMMUNE"/>
+
+                <list-index column="POSITION"/>
+                <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeSection"/>
+            </list>
+
+        </subclass>
+
+    </class>
 </hibernate-mapping>

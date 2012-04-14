@@ -14,49 +14,55 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
-import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Group;
-
 import java.util.List;
 
+import org.hibernate.Query;
+import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeGroup;
+
+import ru.javatalks.utils.general.Assert;
+
 /**
+ * Hibernate implementation of {@link GroupDao}
+ * 
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements
-        GroupDao {
+public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeGroup> implements GroupDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<Group> getAll() {
-        return getSession().createQuery("from Group").list();
+    public List<PoulpeGroup> getAll() {
+        return getSession().createQuery("from PoulpeGroup").list();
     }
-    
-    
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<PoulpeGroup> getMatchedByName(String name) {
+        Assert.throwIfNull(name, "name");
+
+        Query query = getSession().createQuery("from PoulpeGroup g where g.name like ?");
+        query.setString(0, "%" + name + "%");
+
+        return query.list();
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public boolean isGroupDuplicated(Group group) {
-        return ((Number) getSession()
-                .createQuery(
-                        "select count(*) from Group g where g.name = ? and g.id != ?")
-                .setString(0, group.getName()).setLong(1, group.getId())
-                .uniqueResult()).intValue() != 0;
-    }
-    
-    @Override
-    public List<Group> getMatchedByName(String name) {
-        if(name == null){
-            return getAll();
-        }
-        return getSession().createQuery("from Group g where g.name like ?").setString(0, "%"+name+"%").list();
+    public void delete(PoulpeGroup poulpeGroup) {
+        getSession().update(poulpeGroup);
+
+        poulpeGroup.getUsers().clear();
+        saveOrUpdate(poulpeGroup);
+        super.delete(poulpeGroup.getId());
     }
 }

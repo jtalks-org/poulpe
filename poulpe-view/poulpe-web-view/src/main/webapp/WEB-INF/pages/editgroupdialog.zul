@@ -1,19 +1,19 @@
 <?page id="GroupDialog" title="Group" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <window id="editWindow" border="normal" mode="modal" visible="false" presenter="${editGroupDialogPresenter}"
-  use="org.jtalks.poulpe.web.controller.group.EditGroupDialogViewImpl">
+  use="org.jtalks.poulpe.web.controller.group.ZkEditGroupDialogView">
   <vbox>
     <hbox>
-      Name :
+      <label value="${labels.groups.editdialog.name}" />
       <textbox id="groupName" />
     </hbox>
     <hbox>
-      Description :
+      <label value="${labels.groups.editdialog.description}" />
       <textbox id="groupDescription" />
     </hbox>
     <hbox>
-      <button id="confirmButton" />
-      <button id="rejectButton" />
+      <button id="confirmButton" sclass="edit.group.confirmButton" />
+      <button id="rejectButton" sclass="edit.group.rejectButton" />
     </hbox>
   </vbox>
 </window>

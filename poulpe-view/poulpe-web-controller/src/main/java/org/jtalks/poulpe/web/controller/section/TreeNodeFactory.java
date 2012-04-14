@@ -14,63 +14,81 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.Branch;
-import org.jtalks.poulpe.model.entity.Section;
-
 /**
- * This class should be used to wrap one-to-many related persistent entities
- * into ExtendedTreeNode structures. To be able to handle entity it should be
- * described within getTreeNode(Entity) method.
- * 
+ * This class should be used to wrap one-to-many related persistent entities into ExtendedTreeNode structures. To be
+ * able to handle entity it should be described within getTreeNode(Entity) method.
+ *
  * @author Konstantin Akimov
- * 
  */
-class TreeNodeFactory {
+public class TreeNodeFactory {
+    /**
+     * Creates the whole tree of sections and branches without root element (root is {@code null}).
+     *
+     * @param jcommune the forum structure container to get sections and branches of it
+     * @return the whole tree of sections and branches built
+     */
+    @SuppressWarnings("unchecked")
+    public static ExtendedTreeNode buildForumStructure(@Nonnull Jcommune jcommune) {
+        List<ExtendedTreeNode<PoulpeSection>> sectionNodes = getTreeNodes(jcommune.getSections());
+        return new ExtendedTreeNode(null, sectionNodes);
+    }
 
     /**
-     * Wrap single entity to DefaultTreeNode. If this entity has some related
-     * object in one-to-many relation them can be either be wrapped
-     * 
-     * @param entity
-     *            section or branch instance
+     * Wrap single entity to DefaultTreeNode. If this entity has some related object in one-to-many relation them can be
+     * either be wrapped
+     *
+     * @param entity section or branch instance
      * @return node
      */
-    // TODO: it's strange and unclear, refactoring is needed
     public static <T extends Entity> ExtendedTreeNode<T> getTreeNode(T entity) {
         if (entity == null) {
             return null;
         }
-        if (entity instanceof Section) {
-            List<T> branches = (List<T>) ((Section) entity).getBranches();
+        if (entity instanceof PoulpeSection) {
+            @SuppressWarnings("unchecked")
+            List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
             return new ExtendedTreeNode<T>(entity, getTreeNodes(branches));
-        } else if (entity instanceof Branch) {
+        } else if (entity instanceof PoulpeBranch) {
             return new ExtendedTreeNode<T>(entity);
         }
         return null;
     }
 
+
     /**
      * Wrap a List of persistent entities
-     * 
-     * @param entities
-     *            list of entities
+     *
+     * @param entities list of entities
      * @return list of nodes
      */
     public static <T extends Entity> List<ExtendedTreeNode<T>> getTreeNodes(List<T> entities) {
+        if (entities != null) {
+            return wrapInTreeNodes(entities);
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private static <T extends Entity> List<ExtendedTreeNode<T>> wrapInTreeNodes(List<T> entities) {
         List<ExtendedTreeNode<T>> list = new ArrayList<ExtendedTreeNode<T>>();
-        if (entities == null) {
-            return list;
-        }
+
         for (T entity : entities) {
-            if (entity == null) {
-                continue;
+            // TODO: can it be null?
+            if (entity != null) {
+                list.add(getTreeNode(entity));
             }
-            list.add(getTreeNode(entity));
         }
+
         return list;
     }
 }

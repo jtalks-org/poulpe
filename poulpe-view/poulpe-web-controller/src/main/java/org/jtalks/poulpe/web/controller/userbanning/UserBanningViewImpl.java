@@ -1,9 +1,20 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.User;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Components;
 import org.zkoss.zk.ui.ext.AfterCompose;
@@ -22,9 +33,11 @@ import org.zkoss.zul.ListitemRenderer;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("serial")
-public class UserBanningViewImpl extends Window implements UserBanningView,
-        AfterCompose {
+public class UserBanningViewImpl extends Window implements UserBanningView, AfterCompose {
 
     private UserBanningPresenter presenter;
     private Combobox userCombobox;
@@ -45,18 +58,18 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         Components.addForwards(this, this);
         Components.wireVariables(this, this);
         usersToBanList = new ArrayList<User>();
-        
+
         userCombobox.setItemRenderer(new ComboitemRenderer<User>() {
             @Override
-            public void render(Comboitem item, User user) throws Exception {
+            public void render(Comboitem item, User user, int index) throws Exception {
                 item.setLabel(user.getUsername());
                 item.setValue(user);
             }
         });
-        
+
         usersToBan.setItemRenderer(new ListitemRenderer<User>() {
             @Override
-            public void render(Listitem item, User user) throws Exception {
+            public void render(Listitem item, User user, int index) throws Exception {
                 Listcell cell_1 = new Listcell(user.getUsername());
                 Listcell cell_2 = new Listcell(user.getEmail());
                 Listcell cell_3 = new Listcell("NOT IMPLEMENTED YET");
@@ -72,7 +85,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
 
     @Override
     public void updateView(final List<User> users) {
-        userCombobox.setModel(new BindingListModelList(users, false));        
+        userCombobox.setModel(new BindingListModelList(users, false));
         modelUserBanning = new ListModelList<User>(usersToBanList);
         usersToBan.setModel(modelUserBanning);
         addButton.setDisabled(true);
@@ -86,20 +99,19 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         modelUserBanning.addAll(usersToBanList);
         manageButtons();
     }
-    
-    public void manageButtons(){
-        if(usersToBanList.isEmpty()){
+
+    public void manageButtons() {
+        if (usersToBanList.isEmpty()) {
             submitButton.setDisabled(true);
             resetButton.setDisabled(true);
-        }else{
+        } else {
             submitButton.setDisabled(false);
             resetButton.setDisabled(false);
         }
     }
 
     public void onClick$addButton() {
-        Object selectedInCombo = userCombobox.getModel().getElementAt(
-                userCombobox.getSelectedIndex());
+        Object selectedInCombo = userCombobox.getModel().getElementAt(userCombobox.getSelectedIndex());
         if (validateComboboxValue(selectedInCombo)) {
             usersToBanList.add((User) selectedInCombo);
             refreshView();
@@ -107,7 +119,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     }
 
     public void onClick$permanent() {
-//        banLength.setValue(null);
+        // banLength.setValue(null);
         if (permanent.isChecked()) {
             banLength.setDisabled(true);
         } else {
@@ -115,12 +127,9 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         }
     }
 
-    public void onClick$submitButton() {         
+    public void onClick$submitButton() {
         if (validateBanForm()) {
-            presenter.banBasters(usersToBanList, permanent.isChecked(),
-                    banLength.getValue(), banReason.getValue());
-        }else{
-            
+            presenter.banBasters(usersToBanList, permanent.isChecked(), banLength.getValue(), banReason.getValue());
         }
     }
 
@@ -129,14 +138,14 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
     }
 
     public void clearView() {
-        usersToBanList.clear();        
+        usersToBanList.clear();
         refreshView();
     }
 
     public void onSelect$userCombobox() {
-        if(userCombobox.getSelectedIndex() <0) return;
-        Object selectedInCombo = userCombobox.getModel().getElementAt(
-                userCombobox.getSelectedIndex());
+        if (userCombobox.getSelectedIndex() < 0)
+            return;
+        Object selectedInCombo = userCombobox.getModel().getElementAt(userCombobox.getSelectedIndex());
         if (validateComboboxValue(selectedInCombo)) {
             addButton.setDisabled(false);
         }
@@ -150,7 +159,7 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
         if (permanent.isChecked()) {
             return true;
         } else if (banLength.getValue() == null || banLength.getValue() == 0) {
-            banLength.setErrorMessage(Labels.getLabel("userbanning.validation.wrong_ban_length"))          ;  
+            banLength.setErrorMessage(Labels.getLabel("userbanning.validation.wrong_ban_length"));
             return false;
         }
         return true;
@@ -161,11 +170,11 @@ public class UserBanningViewImpl extends Window implements UserBanningView,
             return false;
         if (!(value instanceof User))
             return false;
-        if (((User) value).isPermanentBan()){
+        if (((User) value).isPermanentBan()) {
             userCombobox.setErrorMessage(Labels.getLabel("userbanning.validation.user_already_banned"));
             return false;
         }
-        if (usersToBanList.contains(value)){
+        if (usersToBanList.contains(value)) {
             userCombobox.setErrorMessage(Labels.getLabel("userbanning.validation.user_already_within_ban_list"));
             return false;
         }

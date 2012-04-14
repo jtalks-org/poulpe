@@ -14,12 +14,12 @@
  */
 package org.jtalks.poulpe.model.dao;
 
+import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+
 import java.util.List;
 import java.util.Set;
-
-import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 
 /**
  * Dao for jtalks engine {@link Component}.
@@ -27,12 +27,6 @@ import org.jtalks.poulpe.model.entity.ComponentType;
  * @author Pavel Vervenko
  */
 public interface ComponentDao extends ParentRepository<Component> {
-
-    /**
-     * The enumeration of the fields which ought to be unique in the DB for the User.
-     * @author Dmitriy Sukharev
-     */
-    public static enum ComponentDuplicateField implements DuplicatedField { NAME, TYPE }
 
     /**
      * Get the list of all components.
@@ -46,13 +40,12 @@ public interface ComponentDao extends ParentRepository<Component> {
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
-    
+
     /**
-     * Obtains the set of such fields which ought to be unique and whose uniqueness will be violated
-     * after adding {@code component} to the data source.
-     * @param component the component object
-     * @return the set of fields whose uniqueness will be violated after adding {@code component}
-     *         to the data source
+     * Gets component by it's type.
+     * 
+     * @param the component's type 
+     * @return the component
      */
-    Set<DuplicatedField> getDuplicateFieldsFor(Component component);
+    Component getByType(ComponentType type);
 }

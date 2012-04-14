@@ -1,12 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-<hibernate-mapping package="org.jtalks.poulpe.model.entity">
-  <class name="Group" table="GROUPS">
-    <id column="GROUP_ID" name="id" unsaved-value="0">
-      <generator class="native" />
-    </id>
-    <property column="UUID" name="uuid" not-null="true" unique="true" />
-    <property column="NAME" name="name" not-null="true" />
-    <property column="DESCRIPTION" name="description" />
-  </class>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+    <class name="org.jtalks.common.model.entity.Group" table="GROUPS" abstract="true">
+        <cache usage="nonstrict-read-write"/>
+
+        <id column="GROUP_ID" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+
+        <property column="UUID" name="uuid" not-null="true" unique="true"/>
+        <property column="NAME" name="name" not-null="true"/>
+        <property column="DESCRIPTION" name="description"/>
+
+        <bag name="users" table="GROUP_USER_REF" inverse="false" lazy="true" fetch="select" cascade="all">
+            <cache usage="nonstrict-read-write"/>
+            <key column="GROUP_ID" not-null="true"/>
+            <many-to-many class="org.jtalks.poulpe.model.entity.User">
+                <column name="USER_ID" not-null="true"/>
+            </many-to-many>
+        </bag>
+
+        <joined-subclass name="org.jtalks.poulpe.model.entity.PoulpeGroup" table="POULPE_GROUP">
+            <key column="GROUP_ID"/>
+            <many-to-one column="BRANCH_ID" name="branch" class="org.jtalks.poulpe.model.entity.PoulpeBranch"
+                         lazy="false"
+                         update="false" insert="false"/>
+        </joined-subclass>
+
+    </class>
+
 </hibernate-mapping>

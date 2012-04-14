@@ -1,35 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<!-- Copyright (C) 2011 JTalks.org Team This library is free software; you can redistribute it and/or modify it under the 
+  terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+  or (at your option) any later version. This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+  License for more details. You should have received a copy of the GNU Lesser General Public License along with this library; 
+  if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns:aop="http://www.springframework.org/schema/aop"
   xsi:schemaLocation="http://www.springframework.org/schema/beans
-       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-       http://www.springframework.org/schema/aop
-       http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
+    http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/aop
+    http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
   <bean id="exceptionTranslationInterceptor" class="org.springframework.dao.support.PersistenceExceptionTranslationInterceptor" />
 
-  <!--Declaration of AOP Config -->
+  <!-- Declaration of AOP Config -->
   <aop:config>
     <aop:advisor advice-ref="exceptionTranslationInterceptor" pointcut="execution(* org.jtalks.common.model.dao.ParentRepository+.* (*))" />
   </aop:config>
 
-  <!--Declaration of DAO beans -->
+  <!-- Declaration of DAO beans -->
   <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao" parent="abstractHibernateDao" />
   <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao" parent="abstractHibernateDao" />
   <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao" parent="abstractHibernateDao" />
   <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao" parent="abstractHibernateDao" />
-  <bean id="userDao" class="org.jtalks.common.model.dao.hibernate.UserHibernateDao" parent="abstractCommonsHibernateDao" />
+  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao" parent="abstractHibernateDao" />
   <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="abstractHibernateDao" />
-  
+  <bean id="rankDao" class="org.jtalks.poulpe.model.dao.hibernate.RankHibernateDao" parent="abstractHibernateDao" />
+
   <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way resolves a problem of multiple DAO beans definition -->
-  <bean id="abstractHibernateDao" class="org.jtalks.poulpe.model.dao.hibernate.AbstractHibernateDao" abstract="true">
+  <bean id="abstractHibernateDao" abstract="true">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
 
-  <bean id="abstractCommonsHibernateDao" class="org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository"
-    abstract="true">
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
+  <import resource="validation-context.xml" />
 
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
@@ -38,7 +58,7 @@
     <property name="username" value="${jdbc.username:root}" />
     <property name="password" value="${jdbc.password:root}" />
   </bean>
-  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+  <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean" depends-on="flyway_poulpe">
     <property name="dataSource" ref="dataSource" />
     <property name="mappingResources">
       <list>
@@ -47,7 +67,9 @@
         <value>/org/jtalks/poulpe/model/entity/TopicType.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Group.hbm.xml</value>
-        <value>/org/jtalks/common/model/entity/User.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/Rank.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/User.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/Property.hbm.xml</value>
       </list>
     </property>
     <property name="hibernateProperties">
@@ -61,15 +83,47 @@
         <prop key="hibernate.connection.release_mode">auto</prop>
         <prop key="hibernate.cache.use_query_cache">${hibernate.use_query_cache}</prop>
         <prop key="hibernate.cache.use_second_level_cache">${hibernate.use_second_level_cache}</prop>
+        <prop key="hibernate.cache.region.factory_class">net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory</prop>
+        <prop key="net.sf.ehcache.configurationResourceName">/org/jtalks/poulpe/model/entity/ehcache.xml</prop>
+        <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
       </props>
     </property>
   </bean>
-  
+
   <bean id="transactionManager" class="org.springframework.orm.hibernate3.HibernateTransactionManager">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
-  
+
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
     <property name="location" value="classpath:/org/jtalks/poulpe/model/datasource.properties" />
+  </bean>
+
+  <!-- Migrations, todo: 4 beans - that's weird, Ticket has been left for common to move init to one method -->
+
+  <bean id="flyway_common_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit" depends-on="dataSource">
+    <property name="dataSource" ref="dataSource" />
+    <property name="basePackage" value="org.jtalks.common.migrations" />
+    <property name="baseDir" value="/org/jtalks/common/migrations" />
+    <property name="table" value="common_schema_version" />
+    <property name="enabled" value="${migrations_enabled}" />
+  </bean>
+  <bean id="flyway_common" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate" depends-on="flyway_common_init">
+    <property name="dataSource" ref="dataSource" />
+    <property name="basePackage" value="org.jtalks.common.migrations" />
+    <property name="baseDir" value="/org/jtalks/common/migrations" />
+    <property name="table" value="common_schema_version" />
+    <property name="enabled" value="${migrations_enabled}" />
+  </bean>
+  <bean id="flyway_poulpe_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit" depends-on="flyway_common">
+    <property name="dataSource" ref="dataSource" />
+    <property name="table" value="poulpe_schema_version" />
+    <property name="enabled" value="${migrations_enabled}" />
+  </bean>
+  <bean id="flyway_poulpe" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate" depends-on="flyway_poulpe_init">
+    <property name="dataSource" ref="dataSource" />
+    <property name="basePackage" value="org.jtalks.poulpe.migrations" />
+    <property name="baseDir" value="/org/jtalks/poulpe/migrations" />
+    <property name="table" value="poulpe_schema_version" />
+    <property name="enabled" value="${migrations_enabled}" />
   </bean>
 </beans>

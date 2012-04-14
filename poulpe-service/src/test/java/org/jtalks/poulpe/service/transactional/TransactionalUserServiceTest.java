@@ -20,8 +20,8 @@ import static org.testng.AssertJUnit.assertEquals;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import org.jtalks.common.model.dao.UserDao;
-import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -56,15 +56,50 @@ public class TransactionalUserServiceTest {
         users.add(getUser("jack"));
     }
 
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetPermanentBanStatusUsersNull() {
         userService.setPermanentBanStatus(null, true, BAN_REASON);
     }
 
-    @Test(expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetTemporaryBanStatusUsersNull() {
         userService.setTemporaryBanStatus(null, 1, BAN_REASON);
     }
+
+    @Test
+    public void testGetAll() {
+        userService.getAll();
+
+        verify(userDao).getAllPoulpeUsers();
+    }
+
+    @Test
+    public void testGetUsersByUsernameWord() {
+        String word = "word";
+
+        userService.getUsersByUsernameWord(word);
+
+        verify(userDao).getPoulpeUserByUsernamePart(word);
+    }
+    
+    @Test
+    public void testUpdateUser() {
+        User user = new User("username", "email", "password", "salt");
+        
+        userService.updateUser(user);
+        
+        verify(userDao).update(user);
+    }
+    
+    /*@Test
+    public void testUpdateLastLoginTime() {
+        User user = mock(User.class);
+        
+        userService.updateLastLoginTime(user);
+        
+        verify(user).updateLastLoginTime();
+        verify(userDao).update(user);
+    }*/
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testSetTemporaryBanStatusIllegalArgument() {
@@ -98,18 +133,27 @@ public class TransactionalUserServiceTest {
             verify(userDao).saveOrUpdate(user);
         }
     }
+    
+    @Test
+    public void testGetAllBannedUsers() {
+        User user = new User("username", "email", "password", "salt");
+        ArrayList<User> bannedUsers = new ArrayList<User>();
+        bannedUsers.add(user);
+        userService.setTemporaryBanStatus(bannedUsers, 5, BAN_REASON);
+        
+        userService.getAllBannedUsers();
+        verify(userDao).getAllBannedUsers();
+    }
 
     /**
      * Creates and return the {@link User} entity with default username, email
      * and password, etc.
      * 
-     * @param username
-     *            username
+     * @param username username
      * @return the user entity
      */
     private User getUser(String username) {
-        User user = new User(username, EMAIL, PASSWORD);
-        return user;
+        return new User(username, EMAIL, PASSWORD, "salt");
     }
 
 }

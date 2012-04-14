@@ -14,19 +14,12 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-
-import java.util.Arrays;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -35,97 +28,148 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
 /**
- *
+ * The test for the {@code ComponentHibernateDao} implementation.
+ * 
  * @author Pavel Vervenko
+ * @author Alexey Grigorev
+ * @author Guram Savinov
  */
-@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
+@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Autowired
     private SessionFactory sessionFactory;
-    @Autowired
-    private ComponentDao dao;
+
+    private ComponentHibernateDao dao;
     private Session session;
+
+    private Jcommune forum;
 
     @BeforeMethod
     public void setUp() throws Exception {
+        dao = new ComponentHibernateDao();
+        dao.setSessionFactory(sessionFactory);
+
         session = sessionFactory.getCurrentSession();
+        forum = createForum();
+    }
+
+    @Test
+    public void testSave() {
+        dao.saveOrUpdate(forum);
+        assertNotSame(forum.getId(), 0, "Id not created");
+        Component actual = ObjectRetriever.retrieveUpdated(forum, session);
+        assertReflectionEquals(forum, actual);
+    }
+
+    @Test
+    public void testGet() {
+        session.save(forum);
+        Component actual = dao.get(forum.getId());
+        assertReflectionEquals(forum, actual);
+    }
+
+    @Test
+    public void testUpdate() {
+        String newName = "new Jcommune name";
+
+        session.save(forum);
+        forum.setName(newName);
+        dao.saveOrUpdate(forum);
+
+        String actual = ObjectRetriever.retrieveUpdated(forum, session)
+                .getName();
+        assertEquals(actual, newName);
     }
 
     @Test
     public void testGetAll() {
-        Component cmp1 = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        session.save(cmp1);
-        Component cmp2 = ObjectsFactory.createComponent(ComponentType.FORUM);
-        session.save(cmp2);
+        givenTwoComponents();
 
         List<Component> cList = dao.getAll();
 
         assertEquals(cList.size(), 2);
     }
 
+    private void givenTwoComponents() {
+        givenForum();
+        givenArticle();
+    }
+
+    private void givenForum() {
+        forum = createForum();
+        session.save(forum);
+    }
+
+    private void givenArticle() {
+        session.save(createArticle());
+    }
+
+    private Jcommune createForum() {
+        return ObjectsFactory.createJcommune(10);
+    }
+
+    private Component createArticle() {
+        return ObjectsFactory.createComponent(ComponentType.ARTICLE);
+    }
+
     @Test
     public void testGetAvailableTypes() {
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
 
-        assertEquals(availableTypes.size(), ComponentType.values().length);
-        assertTrue(availableTypes.containsAll(Arrays.asList(ComponentType.values())));
+        assertAllTypesAvailable(availableTypes);
+    }
+
+    private void assertAllTypesAvailable(Set<ComponentType> availableTypes) {
+        List<ComponentType> allActualTypes = Arrays.asList(ComponentType.values());
+        assertEquals(availableTypes.size(), allActualTypes.size());
+        assertTrue(availableTypes.containsAll(allActualTypes));
     }
 
     @Test
     public void testGetAvailableTypesAfterInsert() {
-        ComponentType usedType = ComponentType.FORUM;
-        session.save(ObjectsFactory.createComponent(usedType));
+        givenForum();
+
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
 
-        assertFalse(availableTypes.contains(usedType));
+        assertForumUnavailable(availableTypes);
+    }
+
+    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
+        assertFalse(availableTypes.contains(forum.getComponentType()));
     }
 
     @Test
-    public void getDuplicateNameTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
-    }
-    
-    @Test
-    public void getDuplicateNameWithNullTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(null);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+    public void testSectionPositions() {
+        for (int i = 0; i < 5; i++) {
+            List<PoulpeSection> expected = forum.getSections();
+            Collections.shuffle(expected);
+
+            dao.saveOrUpdate(forum);
+
+            forum = ObjectRetriever.retrieveUpdated(forum, session);
+            List<PoulpeSection> actual = forum.getSections();
+
+            assertEquals(actual, expected);
+        }
     }
 
     @Test
-    public void getDuplicateComponentTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setComponentType(component.getComponentType());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 1);
+    public void testGetForum() {
+    	givenTwoComponents();
+    	Component actual = dao.getByType(ComponentType.FORUM);
+    	assertReflectionEquals(forum, actual);
     }
 
-    @Test
-    public void getDuplicateLoginAndComponentTypeTest() {
-        Component component = ObjectsFactory.createComponent(ComponentType.FORUM);
-        dao.saveOrUpdate(component);
-        
-        Component dude = ObjectsFactory.createComponent(ComponentType.ARTICLE);
-        assertEquals(dao.getDuplicateFieldsFor(dude), null);
-        dude.setName(component.getName());
-        dude.setComponentType(component.getComponentType());
-        assertEquals(dao.getDuplicateFieldsFor(dude).size(), 2);        
-    }
 }
