@@ -39,18 +39,19 @@
       <grid model="@load(userBanningVm.bannedUsers)" hflex="1">
         <columns>
           <column label="${labels.userbanning.username}" />
+          <column label="${labels.userbanning.firstname} - ${labels.userbanning.lastname}" />
           <column label="${labels.userbanning.email}" />
-          <column label="${labels.userbanning.posts}" />
-          <column label="${labels.userbanning.registrationDate}" />
           <column label="${labels.userbanning.managing}" />
         </columns>
         <template name="model" var="user">
           <row onDoubleClick="@command('editBan', user=user)">
             <label value="@load(user.username)" />
+            <hbox>
+              <label value="@load(user.firstName)" />
+              <label value="@load(user.lastName)" />
+            </hbox>
             <label value="@load(user.email)" />
-            <label value="NOT IMPLEMENTED YET" />
-            <label value="NOT IMPLEMENTED YET" />
-            <hbox width="auto">
+            <hbox>
               <button label="${labels.userbanning.edit}" onClick="@command('editBan', user=user)" />
               <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', user=user)" />
             </hbox>
