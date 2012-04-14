@@ -16,20 +16,16 @@
     <window id="editSectionDialog"
             title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
-            onCancel="self.visible=false;event.stopPropagation();"
-            visible="@load(vm.showCreateSectionDialog)" height="200px" width="300px">
+            onCancel="self.visible=false"
+            visible="@load(vm.showCreateSectionDialog)" height="230px" width="300px">
       <vlayout form="@id('fx') @save(vm.selectedSection, before='saveSection')
                      @load(vm.selectedSection)">
-        <cell>
-          ${labels.forum_structure.create_section_dialog.section_name}
-          <textbox id="sectionNameText" value="@bind(fx.name) @validator('beanValidator')"/>
-          <label value="@load(vmsgs[sectionNameText])" sclass="red"/>
-        </cell>
-        <cell height="50%">
-          ${labels.forum_structure.create_section_dialog.section_description}
-          <textbox id="sectionDescriptionText" value="@bind(fx.description) @validator('beanValidator')"/>
-          <label value="@load(vmsgs[sectionDescriptionText])" sclass="red"/>
-        </cell>
+        ${labels.forum_structure.create_section_dialog.section_name}
+        <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
+                 errorMessage="@load(vmsgs[sectionNameBox])"/>
+        ${labels.forum_structure.create_section_dialog.section_description}
+        <textbox rows="5" id="sectionDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
+                 errorMessage="@load(vmsgs[sectionDescriptionText])" width="97%"/>
         <cell>
           <button label="${labels.dialogs.save_button}" onClick="@command('saveSection')"/>
           <button label="${labels.dialogs.cancel_button}" onClick="editSectionDialog.visible=false;"/>

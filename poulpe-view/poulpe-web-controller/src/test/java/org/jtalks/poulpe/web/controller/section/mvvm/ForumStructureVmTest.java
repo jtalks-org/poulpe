@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.web.controller.section.mvvm;
 
 import org.jtalks.common.model.entity.ComponentType;
@@ -12,9 +26,9 @@ import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.TreeNode;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
@@ -27,6 +41,36 @@ public class ForumStructureVmTest {
     public void setUp() throws Exception {
         componentService = mock(ComponentService.class);
         vm = new ForumStructureVm(componentService);
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testSave(Jcommune jcommune) throws Exception {
+        PoulpeSection selectedSection = new PoulpeSection("section", "description");
+        when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
+        vm.initForumStructure();
+        vm.setSelectedSection(selectedSection);
+        vm.saveSection();
+
+        verify(componentService).saveComponent(jcommune);
+        assertNull(vm.getSelectedSection());
+        jcommune.getSections().contains(selectedSection);
+    }
+
+    @Test
+    public void testShowNewSectionDialog_creatingNewSection() throws Exception {
+        vm.showNewSectionDialog();
+        assertNull(vm.getSelectedSection().getName(), null);
+        assertEquals(vm.getSelectedSection().getId(), 0);
+        assertTrue(vm.isShowCreateSectionDialog());
+    }
+
+    @Test
+    public void testShowNewSectionDialog_creatingNewSectionAfterEditingCanceled() throws Exception {
+        vm.setSelectedSection(new PoulpeSection("some name", "some description"));
+        vm.showNewSectionDialog();
+        assertNull(vm.getSelectedSection().getName(), null);
+        assertEquals(vm.getSelectedSection().getId(), 0);
+        assertTrue(vm.isShowCreateSectionDialog());
     }
 
     @Test(dataProvider = "provideRandomJcommuneWithSections")
