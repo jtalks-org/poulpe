@@ -62,13 +62,23 @@
 
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
-    <window visible="@load(userBanningVm.editBanWindowOpened)">
-      <!-- 
-        we must have:
-        * permanent ban flag
-        * ban length(days)
-        * ban reason text
-       -->
+    <window visible="@load(userBanningVm.editBanWindowOpened)" title="${labels.userbanning.title}" width="500px"
+        border="normal" mode="popup" position="center">
+      <!-- here can goes zk bindings to 'userBanningVm.selectedUser' -->
+      <!-- next textbox only for demonstration, can be safely removed -->
+      <textbox multiline="true" width="100%" height="100px">
+        <attribute name="value">
+          we must have:
+          * username label ?
+          * permanent ban flag
+          * ban length(days)
+          * ban reason text
+        </attribute>
+      </textbox>
+      <hbox align="center" pack="center" width="100%">
+        <button onClick="@command('saveBanProperties')" label="${labels.window.save}" width="100px" />
+        <button onClick="@command('closeEditBanWindow')" label="${labels.window.cancel}" width="100px" />
+      </hbox>
     </window>
 
   </window>
