@@ -19,7 +19,7 @@
             onCancel="self.visible=false;event.stopPropagation();"
             visible="@load(vm.showCreateSectionDialog)" height="200px" width="300px">
       <vlayout form="@id('fx') @save(vm.selectedSection, before='saveSection')
-                     @load(vm.selectedSection) @validator('beanValidator')">
+                     @load(vm.selectedSection)">
         <cell>
           ${labels.forum_structure.create_section_dialog.section_name}
           <textbox id="sectionNameText" value="@bind(fx.name) @validator('beanValidator')"/>
