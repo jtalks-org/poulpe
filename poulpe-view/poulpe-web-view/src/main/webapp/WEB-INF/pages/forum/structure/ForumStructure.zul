@@ -6,13 +6,18 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', show=true)"/>
-    <tree model="@bind(vm.sections)">
-      <treechildren>
-        <template name="model" var="section">
-          <treeitem label="@load(section.name)"/>
-        </template>
-      </treechildren>
+    <tree model="@bind(vm.sections)"  context="treeContextMenu">
+        <treechildren>
+          <template name="model" var="section">
+            <treeitem label="@load(section.name)" />
+          </template>
+        </treechildren>
     </tree>
+    <menupopup id="treeContextMenu">
+      <menuitem label="Edit"/>
+      <menuitem label="Delete"/>
+      <menuitem label="Permissions" visible="@load(vm.branchSelected)"/>
+    </menupopup>
     <window id="editSectionDialog"
             title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"

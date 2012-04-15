@@ -111,6 +111,17 @@ public class ForumStructureVm {
     }
 
     /**
+     * Defines whether the selected item is branch at the moment. Is needed for instance to decide whether to shown some
+     * context menu items or not.
+     *
+     * @return {@code true} if the selected item is branch, {@code false} if nothing is selected or the selected items
+     *         is a section
+     */
+    public boolean isBranchSelected() {
+        return false;
+    }
+
+    /**
      * Let's ZK binder know what section the edit section dialog should work with. It's changed by {@link
      * #setSelectedSection(PoulpeSection)} or it's a newly created section if the one is being created (see {@link
      * #showNewSectionDialog()} for more details).
