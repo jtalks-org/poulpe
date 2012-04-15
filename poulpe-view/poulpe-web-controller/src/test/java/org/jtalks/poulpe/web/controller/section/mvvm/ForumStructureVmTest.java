@@ -22,6 +22,7 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeModel;
 import org.zkoss.zul.TreeNode;
 
@@ -48,29 +49,29 @@ public class ForumStructureVmTest {
         PoulpeSection selectedSection = new PoulpeSection("section", "description");
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
         vm.initForumStructure();
-        vm.setSelectedSection(selectedSection);
+        vm.setSelectedNode(new DefaultTreeNode<PoulpeSection>(selectedSection));
         vm.saveSection();
 
         verify(componentService).saveComponent(jcommune);
-        assertNull(vm.getSelectedSection());
+        assertNull(vm.getSelectedItem().getItem());
         jcommune.getSections().contains(selectedSection);
     }
 
     @Test
     public void testShowNewSectionDialog_creatingNewSection() throws Exception {
         vm.showNewSectionDialog();
-        assertNull(vm.getSelectedSection().getName(), null);
-        assertEquals(vm.getSelectedSection().getId(), 0);
-        assertTrue(vm.isShowCreateSectionDialog());
+        assertNull(vm.getSelectedItem().getItem(PoulpeSection.class).getName(), null);
+        assertEquals(vm.getSelectedItem().getItem(PoulpeSection.class).getId(), 0);
+        assertTrue(vm.isShowCreateSectionDialogAndSetFalse());
     }
 
     @Test
     public void testShowNewSectionDialog_creatingNewSectionAfterEditingCanceled() throws Exception {
-        vm.setSelectedSection(new PoulpeSection("some name", "some description"));
+        vm.setSelectedNode(new DefaultTreeNode<PoulpeSection>(new PoulpeSection("some name", "some description")));
         vm.showNewSectionDialog();
-        assertNull(vm.getSelectedSection().getName(), null);
-        assertEquals(vm.getSelectedSection().getId(), 0);
-        assertTrue(vm.isShowCreateSectionDialog());
+        assertNull(vm.getSelectedItem().getItem(PoulpeSection.class).getName(), null);
+        assertEquals(vm.getSelectedItem().getItem().getId(), 0);
+        assertTrue(vm.isShowCreateSectionDialogAndSetFalse());
     }
 
     @Test(dataProvider = "provideRandomJcommuneWithSections")

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section.mvvm;
 
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -24,6 +25,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
+import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeModel;
 
 import javax.validation.constraints.NotNull;
@@ -48,11 +50,11 @@ public class ForumStructureVm {
 
     /**
      * First of all decides whether to show a dialog for creation of the entity or for editing by looking at {@link
-     * #getSelectedSection()} and then changes the flag {@link #isShowCreateSectionDialog()} in order to open the
+     * #getSelectedItem} and then changes the flag {@link #isShowCreateSectionDialogAndSetFalse} in order to open the
      * editing dialog.
      */
     @Command
-    @NotifyChange({"showCreateSectionDialog", "selectedSection"})
+    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem"})
     public void showNewSectionDialog() {
         showCreateSectionDialog = true;
         if (isCreatingNewItem()) {
@@ -67,7 +69,7 @@ public class ForumStructureVm {
      * editing dialog.
      */
     @Command
-    @NotifyChange({"showCreateBranchDialog", "selectedBranch"})
+    @NotifyChange({"showCreateBranchDialog", "selectedItem"})
     public void showNewBranchDialog() {
         showCreateBranchDialog = true;
         if (isCreatingNewItem()) {
@@ -86,7 +88,7 @@ public class ForumStructureVm {
     }
 
     /**
-     * Saves the {@link #getSelectedSection()} to the database, adds it as the last one to the list of sections and
+     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and
      * cleans the selected section. Also makes the create section dialog to be closed.
      */
     @Command
@@ -124,8 +126,10 @@ public class ForumStructureVm {
      *
      * @return {@code true} if the dialog should be shown to the user
      */
-    public boolean isShowCreateSectionDialog() {
-        return showCreateSectionDialog;
+    public boolean isShowCreateSectionDialogAndSetFalse() {
+        boolean result = showCreateSectionDialog;
+        showCreateSectionDialog = false;
+        return result;
     }
     
     /**
@@ -152,22 +156,26 @@ public class ForumStructureVm {
 
     /**
      * Let's ZK binder know what section the edit section dialog should work with. It's changed by {@link
-     * #setSelectedSection(PoulpeSection)} or it's a newly created section if the one is being created (see {@link
+     * #setSelectedItem} or it's a newly created section if the one is being created (see {@link
      * #showNewSectionDialog()} for more details).
      *
      * @return currently selected (or newly created) section to be filled by edit section dialog
      */
-    public PoulpeSection getSelectedSection() {
-        return selectedItem.getItem(PoulpeSection.class);
+    public ForumStructureItem getSelectedItem() {
+        return selectedItem;
+    }
+
+    public void setSelectedItem(Entity selectedItem){
+        this.selectedItem.setItem(selectedItem);
     }
 
     /**
      * Is used by ZK binder to inject the section that is currently selected.
      *
-     * @param selectedSection the section that is currently selected
+     * @param selectedNode the section that is currently selected
      */
-    public void setSelectedSection(PoulpeSection selectedSection) {
-        this.selectedItem.setItem(selectedSection);
+    public void setSelectedNode(DefaultTreeNode selectedNode) {
+        this.selectedItem.setItem((Entity) selectedNode.getData());
     }
 
     private Jcommune getJcommune() {

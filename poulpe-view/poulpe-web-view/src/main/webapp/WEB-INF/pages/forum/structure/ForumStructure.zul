@@ -4,11 +4,9 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
-    <button label="${labels.forum_structure.create_section_button}"
-            onClick="@command('showNewSectionDialog', show=true)"/>
-    <button label="${labels.forum_structure.create_branch_button}"
-            onClick="@command('showNewBranchDialog', show=true)"/>
-    <tree model="@bind(vm.sections)"  context="treeContextMenu">
+    <button label="${labels.forum_structure.create_section_button}" onClick="@command('showNewSectionDialog')"/>
+    <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog')"/>
+    <tree model="@bind(vm.sections)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
         <treechildren>
           <template name="model" var="section">
             <treeitem label="@load(section.name)" />
@@ -28,9 +26,9 @@
             title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
-            visible="@load(vm.showCreateSectionDialog)" height="230px" width="300px">
-      <vlayout form="@id('fx') @save(vm.selectedSection, before='saveSection')
-                     @load(vm.selectedSection)">
+            visible="@load(vm.showCreateSectionDialogAndSetFalse)" height="230px" width="300px">
+      <vlayout form="@id('fx') @save(vm.selectedItem, before='saveSection')
+                     @load(vm.selectedItem.item)">
         ${labels.forum_structure.create_section_dialog.section_name}
         <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
                  errorMessage="@load(vmsgs[sectionNameBox])"/>

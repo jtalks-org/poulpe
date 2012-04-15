@@ -22,7 +22,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.zkoss.zul.TreeNode;
+import org.zkoss.zul.DefaultTreeNode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +44,7 @@ public class TreeNodeFactoryTest {
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
     public void testBuildForumStructure(Jcommune jcommune) throws Exception {
-        ExtendedTreeNode root = TreeNodeFactory.buildForumStructure(jcommune);
+        DefaultTreeNode root = TreeNodeFactory.buildForumStructure(jcommune);
         assertEquals(root.getChildCount(), 2);
         assertSame(root.getChildAt(0).getChildAt(0).getData(), jcommune.getSections().get(0).getBranches().get(0));
         assertSame(root.getChildAt(1).getChildAt(1).getData(), jcommune.getSections().get(1).getBranches().get(1));
@@ -52,32 +52,30 @@ public class TreeNodeFactoryTest {
 
     @Test
     public void getTreeNodeEmptySection() {
-        ExtendedTreeNode<PoulpeSection> testNode = TreeNodeFactory.getTreeNode(emptySection);
+        DefaultTreeNode<PoulpeSection> testNode = TreeNodeFactory.getTreeNode(emptySection);
 
         assertEquals(testNode.getData(), emptySection);
         assertTrue(testNode.getChildren().isEmpty());
-        assertTrue(testNode.isExpanded());
     }
 
     @Test
     public void getTreeNodeBranch() {
-        ExtendedTreeNode<PoulpeBranch> testNode = TreeNodeFactory.getTreeNode(branch);
+        DefaultTreeNode<PoulpeBranch> testNode = TreeNodeFactory.getTreeNode(branch);
 
         assertEquals(testNode.getData(), branch);
         assertNull(testNode.getChildren());
-        assertTrue(testNode.isExpanded());
         assertTrue(testNode.isLeaf());
     }
 
     @Test
     public void getTreeNodeNull() {
-        ExtendedTreeNode<?> testNode = TreeNodeFactory.getTreeNode((Entity) null);
+        DefaultTreeNode<?> testNode = TreeNodeFactory.getTreeNode((Entity) null);
         assertNull(testNode);
     }
 
     @Test
     public void getTreeNodeNotSuitableEntity() {
-        ExtendedTreeNode<?> testNode = TreeNodeFactory.getTreeNode(new TopicType());
+        DefaultTreeNode<?> testNode = TreeNodeFactory.getTreeNode(new TopicType());
         assertNull(testNode);
     }
 
@@ -86,28 +84,23 @@ public class TreeNodeFactoryTest {
      */
     @Test
     public void getTreeNodeWithRelationsTest() {
-        ExtendedTreeNode<?> testNode = TreeNodeFactory.getTreeNode(section);
+        DefaultTreeNode<?> testNode = TreeNodeFactory.getTreeNode(section);
 
         assertEquals(testNode.getData(), section);
         assertEquals(testNode.getChildren().size(), section.getPoulpeBranches().size());
-        assertTrue(testNode.isExpanded());
-
-        assertNotNull(testNode.getChildAt(0));
-
-        assertTrue(testNode.getChildAt(0).getData() instanceof PoulpeBranch);
         assertEquals(testNode.getChildAt(0).getData(), section.getPoulpeBranches().get(0));
     }
 
     @Test
     public void getTreeNodesTest() {
-        List<ExtendedTreeNode<PoulpeSection>> nodes = TreeNodeFactory.getTreeNodes(sections);
+        List<DefaultTreeNode<PoulpeSection>> nodes = TreeNodeFactory.getTreeNodes(sections);
 
         assertEquals(nodes.size(), sections.size());
         assertSectionsContainsAllBranches(nodes);
     }
 
-    private void assertSectionsContainsAllBranches(List<ExtendedTreeNode<PoulpeSection>> nodes) {
-        for (ExtendedTreeNode<PoulpeSection> node : nodes) {
+    private void assertSectionsContainsAllBranches(List<DefaultTreeNode<PoulpeSection>> nodes) {
+        for (DefaultTreeNode<PoulpeSection> node : nodes) {
             List<Branch> childBranches = node.getData().getBranches();
             assertEquals(node.getChildCount(), childBranches.size());
             assertChildrenAreLeafs(node);
@@ -115,9 +108,9 @@ public class TreeNodeFactoryTest {
     }
 
     @SuppressWarnings("unchecked")
-    private void assertChildrenAreLeafs(ExtendedTreeNode<PoulpeSection> node) {
+    private void assertChildrenAreLeafs(DefaultTreeNode<PoulpeSection> node) {
         for (Object obj : node.getChildren()) {
-            ExtendedTreeNode<PoulpeBranch> subnode = (ExtendedTreeNode<PoulpeBranch>) obj;
+            DefaultTreeNode<PoulpeBranch> subnode = (DefaultTreeNode<PoulpeBranch>) obj;
             assertTrue(subnode.isLeaf());
         }
     }
@@ -125,7 +118,7 @@ public class TreeNodeFactoryTest {
     @Test
     public void getTreeNodesWithNullsTest() {
         List<PoulpeSection> sections = Arrays.asList(section, null, section, null);
-        List<ExtendedTreeNode<PoulpeSection>> nodes = TreeNodeFactory.getTreeNodes(sections);
+        List<DefaultTreeNode<PoulpeSection>> nodes = TreeNodeFactory.getTreeNodes(sections);
 
         assertEquals(nodes.size(), 2);
         assertSectionsContainsAllBranches(nodes);
