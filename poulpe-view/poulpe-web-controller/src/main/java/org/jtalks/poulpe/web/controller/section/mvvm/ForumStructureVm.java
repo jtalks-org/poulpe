@@ -35,9 +35,9 @@ import javax.validation.constraints.NotNull;
  */
 public class ForumStructureVm {
     private final ComponentService componentService;
+    private final ForumStructureItem selectedItem = new ForumStructureItem();
     private Jcommune jcommune;
     private boolean showCreateSectionDialog;
-    private PoulpeSection selectedSection;
 
     public ForumStructureVm(@NotNull ComponentService componentService) {
         this.componentService = componentService;
@@ -53,7 +53,7 @@ public class ForumStructureVm {
     public void showNewSectionDialog() {
         showCreateSectionDialog = true;
         if (isCreatingNewSection()) {
-            selectedSection = new PoulpeSection();
+            selectedItem.setItem(new PoulpeSection());
         }
     }
 
@@ -64,7 +64,7 @@ public class ForumStructureVm {
      * @return {@code true} if there are no existing sections being selected for editing
      */
     private boolean isCreatingNewSection() {
-        return selectedSection == null || selectedSection.getId() == 0;
+        return !selectedItem.isPersisted();
     }
 
     /**
@@ -74,9 +74,9 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({"sections", "showCreateSectionDialog", "selectedSection"})
     public void saveSection() {
-        jcommune.addSection(selectedSection);
+        jcommune.addSection(selectedItem.getItem(PoulpeSection.class));
         componentService.saveComponent(jcommune);
-        selectedSection = null;
+        selectedItem.clearState();
         showCreateSectionDialog = false;
     }
 
@@ -129,7 +129,7 @@ public class ForumStructureVm {
      * @return currently selected (or newly created) section to be filled by edit section dialog
      */
     public PoulpeSection getSelectedSection() {
-        return selectedSection;
+        return selectedItem.getItem(PoulpeSection.class);
     }
 
     /**
@@ -138,7 +138,7 @@ public class ForumStructureVm {
      * @param selectedSection the section that is currently selected
      */
     public void setSelectedSection(PoulpeSection selectedSection) {
-        this.selectedSection = selectedSection;
+        this.selectedItem.setItem(selectedSection);
     }
 
     private Jcommune getJcommune() {
