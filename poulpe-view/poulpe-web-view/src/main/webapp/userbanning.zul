@@ -64,17 +64,18 @@
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
     <window visible="@load(userBanningVm.editBanWindowOpened)" title="${labels.userbanning.title}" width="500px"
         border="normal" mode="popup" position="center">
-      <!-- here can goes zk bindings to 'userBanningVm.selectedUser' -->
-      <!-- next textbox only for demonstration, can be safely removed -->
-      <textbox multiline="true" width="100%" height="100px">
-        <attribute name="value">
-          we must have:
-          * username label ?
-          * permanent ban flag
-          * ban length(days)
-          * ban reason text
-        </attribute>
-      </textbox>
+       <groupbox visible="@load(not empty userBanningVm.selectedUser)" hflex="true" mold="3d" height="100%">
+       <vlayout>
+       <checkbox id="permanent" value="@bind(userBanningVm.selectedUser.permanentBan)" label="${labels.userbanning.permanentBan}"  />
+       
+       ${labels.userbanning.banPeriod}
+      <intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1" />
+      
+       ${labels.userbanning.banReason}
+      <textbox id="banReason" value="@bind(userBanningVm.selectedUser.banReason)" rows="6" width="370px" />
+     
+       </vlayout>
+     </groupbox>
       <hbox align="center" pack="center" width="100%">
         <button onClick="@command('saveBanProperties')" label="${labels.window.save}" width="100px" />
         <button onClick="@command('closeEditBanWindow')" label="${labels.window.cancel}" width="100px" />

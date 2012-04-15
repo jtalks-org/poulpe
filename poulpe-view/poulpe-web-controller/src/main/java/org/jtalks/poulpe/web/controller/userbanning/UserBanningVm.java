@@ -167,7 +167,7 @@ public class UserBanningVm {
         Validate.notNull(selectedUser, "To provide save action for user, user must be already selected");
 
         userService.updateUser(selectedUser);
-        editBanWindowOpened = false;
+        closeEditBanWindow();
     }
 
     /**
@@ -177,5 +177,6 @@ public class UserBanningVm {
     @NotifyChange({ "editBanWindowOpened" })
     public void closeEditBanWindow() {
         editBanWindowOpened = false;
+        selectedUser = null;
     }
 }
