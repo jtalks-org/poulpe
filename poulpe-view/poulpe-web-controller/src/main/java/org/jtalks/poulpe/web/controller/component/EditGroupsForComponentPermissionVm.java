@@ -25,11 +25,11 @@ import javax.annotation.Nonnull;
 
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -44,7 +44,7 @@ import org.zkoss.bind.annotation.NotifyChange;
  * 
  * @author Vyacheslav Zhivaev
  */
-public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<PoulpeGroup> {
+public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<Group> {
 
     public static final String GROUPS_PERMISSIONS_ZUL = "groups/GroupsPermissions.zul";
 
@@ -89,7 +89,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
     public void filterAvail() {
         @SuppressWarnings("unchecked")
-        List<PoulpeGroup> notAddedGroups = ListUtils.subtract(groupService.getAll(), stateAfterEdit);
+        List<Group> notAddedGroups = ListUtils.subtract(groupService.getAll(), stateAfterEdit);
         avail.clear();
         avail.addAll(filterGroups(notAddedGroups, getAvailFilterTxt()));
     }
@@ -118,7 +118,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      */
     @Command
     public void save() {
-        List<PoulpeGroup> alreadyAddedGroups = getAlreadyAddedGroups();
+        List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
         @SuppressWarnings("unchecked")
         PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
@@ -161,7 +161,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      * 
      * @return list of groups already added for current {@link Component}
      */
-    private List<PoulpeGroup> getAlreadyAddedGroups() {
+    private List<Group> getAlreadyAddedGroups() {
         GeneralPermission permission = (GeneralPermission) permissionForEntity.getPermission();
         PermissionsMap<GeneralPermission> accessList = componentService.getPermissionsMapFor(component);
         return accessList.get(permission, permissionForEntity.isAllowed());
@@ -181,8 +181,8 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      * @param filterTxt the text used for filtering
      * @return filtered list of groups
      */
-    private List<PoulpeGroup> filterGroups(List<PoulpeGroup> groups, String filterTxt) {
-        return filter(having(on(PoulpeGroup.class).getName(), containsString(filterTxt)), groups);
+    private List<Group> filterGroups(List<Group> groups, String filterTxt) {
+        return filter(having(on(Group.class).getName(), containsString(filterTxt)), groups);
     }
 
 }

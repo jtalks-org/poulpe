@@ -16,26 +16,26 @@ package org.jtalks.poulpe.service;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
- * Service for dealing with {@link PoulpeGroup} objects
+ * Service for dealing with {@link Group} objects
  * 
  * @author unascribed
  */
-public interface GroupService extends EntityService<PoulpeGroup> {
+public interface GroupService extends EntityService<Group> {
 
     /**
-     * @return list of all {@link PoulpeGroup} objects
+     * @return list of all {@link Group} objects
      */
-    List<PoulpeGroup> getAll();
+    List<Group> getAll();
 
     /**
      * @param name to look up
      * @return list of groups that names match the given name
      */
-    List<PoulpeGroup> getAllMatchedByName(String name);
+    List<Group> getAllMatchedByName(String name);
 
     /**
      * Delete group
@@ -43,7 +43,7 @@ public interface GroupService extends EntityService<PoulpeGroup> {
      * @param group to be delete
      * @exception IllegalArgumentException if group is null
      */
-    void deleteGroup(PoulpeGroup group);
+    void deleteGroup(Group group);
 
     /**
      * Save or update group.
@@ -51,6 +51,6 @@ public interface GroupService extends EntityService<PoulpeGroup> {
      * @param selectedGroup instance to save
      * @exception IllegalArgumentException if group is null
      */
-    void saveGroup(PoulpeGroup selectedGroup);
+    void saveGroup(Group selectedGroup);
 
 }

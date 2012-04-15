@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.List;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Group;
 
 /**
  * Forum branch that contains topics
@@ -28,7 +29,7 @@ import org.jtalks.common.model.entity.Branch;
  */
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     private List<User> moderators = new ArrayList<User>();
-    private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
+    private Group group;
 
     /**
      * Creates an empty branch, all fields are set to null,
@@ -138,31 +139,12 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
         return moderators.contains(user);
     }
 
-    /**
-     * Returns a list of user {@link PoulpeGroup}s of this branch.
-     * 
-     * @return list of user groups
-     */
-    public List<PoulpeGroup> getGroups() {
-        return groups;
+    public Group getGroup() {
+        return group;
     }
 
-    /**
-     * Assigns a list of user {@link PoulpeGroup}s for this branch.
-     * 
-     * @param groups - list of user groups
-     */
-    public void setGroups(List<PoulpeGroup> groups) {
-        this.groups = groups;
-    }
-
-    /**
-     * Adds a user {@link PoulpeGroup} for this branch.
-     * 
-     * @param group - user group to add
-     */
-    public void addGroup(PoulpeGroup group) {
-        this.groups.add(group);
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     /**
@@ -178,13 +160,15 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
      * 
      * @param group to be added
      */
-    public void addOrUpdateGroup(PoulpeGroup group) {
-        for (int i = 0; i < groups.size(); i++) {
-            if (group.getId() == groups.get(i).getId()) {
-                groups.set(i, group);
-                return;
-            }
-        }
-        addGroup(group);
+    public void addOrUpdateGroup(Group group) {
+//        for (int i = 0; i < groups.size(); i++) {
+//            if (group.getId() == groups.get(i).getId()) {
+//                groups.set(i, group);
+//                return;
+//            }
+//        }
+//        addGroup(group);
+
+        this.group = group;
     }
 }

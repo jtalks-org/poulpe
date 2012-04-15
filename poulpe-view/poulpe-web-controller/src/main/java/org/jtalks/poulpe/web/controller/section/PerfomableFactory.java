@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.Collections;
+
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -220,7 +222,7 @@ public class PerfomableFactory {
         private void deleteBranchPermissions() {
             for (BranchPermission permission : BranchPermission.values()) {
                 PermissionChanges permissionChanges = new PermissionChanges(permission);
-                permissionChanges.addRemovedGroups(branch.getGroups());
+                permissionChanges.addRemovedGroups(Collections.singleton(branch.getGroup()));
                 branchService.changeGrants(branch, permissionChanges);
             }
         }

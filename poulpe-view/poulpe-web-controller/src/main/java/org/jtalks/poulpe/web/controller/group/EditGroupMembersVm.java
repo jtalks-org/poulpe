@@ -19,12 +19,13 @@ import static ch.lambdaj.Lambda.having;
 import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.text.StringContains.containsString;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -51,9 +52,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     private final WindowManager windowManager;
 
     /**
-     * PoulpeGroup to be edited
+     * Group to be edited
      */
-    private final PoulpeGroup groupToEdit;
+    private final Group groupToEdit;
 
     /**
      * Construct View-Model for 'Edit Members of group' view.
@@ -65,7 +66,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      * @throws NotFoundException if specified group not exist in persistence
      */
     public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull SelectedEntity<PoulpeGroup> selectedEntity)
+            @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity)
         throws NotFoundException {
         super();
 
@@ -75,7 +76,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
         this.groupService = groupService;
         this.userService = userService;
 
-        stateAfterEdit = groupToEdit.getPoulpeUsers();
+        List<?> users = groupToEdit.getUsers();
+        stateAfterEdit = (List<User>) users;
     }
 
     // -- Accessors ------------------------------
@@ -83,9 +85,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     /**
      * Gets group to be edited.
      * 
-     * @return the {@link PoulpeGroup} instance
+     * @return the {@link Group} instance
      */
-    public PoulpeGroup getGroupToEdit() {
+    public Group getGroupToEdit() {
         return groupToEdit;
     }
 
@@ -120,7 +122,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      */
     @Command
     public void save() {
-        groupToEdit.setPoulpeUsers(stateAfterEdit);
+        groupToEdit.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(stateAfterEdit));
         groupService.saveGroup(groupToEdit);
         switchToGroupsWindow();
     }

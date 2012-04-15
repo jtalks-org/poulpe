@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import ru.javatalks.utils.general.Assert;
 
@@ -29,15 +29,15 @@ import ru.javatalks.utils.general.Assert;
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeGroup> implements GroupDao {
+public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
 
     /**
      * {@inheritDoc}
      */
     @Override
     @SuppressWarnings("unchecked")
-    public List<PoulpeGroup> getAll() {
-        return getSession().createQuery("from PoulpeGroup").list();
+    public List<Group> getAll() {
+        return getSession().createQuery("from Group").list();
     }
 
     /**
@@ -45,10 +45,10 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeG
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<PoulpeGroup> getMatchedByName(String name) {
+    public List<Group> getMatchedByName(String name) {
         Assert.throwIfNull(name, "name");
 
-        Query query = getSession().createQuery("from PoulpeGroup g where g.name like ?");
+        Query query = getSession().createQuery("from Group g where g.name like ?");
         query.setString(0, "%" + name + "%");
 
         return query.list();
@@ -58,11 +58,11 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<PoulpeG
      * {@inheritDoc}
      */
     @Override
-    public void delete(PoulpeGroup poulpeGroup) {
-        getSession().update(poulpeGroup);
+    public void delete(Group group) {
+        getSession().update(group);
 
-        poulpeGroup.getUsers().clear();
-        saveOrUpdate(poulpeGroup);
-        super.delete(poulpeGroup.getId());
+        group.getUsers().clear();
+        saveOrUpdate(group);
+        super.delete(group.getId());
     }
 }

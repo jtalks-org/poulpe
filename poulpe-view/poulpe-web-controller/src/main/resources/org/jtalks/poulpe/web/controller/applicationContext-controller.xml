@@ -117,6 +117,7 @@
 
   <bean id="sectionPresenter" class="org.jtalks.poulpe.web.controller.section.SectionPresenter" scope="session">
     <property name="sectionService" ref="sectionService" />
+    <property name="branchService" ref="branchService" />
     <property name="componentService" ref="componentService" />
     <property name="dialogManager" ref="dialogManager" />
     <property name="entityValidator" ref="entityValidator" />
@@ -141,17 +142,6 @@
     <property name="topicTypeService" ref="topicTypeService" />
     <property name="windowManager" ref="windowManager" />
     <property name="entityValidator" ref="entityValidator" />
-  </bean>
-
-  <bean id="usersListPresenter" class="org.jtalks.poulpe.web.controller.users.UsersListPresenter" scope="prototype">
-    <property name="userService" ref="userService" />
-    <property name="windowManager" ref="windowManager" />
-  </bean>
-
-  <bean id="userPresenter" class="org.jtalks.poulpe.web.controller.users.UserPresenter" scope="prototype">
-    <property name="userService" ref="userService" />
-    <property name="windowManager" ref="windowManager" />
-    <property name="dialogManager" ref="dialogManager" />
   </bean>
 
   <bean id="userBanningPresenter" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningPresenter">

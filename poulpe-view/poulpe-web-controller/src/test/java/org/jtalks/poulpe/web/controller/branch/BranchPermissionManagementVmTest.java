@@ -24,11 +24,11 @@ import static org.testng.Assert.assertTrue;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -63,8 +63,8 @@ public class BranchPermissionManagementVmTest {
     // sample/affected data
     private BranchPermission allowedPermission;
     private BranchPermission restrictedPermission;
-    private PoulpeGroup allowedGroup;
-    private PoulpeGroup restrictedGroup;
+    private Group allowedGroup;
+    private Group restrictedGroup;
 
     @BeforeMethod
     public void beforeMethod() {

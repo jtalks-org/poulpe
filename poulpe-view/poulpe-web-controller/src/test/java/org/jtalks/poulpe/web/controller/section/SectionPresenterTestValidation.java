@@ -20,10 +20,13 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.SectionService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
@@ -40,6 +43,7 @@ public class SectionPresenterTestValidation {
     private SectionPresenter presenter;
 
     @Mock SectionService service;
+    @Mock ComponentService componentService;
     @Mock ZkSectionView view;
     @Mock DialogManager dialogManager;
     @Mock EntityValidator entityValidator;
@@ -53,9 +57,11 @@ public class SectionPresenterTestValidation {
         presenter = new SectionPresenter();
 
         presenter.setSectionService(service);
+        presenter.setComponentService(componentService);
         presenter.setDialogManager(dialogManager);
         presenter.setEntityValidator(entityValidator);
 
+        when(componentService.getByType(ComponentType.FORUM)).thenReturn(new Jcommune());
         presenter.initView(view);
     }
 

@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 import com.google.common.collect.Maps;
 
@@ -70,7 +70,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param toRestrict group to restrict
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> add(T permission, PoulpeGroup toAllow, PoulpeGroup toRestrict) {
+    public PermissionsMap<T> add(T permission, Group toAllow, Group toRestrict) {
         accessListMap.putIfAbsent(permission, new GroupAccessList());
         accessListMap.get(permission).addAllowed(toAllow).addRestricted(toRestrict);
         return this;
@@ -83,7 +83,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param group the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> addAllowed(T permission, PoulpeGroup group) {
+    public PermissionsMap<T> addAllowed(T permission, Group group) {
         return add(permission, group, null);
     }
 
@@ -94,7 +94,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param group the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> addRestricted(T permission, PoulpeGroup group) {
+    public PermissionsMap<T> addRestricted(T permission, Group group) {
         return add(permission, null, group);
     }
 
@@ -106,39 +106,39 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param allow {@code true} if allowance is needed, {@code false} otherwise
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> add(T permission, PoulpeGroup group, boolean allow) {
+    public PermissionsMap<T> add(T permission, Group group, boolean allow) {
         return (allow) ? addAllowed(permission, group) : addRestricted(permission, group);
     }
 
     /**
-     * For given permission, retrieves list of {@link PoulpeGroup} that are allowed.
+     * For given permission, retrieves list of {@link Group} that are allowed.
      * 
      * @param permission the permission to get for
-     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
+     * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
-    public List<PoulpeGroup> getAllowed(T permission) {
+    public List<Group> getAllowed(T permission) {
         return Collections.unmodifiableList(accessListMap.get(permission).getAllowed());
     }
 
     /**
-     * For given permission, retrieves list of {@link PoulpeGroup} that are restricted.
+     * For given permission, retrieves list of {@link Group} that are restricted.
      * 
      * @param permission the permission to get for
-     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
+     * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
-    public List<PoulpeGroup> getRestricted(T permission) {
+    public List<Group> getRestricted(T permission) {
         return Collections.unmodifiableList(accessListMap.get(permission).getRestricted());
     }
 
     /**
-     * For given permission, retrieves list of {@link PoulpeGroup} that are allowed or restricted relative to parameter
+     * For given permission, retrieves list of {@link Group} that are allowed or restricted relative to parameter
      * {@code allowed}.
      * 
      * @param permission the permission to get for
      * @param allowed the flag indicating which type of groups needed: allowed (if {@code true}) or restricted
-     * @return list of {@link PoulpeGroup}, list instance is UNMODIFIABLE
+     * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
-    public List<PoulpeGroup> get(T permission, boolean allowed) {
+    public List<Group> get(T permission, boolean allowed) {
         return (allowed) ? getAllowed(permission) : getRestricted(permission);
     }
 

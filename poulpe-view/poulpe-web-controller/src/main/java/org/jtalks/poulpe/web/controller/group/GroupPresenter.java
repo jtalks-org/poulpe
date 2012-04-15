@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -35,7 +35,7 @@ public class GroupPresenter {
     private DialogManager dialogManager;
     private WindowManager windowManager;
     private String searchRestrictions;
-    private SelectedEntity<PoulpeGroup> selectedEntity;
+    private SelectedEntity<Group> selectedEntity;
 
     /**
      * Sets {@link GroupService} for this presenter.
@@ -93,7 +93,7 @@ public class GroupPresenter {
     /**
      * Opens group edit dialog for the specified groupToEdit. 
      * */
-    public void onEditGroup(PoulpeGroup groupToEdit) {
+    public void onEditGroup(Group groupToEdit) {
         view.openEditDialog(groupToEdit);
     }
 
@@ -107,7 +107,7 @@ public class GroupPresenter {
     /**
      * Opens group delete dialog for the specified groupToDelete. 
      * */
-    public void deleteGroup(final PoulpeGroup groupToDelete) {
+    public void deleteGroup(final Group groupToDelete) {
         dialogManager.confirmDeletion(groupToDelete.getName(), new Performable() {
             @Override
             public void execute() {
@@ -120,7 +120,7 @@ public class GroupPresenter {
     /**
      * Edits user members of the group.
      * */
-    public void editMembers(PoulpeGroup selectedGroup) {
+    public void editMembers(Group selectedGroup) {
         selectedEntity.setEntity(selectedGroup);
         windowManager.open("groups/EditMembers.zul");
     }
@@ -139,7 +139,7 @@ public class GroupPresenter {
      * 
      * @param selectedEntity the selectedEntity to set
      */
-    public void setSelectedEntity(SelectedEntity<PoulpeGroup> selectedEntity) {
+    public void setSelectedEntity(SelectedEntity<Group> selectedEntity) {
         this.selectedEntity = selectedEntity;
     }
 

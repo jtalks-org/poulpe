@@ -21,13 +21,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -118,7 +118,7 @@ public class BranchPresenter {
         if (validate(branch)) {
             PoulpeSection section = branch.getPoulpeSection();
             section.addOrUpdateBranch(branch);
-            PoulpeGroup group = createOrGetExistingGroup(branch);
+            Group group = getExistingGroupOrCreateNew(branch);
             if(validate(group)) {
                 branch.addOrUpdateGroup(group);
             } else {
@@ -143,7 +143,7 @@ public class BranchPresenter {
         }
     }
 
-    private boolean validate(PoulpeGroup group) {
+    private boolean validate(Group group) {
         ValidationResult result = entityValidator.validate(group);
         if (result.hasErrors()) {
             correctMessageIfGroupAlreadyExists(result);
@@ -168,12 +168,10 @@ public class BranchPresenter {
         }
     }
 
-    private PoulpeGroup createOrGetExistingGroup(PoulpeBranch branch) {
+    private Group getExistingGroupOrCreateNew(PoulpeBranch branch) {
         String groupName = branch.getName() + GROUP_SUFFIX;
-        PoulpeGroup group = null;
-        if(branch.getGroups().size() > 0) {
-            group = branch.getGroups().get(0);
-        } else {
+        Group group = branch.getGroup();
+        if(group == null) {
             group = getGroupMatchedByName(groupName);
             if(group == null) {
                 group = createNewGroup();
@@ -183,9 +181,9 @@ public class BranchPresenter {
         return group;
     }
 
-    private PoulpeGroup getGroupMatchedByName(String groupName) {
-        List<PoulpeGroup> groups = groupService.getAllMatchedByName(groupName);
-        for(PoulpeGroup group : groups) {
+    private Group getGroupMatchedByName(String groupName) {
+        List<Group> groups = groupService.getAllMatchedByName(groupName);
+        for(Group group : groups) {
             if(groupName.equals(group.getName())) {
                 return group;
             }
@@ -193,13 +191,13 @@ public class BranchPresenter {
         return null;
     }
 
-    private PoulpeGroup createNewGroup() {
-        PoulpeGroup group = new PoulpeGroup();
+    private Group createNewGroup() {
+        Group group = new Group();
         group.setDescription("");
         return group;
     }
 
-    private void setBranchPermissions(PoulpeBranch branch, PoulpeGroup group) {
+    private void setBranchPermissions(PoulpeBranch branch, Group group) {
         for(BranchPermission permission : BranchPermission.values()) {
             PermissionChanges branchAccess = new PermissionChanges(permission);
             branchAccess.addNewlyAddedGroups(Collections.singleton(group));

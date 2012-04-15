@@ -34,8 +34,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -60,11 +60,11 @@ public class EditGroupMembersVmTest {
     // SUT
     private EditGroupMembersVm viewModel;
 
-    private PoulpeGroup groupToEdit;
+    private Group groupToEdit;
     private List<User> usersAll;
     private Set<User> usersSelectedInAvailable;
     private Set<User> usersSelectedInExist;
-    private SelectedEntity<PoulpeGroup> selectedEntity;
+    private SelectedEntity<Group> selectedEntity;
 
     @Mock
     private GroupService groupService;
@@ -85,7 +85,7 @@ public class EditGroupMembersVmTest {
         usersSelectedInAvailable = Sets.newHashSet(usersAll.get(0));
         usersSelectedInExist = Sets.newHashSet(usersAlreadyInGroup.get(0));
 
-        selectedEntity = new SelectedEntity<PoulpeGroup>();
+        selectedEntity = new SelectedEntity<Group>();
         selectedEntity.setEntity(groupToEdit);
 
         givenGroupExistInPersistent();
@@ -184,8 +184,8 @@ public class EditGroupMembersVmTest {
         verify(userService, never()).setTemporaryBanStatus(anyCollectionOf(User.class), anyInt(), anyString());
         verify(userService, never()).updateUser(any(User.class));
 
-        verify(groupService, never()).saveGroup(any(PoulpeGroup.class));
-        verify(groupService, never()).deleteGroup(any(PoulpeGroup.class));
+        verify(groupService, never()).saveGroup(any(Group.class));
+        verify(groupService, never()).deleteGroup(any(Group.class));
     }
 
     private void givenGroupExistInPersistent() throws NotFoundException {
@@ -202,10 +202,10 @@ public class EditGroupMembersVmTest {
         when(viewModel.getExistSelected()).thenReturn(usersSelectedInExist);
     }
 
-    private PoulpeGroup createGroupWithUsers(List<User> usersInGroup) {
-        PoulpeGroup group = new PoulpeGroup(RandomStringUtils.randomAlphanumeric(10),
+    private Group createGroupWithUsers(List<User> usersInGroup) {
+        Group group = new Group(RandomStringUtils.randomAlphanumeric(10),
                 RandomStringUtils.randomAlphanumeric(20));
-        group.setPoulpeUsers(usersInGroup);
+        group.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(usersInGroup));
         return group;
     }
 }

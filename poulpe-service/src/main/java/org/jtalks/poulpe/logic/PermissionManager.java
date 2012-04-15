@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
@@ -30,7 +31,6 @@ import org.jtalks.common.security.acl.builders.AclBuilders;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
@@ -127,9 +127,9 @@ public class PermissionManager {
 
     /**
      * @param groupAce from which if of group should be extracted
-     * @return {@link PoulpeGroup} extracted from {@link GroupAce}
+     * @return {@link Group} extracted from {@link GroupAce}
      */
-    private PoulpeGroup getGroup(GroupAce groupAce) {
+    private Group getGroup(GroupAce groupAce) {
         return groupDao.get(groupAce.getGroupId());
     }
 }

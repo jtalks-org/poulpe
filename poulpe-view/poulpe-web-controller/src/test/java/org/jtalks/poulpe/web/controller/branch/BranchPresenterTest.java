@@ -27,16 +27,17 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.SectionService;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -50,6 +51,7 @@ public class BranchPresenterTest {
     private static final String BRANCH_NEW_NAME = "NewTestBranch2";
     private static final String GROUP_NAME = BRANCH_NAME + GROUP_SUFFIX;
     private PoulpeSection section = new PoulpeSection("sectionName", "sectionDescription");
+    @InjectMocks
     BranchPresenter presenter = new BranchPresenter();
     @Mock
     SectionService sectionService;
@@ -65,11 +67,6 @@ public class BranchPresenterTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        presenter.setSectionService(sectionService);
-        presenter.setView(view);
-        presenter.setBranchService(branchService);
-        presenter.setGroupService(groupService);
-        presenter.setEntityValidator(entityValidator);
     }
 
     @Test
@@ -90,8 +87,7 @@ public class BranchPresenterTest {
         
         presenter.saveBranch(branch);
         
-        assertEquals(branch.getGroups().size(), 1);
-        PoulpeGroup group = branch.getGroups().get(0);
+        Group group = branch.getGroup();
         assertEquals(group.getName(), BRANCH_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
@@ -106,7 +102,7 @@ public class BranchPresenterTest {
         
         presenter.saveBranch(branch);
         
-        PoulpeGroup group = branch.getGroups().get(0);
+        Group group = branch.getGroup();
         assertEquals(group.getName(), BRANCH_NEW_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService, times(2)).saveSection(any(PoulpeSection.class));
@@ -116,14 +112,13 @@ public class BranchPresenterTest {
     @Test
     public void testSaveBranchWithExistingMatchingGroup() {
         givenNoConstraintsViolated();
-        PoulpeGroup group = createMatchingGroup();
+        Group group = createMatchingGroup();
         PoulpeBranch branch = new PoulpeBranch(BRANCH_NAME);
         branch.setSection(section);
         
         presenter.saveBranch(branch);
         
-        assertEquals(branch.getGroups().size(), 1);
-        PoulpeGroup existGroup = branch.getGroups().get(0);
+        Group existGroup = branch.getGroup();
         assertEquals(existGroup.getName(), GROUP_NAME);
         assertEquals(group, existGroup);
         verify(view, never()).validationFailure(any(ValidationResult.class));
@@ -132,9 +127,9 @@ public class BranchPresenterTest {
         verify(branchService, times(3)).changeGrants(any(PoulpeBranch.class), any(PermissionChanges.class));
     }
 
-    private PoulpeGroup createMatchingGroup() {
-        PoulpeGroup group = new PoulpeGroup(GROUP_NAME, "");
-        List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
+    private Group createMatchingGroup() {
+        Group group = new Group(GROUP_NAME, "");
+        List<Group> groups = new ArrayList<Group>();
         groups.add(group);
         when(groupService.getAllMatchedByName(GROUP_NAME)).thenReturn(groups);
         return group;
@@ -189,13 +184,13 @@ public class BranchPresenterTest {
     }
 
     private void givenGroupConstraintViolated() {
-        when(entityValidator.validate(any(PoulpeGroup.class))).thenReturn(resultWithGroupErrors);
+        when(entityValidator.validate(any(Group.class))).thenReturn(resultWithGroupErrors);
     }
 
     private ValidationResult resultWithGroupErrors = resultWithGroupErrors();
 
     private ValidationResult resultWithGroupErrors() {
-        ValidationError error = new ValidationError("group", PoulpeGroup.GROUP_ALREADY_EXISTS);
+        ValidationError error = new ValidationError("group", Group.GROUP_ALREADY_EXISTS);
         Set<ValidationError> errors = Collections.singleton(error);
         return new ValidationResult(errors);
     }

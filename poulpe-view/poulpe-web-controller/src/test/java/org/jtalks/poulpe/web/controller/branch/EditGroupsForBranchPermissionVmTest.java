@@ -24,12 +24,12 @@ import static org.mockito.Mockito.when;
 import java.util.List;
 
 import org.apache.commons.lang.math.RandomUtils;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -155,7 +155,7 @@ public class EditGroupsForBranchPermissionVmTest {
         verify(branchService, never()).changeRestrictions(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(branchService, never()).saveBranch(any(PoulpeBranch.class));
 
-        verify(groupService, never()).saveGroup(any(PoulpeGroup.class));
-        verify(groupService, never()).deleteGroup(any(PoulpeGroup.class));
+        verify(groupService, never()).saveGroup(any(Group.class));
+        verify(groupService, never()).deleteGroup(any(Group.class));
     }
 }
