@@ -6,6 +6,8 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', show=true)"/>
+    <button label="${labels.forum_structure.create_branch_button}"
+            onClick="@command('showNewBranchDialog', show=true)"/>
     <tree model="@bind(vm.sections)"  context="treeContextMenu">
         <treechildren>
           <template name="model" var="section">
@@ -13,6 +15,10 @@
           </template>
         </treechildren>
     </tree>
+    <button label="${labels.forum_structure.create_section_button}"
+            onClick="@command('showNewSectionDialog', show=true)"/>
+    <button label="${labels.forum_structure.create_branch_button}"
+            onClick="@command('showNewBranchDialog', show=true)"/>
     <menupopup id="treeContextMenu">
       <menuitem label="Edit"/>
       <menuitem label="Delete"/>

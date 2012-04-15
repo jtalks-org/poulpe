@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.section.mvvm;
 
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.section.TreeNodeFactory;
@@ -32,12 +33,14 @@ import javax.validation.constraints.NotNull;
  * removing, editing, etc.).
  *
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class ForumStructureVm {
     private final ComponentService componentService;
     private final ForumStructureItem selectedItem = new ForumStructureItem();
     private Jcommune jcommune;
     private boolean showCreateSectionDialog;
+    private boolean showCreateBranchDialog;
 
     public ForumStructureVm(@NotNull ComponentService componentService) {
         this.componentService = componentService;
@@ -52,18 +55,33 @@ public class ForumStructureVm {
     @NotifyChange({"showCreateSectionDialog", "selectedSection"})
     public void showNewSectionDialog() {
         showCreateSectionDialog = true;
-        if (isCreatingNewSection()) {
+        if (isCreatingNewItem()) {
             selectedItem.setItem(new PoulpeSection());
         }
     }
 
+
     /**
-     * While opening a dialog we need to know whether the dialog is for creating a new section or editing the existing
+     * First of all decides whether to show a dialog for creation of the entity or for editing by looking at {@link
+     * #getSelectedBranch()} and then changes the flag {@link #isShowCreateBranchDialog()} in order to open the
+     * editing dialog.
+     */
+    @Command
+    @NotifyChange({"showCreateBranchDialog", "selectedBranch"})
+    public void showNewBranchDialog() {
+        showCreateBranchDialog = true;
+        if (isCreatingNewItem()) {
+            selectedItem.setItem(new PoulpeBranch());
+        }
+    }
+
+    /**
+     * While opening a dialog we need to know whether the dialog is for creating a new item or editing the existing
      * one.
      *
-     * @return {@code true} if there are no existing sections being selected for editing
+     * @return {@code true} if there are no existing items being selected for editing
      */
-    private boolean isCreatingNewSection() {
+    private boolean isCreatingNewItem() {
         return !selectedItem.isPersisted();
     }
 
@@ -108,6 +126,17 @@ public class ForumStructureVm {
      */
     public boolean isShowCreateSectionDialog() {
         return showCreateSectionDialog;
+    }
+    
+    /**
+     * Decides whether the  Edit Branch dialog should be shown. It's bound to the ZK Window on ZUL page by {@code
+     * visible="@bind(...)"}. You should use this in order to control the window visibility. Use NotifyChanges in order
+     * ZUL to understand that this field was changed.
+     *
+     * @return {@code true} if the dialog should be shown to the user
+     */
+    public boolean isShowCreateBranchDialog() {
+        return showCreateBranchDialog;
     }
 
     /**
