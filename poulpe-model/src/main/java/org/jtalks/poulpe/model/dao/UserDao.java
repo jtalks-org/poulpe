@@ -59,5 +59,12 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepo
      * @return {@code List<User>}
      */
     List<User> getAllPoulpeUsers();
+    
+    /**
+     * Get {@link List} with all banned Users.
+     * 
+     * @return {@code List<User>}
+     */
+    List<User> getAllBannedUsers();
 
 }

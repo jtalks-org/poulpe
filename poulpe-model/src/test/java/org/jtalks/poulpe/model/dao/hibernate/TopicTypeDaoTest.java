@@ -37,6 +37,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * 
  * @author Vladimir Bukhtoyarov
@@ -72,7 +74,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
         assertReflectionEquals(topicType, result);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void testSaveTopicTypeWithNameNotNullViolation() {
         TopicType TopicType = new TopicType();
 

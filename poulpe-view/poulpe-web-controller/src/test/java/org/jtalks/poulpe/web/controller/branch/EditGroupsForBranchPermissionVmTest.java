@@ -32,7 +32,6 @@ import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
@@ -84,16 +83,9 @@ public class EditGroupsForBranchPermissionVmTest {
         initTest(permissionForEntity, permissionsMap);
 
         viewModel.removeAll();
-
         viewModel.save();
 
-        PoulpeBranch target = (PoulpeBranch) permissionForEntity.getTarget();
-
-        if (permissionForEntity.isAllowed()) {
-            verify(branchService).changeGrants(eq(target), any(PermissionChanges.class));
-        } else {
-            verify(branchService).changeRestrictions(eq(target), any(PermissionChanges.class));
-        }
+        vefiryPermissionsChanged(permissionForEntity);
 
         verify(windowManager).open(anyString());
     }
@@ -111,10 +103,8 @@ public class EditGroupsForBranchPermissionVmTest {
     public void initTest(PermissionForEntity permissionForEntity, PermissionsMap<BranchPermission> permissionsMap) {
         when(branchService.getPermissionsFor(any(PoulpeBranch.class))).thenReturn(permissionsMap);
 
-        SelectedEntity<Object> selectedEntity = new SelectedEntity<Object>();
-        selectedEntity.setEntity(permissionForEntity);
-
-        viewModel = new EditGroupsForBranchPermissionVm(windowManager, branchService, groupService, selectedEntity);
+        viewModel = new EditGroupsForBranchPermissionVm(windowManager, branchService, groupService,
+                ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
 
         viewModel.updateVm();
     }
@@ -125,11 +115,13 @@ public class EditGroupsForBranchPermissionVmTest {
         PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>(
                 BranchPermission.getAllAsList());
 
+        // target entity (PoulpeBranch)
         PoulpeBranch target = ObjectsFactory.fakeBranch();
+        // permissions to work with
         BranchPermission[] branchPermissions = BranchPermission.values();
 
+        // building fixtures
         int count = Math.min(DATA_PROVIDER_LIMIT, branchPermissions.length);
-
         for (int i = 0; i < count; i++) {
             permissionsForEntity.add(new PermissionForEntity(target, true, branchPermissions[i]));
             permissionsForEntity.add(new PermissionForEntity(target, false, branchPermissions[i]));
@@ -139,15 +131,26 @@ public class EditGroupsForBranchPermissionVmTest {
             }
         }
 
-        Object[] permissionsArray = permissionsForEntity.toArray();
-        Object[][] result = new Object[permissionsArray.length][2];
+        // converting fixtures to usable state, adding same PermissionsMap for each PermissionForEntity
+        int permissionsCount = permissionsForEntity.size();
+        Object[][] result = new Object[permissionsCount][2];
 
-        for (int i = 0; i < permissionsArray.length; i++) {
-            result[i][0] = permissionsArray[i];
+        for (int i = 0; i < permissionsCount; i++) {
+            result[i][0] = permissionsForEntity.get(i);
             result[i][1] = permissionsMap;
         }
 
         return result;
+    }
+
+    private void vefiryPermissionsChanged(PermissionForEntity permissionForEntity) {
+        PoulpeBranch target = (PoulpeBranch) permissionForEntity.getTarget();
+
+        if (permissionForEntity.isAllowed()) {
+            verify(branchService).changeGrants(eq(target), any(PermissionChanges.class));
+        } else {
+            verify(branchService).changeRestrictions(eq(target), any(PermissionChanges.class));
+        }
     }
 
     private void vefiryNothingChanges() {

@@ -28,7 +28,8 @@
             <window title="ttvm.selected.id eq 0? '${labels.item.add}' : '${labels.item.edit}'" mode="modal" border="normal" width="600px"
                     visible="@load(ttvm.showPopUp)">
                 <groupbox visible="@load(not empty ttvm.selected)" hflex="true" mold="3d" height="100%">
-                    <grid hflex="true" >
+                    <grid hflex="true" form="@id('fx') @load(ttvm.selected)
+                    @save(ttvm.selected, after='saveTopicType') @validator('formBeanValidator',prefix='p_')">
                         <columns>
                             <column width="20%"/>
                             <column width="100%"/>
@@ -36,19 +37,18 @@
                         <rows>
                             <row>
                                 Id
-                                <label value="@load(ttvm.selected.id)"/>
+                                <label value="@bind(fx.id)"/>
                             </row>
                             <row>
                                 ${labels.title}
                                 <hlayout>
-                                    <textbox id="titlebox" value="@load(ttvm.selected.title) @save(ttvm.selected.title,before='saveTopicType')
-                                    @validator('beanValidator')" />
-                                    <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
+                                    <textbox id="titlebox" value="@bind(fx.title)" />
+                                    <label value="@load(vmsgs['p_title'])" sclass="redAlert" />
                                 </hlayout>
                             </row>
                             <row>
                                 ${labels.topictypes.list.descr}
-                                <textbox value="@load(ttvm.selected.description) @save(ttvm.selected.description,before='saveTopicType')"/>
+                                <textbox value="@bind(fx.description)"/>
                             </row>
                         </rows>
                     </grid>

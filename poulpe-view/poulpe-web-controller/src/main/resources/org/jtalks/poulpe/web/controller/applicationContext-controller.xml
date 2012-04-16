@@ -23,12 +23,14 @@
   <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop" />
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
   <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity" />
-
+  <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.mvvm.ForumStructureVm" scope="desktop">
+    <constructor-arg index="0" ref="componentService"/>
+  </bean>
   <bean id="branchPermissionManagementVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-    <constructor-arg type="WindowManager" ref="windowManager" />
-    <constructor-arg type="BranchService" ref="branchService" />
-    <constructor-arg type="SelectedEntity" ref="selectedEntity" />
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="branchService" />
+    <constructor-arg ref="selectedEntity" />
   </bean>
 
   <bean id="editGroupsForBranchPermissionVm" scope="prototype"
@@ -87,6 +89,12 @@
       <constructor-arg index="0" ref="topicTypeService" />
       <constructor-arg index="1" ref="dialogManager"/>
   </bean>
+  
+  <bean id="userBanningVm"
+        scope="desktop"
+        class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
+      <constructor-arg index="0" ref="userService"/>
+  </bean> 
 
   <!--Declaration of presenters -->
   <bean id="branchEditorPresenter" class="org.jtalks.poulpe.web.controller.branch.BranchEditorPresenter"

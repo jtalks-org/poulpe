@@ -154,21 +154,4 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitBranch(this);
     }
-
-    /**
-     * Adds a new group, or updates, if it already has it
-     * 
-     * @param group to be added
-     */
-    public void addOrUpdateGroup(Group group) {
-//        for (int i = 0; i < groups.size(); i++) {
-//            if (group.getId() == groups.get(i).getId()) {
-//                groups.set(i, group);
-//                return;
-//            }
-//        }
-//        addGroup(group);
-
-        this.group = group;
-    }
 }

@@ -142,7 +142,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      * Initialize VM after it created.
      */
     @Init
-    public void initVM() {
+    public void initVm() {
         stateAfterEdit.addAll(getAlreadyAddedGroups());
         updateVm();
     }

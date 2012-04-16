@@ -120,7 +120,7 @@ public class BranchPresenter {
             section.addOrUpdateBranch(branch);
             Group group = getExistingGroupOrCreateNew(branch);
             if(validate(group)) {
-                branch.addOrUpdateGroup(group);
+                branch.setGroup(group);
             } else {
                 return false;
             }

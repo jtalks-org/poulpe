@@ -34,6 +34,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import javax.validation.ConstraintViolationException;
+
 /**
  * Test for RankHiberanateDao
  * @author Pavel Vervenko
@@ -67,7 +69,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         assertReflectionEquals(rank, result);
     }
 
-    @Test(expectedExceptions = DataIntegrityViolationException.class)
+    @Test(expectedExceptions = ConstraintViolationException.class)
     public void testSaveBranchWithNameNotNullViolation() {
         Rank rank = new Rank("");
         rank.setRankName(null);

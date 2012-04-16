@@ -22,6 +22,7 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.joda.time.DateTime;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Test
     public void testGetByUsername() {
-        givenUserSavedAndEvicted();
+        givenUserSavedAndEvicted(user);
 
         User actual = dao.getPoulpeUserByUsername(user.getUsername());
 
@@ -86,7 +87,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
     public void testGetByUsernamePart() {
         user.setUsername(RandomStringUtils.randomAlphanumeric(10));
 
-        givenUserSavedAndEvicted();
+        givenUserSavedAndEvicted(user);
 
         List<User> users = dao.getPoulpeUserByUsernamePart(user.getUsername().substring(0, 8));
         assertTrue(users.contains(user));
@@ -94,7 +95,7 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     @Test
     public void testGetByEncodedUsername() {
-        givenUserSavedAndEvicted();
+        givenUserSavedAndEvicted(user);
 
         String encodedUsername = user.getEncodedUsername();
 
@@ -106,15 +107,30 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
      */
     @Test
     public void testGetAll() {
-        givenUserSavedAndEvicted();
+        givenUserSavedAndEvicted(user);
 
         List<User> users = dao.getAllPoulpeUsers();
 
         assertTrue(users.size() == 1);
         assertTrue(users.contains(user));
     }
+    
+    @Test
+    public void testGetAllBannedUsers() {
+    	User bannedUser = ObjectsFactory.createUser();
+    	bannedUser.setBanExpirationDate(new DateTime());
+    	bannedUser.setBanReason("any reason");
+    	
+    	dao.saveOrUpdate(bannedUser);
+        session.evict(bannedUser);
+    	
+    	List<User> users = dao.getAllBannedUsers();
+    	
+    	assertTrue(users.size() == 1);
+        assertTrue(users.contains(bannedUser));
+    }
 
-    private void givenUserSavedAndEvicted() {
+    private void givenUserSavedAndEvicted(User user) {
         dao.saveOrUpdate(user);
         session.evict(user);
     }

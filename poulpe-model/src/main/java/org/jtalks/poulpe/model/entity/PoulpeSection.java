@@ -14,13 +14,13 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Section;
+
+import java.util.List;
 
 /**
  * Forum section that contains branches.
- * 
+ *
  * @author Tatiana Birina
  * @author Guram Savinov
  */
@@ -31,18 +31,19 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
     public PoulpeSection() {
         super();
     }
-    
+
     /**
      * Creates a section with empty list of branches setting section a name
-     * 
+     *
      * @param name for new section
      */
     public PoulpeSection(String name) {
         super(name);
     }
-    
+
     /**
      * Should be used if preference of {@link #getBranches()}
+     *
      * @return list of {@link PoulpeBranch} objects
      */
     @SuppressWarnings("unchecked")
@@ -50,11 +51,11 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
         List<?> branches = getBranches();
         return (List<PoulpeBranch>) branches;
     }
-    
+
     /**
      * Constructor with name and description, creates a section with empty list of branches
-     * 
-     * @param name - name for new section
+     *
+     * @param name        - name for new section
      * @param description - description for new section
      */
     public PoulpeSection(String name, String description) {
@@ -67,5 +68,16 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
     @Override
     public void apply(BranchSectionVisitor visitor) {
         visitor.visitSection(this);
+    }
+
+    /**
+     * Unlike usual situation, in our case this method is used by presentation layer to depict forum structure, so this
+     * method should be changed only if this presentation changed the way it shows branches.
+     *
+     * @return {@link #getName()}
+     */
+    @Override
+    public String toString() {
+        return this.getName();
     }
 }

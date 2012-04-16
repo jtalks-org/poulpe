@@ -17,6 +17,8 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import java.text.MessageFormat;
 import java.util.List;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
@@ -77,5 +79,11 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
     public org.jtalks.common.model.entity.User getByUsername(String username) {
         return getPoulpeUserByUsername(username);
     }
+    
+    @Override
+	public List<User> getAllBannedUsers() {
+		Criteria criteria = getSession().createCriteria(User.class).add(Restrictions.isNotNull("banReason"));
+		return (List<User>) criteria.list();		
+	}
 
 }
