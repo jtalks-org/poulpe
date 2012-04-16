@@ -29,7 +29,7 @@ import org.jtalks.common.model.entity.Group;
  */
 public class PoulpeBranch extends Branch implements BranchSectionVisitable {
     private List<User> moderators = new ArrayList<User>();
-    private Group group;
+    private Group moderatorsGroup;
 
     /**
      * Creates an empty branch, all fields are set to null,
@@ -139,12 +139,24 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
         return moderators.contains(user);
     }
 
-    public Group getGroup() {
-        return group;
+    /**
+     * Returns moderators group for this branch, which is created, modified and deleted on
+     * creating, editing and deleting of this branch - see {@code BranchPresenter.saveBranch(PoulpeBranch)}.
+     * 
+     * @return group of moderators for this branch
+     */
+    public Group getModeratorsGroup() {
+        return moderatorsGroup;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
+    /**
+     * Sets moderators group for this branch, which is created, modified and deleted on
+     * creating, editing and deleting of this branch - see {@code BranchPresenter.saveBranch(PoulpeBranch)}.
+     * 
+     * @param group group of moderators for this branch
+     */
+    public void setModeratorsGroup(Group group) {
+        this.moderatorsGroup = group;
     }
 
     /**

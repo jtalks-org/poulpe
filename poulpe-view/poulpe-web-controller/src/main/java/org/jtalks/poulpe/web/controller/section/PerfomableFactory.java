@@ -196,7 +196,8 @@ public class PerfomableFactory {
 
     /**
      * Implementation of {@link DialogManager.Performable} for deleting
-     * branches, performed when user confirms deletion
+     * branches, performed when user confirms deletion.
+     * When deleting branch, its group is deleted as well (and permissions granted with this group).
      * 
      * @author unascribed
      */
@@ -222,7 +223,7 @@ public class PerfomableFactory {
         private void deleteBranchPermissions() {
             for (BranchPermission permission : BranchPermission.values()) {
                 PermissionChanges permissionChanges = new PermissionChanges(permission);
-                permissionChanges.addRemovedGroups(Collections.singleton(branch.getGroup()));
+                permissionChanges.addRemovedGroups(Collections.singleton(branch.getModeratorsGroup()));
                 branchService.changeGrants(branch, permissionChanges);
             }
         }

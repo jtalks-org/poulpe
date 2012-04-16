@@ -87,7 +87,7 @@ public class BranchPresenterTest {
         
         presenter.saveBranch(branch);
         
-        Group group = branch.getGroup();
+        Group group = branch.getModeratorsGroup();
         assertEquals(group.getName(), BRANCH_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService).saveSection(any(PoulpeSection.class));
@@ -102,7 +102,7 @@ public class BranchPresenterTest {
         
         presenter.saveBranch(branch);
         
-        Group group = branch.getGroup();
+        Group group = branch.getModeratorsGroup();
         assertEquals(group.getName(), BRANCH_NEW_NAME + GROUP_SUFFIX);
         verify(view, never()).validationFailure(any(ValidationResult.class));
         verify(sectionService, times(2)).saveSection(any(PoulpeSection.class));
@@ -118,7 +118,7 @@ public class BranchPresenterTest {
         
         presenter.saveBranch(branch);
         
-        Group existGroup = branch.getGroup();
+        Group existGroup = branch.getModeratorsGroup();
         assertEquals(existGroup.getName(), GROUP_NAME);
         assertEquals(group, existGroup);
         verify(view, never()).validationFailure(any(ValidationResult.class));

@@ -97,7 +97,7 @@ public class BranchPresenter {
 
 
     /**
-     * Save new or edited branch in db In case when branch with equal name
+     * Save new or edited branch in DB. In case when branch with equal name
      * exists, cause open error popup in view.
      */
     public boolean saveBranch() {
@@ -109,7 +109,8 @@ public class BranchPresenter {
     /**
      * When a new branch is saved, then a new group is created using this branch's name: '[New_branch_name] Moderators'.
      * And branch is added permissions with this group.
-     * When editing branch (its name), its group's name changed respectively.
+     * When editing branch (its name), its group's name is changed respectively.
+     * When deleting branch, its group is deleted as well (and permissions granted with this group).
      * 
      * @param branch branch to save/edit
      * @return true on success creation/modification, false on branch or group validation failure
@@ -120,7 +121,7 @@ public class BranchPresenter {
             section.addOrUpdateBranch(branch);
             Group group = getExistingGroupOrCreateNew(branch);
             if(validate(group)) {
-                branch.setGroup(group);
+                branch.setModeratorsGroup(group);
             } else {
                 return false;
             }
@@ -170,7 +171,7 @@ public class BranchPresenter {
 
     private Group getExistingGroupOrCreateNew(PoulpeBranch branch) {
         String groupName = branch.getName() + GROUP_SUFFIX;
-        Group group = branch.getGroup();
+        Group group = branch.getModeratorsGroup();
         if(group == null) {
             group = getGroupMatchedByName(groupName);
             if(group == null) {
