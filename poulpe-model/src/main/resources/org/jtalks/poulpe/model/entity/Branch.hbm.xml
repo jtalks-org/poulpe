@@ -38,10 +38,10 @@
       <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
       <many-to-many class="org.jtalks.poulpe.model.entity.User" column="USER_ID"/>
     </bag>
-
+<!-- 
     <many-to-one name="group" column="MODERATORS_GROUP_ID" unique="true" cascade="all" lazy="false" not-null="false"
       class="org.jtalks.common.model.entity.Group" />
-
+ -->
   </class>
 
 

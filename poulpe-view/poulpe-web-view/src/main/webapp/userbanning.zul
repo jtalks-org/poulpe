@@ -44,16 +44,26 @@
           <column label="${labels.userbanning.managing}" />
         </columns>
         <template name="model" var="user">
-          <row onDoubleClick="@command('editBan', user=user)">
+          <row onDoubleClick="@command('editBan', userId=user.id)">
             <label value="@load(user.username)" />
             <hbox>
               <label value="@load(user.firstName)" />
               <label value="@load(user.lastName)" />
             </hbox>
             <label value="@load(user.email)" />
+            <!--
+              Here detected strange behavior, ZK showing error like:
+
+                Index: 221, Size: 221
+
+              Changes in enclosing list will breaks something, this problem visible when adding ban state to user and
+              after trying to change ban properties without reloading a page.
+              So using old way: user.id
+              // Zhivaev Vyacheslav
+            -->
             <hbox>
-              <button label="${labels.userbanning.edit}" onClick="@command('editBan', user=user)" />
-              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', user=user)" />
+              <button label="${labels.userbanning.edit}" onClick="@command('editBan', userId=user.id)" />
+              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', userId=user.id)" />
             </hbox>
           </row>
         </template>
