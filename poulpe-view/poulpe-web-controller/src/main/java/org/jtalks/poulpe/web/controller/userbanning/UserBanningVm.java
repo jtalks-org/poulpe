@@ -21,6 +21,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import org.apache.commons.lang.Validate;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.annotation.BindingParam;
@@ -39,7 +40,8 @@ public class UserBanningVm {
     private UserService userService;
 
     /**
-     * User selected in list of available users.
+     * User selected in list of available users to add ban for, also this instance used by window for editing ban
+     * properties.
      */
     private User selectedUser;
 
@@ -82,7 +84,7 @@ public class UserBanningVm {
     }
 
     /**
-     * Gets user which selected in view. This user can be used later to edit ban properties.
+     * Gets currently selected user. This user instance used by window to edit ban properties.
      * 
      * @return currently selected user, can be {@code null}
      */
@@ -92,7 +94,7 @@ public class UserBanningVm {
     }
 
     /**
-     * Sets user which selected in view. This user can be used later to edit ban properties.
+     * Sets currently selected user. This user instance used by window to edit ban properties.
      * 
      * @see #addBanToSelectedUser()
      * @see #saveBanProperties()
@@ -112,20 +114,12 @@ public class UserBanningVm {
         return editBanWindowOpened;
     }
 
-    /**
-     * Sets status of editBanWindowOpened flag. This flag used to control visibility of window which used to edit ban
-     * properties of user.
-     * 
-     * @param editBanWindowOpened the editBanWindowOpened to set
-     */
-    public void setEditBanWindowOpened(boolean editBanWindowOpened) {
-        this.editBanWindowOpened = editBanWindowOpened;
-    }
-
     //-- ZK bindings ----------------------------
 
     /**
      * Set banned state to selected user.
+     * 
+     * @throws NotFoundException
      */
     @Command
     @NotifyChange({ "editBanWindowOpened" })
@@ -136,23 +130,27 @@ public class UserBanningVm {
     /**
      * Edit ban properties for specified user.
      * 
-     * @param user the user to edit for
+     * @param userId the id property of user to edit for
+     * @throws NotFoundException
      */
+    // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command
-    @NotifyChange({ "editBanWindowOpened" })
-    public void editBan(@Nonnull @BindingParam("user") User user) {
-        selectedUser = user;
-        editBanWindowOpened = true;
+    @NotifyChange({ "selectedUser", "editBanWindowOpened" })
+    public void editBan(@Nonnull @BindingParam("userId") long userId) throws NotFoundException {
+        editBan(userService.get(userId));
     }
 
     /**
      * Revoke ban for specified user.
      * 
-     * @param user the user to revoke for
+     * @param userId the id property of user to revoke for
+     * @throws NotFoundException
      */
+    // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command
     @NotifyChange({ "availableUsers", "bannedUsers" })
-    public void revokeBan(@Nonnull @BindingParam("user") User user) {
+    public void revokeBan(@Nonnull @BindingParam("userId") long userId) throws NotFoundException {
+        User user = userService.get(userId);
         user.setBanReason(null);
         userService.updateUser(user);
     }
@@ -162,11 +160,11 @@ public class UserBanningVm {
      * {@link #addBanToSelectedUser()}. This method also closes window for ban editing.
      */
     @Command
-    @NotifyChange({ "availableUsers", "bannedUsers", "editBanWindowOpened" })
+    @NotifyChange({ "selectedUser", "availableUsers", "bannedUsers", "editBanWindowOpened" })
     public void saveBanProperties() {
         Validate.notNull(selectedUser, "To provide save action for user, user must be already selected");
-
         userService.updateUser(selectedUser);
+        selectedUser = null;
         closeEditBanWindow();
     }
 
@@ -177,6 +175,18 @@ public class UserBanningVm {
     @NotifyChange({ "editBanWindowOpened" })
     public void closeEditBanWindow() {
         editBanWindowOpened = false;
-        selectedUser = null;
+    }
+
+    //-- Utility methods ------------------------
+
+    /**
+     * Edit ban properties for specified user.
+     * 
+     * @param user the user to edit for
+     * @throws NotFoundException
+     */
+    private void editBan(User user) {
+        selectedUser = user;
+        editBanWindowOpened = true;
     }
 }

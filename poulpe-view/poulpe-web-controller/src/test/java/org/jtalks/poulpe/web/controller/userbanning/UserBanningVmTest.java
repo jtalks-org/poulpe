@@ -17,6 +17,7 @@ import java.util.List;
 
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.math.RandomUtils;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
@@ -63,7 +64,7 @@ public class UserBanningVmTest {
     }
 
     @Test
-    public void addBanToSelectedUser() {
+    public void testAddBanToSelectedUser() {
         User user = allUsers.get(0);
 
         viewModel.setSelectedUser(user);
@@ -71,47 +72,72 @@ public class UserBanningVmTest {
 
         assertTrue(viewModel.isEditBanWindowOpened());
         assertEquals(viewModel.getSelectedUser(), user);
+
+        vefiryNothingChanges();
     }
 
     @Test
-    public void closeEditBanWindow() {
+    public void testCloseEditBanWindow() {
         User user = allUsers.get(0);
 
         viewModel.setSelectedUser(user);
         viewModel.addBanToSelectedUser();
         viewModel.closeEditBanWindow();
 
-        vefiryNothingChanges();
         assertFalse(viewModel.isEditBanWindowOpened());
+
+        vefiryNothingChanges();
     }
 
     @Test
-    public void getAvailableUsers() {
+    public void testGetAvailableUsers() {
         List<User> available = viewModel.getAvailableUsers();
 
         assertTrue(allUsers.containsAll(available));
         assertTrue(ListUtils.intersection(available, bannedUsers).isEmpty());
+
+        vefiryNothingChanges();
     }
 
     @Test
-    public void getBannedUsers() {
+    public void testGetBannedUsers() {
         List<User> banned = viewModel.getBannedUsers();
 
         assertTrue(bannedUsers.containsAll(banned));
         assertTrue(banned.containsAll(bannedUsers));
+
+        vefiryNothingChanges();
     }
 
     @Test
-    public void revokeBan() {
+    public void testRevokeBan() throws NotFoundException {
         User user = allUsers.get(0);
+        long userId = user.getId();
 
-        viewModel.revokeBan(user);
+        when(userService.get(eq(userId))).thenReturn(user);
+
+        viewModel.revokeBan(userId);
 
         verify(userService).updateUser(eq(user));
     }
 
     @Test
-    public void saveBanProperties() {
+    public void testEditBan() throws NotFoundException {
+        User user = allUsers.get(0);
+        long userId = user.getId();
+
+        when(userService.get(eq(userId))).thenReturn(user);
+
+        viewModel.editBan(userId);
+
+        assertTrue(viewModel.isEditBanWindowOpened());
+        assertEquals(viewModel.getSelectedUser(), user);
+
+        vefiryNothingChanges();
+    }
+
+    @Test
+    public void testSaveBanProperties() {
         User user = allUsers.get(0);
 
         viewModel.setSelectedUser(user);
