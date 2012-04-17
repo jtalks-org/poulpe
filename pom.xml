@@ -404,7 +404,6 @@
               <exclude>org/jtalks/poulpe/web/controller/WindowManagerImpl.class</exclude>
               <exclude>org/jtalks/poulpe/web/controller/HighConcurrencyEditListener.class</exclude>
               <exclude>org/jtalks/poulpe/web/controller/AdminWindow.class</exclude>
-              <exclude>org/jtalks/poulpe/web/controller/section/SectionTreeComponentImpl*.class</exclude>
               <exclude>**/*View*</exclude>
               <!-- We exclude all classes related exeption -->
               <exclude>**/*Exception*</exclude>
