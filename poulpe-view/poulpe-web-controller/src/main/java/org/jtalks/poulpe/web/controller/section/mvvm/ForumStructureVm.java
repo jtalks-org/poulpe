@@ -21,6 +21,7 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.section.TreeNodeFactory;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -39,8 +40,9 @@ import javax.validation.constraints.NotNull;
  */
 public class ForumStructureVm {
     private final ComponentService componentService;
-    private final ForumStructureItem selectedItem = new ForumStructureItem();
+    private ForumStructureItem selectedItem = new ForumStructureItem();
     private Jcommune jcommune;
+    private DefaultTreeModel<ForumStructureItem> treeModel;
     private boolean showCreateSectionDialog;
     private boolean showCreateBranchDialog;
 
@@ -54,11 +56,13 @@ public class ForumStructureVm {
      * editing dialog.
      */
     @Command
-    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem"})
-    public void showNewSectionDialog() {
+    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem", "selected"})
+    public void showNewSectionDialog(@BindingParam("createNew") boolean createSection) {
         showCreateSectionDialog = true;
-        if (isCreatingNewItem()) {
-            selectedItem.setItem(new PoulpeSection());
+        if (createSection) {
+            selectedItem = new ForumStructureItem().setItem(new PoulpeSection());
+        } else{
+            selectedItem = treeModel.getSelection().iterator().next().getData();
         }
     }
 
@@ -92,7 +96,7 @@ public class ForumStructureVm {
      * cleans the selected section. Also makes the create section dialog to be closed.
      */
     @Command
-    @NotifyChange({"sections", "showCreateSectionDialog", "selectedSection"})
+    @NotifyChange({"sections", "showCreateSectionDialogAndSetFalse", "selectedSection", "selected"})
     public void saveSection() {
         jcommune.addSection(selectedItem.getItem(PoulpeSection.class));
         componentService.saveComponent(jcommune);
@@ -116,7 +120,8 @@ public class ForumStructureVm {
      */
     @SuppressWarnings("unchecked")
     public TreeModel getSections() {
-        return new DefaultTreeModel(TreeNodeFactory.buildForumStructure(jcommune));
+        treeModel = new DefaultTreeModel(TreeNodeFactory.buildForumStructure(jcommune));
+        return treeModel;
     }
 
     /**
@@ -144,17 +149,6 @@ public class ForumStructureVm {
     }
 
     /**
-     * Defines whether the selected item is branch at the moment. Is needed for instance to decide whether to shown some
-     * context menu items or not.
-     *
-     * @return {@code true} if the selected item is branch, {@code false} if nothing is selected or the selected items
-     *         is a section
-     */
-    public boolean isBranchSelected() {
-        return false;
-    }
-
-    /**
      * Let's ZK binder know what section the edit section dialog should work with. It's changed by {@link
      * #setSelectedItem} or it's a newly created section if the one is being created (see {@link
      * #showNewSectionDialog()} for more details).
@@ -165,8 +159,8 @@ public class ForumStructureVm {
         return selectedItem;
     }
 
-    public void setSelectedItem(Entity selectedItem){
-        this.selectedItem.setItem(selectedItem);
+    public void setSelectedItem(ForumStructureItem selectedItem){
+        this.selectedItem = selectedItem;
     }
 
     /**
@@ -175,7 +169,7 @@ public class ForumStructureVm {
      * @param selectedNode the section that is currently selected
      */
     public void setSelectedNode(DefaultTreeNode selectedNode) {
-        this.selectedItem.setItem((Entity) selectedNode.getData());
+        this.selectedItem = (ForumStructureItem) selectedNode.getData();
     }
 
     private Jcommune getJcommune() {

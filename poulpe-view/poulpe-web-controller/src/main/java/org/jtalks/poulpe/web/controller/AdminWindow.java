@@ -104,12 +104,6 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     }
 
     /**
-     * Show the sections list view
-     */
-    public void onShowSections() {
-        windowManager.open("sections.zul");
-    }
-    /**
      * Points to the new implementation of Sections & Branches. Now it's called Forum Structure.
      */
     public void onShowForumStructure() {

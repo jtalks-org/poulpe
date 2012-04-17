@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.web.controller.section.mvvm.ForumStructureItem;
 import org.zkoss.zul.DefaultTreeNode;
 
 import javax.annotation.Nonnull;
@@ -40,7 +41,7 @@ public class TreeNodeFactory {
      */
     @SuppressWarnings("unchecked")
     public static ExtendedTreeNode buildForumStructure(@Nonnull Jcommune jcommune) {
-        List<DefaultTreeNode<PoulpeSection>> sectionNodes = getTreeNodes(jcommune.getSections());
+        List<DefaultTreeNode> sectionNodes = getTreeNodes(jcommune.getSections());
         return new ExtendedTreeNode(null, sectionNodes);
     }
 
@@ -51,16 +52,16 @@ public class TreeNodeFactory {
      * @param entity section or branch instance
      * @return node
      */
-    public static <T extends Entity> DefaultTreeNode<T> getTreeNode(T entity) {
+    public static <T extends Entity> DefaultTreeNode getTreeNode(T entity) {
         if (entity == null) {
             return null;
         }
         if (entity instanceof PoulpeSection) {
             @SuppressWarnings("unchecked")
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
-            return new DefaultTreeNode<T>(entity, getTreeNodes(branches));
+            return new DefaultTreeNode(new ForumStructureItem().setItem(entity), getTreeNodes(branches));
         } else if (entity instanceof PoulpeBranch) {
-            return new DefaultTreeNode<T>(entity);
+            return new DefaultTreeNode(new ForumStructureItem().setItem(entity));
         }
         return null;
     }
@@ -72,7 +73,7 @@ public class TreeNodeFactory {
      * @param entities list of entities
      * @return list of nodes
      */
-    public static <T extends Entity> List<DefaultTreeNode<T>> getTreeNodes(List<T> entities) {
+    public static <T extends Entity> List<DefaultTreeNode> getTreeNodes(List<T> entities) {
         if (entities != null) {
             return wrapInTreeNodes(entities);
         } else {
@@ -80,8 +81,8 @@ public class TreeNodeFactory {
         }
     }
 
-    private static <T extends Entity> List<DefaultTreeNode<T>> wrapInTreeNodes(List<T> entities) {
-        List<DefaultTreeNode<T>> list = new ArrayList<DefaultTreeNode<T>>();
+    private static <T extends Entity> List<DefaultTreeNode> wrapInTreeNodes(List<T> entities) {
+        List<DefaultTreeNode> list = new ArrayList<DefaultTreeNode>();
 
         for (T entity : entities) {
             // TODO: can it be null?

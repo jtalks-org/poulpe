@@ -19,7 +19,6 @@
         <listbox width="150px">
           <listitem label="${labels.admin.components}" forward="onClick=onShowComponents, onOK=onShowComponents" />
           <listitem label="${labels.admin.topic.types}" forward="onClick=onShowTopicTypes, onOK=onShowTopicTypes" />
-          <listitem label="${labels.admin.sections}" forward="onClick=onShowSections, onOK=onShowSections" />
           <listitem label="${labels.admin.users}" forward="onClick=onShowUsers, onOK=onShowUsers" />
           <listitem label="${labels.admin.ban.users}" forward="onClick=onShowUserBanning, onOK=onShowUserBanning" />
           <listitem label="${labels.admin.user.groups}" forward="onClick=onShowUserGroups, onOK=onShowUserGroups" />

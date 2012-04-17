@@ -75,10 +75,16 @@ public class ForumStructureItem {
 
     /**
      * Sets the wrapped item to {@code null}.
+     *
      * @return this
      */
     public ForumStructureItem clearState() {
         item = null;
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return item == null ? "null" : item.toString();
     }
 }

@@ -14,16 +14,15 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The central JCommune entity that contains all the configuration for
- * respective component.
- * 
+ * The central JCommune entity that contains all the configuration for respective component.
+ *
  * @author Guram Savinov
  * @author Vahluev Vyacheslav
  */
@@ -32,22 +31,20 @@ public class Jcommune extends Component {
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
-     * Creates Component with {@link ComponentType#FORUM}
-     * and empty section list
+     * Creates Component with {@link ComponentType#FORUM} and empty section list
      */
     public Jcommune() {
         setComponentType(ComponentType.FORUM);
     }
-    
+
     /**
-     * Converts given {@link Component} to {@link Jcommune}, keeping the
-     * identity of the first (i.e. id and uuid are copied as well)
-     * 
+     * Converts given {@link Component} to {@link Jcommune}, keeping the identity of the first (i.e. id and uuid are
+     * copied as well)
+     *
      * @param component to be converted
      * @return converted {@link Jcommune}
-     * 
-     * @exception IllegalArgumentException when passed component is not Forum
-     * (its componentType != {@link ComponentType#FORUM})
+     * @throws IllegalArgumentException when passed component is not Forum (its componentType != {@link
+     *                                  ComponentType#FORUM})
      */
     public static Jcommune fromComponent(Component component) {
         checkComponentType(component.getComponentType());
@@ -63,8 +60,8 @@ public class Jcommune extends Component {
     }
 
     /**
-     * @exception IllegalArgumentException if componentType is not {@link ComponentType#FORUM}
      * @param componentType to be checked
+     * @throws IllegalArgumentException if componentType is not {@link ComponentType#FORUM}
      */
     private static void checkComponentType(ComponentType componentType) {
         if (componentType != ComponentType.FORUM) {
@@ -75,7 +72,7 @@ public class Jcommune extends Component {
 
     /**
      * Gets the sections.
-     * 
+     *
      * @return the sections
      */
     public List<PoulpeSection> getSections() {
@@ -84,7 +81,7 @@ public class Jcommune extends Component {
 
     /**
      * Sets the sections.
-     * 
+     *
      * @param sections the sections to set
      */
     public void setSections(List<PoulpeSection> sections) {
@@ -93,10 +90,15 @@ public class Jcommune extends Component {
 
     /**
      * Adds a section to the list.
-     * 
+     *
      * @param section the section to add
      */
     public void addSection(PoulpeSection section) {
-        sections.add(section);
+        int position = sections.indexOf(section);
+        if (position >= 0) {
+            sections.set(position, section);
+        } else {
+            sections.add(section);
+        }
     }
 }
