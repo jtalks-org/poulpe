@@ -93,7 +93,7 @@
   <bean id="userBanningVm"
         scope="desktop"
         class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
-      <constructor-arg index="0" ref="userService"/>
+      <constructor-arg index="0" ref="userService" />
   </bean> 
 
   <!--Declaration of presenters -->
@@ -159,11 +159,6 @@
   <bean id="userPresenter" class="org.jtalks.poulpe.web.controller.users.UserPresenter" scope="prototype">
     <property name="userService" ref="userService" />
     <property name="windowManager" ref="windowManager" />
-    <property name="dialogManager" ref="dialogManager" />
-  </bean>
-
-  <bean id="userBanningPresenter" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningPresenter">
-    <property name="userService" ref="userService" />
     <property name="dialogManager" ref="dialogManager" />
   </bean>
 
