@@ -39,20 +39,31 @@
       <grid model="@load(userBanningVm.bannedUsers)" hflex="1">
         <columns>
           <column label="${labels.userbanning.username}" />
+          <column label="${labels.userbanning.firstname} - ${labels.userbanning.lastname}" />
           <column label="${labels.userbanning.email}" />
-          <column label="${labels.userbanning.posts}" />
-          <column label="${labels.userbanning.registrationDate}" />
           <column label="${labels.userbanning.managing}" />
         </columns>
         <template name="model" var="user">
-          <row onDoubleClick="@command('editBan', user=user)">
+          <row onDoubleClick="@command('editBan', userId=user.id)">
             <label value="@load(user.username)" />
+            <hbox>
+              <label value="@load(user.firstName)" />
+              <label value="@load(user.lastName)" />
+            </hbox>
             <label value="@load(user.email)" />
-            <label value="NOT IMPLEMENTED YET" />
-            <label value="NOT IMPLEMENTED YET" />
-            <hbox width="auto">
-              <button label="${labels.userbanning.edit}" onClick="@command('editBan', user=user)" />
-              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', user=user)" />
+            <!--
+              Here detected strange behavior, ZK showing error like:
+
+                Index: 221, Size: 221
+
+              Changes in enclosing list will breaks something, this problem visible when adding ban state to user and
+              after trying to change ban properties without reloading a page.
+              So using old way: user.id
+              // Zhivaev Vyacheslav
+            -->
+            <hbox>
+              <button label="${labels.userbanning.edit}" onClick="@command('editBan', userId=user.id)" />
+              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', userId=user.id)" />
             </hbox>
           </row>
         </template>
@@ -61,13 +72,24 @@
 
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
-    <window visible="@load(userBanningVm.editBanWindowOpened)">
-      <!-- 
-        we must have:
-        * permanent ban flag
-        * ban length(days)
-        * ban reason text
-       -->
+    <window visible="@load(userBanningVm.editBanWindowOpened)" title="${labels.userbanning.title}" width="500px"
+        border="normal" mode="popup" position="center">
+       <groupbox visible="@load(not empty userBanningVm.selectedUser)" hflex="true" mold="3d" height="100%">
+       <vlayout>
+       <checkbox id="permanent" value="@bind(userBanningVm.selectedUser.permanentBan)" label="${labels.userbanning.permanentBan}"  />
+       
+       ${labels.userbanning.banPeriod}
+      <intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1" />
+      
+       ${labels.userbanning.banReason}
+      <textbox id="banReason" value="@bind(userBanningVm.selectedUser.banReason)" rows="6" width="370px" />
+     
+       </vlayout>
+     </groupbox>
+      <hbox align="center" pack="center" width="100%">
+        <button onClick="@command('saveBanProperties')" label="${labels.window.save}" width="100px" />
+        <button onClick="@command('closeEditBanWindow')" label="${labels.window.cancel}" width="100px" />
+      </hbox>
     </window>
 
   </window>
