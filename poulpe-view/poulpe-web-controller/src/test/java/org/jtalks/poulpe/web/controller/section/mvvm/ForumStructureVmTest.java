@@ -79,7 +79,7 @@ public class ForumStructureVmTest {
     public void testGetSections(Jcommune jcommune) throws Exception {
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
 //        vm.initForumStructure();
-        TreeModel treeModel = vm.getSections();
+        TreeModel treeModel = vm.getSectionTree();
 
         TreeNode root = (TreeNode) treeModel.getRoot();
         assertEquals(root.getChildCount(), jcommune.getSections().size());
