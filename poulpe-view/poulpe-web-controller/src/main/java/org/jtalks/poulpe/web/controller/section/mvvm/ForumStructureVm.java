@@ -37,6 +37,10 @@ import javax.validation.constraints.NotNull;
  * @author Guram Savinov
  */
 public class ForumStructureVm {
+    private final static String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse";
+    private final static String SELECTED_ITEM_PROP = "selectedItem";
+    private final static String SECTIONS_PROP = "sections";
+
     private final ComponentService componentService;
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private DefaultTreeModel<ForumStructureItem> sections;
@@ -53,7 +57,7 @@ public class ForumStructureVm {
      * editing dialog.
      */
     @Command
-    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem"})
+    @NotifyChange({SHOW_CREATE_SECTION_DIALOG_PROP, SELECTED_ITEM_PROP})
     public void showNewSectionDialog(@BindingParam("createNew") boolean createSection) {
         showCreateSectionDialog = true;
         if (createSection) {
@@ -70,7 +74,7 @@ public class ForumStructureVm {
      * dialog.
      */
     @Command
-    @NotifyChange({"showCreateBranchDialog", "selectedItem"})
+    @NotifyChange({"showCreateBranchDialog", SELECTED_ITEM_PROP})
     public void showNewBranchDialog() {
         showCreateBranchDialog = true;
         if (isCreatingNewItem()) {
@@ -89,7 +93,7 @@ public class ForumStructureVm {
     }
 
     @Command
-    @NotifyChange({"sections", "selectedItem"})
+    @NotifyChange({SECTIONS_PROP, SELECTED_ITEM_PROP})
     public void deleteSelectedSection() {
         Jcommune jcommune = getTreeRootAsJcommune();
         jcommune.getSections().remove(selectedItem.getItem(PoulpeSection.class));
@@ -102,7 +106,7 @@ public class ForumStructureVm {
      * the selected section. Also makes the create section dialog to be closed.
      */
     @Command
-    @NotifyChange({"sections", "showCreateSectionDialogAndSetFalse", "selectedSection"})
+    @NotifyChange({SECTIONS_PROP, SHOW_CREATE_SECTION_DIALOG_PROP})
     public void saveSection() {
         Jcommune jcommune = getTreeRootAsJcommune();
         jcommune.addSection(selectedItem.getItem(PoulpeSection.class));
