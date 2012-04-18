@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section.mvvm;
 
+import java.util.List;
+
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -25,6 +27,8 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.ListModel;
+import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeModel;
 
 import javax.validation.constraints.NotNull;
@@ -43,9 +47,11 @@ public class ForumStructureVm {
 
     private final ComponentService componentService;
     private ForumStructureItem selectedItem = new ForumStructureItem();
-    private DefaultTreeModel<ForumStructureItem> sections;
+    private DefaultTreeModel<ForumStructureItem> sectionTree;
+    private ListModelList<PoulpeSection> sectionList;
     private boolean showCreateSectionDialog;
     private boolean showCreateBranchDialog;
+
 
     public ForumStructureVm(@NotNull ComponentService componentService) {
         this.componentService = componentService;
@@ -63,7 +69,7 @@ public class ForumStructureVm {
         if (createSection) {
             selectedItem = new ForumStructureItem().setItem(new PoulpeSection());
         } else {
-            selectedItem = sections.getSelection().iterator().next().getData();
+            selectedItem = sectionTree.getSelection().iterator().next().getData();
         }
     }
 
@@ -115,14 +121,28 @@ public class ForumStructureVm {
     }
 
     /**
-     * Returns all the sections in our database in order they are actually sorted.
+     * Returns all the sections from our database in tree model representation in order they are actually sorted.
      *
-     * @return all the sections in our database in order they are actually sorted or empty list if there are no
-     *         sections. Can't return {@code null}.
+     * @return all the sections from our database in tree model representation in order they are actually sorted
+     *         or empty tree if there are no sections. Can't return {@code null}.
      */
     @SuppressWarnings("unchecked")
-    public TreeModel getSections() {
-        return sections = new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune()));
+    public TreeModel getSectionTree() {
+        return sectionTree = new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune()));
+    }
+    
+    /**
+     * Returns all the sections from our database in list model representation in order they are actually sorted.
+     *
+     * @return all the sections from our database in list model representation in order they are actually sorted
+     *         or empty tree if there are no sections. Can't return {@code null}.
+     */
+    public ListModel<PoulpeSection> getSectionList() {
+        List<PoulpeSection> sections = loadJcommune().getSections();
+        sectionList = new ListModelList<PoulpeSection>(sections);
+        sectionList.clearSelection();
+        sectionList.addToSelection(sections.get(0));
+        return sectionList;
     }
 
     /**
@@ -176,7 +196,7 @@ public class ForumStructureVm {
     }
 
     private Jcommune getTreeRootAsJcommune() {
-        return (Jcommune) (Object) sections.getRoot().getData();
+        return (Jcommune) (Object) sectionTree.getRoot().getData();
     }
 
     private Jcommune loadJcommune() {

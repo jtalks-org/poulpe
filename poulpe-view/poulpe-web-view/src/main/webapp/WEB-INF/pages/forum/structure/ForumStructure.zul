@@ -9,7 +9,7 @@
     <button label="${labels.forum_structure.delete_section_button}" disabled="@load(vm.selectedItem.branch)"
             onClick="@command('deleteSelectedSection')"/>
     <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog')"/>
-    <tree model="@bind(vm.sections)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
+    <tree model="@bind(vm.sectionTree)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
         <treechildren>
           <template name="model" var="section">
             <treeitem label="@load(section.name)" />
@@ -49,8 +49,10 @@
             title="${labels.forum_structure.create_branch_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
-            visible="@load(vm.showCreateBranchDialogAndSetFalse)" height="230px" width="300px">
+            visible="@load(vm.showCreateBranchDialogAndSetFalse)" height="270px" width="300px">
       <vlayout form="@id('fx') @save(vm.selectedItem.item, before='saveBranch') @load(vm.selectedItem.item)">
+        ${labels.forum_structure.branch_dialog.section}
+        <combobox readonly="true" model="@bind(vm.sectionList)"/>
         ${labels.forum_structure.branch_dialog.branch_name}
         <textbox id="branchNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
                  errorMessage="@load(vmsgs[branchNameBox])"/>
