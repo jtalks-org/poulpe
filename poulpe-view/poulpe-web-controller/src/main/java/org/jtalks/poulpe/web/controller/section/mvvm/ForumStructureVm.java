@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.web.controller.section.mvvm;
 
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -23,7 +22,6 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.section.TreeNodeFactory;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
@@ -41,8 +39,7 @@ import javax.validation.constraints.NotNull;
 public class ForumStructureVm {
     private final ComponentService componentService;
     private ForumStructureItem selectedItem = new ForumStructureItem();
-    private Jcommune jcommune;
-    private DefaultTreeModel<ForumStructureItem> treeModel;
+    private DefaultTreeModel<ForumStructureItem> sections;
     private boolean showCreateSectionDialog;
     private boolean showCreateBranchDialog;
 
@@ -56,21 +53,21 @@ public class ForumStructureVm {
      * editing dialog.
      */
     @Command
-    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem", "selected"})
+    @NotifyChange({"showCreateSectionDialogAndSetFalse", "selectedItem"})
     public void showNewSectionDialog(@BindingParam("createNew") boolean createSection) {
         showCreateSectionDialog = true;
         if (createSection) {
             selectedItem = new ForumStructureItem().setItem(new PoulpeSection());
-        } else{
-            selectedItem = treeModel.getSelection().iterator().next().getData();
+        } else {
+            selectedItem = sections.getSelection().iterator().next().getData();
         }
     }
 
 
     /**
      * First of all decides whether to show a dialog for creation of the entity or for editing by looking at {@link
-     * #getSelectedBranch()} and then changes the flag {@link #isShowCreateBranchDialog()} in order to open the
-     * editing dialog.
+     * #getSelectedBranch()} and then changes the flag {@link #isShowCreateBranchDialog()} in order to open the editing
+     * dialog.
      */
     @Command
     @NotifyChange({"showCreateBranchDialog", "selectedItem"})
@@ -91,25 +88,27 @@ public class ForumStructureVm {
         return !selectedItem.isPersisted();
     }
 
+    @Command
+    @NotifyChange({"sections", "selectedItem"})
+    public void deleteSelectedSection() {
+        Jcommune jcommune = getTreeRootAsJcommune();
+        jcommune.getSections().remove(selectedItem.getItem(PoulpeSection.class));
+        componentService.saveComponent(jcommune);
+        selectedItem = new ForumStructureItem();
+    }
+
     /**
-     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and
-     * cleans the selected section. Also makes the create section dialog to be closed.
+     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and cleans
+     * the selected section. Also makes the create section dialog to be closed.
      */
     @Command
-    @NotifyChange({"sections", "showCreateSectionDialogAndSetFalse", "selectedSection", "selected"})
+    @NotifyChange({"sections", "showCreateSectionDialogAndSetFalse", "selectedSection"})
     public void saveSection() {
+        Jcommune jcommune = getTreeRootAsJcommune();
         jcommune.addSection(selectedItem.getItem(PoulpeSection.class));
         componentService.saveComponent(jcommune);
         selectedItem.clearState();
         showCreateSectionDialog = false;
-    }
-
-    /**
-     * Hits the database to obtain all the sections in the forum.
-     */
-    @Init
-    public void initForumStructure() {
-        jcommune = getJcommune();
     }
 
     /**
@@ -120,8 +119,7 @@ public class ForumStructureVm {
      */
     @SuppressWarnings("unchecked")
     public TreeModel getSections() {
-        treeModel = new DefaultTreeModel(TreeNodeFactory.buildForumStructure(jcommune));
-        return treeModel;
+        return sections = new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune()));
     }
 
     /**
@@ -136,7 +134,7 @@ public class ForumStructureVm {
         showCreateSectionDialog = false;
         return result;
     }
-    
+
     /**
      * Decides whether the  Edit Branch dialog should be shown. It's bound to the ZK Window on ZUL page by {@code
      * visible="@bind(...)"}. You should use this in order to control the window visibility. Use NotifyChanges in order
@@ -159,7 +157,7 @@ public class ForumStructureVm {
         return selectedItem;
     }
 
-    public void setSelectedItem(ForumStructureItem selectedItem){
+    public void setSelectedItem(ForumStructureItem selectedItem) {
         this.selectedItem = selectedItem;
     }
 
@@ -172,7 +170,11 @@ public class ForumStructureVm {
         this.selectedItem = (ForumStructureItem) selectedNode.getData();
     }
 
-    private Jcommune getJcommune() {
+    private Jcommune getTreeRootAsJcommune() {
+        return (Jcommune) (Object) sections.getRoot().getData();
+    }
+
+    private Jcommune loadJcommune() {
         return (Jcommune) componentService.getByType(ComponentType.FORUM);
     }
 }

@@ -40,9 +40,9 @@ public class TreeNodeFactory {
      * @return the whole tree of sections and branches built
      */
     @SuppressWarnings("unchecked")
-    public static ExtendedTreeNode buildForumStructure(@Nonnull Jcommune jcommune) {
+    public static ExtendedTreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
         List<DefaultTreeNode> sectionNodes = getTreeNodes(jcommune.getSections());
-        return new ExtendedTreeNode(null, sectionNodes);
+        return new ExtendedTreeNode(jcommune, sectionNodes);
     }
 
     /**

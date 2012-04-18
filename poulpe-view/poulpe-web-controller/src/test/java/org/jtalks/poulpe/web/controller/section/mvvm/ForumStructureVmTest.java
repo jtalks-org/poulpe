@@ -49,7 +49,7 @@ public class ForumStructureVmTest {
     public void testSave(Jcommune jcommune) throws Exception {
         PoulpeSection selectedSection = new PoulpeSection("section", "description");
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-        vm.initForumStructure();
+//        vm.initForumStructure();
         vm.setSelectedNode(new DefaultTreeNode<PoulpeSection>(selectedSection));
         vm.saveSection();
 
@@ -78,7 +78,7 @@ public class ForumStructureVmTest {
     @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
     public void testGetSections(Jcommune jcommune) throws Exception {
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-        vm.initForumStructure();
+//        vm.initForumStructure();
         TreeModel treeModel = vm.getSections();
 
         TreeNode root = (TreeNode) treeModel.getRoot();
