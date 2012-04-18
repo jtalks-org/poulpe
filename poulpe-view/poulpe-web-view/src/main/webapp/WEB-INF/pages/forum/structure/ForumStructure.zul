@@ -45,5 +45,23 @@
         </cell>
       </vlayout>
     </window>
+    <window id="editBranchDialog"
+            title="${labels.forum_structure.create_branch_dialog.title}" closable="true" mode="modal" border="normal"
+            onClose="self.visible=false;event.stopPropagation();"
+            onCancel="self.visible=false"
+            visible="@load(vm.showCreateBranchDialogAndSetFalse)" height="230px" width="300px">
+      <vlayout form="@id('fx') @save(vm.selectedItem.item, before='saveBranch') @load(vm.selectedItem.item)">
+        ${labels.forum_structure.branch_dialog.branch_name}
+        <textbox id="branchNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
+                 errorMessage="@load(vmsgs[branchNameBox])"/>
+        ${labels.forum_structure.branch_dialog.branch_description}
+        <textbox rows="5" id="branchDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
+                 errorMessage="@load(vmsgs[branchDescriptionText])" width="97%"/>
+        <cell>
+          <button label="${labels.dialogs.save_button}" onClick="@command('saveBranch')"/>
+          <button label="${labels.dialogs.cancel_button}" onClick="editBranchDialog.visible=false;"/>
+        </cell>
+      </vlayout>
+    </window>
   </window>
 </zk>

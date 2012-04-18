@@ -39,7 +39,7 @@ import javax.validation.constraints.NotNull;
 public class ForumStructureVm {
     private static final String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse",
             SELECTED_ITEM_PROP = "selectedItem", SECTIONS_PROP = "sections",
-            SHOW_CREATE_BRANCH_DIALOG_PROP = "showCreateBranchDialog";
+            SHOW_CREATE_BRANCH_DIALOG_PROP = "showCreateBranchDialogAndSetFalse";
 
     private final ComponentService componentService;
     private ForumStructureItem selectedItem = new ForumStructureItem();
@@ -66,7 +66,6 @@ public class ForumStructureVm {
             selectedItem = sections.getSelection().iterator().next().getData();
         }
     }
-
 
     /**
      * First of all decides whether to show a dialog for creation of the entity or for editing by looking at {@link
@@ -138,7 +137,7 @@ public class ForumStructureVm {
         showCreateSectionDialog = false;
         return result;
     }
-
+    
     /**
      * Decides whether the  Edit Branch dialog should be shown. It's bound to the ZK Window on ZUL page by {@code
      * visible="@bind(...)"}. You should use this in order to control the window visibility. Use NotifyChanges in order
@@ -146,8 +145,10 @@ public class ForumStructureVm {
      *
      * @return {@code true} if the dialog should be shown to the user
      */
-    public boolean isShowCreateBranchDialog() {
-        return showCreateBranchDialog;
+    public boolean isShowCreateBranchDialogAndSetFalse() {
+        boolean result = showCreateBranchDialog;
+        showCreateBranchDialog = false;
+        return result;
     }
 
     /**
