@@ -37,7 +37,7 @@ import javax.validation.constraints.NotNull;
  * @author Guram Savinov
  */
 public class ForumStructureVm {
-    private final static String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse",
+    private static final String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse",
             SELECTED_ITEM_PROP = "selectedItem", SECTIONS_PROP = "sections",
             SHOW_CREATE_BRANCH_DIALOG_PROP = "showCreateBranchDialog";
 
