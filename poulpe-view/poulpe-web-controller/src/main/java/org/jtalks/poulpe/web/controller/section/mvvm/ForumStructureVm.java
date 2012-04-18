@@ -37,9 +37,9 @@ import javax.validation.constraints.NotNull;
  * @author Guram Savinov
  */
 public class ForumStructureVm {
-    private final static String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse";
-    private final static String SELECTED_ITEM_PROP = "selectedItem";
-    private final static String SECTIONS_PROP = "sections";
+    private final static String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse",
+            SELECTED_ITEM_PROP = "selectedItem", SECTIONS_PROP = "sections",
+            SHOW_CREATE_BRANCH_DIALOG_PROP = "showCreateBranchDialog";
 
     private final ComponentService componentService;
     private ForumStructureItem selectedItem = new ForumStructureItem();
@@ -74,7 +74,7 @@ public class ForumStructureVm {
      * dialog.
      */
     @Command
-    @NotifyChange({"showCreateBranchDialog", SELECTED_ITEM_PROP})
+    @NotifyChange({SHOW_CREATE_BRANCH_DIALOG_PROP, SELECTED_ITEM_PROP})
     public void showNewBranchDialog() {
         showCreateBranchDialog = true;
         if (isCreatingNewItem()) {
