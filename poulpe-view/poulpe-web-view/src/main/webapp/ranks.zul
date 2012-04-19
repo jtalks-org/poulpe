@@ -1,29 +1,64 @@
 <?page id="rankManagement" title="Rank Management" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window width="30%" apply="org.zkoss.bind.BindComposer" id="ranksWindow"
-      title="${labels.ranks.list.title}"  viewModel="@id('vm') @init(rankManagementVm)">
-        <listbox multiple="true" model="@bind(vm.items)" height="300px" selectedItem="@bind(vm.selected)">
-            <listhead>
-                <listheader label="${labels.ranks.edit.name}"/>
-                <listheader label="${labels.ranks.edit.post.count}"/>
-            </listhead>
-            <template name="model" var="item">
-                <listitem onDoubleClick="@command('edit')" onOK="@command('edit')">
-                    <listcell label="@bind(item.rankName)" />
-                    <listcell>
-                        <label value="${labels.ranks.assigned_by_admin}" if="${item.autoAssigned=='false'}"/>
-                        <label value="@bind(item.postCount)" if="${item.autoAssigned=='true'}"/>
-                    </listcell>
-                </listitem>
-            </template>
-            <listfoot>
-                <listfooter>
-                    <button onClick="@command('newItem')" label="${labels.ranks.add}" sclass="ranks.addButton" />
-                    <button id="deleteButton" onClick="@command('delete')" label="${labels.ranks.delete}" sclass="ranks.deleteButton" />
-                </listfooter>
-            </listfoot>
-        </listbox>
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window viewModel="@id('vm') @init(rankManagementVm)" apply="org.zkoss.bind.BindComposer" width="30%"
+          validationMessages="@id('vmsgs')">
+    <listbox model="@bind(vm.ranks)" height="300px" selectedItem="@bind(vm.selected)">
+      <listhead>
+        <listheader label="${labels.ranks.edit.name}"/>
+        <listheader label="${labels.ranks.edit.post.count}"/>
+      </listhead>
+      <template name="model" var="item">
+        <listitem onDoubleClick="@command('openEditRankDialog')" onOk="@command('openEditRankDialog')">
+          <listcell label="@bind(item.rankName)"/>
+          <listcell>
+            <label value="${labels.ranks.assigned_by_admin}" if="${item.autoAssigned == 'false'}"/>
+            <label value="@bind(item.postCount)" if="${item.autoAssigned == 'true'}"/>
+          </listcell>
+        </listitem>
+      </template>
+    </listbox>
+    <toolbar>
+      <button label="${labels.ranks.add}" onClick="@command('openAddNewRankDialog')" sclass="ranks.addButton"/>
+      <button label="${labels.ranks.delete}" onClick="@command('deleteRank')" sclass="ranks.deleteButton"
+              disabled="@load(empty vm.selected)"/>
+    </toolbar>
+    <window mode="modal" visible="@load(vm.showDialog)" validationMessages="@id('vmsgs')">
+      <groupbox
+          form="@id('fx') @load(vm.selected) @save(vm.selected, before='saveRank')
+                @validator('formBeanValidator', prefix='f_')">
+        <grid>
+          <columns>
+            <column width="120px"/>
+            <column/>
+          </columns>
+          <rows>
+            <row>
+              ${labels.ranks.edit.name}
+              <hlayout>
+                <textbox id="rankName" value="@bind(fx.rankName) @validator('beanValidator')"
+                         errorMessage="@load(vmsgs[rankName])"/>
+              </hlayout>
+            </row>
+            <row>
+              <label value="${labels.ranks.edit.auto}"/>
+              <checkbox checked="@bind(fx.autoAssigned)"/>
+            </row>
+            <row>
+              ${labels.ranks.edit.post.count}
+              <hlayout>
+                <intbox id="postCount" value="@bind(fx.postCount)" constraint="no negative,no zero"
+                        disabled="@load(not fx.autoAssigned)" />
+              </hlayout>
+            </row>
+          </rows>
+        </grid>
+      </groupbox>
+      <toolbar>
+        <button label="${labels.ranks.edit.save}" onClick="@command('saveRank')"/>
+        <button label="${labels.ranks.edit.cancel}" onClick="@command('cancel')"/>
+      </toolbar>
     </window>
+  </window>
 </zk>
