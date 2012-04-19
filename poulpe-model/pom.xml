@@ -130,6 +130,16 @@
   </dependencies>
 
   <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.7.2</version>
+        <configuration>
+          <skipTests>${skipDaoTests}</skipTests>
+        </configuration>
+      </plugin>
+    </plugins>
     <resources>
       <resource>
         <directory>src/main/resources</directory>
@@ -152,6 +162,7 @@
     <jdbc.user>${env.JTALKS_DB_USER}</jdbc.user>
     <jdbc.pass>${env.JTALKS_DB_PASSWORD}</jdbc.pass>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <skipDaoTests>true</skipDaoTests>
   </properties>
 </project>
 
