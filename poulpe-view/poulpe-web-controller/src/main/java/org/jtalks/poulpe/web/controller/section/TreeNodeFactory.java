@@ -16,21 +16,19 @@ package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.mvvm.ForumStructureItem;
 import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
- * This class should be used to wrap one-to-many related persistent entities into ExtendedTreeNode structures. To be
- * able to handle entity it should be described within getTreeNode(Entity) method.
+ * Creates a tree structure to be shown at the forum structure page.
  *
- * @author Konstantin Akimov
+ * @author stanislav bashkirtsev
  */
 public class TreeNodeFactory {
     /**
@@ -40,9 +38,9 @@ public class TreeNodeFactory {
      * @return the whole tree of sections and branches built
      */
     @SuppressWarnings("unchecked")
-    public static ExtendedTreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
-        List<DefaultTreeNode> sectionNodes = getTreeNodes(jcommune.getSections());
-        return new ExtendedTreeNode(jcommune, sectionNodes);
+    public static TreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
+        List<DefaultTreeNode> sectionNodes = wrapInTreeNodes(jcommune.getSections());
+        return new DefaultTreeNode(jcommune, sectionNodes);
     }
 
     /**
@@ -53,44 +51,20 @@ public class TreeNodeFactory {
      * @return node
      */
     public static <T extends Entity> DefaultTreeNode getTreeNode(T entity) {
-        if (entity == null) {
-            return null;
-        }
         if (entity instanceof PoulpeSection) {
-            @SuppressWarnings("unchecked")
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
-            return new DefaultTreeNode(new ForumStructureItem().setItem(entity), getTreeNodes(branches));
-        } else if (entity instanceof PoulpeBranch) {
+            return new DefaultTreeNode(new ForumStructureItem().setItem(entity), wrapInTreeNodes(branches));
+        } else {
             return new DefaultTreeNode(new ForumStructureItem().setItem(entity));
         }
-        return null;
     }
 
-
-    /**
-     * Wrap a List of persistent entities
-     *
-     * @param entities list of entities
-     * @return list of nodes
-     */
-    public static <T extends Entity> List<DefaultTreeNode> getTreeNodes(List<T> entities) {
-        if (entities != null) {
-            return wrapInTreeNodes(entities);
-        } else {
-            return Collections.emptyList();
-        }
-    }
 
     private static <T extends Entity> List<DefaultTreeNode> wrapInTreeNodes(List<T> entities) {
         List<DefaultTreeNode> list = new ArrayList<DefaultTreeNode>();
-
         for (T entity : entities) {
-            // TODO: can it be null?
-            if (entity != null) {
-                list.add(getTreeNode(entity));
-            }
+            list.add(getTreeNode(entity));
         }
-
         return list;
     }
 }

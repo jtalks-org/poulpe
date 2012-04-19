@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.TreeNode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,7 +46,7 @@ public class TreeNodeFactoryTest {
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches", enabled = false)
     public void testBuildForumStructure(Jcommune jcommune) throws Exception {
-        DefaultTreeNode root = TreeNodeFactory.buildForumStructure(jcommune);
+        TreeNode root = TreeNodeFactory.buildForumStructure(jcommune);
         assertEquals(root.getChildCount(), 2);
         assertSame(root.getChildAt(0).getChildAt(0).getData(), jcommune.getSections().get(0).getBranches().get(0));
         assertSame(root.getChildAt(1).getChildAt(1).getData(), jcommune.getSections().get(1).getBranches().get(1));
@@ -54,7 +55,6 @@ public class TreeNodeFactoryTest {
     @Test(enabled = false)
     public void getTreeNodeEmptySection() {
         DefaultTreeNode<PoulpeSection> testNode = TreeNodeFactory.getTreeNode(emptySection);
-
         assertEquals(testNode.getData(), emptySection);
         assertTrue(testNode.getChildren().isEmpty());
     }
@@ -62,7 +62,6 @@ public class TreeNodeFactoryTest {
     @Test(enabled = false)
     public void getTreeNodeBranch() {
         DefaultTreeNode<PoulpeBranch> testNode = TreeNodeFactory.getTreeNode(branch);
-
         assertEquals(testNode.getData(), branch);
         assertNull(testNode.getChildren());
         assertTrue(testNode.isLeaf());
@@ -92,14 +91,6 @@ public class TreeNodeFactoryTest {
         assertEquals(testNode.getChildAt(0).getData(), section.getPoulpeBranches().get(0));
     }
 
-    @Test(enabled = false)
-    public void getTreeNodesTest() {
-        List<DefaultTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
-
-        assertEquals(nodes.size(), sections.size());
-        assertSectionsContainsAllBranches(nodes);
-    }
-
     private void assertSectionsContainsAllBranches(List<DefaultTreeNode> nodes) {
         for (DefaultTreeNode<PoulpeSection> node : nodes) {
             List<Branch> childBranches = node.getData().getBranches();
@@ -114,15 +105,6 @@ public class TreeNodeFactoryTest {
             DefaultTreeNode<PoulpeBranch> subnode = (DefaultTreeNode<PoulpeBranch>) obj;
             assertTrue(subnode.isLeaf());
         }
-    }
-
-    @Test(enabled = false)
-    public void getTreeNodesWithNullsTest() {
-        List<PoulpeSection> sections = Arrays.asList(section, null, section, null);
-        List<DefaultTreeNode> nodes = TreeNodeFactory.getTreeNodes(sections);
-
-        assertEquals(nodes.size(), 2);
-        assertSectionsContainsAllBranches(nodes);
     }
 
     @DataProvider

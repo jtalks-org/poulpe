@@ -14,9 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section.mvvm;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Section;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -25,13 +24,10 @@ import org.jtalks.poulpe.web.controller.section.TreeNodeFactory;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zul.DefaultTreeModel;
-import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.ListModel;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.TreeModel;
+import org.zkoss.zul.*;
 
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
@@ -42,7 +38,7 @@ import javax.validation.constraints.NotNull;
  */
 public class ForumStructureVm {
     private static final String SHOW_CREATE_SECTION_DIALOG_PROP = "showCreateSectionDialogAndSetFalse",
-            SELECTED_ITEM_PROP = "selectedItem", SECTIONS_PROP = "sections",
+            SELECTED_ITEM_PROP = "selectedItem", SECTIONS_PROP = "sectionTree",
             SHOW_CREATE_BRANCH_DIALOG_PROP = "showCreateBranchDialogAndSetFalse";
 
     private final ComponentService componentService;
@@ -120,22 +116,35 @@ public class ForumStructureVm {
         showCreateSectionDialog = false;
     }
 
+    @Command
+    @NotifyChange(SECTIONS_PROP)
+    public void saveBranch() {
+        Jcommune jcommune = getTreeRootAsJcommune();
+        PoulpeBranch branch = selectedItem.getItem(PoulpeBranch.class);
+        Section section = branch.getSection();
+        section.addOrUpdateBranch(branch);
+        componentService.saveComponent(jcommune);
+//        int sectionIndex = sectionTree.getSelectionPath()[1];
+//        PoulpeSection section = sectionTree.getRoot().getChildAt(sectionIndex).getData().getItem(PoulpeSection.class);
+//        section
+    }
+
     /**
      * Returns all the sections from our database in tree model representation in order they are actually sorted.
      *
-     * @return all the sections from our database in tree model representation in order they are actually sorted
-     *         or empty tree if there are no sections. Can't return {@code null}.
+     * @return all the sections from our database in tree model representation in order they are actually sorted or
+     *         empty tree if there are no sections. Can't return {@code null}.
      */
     @SuppressWarnings("unchecked")
     public TreeModel getSectionTree() {
         return sectionTree = new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune()));
     }
-    
+
     /**
      * Returns all the sections from our database in list model representation in order they are actually sorted.
      *
-     * @return all the sections from our database in list model representation in order they are actually sorted
-     *         or empty tree if there are no sections. Can't return {@code null}.
+     * @return all the sections from our database in list model representation in order they are actually sorted or
+     *         empty tree if there are no sections. Can't return {@code null}.
      */
     public ListModel<PoulpeSection> getSectionList() {
         List<PoulpeSection> sections = loadJcommune().getSections();
@@ -157,7 +166,7 @@ public class ForumStructureVm {
         showCreateSectionDialog = false;
         return result;
     }
-    
+
     /**
      * Decides whether the  Edit Branch dialog should be shown. It's bound to the ZK Window on ZUL page by {@code
      * visible="@bind(...)"}. You should use this in order to control the window visibility. Use NotifyChanges in order
@@ -191,6 +200,7 @@ public class ForumStructureVm {
      *
      * @param selectedNode the section that is currently selected
      */
+    @NotifyChange(SELECTED_ITEM_PROP)
     public void setSelectedNode(DefaultTreeNode selectedNode) {
         this.selectedItem = (ForumStructureItem) selectedNode.getData();
     }
