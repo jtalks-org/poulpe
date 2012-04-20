@@ -48,8 +48,6 @@ public class ForumStructureVmTest {
     public void testSave(Jcommune jcommune) throws Exception {
         PoulpeSection selectedSection = new PoulpeSection("section", "description");
         when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-//        vm.initForumStructure();
-        vm.setSelectedNode(new DefaultTreeNode<PoulpeSection>(selectedSection));
         vm.saveSection();
 
         verify(componentService).saveComponent(jcommune);

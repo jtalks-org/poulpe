@@ -20,10 +20,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Default;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
@@ -47,6 +44,11 @@ public class ForumStructureVm {
         this.componentService = componentService;
     }
 
+    @Init
+    public void init(){
+        viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune())));
+    }
+
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void showNewSectionDialog(@BindingParam("createNew") boolean createNew) {
@@ -57,7 +59,7 @@ public class ForumStructureVm {
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void showNewBranchDialog(@BindingParam("createNew") boolean createNew,
             @BindingParam("fromMenu") @Default("false") boolean fromMenu) {
-        viewData.showBranchDialog(createNew, fromMenu);
+        viewData.showBranchDialog(createNew);
     }
 
     @Command
@@ -108,7 +110,6 @@ public class ForumStructureVm {
     }
 
     public ForumStructureData getViewData() {
-        viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune())));
         return viewData;
     }
 
@@ -126,8 +127,8 @@ public class ForumStructureVm {
      * @param selectedNode the section that is currently selected
      */
     @NotifyChange(SELECTED_ITEM_PROP)
-    public void setSelectedNode(DefaultTreeNode selectedNode) {
-        this.viewData.setSelectedItem((ForumStructureItem) selectedNode.getData());
+    public void setSelectedNode(DefaultTreeNode<ForumStructureItem> selectedNode) {
+        this.viewData.setSelectedItem(selectedNode.getData());
     }
 
     private Jcommune loadJcommune() {
