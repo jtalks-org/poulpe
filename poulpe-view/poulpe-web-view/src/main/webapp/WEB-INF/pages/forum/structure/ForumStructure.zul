@@ -16,10 +16,11 @@
           </template>
         </treechildren>
     </tree>
-    <button label="${labels.forum_structure.create_section_button}"
-            onClick="@command('showNewSectionDialog', show=true)"/>
-    <button label="${labels.forum_structure.create_branch_button}"
-            onClick="@command('showNewBranchDialog', show=true)"/>
+    <button label="${labels.forum_structure.create_section_button}" onClick="@command('showNewSectionDialog', createNew=true)"/>
+    <button label="${labels.forum_structure.edit_section_button}" onClick="@command('showNewSectionDialog', createNew=false)"/>
+    <button label="${labels.forum_structure.delete_section_button}" disabled="@load(vm.selectedItem.branch)"
+            onClick="@command('deleteSelectedSection')"/>
+    <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog', createNew=true)"/>
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_section_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewSectionDialog', createNew=false)"/>
