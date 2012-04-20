@@ -21,7 +21,7 @@ public class ForumStructureData {
     private boolean showSectionDialog;
     private boolean showBranchDialog;
     private boolean fromMenu;
-    private ForumStructureItem prevSelectedItem;
+    private int sectionIndex;
 
     public Jcommune getRootAsJcommune() {
         return (Jcommune) (Object) sectionTree.getRoot().getData();
@@ -43,8 +43,7 @@ public class ForumStructureData {
 
     public ForumStructureData showBranchDialog(boolean createNew, boolean fromMenu) {
         if (fromMenu) {
-            prevSelectedItem = new ForumStructureItem();
-            prevSelectedItem.setItem(selectedItem.getItem(PoulpeSection.class));
+            sectionList.indexOf(selectedItem.getItem(PoulpeSection.class));
         }
         if (createNew) {
             selectedItem.setItem(new PoulpeBranch());
@@ -97,7 +96,7 @@ public class ForumStructureData {
         this.sectionList.addAll(sections);
         sectionList.clearSelection();
         if (fromMenu) {
-            sectionList.addToSelection(prevSelectedItem.getItem(PoulpeSection.class));
+            sectionList.addToSelection(sections.get(sectionIndex));
         } else {
             sectionList.addToSelection(sections.get(0));
         }
