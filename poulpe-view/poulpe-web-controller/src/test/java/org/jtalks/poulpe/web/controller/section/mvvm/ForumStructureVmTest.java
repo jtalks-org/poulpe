@@ -19,12 +19,11 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.TreeModel;
-import org.zkoss.zul.TreeNode;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -56,36 +55,6 @@ public class ForumStructureVmTest {
         verify(componentService).saveComponent(jcommune);
         assertNull(vm.getSelectedItem().getItem());
         jcommune.getSections().contains(selectedSection);
-    }
-
-    @Test(enabled = false)
-    public void testShowNewSectionDialog_creatingNewSection() throws Exception {
-        vm.showNewSectionDialog(true);
-        assertNull(vm.getSelectedItem().getItem(PoulpeSection.class).getName(), null);
-        assertEquals(vm.getSelectedItem().getItem(PoulpeSection.class).getId(), 0);
-        assertTrue(vm.isShowCreateSectionDialogAndSetFalse());
-    }
-
-    @Test(enabled = false)
-    public void testShowNewSectionDialog_creatingNewSectionAfterEditingCanceled() throws Exception {
-        vm.setSelectedNode(new DefaultTreeNode<PoulpeSection>(new PoulpeSection("some name", "some description")));
-        vm.showNewSectionDialog(true);
-        assertNull(vm.getSelectedItem().getItem(PoulpeSection.class).getName(), null);
-        assertEquals(vm.getSelectedItem().getItem().getId(), 0);
-        assertTrue(vm.isShowCreateSectionDialogAndSetFalse());
-    }
-
-    @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
-    public void testGetSections(Jcommune jcommune) throws Exception {
-        when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-//        vm.initForumStructure();
-        TreeModel treeModel = vm.getSectionTree();
-
-        TreeNode root = (TreeNode) treeModel.getRoot();
-        assertEquals(root.getChildCount(), jcommune.getSections().size());
-        assertEquals(root.getChildAt(1).getChildCount(), jcommune.getSections().get(1).getBranches().size());
-        Object branch1OfSection0 = root.getChildAt(0).getChildAt(1).getData();
-        assertSame(branch1OfSection0, jcommune.getSections().get(0).getBranches().get(1));
     }
 
     @DataProvider

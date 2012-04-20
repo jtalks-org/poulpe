@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.section.mvvm;
 
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 

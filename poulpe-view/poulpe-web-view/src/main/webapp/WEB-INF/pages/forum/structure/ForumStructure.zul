@@ -8,8 +8,8 @@
     <button label="${labels.forum_structure.edit_section_button}" onClick="@command('showNewSectionDialog', createNew=false)"/>
     <button label="${labels.forum_structure.delete_section_button}" disabled="@load(vm.selectedItem.branch)"
             onClick="@command('deleteSelectedSection')"/>
-    <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog')"/>
-    <tree model="@bind(vm.sectionTree)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
+    <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog', createNew=true)"/>
+    <tree model="@bind(vm.viewData.sectionTree)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
         <treechildren>
           <template name="model" var="section">
             <treeitem label="@load(section.name)" />
@@ -27,32 +27,34 @@
                 onClick="@command('deleteSelectedSection')"/>
       <menuitem label="Permissions" visible="@load(vm.selectedItem.branch)"/>
     </menupopup>
+    <!--SECTION DIALOG-->
     <window id="editSectionDialog"
             title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
-            visible="@load(vm.showCreateSectionDialogAndSetFalse)" height="230px" width="300px">
+            visible="@load(vm.viewData.showSectionDialog)" height="230px" width="300px">
       <vlayout form="@id('fx') @save(vm.selectedItem.item, before='saveSection') @load(vm.selectedItem.item)">
         ${labels.forum_structure.section_dialog.section_name}
-        <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
+        <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1" vflex="min"
                  errorMessage="@load(vmsgs[sectionNameBox])"/>
         ${labels.forum_structure.section_dialog.section_description}
-        <textbox rows="5" id="sectionDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
-                 errorMessage="@load(vmsgs[sectionDescriptionText])" width="97%"/>
+        <textbox id="sectionDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
+                 errorMessage="@load(vmsgs[sectionDescriptionText])" vflex="10" hflex="1"  />
         <cell>
           <button label="${labels.dialogs.save_button}" onClick="@command('saveSection')"/>
           <button label="${labels.dialogs.cancel_button}" onClick="editSectionDialog.visible=false;"/>
         </cell>
       </vlayout>
     </window>
+    <!--BRANCH DIALOG-->
     <window id="editBranchDialog"
             title="${labels.forum_structure.create_branch_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
-            visible="@load(vm.showCreateBranchDialogAndSetFalse)" height="270px" width="300px">
+            visible="@load(vm.viewData.showBranchDialog)" height="270px" width="300px">
       <vlayout form="@id('fx') @save(vm.selectedItem.item, before='saveBranch') @load(vm.selectedItem.item)">
         ${labels.forum_structure.branch_dialog.section}
-        <combobox readonly="true" model="@bind(vm.sectionList)"/>
+        <combobox readonly="true" model="@load(vm.viewData.sectionList)" />
         ${labels.forum_structure.branch_dialog.branch_name}
         <textbox id="branchNameBox" value="@bind(fx.name) @validator('beanValidator')" width="97%"
                  errorMessage="@load(vmsgs[branchNameBox])"/>

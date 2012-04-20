@@ -17,7 +17,6 @@ package org.jtalks.poulpe.web.controller.section;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.web.controller.section.mvvm.ForumStructureItem;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeNode;
 

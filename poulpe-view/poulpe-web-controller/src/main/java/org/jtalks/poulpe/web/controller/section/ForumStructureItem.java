@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.web.controller.section.mvvm;
+package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
