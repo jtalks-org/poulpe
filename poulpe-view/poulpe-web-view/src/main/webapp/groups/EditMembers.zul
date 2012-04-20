@@ -4,14 +4,11 @@
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.title}"
+  <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.group_caption}"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')">
+    <caption label=" @load(editGroupMembersVm.groupToEdit.name)"/>
     <vbox>
-      <hbox style="padding: 5px">
-        <label value="${labels.groups.edit_members.group_caption}" style="font: bold 18px sans-serif" />
-        <label value="@load(editGroupMembersVm.groupToEdit.name)" style="font: bold 18px sans-serif" />
-      </hbox>
       <hbox>
         <vbox>
           <panel title="${labels.groups.edit_members.available}" border="normal">
@@ -42,15 +39,15 @@
             </panelchildren>
           </panel>
         </vbox>
-        <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
+        <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="30px" align="center">
           <button onClick="@command('add')" disabled="@load(empty editGroupMembersVm.availSelected)"
-              image="/resources/img/rightarrow.png" width="36px" sclass="edit.members.addButton" />
+              image="/resources/img/rightarrow.png" width="34px" sclass="edit.members.addButton" />
           <button onClick="@command('addAll')" disabled="@load(empty editGroupMembersVm.avail)"
-              image="/resources/img/rightrightarrow.png" width="36px" sclass="edit.members.addAllButton" />
+              image="/resources/img/rightrightarrow.png" width="34px" sclass="edit.members.addAllButton" />
           <button onClick="@command('remove')" disabled="@load(empty editGroupMembersVm.existSelected)"
-              image="/resources/img/leftarrow.png" width="36px" sclass="edit.members.removeButton" />
+              image="/resources/img/leftarrow.png" width="34px" sclass="edit.members.removeButton" />
           <button onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVm.exist)"
-              image="/resources/img/leftleftarrow.png" width="36px" sclass="edit.members.removeAllButton" />
+              image="/resources/img/leftleftarrow.png" width="34px" sclass="edit.members.removeAllButton" />
         </vbox>
         <vbox>
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
