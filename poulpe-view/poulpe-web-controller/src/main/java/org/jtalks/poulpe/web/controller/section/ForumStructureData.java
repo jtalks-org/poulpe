@@ -42,8 +42,10 @@ public class ForumStructureData {
     }
 
     public ForumStructureData showBranchDialog(boolean createNew, boolean fromMenu) {
-        prevSelectedItem = new ForumStructureItem();
-        prevSelectedItem.setItem(selectedItem.getItem(PoulpeSection.class));
+        if (fromMenu) {
+            prevSelectedItem = new ForumStructureItem();
+            prevSelectedItem.setItem(selectedItem.getItem(PoulpeSection.class));
+        }
         if (createNew) {
             selectedItem.setItem(new PoulpeBranch());
         }
