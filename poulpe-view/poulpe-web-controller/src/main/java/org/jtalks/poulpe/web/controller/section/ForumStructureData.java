@@ -41,9 +41,10 @@ public class ForumStructureData {
         return this;
     }
 
-    public ForumStructureData showBranchDialog(boolean createNew, boolean fromMenu) {
+    public ForumStructureData showBranchDialog(boolean createNew,
+            boolean fromMenu) {
         if (fromMenu) {
-            sectionList.indexOf(selectedItem.getItem(PoulpeSection.class));
+            sectionIndex = sectionList.indexOf(selectedItem.getItem(PoulpeSection.class));
         }
         if (createNew) {
             selectedItem.setItem(new PoulpeBranch());
@@ -92,7 +93,8 @@ public class ForumStructureData {
     public void setSectionTree(DefaultTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
-        List<PoulpeSection> sections = unwrap(sectionTree.getRoot().getChildren());
+        List<PoulpeSection> sections = unwrap(sectionTree.getRoot()
+                .getChildren());
         this.sectionList.addAll(sections);
         sectionList.clearSelection();
         if (fromMenu) {
@@ -102,7 +104,8 @@ public class ForumStructureData {
         }
     }
 
-    private List<PoulpeSection> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {
+    private List<PoulpeSection> unwrap(
+            List<TreeNode<ForumStructureItem>> sectionNodes) {
         List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
             sections.add(sectionNode.getData().getItem(PoulpeSection.class));
