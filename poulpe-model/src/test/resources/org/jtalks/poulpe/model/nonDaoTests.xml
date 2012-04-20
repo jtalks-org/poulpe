@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suite name="entity_suite" verbose="1" >
+  <test name="entity">
+    <packages>
+      <package name="org.jtalks.poulpe.model.entity.*" />
+    </packages>
+  </test>
+</suite>
