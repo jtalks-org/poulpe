@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -44,7 +45,12 @@ public class ForumStructureData {
     public ForumStructureData showBranchDialog(boolean createNew,
             boolean fromMenu) {
         if (fromMenu) {
-            sectionIndex = sectionList.indexOf(selectedItem.getItem(PoulpeSection.class));
+            Entity entity = selectedItem.getItem();
+            if (entity.getClass() == PoulpeBranch.class) {
+                sectionIndex = sectionList.indexOf(selectedItem.getItem(PoulpeBranch.class).getSection());
+            } else {
+                sectionIndex = sectionList.indexOf(selectedItem.getItem(PoulpeSection.class));
+            }
         }
         if (createNew) {
             selectedItem.setItem(new PoulpeBranch());
