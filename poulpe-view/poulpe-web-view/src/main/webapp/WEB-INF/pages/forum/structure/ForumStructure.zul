@@ -9,7 +9,8 @@
     <button label="${labels.forum_structure.delete_section_button}" disabled="@load(vm.selectedItem.branch)"
             onClick="@command('deleteSelectedSection')"/>
     <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog', createNew=true)"/>
-    <button label="${labels.forum_structure.edit_branch_button}" onClick="@command('showNewBranchDialog', createNew=false)"/>
+    <button label="${labels.forum_structure.edit_branch_button}" onClick="@command('showNewBranchDialog', createNew=false)"
+            disabled="@load(not vm.selectedItem.branch)"/>
     <tree model="@bind(vm.viewData.sectionTree)"  context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
         <treechildren>
           <template name="model" var="section">
@@ -22,7 +23,8 @@
     <button label="${labels.forum_structure.delete_section_button}" disabled="@load(vm.selectedItem.branch)"
             onClick="@command('deleteSelectedSection')"/>
     <button label="${labels.forum_structure.create_branch_button}" onClick="@command('showNewBranchDialog', createNew=true)"/>
-    <button label="${labels.forum_structure.edit_branch_button}" onClick="@command('showNewBranchDialog', createNew=false)"/>
+    <button label="${labels.forum_structure.edit_branch_button}" onClick="@command('showNewBranchDialog', createNew=false)"
+            disabled="@load(not vm.selectedItem.branch)"/>
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_section_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewSectionDialog', createNew=false)"/>
