@@ -20,6 +20,8 @@ public class ForumStructureData {
     private DefaultTreeModel<ForumStructureItem> sectionTree;
     private boolean showSectionDialog;
     private boolean showBranchDialog;
+    private boolean fromMenu;
+    private ForumStructureItem prevSelectedItem;
 
     public Jcommune getRootAsJcommune() {
         return (Jcommune) (Object) sectionTree.getRoot().getData();
@@ -39,11 +41,14 @@ public class ForumStructureData {
         return this;
     }
 
-    public ForumStructureData showBranchDialog(boolean createNew) {
+    public ForumStructureData showBranchDialog(boolean createNew, boolean fromMenu) {
+        prevSelectedItem = new ForumStructureItem();
+        prevSelectedItem.setItem(selectedItem.getItem(PoulpeSection.class));
         if (createNew) {
             selectedItem.setItem(new PoulpeBranch());
         }
         showBranchDialog = true;
+        this.fromMenu = fromMenu;
         return this;
     }
 
@@ -86,7 +91,14 @@ public class ForumStructureData {
     public void setSectionTree(DefaultTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
-        this.sectionList.addAll(unwrap(sectionTree.getRoot().getChildren()));
+        List<PoulpeSection> sections = unwrap(sectionTree.getRoot().getChildren());
+        this.sectionList.addAll(sections);
+        sectionList.clearSelection();
+        if (fromMenu) {
+            sectionList.addToSelection(prevSelectedItem.getItem(PoulpeSection.class));
+        } else {
+            sectionList.addToSelection(sections.get(0));
+        }
     }
 
     private List<PoulpeSection> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {

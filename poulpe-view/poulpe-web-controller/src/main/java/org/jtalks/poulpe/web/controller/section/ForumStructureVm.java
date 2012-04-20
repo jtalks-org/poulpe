@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Default;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
@@ -54,8 +55,9 @@ public class ForumStructureVm {
 
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew) {
-        viewData.showBranchDialog(createNew);
+    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew,
+            @BindingParam("fromMenu") @Default("false") boolean fromMenu) {
+        viewData.showBranchDialog(createNew, fromMenu);
     }
 
     @Command

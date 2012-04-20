@@ -26,6 +26,8 @@
                 onClick="@command('showNewSectionDialog', createNew=false)"/>
       <menuitem label="${labels.forum_structure.delete_section_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('deleteSelectedSection')"/>
+      <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
+                onClick="@command('showNewBranchDialog', createNew=true, fromMenu=true)"/>
       <menuitem label="Permissions" visible="@load(vm.selectedItem.branch)"/>
     </menupopup>
     <!--SECTION DIALOG-->
