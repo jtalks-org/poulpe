@@ -3,6 +3,7 @@
   <test name="entity">
     <packages>
       <package name="org.jtalks.poulpe.model.entity.*" />
+      <package name="org.jtalks.poulpe.model.dto.*" />
     </packages>
   </test>
 </suite>
