@@ -62,7 +62,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
-import com.sun.istack.Nullable;
 
 /**
  * @author stanislav bashkirtsev
@@ -87,7 +86,6 @@ public class PermissionManagerTest {
                 types[RandomUtils.nextInt(types.length)]);
     }
 
-    @Nullable
     public static PoulpeGroup getGroupWithId(List<PoulpeGroup> groups, long id) {
         for (PoulpeGroup group : groups) {
             if (group.getId() == id) {
@@ -114,7 +112,6 @@ public class PermissionManagerTest {
         /**
          * {@inheritDoc}
          */
-        @Nullable
         @Override
         public PoulpeGroup answer(InvocationOnMock invocation) throws Throwable {
             long id = (Long) invocation.getArguments()[0];
@@ -262,7 +259,7 @@ public class PermissionManagerTest {
     }
 
     private GroupAce buildGroupAce(Entity entity, JtalksPermission permission, boolean isGranting, Acl acl, Sid sid) {
-        AccessControlEntry accessControlEntry = new AccessControlEntryImpl(Long.valueOf(entity.getId()), acl, sid,
+        AccessControlEntry accessControlEntry = new AccessControlEntryImpl(entity.getId(), acl, sid,
                 permission, true, true, false);
         return new GroupAce(accessControlEntry);
     }
