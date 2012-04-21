@@ -60,7 +60,7 @@
                  errorMessage="@load(vmsgs[sectionNameBox])"/>
         ${labels.forum_structure.section_dialog.section_description}
         <textbox id="sectionDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
-                 errorMessage="@load(vmsgs[sectionDescriptionText])" vflex="10" hflex="1"/>
+                 errorMessage="@load(vmsgs[sectionDescriptionText])" rows="6" hflex="1"/>
         <cell>
           <button label="${labels.dialogs.save_button}" onClick="@command('saveSection')"/>
           <button label="${labels.dialogs.cancel_button}" onClick="editSectionDialog.visible=false;"/>

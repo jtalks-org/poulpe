@@ -4,6 +4,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.SectionService;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
@@ -56,6 +57,15 @@ public class ForumStructureData {
             selectedItem = new ForumStructureItem(new PoulpeSection());
         }
         showSectionDialog = true;
+        return this;
+    }
+
+    public ForumStructureData removeSelectedItem(){
+        if(!getSelectedItem().isBranch()){
+            int[] sectionIndex = sectionTree.getSelectionPath();
+            sectionTree.getRoot().remove(sectionIndex[0]);
+        }
+        setSelectedItem(new ForumStructureItem());
         return this;
     }
 

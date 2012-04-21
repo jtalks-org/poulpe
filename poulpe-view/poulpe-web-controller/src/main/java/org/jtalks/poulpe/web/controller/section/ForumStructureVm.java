@@ -67,7 +67,7 @@ public class ForumStructureVm {
         Jcommune jcommune = viewData.getRootAsJcommune();
         jcommune.getSections().remove(viewData.getSelectedItem().getItem(PoulpeSection.class));
         componentService.saveComponent(jcommune);
-        viewData.getSelectedItem().clearState();
+        viewData.removeSelectedItem();
     }
 
     /**
