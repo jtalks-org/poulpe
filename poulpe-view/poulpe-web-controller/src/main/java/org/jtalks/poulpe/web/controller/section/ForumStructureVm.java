@@ -57,8 +57,7 @@ public class ForumStructureVm {
 
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew,
-            @BindingParam("fromMenu") @Default("false") boolean fromMenu) {
+    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew) {
         viewData.showBranchDialog(createNew);
     }
 
@@ -68,7 +67,7 @@ public class ForumStructureVm {
         Jcommune jcommune = viewData.getRootAsJcommune();
         jcommune.getSections().remove(viewData.getSelectedItem().getItem(PoulpeSection.class));
         componentService.saveComponent(jcommune);
-        viewData.setSelectedItem(new ForumStructureItem());
+        viewData.getSelectedItem().clearState();
     }
 
     /**
@@ -79,9 +78,10 @@ public class ForumStructureVm {
     @NotifyChange({VIEW_DATA_PROP})
     public void saveSection() {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        jcommune.addSection(viewData.getSelectedItem().getItem(PoulpeSection.class));
+        PoulpeSection section = viewData.getSelectedItem().getItem(PoulpeSection.class);
+        viewData.addSectionIfNew(section);
+        jcommune.addSection(section);
         componentService.saveComponent(jcommune);
-        viewData.getSelectedItem().clearState();
         viewData.closeDialog();
     }
 

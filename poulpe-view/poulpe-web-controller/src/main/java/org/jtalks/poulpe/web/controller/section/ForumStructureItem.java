@@ -16,6 +16,13 @@ import javax.annotation.Nonnull;
 public class ForumStructureItem {
     private Entity item;
 
+    public ForumStructureItem() {
+    }
+
+    public ForumStructureItem(Entity item) {
+        this.item = item;
+    }
+
     /**
      * Gets the wrapped item inside. May be {@code null} if nothing was set through {@link #setItem(Entity)}.
      *

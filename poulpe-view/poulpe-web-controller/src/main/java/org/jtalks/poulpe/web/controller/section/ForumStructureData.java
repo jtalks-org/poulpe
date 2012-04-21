@@ -5,6 +5,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.zkoss.zul.DefaultTreeModel;
+import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
 
@@ -52,7 +53,7 @@ public class ForumStructureData {
 
     public ForumStructureData showSectionDialog(boolean createNew) {
         if (createNew) {
-            selectedItem.setItem(new PoulpeSection());
+            selectedItem = new ForumStructureItem(new PoulpeSection());
         }
         showSectionDialog = true;
         return this;
@@ -84,6 +85,13 @@ public class ForumStructureData {
 
     public DefaultTreeModel<ForumStructureItem> getSectionTree() {
         return sectionTree;
+    }
+
+    public ForumStructureData addSectionIfNew(PoulpeSection section){
+        if(section.getId() == 0){
+            sectionTree.getRoot().add(new DefaultTreeNode<ForumStructureItem>(new ForumStructureItem(section)));
+        }
+        return this;
     }
 
     public void setSectionTree(DefaultTreeModel<ForumStructureItem> sectionTree) {
