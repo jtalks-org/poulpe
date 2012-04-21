@@ -1,10 +1,8 @@
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.SectionService;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
@@ -47,6 +45,7 @@ public class ForumStructureData {
             selectedItem = new ForumStructureItem(new PoulpeBranch());
         }
         TreeNode<ForumStructureItem> section = sectionTree.getRoot().getChildAt(sectionTree.getSelectionPath()[0]);
+        sectionTree.clearSelection();
         sectionList.addToSelection(section.getData());
         showBranchDialog = true;
         return this;
@@ -60,10 +59,12 @@ public class ForumStructureData {
         return this;
     }
 
-    public ForumStructureData removeSelectedItem(){
-        if(!getSelectedItem().isBranch()){
-            int[] sectionIndex = sectionTree.getSelectionPath();
-            sectionTree.getRoot().remove(sectionIndex[0]);
+    public ForumStructureData removeSelectedItem() {
+        int[] selectedPath = sectionTree.getSelectionPath();
+        if (getSelectedItem().isBranch()) {
+            sectionTree.getRoot().getChildAt(selectedPath[0]).remove(selectedPath[1]);
+        } else {
+            sectionTree.getRoot().remove(selectedPath[0]);
         }
         setSelectedItem(new ForumStructureItem());
         return this;
@@ -97,19 +98,26 @@ public class ForumStructureData {
         return sectionTree;
     }
 
-    public ForumStructureData addSectionIfNew(PoulpeSection section){
-        if(section.getId() == 0){
-            sectionTree.getRoot().add(new DefaultTreeNode<ForumStructureItem>(new ForumStructureItem(section)));
+    public ForumStructureData addSectionIfNew(PoulpeSection section) {
+        if (section.getId() == 0) {
+            TreeNode<ForumStructureItem> sectionNode = new DefaultTreeNode<ForumStructureItem>(
+                    new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
+            getSectionTree().getRoot().add(sectionNode);
+            getSectionTree().addToSelection(sectionNode);
+            getSectionList().add(sectionNode.getData());
         }
         return this;
     }
 
-    public ForumStructureData addBranchIfNew(ForumStructureItem section, PoulpeBranch branch){
-        if(branch.getId() == 0){
+    public ForumStructureData addBranchIfNew(ForumStructureItem section, ForumStructureItem branchItem) {
+        if (branchItem.getItem().getId() == 0) {
             List<TreeNode<ForumStructureItem>> sectionNodes = sectionTree.getRoot().getChildren();
-            for(TreeNode<ForumStructureItem> node: sectionNodes){
-                if(section == node.getData()){
-                    node.add(new DefaultTreeNode<ForumStructureItem>(new ForumStructureItem(branch)));
+            for (TreeNode<ForumStructureItem> node : sectionNodes) {
+                if (section == node.getData()) {
+                    TreeNode<ForumStructureItem> branchNode = new DefaultTreeNode<ForumStructureItem>(branchItem);
+                    node.add(branchNode);
+                    sectionTree.addToSelection(branchNode);
+                    sectionTree.addOpenObject(node);
                 }
             }
         }

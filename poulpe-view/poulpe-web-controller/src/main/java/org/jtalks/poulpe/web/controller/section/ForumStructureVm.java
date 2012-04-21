@@ -63,9 +63,16 @@ public class ForumStructureVm {
 
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void deleteSelectedSection() {
+    public void deleteSelected() {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        jcommune.getSections().remove(viewData.getSelectedItem().getItem(PoulpeSection.class));
+        ForumStructureItem selectedItem = viewData.getSelectedItem();
+        if(selectedItem.isBranch()){
+            PoulpeBranch branch = selectedItem.getItem(PoulpeBranch.class);
+            branch.getSection().deleteBranch(branch);
+            branch.setSection(null);
+        } else{
+            jcommune.getSections().remove(selectedItem.getItem(PoulpeSection.class));
+        }
         componentService.saveComponent(jcommune);
         viewData.removeSelectedItem();
     }
@@ -86,15 +93,15 @@ public class ForumStructureVm {
     }
 
     @Command
-    @NotifyChange(VIEW_DATA_PROP)
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        PoulpeBranch branch = viewData.getSelectedItem().getItem(PoulpeBranch.class);
+        ForumStructureItem branchItem = viewData.getSelectedItem();
         ForumStructureItem sectionTreeItem = viewData.getSectionSelectedInDropDown();
-        viewData.addBranchIfNew(sectionTreeItem, branch);
+        viewData.addBranchIfNew(sectionTreeItem, branchItem);
         PoulpeSection section = sectionTreeItem.getItem(PoulpeSection.class);
-        section.addOrUpdateBranch(branch);
-        branch.setSection(section);
+        section.addOrUpdateBranch(branchItem.getItem(PoulpeBranch.class));
+        branchItem.getItem(PoulpeBranch.class).setSection(section);
         componentService.saveComponent(jcommune);
     }
 
