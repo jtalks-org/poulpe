@@ -17,7 +17,7 @@ import java.util.Set;
  * @author stanislav bashkirtsev
  */
 public class ForumStructureData {
-    private ListModelList<PoulpeSection> sectionList = new ListModelList<PoulpeSection>();
+    private ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private DefaultTreeModel<ForumStructureItem> sectionTree;
     private boolean showSectionDialog;
@@ -27,8 +27,8 @@ public class ForumStructureData {
         return (Jcommune) (Object) sectionTree.getRoot().getData();
     }
 
-    public PoulpeSection getSectionSelectedInDropDown() {
-        Set<PoulpeSection> selection = sectionList.getSelection();
+    public ForumStructureItem getSectionSelectedInDropDown() {
+        Set<ForumStructureItem> selection = sectionList.getSelection();
         if (selection.isEmpty()) {
             return null;
         }
@@ -43,10 +43,10 @@ public class ForumStructureData {
 
     public ForumStructureData showBranchDialog(boolean createNew) {
         if (createNew) {
-            selectedItem.setItem(new PoulpeBranch());
+            selectedItem = new ForumStructureItem(new PoulpeBranch());
         }
         TreeNode<ForumStructureItem> section = sectionTree.getRoot().getChildAt(sectionTree.getSelectionPath()[0]);
-        sectionList.addToSelection(section.getData().getItem(PoulpeSection.class));
+        sectionList.addToSelection(section.getData());
         showBranchDialog = true;
         return this;
     }
@@ -59,7 +59,7 @@ public class ForumStructureData {
         return this;
     }
 
-    public ListModelList<PoulpeSection> getSectionList() {
+    public ListModelList<ForumStructureItem> getSectionList() {
         return sectionList;
     }
 
@@ -94,17 +94,29 @@ public class ForumStructureData {
         return this;
     }
 
+    public ForumStructureData addBranchIfNew(ForumStructureItem section, PoulpeBranch branch){
+        if(branch.getId() == 0){
+            List<TreeNode<ForumStructureItem>> sectionNodes = sectionTree.getRoot().getChildren();
+            for(TreeNode<ForumStructureItem> node: sectionNodes){
+                if(section == node.getData()){
+                    node.add(new DefaultTreeNode<ForumStructureItem>(new ForumStructureItem(branch)));
+                }
+            }
+        }
+        return this;
+    }
+
     public void setSectionTree(DefaultTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
-        List<PoulpeSection> sections = unwrap(sectionTree.getRoot().getChildren());
+        List<ForumStructureItem> sections = unwrap(sectionTree.getRoot().getChildren());
         this.sectionList.addAll(sections);
     }
 
-    private List<PoulpeSection> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
+    private List<ForumStructureItem> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {
+        List<ForumStructureItem> sections = new ArrayList<ForumStructureItem>();
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData().getItem(PoulpeSection.class));
+            sections.add(sectionNode.getData());
         }
         return sections;
     }

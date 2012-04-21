@@ -90,13 +90,12 @@ public class ForumStructureVm {
     public void saveBranch() {
         Jcommune jcommune = viewData.getRootAsJcommune();
         PoulpeBranch branch = viewData.getSelectedItem().getItem(PoulpeBranch.class);
-        Section section = viewData.getSectionSelectedInDropDown();
+        ForumStructureItem sectionTreeItem = viewData.getSectionSelectedInDropDown();
+        viewData.addBranchIfNew(sectionTreeItem, branch);
+        PoulpeSection section = sectionTreeItem.getItem(PoulpeSection.class);
         section.addOrUpdateBranch(branch);
         branch.setSection(section);
         componentService.saveComponent(jcommune);
-//        int sectionIndex = sectionTree.getSelectionPath()[1];
-//        PoulpeSection section = sectionTree.getRoot().getChildAt(sectionIndex).getData().getItem(PoulpeSection.class);
-//        section
     }
 
     /**
@@ -105,7 +104,7 @@ public class ForumStructureVm {
      * @return all the sections from our database in list model representation in order they are actually sorted or
      *         empty tree if there are no sections. Can't return {@code null}.
      */
-    public ListModel<PoulpeSection> getSectionList() {
+    public ListModel<ForumStructureItem> getSectionList() {
         return viewData.getSectionList();
     }
 
