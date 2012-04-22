@@ -68,7 +68,7 @@ public class ForumStructureVmTest {
     public void testSaveBranch() throws Exception {
         doNothing().when(vm).storeSelectedBranch();
         vm.saveBranch();
-        verify(data).addSelectedBranchToTreeIfNew();
+        verify(data).putSelectedBranchToSectionInDropdown();
         verify(vm).storeSelectedBranch();
     }
 

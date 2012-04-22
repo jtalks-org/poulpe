@@ -125,7 +125,7 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
-        viewData.addSelectedBranchToTreeIfNew();
+        viewData.putSelectedBranchToSectionInDropdown();
         storeSelectedBranch();
     }
 

@@ -12,7 +12,6 @@ import org.zkoss.zul.TreeNode;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Is used to contain data for the view and do operations on view. It doesn't do any business logic, only logic that is
@@ -79,11 +78,11 @@ public class ForumStructureData {
      * @return the item that was previously set as selected (the one that is removed by this method)
      */
     public ForumStructureItem removeSelectedItem() {
-        int[] selectedPath = sectionTree.getSelectionPath();
+        int[] selectedPath = getSectionTree().getSelectionPath();
         if (getSelectedItem().isBranch()) {
-            sectionTree.getRoot().getChildAt(selectedPath[0]).remove(selectedPath[1]);
+            getSectionTree().getRoot().getChildAt(selectedPath[0]).remove(selectedPath[1]);
         } else {
-            sectionTree.getRoot().remove(selectedPath[0]);
+            getSectionTree().getRoot().remove(selectedPath[0]);
         }
         return setSelectedItem(new ForumStructureItem());
     }
@@ -109,12 +108,28 @@ public class ForumStructureData {
         return previous;
     }
 
+    /**
+     * Figures out whether the Branch Editing Dialog should be shown right now. It also changes the flag to {@code
+     * false} each time because we don't send anything to the server when closing window, so during next change
+     * notification ZK will think that we need to show that dialog again which is wrong.
+     *
+     * @return {@code true} if the Branch Editing dialog should be shown
+     * @see #showBranchDialog
+     */
     public boolean isShowBranchDialog() {
         boolean show = showBranchDialog && selectedItem.isBranch();
         this.showBranchDialog = false;
         return show;
     }
 
+    /**
+     * Figures out whether the Section Editing Dialog should be shown right now. It also changes the flag to {@code
+     * false} each time because we don't send anything to the server when closing window, so during next change
+     * notification ZK will think that we need to show that dialog again which is wrong.
+     *
+     * @return {@code true} if the Section Editing dialog should be shown
+     * @see #showSectionDialog
+     */
     public boolean isShowSectionDialog() {
         boolean show = showSectionDialog && !selectedItem.isBranch();
         this.showSectionDialog = false;
@@ -147,24 +162,50 @@ public class ForumStructureData {
         return this;
     }
 
-    public ForumStructureData addSelectedBranchToTreeIfNew() {
+    /**
+     * Finds the branch that is currently set as selected and if this is a new branch (was just added via branch
+     * creation dialog), adds it to the list of branches of the section. The section that is chosen - the one that was
+     * selected in the dropdown list of sections (and it can be accessed via {@link #getSectionSelectedInDropDown()}. It
+     * results in the branch been moved to another section if the currently selected section is not persisted yet. When
+     * you trigger this method, conditions should be met:
+     * <pre>
+     *   <li>{@link #getSelectedItem()} should return a non null branch (no matter whether it's already persistent or
+     *         not)
+     *   </li>
+     *   <li>{@link #getSectionSelectedInDropDown()} should return a section chosen in the Branch Editing dialog</li>
+     * </pre>
+     *
+     * @return this
+     */
+    public ForumStructureData putSelectedBranchToSectionInDropdown() {
         ForumStructureItem branchItem = getSelectedItem();
-        ForumStructureItem section = getSectionList().getSelection().iterator().next();
-        if (branchItem.isPersisted()) {
-            List<TreeNode<ForumStructureItem>> sectionNodes = sectionTree.getRoot().getChildren();
-            for (TreeNode<ForumStructureItem> node : sectionNodes) {
-                if (section == node.getData()) {
-                    TreeNode<ForumStructureItem> branchNode = new DefaultTreeNode<ForumStructureItem>(branchItem);
-                    node.add(branchNode);
-                    sectionTree.addToSelection(branchNode);
-                    sectionTree.addOpenObject(node);
-                }
-            }
-        }
+        ForumStructureItem sectionFromDropdown = getSectionList().getSelection().iterator().next();
+        TreeNode<ForumStructureItem> node = findSectionNode(sectionFromDropdown);
+        TreeNode<ForumStructureItem> branchNode = new DefaultTreeNode<ForumStructureItem>(branchItem);
+        node.add(branchNode);
+        getSectionTree().addToSelection(branchNode);
+        getSectionTree().addOpenObject(node);
         return this;
     }
 
-    public void setSectionTree(DefaultTreeModel<ForumStructureItem> sectionTree) {
+    TreeNode<ForumStructureItem> findSectionNode(ForumStructureItem item) {
+        List<TreeNode<ForumStructureItem>> sectionNodes = getSectionTree().getRoot().getChildren();
+        for (TreeNode<ForumStructureItem> node : sectionNodes) {
+            if (item == node.getData()) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Sets and rebuilds the Forum Structure tree and also updates the branch dialog with the list of available sections
+     * so that in combo box we have only sections that are present in the section tree.
+     *
+     * @param sectionTree the new tree of sections and branches to be shown on the Forum Structure page
+     */
+
+    public void setSectionTree(@Nonnull DefaultTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
         List<ForumStructureItem> sections = unwrap(sectionTree.getRoot().getChildren());
