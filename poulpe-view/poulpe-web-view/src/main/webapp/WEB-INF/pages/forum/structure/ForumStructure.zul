@@ -6,17 +6,6 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', createNew=true)"/>
-    <button label="${labels.forum_structure.edit_item}"
-            onClick="@command('showNewSectionDialog', createNew=false)"/>
-    <button label="${labels.forum_structure.delete_item}" disabled="@load(vm.selectedItem.item ne null)"
-            onClick="@command('deleteSelectedSection')"/>
-    <button label="${labels.forum_structure.create_branch_button}"
-            onClick="@command('showNewBranchDialog', createNew=true)"/>
-    <button label="${labels.forum_structure.edit_item}"
-            onClick="@command('showNewBranchDialog', createNew=false)"
-            disabled="@load(not vm.selectedItem.branch)"/>
-    <button label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelectedBranch')"
-            disabled="@load(not vm.selectedItem.branch)"/>
 
     <tree model="@bind(vm.viewData.sectionTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)"/>
 
