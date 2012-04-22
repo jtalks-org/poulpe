@@ -66,4 +66,18 @@ public class User extends org.jtalks.common.model.entity.User {
         this.groups = groups;
     }
 
+    /**
+     * Enable banned state for current user. This is shorthand method, if user was <b>already banned</b> this method
+     * <b>changes nothing</b>.
+     * 
+     * @see #setBanReason(String)
+     */
+    public void enableBannedState() {
+        // here must be working with fields, but we're extending base class where it fields are private
+        // it's not good practice, must be fixed
+        if (getBanReason() == null) {
+            setBanReason("");
+        }
+    }
+
 }

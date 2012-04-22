@@ -39,9 +39,9 @@
       <grid model="@load(userBanningVm.bannedUsers)" hflex="1">
         <columns>
           <column label="${labels.userbanning.username}" />
-          <column label="${labels.userbanning.firstname} - ${labels.userbanning.lastname}" />
+          <column label="${labels.userbanning.firstname_lastname}" />
           <column label="${labels.userbanning.email}" />
-          <column label="${labels.userbanning.managing}" />
+          <column label="${labels.userbanning.managing}" width="auto" />
         </columns>
         <template name="model" var="user">
           <row onDoubleClick="@command('editBan', userId=user.id)">
@@ -51,7 +51,7 @@
               <label value="@load(user.lastName)" />
             </hbox>
             <label value="@load(user.email)" />
-            <!--
+            <!-- 
               Here detected strange behavior, ZK showing error like:
 
                 Index: 221, Size: 221
@@ -60,7 +60,7 @@
               after trying to change ban properties without reloading a page.
               So using old way: user.id
               // Zhivaev Vyacheslav
-            -->
+             -->
             <hbox>
               <button label="${labels.userbanning.edit}" onClick="@command('editBan', userId=user.id)" />
               <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', userId=user.id)" />
@@ -74,22 +74,28 @@
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
     <window visible="@load(userBanningVm.editBanWindowOpened)" title="${labels.userbanning.title}" width="500px"
         border="normal" mode="popup" position="center">
-       <groupbox visible="@load(not empty userBanningVm.selectedUser)" hflex="true" mold="3d" height="100%">
-       <vlayout>
-       <checkbox id="permanent" value="@bind(userBanningVm.selectedUser.permanentBan)" label="${labels.userbanning.permanentBan}"  />
-       
-       ${labels.userbanning.banPeriod}
-      <intbox id="banLength" constraint="no negative,no zero" width="150px" disabled="false" value="1" />
-      
-       ${labels.userbanning.banReason}
-      <textbox id="banReason" value="@bind(userBanningVm.selectedUser.banReason)" rows="6" width="370px" />
-     
-       </vlayout>
-     </groupbox>
-      <hbox align="center" pack="center" width="100%">
-        <button onClick="@command('saveBanProperties')" label="${labels.window.save}" width="100px" />
-        <button onClick="@command('closeEditBanWindow')" label="${labels.window.cancel}" width="100px" />
-      </hbox>
+      <vbox spacing="12px" hflex="1">
+        <hbox>
+          <label value="${labels.userbanning.for_user}" style="font-size: large" />
+          <label value="@load(userBanningVm.selectedUser.username)" style="font-size: 110%" />
+        </hbox>
+        <hbox>
+          <checkbox label="${labels.userbanning.permanent_ban}"
+            value="@bind(userBanningVm.selectedUser.permanentBan)" />
+        </hbox>
+        <hbox align="center" width="50%">
+          <label value="${labels.userbanning.ban_period}" hflex="1" />
+          <intbox constraint="no negative,no zero" value="1" hflex="1" />
+        </hbox>
+        <vbox hflex="1">
+          <label value="${labels.userbanning.ban_reason}" />
+          <textbox value="@bind(userBanningVm.selectedUser.banReason)" rows="6" hflex="1" style="resize: none;" />
+        </vbox>
+        <hbox hflex="1" pack="center">
+          <button onClick="@command('saveBanProperties')" label="${labels.window.save}" width="100px" />
+          <button onClick="@command('closeEditBanWindow')" label="${labels.window.cancel}" width="100px" />
+        </hbox>
+      </vbox>
     </window>
 
   </window>

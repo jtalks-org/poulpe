@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -70,7 +69,7 @@ public class UserBanningVm {
     public List<User> getAvailableUsers() {
         List<User> users = userService.getAll();
         users.removeAll(userService.getAllBannedUsers());
-        return Collections.unmodifiableList(users);
+        return users;
     }
 
     /**
@@ -80,7 +79,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<User> getBannedUsers() {
-        return Collections.unmodifiableList(userService.getAllBannedUsers());
+        return userService.getAllBannedUsers();
     }
 
     /**
@@ -163,6 +162,7 @@ public class UserBanningVm {
     @NotifyChange({ "selectedUser", "availableUsers", "bannedUsers", "editBanWindowOpened" })
     public void saveBanProperties() {
         Validate.notNull(selectedUser, "To provide save action for user, user must be already selected");
+        selectedUser.enableBannedState();
         userService.updateUser(selectedUser);
         selectedUser = null;
         closeEditBanWindow();
