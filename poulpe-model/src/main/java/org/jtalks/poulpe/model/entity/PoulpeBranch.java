@@ -26,7 +26,7 @@ import java.util.List;
  *
  * @author Pavel Vervenko
  */
-public class PoulpeBranch extends Branch implements BranchSectionVisitable {
+public class PoulpeBranch extends Branch {
     private List<User> moderators = new ArrayList<User>();
     private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
 
@@ -161,14 +161,6 @@ public class PoulpeBranch extends Branch implements BranchSectionVisitable {
      */
     public void addGroup(PoulpeGroup group) {
         this.groups.add(group);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void apply(BranchSectionVisitor visitor) {
-        visitor.visitBranch(this);
     }
 
     /**

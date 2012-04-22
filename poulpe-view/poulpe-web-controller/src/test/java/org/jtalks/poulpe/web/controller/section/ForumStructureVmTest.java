@@ -14,12 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import org.aspectj.lang.annotation.After;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -29,7 +27,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
@@ -51,12 +49,12 @@ public class ForumStructureVmTest {
     }
 
     @AfterMethod
-    public void afterMethod(){
+    public void afterMethod() {
         Mockito.validateMockitoUsage();
     }
 
     @Test
-    public void testSave() throws Exception {
+    public void testSaveSection() throws Exception {
         PoulpeSection selectedSection = new PoulpeSection("section", "description");
         doReturn(selectedSection).when(data).getSelectedEntity(PoulpeSection.class);
         doNothing().when(vm).storeNewSection(selectedSection);
@@ -64,6 +62,26 @@ public class ForumStructureVmTest {
         verify(data).addSelectedSectionToTreeIfNew();
         verify(data).closeDialog();
         verify(vm).storeNewSection(selectedSection);
+    }
+
+    @Test
+    public void testSaveBranch() throws Exception {
+        doNothing().when(vm).storeSelectedBranch();
+        vm.saveBranch();
+        verify(data).addSelectedBranchToTreeIfNew();
+        verify(vm).storeSelectedBranch();
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testStoreSelectedBranch(Jcommune jcommune) throws Exception {
+        PoulpeBranch selectedBranch = jcommune.getSections().get(0).getPoulpeBranches().get(0);
+        doReturn(jcommune).when(data).getRootAsJcommune();
+        doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
+        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropDown();
+        vm.storeSelectedBranch();
+        assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
+        assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
+        assertFalse(jcommune.getSections().get(0).getPoulpeBranches().contains(selectedBranch));
     }
 
     @Test
@@ -88,17 +106,46 @@ public class ForumStructureVmTest {
         verify(componentService).saveComponent(jcommune);
     }
 
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testDeleteSelected_section(Jcommune jcommune) throws Exception {
+        doReturn(jcommune).when(data).getRootAsJcommune();
+        PoulpeSection selectedSection = jcommune.getSections().get(1);
+        doReturn(new ForumStructureItem(selectedSection)).when(data).removeSelectedItem();
+
+        vm.deleteSelected();
+        assertFalse(jcommune.getSections().contains(selectedSection));
+        verify(componentService).saveComponent(jcommune);
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testDeleteSelected_branch(Jcommune jcommune) throws Exception {
+        doReturn(jcommune).when(data).getRootAsJcommune();
+        PoulpeBranch selectedBranch = jcommune.getSections().get(1).getPoulpeBranches().get(0);
+        doReturn(new ForumStructureItem(selectedBranch)).when(data).removeSelectedItem();
+
+        vm.deleteSelected();
+        assertFalse(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
+        assertNull(selectedBranch.getSection());
+        verify(componentService).saveComponent(jcommune);
+    }
+
     @DataProvider
     public Object[][] provideRandomJcommuneWithSections() {
         Jcommune jcommune = new Jcommune();
         PoulpeSection sectionA = new PoulpeSection("SectionA");
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));
+        sectionA.addOrUpdateBranch(createBranch(sectionA, "BranchA"));
+        sectionA.addOrUpdateBranch(createBranch(sectionA, "BranchB"));
         jcommune.addSection(sectionA);
         PoulpeSection sectionB = new PoulpeSection("SectionB");
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
+        sectionB.addOrUpdateBranch(createBranch(sectionB, "BranchD"));
+        sectionB.addOrUpdateBranch(createBranch(sectionB, "BranchE"));
         jcommune.addSection(sectionB);
         return new Object[][]{{jcommune}};
+    }
+
+    private PoulpeBranch createBranch(PoulpeSection section, String branchName) {
+        PoulpeBranch branch = new PoulpeBranch(branchName);
+        branch.setSection(section);
+        return branch;
     }
 }

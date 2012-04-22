@@ -43,12 +43,8 @@ public class ForumStructureData {
      *
      * @return the section that was selected during editing/creating of the branch
      */
-    public ForumStructureItem getSectionSelectedInDropDown() {
-        Set<ForumStructureItem> selection = sectionList.getSelection();
-        if (selection.isEmpty()) {
-            return null;
-        }
-        return selection.iterator().next();
+    public PoulpeSection getSectionSelectedInDropDown() {
+        return sectionList.getSelection().iterator().next().getItem(PoulpeSection.class);
     }
 
     public ForumStructureData closeDialog() {
@@ -151,7 +147,9 @@ public class ForumStructureData {
         return this;
     }
 
-    public ForumStructureData addBranchIfNew(ForumStructureItem section, ForumStructureItem branchItem) {
+    public ForumStructureData addSelectedBranchToTreeIfNew() {
+        ForumStructureItem branchItem = getSelectedItem();
+        ForumStructureItem section = getSectionList().getSelection().iterator().next();
         if (branchItem.isPersisted()) {
             List<TreeNode<ForumStructureItem>> sectionNodes = sectionTree.getRoot().getChildren();
             for (TreeNode<ForumStructureItem> node : sectionNodes) {

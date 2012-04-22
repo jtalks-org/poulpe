@@ -34,7 +34,9 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
- * removing, editing, etc.).
+ * removing, editing, etc.). Note, that this class is responsible for back-end of the operations (presenter,
+ * controller), so it stores all the changes to the database using {@link ComponentService}. In order to control the
+ * view and what it should show/change, it uses {@link ForumStructureData}.
  *
  * @author stanislav bashkirtsev
  * @author Guram Savinov
@@ -81,6 +83,12 @@ public class ForumStructureVm {
         viewData.showBranchDialog(createNew);
     }
 
+    /**
+     * Deletes the selected entity no matter what it is - a branch or a section. It does both - back end removal from DB
+     * and ask the {@link ForumStructureData} to remove the item from the tree.
+     *
+     * @see ForumStructureData#getSelectedItem()
+     */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void deleteSelected() {
@@ -117,13 +125,22 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
+        viewData.addSelectedBranchToTreeIfNew();
+        storeSelectedBranch();
+    }
+
+    /**
+     * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches of
+     * the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved to
+     * another section.
+     */
+    void storeSelectedBranch() {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        ForumStructureItem branchItem = viewData.getSelectedItem();
-        ForumStructureItem sectionTreeItem = viewData.getSectionSelectedInDropDown();
-        viewData.addBranchIfNew(sectionTreeItem, branchItem);
-        PoulpeSection section = sectionTreeItem.getItem(PoulpeSection.class);
-        section.addOrUpdateBranch(branchItem.getItem(PoulpeBranch.class));
-        branchItem.getItem(PoulpeBranch.class).setSection(section);
+        PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
+        PoulpeSection section = viewData.getSectionSelectedInDropDown();
+        selectedBranch.getSection().deleteBranch(selectedBranch);
+        section.addOrUpdateBranch(selectedBranch);
+        selectedBranch.setSection(section);
         componentService.saveComponent(jcommune);
     }
 

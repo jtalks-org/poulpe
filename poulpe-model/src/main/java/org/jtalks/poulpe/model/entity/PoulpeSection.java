@@ -24,7 +24,7 @@ import java.util.List;
  * @author Tatiana Birina
  * @author Guram Savinov
  */
-public class PoulpeSection extends Section implements BranchSectionVisitable {
+public class PoulpeSection extends Section {
     /**
      * Default constructor, creates a section with empty list of branches
      */
@@ -60,14 +60,6 @@ public class PoulpeSection extends Section implements BranchSectionVisitable {
      */
     public PoulpeSection(String name, String description) {
         super(name, description);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void apply(BranchSectionVisitor visitor) {
-        visitor.visitSection(this);
     }
 
     /**
