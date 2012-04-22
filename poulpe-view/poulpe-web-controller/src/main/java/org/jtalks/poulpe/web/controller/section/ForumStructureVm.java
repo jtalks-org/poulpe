@@ -14,18 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.entity.Section;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
-import org.zkoss.bind.annotation.*;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
 
 import javax.validation.constraints.NotNull;
+
+import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
@@ -44,17 +49,32 @@ public class ForumStructureVm {
         this.componentService = componentService;
     }
 
+    /**
+     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is
+     * opening.
+     */
     @Init
-    public void init(){
-        viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(TreeNodeFactory.buildForumStructure(loadJcommune())));
+    public void init() {
+        viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
     }
 
+    /**
+     * Shows the dialog either for creating or for editing existing section.
+     *
+     * @param createNew whether or not it's a creating of new section or just editing existing one
+     */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void showNewSectionDialog(@BindingParam("createNew") boolean createNew) {
         viewData.showSectionDialog(createNew);
     }
 
+    /**
+     * Shows the dialog for creating or editing the branch. Whether it's a creating or editing is decided by the
+     * specified parameter.
+     *
+     * @param createNew pass {@code true} if this is a window for creating a new branch
+     */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void showNewBranchDialog(@BindingParam("createNew") boolean createNew) {
@@ -65,16 +85,15 @@ public class ForumStructureVm {
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void deleteSelected() {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        ForumStructureItem selectedItem = viewData.getSelectedItem();
-        if(selectedItem.isBranch()){
+        ForumStructureItem selectedItem = viewData.removeSelectedItem();
+        if (selectedItem.isBranch()) {
             PoulpeBranch branch = selectedItem.getItem(PoulpeBranch.class);
             branch.getSection().deleteBranch(branch);
             branch.setSection(null);
-        } else{
+        } else {
             jcommune.getSections().remove(selectedItem.getItem(PoulpeSection.class));
         }
         componentService.saveComponent(jcommune);
-        viewData.removeSelectedItem();
     }
 
     /**
@@ -84,12 +103,15 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP})
     public void saveSection() {
+        storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
+        viewData.addSelectedSectionToTreeIfNew();
+        viewData.closeDialog();
+    }
+
+    void storeNewSection(PoulpeSection section) {
         Jcommune jcommune = viewData.getRootAsJcommune();
-        PoulpeSection section = viewData.getSelectedItem().getItem(PoulpeSection.class);
-        viewData.addSectionIfNew(section);
         jcommune.addSection(section);
         componentService.saveComponent(jcommune);
-        viewData.closeDialog();
     }
 
     @Command
@@ -139,5 +161,10 @@ public class ForumStructureVm {
 
     private Jcommune loadJcommune() {
         return (Jcommune) componentService.getByType(ComponentType.FORUM);
+    }
+
+    @VisibleForTesting
+    void setViewData(ForumStructureData viewData) {
+        this.viewData = viewData;
     }
 }

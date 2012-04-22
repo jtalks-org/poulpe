@@ -12,47 +12,80 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.section.mvvm;
+package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.common.model.entity.ComponentType;
+import org.aspectj.lang.annotation.After;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
-import org.zkoss.zul.DefaultTreeNode;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertSame;
 
 /**
  * @author stanislav bashkirtsev
  */
-@Test
 public class ForumStructureVmTest {
+    @Mock
     private ComponentService componentService;
+    @Mock
+    private ForumStructureData data;
+
     private ForumStructureVm vm;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        componentService = mock(ComponentService.class);
+        MockitoAnnotations.initMocks(this);
         vm = new ForumStructureVm(componentService);
+        vm.setViewData(data);
+        vm = spy(vm);
     }
 
-    @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
-    public void testSave(Jcommune jcommune) throws Exception {
-        PoulpeSection selectedSection = new PoulpeSection("section", "description");
-        when(componentService.getByType(ComponentType.FORUM)).thenReturn(jcommune);
-        vm.saveSection();
+    @AfterMethod
+    public void afterMethod(){
+        Mockito.validateMockitoUsage();
+    }
 
+    @Test
+    public void testSave() throws Exception {
+        PoulpeSection selectedSection = new PoulpeSection("section", "description");
+        doReturn(selectedSection).when(data).getSelectedEntity(PoulpeSection.class);
+        doNothing().when(vm).storeNewSection(selectedSection);
+        vm.saveSection();
+        verify(data).addSelectedSectionToTreeIfNew();
+        verify(data).closeDialog();
+        verify(vm).storeNewSection(selectedSection);
+    }
+
+    @Test
+    public void testShowNewSection() throws Exception {
+        vm.showNewSectionDialog(true);
+        verify(data).showSectionDialog(true);
+    }
+
+    @Test
+    public void testShowNewBranch() throws Exception {
+        vm.showNewBranchDialog(true);
+        verify(data).showBranchDialog(true);
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testStoreNewSection(Jcommune jcommune) throws Exception {
+        PoulpeSection selectedSection = new PoulpeSection("section", "description");
+        doReturn(jcommune).when(data).getRootAsJcommune();
+
+        vm.storeNewSection(selectedSection);
+        assertSame(jcommune.getSections().get(jcommune.getSections().size() - 1), selectedSection);
         verify(componentService).saveComponent(jcommune);
-        assertNull(vm.getSelectedItem().getItem());
-        jcommune.getSections().contains(selectedSection);
     }
 
     @DataProvider
