@@ -25,13 +25,14 @@
     <!-- Adding user to ban state: user selection -->
     <hbox style="padding: 10px" width="100%">
       <combobox autodrop="true" width="300px" model="@load(userBanningVm.availableUsers)"
-          selectedItem="@bind(userBanningVm.selectedUser)">
+        selectedItem="@bind(userBanningVm.addBanFor)">
         <template name="model" var="user">
           <comboitem label="@load(user.username)" />
         </template>
       </combobox>
 
-      <button label="${labels.userbanning.add}" onClick="@command('addBanToSelectedUser')" />
+      <button label="${labels.userbanning.add}" onClick="@command('addBanToUser')"
+        disabled="@load(null eq userBanningVm.addBanFor or userBanningVm.editBanWindowOpened)" />
     </hbox>
 
     <!-- Banned users list -->

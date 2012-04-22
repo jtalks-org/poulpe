@@ -35,14 +35,23 @@ import org.zkoss.bind.annotation.NotifyChange;
  */
 public class UserBanningVm {
 
+    /**
+     * 
+     */
+    private static final String NOT_SELECTED_ERROR = "To provide save action for user, user must be already selected";
+
     // Injected
     private UserService userService;
 
     /**
-     * User selected in list of available users to add ban for, also this instance used by window for editing ban
-     * properties.
+     * User selected in list of banned, also this instance used by window for editing ban properties.
      */
     private User selectedUser;
+
+    /**
+     * User selected in list of available users to add ban for.
+     */
+    private User addBanFor;
 
     /**
      * Flag variable which indicates that window to edit ban properties should be shown.
@@ -95,7 +104,7 @@ public class UserBanningVm {
     /**
      * Sets currently selected user. This user instance used by window to edit ban properties.
      * 
-     * @see #addBanToSelectedUser()
+     * @see #addBanToUser()
      * @see #saveBanProperties()
      * @param selectedUser the user instance to set
      */
@@ -113,6 +122,25 @@ public class UserBanningVm {
         return editBanWindowOpened;
     }
 
+    /**
+     * Gets user selected to ban.
+     * 
+     * @return the user currently selected to add ban state
+     */
+    @Nullable
+    public User getAddBanFor() {
+        return addBanFor;
+    }
+
+    /**
+     * Sets user selected to ban.
+     * 
+     * @param addBanFor the user which be used to add ban state
+     */
+    public void setAddBanFor(@Nonnull User addBanFor) {
+        this.addBanFor = addBanFor;
+    }
+
     //-- ZK bindings ----------------------------
 
     /**
@@ -121,9 +149,10 @@ public class UserBanningVm {
      * @throws NotFoundException
      */
     @Command
-    @NotifyChange({ "editBanWindowOpened" })
-    public void addBanToSelectedUser() {
-        editBan(selectedUser);
+    @NotifyChange({ "selectedUser", "editBanWindowOpened" })
+    public void addBanToUser() {
+        Validate.notNull(addBanFor, NOT_SELECTED_ERROR);
+        editBan(addBanFor);
     }
 
     /**
@@ -149,22 +178,24 @@ public class UserBanningVm {
     @Command
     @NotifyChange({ "availableUsers", "bannedUsers" })
     public void revokeBan(@Nonnull @BindingParam("userId") long userId) throws NotFoundException {
-        User user = userService.get(userId);
-        user.setBanReason(null);
-        userService.updateUser(user);
+        userService.updateUser(disableBannedState(userService.get(userId)));
     }
 
     /**
      * Save ban properties to already selected user. User must be already selected by {@link #editBan(User)} or
-     * {@link #addBanToSelectedUser()}. This method also closes window for ban editing.
+     * {@link #addBanToUser()}. This method also closes window for ban editing.
      */
     @Command
-    @NotifyChange({ "selectedUser", "availableUsers", "bannedUsers", "editBanWindowOpened" })
+    @NotifyChange({ "addBanFor", "selectedUser", "availableUsers", "bannedUsers", "editBanWindowOpened" })
     public void saveBanProperties() {
-        Validate.notNull(selectedUser, "To provide save action for user, user must be already selected");
-        selectedUser.enableBannedState();
-        userService.updateUser(selectedUser);
-        selectedUser = null;
+        Validate.notNull(selectedUser, NOT_SELECTED_ERROR);
+
+        userService.updateUser(enableBannedState(selectedUser));
+
+        if (selectedUser == addBanFor) {
+            addBanFor = null;
+        }
+
         closeEditBanWindow();
     }
 
@@ -174,6 +205,7 @@ public class UserBanningVm {
     @Command
     @NotifyChange({ "editBanWindowOpened" })
     public void closeEditBanWindow() {
+        selectedUser = null;
         editBanWindowOpened = false;
     }
 
@@ -189,4 +221,29 @@ public class UserBanningVm {
         selectedUser = user;
         editBanWindowOpened = true;
     }
+
+    /**
+     * Enable banned state for user.
+     * 
+     * @param user the user to enable for
+     * @return the user instance same as parameter
+     */
+    private User enableBannedState(User user) {
+        if (user.getBanReason() == null) {
+            user.setBanReason("");
+        }
+        return user;
+    }
+
+    /**
+     * Disable banned state for user.
+     * 
+     * @param user the user to disable for
+     * @return the user instance same as parameter
+     */
+    private User disableBannedState(User user) {
+        user.setBanReason(null);
+        return user;
+    }
+
 }

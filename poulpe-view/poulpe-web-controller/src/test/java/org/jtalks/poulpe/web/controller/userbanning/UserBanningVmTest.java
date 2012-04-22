@@ -68,7 +68,7 @@ public class UserBanningVmTest {
         User user = allUsers.get(0);
 
         viewModel.setSelectedUser(user);
-        viewModel.addBanToSelectedUser();
+        viewModel.addBanToUser();
 
         assertTrue(viewModel.isEditBanWindowOpened());
         assertEquals(viewModel.getSelectedUser(), user);
@@ -81,7 +81,7 @@ public class UserBanningVmTest {
         User user = allUsers.get(0);
 
         viewModel.setSelectedUser(user);
-        viewModel.addBanToSelectedUser();
+        viewModel.addBanToUser();
         viewModel.closeEditBanWindow();
 
         assertFalse(viewModel.isEditBanWindowOpened());
