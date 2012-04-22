@@ -102,17 +102,6 @@ public class UserBanningVm {
     }
 
     /**
-     * Sets currently selected user. This user instance used by window to edit ban properties.
-     * 
-     * @see #addBanToUser()
-     * @see #saveBanProperties()
-     * @param selectedUser the user instance to set
-     */
-    public void setSelectedUser(@Nonnull User selectedUser) {
-        this.selectedUser = selectedUser;
-    }
-
-    /**
      * Gets status of editBanWindowOpened flag. This flag used to control visibility of window which used to edit ban
      * properties of user.
      * 
@@ -245,5 +234,4 @@ public class UserBanningVm {
         user.setBanReason(null);
         return user;
     }
-
 }

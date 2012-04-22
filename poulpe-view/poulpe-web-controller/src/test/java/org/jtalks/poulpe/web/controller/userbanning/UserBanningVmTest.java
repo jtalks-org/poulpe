@@ -64,10 +64,10 @@ public class UserBanningVmTest {
     }
 
     @Test
-    public void testAddBanToSelectedUser() {
+    public void testAddBanToUser() {
         User user = allUsers.get(0);
 
-        viewModel.setSelectedUser(user);
+        viewModel.setAddBanFor(user);
         viewModel.addBanToUser();
 
         assertTrue(viewModel.isEditBanWindowOpened());
@@ -80,7 +80,7 @@ public class UserBanningVmTest {
     public void testCloseEditBanWindow() {
         User user = allUsers.get(0);
 
-        viewModel.setSelectedUser(user);
+        viewModel.setAddBanFor(user);
         viewModel.addBanToUser();
         viewModel.closeEditBanWindow();
 
@@ -137,10 +137,13 @@ public class UserBanningVmTest {
     }
 
     @Test
-    public void testSaveBanProperties() {
+    public void testSaveBanProperties() throws NotFoundException {
         User user = allUsers.get(0);
+        long userId = user.getId();
 
-        viewModel.setSelectedUser(user);
+        when(userService.get(eq(userId))).thenReturn(user);
+
+        viewModel.editBan(userId);
         viewModel.saveBanProperties();
 
         verify(userService).updateUser(eq(user));
