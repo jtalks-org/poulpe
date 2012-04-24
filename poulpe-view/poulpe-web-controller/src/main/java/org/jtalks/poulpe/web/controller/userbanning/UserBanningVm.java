@@ -23,6 +23,7 @@ import org.apache.commons.lang.Validate;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.web.controller.PrefixedTextConverter;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -35,13 +36,10 @@ import org.zkoss.bind.annotation.NotifyChange;
  */
 public class UserBanningVm {
 
-    /**
-     * 
-     */
     private static final String NOT_SELECTED_ERROR = "To provide save action for user, user must be already selected";
 
     // Injected
-    private UserService userService;
+    private final UserService userService;
 
     /**
      * User selected in list of banned, also this instance used by window for editing ban properties.
@@ -57,6 +55,11 @@ public class UserBanningVm {
      * Flag variable which indicates that window to edit ban properties should be shown.
      */
     private boolean editBanWindowOpened = false;
+
+    /**
+     * Converter to wrap strings with prefix in @load expressions.
+     */
+    private final PrefixedTextConverter prefixedTextConverter = new PrefixedTextConverter();
 
     /**
      * Constructs VM.
@@ -130,6 +133,15 @@ public class UserBanningVm {
         this.addBanFor = addBanFor;
     }
 
+    /**
+     * Gets {@link PrefixedTextConverter} which can be used to wrap strings with prefix in @load expressions.
+     * 
+     * @return the prefixedTextConverter the {@link PrefixedTextConverter} instance
+     */
+    public PrefixedTextConverter getPrefixedTextConverter() {
+        return prefixedTextConverter;
+    }
+
     //-- ZK bindings ----------------------------
 
     /**
@@ -148,7 +160,7 @@ public class UserBanningVm {
      * Edit ban properties for specified user.
      * 
      * @param userId the id property of user to edit for
-     * @throws NotFoundException
+     * @throws NotFoundException when user can't be found by specified {@code userId} 
      */
     // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command
@@ -161,7 +173,7 @@ public class UserBanningVm {
      * Revoke ban for specified user.
      * 
      * @param userId the id property of user to revoke for
-     * @throws NotFoundException
+     * @throws NotFoundException when user can't be found by specified {@code userId} 
      */
     // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command

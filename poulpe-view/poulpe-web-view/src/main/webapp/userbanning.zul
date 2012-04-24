@@ -73,13 +73,10 @@
 
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
-    <window visible="@load(userBanningVm.editBanWindowOpened)" title="${labels.userbanning.title}" width="500px"
-        border="normal" mode="popup" position="center">
+    <window visible="@load(userBanningVm.editBanWindowOpened)" width="500px" border="normal" mode="popup"
+      position="center"
+      title="@load(userBanningVm.selectedUser.username) @converter(userBanningVm.prefixedTextConverter, prefix='userbanning.ban_properties.for_user')">
       <vbox spacing="12px" hflex="1">
-        <hbox>
-          <label value="${labels.userbanning.for_user}" style="font-size: large" />
-          <label value="@load(userBanningVm.selectedUser.username)" style="font-size: 110%" />
-        </hbox>
         <vbox hflex="1">
           <label value="${labels.userbanning.ban_reason}" />
           <textbox value="@bind(userBanningVm.selectedUser.banReason)" rows="6" hflex="1" style="resize: none;" />
