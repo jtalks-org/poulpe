@@ -14,6 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static org.hamcrest.Matchers.startsWith;
+
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -62,6 +67,11 @@ public class UserBanningVm {
     private final PrefixedTextConverter prefixedTextConverter = new PrefixedTextConverter();
 
     /**
+     * Text to filter users by username in available list.
+     */
+    private String availableFilterText = "";
+
+    /**
      * Constructs VM.
      * 
      * @param userService the UserService instance, used to obtain data related to users for VM
@@ -79,9 +89,10 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<User> getAvailableUsers() {
-        List<User> users = userService.getAll();
+        List<User> users = userService.getUsersByUsernameWord(availableFilterText);
         users.removeAll(userService.getAllBannedUsers());
-        return users;
+        users = filter(having(on(User.class).getUsername(), startsWith(availableFilterText)), users);
+        return users.subList(0, Math.min(10, users.size()));
     }
 
     /**
@@ -145,6 +156,18 @@ public class UserBanningVm {
     //-- ZK bindings ----------------------------
 
     /**
+     * Sets new value to filter text for users in available list. This value later will be used to filter users by
+     * username in list of available users.
+     * 
+     * @param filterText the text to filter by
+     */
+    @Command
+    @NotifyChange({ "availableUsers" })
+    public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
+        this.availableFilterText = filterText;
+    }
+
+    /**
      * Set banned state to selected user.
      * 
      * @throws NotFoundException
@@ -160,7 +183,7 @@ public class UserBanningVm {
      * Edit ban properties for specified user.
      * 
      * @param userId the id property of user to edit for
-     * @throws NotFoundException when user can't be found by specified {@code userId} 
+     * @throws NotFoundException when user can't be found by specified {@code userId}
      */
     // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command
@@ -173,7 +196,7 @@ public class UserBanningVm {
      * Revoke ban for specified user.
      * 
      * @param userId the id property of user to revoke for
-     * @throws NotFoundException when user can't be found by specified {@code userId} 
+     * @throws NotFoundException when user can't be found by specified {@code userId}
      */
     // why we're using userId, not by User instance? - look comment in userbanning.zul
     @Command
