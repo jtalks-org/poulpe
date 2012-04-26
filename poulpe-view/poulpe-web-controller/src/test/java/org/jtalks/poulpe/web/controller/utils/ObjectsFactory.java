@@ -21,9 +21,9 @@ import java.util.List;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.entity.User;
@@ -121,12 +121,12 @@ public class ObjectsFactory {
         return topicType;
     }
 
-    public static PoulpeGroup fakeGroup() {
-        return new PoulpeGroup(random(), random());
+    public static Group fakeGroup() {
+        return new Group(random(), random());
     }
 
-    public static List<PoulpeGroup> fakeGroupList(int listSize) {
-        List<PoulpeGroup> result = Lists.newArrayList();
+    public static List<Group> fakeGroupList(int listSize) {
+        List<Group> result = Lists.newArrayList();
 
         if (listSize > 0) {
             for (int i = 0; i < listSize; i++) {

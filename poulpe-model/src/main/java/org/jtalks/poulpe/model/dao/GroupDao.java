@@ -17,21 +17,21 @@ package org.jtalks.poulpe.model.dao;
 import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.common.model.entity.Group;
 
 /**
- * Dao interface for accessing {@link PoulpeGroup} objects
+ * Dao interface for accessing {@link Group} objects
  * 
  * @author Konstantin Akimov
  */
-public interface GroupDao extends ParentRepository<PoulpeGroup> {
+public interface GroupDao extends ParentRepository<Group> {
 
     /**
      * Get the list of all groups.
      * 
      * @return list of groups
      */
-    List<PoulpeGroup> getAll();
+    List<Group> getAll();
 
     /**
      * Get the list of all groups which match to the specified name
@@ -40,5 +40,5 @@ public interface GroupDao extends ParentRepository<PoulpeGroup> {
      * @return list of groups
      * @exception IllegalArgumentException if name is null
      */
-    List<PoulpeGroup> getMatchedByName(String name);
+    List<Group> getMatchedByName(String name);
 }

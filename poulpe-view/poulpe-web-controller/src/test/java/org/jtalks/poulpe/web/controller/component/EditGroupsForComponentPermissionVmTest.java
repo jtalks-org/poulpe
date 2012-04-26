@@ -27,11 +27,11 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -177,7 +177,7 @@ public class EditGroupsForComponentPermissionVmTest {
         verify(componentService, never()).changeRestrictions(any(Component.class), any(PermissionChanges.class));
         verify(componentService, never()).saveComponent(any(Component.class));
 
-        verify(groupService, never()).saveGroup(any(PoulpeGroup.class));
-        verify(groupService, never()).deleteGroup(any(PoulpeGroup.class));
+        verify(groupService, never()).saveGroup(any(Group.class));
+        verify(groupService, never()).deleteGroup(any(Group.class));
     }
 }

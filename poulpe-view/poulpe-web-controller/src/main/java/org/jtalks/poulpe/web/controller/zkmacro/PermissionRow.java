@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.zkmacro;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.common.model.entity.Group;
 
 /**
  * @author stanislav bashkirtsev
@@ -25,14 +25,14 @@ import org.jtalks.poulpe.model.entity.PoulpeGroup;
  */
 public class PermissionRow {
     private final String rowLabel;
-    private final List<PoulpeGroup> groups;
+    private final List<Group> groups;
 
-    protected PermissionRow(String rowLabel, List<PoulpeGroup> groups) {
+    protected PermissionRow(String rowLabel, List<Group> groups) {
         this.groups = groups;
         this.rowLabel = rowLabel;
     }
 
-    public List<PoulpeGroup> getGroups() {
+    public List<Group> getGroups() {
         return groups;
     }
 
@@ -41,32 +41,32 @@ public class PermissionRow {
         return rowLabel;
     }
 
-    public PermissionRow addGroup(PoulpeGroup group) {
+    public PermissionRow addGroup(Group group) {
         groups.add(group);
         return this;
     }
 
     public static PermissionRow newAllowRow() {
-        return newAllowRow(new ArrayList<PoulpeGroup>());
+        return newAllowRow(new ArrayList<Group>());
     }
 
     public static PermissionRow newRestrictRow() {
-        return newRestrictRow(new ArrayList<PoulpeGroup>());
+        return newRestrictRow(new ArrayList<Group>());
     }
 
-    public static PermissionRow newAllowRow(List<PoulpeGroup> groups) {
+    public static PermissionRow newAllowRow(List<Group> groups) {
         return newAllowRow("Allow", groups);
     }
 
-    public static PermissionRow newRestrictRow(List<PoulpeGroup> groups) {
+    public static PermissionRow newRestrictRow(List<Group> groups) {
         return newRestrictRow("Restrict", groups);
     }
 
-    public static PermissionRow newAllowRow(String rowLabel, List<PoulpeGroup> groups) {
+    public static PermissionRow newAllowRow(String rowLabel, List<Group> groups) {
         return new PermissionRow(rowLabel, groups);
     }
 
-    public static PermissionRow newRestrictRow(String rowLabel, List<PoulpeGroup> groups) {
+    public static PermissionRow newRestrictRow(String rowLabel, List<Group> groups) {
         return new PermissionRow(rowLabel, groups);
     }
 

@@ -29,6 +29,7 @@ import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
@@ -40,7 +41,6 @@ import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -73,9 +73,8 @@ public class PermissionManagerTest {
         return new PoulpeBranch(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
     }
 
-    public static PoulpeGroup randomGroup(long id) {
-        PoulpeGroup group = new PoulpeGroup(RandomStringUtils.randomAlphanumeric(15),
-                RandomStringUtils.randomAlphanumeric(20));
+    public static Group randomGroup(long id) {
+        Group group = new Group(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
         group.setId(id);
         return group;
     }
@@ -86,8 +85,8 @@ public class PermissionManagerTest {
                 types[RandomUtils.nextInt(types.length)]);
     }
 
-    public static PoulpeGroup getGroupWithId(List<PoulpeGroup> groups, long id) {
-        for (PoulpeGroup group : groups) {
+    public static Group getGroupWithId(List<Group> groups, long id) {
+        for (Group group : groups) {
             if (group.getId() == id) {
                 return group;
             }
@@ -101,11 +100,11 @@ public class PermissionManagerTest {
      * @author Vyacheslav Zhivaev
      * 
      */
-    class GroupDaoAnswer implements Answer<PoulpeGroup> {
+    class GroupDaoAnswer implements Answer<Group> {
 
-        private final List<PoulpeGroup> groups;
+        private final List<Group> groups;
 
-        public GroupDaoAnswer(List<PoulpeGroup> groups) {
+        public GroupDaoAnswer(List<Group> groups) {
             this.groups = groups;
         }
 
@@ -113,7 +112,7 @@ public class PermissionManagerTest {
          * {@inheritDoc}
          */
         @Override
-        public PoulpeGroup answer(InvocationOnMock invocation) throws Throwable {
+        public Group answer(InvocationOnMock invocation) throws Throwable {
             long id = (Long) invocation.getArguments()[0];
             return PermissionManagerTest.getGroupWithId(groups, id);
         }
@@ -127,7 +126,7 @@ public class PermissionManagerTest {
 
     PermissionManager manager;
 
-    List<PoulpeGroup> groups;
+    List<Group> groups;
     List<GroupAce> groupAces;
     List<JtalksPermission> permissions;
 
@@ -175,7 +174,7 @@ public class PermissionManagerTest {
         assertTrue(permissionsMap.getPermissions().containsAll(permissions));
 
         for (GroupAce groupAce : groupAces) {
-            List<PoulpeGroup> groups = permissionsMap.get(groupAce.getBranchPermission(), groupAce.isGranting());
+            List<Group> groups = permissionsMap.get(groupAce.getBranchPermission(), groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }
     }
@@ -193,7 +192,7 @@ public class PermissionManagerTest {
         assertTrue(permissionsMap.getPermissions().containsAll(permissions));
 
         for (GroupAce groupAce : groupAces) {
-            List<PoulpeGroup> groups = permissionsMap.get(
+            List<Group> groups = permissionsMap.get(
                     GeneralPermission.findByMask(groupAce.getBranchPermissionMask()), groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }
@@ -202,8 +201,8 @@ public class PermissionManagerTest {
     @DataProvider
     public Object[][] accessChanges() {
         PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CREATE_TOPICS);
-        accessChanges.addNewlyAddedGroups(newArrayList(new PoulpeGroup("new1"), new PoulpeGroup("new2")));
-        accessChanges.addRemovedGroups(newArrayList(new PoulpeGroup("removed1"), new PoulpeGroup("removed2")));
+        accessChanges.addNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
+        accessChanges.addRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
         return new Object[][] { { accessChanges } };
     }
 
@@ -227,7 +226,7 @@ public class PermissionManagerTest {
     private void givenPermissions(Entity entity, JtalksPermission... permissions) {
         givenGroupAces(entity, permissions);
 
-        Answer<PoulpeGroup> answer = new GroupDaoAnswer(groups);
+        Answer<Group> answer = new GroupDaoAnswer(groups);
 
         when(groupDao.get(anyLong())).thenAnswer(answer);
         when(aclManager.getGroupPermissionsOn(eq(entity))).thenReturn(groupAces);
@@ -248,7 +247,7 @@ public class PermissionManagerTest {
 
         for (int i = 0; i < permissions.length; i++) {
             for (int j = 0, count = RandomUtils.nextInt(20) + 10; j < count; j++) {
-                PoulpeGroup group = randomGroup(lastGroupId++);
+                Group group = randomGroup(lastGroupId++);
                 groups.add(group);
 
                 this.permissions.add(permissions[i]);

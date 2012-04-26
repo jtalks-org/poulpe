@@ -36,14 +36,6 @@
                 <column name="USER_ID" not-null="true"/>
             </many-to-many>
         </bag>
-
-        <joined-subclass name="org.jtalks.poulpe.model.entity.PoulpeGroup" table="POULPE_GROUP">
-            <key column="GROUP_ID"/>
-            <many-to-one column="BRANCH_ID" name="branch" class="org.jtalks.poulpe.model.entity.PoulpeBranch"
-                         lazy="false"
-                         update="false" insert="false"/>
-        </joined-subclass>
-
     </class>
 
 </hibernate-mapping>

@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.common.model.entity.Branch;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Group;
 
 /**
  * Forum branch that contains topics.
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class PoulpeBranch extends Branch {
     private List<User> moderators = new ArrayList<User>();
-    private List<PoulpeGroup> groups = new ArrayList<PoulpeGroup>();
+    private Group moderatorsGroup;
 
     /**
      * Creates an empty branch, all fields are set to null,
@@ -137,45 +138,23 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * Returns a list of user {@link PoulpeGroup}s of this branch.
+     * Returns a {@link Group} of moderators of this branch, which is created, modified and deleted on creating,
+     * editing and deleting of this branch.
      *
-     * @return list of user groups
+     * @return a group of moderators for this branch
      */
-    public List<PoulpeGroup> getGroups() {
-        return groups;
+    public Group getModeratorsGroup() {
+        return moderatorsGroup;
     }
 
     /**
-     * Assigns a list of user {@link PoulpeGroup}s for this branch.
+     * Sets a {@link Group} of moderators for this branch, which is created, modified and deleted on creating, editing
+     * and deleting of this branch.
      *
-     * @param groups - list of user groups
+     * @param moderatorsGroup - a group of moderators for this branch
      */
-    public void setGroups(List<PoulpeGroup> groups) {
-        this.groups = groups;
-    }
-
-    /**
-     * Adds a user {@link PoulpeGroup} for this branch.
-     *
-     * @param group - user group to add
-     */
-    public void addGroup(PoulpeGroup group) {
-        this.groups.add(group);
-    }
-
-    /**
-     * Adds a new group, or updates, if it already has it
-     *
-     * @param group to be added
-     */
-    public void addOrUpdateGroup(PoulpeGroup group) {
-        for (int i = 0; i < groups.size(); i++) {
-            if (group.getId() == groups.get(i).getId()) {
-                groups.set(i, group);
-                return;
-            }
-        }
-        addGroup(group);
+    public void setModeratorsGroup(Group moderatorsGroup) {
+        this.moderatorsGroup = moderatorsGroup;
     }
 
     /**

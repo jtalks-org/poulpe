@@ -21,11 +21,11 @@ import static org.mockito.Mockito.verify;
 import java.util.Collections;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -41,7 +41,7 @@ public class TransactionalGroupServiceTest {
     @Mock GroupDao dao;
     @Mock EntityValidator entityValidator;
 
-    private PoulpeGroup group = new PoulpeGroup("new group");
+    private Group group = new Group("new group");
 
     @BeforeMethod
     public void beforeMethod() {

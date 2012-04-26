@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.util.resource.Labels;
@@ -97,7 +97,7 @@ public class ZkEditGroupDialogView extends Window implements EditGroupDialogView
      * @param event information about event
      */
     public void onOpenEditDialog(Event event) {
-        show((PoulpeGroup) event.getData());
+        show((Group) event.getData());
     }
 
     /**
@@ -133,7 +133,7 @@ public class ZkEditGroupDialogView extends Window implements EditGroupDialogView
      * {@inheritDoc}
      */
     @Override
-    public void show(PoulpeGroup group) {
+    public void show(Group group) {
         presenter.initView(this, group);
         setTitle(Labels.getLabel("groups.editdialog.title"));
         confirmButton.setLabel(Labels.getLabel("groups.button.edit"));

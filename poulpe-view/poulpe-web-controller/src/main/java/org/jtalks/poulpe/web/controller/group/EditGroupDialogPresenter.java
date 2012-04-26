@@ -14,15 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.GroupService;
 
 public class EditGroupDialogPresenter {
 
     private EditGroupDialogView view;
-    private PoulpeGroup group;
+    private Group group;
     private GroupService groupService;
     private EntityValidator entityValidator;
 
@@ -37,7 +37,7 @@ public class EditGroupDialogPresenter {
         this.entityValidator = entityValidator;
     }
 
-    public void initView(EditGroupDialogView view, PoulpeGroup group) {
+    public void initView(EditGroupDialogView view, Group group) {
         this.view = view;
         this.group = group;
     }
@@ -45,7 +45,7 @@ public class EditGroupDialogPresenter {
 
     public boolean saveOrUpdateGroup(String name, String description) {
         if (group == null) {
-            group = new PoulpeGroup();
+            group = new Group();
         }
         group.setName(name);
         group.setDescription(description);
@@ -58,7 +58,7 @@ public class EditGroupDialogPresenter {
         }
     }
     
-    private boolean validate(PoulpeGroup group) {
+    private boolean validate(Group group) {
         ValidationResult result = entityValidator.validate(group);
 
         if (result.hasErrors()) {

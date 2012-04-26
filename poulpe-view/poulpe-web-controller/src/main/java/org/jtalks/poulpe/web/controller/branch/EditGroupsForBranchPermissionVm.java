@@ -19,12 +19,12 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.apache.commons.collections.ListUtils;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -42,7 +42,7 @@ import org.zkoss.bind.annotation.Init;
  * @see BranchPermissionManagementVm
  * @author Vyacheslav Zhivaev
  */
-public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<PoulpeGroup> {
+public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
 
     public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "/sections/BranchPermissionManagement.zul";
 
@@ -97,7 +97,7 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Pou
      */
     @Command
     public void save() {
-        List<PoulpeGroup> alreadyAddedGroups = getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed());
+        List<Group> alreadyAddedGroups = getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed());
 
         @SuppressWarnings("unchecked")
         PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
@@ -138,7 +138,7 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Pou
      * @param allowed the permission mode (allowed or restricted)
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
-    private List<PoulpeGroup> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
+    private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
         PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
         return permissionsMap.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }

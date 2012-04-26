@@ -20,17 +20,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
+import org.jtalks.common.model.entity.Group;
 
 /**
- * Access list for {@link PoulpeGroup}
+ * Access list for {@link Group}
  * 
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
 public class GroupAccessList {
-    private final List<PoulpeGroup> allowed = new ArrayList<PoulpeGroup>();
-    private final List<PoulpeGroup> restricted = new ArrayList<PoulpeGroup>();
+    private final List<Group> allowed = new ArrayList<Group>();
+    private final List<Group> restricted = new ArrayList<Group>();
 
     /**
      * Adds group to the allowed access list.
@@ -38,7 +38,7 @@ public class GroupAccessList {
      * @param group to be allowed
      * @return {@code this} instance for providing fluent interface
      */
-    public GroupAccessList addAllowed(@Nullable PoulpeGroup group) {
+    public GroupAccessList addAllowed(@Nullable Group group) {
         if (group != null) {
             allowed.add(group);
         }
@@ -51,7 +51,7 @@ public class GroupAccessList {
      * @param group to be restricted
      * @return {@code this} instance for providing fluent interface
      */
-    public GroupAccessList addRestricted(@Nullable PoulpeGroup group) {
+    public GroupAccessList addRestricted(@Nullable Group group) {
         if (group != null) {
             restricted.add(group);
         }
@@ -64,7 +64,7 @@ public class GroupAccessList {
      * @param allowed allowed groups
      * @return {@code this} instance for providing fluent interface
      */
-    public GroupAccessList setAllowed(List<PoulpeGroup> allowed) {
+    public GroupAccessList setAllowed(List<Group> allowed) {
         this.allowed.clear();
         this.allowed.addAll(allowed);
         return this;
@@ -76,7 +76,7 @@ public class GroupAccessList {
      * @param restricted restricted groups
      * @return {@code this} instance for providing fluent interface
      */
-    public GroupAccessList setRestricted(List<PoulpeGroup> restricted) {
+    public GroupAccessList setRestricted(List<Group> restricted) {
         this.restricted.clear();
         this.restricted.addAll(restricted);
         return this;
@@ -87,7 +87,7 @@ public class GroupAccessList {
      * 
      * @return unmodifiable list of restricted groups
      */
-    public List<PoulpeGroup> getRestricted() {
+    public List<Group> getRestricted() {
         return Collections.unmodifiableList(restricted);
     }
 
@@ -96,7 +96,7 @@ public class GroupAccessList {
      * 
      * @return unmodifiable list of allowed groups
      */
-    public List<PoulpeGroup> getAllowed() {
+    public List<Group> getAllowed() {
         return Collections.unmodifiableList(allowed);
     }
 }

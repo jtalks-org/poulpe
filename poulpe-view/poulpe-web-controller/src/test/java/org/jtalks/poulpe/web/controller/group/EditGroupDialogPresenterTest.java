@@ -22,10 +22,10 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Set;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.PoulpeGroup;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.GroupService;
@@ -43,7 +43,7 @@ public class EditGroupDialogPresenterTest {
     
     @Mock 
     EntityValidator entityValidator;
-    private PoulpeGroup group;
+    private Group group;
 
     private ValidationResult resultWithErrors = resultWithErrors();
 
@@ -57,7 +57,7 @@ public class EditGroupDialogPresenterTest {
     public void beforeMethod() {
         dialogPresenter = new EditGroupDialogPresenter();
         MockitoAnnotations.initMocks(this);
-        group = new PoulpeGroup();
+        group = new Group();
         dialogPresenter.setGroupService(mockGroupService);
         dialogPresenter.setEntityValidator(entityValidator);
     }
@@ -67,7 +67,7 @@ public class EditGroupDialogPresenterTest {
         givenConstraintViolated();
         dialogPresenter.initView(mockView, group);
         dialogPresenter.saveOrUpdateGroup(null, "description");
-        verify(mockGroupService, never()).saveGroup(any(PoulpeGroup.class));
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
     
     @Test
@@ -75,7 +75,7 @@ public class EditGroupDialogPresenterTest {
         givenConstraintViolated();
         dialogPresenter.initView(mockView, group);
         dialogPresenter.saveOrUpdateGroup("", "description");
-        verify(mockGroupService, never()).saveGroup(any(PoulpeGroup.class));
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
 
     @Test
@@ -84,7 +84,7 @@ public class EditGroupDialogPresenterTest {
         String longName = new String(new byte[255]);
         dialogPresenter.initView(mockView, group);
         dialogPresenter.saveOrUpdateGroup(longName, "description");
-        verify(mockGroupService, never()).saveGroup(any(PoulpeGroup.class));
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
 
     @Test
@@ -95,7 +95,7 @@ public class EditGroupDialogPresenterTest {
         dialogPresenter.initView(mockView, group);
         dialogPresenter.saveOrUpdateGroup(name, desc);
         verify(mockView, never()).validationFailure(any(ValidationResult.class));
-        verify(mockGroupService).saveGroup(any(PoulpeGroup.class));
+        verify(mockGroupService).saveGroup(any(Group.class));
     }
     
     private void givenNoConstraintsViolated() {
@@ -105,7 +105,7 @@ public class EditGroupDialogPresenterTest {
     @Test
     public void testSaveOrUpdateGroupWithException() {
         givenConstraintViolated();
-        PoulpeGroup nullGroup = new PoulpeGroup();
+        Group nullGroup = new Group();
         
         final String name = "";
         final String desc = "description";
@@ -113,7 +113,7 @@ public class EditGroupDialogPresenterTest {
         dialogPresenter.initView(mockView, nullGroup);
         dialogPresenter.setGroupService(mockGroupService);
         dialogPresenter.saveOrUpdateGroup(name, desc);
-        verify(mockGroupService, never()).saveGroup(any(PoulpeGroup.class));
+        verify(mockGroupService, never()).saveGroup(any(Group.class));
     }
     
     private void givenConstraintViolated() {
