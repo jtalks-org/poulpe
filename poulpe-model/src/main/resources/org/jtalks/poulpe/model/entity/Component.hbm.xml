@@ -18,44 +18,35 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="org.jtalks.common.model.entity.Component" table="COMPONENTS">
+  <class name="org.jtalks.common.model.entity.Component" table="COMPONENTS">
+    <cache usage="nonstrict-read-write"/>
+    <id column="CMP_ID" name="id" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    <discriminator column="COMPONENT_TYPE"/>
+    <property column="UUID" name="uuid" not-null="true" unique="true"/>
+    <property column="NAME" name="name" not-null="true" unique="true"/>
+    <property column="DESCRIPTION" name="description"/>
+
+    <bag name="properties" cascade="all-delete-orphan" inverse="false" lazy="false">
+      <cache usage="nonstrict-read-write"/>
+      <key column="CMP_ID" foreign-key="FK_COMPONENT"/>
+      <one-to-many class="org.jtalks.common.model.entity.Property"/>
+    </bag>
+
+    <property name="componentType" column="C_TYPE" unique="true">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
+      </type>
+    </property>
+
+    <subclass name="org.jtalks.poulpe.model.entity.Jcommune" discriminator-value="JCOMMUNE">
+      <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
         <cache usage="nonstrict-read-write"/>
-
-        <id column="CMP_ID" name="id" unsaved-value="0">
-            <generator class="native"/>
-        </id>
-
-        <discriminator column="COMPONENT_TYPE"/>
-
-        <property column="UUID" name="uuid" not-null="true" unique="true"/>
-        <property column="NAME" name="name" not-null="true" unique="true"/>
-        <property column="DESCRIPTION" name="description"/>
-
-        <bag name="properties" cascade="all-delete-orphan" inverse="false" lazy="false">
-            <cache usage="nonstrict-read-write"/>
-            <key column="CMP_ID" foreign-key="FK_COMPONENT"/>
-            <one-to-many class="org.jtalks.common.model.entity.Property"/>
-        </bag>
-
-        <property name="componentType" column="C_TYPE" unique="true">
-            <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
-            </type>
-        </property>
-
-
-        <subclass name="org.jtalks.poulpe.model.entity.Jcommune" discriminator-value="JCOMMUNE">
-
-            <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
-                <cache usage="nonstrict-read-write"/>
-
-                <key column="COMPONENT_ID" foreign-key="FK_JCOMMUNE"/>
-
-                <list-index column="POSITION"/>
-                <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeSection"/>
-            </list>
-
-        </subclass>
-
-    </class>
+        <key column="COMPONENT_ID" foreign-key="FK_JCOMMUNE"/>
+        <list-index column="POSITION"/>
+        <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeSection"/>
+      </list>
+    </subclass>
+  </class>
 </hibernate-mapping>

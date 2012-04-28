@@ -15,11 +15,11 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.ForumStructureService;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -27,8 +27,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
-
-import javax.validation.constraints.NotNull;
 
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 
@@ -43,12 +41,11 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
  */
 public class ForumStructureVm {
     private static final String SELECTED_ITEM_PROP = "selectedItem", VIEW_DATA_PROP = "viewData";
-    private final ComponentService componentService;
     private ForumStructureData viewData = new ForumStructureData();
+    private ForumStructureService forumStructureService;
 
-
-    public ForumStructureVm(@NotNull ComponentService componentService) {
-        this.componentService = componentService;
+    public ForumStructureVm(ForumStructureService forumStructureService) {
+        this.forumStructureService = forumStructureService;
     }
 
     /**
@@ -92,16 +89,13 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void deleteSelected() {
-        Jcommune jcommune = viewData.getRootAsJcommune();
         ForumStructureItem selectedItem = viewData.removeSelectedItem();
         if (selectedItem.isBranch()) {
-            PoulpeBranch branch = selectedItem.getItem(PoulpeBranch.class);
-            branch.getSection().deleteBranch(branch);
-            branch.setSection(null);
+            forumStructureService.deleteBranch(selectedItem.getItem(PoulpeBranch.class));
         } else {
-            jcommune.getSections().remove(selectedItem.getItem(PoulpeSection.class));
+            Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
+            viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
-        componentService.saveComponent(jcommune);
     }
 
     /**
@@ -119,14 +113,14 @@ public class ForumStructureVm {
     void storeNewSection(PoulpeSection section) {
         Jcommune jcommune = viewData.getRootAsJcommune();
         jcommune.addSection(section);
-        componentService.saveComponent(jcommune);
+        forumStructureService.saveJcommune(jcommune);
     }
 
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
+        viewData.getSelectedItem().setItem(storeSelectedBranch());
         viewData.putSelectedBranchToSectionInDropdown();
-        storeSelectedBranch();
     }
 
     /**
@@ -134,14 +128,10 @@ public class ForumStructureVm {
      * the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved to
      * another section.
      */
-    void storeSelectedBranch() {
-        Jcommune jcommune = viewData.getRootAsJcommune();
+    PoulpeBranch storeSelectedBranch() {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
         PoulpeSection section = viewData.getSectionSelectedInDropDown();
-        selectedBranch.getSection().deleteBranch(selectedBranch);
-        section.addOrUpdateBranch(selectedBranch);
-        selectedBranch.setSection(section);
-        componentService.saveComponent(jcommune);
+        return forumStructureService.saveBranch(section, selectedBranch);
     }
 
     /**
@@ -177,7 +167,7 @@ public class ForumStructureVm {
     }
 
     private Jcommune loadJcommune() {
-        return (Jcommune) componentService.getByType(ComponentType.FORUM);
+        return (Jcommune) forumStructureService.getJcommune(0);
     }
 
     @VisibleForTesting

@@ -72,4 +72,8 @@ public class PoulpeSection extends Section {
     public String toString() {
         return this.getName();
     }
+
+    public void clearBranches(){
+        this.getBranches().clear();
+    }
 }

@@ -18,26 +18,30 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-    <class name="org.jtalks.poulpe.model.entity.PoulpeSection" table="SECTIONS" abstract="true">
-        <cache usage="nonstrict-read-write"/>
+  <class name="org.jtalks.poulpe.model.entity.PoulpeSection" table="SECTIONS" abstract="true">
+    <cache usage="nonstrict-read-write"/>
 
-        <id column="SECTION_ID" name="id" unsaved-value="0">
-            <generator class="native"/>
-        </id>
+    <id column="SECTION_ID" name="id" unsaved-value="0">
+      <generator class="native"/>
+    </id>
+    <property column="UUID" name="uuid" not-null="true" unique="true"/>
+    <property column="NAME" name="name" not-null="true"/>
+    <property column="DESCRIPTION" name="description"/>
+    <!--
+    Note that delete-orphan will remove branch if it was removed from section and the section was saved. This is okay
+    since branch can't exist without section, but in order to move branch between two sections you'll need to use hacks
+    because when you remove branch from one section, it will be removed and Hibernate won't allow you to save the 2nd
+    section with this branch because the branch was already removed. In order to overcome this issue you need to
+    save branch to the second section first, afterwards flush() and evict() it from session and then save the second
+    section you're removing branch from.
+    -->
+    <list name="branches" cascade="all">
+      <cache usage="nonstrict-read-write"/>
+      <key column="SECTION_ID" foreign-key="FK_SECTION"/>
+      <list-index column="POSITION"/>
+      <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
+    </list>
 
-        <property column="UUID" name="uuid" not-null="true" unique="true"/>
-        <property column="NAME" name="name" not-null="true"/>
-        <property column="DESCRIPTION" name="description"/>
-
-        <!-- inverse is false because otherwise indexes are saved as null -->
-        <!-- (even if you save branch and just after that section). -->
-        <list name="branches" cascade="all-delete-orphan" inverse="false" lazy="false">
-            <cache usage="nonstrict-read-write"/>
-            <key column="SECTION_ID" foreign-key="FK_SECTION"/>
-            <list-index column="POSITION"/>
-            <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
-        </list>
-
-    </class>
+  </class>
 
 </hibernate-mapping>

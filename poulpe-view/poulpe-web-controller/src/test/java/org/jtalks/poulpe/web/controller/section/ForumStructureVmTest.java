@@ -26,6 +26,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.Random;
+
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -43,7 +45,7 @@ public class ForumStructureVmTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        vm = new ForumStructureVm(componentService);
+//        vm = new ForumStructureVm(componentService);
         vm.setViewData(data);
         vm = spy(vm);
     }
@@ -75,6 +77,18 @@ public class ForumStructureVmTest {
     @Test(dataProvider = "provideRandomJcommuneWithSections")
     public void testStoreSelectedBranch(Jcommune jcommune) throws Exception {
         PoulpeBranch selectedBranch = jcommune.getSections().get(0).getPoulpeBranches().get(0);
+        doReturn(jcommune).when(data).getRootAsJcommune();
+        doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
+        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropDown();
+        vm.storeSelectedBranch();
+        assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
+        assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
+        assertFalse(jcommune.getSections().get(0).getPoulpeBranches().contains(selectedBranch));
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testStoreSelectedBranch_withNewBranch(Jcommune jcommune) throws Exception {
+        PoulpeBranch selectedBranch = new PoulpeBranch("test");
         doReturn(jcommune).when(data).getRootAsJcommune();
         doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
         doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropDown();
@@ -145,6 +159,7 @@ public class ForumStructureVmTest {
 
     private PoulpeBranch createBranch(PoulpeSection section, String branchName) {
         PoulpeBranch branch = new PoulpeBranch(branchName);
+        branch.setId(new Random().nextLong());
         branch.setSection(section);
         return branch;
     }
