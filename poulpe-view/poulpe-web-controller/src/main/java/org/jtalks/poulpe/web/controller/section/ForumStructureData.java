@@ -4,6 +4,9 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.context.annotation.Configuration;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
@@ -19,7 +22,9 @@ import java.util.List;
  *
  * @author stanislav bashkirtsev
  */
+@Configurable
 public class ForumStructureData {
+    @Autowired
     private ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private DefaultTreeModel<ForumStructureItem> sectionTree;
@@ -182,6 +187,7 @@ public class ForumStructureData {
         ForumStructureItem sectionFromDropdown = getSectionList().getSelection().iterator().next();
         TreeNode<ForumStructureItem> node = findSectionNode(sectionFromDropdown);
         TreeNode<ForumStructureItem> branchNode = new DefaultTreeNode<ForumStructureItem>(branchItem);
+
         node.add(branchNode);
         getSectionTree().addToSelection(branchNode);
         getSectionTree().addOpenObject(node);

@@ -74,7 +74,7 @@ public final class ObjectsFactory {
 
     public static User createUser() {
         String random = random();
-        return new User(random, random, random, random);
+        return new User(RandomStringUtils.random(15), "random@gmail.com", random, random);
     }
 
     public static Group createGroup() {
@@ -95,9 +95,8 @@ public final class ObjectsFactory {
      * @return new rank
      */
     public static Rank createRank() {
-        int randNum = new Random().nextInt();
-        Rank rank = new Rank("Rank" + randNum, randNum);
-        return rank;
+        int randNum = new Random().nextInt(1000);
+        return new Rank("Rank" + randNum, randNum);
     }
 
     public static Jcommune createJcommune(int sectionsAmount) {
