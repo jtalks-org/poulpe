@@ -28,7 +28,6 @@ import org.apache.commons.lang.Validate;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.web.controller.PrefixedTextConverter;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -60,11 +59,6 @@ public class UserBanningVm {
      * Flag variable which indicates that window to edit ban properties should be shown.
      */
     private boolean editBanWindowOpened = false;
-
-    /**
-     * Converter to wrap strings with prefix in @load expressions.
-     */
-    private final PrefixedTextConverter prefixedTextConverter = new PrefixedTextConverter();
 
     /**
      * Text to filter users by username in available list.
@@ -142,15 +136,6 @@ public class UserBanningVm {
      */
     public void setAddBanFor(@Nonnull User addBanFor) {
         this.addBanFor = addBanFor;
-    }
-
-    /**
-     * Gets {@link PrefixedTextConverter} which can be used to wrap strings with prefix in @load expressions.
-     * 
-     * @return the prefixedTextConverter the {@link PrefixedTextConverter} instance
-     */
-    public PrefixedTextConverter getPrefixedTextConverter() {
-        return prefixedTextConverter;
     }
 
     //-- ZK bindings ----------------------------

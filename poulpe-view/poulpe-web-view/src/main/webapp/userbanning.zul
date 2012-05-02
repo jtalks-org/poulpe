@@ -75,8 +75,8 @@
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
     <window visible="@load(userBanningVm.editBanWindowOpened)" width="500px" border="normal" mode="popup"
-        position="center"
-        title="@load(userBanningVm.selectedUser.username) @converter(userBanningVm.prefixedTextConverter, prefix='userbanning.ban_properties.for_user')">
+        position="center" title="${labels.userbanning.ban_properties.for_user}">
+      <caption label="@load(userBanningVm.selectedUser.username)" />
       <vbox spacing="12px" hflex="1">
         <vbox hflex="1">
           <label value="${labels.userbanning.ban_reason}" />
