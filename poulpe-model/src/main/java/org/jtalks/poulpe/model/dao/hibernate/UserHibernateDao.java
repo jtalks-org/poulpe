@@ -79,11 +79,22 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
     public org.jtalks.common.model.entity.User getByUsername(String username) {
         return getPoulpeUserByUsername(username);
     }
-    
+
     @Override
-	public List<User> getAllBannedUsers() {
-		Criteria criteria = getSession().createCriteria(User.class).add(Restrictions.isNotNull("banReason"));
-		return (List<User>) criteria.list();		
-	}
+    public List<User> getAllBannedUsers() {
+        Criteria criteria = getSession().createCriteria(User.class).add(Restrictions.isNotNull("banReason"));
+        return (List<User>) criteria.list();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<User> getNonBannedByUsername(String word, int maxResults) {
+        return (List<User>) getSession()
+                .createQuery("from " + type.getSimpleName() + " u where u.banReason is null and u.username like ?")
+                .setString(0, MessageFormat.format("%{0}%", word)).setMaxResults(maxResults).list();
+    }
 
 }

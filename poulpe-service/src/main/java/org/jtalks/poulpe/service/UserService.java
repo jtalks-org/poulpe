@@ -48,12 +48,14 @@ public interface UserService {
 
     /**
      * Gets all Users from the database
+     * 
      * @return list of all users
      */
     List<User> getAll();
 
     /**
      * Gets Users with corresponding word in user name
+     * 
      * @param word to look up
      * @return list of users with the word in the name
      */
@@ -61,6 +63,7 @@ public interface UserService {
 
     /**
      * Updates the user
+     * 
      * @param user entity to be updated
      */
     void updateUser(User user);
@@ -73,11 +76,21 @@ public interface UserService {
      * @throws NotFoundException when user can't be found
      */
     User get(long id) throws NotFoundException;
-    
+
     /**
      * Gets all banned users from the database
+     * 
      * @return list of all users
      */
     List<User> getAllBannedUsers();
+
+    /**
+     * Gets all non banned users with username like in parameter.
+     * 
+     * @param word some word which must be like username
+     * @param maxCount max count of returned results
+     * @return list of non banned users with username like in parameter
+     */
+    List<User> getNonBannedByUsername(String word, int maxCount);
 
 }

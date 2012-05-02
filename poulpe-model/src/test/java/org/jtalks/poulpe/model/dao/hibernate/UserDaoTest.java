@@ -14,7 +14,9 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.util.List;
@@ -35,9 +37,9 @@ import org.testng.annotations.Test;
 
 /**
  * Tests for {@link UserDao}
- *
+ * 
  * @author Vyacheslav Zhivaev
- *
+ * 
  */
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -114,25 +116,73 @@ public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
         assertTrue(users.size() == 1);
         assertTrue(users.contains(user));
     }
-    
+
     @Test
     public void testGetAllBannedUsers() {
-    	User bannedUser = ObjectsFactory.createUser();
-    	bannedUser.setBanExpirationDate(new DateTime());
-    	bannedUser.setBanReason("any reason");
-    	
-    	dao.saveOrUpdate(bannedUser);
+        User bannedUser = ObjectsFactory.createUser();
+        bannedUser.setBanExpirationDate(new DateTime());
+        bannedUser.setBanReason("any reason");
+
+        dao.saveOrUpdate(bannedUser);
         session.evict(bannedUser);
-    	
-    	List<User> users = dao.getAllBannedUsers();
-    	
-    	assertTrue(users.size() == 1);
+
+        List<User> users = dao.getAllBannedUsers();
+
+        assertTrue(users.size() == 1);
         assertTrue(users.contains(bannedUser));
+    }
+
+    @Test
+    public void testGetNonBannedByUsername() {
+        String randomEmailSuffix = "@" + RandomStringUtils.randomAlphanumeric(10) + "."
+                + RandomStringUtils.randomAlphabetic(3);
+
+        User bannedUser1 = createUser("aaa", "aaa" + randomEmailSuffix, true);
+        User bannedUser2 = createUser("abb", "abb" + randomEmailSuffix, true);
+
+        User nonBannedUser1 = createUser("azc", "azc" + randomEmailSuffix, false);
+        User nonBannedUser2 = createUser("azd", "azd" + randomEmailSuffix, false);
+
+        for (User u : new User[] { bannedUser1, bannedUser2, nonBannedUser1, nonBannedUser2 }) {
+            dao.saveOrUpdate(u);
+            session.evict(u);
+        }
+
+        List<User> users = dao.getNonBannedByUsername("", 1000);
+        assertTrue(users.size() == 2);
+        assertTrue(users.contains(nonBannedUser1));
+        assertTrue(users.contains(nonBannedUser2));
+
+        users = dao.getNonBannedByUsername("a", 1000);
+        assertTrue(users.size() == 2);
+        assertTrue(users.contains(nonBannedUser1));
+        assertTrue(users.contains(nonBannedUser2));
+
+        users = dao.getNonBannedByUsername("a", 1);
+        assertTrue(users.size() == 1);
+        assertTrue(users.contains(nonBannedUser1) || users.contains(nonBannedUser2));
+
+        users = dao.getNonBannedByUsername("z", 1000);
+        assertTrue(users.size() == 2);
+        assertTrue(users.contains(nonBannedUser1));
+        assertTrue(users.contains(nonBannedUser2));
+
+        users = dao.getNonBannedByUsername("d", 1000);
+        assertTrue(users.size() == 1);
+        assertTrue(users.contains(nonBannedUser2));
     }
 
     private void givenUserSavedAndEvicted(User user) {
         dao.saveOrUpdate(user);
         session.evict(user);
+    }
+
+    private User createUser(String username, String email, boolean isBanned) {
+        User user = ObjectsFactory.createUser();
+        user.setUsername(username);
+        user.setEmail(email);
+        user.setBanReason((isBanned) ? "any reason" : null);
+        return user;
     }
 
 }

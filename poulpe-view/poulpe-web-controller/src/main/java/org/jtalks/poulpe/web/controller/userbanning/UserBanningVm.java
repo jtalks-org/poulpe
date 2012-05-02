@@ -14,11 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.Matchers.startsWith;
-
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -83,10 +78,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<User> getAvailableUsers() {
-        List<User> users = userService.getUsersByUsernameWord(availableFilterText);
-        users.removeAll(userService.getAllBannedUsers());
-        users = filter(having(on(User.class).getUsername(), startsWith(availableFilterText)), users);
-        return users.subList(0, Math.min(10, users.size()));
+        return userService.getNonBannedByUsername(availableFilterText, 10);
     }
 
     /**

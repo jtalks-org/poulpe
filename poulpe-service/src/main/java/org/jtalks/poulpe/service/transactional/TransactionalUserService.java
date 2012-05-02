@@ -25,8 +25,7 @@ import org.jtalks.poulpe.service.UserService;
 import ru.javatalks.utils.general.Assert;
 
 /**
- * User service class, contains methods needed to manipulate with {@code User}
- * persistent entity.
+ * User service class, contains methods needed to manipulate with {@code User} persistent entity.
  * 
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
@@ -38,8 +37,7 @@ public class TransactionalUserService implements UserService {
     /**
      * Create an instance of user entity based service.
      * 
-     * @param userDao a DAO providing persistence operations over {@link User}
-     * entities
+     * @param userDao a DAO providing persistence operations over {@link User} entities
      */
     public TransactionalUserService(UserDao userDao) {
         this.userDao = userDao;
@@ -128,10 +126,18 @@ public class TransactionalUserService implements UserService {
     public User get(long id) {
         return userDao.get(id);
     }
-    
+
     @Override
-	public List<User> getAllBannedUsers() {
-		return userDao.getAllBannedUsers();
-	}
+    public List<User> getAllBannedUsers() {
+        return userDao.getAllBannedUsers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<User> getNonBannedByUsername(String word, int maxCount) {
+        return userDao.getNonBannedByUsername(word, maxCount);
+    }
 
 }

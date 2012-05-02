@@ -59,12 +59,21 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepo
      * @return {@code List<User>}
      */
     List<User> getAllPoulpeUsers();
-    
+
     /**
      * Get {@link List} with all banned Users.
      * 
      * @return {@code List<User>}
      */
     List<User> getAllBannedUsers();
+
+    /**
+     * Gets all non banned users with username like in parameter.
+     * 
+     * @param word some word which must be like username
+     * @param maxCount max count of returned results
+     * @return list of non banned users with username like in parameter
+     */
+    List<User> getNonBannedByUsername(String word, int maxCount);
 
 }
