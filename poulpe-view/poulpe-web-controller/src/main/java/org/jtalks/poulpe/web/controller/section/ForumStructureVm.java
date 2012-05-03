@@ -24,6 +24,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
@@ -173,5 +174,16 @@ public class ForumStructureVm {
     @VisibleForTesting
     void setViewData(ForumStructureData viewData) {
         this.viewData = viewData;
+    }
+
+    /**
+     * Handler of event when one item was dragged and dropped to another
+     * 
+     * @param event
+     *         contains all needed info about event
+     */
+    @Command
+    @NotifyChange(VIEW_DATA_PROP)
+    public void onDropItem(@BindingParam("event") Event event) {
     }
 }

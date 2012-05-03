@@ -7,7 +7,12 @@
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', createNew=true)"/>
 
-    <tree model="@bind(vm.viewData.sectionTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)"/>
+    <tree model="@bind(vm.viewData.sectionTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
+      <template name="model">
+        <treeitem draggable="@load(each.data.branch)" droppable="@load(each.data.branch)" label="@load(each)"
+                onDrop="@command('onDropItem', event=event)"/>
+      </template>
+    </tree>
 
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_item}" visible="@load(not vm.selectedItem.branch)"
