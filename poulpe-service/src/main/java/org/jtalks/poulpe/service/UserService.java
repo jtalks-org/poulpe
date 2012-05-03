@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
@@ -27,24 +26,6 @@ import org.jtalks.poulpe.model.entity.User;
  * @author Vyacheslav Zhivaev
  */
 public interface UserService {
-
-    /**
-     * Sets permanent ban status for the user list.
-     * 
-     * @param users the users to update ban status
-     * @param permanentBan the permanent ban status
-     * @param banReason the ban reason description
-     */
-    void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason);
-
-    /**
-     * Sets temporary ban status for the user list.
-     * 
-     * @param users the users to update ban status
-     * @param days the length of the temporary ban status in days
-     * @param banReason the ban reason description
-     */
-    void setTemporaryBanStatus(Collection<User> users, int days, String banReason);
 
     /**
      * Gets all Users from the database

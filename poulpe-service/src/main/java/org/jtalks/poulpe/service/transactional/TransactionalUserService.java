@@ -14,15 +14,11 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.Collection;
 import java.util.List;
 
-import org.joda.time.DateTime;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
-
-import ru.javatalks.utils.general.Assert;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -41,58 +37,6 @@ public class TransactionalUserService implements UserService {
      */
     public TransactionalUserService(UserDao userDao) {
         this.userDao = userDao;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setPermanentBanStatus(Collection<User> users, boolean permanentBan, String banReason) {
-        checkUsers(users);
-
-        for (User user : users) {
-            user.setPermanentBan(permanentBan);
-            user.setBanExpirationDate(null);
-            user.setBanReason(banReason);
-
-            userDao.saveOrUpdate(user);
-        }
-    }
-
-    /**
-     * @param users to be checked
-     * @exception IllegalArgumentException if users is null
-     */
-    private static void checkUsers(Collection<User> users) {
-        Assert.throwIfNull(users, "users");
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    private static void checkDays(int days) {
-        if (days <= 0) {
-            throw new IllegalArgumentException("Days must be positive");
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void setTemporaryBanStatus(Collection<User> users, int days, String banReason) {
-        checkUsers(users);
-        checkDays(days);
-
-        DateTime banExpirationDate = DateTime.now().plusDays(days);
-
-        for (User user : users) {
-            user.setPermanentBan(false);
-            user.setBanExpirationDate(banExpirationDate);
-            user.setBanReason(banReason);
-
-            userDao.saveOrUpdate(user);
-        }
     }
 
     /**

@@ -15,9 +15,6 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyBoolean;
-import static org.mockito.Matchers.anyCollectionOf;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.doNothing;
@@ -180,8 +177,6 @@ public class EditGroupMembersVmTest {
     }
 
     private void vefiryNothingChanges() {
-        verify(userService, never()).setPermanentBanStatus(anyCollectionOf(User.class), anyBoolean(), anyString());
-        verify(userService, never()).setTemporaryBanStatus(anyCollectionOf(User.class), anyInt(), anyString());
         verify(userService, never()).updateUser(any(User.class));
 
         verify(groupService, never()).saveGroup(any(Group.class));
