@@ -40,6 +40,16 @@ public class ForumStructureDataTest {
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
+    public void testAddSelectedSectionToTreeIfNew_notPersistentItemSelected(DefaultTreeModel<ForumStructureItem> tree) {
+        ForumStructureItem newSection = new ForumStructureItem(new PoulpeSection());
+        sut.setSectionTree(tree);
+        sut.setSelectedItem(newSection);
+
+        sut.addSelectedSectionToTreeIfNew();
+        assertSame(tree.getSelection().iterator().next().getData(), newSection);
+    }
+
+    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
     public void testRemoveSelectedItem_selectedSection(DefaultTreeModel<ForumStructureItem> treeModel) {
         TreeNode<ForumStructureItem> selectedNode = treeModel.getRoot().getChildAt(1);
         treeModel.addSelectionPath(new int[]{1});

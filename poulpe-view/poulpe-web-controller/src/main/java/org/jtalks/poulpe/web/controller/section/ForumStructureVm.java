@@ -105,8 +105,8 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP})
     public void saveSection() {
-        storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
         viewData.addSelectedSectionToTreeIfNew();
+        storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
         viewData.closeDialog();
     }
 
@@ -167,7 +167,7 @@ public class ForumStructureVm {
     }
 
     private Jcommune loadJcommune() {
-        return (Jcommune) forumStructureService.getJcommune(0);
+        return forumStructureService.getJcommune(0);
     }
 
     @VisibleForTesting
