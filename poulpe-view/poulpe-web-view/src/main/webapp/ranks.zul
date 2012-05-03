@@ -24,7 +24,12 @@
       <button label="${labels.ranks.delete}" onClick="@command('deleteRank')" sclass="ranks.deleteButton"
               disabled="@load(empty vm.selected)"/>
     </toolbar>
-    <window id="editRankDialog" title="${labels.ranks.edit.add_edit.title}" closable="true" mode="modal" border="normal"
+    <window id="editRankDialog"
+            title="${labels.ranks.edit.add_edit.title}"
+            closable="true"
+            onClose="self.visible=false;event.stopPropagation();"
+            onCancel="self.visible=false"
+            mode="modal" border="normal"
             visible="@load(vm.showDialog)" width="300px">
       <groupbox form="@id('fx') @load(vm.selected) @save(vm.selected, before='saveRank')
                 @validator('formBeanValidator', prefix='f_')">
@@ -43,13 +48,18 @@
             </row>
             <row>
               <label value="${labels.ranks.edit.auto}"/>
-              <checkbox checked="@bind(fx.autoAssigned)"/>
+              <checkbox checked="@bind(fx.autoAssigned)" onCheck="postCount.invalidate();postCount.value=100;"/>
             </row>
             <row>
               ${labels.ranks.edit.post.count}
               <hlayout>
                 <intbox id="postCount" value="@bind(fx.postCount)" constraint="no negative,no zero"
-                        disabled="@load(not fx.autoAssigned)" hflex="1"/>
+                        disabled="@load(not fx.autoAssigned)" hflex="1">
+                  <attribute name="onError">
+                    if(self.disabled)
+                    self.clearErrorMessage();
+                  </attribute>
+                </intbox>
               </hlayout>
             </row>
           </rows>
