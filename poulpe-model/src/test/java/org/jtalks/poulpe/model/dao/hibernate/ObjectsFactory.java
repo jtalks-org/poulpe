@@ -38,6 +38,7 @@ public final class ObjectsFactory {
     public static PoulpeBranch createBranch() {
         PoulpeBranch newBranch = new PoulpeBranch(RandomStringUtils.random(15), "desc");
         newBranch.setSection(createSection());
+        newBranch.setModeratorsGroup(createGroup());
         return newBranch;
     }
 
