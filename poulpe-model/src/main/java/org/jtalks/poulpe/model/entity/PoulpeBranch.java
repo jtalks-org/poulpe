@@ -28,7 +28,6 @@ import org.jtalks.common.model.entity.Group;
  * @author Pavel Vervenko
  */
 public class PoulpeBranch extends Branch {
-    private List<User> moderators = new ArrayList<User>();
     private Group moderatorsGroup;
 
     /**
@@ -70,6 +69,7 @@ public class PoulpeBranch extends Branch {
      * @return an unmodifiable list of {@link User} which are signed to moderate this branch
      */
     public List<User> getModeratorsList() {
+        List<User> moderators = getPoulpeUsersConvertedFromCommonGroupUsers();
         return Collections.unmodifiableList(moderators);
     }
 
@@ -79,7 +79,7 @@ public class PoulpeBranch extends Branch {
      * @return the list of moderators.
      */
     protected List<User> getModerators() {
-        return moderators;
+        return getPoulpeUsersConvertedFromCommonGroupUsers();
     }
 
     /**
@@ -88,7 +88,7 @@ public class PoulpeBranch extends Branch {
      * @param moderators a list of {@link User}
      */
     protected void setModerators(List<User> moderators) {
-        this.moderators = moderators;
+        moderatorsGroup.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(moderators));
     }
 
     /**
@@ -97,7 +97,7 @@ public class PoulpeBranch extends Branch {
      * @param user to be assigned
      */
     public void addModerator(User user) {
-        moderators.add(user);
+        getGroupUsers().add(user);
     }
 
     /**
@@ -106,7 +106,7 @@ public class PoulpeBranch extends Branch {
      * @param users - list of moderators
      */
     public void addModerators(List<User> users) {
-        moderators.addAll(users);
+        getGroupUsers().addAll(users);
     }
 
     /**
@@ -124,7 +124,7 @@ public class PoulpeBranch extends Branch {
      * @param user to be removed from moderators
      */
     public void removeModerator(User user) {
-        moderators.remove(user);
+        getGroupUsers().remove(user);
     }
 
     /**
@@ -134,7 +134,7 @@ public class PoulpeBranch extends Branch {
      * @return {@code true} if assigned, {@code false} otherwise
      */
     public boolean isModeratedBy(User user) {
-        return moderators.contains(user);
+        return getGroupUsers().contains(user);
     }
 
     /**
@@ -166,5 +166,18 @@ public class PoulpeBranch extends Branch {
     @Override
     public String toString() {
         return getName();
+    }
+
+    private List<User> getPoulpeUsersConvertedFromCommonGroupUsers() {
+        List<org.jtalks.common.model.entity.User> commonUsers = getGroupUsers();
+        List<User> moderators = new ArrayList<User>(commonUsers.size());
+        for(org.jtalks.common.model.entity.User user : commonUsers) {
+            moderators.add((User) user);
+        }
+        return moderators;
+    }
+
+    private List<org.jtalks.common.model.entity.User> getGroupUsers() {
+        return moderatorsGroup.getUsers();
     }
 }

@@ -63,6 +63,6 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
 
         group.getUsers().clear();
         saveOrUpdate(group);
-        super.delete(group.getId());
+        super.delete(group);
     }
 }

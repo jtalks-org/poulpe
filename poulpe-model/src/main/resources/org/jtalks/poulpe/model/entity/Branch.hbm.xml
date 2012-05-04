@@ -19,27 +19,20 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
   <class name="org.jtalks.poulpe.model.entity.PoulpeBranch" table="BRANCHES">
-    <cache usage="nonstrict-read-write"/>
+    <cache usage="nonstrict-read-write" />
 
     <id column="BRANCH_ID" name="id" unsaved-value="0">
-      <generator class="native"/>
+      <generator class="native" />
     </id>
 
-    <property column="UUID" name="uuid" not-null="true" unique="true"/>
-    <property column="NAME" name="name" not-null="true"/>
-    <property column="DESCRIPTION" name="description"/>
-    <property column="POSITION" name="position" insert="false" update="false"/>
-    <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection"
-                 lazy="false" update="false" insert="false"/>
+    <property column="UUID" name="uuid" not-null="true" unique="true" />
+    <property column="NAME" name="name" not-null="true" />
+    <property column="DESCRIPTION" name="description" />
+    <property column="POSITION" name="position" insert="false" update="false" />
+    <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection" lazy="false"
+      update="false" insert="false" />
 
-    <bag name="moderators" table="BRANCH_USER_REF" inverse="false" lazy="false">
-      <cache usage="nonstrict-read-write"/>
-      <key column="BRANCH_ID" foreign-key="FK_BRANCH"/>
-      <many-to-many class="org.jtalks.poulpe.model.entity.User" column="USER_ID"/>
-    </bag>
-
-    <many-to-one name="moderatorsGroup" column="MODERATORS_GROUP_ID" unique="true" cascade="all" lazy="false"
-      class="org.jtalks.common.model.entity.Group" not-null="false" />
+    <one-to-one name="moderatorsGroup" constrained="true" cascade="all" foreign-key="FK_MODERATORS_GROUP_ID"
+      class="org.jtalks.common.model.entity.Group" />
   </class>
-
 </hibernate-mapping>

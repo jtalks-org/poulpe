@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.entity;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.hibernate.ObjectsFactory;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -28,12 +28,15 @@ public class BranchModeratorsTest {
     
     private PoulpeBranch branch = new PoulpeBranch();
     
+    private Group group = ObjectsFactory.createGroup();
+    
     private User user1 = ObjectsFactory.createUser();
     private User user2 = ObjectsFactory.createUser();
     private User user3 = ObjectsFactory.createUser();
     
     @BeforeMethod
     public void setUp() {
+        branch.setModeratorsGroup(group);
         branch.setModerators(Lists.newArrayList(user1));
     }
     
