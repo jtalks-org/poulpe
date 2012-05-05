@@ -1,12 +1,24 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.web.controller;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.springframework.web.context.ContextLoaderListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContextEvent;
-import java.lang.Override;
-import java.lang.String;
+import javax.servlet.ServletContextListener;
 import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -17,33 +29,37 @@ import java.util.Enumeration;
  * Application shutdown listener which unregistering a JDBC driver to prevent
  * having errors while Tomcat stopping the application.
  *
- * created: 04.05.12, 12:36
- *
  * @author Leonid Kazancev
+ * @see <a href="https://issues.apache.org/jira/browse/DBCP-332">Apache.org</a>
  */
-public class JdbcDriverUnregisteringListener extends ContextLoaderListener {
+public class JdbcDriverUnregisteringListener implements ServletContextListener {
 
-    final private String loggerName = "org.jtalks";
-    final private String successMessage = "Deregistering jdbc driver: %s";
-    final private String errorMessage = "Error deregistering jdbc driver: %s";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        //On application StartUP
+        throw new UnsupportedOperationException();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        //On application ShutDOWN
         Enumeration<Driver> drivers = DriverManager.getDrivers();
         while (drivers.hasMoreElements()) {
             Driver driver = drivers.nextElement();
             try {
                 DriverManager.deregisterDriver(driver);
-                Logger.getLogger(loggerName).log(Level.INFO, String.format(successMessage, driver));
+                logger.info("Deregistering JDBC driver: " + driver);
             } catch (SQLException ex) {
-                Logger.getLogger(loggerName).log(Level.WARN, String.format(errorMessage, driver));
+                logger.error("Error deregistering JDBC driver: " + driver);
             }
         }
     }
+
+
 }
