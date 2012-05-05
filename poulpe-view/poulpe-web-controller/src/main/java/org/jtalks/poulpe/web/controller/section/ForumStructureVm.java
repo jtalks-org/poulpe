@@ -20,12 +20,12 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
 
@@ -55,7 +55,7 @@ public class ForumStructureVm {
      */
     @Init
     public void init() {
-        viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
+        viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
     }
 
     /**
@@ -95,7 +95,7 @@ public class ForumStructureVm {
             forumStructureService.deleteBranch(selectedItem.getItem(PoulpeBranch.class));
         } else {
             Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
-            viewData.setSectionTree(new DefaultTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
+            viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
     }
 
@@ -120,8 +120,8 @@ public class ForumStructureVm {
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
-        viewData.getSelectedItem().setItem(storeSelectedBranch());
         viewData.putSelectedBranchToSectionInDropdown();
+        viewData.getSelectedItem().setItem(storeSelectedBranch());
     }
 
     /**
@@ -131,7 +131,7 @@ public class ForumStructureVm {
      */
     PoulpeBranch storeSelectedBranch() {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
-        PoulpeSection section = viewData.getSectionSelectedInDropDown();
+        PoulpeSection section = viewData.getSectionSelectedInDropdown().getItem(PoulpeSection.class);
         return forumStructureService.saveBranch(section, selectedBranch);
     }
 
@@ -178,9 +178,8 @@ public class ForumStructureVm {
 
     /**
      * Handler of event when one item was dragged and dropped to another
-     * 
-     * @param event
-     *         contains all needed info about event
+     *
+     * @param event contains all needed info about event
      */
     @Command
     @NotifyChange(VIEW_DATA_PROP)

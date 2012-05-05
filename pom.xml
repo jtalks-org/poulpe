@@ -456,7 +456,7 @@
   <properties>
     <hibernateVersion>3.6.10.Final</hibernateVersion>
     <springVersion>3.0.5.RELEASE</springVersion>
-    <zkVersion>6.0.1.FL.20120501</zkVersion>
+    <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <common.version>0.14-SNAPSHOT</common.version>
   </properties>

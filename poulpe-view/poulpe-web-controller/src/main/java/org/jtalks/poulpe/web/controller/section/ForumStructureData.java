@@ -4,7 +4,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.zkoss.zul.DefaultTreeModel;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
@@ -22,7 +22,7 @@ import java.util.List;
 public class ForumStructureData {
     private ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
     private ForumStructureItem selectedItem = new ForumStructureItem();
-    private DefaultTreeModel<ForumStructureItem> sectionTree;
+    private ZkTreeModel<ForumStructureItem> sectionTree;
     private boolean showSectionDialog;
     private boolean showBranchDialog;
 
@@ -34,16 +34,6 @@ public class ForumStructureData {
      */
     public Jcommune getRootAsJcommune() {
         return (Jcommune) (Object) sectionTree.getRoot().getData();
-    }
-
-    /**
-     * If the branch editing/creating dialog was open and there was a dropdown with the list of sections and user had to
-     * choose to what section this branch had to go, this method would returned the selected value.
-     *
-     * @return the section that was selected during editing/creating of the branch
-     */
-    public PoulpeSection getSectionSelectedInDropDown() {
-        return sectionList.getSelection().iterator().next().getItem(PoulpeSection.class);
     }
 
     public ForumStructureData closeDialog() {
@@ -87,10 +77,31 @@ public class ForumStructureData {
         return setSelectedItem(new ForumStructureItem());
     }
 
+    /**
+     * Gets the section that was chosen in the list of available sections while moving the branch to another section (or
+     * creating new).
+     *
+     * @return the section that was chosen in the list of available sections
+     */
+    public ForumStructureItem getSectionSelectedInDropdown() {
+        return getSectionList().getSelection().iterator().next();
+    }
+
+    /**
+     * The list of available sections (in the branch dialog where Admin can choose to what section this branch should
+     * go).
+     *
+     * @return the list of available sections
+     */
     public ListModelList<ForumStructureItem> getSectionList() {
         return sectionList;
     }
 
+    /**
+     * The item being currently selected. It can be empty (without underlying entity) if nothing was actually selected.
+     *
+     * @return item being currently selected or an empty item if nothing is selected
+     */
     public ForumStructureItem getSelectedItem() {
         return selectedItem;
     }
@@ -136,10 +147,23 @@ public class ForumStructureData {
         return show;
     }
 
-    public DefaultTreeModel<ForumStructureItem> getSectionTree() {
+    /**
+     * The whole tree of sections and branches as a ZK tree model.
+     *
+     * @return the tree of sections and branches
+     */
+    public ZkTreeModel<ForumStructureItem> getSectionTree() {
         return sectionTree;
     }
 
+    /**
+     * A shorthand method to get currently selected item.
+     *
+     * @param clazz the class (branch or section) the selected item should be casted to
+     * @param <T>   {@link  PoulpeBranch} or {@link PoulpeSection}
+     * @return currently selected entity or {@code null} if nothing is selected
+     * @see ForumStructureItem#getItem(Class)
+     */
     public <T extends Entity> T getSelectedEntity(Class<T> clazz) {
         return getSelectedItem().getItem(clazz);
     }
@@ -165,38 +189,31 @@ public class ForumStructureData {
     /**
      * Finds the branch that is currently set as selected and if this is a new branch (was just added via branch
      * creation dialog), adds it to the list of branches of the section. The section that is chosen - the one that was
-     * selected in the dropdown list of sections (and it can be accessed via {@link #getSectionSelectedInDropDown()}. It
+     * selected in the dropdown list of sections (and it can be accessed via {@link #getSectionSelectedInDropdown()}. It
      * results in the branch been moved to another section if the currently selected section is not persisted yet. When
      * you trigger this method, conditions should be met:
      * <pre>
      *   <li>{@link #getSelectedItem()} should return a non null branch (no matter whether it's already persistent or
      *         not)
      *   </li>
-     *   <li>{@link #getSectionSelectedInDropDown()} should return a section chosen in the Branch Editing dialog</li>
+     *   <li>{@link #getSectionSelectedInDropdown()} should return a section chosen in the Branch Editing dialog</li>
      * </pre>
      *
      * @return this
      */
     public ForumStructureData putSelectedBranchToSectionInDropdown() {
-        ForumStructureItem branchItem = getSelectedItem();
-        ForumStructureItem sectionFromDropdown = getSectionList().getSelection().iterator().next();
-        TreeNode<ForumStructureItem> node = findSectionNode(sectionFromDropdown);
-        TreeNode<ForumStructureItem> branchNode = new DefaultTreeNode<ForumStructureItem>(branchItem);
-
-        node.add(branchNode);
-        getSectionTree().addToSelection(branchNode);
-        getSectionTree().addOpenObject(node);
-        return this;
-    }
-
-    TreeNode<ForumStructureItem> findSectionNode(ForumStructureItem item) {
-        List<TreeNode<ForumStructureItem>> sectionNodes = getSectionTree().getRoot().getChildren();
-        for (TreeNode<ForumStructureItem> node : sectionNodes) {
-            if (item == node.getData()) {
-                return node;
-            }
+        ForumStructureItem branchToPut = getSelectedItem();
+        TreeNode<ForumStructureItem> destinationSectionNode = getSectionTree().find(getSectionSelectedInDropdown());
+        TreeNode<ForumStructureItem> branchNodeToPut = getSectionTree().find(branchToPut);
+        if (branchNodeToPut != null) {
+            branchNodeToPut.getParent().remove(branchNodeToPut);
+        } else {
+            branchNodeToPut = new DefaultTreeNode<ForumStructureItem>(branchToPut);
         }
-        return null;
+        destinationSectionNode.add(branchNodeToPut);
+        getSectionTree().addToSelection(branchNodeToPut);
+        getSectionTree().addOpenObject(destinationSectionNode);
+        return this;
     }
 
     /**
@@ -206,7 +223,7 @@ public class ForumStructureData {
      * @param sectionTree the new tree of sections and branches to be shown on the Forum Structure page
      */
 
-    public void setSectionTree(@Nonnull DefaultTreeModel<ForumStructureItem> sectionTree) {
+    public void setSectionTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
         List<ForumStructureItem> sections = unwrap(sectionTree.getRoot().getChildren());

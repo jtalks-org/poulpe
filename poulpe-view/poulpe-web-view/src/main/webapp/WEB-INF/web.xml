@@ -17,10 +17,11 @@
 -->
 <web-app id="jt-forum" version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-         http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+  <display-name>JTalks Poulpe</display-name>
+  <description>The administration panel of the JTalks project.</description>
 
-    <context-param>
+  <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:org/jtalks/poulpe/model/entity/applicationContext-dao.xml

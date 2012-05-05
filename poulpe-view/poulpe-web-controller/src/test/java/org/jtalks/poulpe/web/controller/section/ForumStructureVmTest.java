@@ -79,7 +79,7 @@ public class ForumStructureVmTest {
         PoulpeBranch selectedBranch = jcommune.getSections().get(0).getPoulpeBranches().get(0);
         doReturn(jcommune).when(data).getRootAsJcommune();
         doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
-        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropDown();
+        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropdown();
         vm.storeSelectedBranch();
         assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
         assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
@@ -91,7 +91,7 @@ public class ForumStructureVmTest {
         PoulpeBranch selectedBranch = new PoulpeBranch("test");
         doReturn(jcommune).when(data).getRootAsJcommune();
         doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
-        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropDown();
+        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropdown();
         vm.storeSelectedBranch();
         assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
         assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
