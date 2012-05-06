@@ -46,9 +46,9 @@
         <description>ZK listener for session cleanup</description>
         <listener-class>org.zkoss.zk.ui.http.HttpSessionListener</listener-class>
     </listener>
-    <listener>
-        <listener-class>org.jtalks.poulpe.web.controller.JdbcDriverUnregisteringListener</listener-class>
-    </listener>
+    <!--<listener>-->
+        <!--<listener-class>org.jtalks.poulpe.web.controller.JdbcDriverUnregisteringListener</listener-class>-->
+    <!--</listener>-->
 
     <servlet>
         <description>ZK loader for ZUML pages</description>
