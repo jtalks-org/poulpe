@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -35,13 +36,14 @@ import java.util.Enumeration;
 public class JdbcDriverUnregisteringListener implements ServletContextListener {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private Enumeration<Driver> drivers;
+    private Driver driver;
 
     /**
      * {@inheritDoc}
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        throw new UnsupportedOperationException();
     }
 
     /**
@@ -49,17 +51,32 @@ public class JdbcDriverUnregisteringListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            try {
-                DriverManager.deregisterDriver(driver);
-                logger.info("Deregistering JDBC driver: " + driver);
-            } catch (SQLException ex) {
-                logger.error("Error deregistering JDBC driver: " + driver);
-            }
+        drivers = getDrivers();
+        try {
+            deregisterDrivers();
+        } catch (SQLException ex) {
+            logger.error("Error deregistering JDBC driver: " + driver);
         }
+    }
+
+    protected Enumeration<Driver> getDrivers() {
+        return DriverManager.getDrivers();
+    }
+
+    protected void deregisterDrivers() throws SQLException {
+        while (drivers.hasMoreElements()) {
+            driver = drivers.nextElement();
+            deregisterDriver(driver);
+            logger.info("Deregistering JDBC driver: " + driver);
+        }
+    }
+
+    protected void deregisterDriver(Driver driver) throws SQLException {
+        DriverManager.deregisterDriver(driver);
     }
 
 
 }
+
+
+
