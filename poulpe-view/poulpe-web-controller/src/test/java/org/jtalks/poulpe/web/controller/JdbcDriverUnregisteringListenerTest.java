@@ -14,34 +14,50 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.servlet.ServletContextEvent;
-import java.sql.DriverManager;
+import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.Enumeration;
+
+import static org.mockito.Mockito.*;
 
 public class JdbcDriverUnregisteringListenerTest {
 
-    @InjectMocks
     JdbcDriverUnregisteringListener jdbcDriverUnregisteringListener = new JdbcDriverUnregisteringListener();
-
+    JdbcDriverUnregisteringListener spyJdbcDriverUnregisteringListener = spy(jdbcDriverUnregisteringListener);
 
     @Mock
     ServletContextEvent event;
+
+    @Mock
+    Driver driver;
+
+    @Mock
+    Enumeration<Driver> drivers;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
     }
 
-
     @Test
     public void testContextDestroyed() throws SQLException {
-        jdbcDriverUnregisteringListener.contextDestroyed(event);
-        assert (!DriverManager.getDrivers().hasMoreElements());
+        when(spyJdbcDriverUnregisteringListener.getDrivers()).thenReturn(drivers);
+        when(drivers.hasMoreElements()).thenReturn(true,true, true, false);
+        when(drivers.nextElement()).thenReturn(driver);
+        doNothing().when(spyJdbcDriverUnregisteringListener).deregisterDriver(driver);
+
+        spyJdbcDriverUnregisteringListener.contextDestroyed(event);
+
+        verify(spyJdbcDriverUnregisteringListener).getDrivers();
+        verify(spyJdbcDriverUnregisteringListener, times(3)).deregisterDriver(driver);
+
     }
+
+
 }
