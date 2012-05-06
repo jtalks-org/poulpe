@@ -44,21 +44,6 @@ public interface WindowManager {
     void closeWindow(Object window);
 
     /**
-     * Opens a window for creating topic types
-     * 
-     * @param listener edit listener
-     */
-    void openTopicTypeWindowForCreate(EditListener<TopicType> listener);
-
-    /**
-     * Opens a window for editing topic types
-     * 
-     * @param topicType to edit
-     * @param listener edit listener
-     */
-    void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener);
-
-    /**
      * Sets work-area component which will be used as parent component for newly
      * created windows.
      * 

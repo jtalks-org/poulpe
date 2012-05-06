@@ -161,7 +161,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testUpdateNotNullViolation() {
         givenBranch();
         branch.setName(null);
-
         dao.saveOrUpdate(branch);
     }
 
@@ -172,7 +171,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         dao.delete(branch);
 
         assertBranchDeleted();
-        assertGroupDeleted();
+        assertGroupNotDeleted();
     }
 
     private void assertBranchDeleted() {
@@ -180,9 +179,9 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         assertEquals(branchCount, 0);
     }
 
-    private void assertGroupDeleted() {
+    private void assertGroupNotDeleted() {
         int groupCount = retrieveActualGroupsAmount();
-        assertEquals(groupCount, 0);
+        assertEquals(groupCount, 1);
     }
 
     private int retrieveActualBranchesAmount() {

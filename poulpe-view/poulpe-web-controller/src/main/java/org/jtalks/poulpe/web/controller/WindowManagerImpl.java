@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter;
-import org.jtalks.poulpe.web.controller.topictype.TopicTypeView;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -80,24 +78,6 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
                 throw new AssertionError(e); // can't happen
             }
         }
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void openTopicTypeWindowForCreate(EditListener<TopicType> listener) {
-        Window win = (Window) createComponent("topictype.zul");
-        TopicTypePresenter presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
-        doModal(win);
-        presenter.initializeForCreate((TopicTypeView) win, listener);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public void openTopicTypeWindowForEdit(TopicType topicType, EditListener<TopicType> listener) {
-        Window win = (Window) createComponent("topictype.zul");
-        TopicTypePresenter presenter = (TopicTypePresenter) getBean("topicTypePresenter", win);
-        doModal(win);
-        presenter.initializeForEdit((TopicTypeView) win, topicType, listener);
     }
 
     /** {@inheritDoc} */
