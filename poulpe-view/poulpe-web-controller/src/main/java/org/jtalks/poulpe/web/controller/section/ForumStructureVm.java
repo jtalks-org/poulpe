@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import com.google.common.annotations.VisibleForTesting;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -121,7 +122,8 @@ public class ForumStructureVm {
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
         viewData.putSelectedBranchToSectionInDropdown();
-        viewData.getSelectedItem().setItem(storeSelectedBranch());
+        PoulpeBranch createdBranch = storeSelectedBranch();
+        viewData.getSelectedItem().setItem(createdBranch);
     }
 
     /**
@@ -131,6 +133,8 @@ public class ForumStructureVm {
      */
     PoulpeBranch storeSelectedBranch() {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
+        Group moderatingGroup = new Group(selectedBranch.getName() + " Moderators");
+        selectedBranch.setModeratorsGroup(moderatingGroup);
         PoulpeSection section = viewData.getSectionSelectedInDropdown().getItem(PoulpeSection.class);
         return forumStructureService.saveBranch(section, selectedBranch);
     }

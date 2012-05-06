@@ -5,6 +5,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
@@ -204,13 +205,11 @@ public class ForumStructureData {
     public ForumStructureData putSelectedBranchToSectionInDropdown() {
         ForumStructureItem branchToPut = getSelectedItem();
         TreeNode<ForumStructureItem> destinationSectionNode = getSectionTree().find(getSectionSelectedInDropdown());
-        TreeNode<ForumStructureItem> branchNodeToPut = getSectionTree().find(branchToPut);
-        if (branchNodeToPut != null) {
-            branchNodeToPut.getParent().remove(branchNodeToPut);
-        } else {
-            branchNodeToPut = new DefaultTreeNode<ForumStructureItem>(branchToPut);
+        ZkTreeNode<ForumStructureItem> branchNodeToPut = (ZkTreeNode<ForumStructureItem>) getSectionTree().find(branchToPut);
+        if (branchNodeToPut == null) {
+            branchNodeToPut = new ZkTreeNode<ForumStructureItem>(branchToPut);
         }
-        destinationSectionNode.add(branchNodeToPut);
+        branchNodeToPut.moveTo(destinationSectionNode);
         getSectionTree().addToSelection(branchNodeToPut);
         getSectionTree().addOpenObject(destinationSectionNode);
         return this;

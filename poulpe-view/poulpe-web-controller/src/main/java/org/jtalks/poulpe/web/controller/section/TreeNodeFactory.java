@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.section;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeNode;
 
@@ -38,29 +39,29 @@ public class TreeNodeFactory {
      */
     @SuppressWarnings("unchecked")
     public static TreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
-        List<DefaultTreeNode> sectionNodes = wrapInTreeNodes(jcommune.getSections());
-        return new DefaultTreeNode(jcommune, sectionNodes);
+        List<ZkTreeNode> sectionNodes = wrapInTreeNodes(jcommune.getSections());
+        return new ZkTreeNode(jcommune, sectionNodes);
     }
 
     /**
-     * Wrap single entity to DefaultTreeNode. If this entity has some related object in one-to-many relation them can be
+     * Wrap single entity to ZkTreeNode. If this entity has some related object in one-to-many relation them can be
      * either be wrapped
      *
      * @param entity section or branch instance
      * @return node
      */
-    public static <T extends Entity> DefaultTreeNode getTreeNode(T entity) {
+    public static <T extends Entity> ZkTreeNode getTreeNode(T entity) {
         if (entity instanceof PoulpeSection) {
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
-            return new DefaultTreeNode(new ForumStructureItem().setItem(entity), wrapInTreeNodes(branches));
+            return new ZkTreeNode(new ForumStructureItem().setItem(entity), wrapInTreeNodes(branches));
         } else {
-            return new DefaultTreeNode(new ForumStructureItem().setItem(entity));
+            return new ZkTreeNode(new ForumStructureItem().setItem(entity));
         }
     }
 
 
-    private static <T extends Entity> List<DefaultTreeNode> wrapInTreeNodes(List<T> entities) {
-        List<DefaultTreeNode> list = new ArrayList<DefaultTreeNode>();
+    private static <T extends Entity> List<ZkTreeNode> wrapInTreeNodes(List<T> entities) {
+        List<ZkTreeNode> list = new ArrayList<ZkTreeNode>();
         for (T entity : entities) {
             list.add(getTreeNode(entity));
         }

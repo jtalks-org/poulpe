@@ -7,8 +7,7 @@ import org.zkoss.zul.TreeNode;
 
 import java.util.ArrayList;
 
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev

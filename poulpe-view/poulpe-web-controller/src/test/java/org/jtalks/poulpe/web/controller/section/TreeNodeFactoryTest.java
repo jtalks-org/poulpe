@@ -40,8 +40,6 @@ import static org.testng.Assert.*;
 public class TreeNodeFactoryTest {
     PoulpeSection emptySection = fakeSection();
     PoulpeSection section = sectionWithBranches();
-    List<PoulpeSection> sections = Arrays.asList(section, section);
-
     PoulpeBranch branch = fakeBranch();
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches", enabled = false)
