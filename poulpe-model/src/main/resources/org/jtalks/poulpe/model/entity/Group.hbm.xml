@@ -30,7 +30,7 @@
     <property column="DESCRIPTION" name="description" />
 
     <!-- "Extra-lazy" is used due to probable large amount of users in a group -->
-    <bag name="users" table="GROUP_USER_REF" inverse="false" lazy="extra" fetch="select" cascade="all">
+    <bag name="users" table="GROUP_USER_REF" lazy="extra" fetch="select">
       <cache usage="nonstrict-read-write" />
       <key column="GROUP_ID" not-null="true" />
       <many-to-many class="org.jtalks.poulpe.model.entity.User">
