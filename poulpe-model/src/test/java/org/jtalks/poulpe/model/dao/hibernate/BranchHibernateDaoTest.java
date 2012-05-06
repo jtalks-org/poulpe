@@ -24,23 +24,23 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 import java.util.List;
 
+import javax.validation.ConstraintViolationException;
+
 import junit.framework.AssertionFailedError;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.validation.ConstraintViolationException;
 
 /**
  * @author Kirill Afonin
@@ -58,6 +58,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
     private Session session;
     private PoulpeBranch branch;
+    private Group group;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -71,10 +72,13 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         dao.saveOrUpdate(branch);
 
         assertBranchSaved();
+        assertGroupSaved();
     }
 
     private void givenParentSection() {
         branch = ObjectsFactory.createBranch();
+        group = ObjectsFactory.createGroup();
+        branch.setModeratorsGroup(group);
         session.save(branch.getSection());
     }
 
@@ -84,9 +88,19 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         actual.setSection(branch.getSection());
         assertReflectionEquals(branch, actual);
     }
+    
+    private void assertGroupSaved() {
+        assertNotSame(group.getId(), 0, "Id not created");
+        Group actual = retrieveActualGroup();
+        assertReflectionEquals(group, actual);
+    }
 
     private PoulpeBranch retrieveActualBranch() {
         return ObjectRetriever.retrieveUpdated(branch, session);
+    }
+
+    private Group retrieveActualGroup() {
+        return ObjectRetriever.retrieveUpdated(group, session);
     }
 
     @Test(expectedExceptions = ConstraintViolationException.class)
@@ -121,16 +135,25 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testUpdate() {
         givenBranch();
 
+        String newGroupName = "new group name";
+        group.setName(newGroupName);
         String newName = "new name";
         branch.setName(newName);
 
         dao.saveOrUpdate(branch);
 
-        assertNameChanged(newName);
+        assertBranchNameChanged(newName);
+        assertGroupNameChanged(newGroupName);
     }
 
-    private void assertNameChanged(String newName) {
+    private void assertBranchNameChanged(String newName) {
         PoulpeBranch result = retrieveActualBranch();
+        assertEquals(result.getName(), newName);
+    }
+
+
+    private void assertGroupNameChanged(String newName) {
+        Group result = retrieveActualGroup();
         assertEquals(result.getName(), newName);
     }
 
@@ -146,10 +169,10 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testDelete() {
         givenBranch();
 
-        boolean result = dao.delete(branch.getId());
-        assertTrue(result, "Entity is not deleted");
+        dao.delete(branch);
 
         assertBranchDeleted();
+        assertGroupDeleted();
     }
 
     private void assertBranchDeleted() {
@@ -157,8 +180,19 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         assertEquals(branchCount, 0);
     }
 
+    private void assertGroupDeleted() {
+        int groupCount = retrieveActualGroupsAmount();
+        assertEquals(groupCount, 0);
+    }
+
     private int retrieveActualBranchesAmount() {
         String countQuery = "select count(*) from PoulpeBranch";
+        Number count = (Number) session.createQuery(countQuery).uniqueResult();
+        return count.intValue();
+    }
+
+    private int retrieveActualGroupsAmount() {
+        String countQuery = "select count(*) from Group";
         Number count = (Number) session.createQuery(countQuery).uniqueResult();
         return count.intValue();
     }
