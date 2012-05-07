@@ -44,7 +44,7 @@ import org.testng.annotations.Test;
 @ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
-public class UserDaoTest extends AbstractTransactionalTestNGSpringContextTests {
+public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
 
     // SUT
     @Autowired
