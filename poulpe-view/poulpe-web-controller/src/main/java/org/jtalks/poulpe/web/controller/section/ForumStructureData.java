@@ -230,14 +230,6 @@ public class ForumStructureData {
         this.sectionList.addAll(sections);
     }
 
-    public void moveNode(TreeNode<ForumStructureItem> node,
-            TreeNode<ForumStructureItem> target) {
-        TreeNode<ForumStructureItem> targetParent = target.getParent();
-        int index = targetParent.getIndex(target);
-        node.getParent().remove(node);
-        targetParent.insert(node, index);
-    }
-
     private List<ForumStructureItem> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {
         List<ForumStructureItem> sections = new ArrayList<ForumStructureItem>();
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {

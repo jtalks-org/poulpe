@@ -91,11 +91,7 @@ public class TransactionalForumStructureService implements ForumStructureService
         List<PoulpeBranch> branches = targetSection.getPoulpeBranches();
         int index = branches.indexOf(target);
         removeBranch(branch);
-        if (index == branches.size()) {
-            branches.add(branch);
-        } else {
-            branches.add(index, branch);
-        }
+        branches.add(index, branch);
         sectionDao.update(targetSection);
     }
 }

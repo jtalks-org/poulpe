@@ -197,7 +197,7 @@ public class ForumStructureVm {
            PoulpeBranch draggedBranch = draggedItem.getItem(PoulpeBranch.class);
            PoulpeBranch targetBranch = targetItem.getItem(PoulpeBranch.class);
            forumStructureService.moveBranch(draggedBranch, targetBranch);
-           viewData.moveNode(draggedNode, targetNode);
+           viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
        }
     }
 }
