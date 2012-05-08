@@ -30,9 +30,9 @@ public class BranchModeratorsTest {
     
     private Group group = ObjectsFactory.createGroup();
     
-    private User user1 = ObjectsFactory.createUser();
-    private User user2 = ObjectsFactory.createUser();
-    private User user3 = ObjectsFactory.createUser();
+    private User user1 = ObjectsFactory.createUser("user1");
+    private User user2 = ObjectsFactory.createUser("user2");
+    private User user3 = ObjectsFactory.createUser("user3");
     
     @BeforeMethod
     public void setUp() {
