@@ -26,9 +26,10 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zk.ui.event.Event;
+import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
+import org.zkoss.zul.Treeitem;
 
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 
@@ -187,6 +188,16 @@ public class ForumStructureVm {
      */
     @Command
     @NotifyChange(VIEW_DATA_PROP)
-    public void onDropItem(@BindingParam("event") Event event) {
+    public void onDropItem(@BindingParam("event") DropEvent event) {
+       DefaultTreeNode<ForumStructureItem> draggedNode = ((Treeitem) event.getDragged()).getValue();
+       DefaultTreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
+       ForumStructureItem draggedItem = draggedNode.getData();
+       ForumStructureItem targetItem = targetNode.getData();
+       if (draggedItem.isBranch() && targetItem.isBranch()) {
+           PoulpeBranch draggedBranch = draggedItem.getItem(PoulpeBranch.class);
+           PoulpeBranch targetBranch = targetItem.getItem(PoulpeBranch.class);
+           forumStructureService.moveBranch(draggedBranch, targetBranch);
+           viewData.moveNode(draggedNode, targetNode);
+       }
     }
 }

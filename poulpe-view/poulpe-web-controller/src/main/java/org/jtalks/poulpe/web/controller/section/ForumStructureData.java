@@ -19,6 +19,7 @@ import java.util.List;
  * connected to presenting the data. In MVP it would be a View.
  *
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class ForumStructureData {
     private ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
@@ -227,6 +228,14 @@ public class ForumStructureData {
         this.sectionList.clear();
         List<ForumStructureItem> sections = unwrap(sectionTree.getRoot().getChildren());
         this.sectionList.addAll(sections);
+    }
+
+    public void moveNode(TreeNode<ForumStructureItem> node,
+            TreeNode<ForumStructureItem> target) {
+        TreeNode<ForumStructureItem> targetParent = target.getParent();
+        int index = targetParent.getIndex(target);
+        node.getParent().remove(node);
+        targetParent.insert(node, index);
     }
 
     private List<ForumStructureItem> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {

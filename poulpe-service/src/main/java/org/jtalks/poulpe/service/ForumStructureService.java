@@ -6,6 +6,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public interface ForumStructureService {
     void saveJcommune(Jcommune jcommune);
@@ -15,6 +16,8 @@ public interface ForumStructureService {
     void removeBranch(PoulpeBranch branch);
 
     void moveBranch(PoulpeBranch branch, PoulpeSection toSection);
+
+    void moveBranch(PoulpeBranch branch, PoulpeBranch target);
 
     Jcommune deleteSectionWithBranches(PoulpeSection section);
 
