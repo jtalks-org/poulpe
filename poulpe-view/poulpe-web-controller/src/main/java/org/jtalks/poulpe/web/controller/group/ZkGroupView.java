@@ -14,26 +14,17 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.zkoss.zk.ui.event.Event;
-import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
 import org.zkoss.zk.ui.ext.AfterCompose;
-import org.zkoss.zul.Button;
-import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Listbox;
-import org.zkoss.zul.Listcell;
-import org.zkoss.zul.Listitem;
-import org.zkoss.zul.ListitemRenderer;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Window;
+import org.zkoss.zul.*;
+
+import java.util.List;
 
 /**
  * @author Konstantin Akimov
  * @author Vyacheslav Zhivaev
+ * @author Kazancev Leonid
  */
 @SuppressWarnings("serial")
 public class ZkGroupView extends Window implements AfterCompose {
@@ -45,7 +36,8 @@ public class ZkGroupView extends Window implements AfterCompose {
 
     private Window editDialog;
     private Button removeButton;
-    private Button editMembersButton;
+    private static final String POPUP_MENU="editPopupMenu";
+    private Menuitem editMembersMenuitem;
 
     private Listbox groupsListbox;
     private Textbox searchTextbox;
@@ -56,21 +48,20 @@ public class ZkGroupView extends Window implements AfterCompose {
 
         groupsListbox.setItemRenderer(groupListRenderer);
 
-        groupsListbox.addEventListener(Events.ON_CLICK, new EventListener<Event>() {
-            @Override
-            public void onEvent(Event event) throws Exception {
-                enableRemoveAndEditButtons();
-            }
-        });
-
         presenter.initView(this);
     }
-    
+
     private static final ListitemRenderer<Group> groupListRenderer = new ListitemRenderer<Group>() {
         @Override
         public void render(Listitem listItem, Group group, int index) throws Exception {
-            listItem.appendChild(new Listcell(group.getName()));
-            listItem.appendChild(new Listcell(Integer.toString(group.getUsers().size())));
+            Listcell listcellName = new Listcell(group.getName());
+            Listcell listcellUsersCount = new Listcell(Integer.toString(group.getUsers().size()));
+
+            listcellName.setContext(POPUP_MENU);
+            listcellUsersCount.setContext(POPUP_MENU);
+
+            listItem.appendChild(listcellName);
+            listItem.appendChild(listcellUsersCount);
             listItem.setId(String.valueOf(group.getId()));
         }
     };
@@ -82,28 +73,49 @@ public class ZkGroupView extends Window implements AfterCompose {
     }
 
     public void onDoubleClick$groupsListbox() {
-        presenter.onEditGroup(getSelectedGroup());
+        if (correctSelection()) {
+            presenter.onEditGroup(getSelectedGroup());
+        }
     }
 
     public void onClick$addButton() {
         presenter.onAddGroup();
     }
 
-    public void onClick$removeButton() {
-        presenter.deleteGroup(getSelectedGroup());
-    }
-
-    public void onClick$editMembersButton() {
-        presenter.editMembers(getSelectedGroup());
-    }
-
     public void onSearchAction() {
         presenter.doSearch(searchTextbox.getText());
+    }
+
+    public void onClick$groupsListbox() {
+        if (correctSelection()) {
+            enableRemoveAndEditButtons();
+        }
+    }
+
+    public void onClick$removeButton() {
+        if (correctSelection()) {
+            presenter.deleteGroup(getSelectedGroup());
+        }
+    }
+
+    public void onClick$editMembersMenuitem() {
+        if (correctSelection()) {
+            presenter.editMembers(getSelectedGroup());
+        }
     }
 
     public void openNewDialog() {
         EditGroupDialogView component = getEditView();
         component.show();
+    }
+
+    /**
+     * Checking selected index to prevent list header selection.
+     *
+     * @return True when Selected index are correct.
+     */
+    private boolean correctSelection() {
+        return groupsListbox.getSelectedIndex() != -1;
     }
 
     private EditGroupDialogView getEditView() {
@@ -132,12 +144,10 @@ public class ZkGroupView extends Window implements AfterCompose {
 
     private void enableRemoveAndEditButtons() {
         removeButton.setDisabled(false);
-        editMembersButton.setDisabled(false);
     }
 
     private void disableRemoveAndEditButtons() {
         removeButton.setDisabled(true);
-        editMembersButton.setDisabled(true);
     }
 
     public void setPresenter(GroupPresenter presenter) {

@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -28,10 +29,12 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.entity.User;
 
+import com.google.common.collect.Lists;
+
 /**
  * @author Kirill Afonin
  * @author Alexey Grigorev
- *
+ * 
  */
 public final class ObjectsFactory {
 
@@ -73,9 +76,32 @@ public final class ObjectsFactory {
         return new PoulpeSection(RandomStringUtils.random(15));
     }
 
-    public static User createUser() {
-        String random = random();
-        return new User(RandomStringUtils.random(15), "random@gmail.com", random, random);
+    public static User createUser(String username) {
+        String email = username + "@" + RandomStringUtils.randomAlphanumeric(10) + "."
+                + RandomStringUtils.randomAlphabetic(3);
+        return new User(username, email, RandomStringUtils.randomAlphanumeric(8), "");
+    }
+
+    public static List<User> createBannedUsers(String... usernames) {
+        List<User> result = Lists.newArrayList();
+
+        for (String username : usernames) {
+            User user = createUser(username);
+            user.setBanReason("any reason");
+            result.add(user);
+        }
+
+        return result;
+    }
+
+    public static List<User> createUsers(String... usernames) {
+        List<User> result = Lists.newArrayList();
+
+        for (String username : usernames) {
+            result.add(createUser(username));
+        }
+
+        return result;
     }
 
     public static Group createGroup() {
@@ -107,7 +133,7 @@ public final class ObjectsFactory {
             PoulpeSection section = createSectionWithBranches();
             jcommune.addSection(section);
         }
-        
+
         return jcommune;
     }
 
