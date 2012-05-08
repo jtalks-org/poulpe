@@ -22,41 +22,33 @@ import org.testng.annotations.Test;
 import javax.servlet.ServletContextEvent;
 import java.sql.Driver;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 
 import static org.mockito.Mockito.*;
 
+/**
+ * @author @author Leonid Kazancev
+ */
 public class JdbcDriverUnregisteringListenerTest {
-
-    JdbcDriverUnregisteringListener jdbcDriverUnregisteringListener = new JdbcDriverUnregisteringListener();
-    JdbcDriverUnregisteringListener spyJdbcDriverUnregisteringListener = spy(jdbcDriverUnregisteringListener);
-
-    @Mock
-    ServletContextEvent event;
-
-    @Mock
+    JdbcDriverUnregisteringListener spyJdbcDriverUnregisteringListener = spy(new JdbcDriverUnregisteringListener());
     Driver driver;
-
-    @Mock
     Enumeration<Driver> drivers;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        driver = mock(Driver.class);
+        drivers = Collections.enumeration(Arrays.asList(driver));
     }
 
     @Test
     public void testContextDestroyed() throws SQLException {
         when(spyJdbcDriverUnregisteringListener.getDrivers()).thenReturn(drivers);
-        when(drivers.hasMoreElements()).thenReturn(true,true, true, false);
-        when(drivers.nextElement()).thenReturn(driver);
         doNothing().when(spyJdbcDriverUnregisteringListener).deregisterDriver(driver);
 
-        spyJdbcDriverUnregisteringListener.contextDestroyed(event);
-
-        verify(spyJdbcDriverUnregisteringListener).getDrivers();
-        verify(spyJdbcDriverUnregisteringListener, times(3)).deregisterDriver(driver);
-
+        spyJdbcDriverUnregisteringListener.contextDestroyed(any(ServletContextEvent.class));
+        verify(spyJdbcDriverUnregisteringListener).deregisterDriver(driver);
     }
 
 

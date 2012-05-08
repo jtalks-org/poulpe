@@ -27,17 +27,14 @@ import java.util.Enumeration;
 
 
 /**
- * Application shutdown listener which unregistering a JDBC driver to prevent
- * having errors while Tomcat stopping the application.
+ * Application shutdown listener which unregistering a JDBC driver to prevent having errors while Tomcat stopping the
+ * application.
  *
  * @author Leonid Kazancev
  * @see <a href="https://issues.apache.org/jira/browse/DBCP-332">Apache.org</a>
  */
 public class JdbcDriverUnregisteringListener implements ServletContextListener {
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
-    private Enumeration<Driver> drivers;
-    private Driver driver;
 
     /**
      * {@inheritDoc}
@@ -51,31 +48,27 @@ public class JdbcDriverUnregisteringListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        drivers = getDrivers();
-        try {
-            deregisterDrivers();
-        } catch (SQLException ex) {
-            logger.error("Error deregistering JDBC driver: " + driver);
-        }
+        deregisterDrivers(getDrivers());
     }
 
-    protected Enumeration<Driver> getDrivers() {
+    Enumeration<Driver> getDrivers() {
         return DriverManager.getDrivers();
     }
 
-    protected void deregisterDrivers() throws SQLException {
+    void deregisterDrivers(Enumeration<Driver> drivers) {
         while (drivers.hasMoreElements()) {
-            driver = drivers.nextElement();
-            deregisterDriver(driver);
-            logger.info("Deregistering JDBC driver: " + driver);
+            deregisterDriver(drivers.nextElement());
         }
     }
 
-    protected void deregisterDriver(Driver driver) throws SQLException {
-        DriverManager.deregisterDriver(driver);
+    void deregisterDriver(Driver driver) {
+        try {
+            DriverManager.deregisterDriver(driver);
+            logger.info("Deregistering JDBC driver: {}", driver);
+        } catch (SQLException e) {
+            logger.warn("Error deregistering JDBC driver: {}. Root cause: ", driver, e);
+        }
     }
-
-
 }
 
 
