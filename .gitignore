@@ -31,3 +31,5 @@ pom.xml.releaseBackup
 
 #test-output
 test-output
+
+/poulpe-view/poulpe-web-controller/.springBeans
