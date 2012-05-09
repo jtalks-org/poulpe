@@ -47,3 +47,8 @@
 .language-button {
     float: right
 }
+
+.boldstyle {
+	font-weight: bold;
+	font-size: 14pt;
+}

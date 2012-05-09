@@ -1,27 +1,92 @@
 <?page id="componentListPage" title="Component List" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk>
+	<window title="${labels.componentlist.title}" border="none"
+		width="800px" position="center,top" apply="org.zkoss.bind.BindComposer"
+		viewModel="@id('vm') @init(componentListVM)" validationMessages="@id('vmsgs')">
+		<style src="/resources/css/all.css" />
+		<vlayout>
+			<listbox model="@load(vm.componentList)"
+				selectedItem="@bind(vm.selected)">
+				<listhead sizable="true">
+					<listheader align="center"
+						label="${labels.component.title}" sclass="boldstyle" />
+					<listheader align="center"
+						label="${labels.component.description}" />
+					<listheader align="center"
+						label="${labels.component.type}" />
+				</listhead>
+				<template name="model" var="component">
+					<listitem value="component"
+						onDoubleClick="@command('editComponent', component=component)">
+						<listcell sclass="boldstyle" label="@load(component.name)"/>
+						<listcell label="@load(component.description)"/>
+						<listcell label="@load(component.componentType)"/>
+					</listitem>
+				</template>
+			</listbox>
+			<div>
+				<button label="${labels.componentlist.add}"
+					sclass="components.addCompButton"
+					onClick="@command('newComponent')"
+					disabled="@bind(!vm.canCreateNewComponent)"/>
+				<button label="${labels.componentlist.delete}"
+					sclass="components.delCompButton"
+					onClick="@command('deleteComponent')"
+					disabled="@bind(empty vm.selected)"/>
+				<button label="${labels.componentlist.configure}"
+					sclass="components.confCompButton"
+					onClick="@command('configureComponent')"
+					disabled="@bind(empty vm.selected)"/>
+			</div>
+		</vlayout>
 
-<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-
-  <window id="componentWindow" title="${labels.componentlist.title}" border="none" width="800px" position="center,top"
-    presenter="${componentListPresenter}" use="org.jtalks.poulpe.web.controller.component.ZkListView">
-    <style>.boldstyle { font-weight: bold; font-size: 14pt; }</style>
-    <vlayout>
-      <listbox id="listbox">
-        <listhead sizable="true">
-          <listheader align="center" label="${labels.component.title}" sclass="boldstyle" />
-          <listheader align="center" label="${labels.component.description}" />
-          <listheader align="center" label="${labels.component.type}" />
-        </listhead>
-      </listbox>
-      <div>
-        <button id="addCompButton" label="${labels.componentlist.add}" sclass="components.addCompButton" />
-        <button id="delCompButton" label="${labels.componentlist.delete}" sclass="components.delCompButton" />
-		<button id="confCompButton" label="${labels.componentlist.configure}" sclass="components.confCompButton" />
-      </div>
-    </vlayout>
-  </window>
-
-  <include src="/WEB-INF/pages/edit_component.zul" mode="defer" />
+		<!-- This is the window which used for edit selected component or for creating new component, is not visible by default-->
+		<window title="${labels.componentedit.title}" border="normal"
+			width="430px" mode="modal" onClose="@command('cancelEdit')"
+			visible="@load(vm.editWindowVisible)">
+			<grid>
+				<columns>
+					<column width="100px" />
+					<column width="310px" />
+				</columns>
+				<rows>
+					<row>
+						${labels.component.title}
+						<textbox id="titlebox" width="300px" constraint="no empty" value="
+							@load(vm.selected.name, after={'newComponent', 'editComponent'})
+							@save(vm.selected.name, before='saveComponent')
+							@validator('beanValidator')"/>
+						<label value="@load(vmsgs[titlebox])" sclass="redAlert" />
+					</row>
+					<row>
+						${labels.component.description}
+						<textbox width="300px" constraint="no empty"
+							value="@load(vm.selected.description, after={'newComponent', 'editComponent'}) 
+								@save(vm.selected.description, before='saveComponent')"/>
+					</row>
+					<row>
+						${labels.component.type}
+						<combobox
+							model="@load(vm.availableComponentTypes, after={'newComponent', 'editComponent'})"
+							selectedItem="@load(vm.selected.componentType, after={'newComponent', 'editComponent'})
+								@save(vm.selected.componentType, before='saveComponent')" 
+							width="300px" readonly="true" constraint="no empty">
+							<template name="model" var="componentType">
+								<comboitem label="@load(componentType)" />
+							</template>
+						</combobox>
+					</row>
+					<row align="right" spans="3">
+						<hbox>
+							<button label="${labels.componentedit.save}"
+								onClick="@command('saveComponent')" />
+							<button label="${labels.componentedit.cancel}"
+								onClick="@command('cancelEdit')" />
+						</hbox>
+					</row>
+				</rows>
+			</grid>
+		</window>
+	</window>
 </zk>

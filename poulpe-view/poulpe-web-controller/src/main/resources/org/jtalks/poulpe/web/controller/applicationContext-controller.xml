@@ -95,33 +95,11 @@
   <bean id="userBanningVm" scope="desktop" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
       <constructor-arg index="0" ref="userService" />
   </bean> 
-
-  <!--Declaration of presenters -->
-  <bean id="componentItemPresenter" class="org.jtalks.poulpe.web.controller.component.items.ItemPresenter"
-        scope="prototype">
-    <property name="componentService" ref="componentService" />
-    <property name="dialogManager" ref="dialogManager" />
-    <property name="entityValidator" ref="entityValidator" />
-  </bean>
-
-  <bean id="componentListPresenter" class="org.jtalks.poulpe.web.controller.component.ListPresenter" scope="prototype">
-    <property name="componentService" ref="componentService" />
-    <property name="dialogManager" ref="dialogManager" />
-    <property name="windowManager" ref="windowManager" />
-  </bean>
-
-
-  <bean id="topicTypeListPresenter" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeListPresenter"
-        scope="prototype">
-    <property name="topicTypeService" ref="topicTypeService" />
-    <property name="windowManager" ref="windowManager" />
-    <property name="dialogManager" ref="dialogManager" />
-  </bean>
-
-  <bean id="topicTypePresenter" class="org.jtalks.poulpe.web.controller.topictype.TopicTypePresenter" scope="prototype">
-    <property name="topicTypeService" ref="topicTypeService" />
-    <property name="windowManager" ref="windowManager" />
-    <property name="entityValidator" ref="entityValidator" />
+  
+  <bean id="componentListVM" class="org.jtalks.poulpe.web.controller.component.ComponentsVM" scope="prototype">
+		<property name="componentService" ref="componentService" />
+		<property name="dialogManager" ref="dialogManager" />
+		<property name="windowManager" ref="windowManager" />
   </bean>
 
   <bean id="moderationDialogPresenter"

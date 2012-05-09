@@ -19,6 +19,8 @@ import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
@@ -34,7 +36,7 @@ import java.util.Map;
  * 
  * @author Vahluev Vyacheslav
  */
-public class EditCompViewModel extends AbstractComponentPresenter {
+public class EditCompViewModel {
 
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
     public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
@@ -80,6 +82,34 @@ public class EditCompViewModel extends AbstractComponentPresenter {
      * Web-form validation messages
      */
     private Map<String, String> validationMessages = new HashMap<String, String>();
+    
+    protected ComponentService componentService;
+    protected DialogManager dialogManager;
+    protected WindowManager windowManager;
+
+    /**
+     * Sets the service instance which is used for manipulating with stored components.
+     * @param componentService the new value of the service instance
+     */
+    public void setComponentService(ComponentService componentService) {
+        this.componentService = componentService;
+    }
+
+    /**
+     * Sets the dialog manager which is used for showing different types of dialog messages.
+     * @param dialogManager the new value of the dialog manager
+     */
+    public void setDialogManager(DialogManager dialogManager) {
+        this.dialogManager = dialogManager;
+    }
+
+    /**
+     * Sets window manager.
+     * @param windowManager the new window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
 
     //    constructor
 
