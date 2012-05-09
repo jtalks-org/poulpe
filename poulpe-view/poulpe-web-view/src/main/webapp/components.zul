@@ -6,9 +6,8 @@
 		viewModel="@id('vm') @init(componentListVM)" validationMessages="@id('vmsgs')">
 		<style src="/resources/css/all.css" />
 		<vlayout>
-			<listbox model="@load(vm.componentList)"
-				selectedItem="@bind(vm.selected)">
-				<listhead sizable="true">
+			<listbox model="@load(vm.componentList)" selectedItem="@bind(vm.selected)">
+				<listhead>
 					<listheader align="center"
 						label="${labels.component.title}" sclass="boldstyle" />
 					<listheader align="center"
