@@ -22,7 +22,7 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.BindUtils;
+import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -37,13 +37,14 @@ import org.zkoss.zk.ui.Executions;
  */
 public class ComponentsVM {
 
-	private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
+	public static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
 
 	private Component selected;
 	private boolean editWindowVisible;
 	private boolean canCreateNewComponent;
 	private List<Component> componentList;
 	private List<ComponentType> availableComponentTypes;
+	private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
 	// List of injectable properties
 	private ComponentService componentService;
@@ -65,11 +66,6 @@ public class ComponentsVM {
 	@NotifyChange({ "editWindowVisible", "availableComponentTypes", "selectedComponentType" })
 	public void newComponent() {
 		selected = new Component();
-		selected.setComponentType(availableComponentTypes.get(0)); // first from
-																   // avalable
-																   // types
-		selected.setDescription("Description of new component");
-		selected.setName("Name of new component");
 		editWindowVisible = true;
 	}
 
@@ -99,11 +95,13 @@ public class ComponentsVM {
 				componentService.deleteComponent(selected);
 				updateListComponentsData();
 				selected = null;
-				// Because confirmation needed, we need to send notification
-				// event programmatically
-				BindUtils.postNotifyChange(null, null, this, "selected");
-				BindUtils.postNotifyChange(null, null, this, "componentList");
-				BindUtils.postNotifyChange(null, null, this, "canCreateNewComponent");
+				/*
+				 * Because confirmation needed, we need to send notification
+				 * event programmatically
+				 */
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "selected");
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "componentList");
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "canCreateNewComponent");
 			}
 		};
 		dialogManager.confirmDeletion(selected.getName(), dc);
@@ -148,7 +146,7 @@ public class ComponentsVM {
 	}
 
 	/**
-	 * @return <code>true</code> if the window for editing component should be
+	 * @return {@code true} if the window for editing component should be
 	 *         visible, unless false.
 	 * 
 	 */
@@ -177,8 +175,8 @@ public class ComponentsVM {
 	}
 
 	/**
-	 * @return <code>true</code> only if new component can be created,
-	 *         <code>false</code> in other cases.
+	 * @return {@code true} only if new component can be created,
+	 *         {@code false} in other cases.
 	 */
 	public boolean isCanCreateNewComponent() {
 		return canCreateNewComponent;
@@ -195,7 +193,7 @@ public class ComponentsVM {
 	}
 
 	private void updateListComponentsData() {
-		availableComponentTypes = new ArrayList(componentService.getAvailableTypes());
+		availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
 		componentList = componentService.getAll();
 		canCreateNewComponent = !availableComponentTypes.isEmpty();
 	}

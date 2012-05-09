@@ -29,15 +29,15 @@
 				<button label="${labels.componentlist.add}"
 					sclass="components.addCompButton"
 					onClick="@command('newComponent')"
-					disabled="@bind(!vm.canCreateNewComponent)"/>
+					disabled="@load(!vm.canCreateNewComponent)"/>
 				<button label="${labels.componentlist.delete}"
 					sclass="components.delCompButton"
 					onClick="@command('deleteComponent')"
-					disabled="@bind(empty vm.selected)"/>
+					disabled="@load(empty vm.selected)"/>
 				<button label="${labels.componentlist.configure}"
 					sclass="components.confCompButton"
 					onClick="@command('configureComponent')"
-					disabled="@bind(empty vm.selected)"/>
+					disabled="@load(empty vm.selected)"/>
 			</div>
 		</vlayout>
 
