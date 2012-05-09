@@ -38,338 +38,355 @@ import java.util.Map;
  */
 public class EditCompViewModel {
 
-    public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
-    public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
-    public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
+	public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
+	public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
+	public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
 
-    /**
-     * Current component we are working with
-     */
-    private Component currentComponent = (Component) Executions.getCurrent().getDesktop()
-            .getAttribute("componentToEdit");
+	/**
+	 * Current component we are working with
+	 */
+	private Component currentComponent = (Component) Executions.getCurrent().getDesktop()
+	        .getAttribute("componentToEdit");
 
-    /**
-     * The name of the component
-     */
-    private String name;
+	/**
+	 * The name of the component
+	 */
+	private String name;
 
-    /**
-     * The description of the component
-     */
-    private String description;
+	/**
+	 * The description of the component
+	 */
+	private String description;
 
-    /**
-     * The name of the component
-     */
-    private String componentName;
+	/**
+	 * The name of the component
+	 */
+	private String componentName;
 
-    /**
-     * Type of the component
-     */
-    private String componentType;
-    /**
-     * The caption of the forum
-     */
-    private String caption;
-    /**
-     * The post preview size of the forum
-     */
-    private String postPreviewSize;
+	/**
+	 * Type of the component
+	 */
+	private String componentType;
+	/**
+	 * The caption of the forum
+	 */
+	private String caption;
+	/**
+	 * The post preview size of the forum
+	 */
+	private String postPreviewSize;
 
-    private String sessionTimeout;
+	private String sessionTimeout;
 
-    /**
-     * Web-form validation messages
-     */
-    private Map<String, String> validationMessages = new HashMap<String, String>();
-    
-    protected ComponentService componentService;
-    protected DialogManager dialogManager;
-    protected WindowManager windowManager;
+	/**
+	 * Web-form validation messages
+	 */
+	private Map<String, String> validationMessages = new HashMap<String, String>();
 
-    /**
-     * Sets the service instance which is used for manipulating with stored components.
-     * @param componentService the new value of the service instance
-     */
-    public void setComponentService(ComponentService componentService) {
-        this.componentService = componentService;
-    }
+	protected ComponentService componentService;
+	protected DialogManager dialogManager;
+	protected WindowManager windowManager;
 
-    /**
-     * Sets the dialog manager which is used for showing different types of dialog messages.
-     * @param dialogManager the new value of the dialog manager
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
+	/**
+	 * Sets the service instance which is used for manipulating with stored
+	 * components.
+	 * 
+	 * @param componentService
+	 *            the new value of the service instance
+	 */
+	public void setComponentService(ComponentService componentService) {
+		this.componentService = componentService;
+	}
 
-    /**
-     * Sets window manager.
-     * @param windowManager the new window manager
-     */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
+	/**
+	 * Sets the dialog manager which is used for showing different types of
+	 * dialog messages.
+	 * 
+	 * @param dialogManager
+	 *            the new value of the dialog manager
+	 */
+	public void setDialogManager(DialogManager dialogManager) {
+		this.dialogManager = dialogManager;
+	}
 
-    //    constructor
+	/**
+	 * Sets window manager.
+	 * 
+	 * @param windowManager
+	 *            the new window manager
+	 */
+	public void setWindowManager(WindowManager windowManager) {
+		this.windowManager = windowManager;
+	}
 
-    /**
-     * Default constructor. Inits the data on the form.
-     * 
-     * @param componentService service we use to access components
-     */
-    public EditCompViewModel(@Nonnull ComponentService componentService) {
-        this.setComponentService(componentService);
-        initData();
-    }
+	// constructor
 
-    /**
-     * Inits the data on the form.
-     */
-    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
-    public void initData() {
-        currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
+	/**
+	 * Default constructor. Inits the data on the form.
+	 * 
+	 * @param componentService
+	 *            service we use to access components
+	 */
+	public EditCompViewModel(@Nonnull ComponentService componentService) {
+		this.setComponentService(componentService);
+		initData();
+	}
 
-        if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
-            componentType = "jcommune";
-        } else {
-            componentType = "antarcticle";
-        }
-        componentName = valueOf(currentComponent.getName());
-        name = valueOf(currentComponent.getProperty(componentType + ".name"));
-        description = valueOf(currentComponent.getDescription());
-        caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
-        postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
-        sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
-    }
+	/**
+	 * Inits the data on the form.
+	 */
+	@NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
+	public void initData() {
+		currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
-    //    service functions
+		if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
+			componentType = "jcommune";
+		} else {
+			componentType = "antarcticle";
+		}
+		componentName = valueOf(currentComponent.getName());
+		name = valueOf(currentComponent.getProperty(componentType + ".name"));
+		description = valueOf(currentComponent.getDescription());
+		caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
+		postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
+		sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+	}
 
-    /**
-     * Returns all components.
-     * 
-     * @return the list of the components
-     */
-    public List<Component> getComponents() {
-        return componentService.getAll();
-    }
+	// service functions
 
-    //    commands
+	/**
+	 * Returns all components.
+	 * 
+	 * @return the list of the components
+	 */
+	public List<Component> getComponents() {
+		return componentService.getAll();
+	}
 
-    /**
-     * Saves a component. Shows validation messages, if something is wrong
-     */
-    @Command()
-    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
-    public void save() {
-        boolean correct = true;
-        validationMessages.clear();
+	// commands
 
-        if (checkCorrect()) {
-            currentComponent.setName(componentName);
-            currentComponent.setDescription(description);
-            currentComponent.setProperty(componentType + ".name", name);
-            currentComponent.setProperty(componentType + ".caption", caption);
-            currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
-            currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+	/**
+	 * Saves a component. Shows validation messages, if something is wrong
+	 */
+	@Command()
+	@NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout" })
+	public void save() {
+		boolean correct = true;
+		validationMessages.clear();
 
-            try {
-                componentService.saveComponent(currentComponent);
-            } catch (ValidationException e) {
-                validationMessages.put("componentName", Labels.getLabel(ITEM_ALREADY_EXISTS));
-                correct = false;
-            }
+		if (checkCorrect()) {
+			currentComponent.setName(componentName);
+			currentComponent.setDescription(description);
+			currentComponent.setProperty(componentType + ".name", name);
+			currentComponent.setProperty(componentType + ".caption", caption);
+			currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
+			currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
 
-            if (correct) {
-                validationMessages.clear();
-                Executions.sendRedirect("");
-            }
-        }
-    }
+			try {
+				componentService.saveComponent(currentComponent);
+			} catch (ValidationException e) {
+				validationMessages.put("componentName", Labels.getLabel(ITEM_ALREADY_EXISTS));
+				correct = false;
+			}
 
-    /**
-     * Cancels all the actions
-     */
-    @Command()
-    @NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "validationMessages",
-            "sessionTimeout" })
-    public void cancel() {
-        initData();
-        validationMessages.clear();
-        Executions.sendRedirect("");
-    }
+			if (correct) {
+				validationMessages.clear();
+				Executions.sendRedirect("");
+			}
+		}
+	}
 
-    //    helpers
+	/**
+	 * Cancels all the actions
+	 */
+	@Command()
+	@NotifyChange({ "componentName", "name", "description", "caption", "postPreviewSize", "validationMessages",
+	        "sessionTimeout" })
+	public void cancel() {
+		initData();
+		validationMessages.clear();
+		Executions.sendRedirect("");
+	}
 
-    /**
-     * Returns string value of the field or empty string if string is null
-     * 
-     * @param value value of the string
-     * @return string value of the field or empty string if string is null
-     */
-    public String valueOf(String value) {
-        return (value == null) ? "" : value;
-    }
+	// helpers
 
-    /**
-     * Check if input data is correct
-     * 
-     * @return true if input is correct, else otherwise
-     */
-    public boolean checkCorrect() {
-        boolean correct = true;
+	/**
+	 * Returns string value of the field or empty string if string is null
+	 * 
+	 * @param value
+	 *            value of the string
+	 * @return string value of the field or empty string if string is null
+	 */
+	public String valueOf(String value) {
+		return (value == null) ? "" : value;
+	}
 
-        if (name == null || name.equals("")) {
-            validationMessages.put("name", Labels.getLabel(EMPTY_TITLE));
-            correct = false;
-        }
+	/**
+	 * Check if input data is correct
+	 * 
+	 * @return true if input is correct, else otherwise
+	 */
+	public boolean checkCorrect() {
+		boolean correct = true;
 
-        if (componentName == null || componentName.equals("")) {
-            validationMessages.put("componentName", Labels.getLabel(EMPTY_NAME));
-            correct = false;
-        }
+		if (name == null || name.equals("")) {
+			validationMessages.put("name", Labels.getLabel(EMPTY_TITLE));
+			correct = false;
+		}
 
-        return correct;
-    }
+		if (componentName == null || componentName.equals("")) {
+			validationMessages.put("componentName", Labels.getLabel(EMPTY_NAME));
+			correct = false;
+		}
 
-    //    getters & setters for web-form
+		return correct;
+	}
 
-    /**
-     * Returns the title for current component
-     * 
-     * @return name value from web-form
-     */
-    public String getName() {
-        return name;
-    }
+	// getters & setters for web-form
 
-    /**
-     * Sets the title for the current component
-     * 
-     * @param name value to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
+	/**
+	 * Returns the title for current component
+	 * 
+	 * @return name value from web-form
+	 */
+	public String getName() {
+		return name;
+	}
 
-    /**
-     * Returns the description for the current component
-     * 
-     * @return description value from web-form
-     */
-    public String getDescription() {
-        return description;
-    }
+	/**
+	 * Sets the title for the current component
+	 * 
+	 * @param name
+	 *            value to set
+	 */
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    /**
-     * Sets the description for the current component
-     * 
-     * @param description to set on web-form
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	/**
+	 * Returns the description for the current component
+	 * 
+	 * @return description value from web-form
+	 */
+	public String getDescription() {
+		return description;
+	}
 
-    /**
-     * Returns the name of the current component
-     * 
-     * @return component name value from web-form
-     */
-    public String getComponentName() {
-        return componentName;
-    }
+	/**
+	 * Sets the description for the current component
+	 * 
+	 * @param description
+	 *            to set on web-form
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    /**
-     * Sets the name for current component
-     * 
-     * @param componentName new component name value on web-form
-     */
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
-    }
+	/**
+	 * Returns the name of the current component
+	 * 
+	 * @return component name value from web-form
+	 */
+	public String getComponentName() {
+		return componentName;
+	}
 
-    /**
-     * Returns validation messages for data input
-     * 
-     * @return validation messages
-     */
-    public Map<String, String> getValidationMessages() {
-        return validationMessages;
-    }
+	/**
+	 * Sets the name for current component
+	 * 
+	 * @param componentName
+	 *            new component name value on web-form
+	 */
+	public void setComponentName(String componentName) {
+		this.componentName = componentName;
+	}
 
-//    getter and setter for current component we edit
+	/**
+	 * Returns validation messages for data input
+	 * 
+	 * @return validation messages
+	 */
+	public Map<String, String> getValidationMessages() {
+		return validationMessages;
+	}
 
-    /**
-     * Gets the current component we edit
-     * 
-     * @return current component
-     */
-    public Component getCurrentComponent() {
-        return currentComponent;
-    }
+	// getter and setter for current component we edit
 
-    /**
-     * Sets the current component we edit
-     * 
-     * @param currentComponent - to set
-     */
-    public void setCurrentComponent(Component currentComponent) {
-        this.currentComponent = currentComponent;
-    }
+	/**
+	 * Gets the current component we edit
+	 * 
+	 * @return current component
+	 */
+	public Component getCurrentComponent() {
+		return currentComponent;
+	}
 
-    /**
-     * Returns caption from the web-form
-     * 
-     * @return caption
-     */
-    public String getCaption() {
-        return caption;
-    }
+	/**
+	 * Sets the current component we edit
+	 * 
+	 * @param currentComponent
+	 *            - to set
+	 */
+	public void setCurrentComponent(Component currentComponent) {
+		this.currentComponent = currentComponent;
+	}
 
-    /**
-     * Sets the current caption
-     * 
-     * @param caption - to set on web-form
-     */
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
+	/**
+	 * Returns caption from the web-form
+	 * 
+	 * @return caption
+	 */
+	public String getCaption() {
+		return caption;
+	}
 
-    /**
-     * Returns post preview size from the web-form
-     * 
-     * @return post preview size
-     */
-    public String getPostPreviewSize() {
-        return postPreviewSize;
-    }
+	/**
+	 * Sets the current caption
+	 * 
+	 * @param caption
+	 *            - to set on web-form
+	 */
+	public void setCaption(String caption) {
+		this.caption = caption;
+	}
 
-    /**
-     * Sets the current component we edit
-     * 
-     * @param postPreviewSize- to set on web-form
-     */
-    public void setPostPreviewSize(String postPreviewSize) {
-        this.postPreviewSize = postPreviewSize;
-    }
+	/**
+	 * Returns post preview size from the web-form
+	 * 
+	 * @return post preview size
+	 */
+	public String getPostPreviewSize() {
+		return postPreviewSize;
+	}
 
-    /**
-     * Returns session timeout value from the web-form
-     * 
-     * @return session timeout
-     */
-    @NotEmpty(message = "Last name can not be null")
-    public String getSessionTimeout() {
-        return sessionTimeout;
-    }
+	/**
+	 * Sets the current component we edit
+	 * 
+	 * @param postPreviewSize
+	 *            - to set on web-form
+	 */
+	public void setPostPreviewSize(String postPreviewSize) {
+		this.postPreviewSize = postPreviewSize;
+	}
 
-    /**
-     * Sets session timeout
-     * 
-     * @param sessionTimeout - to set on web-form
-     */
-    public void setSessionTimeout(String sessionTimeout) {
-        this.sessionTimeout = sessionTimeout;
-    }
+	/**
+	 * Returns session timeout value from the web-form
+	 * 
+	 * @return session timeout
+	 */
+	@NotEmpty(message = "Last name can not be null")
+	public String getSessionTimeout() {
+		return sessionTimeout;
+	}
+
+	/**
+	 * Sets session timeout
+	 * 
+	 * @param sessionTimeout
+	 *            - to set on web-form
+	 */
+	public void setSessionTimeout(String sessionTimeout) {
+		this.sessionTimeout = sessionTimeout;
+	}
 
 }
