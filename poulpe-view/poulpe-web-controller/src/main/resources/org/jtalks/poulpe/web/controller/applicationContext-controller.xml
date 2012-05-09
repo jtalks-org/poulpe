@@ -54,6 +54,14 @@
     <constructor-arg index="1" ref="entityValidator"/>
   </bean>
 
+    <bean id="userGroupVm" scope="desktop" class="org.jtalks.poulpe.web.controller.group.UserGroupVm">
+        <constructor-arg index="0" ref="groupService"/>
+        <constructor-arg index="1" ref="entityValidator"/>
+        <constructor-arg index="2" ref="windowManager"/>
+        <constructor-arg index="3" ref="dialogManager"/>
+        <property name="selectedEntity" ref="selectedEntity" />
+    </bean>
+
   <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
     <constructor-arg index="0" ref="rankService"/>
   </bean>
@@ -124,12 +132,6 @@
     <property name="entityValidator" ref="entityValidator" />
   </bean>
 
-  <bean id="groupPresenter" class="org.jtalks.poulpe.web.controller.group.GroupPresenter" scope="prototype">
-    <property name="groupService" ref="groupService" />
-    <property name="dialogManager" ref="dialogManager" />
-    <property name="windowManager" ref="windowManager" />
-    <property name="selectedEntity" ref="selectedEntity" />
-  </bean>
 
   <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
         scope="prototype">

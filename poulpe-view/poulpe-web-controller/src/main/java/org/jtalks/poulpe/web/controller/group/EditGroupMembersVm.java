@@ -14,16 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.text.StringContains.containsString;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.User;
@@ -36,7 +27,12 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+
+import static ch.lambdaj.Lambda.*;
+import static org.hamcrest.text.StringContains.containsString;
 
 /**
  * View-Model for 'Edit Members of group'.
@@ -151,7 +147,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      */
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
-        windowManager.open("groups.zul");
+        windowManager.open("usergroup.zul");
     }
 
 }

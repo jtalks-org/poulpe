@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<?page title="UserGroup" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="userGroupWindow" title="${labels.groups.title}" border="normal" hflex="true"
+         apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)" width="650px">
+
+    <hbox>
+      <label value="${labels.groups.filter}" />
+      <textbox value="@save(vm.searchString)" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
+      <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')" />
+    </hbox>
+    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true"
+           mold="paging" pageSize="50" pagingPosition="both" width="600px" height="500px">
+      <listhead>
+        <listheader align="left" label="${labels.groups.name}"  sclass="boldstyle" />
+        <listheader align="left" label="${labels.groups.memberCount}" />
+      </listhead>
+      <template name="model" var="group">
+        <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
+                   onMouseOver="@command('setSelectedGroup', group=group)"
+                   onDoubleClick="@command('editGroup', group=group)">
+          <listcell label="@load(group.getName())" />
+          <listcell label="@load(group.getUsers().size())" />
+        </listitem>
+      </template>
+      <zscript><![CDATA[groupsListbox.pagingChild.mold="os";
+                     groupsListbox.paginal.pageIncrement=10;]]>
+      </zscript>
+    </listbox>
+
+    <menupopup id="editPopupMenu">
+      <menuitem image="/resources/img/usergroupicons/members.png" label="${labels.groups.menuitem.edit_members}" onClick="@command('showGroupMemberEditWindow')" />
+       <menuseparator />
+       <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}" onClick="@command('deleteGroup')" />
+    </menupopup>
+
+    <button label="+" sclass="groups.addButton" onClick="@command('addGroup')" />
+  </window>
+  <include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer" />
+
+</zk>

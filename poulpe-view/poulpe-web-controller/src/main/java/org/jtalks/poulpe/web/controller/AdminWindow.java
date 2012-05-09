@@ -14,15 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.util.GenericForwardComposer;
 import org.zkoss.zul.Center;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
+import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
 
 /**
  * Server-side representation of view for main 'Admin Window'.
@@ -121,7 +120,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
      * Shows User Groups window that allows admins to CRUD groups.
      */
     public void onShowUserGroups() {
-        windowManager.open("groups.zul");
+        windowManager.open("usergroup.zul");
     }
 
     /**
