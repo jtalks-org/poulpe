@@ -19,16 +19,17 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="userGroupWindow" title="${labels.groups.title}" border="normal" hflex="true"
-         apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)" width="650px">
+  <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.title}" border="normal" width="100%" height="100%"
+         apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
 
     <hbox>
       <label value="${labels.groups.filter}" />
-      <textbox value="@save(vm.searchString)" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
+      <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
       <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')" />
+      <button label="+" sclass="groups.addButton" onClick="@command('addGroup')" />
     </hbox>
     <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true"
-           mold="paging" pageSize="50" pagingPosition="both" width="600px" height="500px">
+           mold="paging" pageSize="50" pagingPosition="both" height="500px">
       <listhead>
         <listheader align="left" label="${labels.groups.name}"  sclass="boldstyle" />
         <listheader align="left" label="${labels.groups.memberCount}" />
@@ -49,11 +50,8 @@
     <menupopup id="editPopupMenu">
       <menuitem image="/resources/img/usergroupicons/members.png" label="${labels.groups.menuitem.edit_members}" onClick="@command('showGroupMemberEditWindow')" />
        <menuseparator />
-       <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}" onClick="@command('deleteGroup')" />
+       <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}" onClick="@command('confirmDelete')" />
     </menupopup>
 
-    <button label="+" sclass="groups.addButton" onClick="@command('addGroup')" />
-  </window>
-  <include src="/WEB-INF/pages/editgroupdialog.zul" mode="defer" />
-
+ </window>
 </zk>

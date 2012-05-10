@@ -25,7 +25,7 @@
     </id>
     <property column="UUID" name="uuid" not-null="true" unique="true"/>
     <property column="NAME" name="name" not-null="true"/>
-    <property column="DESCRIPTION" name="description" type="text"/>
+    <property column="DESCRIPTION" name="description"/>
     <property column="POSITION" name="position" insert="false" update="false"/>
     <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection" lazy="false"
                  update="false" insert="false"/>

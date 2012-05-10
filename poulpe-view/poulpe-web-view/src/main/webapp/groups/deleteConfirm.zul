@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<?page title="Delete confirm dialog" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="deleteConfirmDialog"
+         title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
+         onClose="@command('cancelDelete')"
+         onOK="@command('deleteGroup')"
+         onCancel="@command('cancelDelete')"
+         height="150" width="250px">
+    ${labels.groups.delete_confirm_dialog.message}: ${vm.selectedGroup.name}?
+    <hbox align="center">
+    <button id="deleteButton" image="/resources/img/dialogicons/accept(16x16).png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
+    <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.groups.button.cancel}" onClick="@command('cancelDelete')" />
+    </hbox>
+  </window>
+</zk>
