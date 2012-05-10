@@ -52,7 +52,7 @@ public class ComponentsVMTest {
 	@Captor
 	private ArgumentCaptor<Performable> deleteCallbackCaptor;
 	@InjectMocks
-	private ComponentsVM viewModel;
+	private ComponentsVm viewModel;
 	
 	private List<Component> listOfTwoComponent;
 	private List<Component> listOfTreeComponent;
@@ -61,7 +61,7 @@ public class ComponentsVMTest {
 	
 	@BeforeTest
 	public void beforeTest() {
-		viewModel = new ComponentsVM();
+		viewModel = new ComponentsVm();
 		MockitoAnnotations.initMocks(this);
 		
 		Component component1 = new Component();
@@ -108,9 +108,9 @@ public class ComponentsVMTest {
 		verify(componentService).deleteComponent(selected);
 		assertNull(viewModel.getSelected());
 		verify(componentService).getAvailableTypes();
-		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVM.SELECTED);
-		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVM.COMPONENT_LIST);
-		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVM.CAN_CREATE_NEW_COMPPONENT);
+		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.SELECTED);
+		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.COMPONENT_LIST);
+		verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.CAN_CREATE_NEW_COMPPONENT);
 		verifyStateOfViewModel(CAN_CREATE_NEW_COMPONENT, !EDIT_WINDOW_VISIBLE, listOfTwoComponent,
 				setOfAvailableComponentTypeWithOneMemeber, EMPTY_SELECTION);
 	}

@@ -34,7 +34,7 @@ import org.zkoss.bind.annotation.NotifyChange;
  * 
  * @author Vermut
  */
-public class ComponentsVM {
+public class ComponentsVm {
 
 	public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
 	        AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
@@ -101,9 +101,9 @@ public class ComponentsVM {
 				 * Because confirmation needed, we need to send notification
 				 * event programmatically
 				 */
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, SELECTED);
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, COMPONENT_LIST);
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, CAN_CREATE_NEW_COMPPONENT);
+				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, SELECTED);
+				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, COMPONENT_LIST);
+				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, CAN_CREATE_NEW_COMPPONENT);
 			}
 		};
 		dialogManager.confirmDeletion(selected.getName(), dc);
