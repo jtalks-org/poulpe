@@ -13,12 +13,14 @@ import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
-* @author Leonid Kazancev
-*/
+ * @author Leonid Kazancev
+ */
 public class UserGroupVmTest {
 
     private static final String SEARCH_STRING = "searchString";
@@ -37,13 +39,14 @@ public class UserGroupVmTest {
     @Mock
     private DialogManager.Performable preformable;
 
-    private UserGroupVm viewModel = new UserGroupVm(groupService, windowManager);
+    private UserGroupVm viewModel;
     private SelectedEntity<Group> selectedEntity;
     private Group selectedGroup;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
+        viewModel = new UserGroupVm(groupService, windowManager);
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
         viewModel.setZkHelper(zkHelper);
@@ -74,13 +77,14 @@ public class UserGroupVmTest {
 
     @Test
     public void testDeleteGroup() {
+        doNothing().when(groupService).deleteGroup(any(Group.class));
+        when(zkHelper.findComponent(UserGroupVm.DELETE_CONFIRM_DIALOG)).thenReturn(userDialog);
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
-        verify(viewModel).updateView();
     }
-    
+
     @Test
-    public void testConfirmDelete(){
+    public void testConfirmDelete() {
         viewModel.confirmDelete();
         verify(zkHelper).wireToZul(UserGroupVm.DELETE_CONFIRM_URL);
     }
@@ -114,9 +118,9 @@ public class UserGroupVmTest {
 
         verify(userDialog).detach();
     }
-    
+
     @Test
-    public void testCancelDelete(){
+    public void testCancelDelete() {
         when(zkHelper.findComponent(UserGroupVm.DELETE_CONFIRM_DIALOG)).thenReturn(userDialog);
         viewModel.cancelDelete();
 
