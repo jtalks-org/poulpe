@@ -37,7 +37,6 @@ import org.zkoss.zk.ui.Executions;
  */
 public class ComponentsVM {
 
-	public static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
 	private static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
 	        AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
 	        SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
@@ -116,8 +115,7 @@ public class ComponentsVM {
 	 */
 	@Command
 	public void configureComponent() {
-		Executions.getCurrent().getDesktop().setAttribute("componentToEdit", selected);
-		windowManager.open(EDIT_COMPONENT_LOCATION);
+		EditCompViewModel.openWindowForEdit(windowManager, selected);
 	}
 
 	/** Saves the created or edited component in component list. */

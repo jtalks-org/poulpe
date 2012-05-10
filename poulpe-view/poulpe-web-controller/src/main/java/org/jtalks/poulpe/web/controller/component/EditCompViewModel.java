@@ -38,6 +38,7 @@ import java.util.Map;
  */
 public class EditCompViewModel {
 
+	public static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
 	public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
 	public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
 	public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
@@ -86,6 +87,20 @@ public class EditCompViewModel {
 	protected ComponentService componentService;
 	protected DialogManager dialogManager;
 	protected WindowManager windowManager;
+	
+	/**
+	 * Opens window for editing component.
+	 * 
+	 * @param windowManager
+	 *            The object which is responsible for creation and closing
+	 *            application windows
+	 * @param component
+	 *            component for editing
+	 */
+	public static void openWindowForEdit(WindowManager windowManager, Component component) {
+		Executions.getCurrent().getDesktop().setAttribute("componentToEdit", component);
+		windowManager.open(EDIT_COMPONENT_LOCATION);
+	}
 
 	/**
 	 * Sets the service instance which is used for manipulating with stored
