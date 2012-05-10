@@ -1,8 +1,6 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -15,28 +13,21 @@ import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.Window;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 /**
- * @author Leonid Kazancev
- */
+* @author Leonid Kazancev
+*/
 public class UserGroupVmTest {
 
     private static final String SEARCH_STRING = "searchString";
     private static final String GROUP_NAME = "GroupName";
 
-    private UserGroupVm viewModel;
-
     @Mock
     private GroupService groupService;
     @Mock
-    private EntityValidator entityValidator;
-    @Mock
     private WindowManager windowManager;
-    @Mock
-    private DialogManager dialogManager;
     @Mock
     private ZkHelper zkHelper;
     @Mock
@@ -45,17 +36,16 @@ public class UserGroupVmTest {
     private ListModelList<Group> groups;
     @Mock
     private DialogManager.Performable preformable;
-    @Mock
-    private Group selectedGroup;
-    @Mock
+
+    private UserGroupVm viewModel = new UserGroupVm(groupService, windowManager);
     private SelectedEntity<Group> selectedEntity;
+    private Group selectedGroup;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-
+        selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
-        viewModel = new UserGroupVm(groupService, entityValidator, windowManager, dialogManager);
         viewModel.setZkHelper(zkHelper);
         viewModel.setGroups(groups);
         viewModel.setSelectedGroup(selectedGroup);
@@ -85,7 +75,14 @@ public class UserGroupVmTest {
     @Test
     public void testDeleteGroup() {
         viewModel.deleteGroup();
-        verify(dialogManager).confirmDeletion(any(String.class), any(DialogManager.Performable.class));
+        verify(groupService).deleteGroup(selectedGroup);
+        verify(viewModel).updateView();
+    }
+    
+    @Test
+    public void testConfirmDelete(){
+        viewModel.confirmDelete();
+        verify(zkHelper).wireToZul(UserGroupVm.DELETE_CONFIRM_URL);
     }
 
     @Test
@@ -103,7 +100,6 @@ public class UserGroupVmTest {
     @Test
     public void testSaveGroup() throws Exception {
         when(zkHelper.findComponent(UserGroupVm.EDIT_GROUP_DIALOG)).thenReturn(userDialog);
-        when(entityValidator.validate(any(Group.class))).thenReturn(ValidationResult.EMPTY);
         Group group = new Group();
 
         viewModel.saveGroup(group);
@@ -115,6 +111,14 @@ public class UserGroupVmTest {
     public void testCancelEdit() {
         when(zkHelper.findComponent(UserGroupVm.EDIT_GROUP_DIALOG)).thenReturn(userDialog);
         viewModel.cancelEdit();
+
+        verify(userDialog).detach();
+    }
+    
+    @Test
+    public void testCancelDelete(){
+        when(zkHelper.findComponent(UserGroupVm.DELETE_CONFIRM_DIALOG)).thenReturn(userDialog);
+        viewModel.cancelDelete();
 
         verify(userDialog).detach();
     }

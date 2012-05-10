@@ -20,7 +20,7 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="editGroupDialog" title="${labels.users.editgroupdialog.title}" closable="true" border="normal"
+  <window id="editGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.editdialog.title}" closable="true" border="normal"
     width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
     <grid>
       <columns>
@@ -30,11 +30,13 @@
       <rows>
         <row>
           <label value="${labels.groups.editdialog.name}" />
-          <textbox value="@bind(vm.selectedGroup.name)" width="100%" focus="true" />
+          <textbox id="groupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
+                   errorMessage="@load(vmsgs[groupNameBox])" />
         </row>
         <row>
           <label value="${labels.groups.editdialog.description}" />
-          <textbox value="@bind(vm.selectedGroup.description)" width="100%" />
+          <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
+                   errorMessage="@load(vmsgs[groupDescriptionBox])" />
         </row>
        </rows>
     </grid>

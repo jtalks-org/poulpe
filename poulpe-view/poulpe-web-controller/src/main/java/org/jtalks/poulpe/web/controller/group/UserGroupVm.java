@@ -1,50 +1,41 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationResult;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.validator.ValidationFailure;
-import org.jtalks.poulpe.validator.ValidationFailureHandler;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Textbox;
 
 import javax.annotation.Nonnull;
 
 /**
  * @author Leonid Kazancev
  */
-public class UserGroupVm implements ValidationFailure {
+public class UserGroupVm {
     public static final String EDIT_GROUP_URL = "/groups/edit_group.zul";
     public static final String EDIT_GROUP_DIALOG = "#editGroupDialog";
+    public static final String DELETE_CONFIRM_URL="/groups/deleteConfirm.zul";
+    public static final String DELETE_CONFIRM_DIALOG="#deleteConfirmDialog";
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 
     //Injected
-    private EntityValidator entityValidator;
     private GroupService groupService;
     private final WindowManager windowManager;
-    private final DialogManager dialogManager;
-
 
     private ListModelList<Group> groups;
     private Group selectedGroup;
     private SelectedEntity<Group> selectedEntity;
     private ZkHelper zkHelper;
-    private ValidationFailureHandler handler;
     private String searchString = "";
 
 
-    public UserGroupVm(@Nonnull GroupService groupService, EntityValidator entityValidator, @Nonnull WindowManager windowManager, @Nonnull DialogManager dialogManager) {
+    public UserGroupVm(@Nonnull GroupService groupService, @Nonnull WindowManager windowManager) {
         this.groupService = groupService;
-        this.entityValidator = entityValidator;
         this.windowManager = windowManager;
-        this.dialogManager = dialogManager;
+
         this.groups = new ListModelList<Group>(groupService.getAll(), true);
     }
 
@@ -88,17 +79,21 @@ public class UserGroupVm implements ValidationFailure {
     }
 
     /**
+     * Calls confirm delete dialog.
+     */
+    @Command
+    public void confirmDelete() {
+       zkHelper.wireToZul(DELETE_CONFIRM_URL);
+    }
+
+    /**
      * Deletes selected group.
      */
     @Command
-    public void deleteGroup() {
-        dialogManager.confirmDeletion(selectedGroup.getName(), new DialogManager.Performable() {
-            @Override
-            public void execute() {
-                groupService.deleteGroup(selectedGroup);
-                updateView();
-            }
-        });
+    public void deleteGroup(){
+        groupService.deleteGroup(selectedGroup);
+        updateView();
+        cancelDelete();
     }
 
     /**
@@ -122,17 +117,15 @@ public class UserGroupVm implements ValidationFailure {
     }
 
     /**
-     * Validates editing group, on success saves it, on failure shows the error message.
+     * Saves group, closing group edit(add) dialog and updates view.
      *
      * @param group editing group
      */
     @Command
     public void saveGroup(@BindingParam(value = "group") Group group) {
-        if (validate(group)) {
             groupService.saveGroup(group);
             cancelEdit();
             updateView();
-        }
     }
 
     /**
@@ -143,30 +136,19 @@ public class UserGroupVm implements ValidationFailure {
         zkHelper.findComponent(EDIT_GROUP_DIALOG).detach();
     }
 
+    /**
+     *Closing delete window without apply changes.
+     */
+    @Command
+    public void cancelDelete(){
+        zkHelper.findComponent(DELETE_CONFIRM_DIALOG).detach();
+    }
+
     @Command
     public void setSelectedGroup(@BindingParam(value = "group") Group group) {
         this.selectedGroup = group;
     }
 
-    private boolean validate(Group group) {
-        ValidationResult result = entityValidator.validate(group);
-
-        if (result.hasErrors()) {
-            validationFailure(result);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void validationFailure(ValidationResult result) {
-        handler = new ValidationFailureHandler("name", (Textbox) zkHelper.getCurrentComponent("name"));
-        handler.validationFailure(result);
-    }
 
     public GroupService getGroupService() {
         return groupService;
@@ -201,13 +183,6 @@ public class UserGroupVm implements ValidationFailure {
         this.zkHelper = zkHelper;
     }
 
-    public EntityValidator getEntityValidator() {
-        return entityValidator;
-    }
-
-    public void setEntityValidator(EntityValidator entityValidator) {
-        this.entityValidator = entityValidator;
-    }
 
     public SelectedEntity<Group> getSelectedEntity() {
         return selectedEntity;
@@ -215,14 +190,6 @@ public class UserGroupVm implements ValidationFailure {
 
     public void setSelectedEntity(SelectedEntity<Group> selectedEntity) {
         this.selectedEntity = selectedEntity;
-    }
-
-    public ValidationFailureHandler getHandler() {
-        return handler;
-    }
-
-    public void setHandler(ValidationFailureHandler handler) {
-        this.handler = handler;
     }
 
 }
