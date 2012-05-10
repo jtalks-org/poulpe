@@ -3,7 +3,7 @@
 <zk>
 	<window title="${labels.componentlist.title}" border="none"
 		width="800px" position="center,top" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init(componentListVM)" validationMessages="@id('vmsgs')">
+		viewModel="@id('vm') @init(componentListVm)" validationMessages="@id('vmsgs')">
 		<style src="/resources/css/all.css" />
 		<vlayout>
 			<listbox model="@load(vm.componentList)" selectedItem="@bind(vm.selected)">

@@ -94,7 +94,7 @@
       <constructor-arg index="0" ref="userService" />
   </bean> 
   
-  <bean id="componentListVM" class="org.jtalks.poulpe.web.controller.component.ComponentsVM" scope="prototype">
+  <bean id="componentListVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
 		<property name="componentService" ref="componentService" />
 		<property name="dialogManager" ref="dialogManager" />
 		<property name="windowManager" ref="windowManager" />
