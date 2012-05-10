@@ -36,7 +36,7 @@ import org.zkoss.bind.annotation.NotifyChange;
  */
 public class ComponentsVM {
 
-	private static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
+	public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
 	        AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
 	        SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
 	        COMPONENT_LIST = "componentList";
