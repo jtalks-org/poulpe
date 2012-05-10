@@ -28,7 +28,7 @@
 			<div>
 				<button label="${labels.componentlist.add}"
 					sclass="components.addCompButton"
-					onClick="@command('newComponent')"
+					onClick="@command('showAddComponentDialog')"
 					disabled="@load(!vm.canCreateNewComponent)"/>
 				<button label="${labels.componentlist.delete}"
 					sclass="components.delCompButton"

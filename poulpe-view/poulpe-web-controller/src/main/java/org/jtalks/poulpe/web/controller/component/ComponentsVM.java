@@ -38,6 +38,10 @@ import org.zkoss.zk.ui.Executions;
 public class ComponentsVM {
 
 	public static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
+	private static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
+	        AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+	        SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
+	        COMPONENT_LIST = "componentList";
 
 	private Component selected;
 	private boolean editWindowVisible;
@@ -63,8 +67,8 @@ public class ComponentsVM {
 	 * Creates new TopicType and adds it on form
 	 */
 	@Command
-	@NotifyChange({ "editWindowVisible", "availableComponentTypes", "selectedComponentType" })
-	public void newComponent() {
+	@NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
+	public void showAddComponentDialog() {
 		selected = new Component();
 		editWindowVisible = true;
 	}
@@ -76,7 +80,7 @@ public class ComponentsVM {
 	 *            selected component
 	 */
 	@Command
-	@NotifyChange({ "selected", "editWindowVisible", "availableComponentTypes", "selectedComponentType" })
+	@NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
 	public void editComponent(@BindingParam("component") Component component) {
 		selected = component;
 		availableComponentTypes.add(selected.getComponentType());
@@ -99,9 +103,9 @@ public class ComponentsVM {
 				 * Because confirmation needed, we need to send notification
 				 * event programmatically
 				 */
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "selected");
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "componentList");
-				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, "canCreateNewComponent");
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, SELECTED);
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, COMPONENT_LIST);
+				bindWrapper.postNotifyChange(null, null, ComponentsVM.this, CAN_CREATE_NEW_COMPPONENT);
 			}
 		};
 		dialogManager.confirmDeletion(selected.getName(), dc);
@@ -118,7 +122,7 @@ public class ComponentsVM {
 
 	/** Saves the created or edited component in component list. */
 	@Command
-	@NotifyChange({ "componentList", "selected", "canCreateNewComponent", "editWindowVisible" })
+	@NotifyChange({COMPONENT_LIST, SELECTED,CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
 	public void saveComponent() {
 		componentService.saveComponent(selected);
 		editWindowVisible = false;
@@ -129,7 +133,7 @@ public class ComponentsVM {
 	 * Event which happen when user cansel editing of component.
 	 */
 	@Command
-	@NotifyChange({ "selected", "editWindowVisible" })
+	@NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE })
 	public void cancelEdit() {
 		selected = null;
 		editWindowVisible = false;
