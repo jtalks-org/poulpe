@@ -18,7 +18,7 @@
 				<template name="model" var="component">
 					<listitem value="component"
 						onDoubleClick="@command('editComponent', component=component)">
-						<listcell sclass="boldstyle" label="@load(component.name)"/>
+						<listcell label="@load(component.name)"/>
 						<listcell label="@load(component.description)"/>
 						<listcell label="@load(component.componentType)"/>
 					</listitem>
@@ -26,15 +26,12 @@
 			</listbox>
 			<div>
 				<button label="${labels.componentlist.add}"
-					sclass="components.addCompButton"
 					onClick="@command('showAddComponentDialog')"
 					disabled="@load(!vm.canCreateNewComponent)"/>
 				<button label="${labels.componentlist.delete}"
-					sclass="components.delCompButton"
 					onClick="@command('deleteComponent')"
 					disabled="@load(empty vm.selected)"/>
 				<button label="${labels.componentlist.configure}"
-					sclass="components.confCompButton"
 					onClick="@command('configureComponent')"
 					disabled="@load(empty vm.selected)"/>
 			</div>
