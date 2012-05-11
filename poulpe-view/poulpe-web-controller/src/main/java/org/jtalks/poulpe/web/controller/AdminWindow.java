@@ -14,24 +14,22 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletResponse;
-
-import org.zkoss.zul.Center;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Center;
 import org.zkoss.zul.Window;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
+
+import javax.servlet.http.HttpServletResponse;
+
+import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
 
 /**
- * Server-side representation of view for main 'Admin Window'
- * 
+ * Server-side representation of view for main 'Admin Window'.
+ *
  * @author Vladimir Bukhoyarov
  * @author Vyacheslav Zhivaev
  * @author Alexandr Afanasev
@@ -57,21 +55,17 @@ public class AdminWindow {
 
     /**
      * Sets Russian language for the admin panel.
-     * 
-     * @throws IOException
      */
     @Command
-    public void onChangeLocaleToRu() throws IOException {
+    public void onChangeLocaleToRu() {
         changeLocaleAndReload(RU_LOCALE_LANG);
     }
 
     /**
      * Sets English language for the admin panel.
-     * 
-     * @throws IOException
      */
     @Command
-    public void onChangeLocaleToEn() throws IOException {
+    public void onChangeLocaleToEn() {
         changeLocaleAndReload(EN_LOCALE_LANG);
     }
 
@@ -110,8 +104,7 @@ public class AdminWindow {
     }
 
     /**
-     * Points to the new implementation of Sections & Branches. Now it's called
-     * Forum Structure.
+     * Points to the new implementation of Sections & Branches. Now it's called Forum Structure.
      */
     @Command
     public void onShowForumStructure() {
