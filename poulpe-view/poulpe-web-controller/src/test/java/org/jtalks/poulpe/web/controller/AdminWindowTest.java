@@ -71,61 +71,60 @@ public class AdminWindowTest {
         verify(zkHelper).reloadPage();
     }
 
-    
-    public void testOnShow(String target){
+    public void testOnShow(String target) {
         verify(windowManager).open(target);
     }
-    
+
     @Test
-    public void testOnShowComponents() {        
-        adminWindow.onShowComponents();        
+    public void testOnShowComponents() {
+        adminWindow.onShowComponents();
         testOnShow("components.zul");
     }
 
     @Test
-    public void testOnShowBranches() {        
+    public void testOnShowBranches() {
         adminWindow.onShowBranches();
         testOnShow("brancheditor.zul");
     }
 
     @Test
-    public void testOnShowTopicTypes() {        
+    public void testOnShowTopicTypes() {
         adminWindow.onShowTopicTypes();
         testOnShow("topictype.zul");
     }
 
     @Test
-    public void testOnShowForumStructure() {        
+    public void testOnShowForumStructure() {
         adminWindow.onShowForumStructure();
         testOnShow("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
 
     @Test
-    public void testOnShowUserBanning() {        
+    public void testOnShowUserBanning() {
         adminWindow.onShowUserBanning();
         testOnShow("userbanning.zul");
     }
 
     @Test
-    public void testOnShowUserGroups() {        
+    public void testOnShowUserGroups() {
         adminWindow.onShowUserGroups();
         testOnShow("usergroup.zul");
     }
 
     @Test
-    public void testOnShowUsers() {        
+    public void testOnShowUsers() {
         adminWindow.onShowUsers();
         testOnShow("users.zul");
     }
 
     @Test
-    public void testOnShowRanks() {        
+    public void testOnShowRanks() {
         adminWindow.onShowRanks();
         testOnShow("ranks.zul");
     }
 
     @Test
-    public void testOnShowGroupsPermissions() {      
+    public void testOnShowGroupsPermissions() {
         adminWindow.onShowGroupsPermissions();
         testOnShow("groups/GroupsPermissions.zul");
     }
