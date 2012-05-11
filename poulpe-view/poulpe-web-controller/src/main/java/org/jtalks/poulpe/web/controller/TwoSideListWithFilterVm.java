@@ -58,7 +58,9 @@ public class TwoSideListWithFilterVm<E> {
         availFilterTxt = "";
         existFilterTxt = "";
         avail = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
+        avail.setMultiple(true);
         exist = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
+        exist.setMultiple(true);
         stateAfterEdit = Lists.newLinkedList();
     }
 
