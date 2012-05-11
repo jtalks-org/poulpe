@@ -2,51 +2,48 @@
 <?page title="${labels.admin.title}" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-	<style src="/resources/css/all.css" />
-	<window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)"
-		apply="org.zkoss.bind.BindComposer" width="100%" height="100%">
-		<borderlayout>
-			<north>
-				<groupbox>
-					<label style="font-size=30px" value="${labels.admin.title}" />
-					<a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
-						sclass="language-button" />
-					<a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
-						sclass="language-button" />
-				</groupbox>
-			</north>
-			<west splittable="true" collapsible="true">
-				<tree width="150px">
-					<treecols />
-					<treechildren>
-						<treeitem open="false" label="Components" onClick="@command('onBlankPage')">
-							<treechildren>
-								<treeitem label="${labels.admin.components}" onClick="@command('onShowComponents')" />
-								<treeitem label="${labels.admin.group_permissions}"
-									onClick="@command('onShowGroupsPermissions')" />
-							</treechildren>
-						</treeitem>
-						<treeitem open="false" label="JCommune" onClick="@command('onBlankPage')">
-							<treechildren>
-								<treeitem label="${labels.admin.forum}" onClick="@command('onShowForumStructure')" />
-							</treechildren>
-						</treeitem>
-						<treeitem open="false" label="Users" onClick="@command('onBlankPage')">
-							<treechildren>
-								<treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')" />
-								<treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')" />
-								<treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')" />
-
-								<treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />
-							</treechildren>
-						</treeitem>
-						<treeitem open="false" label="${labels.admin.topic.types}"
-							onClick="@command('onShowTopicTypes')" />
-					</treechildren>
-				</tree>
-			</west>
-			<center id="workArea" border="0" />
-		</borderlayout>
-	</window>
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <style src="/resources/css/all.css" />
+  <window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)" apply="org.zkoss.bind.BindComposer" width="100%"
+    height="100%">
+    <borderlayout>
+      <north>
+        <groupbox>
+          <label style="font-size=30px" value="${labels.admin.title}" />
+          <a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
+            sclass="language-button" />
+          <a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
+            sclass="language-button" />
+        </groupbox>
+      </north>
+      <west splittable="true" collapsible="true" flex="true" minsize="150" maxsize="300">
+        <tree width="150px">
+          <treecols />
+          <treechildren>
+            <treeitem open="false" label="Components" onClick="@command('onBlankPage')">
+              <treechildren>
+                <treeitem label="${labels.admin.components}" onClick="@command('onShowComponents')" />
+                <treeitem label="${labels.admin.group_permissions}" onClick="@command('onShowGroupsPermissions')" />
+              </treechildren>
+            </treeitem>
+            <treeitem open="false" label="JCommune" onClick="@command('onBlankPage')">
+              <treechildren>
+                <treeitem label="${labels.admin.forum}" onClick="@command('onShowForumStructure')" />
+              </treechildren>
+            </treeitem>
+            <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
+              <treechildren>
+                <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')" />
+                <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')" />
+                <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')" />
+                <treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />
+              </treechildren>
+            </treeitem>
+            <treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />
+          </treechildren>
+        </tree>
+      </west>
+      <center id="workArea" border="0" />
+    </borderlayout>
+  </window>
 </zk>

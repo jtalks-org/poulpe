@@ -1,128 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright (C) 2011 JTalks.org Team This library is free software; you 
-	can redistribute it and/or modify it under the terms of the GNU Lesser General 
-	Public License as published by the Free Software Foundation; either version 
-	2.1 of the License, or (at your option) any later version. This library is 
-	distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
-	without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-	PURPOSE. See the GNU Lesser General Public License for more details. You 
-	should have received a copy of the GNU Lesser General Public License along 
-	with this library; if not, write to the Free Software Foundation, Inc., 51 
-	Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA -->
-<beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+<!-- Copyright (C) 2011 JTalks.org Team This library is free software; you can redistribute it and/or modify it under the 
+  terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, 
+  or (at your option) any later version. This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
+  without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public 
+  License for more details. You should have received a copy of the GNU Lesser General Public License along with this library; 
+  if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA -->
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
-	<zksp:zk-config />
-	<bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl"
-		scope="desktop" />
-	<bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl"
-		scope="singleton" />
-	<bean id="selectedEntity" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.SelectedEntity" />
-	<bean id="forumStructureVm"
-		class="org.jtalks.poulpe.web.controller.section.ForumStructureVm"
-		scope="desktop">
-		<constructor-arg index="0" ref="forumStructureService" />
-	</bean>
-	<bean id="branchPermissionManagementVm" scope="prototype"
-		class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-		<constructor-arg ref="windowManager" />
-		<constructor-arg ref="branchService" />
-		<constructor-arg ref="selectedEntity" />
-	</bean>
+  <zksp:zk-config />
+  <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop" />
+  <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
+  <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity" />
+  <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.ForumStructureVm" scope="desktop">
+    <constructor-arg index="0" ref="forumStructureService" />
+  </bean>
+  <bean id="branchPermissionManagementVm" scope="prototype"
+    class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="branchService" />
+    <constructor-arg ref="selectedEntity" />
+  </bean>
 
-	<bean id="editGroupsForBranchPermissionVm" scope="prototype"
-		class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
-		<constructor-arg ref="windowManager" />
-		<constructor-arg ref="branchService" />
-		<constructor-arg ref="groupService" />
-		<constructor-arg ref="selectedEntity" />
-	</bean>
+  <bean id="editGroupsForBranchPermissionVm" scope="prototype"
+    class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="branchService" />
+    <constructor-arg ref="groupService" />
+    <constructor-arg ref="selectedEntity" />
+  </bean>
 
-	<bean id="editGroupsForComponentPermissionVm" scope="prototype"
-		class="org.jtalks.poulpe.web.controller.component.EditGroupsForComponentPermissionVm">
-		<constructor-arg ref="windowManager" />
-		<constructor-arg ref="componentService" />
-		<constructor-arg ref="groupService" />
-		<constructor-arg ref="selectedEntity" />
-	</bean>
+  <bean id="editGroupsForComponentPermissionVm" scope="prototype"
+    class="org.jtalks.poulpe.web.controller.component.EditGroupsForComponentPermissionVm">
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="componentService" />
+    <constructor-arg ref="groupService" />
+    <constructor-arg ref="selectedEntity" />
+  </bean>
 
-	<bean id="usersVm" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.users.UsersVm">
-		<constructor-arg index="0" ref="userService" />
-		<constructor-arg index="1" ref="entityValidator" />
-	</bean>
+  <bean id="usersVm" scope="desktop" class="org.jtalks.poulpe.web.controller.users.UsersVm">
+    <constructor-arg index="0" ref="userService" />
+    <constructor-arg index="1" ref="entityValidator" />
+  </bean>
 
-	<bean id="userGroupVm" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.group.UserGroupVm">
-		<constructor-arg index="0" ref="groupService" />
-		<constructor-arg index="1" ref="windowManager" />
-		<property name="selectedEntity" ref="selectedEntity" />
-	</bean>
+  <bean id="userGroupVm" scope="desktop" class="org.jtalks.poulpe.web.controller.group.UserGroupVm">
+    <constructor-arg index="0" ref="groupService" />
+    <constructor-arg index="1" ref="windowManager" />
+    <property name="selectedEntity" ref="selectedEntity" />
+  </bean>
 
-	<bean id="rankManagementVm" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
-		<constructor-arg index="0" ref="rankService" />
-	</bean>
+  <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
+    <constructor-arg index="0" ref="rankService" />
+  </bean>
 
-	<bean id="editCompViewModel" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
-		<constructor-arg index="0" ref="componentService" />
-	</bean>
+  <bean id="editCompViewModel" scope="desktop" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
+    <constructor-arg index="0" ref="componentService" />
+  </bean>
 
-	<bean id="editGroupMembersVm" scope="prototype"
-		class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
-		<constructor-arg ref="windowManager" />
-		<constructor-arg ref="groupService" />
-		<constructor-arg ref="userService" />
-		<constructor-arg ref="selectedEntity" />
-	</bean>
+  <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="groupService" />
+    <constructor-arg ref="userService" />
+    <constructor-arg ref="selectedEntity" />
+  </bean>
 
-	<bean id="groupsPermissionsVm" scope="prototype"
-		class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">
-		<constructor-arg ref="windowManager" />
-		<constructor-arg ref="componentService" />
-		<constructor-arg ref="selectedEntity" />
-	</bean>
+  <bean id="groupsPermissionsVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">
+    <constructor-arg ref="windowManager" />
+    <constructor-arg ref="componentService" />
+    <constructor-arg ref="selectedEntity" />
+  </bean>
 
-	<bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow"
-		scope="prototype">
-		<property name="windowManager" ref="windowManager" />
-	</bean>
+  <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
+    <property name="windowManager" ref="windowManager" />
+  </bean>
 
-	<bean id="topicTypeVm" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVm"
-		scope="desktop">
-		<constructor-arg index="0" ref="topicTypeService" />
-		<constructor-arg index="1" ref="dialogManager" />
-	</bean>
+  <bean id="topicTypeVm" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVm" scope="desktop">
+    <constructor-arg index="0" ref="topicTypeService" />
+    <constructor-arg index="1" ref="dialogManager" />
+  </bean>
 
-	<bean id="userBanningVm" scope="desktop"
-		class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
-		<constructor-arg index="0" ref="userService" />
-	</bean>
+  <bean id="userBanningVm" scope="desktop" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
+    <constructor-arg index="0" ref="userService" />
+  </bean>
 
-	<bean id="componentListVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm"
-		scope="prototype">
-		<property name="componentService" ref="componentService" />
-		<property name="dialogManager" ref="dialogManager" />
-		<property name="windowManager" ref="windowManager" />
-	</bean>
+  <bean id="componentListVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
+    <property name="componentService" ref="componentService" />
+    <property name="dialogManager" ref="dialogManager" />
+    <property name="windowManager" ref="windowManager" />
+  </bean>
 
-	<bean id="moderationDialogPresenter"
-		class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
-		<property name="branchService" ref="branchService" />
-		<property name="userService" ref="userService" />
-		<property name="dialogManager" ref="dialogManager" />
-		<property name="entityValidator" ref="entityValidator" />
-	</bean>
+  <bean id="moderationDialogPresenter" class="org.jtalks.poulpe.web.controller.section.moderation.ModerationDialogPresenter">
+    <property name="branchService" ref="branchService" />
+    <property name="userService" ref="userService" />
+    <property name="dialogManager" ref="dialogManager" />
+    <property name="entityValidator" ref="entityValidator" />
+  </bean>
 
 
-	<bean id="editGroupDialogPresenter"
-		class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
-		scope="prototype">
-		<property name="groupService" ref="groupService" />
-		<property name="entityValidator" ref="entityValidator" />
-	</bean>
+  <bean id="editGroupDialogPresenter" class="org.jtalks.poulpe.web.controller.group.EditGroupDialogPresenter"
+    scope="prototype">
+    <property name="groupService" ref="groupService" />
+    <property name="entityValidator" ref="entityValidator" />
+  </bean>
 
 </beans>
