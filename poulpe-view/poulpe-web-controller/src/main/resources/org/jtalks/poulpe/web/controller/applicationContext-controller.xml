@@ -64,7 +64,7 @@
     <constructor-arg index="0" ref="rankService"/>
   </bean>
 
-  <bean id="editCompViewModel" scope="desktop" class="org.jtalks.poulpe.web.controller.component.EditCompViewModel">
+  <bean id="editCompViewModel" scope="desktop" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
       <constructor-arg index="0" ref="componentService"/>
   </bean>
 

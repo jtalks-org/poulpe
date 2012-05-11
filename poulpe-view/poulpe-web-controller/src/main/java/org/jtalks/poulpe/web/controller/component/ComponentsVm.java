@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -28,207 +25,199 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * The class which manages actions and represents information about components
- * displayed in administrator panel.
- * 
+ * The class which manages actions and represents information about components displayed in administrator panel.
+ *
  * @author Vermut
  */
 public class ComponentsVm {
 
-	public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
-	        AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
-	        SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-	        COMPONENT_LIST = "componentList";
+    public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
+            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+            SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
+            COMPONENT_LIST = "componentList";
 
-	private Component selected;
-	private boolean editWindowVisible;
-	private boolean canCreateNewComponent;
-	private List<Component> componentList;
-	private List<ComponentType> availableComponentTypes;
-	private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
+    private Component selected;
+    private boolean editWindowVisible;
+    private boolean canCreateNewComponent;
+    private List<Component> componentList;
+    private List<ComponentType> availableComponentTypes;
+    private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
-	// List of injectable properties
-	private ComponentService componentService;
-	private DialogManager dialogManager;
-	private WindowManager windowManager;
+    // List of injectable properties
+    private ComponentService componentService;
+    private DialogManager dialogManager;
+    private WindowManager windowManager;
 
-	/**
-	 * Inits the data on the form.
-	 */
-	@Init
-	public void init() {
-		updateListComponentsData();
-	}
+    /**
+     * Inits the data on the form.
+     */
+    @Init
+    public void init() {
+        updateListComponentsData();
+    }
 
-	/**
-	 * Creates new TopicType and adds it on form
-	 */
-	@Command
-	@NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
-	public void showAddComponentDialog() {
-		selected = new Component();
-		editWindowVisible = true;
-	}
+    /**
+     * Creates new TopicType and adds it on form
+     */
+    @Command
+    @NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
+    public void showAddComponentDialog() {
+        selected = new Component();
+        editWindowVisible = true;
+    }
 
-	/**
-	 * Edits the selected component.
-	 * 
-	 * @param component
-	 *            selected component
-	 */
-	@Command
-	@NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
-	public void editComponent(@BindingParam("component") Component component) {
-		selected = component;
-		availableComponentTypes.add(selected.getComponentType());
-		editWindowVisible = true;
-	}
+    /**
+     * Edits the selected component.
+     *
+     * @param component selected component
+     */
+    @Command
+    @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
+    public void editComponent(@BindingParam("component") Component component) {
+        selected = component;
+        availableComponentTypes.add(selected.getComponentType());
+        editWindowVisible = true;
+    }
 
-	/**
-	 * Deletes the selected component
-	 */
-	@Command
-	public void deleteComponent() {
-		DialogManager.Performable dc = new DialogManager.Performable() {
-			/** {@inheritDoc} */
-			@Override
-			public void execute() {
-				componentService.deleteComponent(selected);
-				updateListComponentsData();
-				selected = null;
-				/*
-				 * Because confirmation needed, we need to send notification
-				 * event programmatically
-				 */
-				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, SELECTED);
-				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, COMPONENT_LIST);
-				bindWrapper.postNotifyChange(null, null, ComponentsVm.this, CAN_CREATE_NEW_COMPPONENT);
-			}
-		};
-		dialogManager.confirmDeletion(selected.getName(), dc);
-	}
+    /**
+     * Deletes the selected component
+     */
+    @Command
+    public void deleteComponent() {
+        DialogManager.Performable dc = new DialogManager.Performable() {
+            /** {@inheritDoc} */
+            @Override
+            public void execute() {
+                componentService.deleteComponent(selected);
+                updateListComponentsData();
+                selected = null;
+                /*
+                     * Because confirmation needed, we need to send notification
+                     * event programmatically
+                     */
+                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, SELECTED);
+                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, COMPONENT_LIST);
+                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, CAN_CREATE_NEW_COMPPONENT);
+            }
+        };
+        dialogManager.confirmDeletion(selected.getName(), dc);
+    }
 
-	/**
-	 * Shows a component edit window
-	 */
-	@Command
-	public void configureComponent() {
-		EditCompViewModel.openWindowForEdit(windowManager, selected);
-	}
+    /**
+     * Shows a component edit window
+     */
+    @Command
+    public void configureComponent() {
+        EditComponentVm.openWindowForEdit(windowManager, selected);
+    }
 
-	/** Saves the created or edited component in component list. */
-	@Command
-	@NotifyChange({COMPONENT_LIST, SELECTED,CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
-	public void saveComponent() {
-		componentService.saveComponent(selected);
-		editWindowVisible = false;
-		updateListComponentsData();
-	}
+    /**
+     * Saves the created or edited component in component list.
+     */
+    @Command
+    @NotifyChange({COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE})
+    public void saveComponent() {
+        componentService.saveComponent(selected);
+        editWindowVisible = false;
+        updateListComponentsData();
+    }
 
-	/**
-	 * Event which happen when user cansel editing of component.
-	 */
-	@Command
-	@NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE })
-	public void cancelEdit() {
-		selected = null;
-		editWindowVisible = false;
-		updateListComponentsData();
-	}
+    /**
+     * Event which happen when user cansel editing of component.
+     */
+    @Command
+    @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE})
+    public void cancelEdit() {
+        selected = null;
+        editWindowVisible = false;
+        updateListComponentsData();
+    }
 
-	/**
-	 * Returns the list of all components.
-	 * 
-	 * @return list of components
-	 */
-	public List<Component> getComponentList() {
-		return componentList;
-	}
+    /**
+     * Returns the list of all components.
+     *
+     * @return list of components
+     */
+    public List<Component> getComponentList() {
+        return componentList;
+    }
 
-	/**
-	 * @return {@code true} if the window for editing component should be
-	 *         visible, unless false.
-	 * 
-	 */
-	public boolean isEditWindowVisible() {
-		return editWindowVisible;
-	}
+    /**
+     * @return {@code true} if the window for editing component should be visible, unless false.
+     */
+    public boolean isEditWindowVisible() {
+        return editWindowVisible;
+    }
 
-	/**
-	 * Sets the selected component from the list which displays components.
-	 * 
-	 * @param selected
-	 *            {@link org.jtalks.common.model.entity.Component}
-	 */
-	public void setSelected(Component selected) {
-		this.selected = selected;
-	}
+    /**
+     * Sets the selected component from the list which displays components.
+     *
+     * @param selected {@link org.jtalks.common.model.entity.Component}
+     */
+    public void setSelected(Component selected) {
+        this.selected = selected;
+    }
 
-	/**
-	 * Returns the component which currently is edited, created or selected in a
-	 * list which displays components.
-	 * 
-	 * @return {@link org.jtalks.common.model.entity.Component}
-	 */
-	public Component getSelected() {
-		return selected;
-	}
+    /**
+     * Returns the component which currently is edited, created or selected in a list which displays components.
+     *
+     * @return {@link org.jtalks.common.model.entity.Component}
+     */
+    public Component getSelected() {
+        return selected;
+    }
 
-	/**
-	 * @return {@code true} only if new component can be created,
-	 *         {@code false} in other cases.
-	 */
-	public boolean isCanCreateNewComponent() {
-		return canCreateNewComponent;
-	}
+    /**
+     * @return {@code true} only if new component can be created, {@code false} in other cases.
+     */
+    public boolean isCanCreateNewComponent() {
+        return canCreateNewComponent;
+    }
 
-	/**
-	 * Returns all available component types which available to be set to
-	 * editable component.
-	 * 
-	 * @return list of available component types
-	 */
-	public List<ComponentType> getAvailableComponentTypes() {
-		return availableComponentTypes;
-	}
+    /**
+     * Returns all available component types which available to be set to editable component.
+     *
+     * @return list of available component types
+     */
+    public List<ComponentType> getAvailableComponentTypes() {
+        return availableComponentTypes;
+    }
 
-	private void updateListComponentsData() {
-		availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
-		componentList = componentService.getAll();
-		canCreateNewComponent = !availableComponentTypes.isEmpty();
-	}
+    private void updateListComponentsData() {
+        availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
+        componentList = componentService.getAll();
+        canCreateNewComponent = !availableComponentTypes.isEmpty();
+    }
 
-	/**
-	 * Sets the service instance which is used for manipulating with stored
-	 * components.
-	 * 
-	 * @param componentService
-	 *            the new value of the service instance
-	 */
-	public void setComponentService(ComponentService componentService) {
-		this.componentService = componentService;
-	}
+    /**
+     * Sets the service instance which is used for manipulating with stored components.
+     *
+     * @param componentService the new value of the service instance
+     */
+    public void setComponentService(ComponentService componentService) {
+        this.componentService = componentService;
+    }
 
-	/**
-	 * Sets the dialog manager which is used for showing different types of
-	 * dialog messages.
-	 * 
-	 * @param dialogManager
-	 *            the new value of the dialog manager
-	 */
-	public void setDialogManager(DialogManager dialogManager) {
-		this.dialogManager = dialogManager;
-	}
+    /**
+     * Sets the dialog manager which is used for showing different types of dialog messages.
+     *
+     * @param dialogManager the new value of the dialog manager
+     */
+    public void setDialogManager(DialogManager dialogManager) {
+        this.dialogManager = dialogManager;
+    }
 
-	/**
-	 * Sets window manager.
-	 * 
-	 * @param windowManager
-	 *            the new window manager
-	 */
-	public void setWindowManager(WindowManager windowManager) {
-		this.windowManager = windowManager;
-	}
+    /**
+     * Sets window manager.
+     *
+     * @param windowManager the new window manager
+     */
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
+    }
 
 }

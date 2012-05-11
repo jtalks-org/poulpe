@@ -17,8 +17,8 @@ import javax.annotation.Nonnull;
 public class UserGroupVm {
     public static final String EDIT_GROUP_URL = "/groups/edit_group.zul";
     public static final String EDIT_GROUP_DIALOG = "#editGroupDialog";
-    public static final String DELETE_CONFIRM_URL="/groups/deleteConfirm.zul";
-    public static final String DELETE_CONFIRM_DIALOG="#deleteConfirmDialog";
+    public static final String DELETE_CONFIRM_URL = "/groups/deleteConfirm.zul";
+    public static final String DELETE_CONFIRM_DIALOG = "#deleteConfirmDialog";
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 
     //Injected
@@ -60,7 +60,7 @@ public class UserGroupVm {
 
     // -- ZK Command bindings --------------------
 
-     /**
+    /**
      * Look for the users matching specified pattern from the search textbox.
      */
     @Command
@@ -83,14 +83,14 @@ public class UserGroupVm {
      */
     @Command
     public void confirmDelete() {
-       zkHelper.wireToZul(DELETE_CONFIRM_URL);
+        zkHelper.wireToZul(DELETE_CONFIRM_URL);
     }
 
     /**
      * Deletes selected group.
      */
     @Command
-    public void deleteGroup(){
+    public void deleteGroup() {
         groupService.deleteGroup(selectedGroup);
         updateView();
         cancelDelete();
@@ -123,9 +123,9 @@ public class UserGroupVm {
      */
     @Command
     public void saveGroup(@BindingParam(value = "group") Group group) {
-            groupService.saveGroup(group);
-            cancelEdit();
-            updateView();
+        groupService.saveGroup(group);
+        cancelEdit();
+        updateView();
     }
 
     /**
@@ -137,10 +137,10 @@ public class UserGroupVm {
     }
 
     /**
-     *Closing delete window without apply changes.
+     * Closing delete window without apply changes.
      */
     @Command
-    public void cancelDelete(){
+    public void cancelDelete() {
         zkHelper.findComponent(DELETE_CONFIRM_DIALOG).detach();
     }
 
