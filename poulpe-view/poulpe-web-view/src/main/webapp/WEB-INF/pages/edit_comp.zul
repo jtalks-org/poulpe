@@ -1,6 +1,6 @@
 <!-- works with ZK 6 and later only -->
 <window border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer" 
-  	viewModel="@id('vm') @init('org.jtalks.poulpe.web.controller.component.EditCompViewModel')">
+  	viewModel="@id('vm') @init('org.jtalks.poulpe.web.controller.component.EditComponentVm)">
 	
 	<grid>
 		<columns>

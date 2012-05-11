@@ -189,15 +189,15 @@ public class ForumStructureVm {
     @Command
     @NotifyChange(VIEW_DATA_PROP)
     public void onDropItem(@BindingParam("event") DropEvent event) {
-       DefaultTreeNode<ForumStructureItem> draggedNode = ((Treeitem) event.getDragged()).getValue();
-       DefaultTreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
-       ForumStructureItem draggedItem = draggedNode.getData();
-       ForumStructureItem targetItem = targetNode.getData();
-       if (draggedItem.isBranch() && targetItem.isBranch()) {
-           PoulpeBranch draggedBranch = draggedItem.getItem(PoulpeBranch.class);
-           PoulpeBranch targetBranch = targetItem.getItem(PoulpeBranch.class);
-           forumStructureService.moveBranch(draggedBranch, targetBranch);
-           viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
-       }
+        DefaultTreeNode<ForumStructureItem> draggedNode = ((Treeitem) event.getDragged()).getValue();
+        DefaultTreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
+        ForumStructureItem draggedItem = draggedNode.getData();
+        ForumStructureItem targetItem = targetNode.getData();
+        if (draggedItem.isBranch() && targetItem.isBranch()) {
+            PoulpeBranch draggedBranch = draggedItem.getItem(PoulpeBranch.class);
+            PoulpeBranch targetBranch = targetItem.getItem(PoulpeBranch.class);
+            forumStructureService.moveBranch(draggedBranch, targetBranch);
+            viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
+        }
     }
 }

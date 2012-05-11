@@ -14,59 +14,63 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.util.GenericForwardComposer;
-import org.zkoss.zul.Center;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
 
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.zkoss.zul.Center;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.select.annotation.Wire;
+import org.zkoss.zul.Window;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+
 /**
- * Server-side representation of view for main 'Admin Window'.
- *
+ * Server-side representation of view for main 'Admin Window'
+ * 
  * @author Vladimir Bukhoyarov
  * @author Vyacheslav Zhivaev
- *
+ * @author Alexandr Afanasev
  */
-public class AdminWindow extends GenericForwardComposer<Component> {
 
-    private static final long serialVersionUID = 7658211471084280646L;
+public class AdminWindow {
 
     public static final String RU_LOCALE_LANG = "ru";
     public static final String EN_LOCALE_LANG = "en";
 
+    @Wire
     private Center workArea;
+    @Wire
+    private Window adminWindow;
     private WindowManager windowManager;
-    private ZkHelper zkHelper = new ZkHelper(self);
+    private ZkHelper zkHelper = new ZkHelper(adminWindow);
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void doAfterCompose(Component comp) throws Exception {
-        super.doAfterCompose(comp);
+    @Init
+    public void init(@ContextParam(ContextType.VIEW) Component view) {
+        zkHelper.wireComponents(view, this);
         windowManager.setWorkArea(workArea);
-        // TODO get user language from DB
-        /*
-        String localeLanguage = ...; //decide the locale (from, say, database) 
-        saveLocaleInCookie(localeLanguage);
-        */
     }
 
     /**
      * Sets Russian language for the admin panel.
+     * 
      * @throws IOException
      */
+    @Command
     public void onChangeLocaleToRu() throws IOException {
         changeLocaleAndReload(RU_LOCALE_LANG);
     }
 
     /**
      * Sets English language for the admin panel.
+     * 
      * @throws IOException
      */
+    @Command
     public void onChangeLocaleToEn() throws IOException {
         changeLocaleAndReload(EN_LOCALE_LANG);
     }
@@ -84,6 +88,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show the component list view
      */
+    @Command
     public void onShowComponents() {
         windowManager.open("components.zul");
     }
@@ -91,6 +96,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show the branches list view
      */
+    @Command
     public void onShowBranches() {
         windowManager.open("brancheditor.zul");
     }
@@ -98,13 +104,16 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show the topic type list view
      */
+    @Command
     public void onShowTopicTypes() {
         windowManager.open("topictype.zul");
     }
 
     /**
-     * Points to the new implementation of Sections & Branches. Now it's called Forum Structure.
+     * Points to the new implementation of Sections & Branches. Now it's called
+     * Forum Structure.
      */
+    @Command
     public void onShowForumStructure() {
         windowManager.open("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
@@ -112,6 +121,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Shows user banning window
      */
+    @Command
     public void onShowUserBanning() {
         windowManager.open("userbanning.zul");
     }
@@ -119,6 +129,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Shows User Groups window that allows admins to CRUD groups.
      */
+    @Command
     public void onShowUserGroups() {
         windowManager.open("usergroup.zul");
     }
@@ -126,6 +137,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show the users list view
      */
+    @Command
     public void onShowUsers() {
         windowManager.open("users.zul");
     }
@@ -133,6 +145,7 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show the ranks page.
      */
+    @Command
     public void onShowRanks() {
         windowManager.open("ranks.zul");
     }
@@ -140,8 +153,19 @@ public class AdminWindow extends GenericForwardComposer<Component> {
     /**
      * Show Group Permissions page.
      */
+    @Command
     public void onShowGroupsPermissions() {
         windowManager.open("groups/GroupsPermissions.zul");
+    }
+
+    /**
+     * Show blank page.
+     */
+    @Command
+    public void onBlankPage() {
+        if (workArea.getLastChild() != null) {
+            workArea.getLastChild().detach();
+        }
     }
 
     /**

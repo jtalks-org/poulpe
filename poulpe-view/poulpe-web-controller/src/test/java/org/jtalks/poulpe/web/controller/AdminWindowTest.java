@@ -41,6 +41,8 @@ public class AdminWindowTest {
     HttpServletResponse response;
     @Mock
     Cookie cookie;
+    @Mock
+    WindowManager windowManager;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -67,5 +69,68 @@ public class AdminWindowTest {
 
         verify(response).addCookie(cookie);
         verify(zkHelper).reloadPage();
+    }
+
+    @Test
+    public void testOnShowComponents() {
+        String target = "components.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowBranches() {
+        String target = "brancheditor.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowTopicTypes() {
+        String target = "topictype.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowForumStructure() {
+        String target = "WEB-INF/pages/forum/structure/ForumStructure.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowUserBanning() {
+        String target = "userbanning.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowUserGroups() {
+        String target = "usergroup.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowUsers() {
+        String target = "users.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowRanks() {
+        String target = "ranks.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
+    }
+
+    @Test
+    public void testOnShowGroupsPermissions() {
+        String target = "groups/GroupsPermissions.zul";
+        windowManager.open(target);
+        verify(windowManager).open(target);
     }
 }
