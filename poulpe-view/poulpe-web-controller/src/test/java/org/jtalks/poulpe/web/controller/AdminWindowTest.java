@@ -71,66 +71,62 @@ public class AdminWindowTest {
         verify(zkHelper).reloadPage();
     }
 
-    @Test
-    public void testOnShowComponents() {
-        String target = "components.zul";
-        windowManager.open(target);
+    
+    public void testOnShow(String target){
         verify(windowManager).open(target);
+    }
+    
+    @Test
+    public void testOnShowComponents() {        
+        adminWindow.onShowComponents();        
+        testOnShow("components.zul");
     }
 
     @Test
-    public void testOnShowBranches() {
-        String target = "brancheditor.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowBranches() {        
+        adminWindow.onShowBranches();
+        testOnShow("brancheditor.zul");
     }
 
     @Test
-    public void testOnShowTopicTypes() {
-        String target = "topictype.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowTopicTypes() {        
+        adminWindow.onShowTopicTypes();
+        testOnShow("topictype.zul");
     }
 
     @Test
-    public void testOnShowForumStructure() {
-        String target = "WEB-INF/pages/forum/structure/ForumStructure.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowForumStructure() {        
+        adminWindow.onShowForumStructure();
+        testOnShow("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
 
     @Test
-    public void testOnShowUserBanning() {
-        String target = "userbanning.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowUserBanning() {        
+        adminWindow.onShowUserBanning();
+        testOnShow("userbanning.zul");
     }
 
     @Test
-    public void testOnShowUserGroups() {
-        String target = "usergroup.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowUserGroups() {        
+        adminWindow.onShowUserGroups();
+        testOnShow("usergroup.zul");
     }
 
     @Test
-    public void testOnShowUsers() {
-        String target = "users.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowUsers() {        
+        adminWindow.onShowUsers();
+        testOnShow("users.zul");
     }
 
     @Test
-    public void testOnShowRanks() {
-        String target = "ranks.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowRanks() {        
+        adminWindow.onShowRanks();
+        testOnShow("ranks.zul");
     }
 
     @Test
-    public void testOnShowGroupsPermissions() {
-        String target = "groups/GroupsPermissions.zul";
-        windowManager.open(target);
-        verify(windowManager).open(target);
+    public void testOnShowGroupsPermissions() {      
+        adminWindow.onShowGroupsPermissions();
+        testOnShow("groups/GroupsPermissions.zul");
     }
 }
