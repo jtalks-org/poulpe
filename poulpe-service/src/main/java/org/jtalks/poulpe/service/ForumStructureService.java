@@ -5,6 +5,8 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 /**
+ * A coarse-grained service to work with forum structure (sections, branches).
+ *
  * @author stanislav bashkirtsev
  * @author Guram Savinov
  */
