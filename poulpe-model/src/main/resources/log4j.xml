@@ -15,11 +15,9 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
 -->
-<configuration debug="false" xmlns="http://jakarta.apache.org/log4j/"
-               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://jakarta.apache.org/log4j/ http://www.felixgolubov.com/XMLEditor/xml/Log4j/log4j.xsd">
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
   <!-- Appenders -->
-  
   <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
     <param name="Encoding" value="Cp866"/>
     <layout class="org.apache.log4j.PatternLayout">
@@ -37,11 +35,15 @@
       <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%36c] - %m%n"/>
     </layout>
   </appender>
-
+  <logger name="org.hibernate">
+    <level value="DEBUG"/>
+    <appender-ref ref="CONSOLE"/>
+    <appender-ref ref="FILE"/>
+  </logger>
   <root>
-    <priority value="DEBUG"/>
+    <priority value="INFO"/>
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
   </root>
 
-</configuration>
+</log4j:configuration>
