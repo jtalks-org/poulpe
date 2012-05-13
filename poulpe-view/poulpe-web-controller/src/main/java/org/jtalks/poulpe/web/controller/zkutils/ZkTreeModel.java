@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
  * @since 0.15
  */
 public class ZkTreeModel<E> extends DefaultTreeModel<E> {
+    private static final long serialVersionUID = 20110131094143L;
+
     /**
      * Creates a tree with the specified note as the root.
      *
