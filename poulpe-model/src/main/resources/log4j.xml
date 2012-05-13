@@ -36,7 +36,7 @@
     </layout>
   </appender>
   <logger name="org.hibernate">
-    <level value="DEBUG"/>
+    <level value="INFO"/>
     <appender-ref ref="CONSOLE"/>
     <appender-ref ref="FILE"/>
   </logger>

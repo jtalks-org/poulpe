@@ -31,8 +31,10 @@
   <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity" />
   <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.ForumStructureVm" scope="desktop">
     <constructor-arg index="0" ref="forumStructureService" />
+    <constructor-arg index="1" ref="windowManager" />
+    <constructor-arg index="2" ref="selectedEntity" />
   </bean>
-  <bean id="branchPermissionManagementVm" scope="prototype"
+  <bean id="branchPermissionManagementVm" scope="desktop"
     class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
     <constructor-arg ref="windowManager" />
     <constructor-arg ref="branchService" />

@@ -21,6 +21,9 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -30,6 +33,8 @@ import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Treeitem;
+
+import javax.annotation.Nonnull;
 
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 
@@ -44,11 +49,16 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
  */
 public class ForumStructureVm {
     private static final String SELECTED_ITEM_PROP = "selectedItem", VIEW_DATA_PROP = "viewData";
+    private final ForumStructureService forumStructureService;
+    private final WindowManager windowManager;
+    private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
     private ForumStructureData viewData = new ForumStructureData();
-    private ForumStructureService forumStructureService;
 
-    public ForumStructureVm(ForumStructureService forumStructureService) {
+    public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
+                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions) {
         this.forumStructureService = forumStructureService;
+        this.windowManager = windowManager;
+        this.selectedBranchForPermissions = selectedBranchForPermissions;
     }
 
     /**
@@ -99,6 +109,13 @@ public class ForumStructureVm {
             Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
+    }
+
+    @Command
+    public void openBranchPermissions(){
+        selectedBranchForPermissions.setEntity(getSelectedItem().getItem(PoulpeBranch.class));
+        BranchPermissionManagementVm.
+                showBranchPermissionManagementPage(windowManager, getSelectedItem().getItem(PoulpeBranch.class));
     }
 
     /**

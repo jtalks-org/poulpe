@@ -14,11 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.collect.Lists;
+import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
@@ -32,36 +29,36 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.util.resource.Labels;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * A View Model for page that allows user to specify what actions can be done with the specific branch and what user
  * groups can do them.
- * 
+ *
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
 public class BranchPermissionManagementVm {
-
-    public static final String MANAGE_GROUPS_DIALOG_ZUL = "/sections/EditGroupsForBranchPermission.zul";
-
-    // Injected
+    private static final String
+            BRANCH_PERMISSION_MANAGEMENT_PAGE = "WEB-INF/pages/forum/BranchPermissionManagement.zul",
+            MANAGE_GROUPS_DIALOG_ZUL = "WEB-INF/pages/forum/EditGroupsForBranchPermission.zul";
     private final WindowManager windowManager;
     private final BranchService branchService;
     private final SelectedEntity<Object> selectedEntity;
-
     private final PoulpeBranch branch;
     private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
 
     /**
      * Constructs the VM with given dependencies.
-     * 
-     * @param windowManager the window manager instance
-     * @param branchService branch service
+     *
+     * @param windowManager  the window manager instance
+     * @param branchService  branch service
      * @param selectedEntity the selectedEntity with PoulpeBranch to edit
      */
     public BranchPermissionManagementVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
-            @Nonnull SelectedEntity<Object> selectedEntity) {
+                                        @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
         this.branchService = branchService;
         this.selectedEntity = selectedEntity;
@@ -72,20 +69,20 @@ public class BranchPermissionManagementVm {
 
     /**
      * Command for showing dialog with editing groups list for current permission.
-     * 
+     *
      * @param permission the permission for which editing window shows
-     * @param mode the mode for permission, can be only {@code "allow"} or {@code "restrict"}
+     * @param mode       the mode for permission, can be only {@code "allow"} or {@code "restrict"}
      */
     @Command
     public void showGroupsDialog(@BindingParam("permission") JtalksPermission permission,
-            @BindingParam("mode") String mode) {
+                                 @BindingParam("mode") String mode) {
         selectedEntity.setEntity(new PermissionForEntity(branch, mode, permission));
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
     }
 
     /**
      * Gets blocks which represents state of each permission.
-     * 
+     *
      * @return all blocks, list instance is UNMODIFIABLE
      */
     public List<PermissionManagementBlock> getBlocks() {
@@ -94,11 +91,15 @@ public class BranchPermissionManagementVm {
 
     /**
      * Gets current branch for edit.
-     * 
+     *
      * @return the branch to edit
      */
     public PoulpeBranch getBranch() {
         return branch;
+    }
+
+    public static void showBranchPermissionManagementPage(WindowManager windowManager, Branch branch) {
+        windowManager.open(BRANCH_PERMISSION_MANAGEMENT_PAGE);
     }
 
     /**

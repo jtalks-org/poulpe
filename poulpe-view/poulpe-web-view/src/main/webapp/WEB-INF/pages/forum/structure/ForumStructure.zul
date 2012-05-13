@@ -22,7 +22,8 @@
       <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"/>
       <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewBranchDialog', createNew=true)"/>
-      <menuitem label="Permissions" visible="@load(vm.selectedItem.branch)"/>
+      <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
+                onClick="@command('openBranchPermissions')"/>
     </menupopup>
     <!--SECTION DIALOG-->
     <window id="editSectionDialog"
