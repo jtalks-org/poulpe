@@ -26,9 +26,9 @@
       <label value="${labels.groups.filter}" />
       <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
       <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')" />
-      <button label="+" sclass="groups.addButton" onClick="@command('addNewGroup')" />
+      <button label="${labels.groups.button.add}" onClick="@command('addNewGroup')" />
     </hbox>
-    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true"
+    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
            mold="paging" pageSize="50" pagingPosition="both" height="500px">
       <listhead>
         <listheader align="left" label="${labels.groups.name}"  sclass="boldstyle" />
@@ -36,7 +36,6 @@
       </listhead>
       <template name="model" var="group">
         <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
-                   onMouseOver="@command('setSelectedGroup', group=group)"
                    onDoubleClick="editGroupDialog.visible=true">
           <listcell label="@load(group.getName())" />
           <listcell label="@load(group.getUsers().size())" />
@@ -49,17 +48,18 @@
 
     <!--CONTEXT MENU-->
     <menupopup id="editPopupMenu">
-      <menuitem image="/resources/img/usergroupicons/members.png" label="${labels.groups.menuitem.edit_members}" onClick="@command('showGroupMemberEditWindow')" />
-       <menuseparator />
-       <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}" onClick="deleteConfirmDialog.visible=true" />
+      <menuitem image="/resources/img/usergroupicons/members.png" label="${labels.groups.menuitem.edit_members}"
+                onClick="@command('showGroupMemberEditWindow')" />
+      <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}"
+                onClick="deleteConfirmDialog.visible=true" />
     </menupopup>
 
     <!-- NEW GROUP DIALOG-->
      <window id="newGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.newgroupdialog.title}"
-             closable="true" border="normal" width="300px" height="200" mode="modal"
-             visible="@load(vm.showNewDialog)"
-             onClose="self.visible=false"
-             onCancel="self.visible=false">
+             closable="true" border="normal" width="300px" mode="modal"
+             onClose="self.visible=false; event.stopPropagation();"
+             onCancel="@command('closeDialog')"
+             visible="@bind(vm.showNewDialog)">
        <grid>
          <columns>
            <column label="${labels.field.description}" hflex="min" />
@@ -79,53 +79,68 @@
          </rows>
          </grid>
            <hbox align="end">
-             <button id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-             <button label="${labels.window.cancel}" onClick="newGroupDialog.visible=false" sclass="edit.group.rejectButton" />
+             <button image="/resources/img/dialogicons/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
+             <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.window.cancel}" onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
            </hbox>
      </window>
 
     <!--EDIT DIALOG-->
     <window id="editGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.editdialog.title}"
-            closable="true" border="normal"  width="300px" height="200" mode="modal"
+            closable="true" border="normal"  width="300px"  mode="modal"
             visible="@load(vm.showEditDialog)"
-            onClose="self.visible=false"
+            onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false">
+      <grid>
+        <columns>
+          <column label="${labels.field.description}" hflex="min" />
+          <column label="${labels.field.input}" />
+        </columns>
+        <rows>
+          <row>
+            <label value="${labels.groups.editdialog.name}" />
+            <textbox id="groupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
+                     errorMessage="@load(vmsgs[groupNameBox])" />
+          </row>
+          <row>
+            <label value="${labels.groups.editdialog.description}" />
+            <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
+                     errorMessage="@load(vmsgs[groupDescriptionBox])" />
+          </row>
+        </rows>
+      </grid>
+      <hbox align="end">
+        <button image="/resources/img/dialogicons/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
+        <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
+      </hbox>
+    </window>
+
+    <!--DELETE CONFIRM DIALOG-->
+      <window id="deleteConfirmDialog"
+             title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
+             visible="@bind(vm.showDeleteDialog)"
+             onClose="self.visible=false;event.stopPropagation();"
+             onCancel="self.visible=false"
+             onOK="@command('deleteGroup')"
+             width="300px" >
         <grid>
           <columns>
-            <column label="${labels.field.description}" hflex="min" />
-            <column label="${labels.field.input}" />
+             <column label="${labels.field.description}" hflex="min" />
+             <column label="${labels.field.input}" />
           </columns>
           <rows>
             <row>
               <label value="${labels.groups.editdialog.name}" />
-              <textbox id="groupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
-                       errorMessage="@load(vmsgs[groupNameBox])" />
+              <label value="@load(vm.selectedGroup.name)" />
             </row>
             <row>
               <label value="${labels.groups.editdialog.description}" />
-              <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
-                       errorMessage="@load(vmsgs[groupDescriptionBox])" />
+              <label value="@load(vm.selectedGroup.description)" />
             </row>
-           </rows>
+          </rows>
         </grid>
         <hbox align="end">
-          <button id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-          <button label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
-        </hbox>
-      </window>
-
-    <!--DELETE CONFIRM DIALOG-->
-     <window id="deleteConfirmDialog"
-             title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-             visible="@load(vm.showDeleteDialog)"
-             onClose="self.visible=false"
-             onCancel="self.visible=false"
-             onOK="@command('deleteGroup')"
-             width="300px" height="200">
-        ${labels.groups.delete_confirm_dialog.message}: ${vm.selectedGroup.name}?
-        <hbox align="center">
-        <button id="deleteButton" image="/resources/img/dialogicons/accept(16x16).png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
-        <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.groups.button.cancel}" onClick="deleteConfirmDialog.visible=false" />
+          <button id="deleteButton" image="/resources/img/dialogicons/accept(16x16).png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
+          <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.groups.button.cancel}" onClick="deleteConfirmDialog.visible=false" />
         </hbox>
       </window>
 
