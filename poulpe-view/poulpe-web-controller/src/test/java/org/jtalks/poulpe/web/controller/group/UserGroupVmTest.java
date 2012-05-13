@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -22,12 +23,18 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
 
 /**
  * @author Leonid Kazancev
@@ -54,16 +61,20 @@ public class UserGroupVmTest {
         viewModel = new UserGroupVm(groupService, selectedEntity, windowManager);
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
-        groups = spy(new ListModelList<Group>());
+        groups = new ListModelList<Group>();
         viewModel.setGroups(groups);
         viewModel.setSelectedGroup(selectedGroup);
     }
 
-    @Test
-    public void testUpdateView() {
+    @Test(dataProvider = "provideRandomGroupsList")
+    public void testUpdateView(List<Group> groupList) {
+        groups.add(new Group("1"));
+        doReturn(groupList).when(groupService).getAll();
+
         viewModel.updateView();
-        verify(groups).clear();
-        verify(groups).addAll(groupService.getAll());
+        assertEquals(groups.size(), 2);
+        assertSame(groups.get(0), groupList.get(0));
+        assertSame(groups.get(1), groupList.get(1));
     }
 
     @Test
@@ -106,6 +117,11 @@ public class UserGroupVmTest {
     public void testCloseDialog(){
         viewModel.closeDialog();
         assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+    }
+
+    @DataProvider
+    public Object[][] provideRandomGroupsList(){
+        return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
     }
 
 }
