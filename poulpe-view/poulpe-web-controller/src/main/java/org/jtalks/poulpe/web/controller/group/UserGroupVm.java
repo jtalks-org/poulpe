@@ -27,6 +27,8 @@ import javax.annotation.Nonnull;
 
 /**
  * View-model for 'User Groups'
+ * Is used to order to work with page that allows admin to manage groups(add, edit, delete).
+ * Also class provides access to Members edit window, presented by {@link EditGroupMembersVm}.
  *
  * @author Leonid Kazancev
  */
@@ -163,7 +165,9 @@ public class UserGroupVm {
     }
 
     /**
-     * Gets visibility status of New group dialog window, boolean show added as fix for event.stopPropagation at onClose action.
+     * Gets visibility status of New group dialog window, boolean show added as fix for onClose action,
+     * which don't send anything to the server when closing window because of event.stopPropagation,
+     * so during next change notification ZK will think that we need to show that dialog again which is wrong.
      *
      * @return true if dialog is visible
      *         false if dialog is invisible
@@ -179,6 +183,7 @@ public class UserGroupVm {
      *
      * @return Groups currently displayed at UI.
      */
+    @SuppressWarnings("unused")
     public ListModelList<Group> getGroups() {
         return groups;
     }
@@ -188,6 +193,7 @@ public class UserGroupVm {
      *
      * @return Group selected at UI.
      */
+    @SuppressWarnings("unused")
     public Group getSelectedGroup() {
         return selectedGroup;
     }
