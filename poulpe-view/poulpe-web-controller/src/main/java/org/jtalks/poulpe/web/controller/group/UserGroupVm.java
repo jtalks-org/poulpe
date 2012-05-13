@@ -55,7 +55,8 @@ public class UserGroupVm {
      * @param selectedEntity the selected entity instance
      * @param windowManager  the window manager instance
      */
-    public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity, @Nonnull WindowManager windowManager) {
+    public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity,
+                       @Nonnull WindowManager windowManager) {
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
