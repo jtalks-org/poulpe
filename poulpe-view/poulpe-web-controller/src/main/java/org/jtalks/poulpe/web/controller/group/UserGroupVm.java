@@ -202,7 +202,7 @@ public class UserGroupVm {
     }
 
     /**
-     * Sets List of groups whoch shown at UI.
+     * Sets List of groups which shown at UI.
      *
      * @param groups selected at UI.
      */

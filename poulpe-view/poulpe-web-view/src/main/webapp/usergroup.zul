@@ -31,8 +31,8 @@
     <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
            mold="paging" pageSize="50" pagingPosition="both" height="500px">
       <listhead>
-        <listheader align="left" label="${labels.groups.name}"  sclass="boldstyle" />
-        <listheader align="left" label="${labels.groups.memberCount}" />
+        <listheader align="left" label="${labels.groups.name}" sort="auto(name)" sclass="boldstyle" />
+        <listheader align="left" label="${labels.groups.memberCount}" sort="auto(memberCount)" />
       </listhead>
       <template name="model" var="group">
         <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
@@ -48,9 +48,9 @@
 
     <!--CONTEXT MENU-->
     <menupopup id="editPopupMenu">
-      <menuitem image="/resources/img/usergroupicons/members.png" label="${labels.groups.menuitem.edit_members}"
+      <menuitem image="/resources/img/members.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')" />
-      <menuitem image="/resources/img/usergroupicons/remove.png" label="${labels.groups.menuitem.delete_group}"
+      <menuitem image="/resources/img/remove.png" label="${labels.groups.menuitem.delete_group}"
                 onClick="deleteConfirmDialog.visible=true" />
     </menupopup>
 
@@ -59,6 +59,7 @@
              closable="true" border="normal" width="300px" mode="modal"
              onClose="self.visible=false; event.stopPropagation();"
              onCancel="@command('closeDialog')"
+             onOK="@command('saveGroup', group=vm.selectedGroup)"
              visible="@bind(vm.showNewDialog)">
        <grid>
          <columns>
@@ -79,8 +80,8 @@
          </rows>
          </grid>
            <hbox align="end">
-             <button image="/resources/img/dialogicons/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-             <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.window.cancel}" onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
+             <button image="/resources/img/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
+             <button image="/resources/img/deny(16x16).png" label="${labels.window.cancel}" onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
            </hbox>
      </window>
 
@@ -89,6 +90,7 @@
             closable="true" border="normal"  width="300px"  mode="modal"
             visible="@load(vm.showEditDialog)"
             onClose="self.visible=false;event.stopPropagation();"
+            onOK="@command('saveGroup', group=vm.selectedGroup)"
             onCancel="self.visible=false">
       <grid>
         <columns>
@@ -109,8 +111,8 @@
         </rows>
       </grid>
       <hbox align="end">
-        <button image="/resources/img/dialogicons/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-        <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
+        <button image="/resources/img/accept(16x16).png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
+        <button image="/resources/img/deny(16x16).png" label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
       </hbox>
     </window>
 
@@ -139,8 +141,8 @@
           </rows>
         </grid>
         <hbox align="end">
-          <button id="deleteButton" image="/resources/img/dialogicons/accept(16x16).png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
-          <button image="/resources/img/dialogicons/deny(16x16).png" label="${labels.groups.button.cancel}" onClick="deleteConfirmDialog.visible=false" />
+          <button id="deleteButton" image="/resources/img/accept(16x16).png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
+          <button image="/resources/img/deny(16x16).png" label="${labels.groups.button.cancel}" onClick="deleteConfirmDialog.visible=false" />
         </hbox>
       </window>
 
