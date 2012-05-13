@@ -41,7 +41,7 @@ import static org.hamcrest.text.StringContains.containsString;
  * 
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
-
+    public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
     // Injected
     private final GroupService groupService;
     private final UserService userService;
@@ -148,6 +148,15 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
         windowManager.open("usergroup.zul");
+    }
+
+    /**
+     * Opens edit group members dialog window.
+     *
+     * @param windowManager the window manager instance
+     */
+    public static void showDialog(WindowManager windowManager){
+        windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
 
 }

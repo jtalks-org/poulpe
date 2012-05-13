@@ -27,6 +27,7 @@ import org.zkoss.zul.ListModelList;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertFalse;
 
 /**
  * @author Leonid Kazancev
@@ -75,7 +76,7 @@ public class UserGroupVmTest {
     @Test
     public void testShowGroupMemberEditWindow() {
         viewModel.showGroupMemberEditWindow();
-        verify(windowManager).open(UserGroupVm.EDIT_GROUP_MEMBERS_URL);
+        verify(windowManager).open(EditGroupMembersVm.EDIT_GROUP_MEMBERS_URL);
     }
 
     @Test
@@ -83,12 +84,12 @@ public class UserGroupVmTest {
         doNothing().when(groupService).deleteGroup(any(Group.class));
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
-        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
-    public void testAddNewGroup() {
-        viewModel.addNewGroup();
+    public void testShowNewGroupDialog() {
+        viewModel.showNewGroupDialog();
         assert (viewModel.isShowNewDialog());
     }
 
@@ -98,13 +99,13 @@ public class UserGroupVmTest {
 
         viewModel.saveGroup(group);
         verify(groupService).saveGroup(group);
-        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
     public void testCloseDialog(){
         viewModel.closeDialog();
-        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
 }

@@ -32,10 +32,8 @@ import javax.annotation.Nonnull;
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
-    public static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
+    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
             SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
-
 
     //Injected
     private GroupService groupService;
@@ -90,7 +88,7 @@ public class UserGroupVm {
     @Command
     public void showGroupMemberEditWindow() {
         selectedEntity.setEntity(selectedGroup);
-        windowManager.open(EDIT_GROUP_MEMBERS_URL);
+        EditGroupMembersVm.showDialog(windowManager);
     }
 
     /**
@@ -109,7 +107,7 @@ public class UserGroupVm {
      */
     @Command
     @NotifyChange({SELECTED_GROUP, SHOW_NEW_DIALOG})
-    public void addNewGroup() {
+    public void showNewGroupDialog() {
         selectedGroup = new Group();
         showNewDialog = true;
     }
