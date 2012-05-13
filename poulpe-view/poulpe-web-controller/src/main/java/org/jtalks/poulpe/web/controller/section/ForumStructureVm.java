@@ -106,13 +106,14 @@ public class ForumStructureVm {
         if (selectedItem.isBranch()) {
             forumStructureService.deleteBranch(selectedItem.getItem(PoulpeBranch.class));
         } else {
-            Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
+            Jcommune jcommune = forumStructureService
+                    .deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
     }
 
     @Command
-    public void openBranchPermissions(){
+    public void openBranchPermissions() {
         selectedBranchForPermissions.setEntity(getSelectedItem().getItem(PoulpeBranch.class));
         BranchPermissionManagementVm.
                 showBranchPermissionManagementPage(windowManager, getSelectedItem().getItem(PoulpeBranch.class));
