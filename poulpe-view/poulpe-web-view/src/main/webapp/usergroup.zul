@@ -26,7 +26,7 @@
       <label value="${labels.groups.filter}" />
       <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
       <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')" />
-      <button label="${labels.groups.button.add}" onClick="@command('addNewGroup')" />
+      <button label="${labels.groups.button.add}" onClick="@command('showNewGroupDialog')" />
     </hbox>
     <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
            mold="paging" pageSize="50" pagingPosition="both" height="500px">
@@ -35,8 +35,7 @@
         <listheader align="left" label="${labels.groups.memberCount}" sort="auto(memberCount)" />
       </listhead>
       <template name="model" var="group">
-        <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
-                   onDoubleClick="editGroupDialog.visible=true">
+        <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu">
           <listcell label="@load(group.getName())" />
           <listcell label="@load(group.getUsers().size())" />
         </listitem>
@@ -48,6 +47,8 @@
 
     <!--CONTEXT MENU-->
     <menupopup id="editPopupMenu">
+      <menuitem image="/resources/img/groupsedit.png" label="${labels.groups.menuitem.edit_group}"
+                onClick="editGroupDialog.visible=true" />
       <menuitem image="/resources/img/members.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')" />
       <menuitem image="/resources/img/remove.png" label="${labels.groups.menuitem.delete_group}"
