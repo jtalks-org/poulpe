@@ -26,18 +26,15 @@ import org.zkoss.zul.ListModelList;
 import javax.annotation.Nonnull;
 
 /**
- * View-model for 'User Groups'
- * Is used to order to work with page that allows admin to manage groups(add, edit, delete).
- * Also class provides access to Members edit window, presented by {@link EditGroupMembersVm}.
+ * View-model for 'User Groups' Is used to order to work with page that allows admin to manage groups(add, edit,
+ * delete). Also class provides access to Members edit window, presented by {@link EditGroupMembersVm}.
  *
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
-    public static final String SHOW_DELETE_DIALOG = "showDeleteDialog";
-    public static final String SHOW_EDIT_DIALOG = "showEditDialog";
-    public static final String SHOW_NEW_DIALOG = "showNewDialog";
-    public static final String SELECTED_GROUP = "selectedGroup";
+    public static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
+            SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
 
 
     //Injected
@@ -147,8 +144,7 @@ public class UserGroupVm {
     /**
      * Gets visibility status of Delete dialog window.
      *
-     * @return true if dialog is visible
-     *         false if dialog is invisible
+     * @return true if dialog is visible false if dialog is invisible
      */
     public boolean isShowDeleteDialog() {
         return showDeleteDialog;
@@ -157,20 +153,18 @@ public class UserGroupVm {
     /**
      * Gets visibility status of Edit dialog window.
      *
-     * @return true if dialog is visible
-     *         false if dialog is invisible
+     * @return true if dialog is visible false if dialog is invisible
      */
     public boolean isShowEditDialog() {
         return showEditDialog;
     }
 
     /**
-     * Gets visibility status of New group dialog window, boolean show added as fix for onClose action,
-     * which don't send anything to the server when closing window because of event.stopPropagation,
-     * so during next change notification ZK will think that we need to show that dialog again which is wrong.
+     * Gets visibility status of New group dialog window, boolean show added as fix for onClose action, which don't send
+     * anything to the server when closing window because of event.stopPropagation, so during next change notification
+     * ZK will think that we need to show that dialog again which is wrong.
      *
-     * @return true if dialog is visible
-     *         false if dialog is invisible
+     * @return true if dialog is visible false if dialog is invisible
      */
     public boolean isShowNewDialog() {
         boolean show = showNewDialog;
