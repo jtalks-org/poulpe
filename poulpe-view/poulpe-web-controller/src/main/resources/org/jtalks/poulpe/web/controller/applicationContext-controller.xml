@@ -62,8 +62,8 @@
 
   <bean id="userGroupVm" scope="desktop" class="org.jtalks.poulpe.web.controller.group.UserGroupVm">
     <constructor-arg index="0" ref="groupService" />
-    <constructor-arg index="1" ref="windowManager" />
-    <property name="selectedEntity" ref="selectedEntity" />
+    <constructor-arg index="1" ref="selectedEntity" />
+    <constructor-arg index="2" ref="windowManager" />
   </bean>
 
   <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">

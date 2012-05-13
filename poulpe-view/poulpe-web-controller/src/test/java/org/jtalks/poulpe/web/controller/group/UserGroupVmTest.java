@@ -26,17 +26,14 @@ import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
-* @author Leonid Kazancev
-*/
+ * @author Leonid Kazancev
+ */
 public class UserGroupVmTest {
 
     private static final String SEARCH_STRING = "searchString";
-    private static final String GROUP_NAME = "GroupName";
 
     @Mock
     private GroupService groupService;
@@ -53,7 +50,7 @@ public class UserGroupVmTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        viewModel = new UserGroupVm(groupService, windowManager);
+        viewModel = new UserGroupVm(groupService, selectedEntity, windowManager);
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
         groups = spy(new ListModelList<Group>());
@@ -77,7 +74,6 @@ public class UserGroupVmTest {
 
     @Test
     public void testShowGroupMemberEditWindow() {
-        viewModel.setSelectedEntity(selectedEntity);
         viewModel.showGroupMemberEditWindow();
         verify(windowManager).open(UserGroupVm.EDIT_GROUP_MEMBERS_URL);
     }
@@ -87,12 +83,13 @@ public class UserGroupVmTest {
         doNothing().when(groupService).deleteGroup(any(Group.class));
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
+        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
     public void testAddNewGroup() {
         viewModel.addNewGroup();
-        assert(viewModel.getShowNewDialog());
+        assert (viewModel.isShowNewDialog());
     }
 
     @Test
@@ -101,7 +98,13 @@ public class UserGroupVmTest {
 
         viewModel.saveGroup(group);
         verify(groupService).saveGroup(group);
-        assert!((viewModel.getShowDeleteDialog())&&(viewModel.getShowEditDialog())&&(viewModel.getShowNewDialog()));
+        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+    }
+
+    @Test
+    public void testCloseDialog(){
+        viewModel.closeDialog();
+        assert !((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
 }

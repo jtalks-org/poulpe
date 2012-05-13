@@ -26,14 +26,19 @@ import org.zkoss.zul.ListModelList;
 import javax.annotation.Nonnull;
 
 /**
+ * View-model for 'User Groups'
+ * Is used to order to work with page that allows admin to manage groups(add, edit, delete).
+ * Also class provides access to Members edit window, presented by {@link EditGroupMembersVm}.
+ *
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    public static final String EDIT_GROUP_URL = "/groups/edit_group.zul";
-    public static final String EDIT_GROUP_DIALOG = "#editGroupDialog";
-    public static final String DELETE_CONFIRM_URL = "/groups/deleteConfirm.zul";
-    public static final String DELETE_CONFIRM_DIALOG = "#deleteConfirmDialog";
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+    public static final String SHOW_DELETE_DIALOG = "showDeleteDialog";
+    public static final String SHOW_EDIT_DIALOG = "showEditDialog";
+    public static final String SHOW_NEW_DIALOG = "showNewDialog";
+    public static final String SELECTED_GROUP = "selectedGroup";
+
 
     //Injected
     private GroupService groupService;
@@ -44,12 +49,20 @@ public class UserGroupVm {
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
-    private Boolean showDeleteDialog = Boolean.FALSE;
-    private Boolean showEditDialog = Boolean.FALSE;
-    private Boolean showNewDialog = Boolean.FALSE;
+    private boolean showDeleteDialog;
+    private boolean showEditDialog;
+    private boolean showNewDialog;
 
-    public UserGroupVm(@Nonnull GroupService groupService, @Nonnull WindowManager windowManager) {
+    /**
+     * Construct View-Model for 'User groups' view.
+     *
+     * @param groupService   the group service instance
+     * @param selectedEntity the selected entity instance
+     * @param windowManager  the window manager instance
+     */
+    public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity, @Nonnull WindowManager windowManager) {
         this.groupService = groupService;
+        this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
 
         this.groups = new ListModelList<Group>(groupService.getAll(), true);
@@ -60,7 +73,7 @@ public class UserGroupVm {
      */
     public void updateView() {
         groups.clear();
-        groups.addAll(getGroupService().getAll());
+        groups.addAll(groupService.getAll());
     }
 
     // -- ZK Command bindings --------------------
@@ -87,7 +100,7 @@ public class UserGroupVm {
      * Deletes selected group.
      */
     @Command
-    @NotifyChange("showDeleteDialog")
+    @NotifyChange(SELECTED_GROUP)
     public void deleteGroup() {
         groupService.deleteGroup(selectedGroup);
         closeDialog();
@@ -98,7 +111,7 @@ public class UserGroupVm {
      * Opens group adding dialog.
      */
     @Command
-    @NotifyChange({"showNewDialog", "name", "description"})
+    @NotifyChange({SELECTED_GROUP, SHOW_NEW_DIALOG})
     public void addNewGroup() {
         selectedGroup = new Group();
         showNewDialog = true;
@@ -111,19 +124,19 @@ public class UserGroupVm {
      */
 
     @Command
-    @NotifyChange({"showNewDialog", "showDeleteDialog", "showEditDialog"})
+    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
     public void saveGroup(@BindingParam(value = "group") Group group) {
         groupService.saveGroup(group);
         closeDialog();
         updateView();
     }
 
+    /**
+     * Close all dialogs by set visibility to false.
+     */
     @Command
-    public void setSelectedGroup(@BindingParam(value = "group") Group group) {
-        this.selectedGroup = group;
-    }
-
-    private void closeDialog() {
+    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
+    public void closeDialog() {
         showNewDialog = false;
         showDeleteDialog = false;
         showEditDialog = false;
@@ -131,53 +144,84 @@ public class UserGroupVm {
 
     // -- Getters/Setters --------------------
 
-    public Boolean getShowDeleteDialog() {
+    /**
+     * Gets visibility status of Delete dialog window.
+     *
+     * @return true if dialog is visible
+     *         false if dialog is invisible
+     */
+    public boolean isShowDeleteDialog() {
         return showDeleteDialog;
     }
 
-    public Boolean getShowEditDialog() {
+    /**
+     * Gets visibility status of Edit dialog window.
+     *
+     * @return true if dialog is visible
+     *         false if dialog is invisible
+     */
+    public boolean isShowEditDialog() {
         return showEditDialog;
     }
 
-    public Boolean getShowNewDialog() {
-        return showNewDialog;
+    /**
+     * Gets visibility status of New group dialog window, boolean show added as fix for onClose action,
+     * which don't send anything to the server when closing window because of event.stopPropagation,
+     * so during next change notification ZK will think that we need to show that dialog again which is wrong.
+     *
+     * @return true if dialog is visible
+     *         false if dialog is invisible
+     */
+    public boolean isShowNewDialog() {
+        boolean show = showNewDialog;
+        showNewDialog = false;
+        return show;
     }
 
-    public GroupService getGroupService() {
-        return groupService;
-    }
-
-    public void setGroupService(GroupService groupService) {
-        this.groupService = groupService;
-    }
-
+    /**
+     * Gets List of groups which shown at UI.
+     *
+     * @return Groups currently displayed at UI.
+     */
+    @SuppressWarnings("unused")
     public ListModelList<Group> getGroups() {
-        this.groups = new ListModelList<Group>(groupService.getAll(), true);
         return groups;
     }
 
-    public void setGroups(ListModelList<Group> groups) {
-        this.groups = groups;
-    }
-
-    public String getSearchString() {
-        return searchString;
-    }
-
-    public void setSearchString(String searchString) {
-        this.searchString = searchString;
-    }
-
+    /**
+     * Gets current selected group.
+     *
+     * @return Group selected at UI.
+     */
+    @SuppressWarnings("unused")
     public Group getSelectedGroup() {
         return selectedGroup;
     }
 
-    public SelectedEntity<Group> getSelectedEntity() {
-        return selectedEntity;
+    /**
+     * Sets current selected group.
+     *
+     * @param group selected at UI.
+     */
+    public void setSelectedGroup(Group group) {
+        this.selectedGroup = group;
     }
 
-    public void setSelectedEntity(SelectedEntity<Group> selectedEntity) {
-        this.selectedEntity = selectedEntity;
+    /**
+     * Sets List of groups whoch shown at UI.
+     *
+     * @param groups selected at UI.
+     */
+    public void setGroups(ListModelList<Group> groups) {
+        this.groups = groups;
     }
 
+    /**
+     * Sets Search string, used for group search.
+     *
+     * @param searchString string used for group search.
+     */
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
+    }
 }
