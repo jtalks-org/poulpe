@@ -14,10 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -33,42 +29,39 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
  * already granted/restricted to the permission. So when the user selects some items from one list and moves them to
  * another, a command is triggered in {@link BranchPermissionManagementVm} which then delegates the actual changing of
  * the lists to this view model.
- * 
- * @see BranchPermissionManagementVm
+ *
  * @author Vyacheslav Zhivaev
+ * @see BranchPermissionManagementVm
  */
 public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
-
     public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "/sections/BranchPermissionManagement.zul";
-
-    // Injected
     private final WindowManager windowManager;
     private final BranchService branchService;
     private final GroupService groupService;
     private final SelectedEntity<Object> selectedEntity;
-
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
     private final PoulpeBranch branch;
 
     /**
      * Construct VM for editing group list for selected {@link BranchPermission}.
-     * 
-     * @param windowManager the window manager instance
-     * @param branchService the branch service instance
-     * @param groupService the group service instance
+     *
+     * @param windowManager  the window manager instance
+     * @param branchService  the branch service instance
+     * @param groupService   the group service instance
      * @param selectedEntity the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
-     * VM state
+     *                       VM state
      */
     public EditGroupsForBranchPermissionVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
-            @Nonnull GroupService groupService, @Nonnull SelectedEntity<Object> selectedEntity) {
-        super();
-
+                                           @Nonnull GroupService groupService, @Nonnull SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
 
         this.windowManager = windowManager;
@@ -77,9 +70,7 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         this.selectedEntity = selectedEntity;
 
         branch = (PoulpeBranch) permissionForEntity.getTarget();
-
-        // firstly initialize this state
-        stateAfterEdit.addAll(getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed()));
+        getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed()));
     }
 
     // -- ZK Command bindings --------------------
@@ -101,8 +92,8 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
 
         @SuppressWarnings("unchecked")
         PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
-                ListUtils.subtract(stateAfterEdit, alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
-                        stateAfterEdit));
+                ListUtils.subtract(getStateAfterEdit(), alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
+                getStateAfterEdit()));
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
@@ -124,17 +115,17 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
     @Init
     @Override
     public void updateVm() {
-        exist.clear();
-        exist.addAll(stateAfterEdit);
+        getExist().clear();
+        getExist().addAll(getStateAfterEdit());
 
-        avail.clear();
-        avail.addAll(ListUtils.subtract(groupService.getAll(), stateAfterEdit));
+        getAvail().clear();
+        getAvail().addAll(ListUtils.subtract(groupService.getAll(), getStateAfterEdit()));
     }
 
     /**
      * Gets list of groups which already added in persistence for current {@link PoulpeBranch} with {@link AclMode}.
-     * 
-     * @param branch the branch to get for
+     *
+     * @param branch  the branch to get for
      * @param allowed the permission mode (allowed or restricted)
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
