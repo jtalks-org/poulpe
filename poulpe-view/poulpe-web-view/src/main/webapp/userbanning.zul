@@ -23,7 +23,7 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style="padding: 10px" width="100%">
+    <hbox style="padding: 8px" width="100%">
       <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@bind(userBanningVm.addBanFor)" width="300px"
           autodrop="true" autocomplete="true" buttonVisible="false"
           onChanging="@command('setAvailableFilter', filterText=event.value)">
@@ -43,10 +43,9 @@
           <column label="${labels.userbanning.username}" />
           <column label="${labels.userbanning.firstname_lastname}" />
           <column label="${labels.userbanning.email}" />
-          <column label="${labels.userbanning.managing}" width="auto" />
         </columns>
         <template name="model" var="user">
-          <row onDoubleClick="@command('editBan', userId=user.id)">
+          <row onDoubleClick="@command('editBan', userId=user.id)" context="contextMenu">
             <label value="@load(user.username)" />
             <hbox>
               <label value="@load(user.firstName)" />
@@ -64,13 +63,20 @@
               // Zhivaev Vyacheslav
              -->
             <hbox>
-              <button label="${labels.userbanning.edit}" onClick="@command('editBan', userId=user.id)" />
-              <button label="${labels.userbanning.revoke}" onClick="@command('revokeBan', userId=user.id)" />
+               <!--CONTEXT MENU-->
+                <menupopup id="contextMenu">
+                    <menuitem label="${labels.userbanning.edit}"
+                              image="/resources/img/edit16.png" onClick="@command('editBan', userId=user.id)" />
+                    <menuitem label="${labels.userbanning.revoke}"
+                              image="/resources/img/unblock16.png" onClick="@command('revokeBan', userId=user.id)" />
+                </menupopup>
             </hbox>
           </row>
         </template>
       </grid>
     </hbox>
+
+
 
     <!-- Window to edit ban properties -->
     <!-- it will be shown after prepared selectedUser property & done some initialization in vm -->
