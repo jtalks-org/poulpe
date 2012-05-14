@@ -36,17 +36,14 @@ import static org.hamcrest.text.StringContains.containsString;
 
 /**
  * View-Model for 'Edit Members of group'.
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
-    // Injected
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
-
     /**
      * Group to be edited
      */
@@ -54,33 +51,31 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
 
     /**
      * Construct View-Model for 'Edit Members of group' view.
-     * 
-     * @param windowManager the window manager instance
-     * @param groupService the group service instance
-     * @param userService the user service instance
+     *
+     * @param windowManager  the window manager instance
+     * @param groupService   the group service instance
+     * @param userService    the user service instance
      * @param selectedEntity the selected entity instance, for obtaining group which to be edited
      * @throws NotFoundException if specified group not exist in persistence
      */
     public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
-            @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity)
-        throws NotFoundException {
-        super();
+                              @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity)
+            throws NotFoundException {
 
         groupToEdit = groupService.get(selectedEntity.getEntity().getId());
-
         this.windowManager = windowManager;
         this.groupService = groupService;
         this.userService = userService;
 
-        List<?> users = groupToEdit.getUsers();
-        stateAfterEdit = (List<User>) users;
+        List<User> users = (List<User>) (List<?>)groupToEdit.getUsers();
+        setStateAfterEdit(users);
     }
 
     // -- Accessors ------------------------------
 
     /**
      * Gets group to be edited.
-     * 
+     *
      * @return the {@link Group} instance
      */
     public Group getGroupToEdit() {
@@ -94,12 +89,12 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
         List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
-        users.removeAll(stateAfterEdit);
-        avail.clear();
-        avail.addAll(users);
+        users.removeAll(getStateAfterEdit());
+        getAvail().clear();
+        getAvail().addAll(users);
     }
 
     /**
@@ -107,10 +102,10 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      * with values of search result.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterExist() {
-        exist.clear();
-        exist.addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), stateAfterEdit));
+        getExist().clear();
+        getExist().addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), getStateAfterEdit()));
     }
 
     /**
@@ -118,7 +113,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      */
     @Command
     public void save() {
-        groupToEdit.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(stateAfterEdit));
+        groupToEdit.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(getStateAfterEdit()));
         groupService.saveGroup(groupToEdit);
         switchToGroupsWindow();
     }
@@ -155,7 +150,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
      *
      * @param windowManager the window manager instance
      */
-    public static void showDialog(WindowManager windowManager){
+    public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
 

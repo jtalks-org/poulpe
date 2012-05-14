@@ -14,15 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static org.hamcrest.text.StringContains.containsString;
-
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Group;
@@ -39,38 +30,40 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
+import static ch.lambdaj.Lambda.*;
+import static org.hamcrest.text.StringContains.containsString;
+
 /**
  * View Model for editing groups for component permission.
- * 
+ *
  * @author Vyacheslav Zhivaev
  */
 public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<Group> {
-
     public static final String GROUPS_PERMISSIONS_ZUL = "groups/GroupsPermissions.zul";
-
     // Injected
     private final WindowManager windowManager;
     private final ComponentService componentService;
     private final GroupService groupService;
-
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
     private final Component component;
 
     /**
      * Construct VM for editing group list for selected permission.
-     * 
-     * @param windowManager the window manager instance
+     *
+     * @param windowManager    the window manager instance
      * @param componentService the component service instance
-     * @param groupService the group service instance
-     * @param selectedEntity the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
-     * VM state
+     * @param groupService     the group service instance
+     * @param selectedEntity   the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
+     *                         VM state
      */
     public EditGroupsForComponentPermissionVm(@Nonnull WindowManager windowManager,
-            @Nonnull ComponentService componentService, @Nonnull GroupService groupService,
-            @Nonnull SelectedEntity<Object> selectedEntity) {
-        super();
-
+                                              @Nonnull ComponentService componentService,
+                                              @Nonnull GroupService groupService,
+                                              @Nonnull SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
         component = (Component) permissionForEntity.getTarget();
 
@@ -86,12 +79,12 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      * available users would be updated with values of search result.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
         @SuppressWarnings("unchecked")
-        List<Group> notAddedGroups = ListUtils.subtract(groupService.getAll(), stateAfterEdit);
-        avail.clear();
-        avail.addAll(filterGroups(notAddedGroups, getAvailFilterTxt()));
+        List<Group> notAddedGroups = ListUtils.subtract(groupService.getAll(), getStateAfterEdit());
+        getAvail().clear();
+        getAvail().addAll(filterGroups(notAddedGroups, getAvailFilterTxt()));
     }
 
     /**
@@ -99,10 +92,10 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      * users would be updated with values of search result.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterExist() {
-        exist.clear();
-        exist.addAll(filterGroups(stateAfterEdit, getExistFilterTxt()));
+        getExist().clear();
+        getExist().addAll(filterGroups(getStateAfterEdit(), getExistFilterTxt()));
     }
 
     /**
@@ -122,8 +115,8 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
 
         @SuppressWarnings("unchecked")
         PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
-                ListUtils.subtract(stateAfterEdit, alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
-                        stateAfterEdit));
+                ListUtils.subtract(getStateAfterEdit(), alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
+                getStateAfterEdit()));
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
@@ -143,7 +136,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      */
     @Init
     public void initVm() {
-        stateAfterEdit.addAll(getAlreadyAddedGroups());
+        getStateAfterEdit().addAll(getAlreadyAddedGroups());
         updateVm();
     }
 
@@ -158,7 +151,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
 
     /**
      * Gets list of groups which already added in persistence for current {@link Component}.
-     * 
+     *
      * @return list of groups already added for current {@link Component}
      */
     private List<Group> getAlreadyAddedGroups() {
@@ -176,8 +169,8 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
 
     /**
      * Filter list of groups with specified {@code filterTxt}.
-     * 
-     * @param groups the list to filter
+     *
+     * @param groups    the list to filter
      * @param filterTxt the text used for filtering
      * @return filtered list of groups
      */

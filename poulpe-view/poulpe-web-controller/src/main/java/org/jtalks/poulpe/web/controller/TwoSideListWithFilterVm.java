@@ -14,61 +14,64 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * VM represents two list's with possibility to add or remove item's from some consistent state. It's also provides
  * filtering these list's in View for easy search. After user completed his actions we are have consistent state, stored
  * in internal field {@code stateAfterEdit}. This consistent state may be fixed (for example in persistent layer) or
  * ignored if VM simply closed without save action. In any time consistent state may be obtained by getter.
- * 
+ *
  * @author Vyacheslav Zhivaev
  */
 public class TwoSideListWithFilterVm<E> {
+    public static final String AVAIL_PROPERTY = "avail", EXIST_PROPERTY = "exist",
+            AVAIL_SELECTED_PROPERTY = "availSelected", EXIST_SELECTED_PROPERTY = "existSelected";
+    /**
+     * String represents text in filter field for available items list.
+     */
+    private String availFilterTxt = "";
+    /**
+     * String represents text in filter field for exist items list.
+     */
+    private String existFilterTxt = "";
 
-    /** String represents text in filter field for available items list. */
-    protected String availFilterTxt;
+    /**
+     * List of available for adding items.
+     */
+    private ListModelList<E> avail = new BindingListModelList<E>(new ArrayList<E>(), false);
 
-    /** String represents text in filter field for exist items list. */
-    protected String existFilterTxt;
+    /**
+     * List of already existed (added) items.
+     */
+    private ListModelList<E> exist = new BindingListModelList<E>(new ArrayList<E>(), false);
 
-    /** List of available for adding items. */
-    protected ListModelList<E> avail;
-
-    /** List of already existed (added) items. */
-    protected ListModelList<E> exist;
-
-    /** List represents state of existed items after editing. */
-    protected List<E> stateAfterEdit;
+    /**
+     * List represents state of existed items after editing.
+     */
+    private List<E> stateAfterEdit = new ArrayList<E>();
 
     /**
      * Constructs VM with simple initialization which avoiding {@code null} values in internal fields.
      */
     public TwoSideListWithFilterVm() {
-        availFilterTxt = "";
-        existFilterTxt = "";
-        avail = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         avail.setMultiple(true);
-        exist = new BindingListModelList<E>(Lists.<E> newLinkedList(), false);
         exist.setMultiple(true);
-        stateAfterEdit = Lists.newLinkedList();
     }
 
     // -- Accessors -----------------------------
 
     /**
      * Gets filter text for available list.
-     * 
+     *
      * @return text for filter field
      */
     public String getAvailFilterTxt() {
@@ -77,7 +80,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Sets filter text for available list.
-     * 
+     *
      * @param availFilterTxt the filter text to set
      */
     public void setAvailFilterTxt(@Nonnull String availFilterTxt) {
@@ -86,7 +89,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets filter text for a list of existing items.
-     * 
+     *
      * @return text for filter field
      */
     public String getExistFilterTxt() {
@@ -95,7 +98,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Sets filter text for a list of existing items.
-     * 
+     *
      * @param existFilterTxt the filter text to set
      */
     public void setExistFilterTxt(@Nonnull String existFilterTxt) {
@@ -104,7 +107,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets list of available items.
-     * 
+     *
      * @return the list of available items
      */
     public ListModelList<E> getAvail() {
@@ -113,7 +116,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets list of existing items.
-     * 
+     *
      * @return the list of existed items
      */
     public ListModelList<E> getExist() {
@@ -122,7 +125,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets list of items in consistent state (after editing).
-     * 
+     *
      * @return the list of items in consistent state (after editing)
      */
     protected List<E> getConsistentState() {
@@ -131,7 +134,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets set of selected items in available list.
-     * 
+     *
      * @return set of selected items in available list
      */
     public Set<E> getAvailSelected() {
@@ -140,7 +143,7 @@ public class TwoSideListWithFilterVm<E> {
 
     /**
      * Gets set of selected items in existed list.
-     * 
+     *
      * @return set of selected items in existed list
      */
     public Set<E> getExistSelected() {
@@ -153,7 +156,7 @@ public class TwoSideListWithFilterVm<E> {
      * Adds available selected item in consistent state.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void add() {
         stateAfterEdit.addAll(getAvailSelected());
         updateVm();
@@ -163,7 +166,7 @@ public class TwoSideListWithFilterVm<E> {
      * Adds all available items in consistent state.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
         stateAfterEdit.addAll(getAvail());
         updateVm();
@@ -173,7 +176,7 @@ public class TwoSideListWithFilterVm<E> {
      * Removes selected item from consistent state.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
         stateAfterEdit.removeAll(getExistSelected());
         updateVm();
@@ -183,7 +186,7 @@ public class TwoSideListWithFilterVm<E> {
      * Removes all selected items from consistent state.
      */
     @Command
-    @NotifyChange({ "avail", "exist", "availSelected", "existSelected" })
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void removeAll() {
         stateAfterEdit.removeAll(getExist());
         updateVm();
@@ -194,7 +197,7 @@ public class TwoSideListWithFilterVm<E> {
      * any of two list's in window.
      */
     @Command
-    @NotifyChange({ "availSelected", "existSelected" })
+    @NotifyChange({"availSelected", "existSelected"})
     public void listSelected() {
         // NOOP
     }
@@ -209,4 +212,19 @@ public class TwoSideListWithFilterVm<E> {
         // NOOP
     }
 
+    public void setStateAfterEdit(List<E> stateAfterEdit) {
+        this.stateAfterEdit = stateAfterEdit;
+    }
+
+    public void setAvail(ListModelList<E> avail) {
+        this.avail = avail;
+    }
+
+    public void setExist(ListModelList<E> exist) {
+        this.exist = exist;
+    }
+
+    public List<E> getStateAfterEdit() {
+        return stateAfterEdit;
+    }
 }
