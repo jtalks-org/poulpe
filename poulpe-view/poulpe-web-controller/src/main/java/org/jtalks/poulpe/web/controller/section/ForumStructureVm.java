@@ -106,8 +106,7 @@ public class ForumStructureVm {
         if (selectedItem.isBranch()) {
             forumStructureService.removeBranch(selectedItem.getItem(PoulpeBranch.class));
         } else {
-            forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
-            Jcommune jcommune = forumStructureService.getJcommune(1L);
+            Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
     }
@@ -200,7 +199,7 @@ public class ForumStructureVm {
     }
 
     private Jcommune loadJcommune() {
-        return forumStructureService.getJcommune(0);
+        return forumStructureService.getJcommune();
     }
 
     /**

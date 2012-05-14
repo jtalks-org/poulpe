@@ -57,7 +57,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public Jcommune getJcommune(long id) {
+    public Jcommune getJcommune() {
         return (Jcommune) componentDao.getByType(ComponentType.FORUM);
     }
 
@@ -87,8 +87,11 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public void deleteSectionWithBranches(PoulpeSection section) {
-        sectionDao.delete(section);
+    public Jcommune deleteSectionWithBranches(PoulpeSection section) {
+        Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
+        jcommune.removeSection(section);
+        componentDao.saveOrUpdate(jcommune);
+        return jcommune;
     }
 
     /**
@@ -96,7 +99,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches) {
-
+        throw new UnsupportedOperationException();
     }
 
     /**

@@ -89,6 +89,16 @@ public class Jcommune extends Component {
     }
 
     /**
+     * Removes the specified section from jcommune instance if it's there, does nothing if it's not there.
+     *
+     * @param section the section to remove it from the list
+     * @return {@code true} if the specified section wasn't in the list
+     */
+    public boolean removeSection(PoulpeSection section) {
+        return getSections().remove(section);
+    }
+
+    /**
      * Adds a section to the list.
      *
      * @param section the section to add

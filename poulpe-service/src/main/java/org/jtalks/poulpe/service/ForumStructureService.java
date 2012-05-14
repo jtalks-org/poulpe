@@ -27,7 +27,12 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 public interface ForumStructureService {
     void saveJcommune(Jcommune jcommune);
 
-    Jcommune getJcommune(long id);
+    /**
+     * Returns a JCommune instance by the specified ID (there can be several such instances).
+     *
+     * @return the instance of JCommune or {@code null} if no JCommune instance is in database
+     */
+    Jcommune getJcommune();
 
     void removeBranch(PoulpeBranch branch);
 
@@ -35,7 +40,14 @@ public interface ForumStructureService {
 
     void moveBranch(PoulpeBranch branch, PoulpeBranch target);
 
-    void deleteSectionWithBranches(PoulpeSection section);
+    /**
+     * Deletes the specified section from its JCommune instance and returns updated JCommune. Results in no-op if there
+     * is no such section in DB.
+     *
+     * @param section a section to be removed from the database
+     * @return the updated JCommune
+     */
+    Jcommune deleteSectionWithBranches(PoulpeSection section);
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 
