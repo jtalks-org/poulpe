@@ -104,14 +104,18 @@ public class ForumStructureVm {
     public void deleteSelected() {
         ForumStructureItem selectedItem = viewData.removeSelectedItem();
         if (selectedItem.isBranch()) {
-            forumStructureService.deleteBranch(selectedItem.getItem(PoulpeBranch.class));
+            forumStructureService.removeBranch(selectedItem.getItem(PoulpeBranch.class));
         } else {
-            Jcommune jcommune = forumStructureService
-                    .deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
+            forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
+            Jcommune jcommune = forumStructureService.getJcommune(1L);
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
         }
     }
 
+    /**
+     * Opens a separate page - Branch Permissions where admin can edit what Groups have wha Permissions on the selected
+     * branch.
+     */
     @Command
     public void openBranchPermissions() {
         selectedBranchForPermissions.setEntity(getSelectedItem().getItem(PoulpeBranch.class));
@@ -137,6 +141,9 @@ public class ForumStructureVm {
         forumStructureService.saveJcommune(jcommune);
     }
 
+    /**
+     * Processes onOK of the Branch Dialog in order to save the branch being edited. Also saves a new branch.
+     */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveBranch() {
@@ -149,6 +156,8 @@ public class ForumStructureVm {
      * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches of
      * the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved to
      * another section.
+     *
+     * @return the stored branch with id being set
      */
     PoulpeBranch storeSelectedBranch() {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
@@ -194,11 +203,6 @@ public class ForumStructureVm {
         return forumStructureService.getJcommune(0);
     }
 
-    @VisibleForTesting
-    void setViewData(ForumStructureData viewData) {
-        this.viewData = viewData;
-    }
-
     /**
      * Handler of event when one item was dragged and dropped to another
      *
@@ -217,5 +221,10 @@ public class ForumStructureVm {
             forumStructureService.moveBranch(draggedBranch, targetBranch);
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
         }
+    }
+
+    @VisibleForTesting
+    void setViewData(ForumStructureData viewData) {
+        this.viewData = viewData;
     }
 }

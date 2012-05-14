@@ -35,7 +35,7 @@ public interface ForumStructureService {
 
     void moveBranch(PoulpeBranch branch, PoulpeBranch target);
 
-    Jcommune deleteSectionWithBranches(PoulpeSection section);
+    void deleteSectionWithBranches(PoulpeSection section);
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 

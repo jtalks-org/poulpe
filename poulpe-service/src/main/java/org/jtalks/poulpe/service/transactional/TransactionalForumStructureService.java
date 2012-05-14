@@ -87,9 +87,8 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public Jcommune deleteSectionWithBranches(PoulpeSection section) {
+    public void deleteSectionWithBranches(PoulpeSection section) {
         sectionDao.delete(section);
-        return (Jcommune) componentDao.getByType(ComponentType.FORUM);
     }
 
     /**

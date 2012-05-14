@@ -14,13 +14,13 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Group;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-
-import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Group;
 
 /**
  * Forum branch that contains topics.
@@ -92,54 +92,9 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * Assigns {@link User} to moderate this branch
-     *
-     * @param user to be assigned
-     */
-    public void addModerator(User user) {
-        getGroupUsers().add(user);
-    }
-
-    /**
-     * Assigns a list of {@link User} to moderate this branch
-     *
-     * @param users - list of moderators
-     */
-    public void addModerators(List<User> users) {
-        getGroupUsers().addAll(users);
-    }
-
-    /**
-     * Assigns a list of {@link User} to moderate this branch. This method mainly for using in tests
-     *
-     * @param users - arrays of moderators
-     */
-    public void addModerators(User... users) {
-        addModerators(Arrays.asList(users));
-    }
-
-    /**
-     * Removes an assignment for {@link User} to moderate this branch
-     *
-     * @param user to be removed from moderators
-     */
-    public void removeModerator(User user) {
-        getGroupUsers().remove(user);
-    }
-
-    /**
-     * Checks if {@link User} is assigned to moderate this branch
-     *
-     * @param user - user for check
-     * @return {@code true} if assigned, {@code false} otherwise
-     */
-    public boolean isModeratedBy(User user) {
-        return getGroupUsers().contains(user);
-    }
-
-    /**
-     * Returns a {@link Group} of moderators of this branch, which is created, modified and deleted on creating,
-     * editing and deleting of this branch.
+     * Returns a {@link Group} of moderators of this branch. This field is an extra information about moderators, since
+     * we already have ACL records that explain what permissions groups have on branches, but this moderators group is
+     * just for convenience - in order to easily work with moderators.
      *
      * @return a group of moderators for this branch
      */
@@ -148,10 +103,11 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * Sets a {@link Group} of moderators for this branch, which is created, modified and deleted on creating, editing
-     * and deleting of this branch.
+     * Sets a {@link Group} of moderators for this branch. This field is an extra information about moderators, since we
+     * already have ACL records that explain what permissions groups have on branches, but this moderators group is just
+     * for convenience - in order to easily work with moderators.
      *
-     * @param moderatorsGroup - a group of moderators for this branch
+     * @param moderatorsGroup a group of moderators for this branch
      */
     public void setModeratorsGroup(Group moderatorsGroup) {
         this.moderatorsGroup = moderatorsGroup;
@@ -171,7 +127,7 @@ public class PoulpeBranch extends Branch {
     private List<User> getPoulpeUsersConvertedFromCommonGroupUsers() {
         List<org.jtalks.common.model.entity.User> commonUsers = getGroupUsers();
         List<User> moderators = new ArrayList<User>(commonUsers.size());
-        for(org.jtalks.common.model.entity.User user : commonUsers) {
+        for (org.jtalks.common.model.entity.User user : commonUsers) {
             moderators.add((User) user);
         }
         return moderators;
