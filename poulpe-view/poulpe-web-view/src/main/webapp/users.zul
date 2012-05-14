@@ -1,32 +1,31 @@
 <?page title="Users" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="usersWindow" title="${labels.users.list.title}" border="normal" width="100%" height="100%"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)">
+          apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)">
     <hbox>
-      <label value="${labels.users.label.search}" />
-      :
+      <label value="${labels.users.label.search}:"/>
       <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false"
-        maxlength="20" />
-      <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton" />
+               maxlength="20"/>
+      <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton"/>
     </hbox>
     <listbox id="listbox" model="@bind(vm.users)" mold="paging" pageSize="50" pagingPosition="both" vflex="true"
-      height="500px">
+             height="500px">
       <listhead>
-        <listheader label="${labels.users.username}" sort="auto(username)" />
-        <listheader label="${labels.users.email}" sort="auto(email)" />
-        <listheader label="${labels.users.firstname}" sort="auto(firstName)" />
-        <listheader label="${labels.users.lastname}" sort="auto(lastName)" />
-        <listheader label="${labels.users.role}" sort="auto(role)" />
+        <listheader label="${labels.users.username}" sort="auto(username)"/>
+        <listheader label="${labels.users.email}" sort="auto(email)"/>
+        <listheader label="${labels.users.firstname}" sort="auto(firstName)"/>
+        <listheader label="${labels.users.lastname}" sort="auto(lastName)"/>
+        <listheader label="${labels.users.role}" sort="auto(role)"/>
       </listhead>
       <template name="model" var="user">
         <listitem onDoubleClick="@command('editUser', user=user)" onOK="@command('editUser', user=user)">
-          <listcell label="@load(user.username)" />
-          <listcell label="@load(user.email)" />
-          <listcell label="@load(user.firstName)" />
-          <listcell label="@load(user.lastName)" />
-          <listcell label="@load(user.role)" />
+          <listcell label="@load(user.username)"/>
+          <listcell label="@load(user.email)"/>
+          <listcell label="@load(user.firstName)"/>
+          <listcell label="@load(user.lastName)"/>
+          <listcell label="@load(user.role)"/>
         </listitem>
       </template>
       <zscript><![CDATA[

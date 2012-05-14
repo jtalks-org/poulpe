@@ -18,6 +18,8 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -45,7 +47,7 @@ public class ForumStructureVmTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        vm = new ForumStructureVm(forumStructureService);
+        vm = new ForumStructureVm(forumStructureService, mock(WindowManager.class), mock(SelectedEntity.class));
         vm.setViewData(data);
         vm = spy(vm);
     }

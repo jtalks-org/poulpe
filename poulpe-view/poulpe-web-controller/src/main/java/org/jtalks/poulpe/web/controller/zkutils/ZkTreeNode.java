@@ -27,6 +27,8 @@ import java.util.Collection;
  * @author stanislav bashkirtsev
  */
 public class ZkTreeNode<E> extends DefaultTreeNode<E> {
+    private static final long serialVersionUID = 20110038094143L;
+
     /**
      * Creates a branch (non-leaf) node.
      *

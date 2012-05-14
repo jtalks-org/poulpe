@@ -39,42 +39,35 @@ public class UsersVmTest {
     UserService service;
     @Mock
     ZkHelper zkHelper;
-    @Mock 
-    EntityValidator entityValidator;
     @Mock
     Window userDialog;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        vm = new UsersVm(service, entityValidator);
+        vm = new UsersVm(service);
         vm.setZkHelper(zkHelper);
     }
 
     @Test
     public void testSearchUser() {
         vm.setSearchString(SEARCH_STRING);
-        
         vm.searchUser();
-        
         verify(service).getUsersByUsernameWord(SEARCH_STRING);
     }
 
     @Test
     public void testEditUser() throws Exception {
         vm.editUser(new User());
-        
         verify(zkHelper).wireToZul(EDIT_USER_URL);
     }
 
     @Test
     public void testUpdateUser() throws Exception {
         when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
-        when(entityValidator.validate(any(PoulpeBranch.class))).thenReturn(ValidationResult.EMPTY);
         User user = new User();
 
         vm.saveUser(user);
-
         verify(service).updateUser(user);
         verify(userDialog).detach();
     }
@@ -82,9 +75,7 @@ public class UsersVmTest {
     @Test
     public void testCancelEdit() {
         when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
-        
         vm.cancelEdit();
-        
         verify(userDialog).detach();
     }
 }

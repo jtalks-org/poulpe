@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
@@ -45,10 +46,13 @@ import org.zkoss.zk.ui.util.ConventionWires;
  * @author Alexey Grigorev
  */
 public class ZkHelper {
-
     private final Component component;
 
-    public ZkHelper(Component component) {
+    /**
+     * Creates a helper with a component to work with.
+     * @param component the component this helper will be working with
+     */
+    public ZkHelper(@Nonnull Component component) {
         this.component = component;
     }
 
@@ -164,8 +168,9 @@ public class ZkHelper {
     /**
      * Returns the label of the specified key based on the current Locale, or null if no found. 
      *
-     * @param key
-     * @return
+     * @param key the label code to return its value
+     * @return the label value according to current locale
+     * @see Labels#getLabel(String)
      */
     public String getLabel(String key) {
         return Labels.getLabel(key);

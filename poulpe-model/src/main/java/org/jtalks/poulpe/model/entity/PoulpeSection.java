@@ -42,6 +42,16 @@ public class PoulpeSection extends Section {
     }
 
     /**
+     * Constructor with name and description, creates a section with empty list of branches
+     *
+     * @param name        - name for new section
+     * @param description - description for new section
+     */
+    public PoulpeSection(String name, String description) {
+        super(name, description);
+    }
+
+    /**
      * Should be used if preference of {@link #getBranches()}
      *
      * @return list of {@link PoulpeBranch} objects
@@ -50,16 +60,6 @@ public class PoulpeSection extends Section {
     public List<PoulpeBranch> getPoulpeBranches() {
         List<?> branches = getBranches();
         return (List<PoulpeBranch>) branches;
-    }
-
-    /**
-     * Constructor with name and description, creates a section with empty list of branches
-     *
-     * @param name        - name for new section
-     * @param description - description for new section
-     */
-    public PoulpeSection(String name, String description) {
-        super(name, description);
     }
 
     /**

@@ -14,52 +14,42 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
-import javax.annotation.Nonnull;
-
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationResult;
+import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.poulpe.model.entity.User;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.validator.ValidationFailure;
-import org.jtalks.poulpe.validator.ValidationFailureHandler;
 import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Textbox;
-import org.zkoss.zul.Window;
+
+import javax.annotation.Nonnull;
 
 /**
  * ViewModel for users page.
- * 
+ *
  * @author dim42
  */
-public class UsersVm implements ValidationFailure {
+public class UsersVm {
     public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
-    private UserService userService;
-    private ListModelList<User> users;
+    private final UserService userService;
+    private final ListModelList<User> users;
     private String searchString;
     private User selectedUser;
     private ZkHelper zkHelper;
-    private EntityValidator entityValidator;
-    private ValidationFailureHandler handler;
 
-    public UsersVm(@Nonnull UserService userService, EntityValidator entityValidator) {
+    /**
+     * @param userService the service to get access to users and to store changes to the database
+     */
+    public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
-        this.entityValidator = entityValidator;
         this.users = new BindingListModelList<User>(userService.getAll(), true);
     }
 
     /**
-     * Wires users window to this ViewModel. 
-     * 
+     * Wires users window to this ViewModel.
+     *
      * @param component users window
      */
     @Init
@@ -79,7 +69,7 @@ public class UsersVm implements ValidationFailure {
 
     /**
      * Opens edit user dialog.
-     * 
+     *
      * @param user selected user
      */
     @Command
@@ -90,15 +80,13 @@ public class UsersVm implements ValidationFailure {
 
     /**
      * Validates editing user, on success saves him, on failure shows the error message.
-     * 
+     *
      * @param user editing user
      */
     @Command
     public void saveUser(@BindingParam(value = "user") User user) {
-        if (validate(user)) {
-            userService.updateUser(user);
-            closeEditDialog();
-        }
+        userService.updateUser(user);
+        closeEditDialog();
     }
 
     /**
@@ -113,48 +101,26 @@ public class UsersVm implements ValidationFailure {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
     }
 
-    private boolean validate(User user) {
-        ValidationResult result = entityValidator.validate(user);
-
-        if (result.hasErrors()) {
-            validationFailure(result);
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    @Override
-    public void validationFailure(ValidationResult result) {
-        handler = new ValidationFailureHandler("userName", (Textbox) zkHelper.getCurrentComponent("userName"));
-        handler.validationFailure(result);
-    }
-
-    public UserService getUserService() {
-        return userService;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
     public ListModelList<User> getUsers() {
-        this.users = new BindingListModelList<User>(userService.getAll(), true);
+        users.clear();
+        users.addAll(userService.getAll());
         return users;
     }
 
-    public void setUsers(ListModelList<User> users) {
-        this.users = users;
-    }
-
-    public String getSearchString() {
-        return searchString;
-    }
-
+    /**
+     * Sets the search keyword to find the users by it. Is used by ZK Binder.
+     *
+     * @param searchString search keyword to find the users by it
+     */
     public void setSearchString(String searchString) {
         this.searchString = searchString;
     }
 
+    /**
+     * Gets the user selected on the UI.
+     *
+     * @return the user selected on the UI
+     */
     public User getSelectedUser() {
         return selectedUser;
     }
@@ -163,7 +129,8 @@ public class UsersVm implements ValidationFailure {
         this.selectedUser = selectedUser;
     }
 
-    public void setZkHelper(ZkHelper zkHelper) {
+    @VisibleForTesting
+    void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
     }
 }

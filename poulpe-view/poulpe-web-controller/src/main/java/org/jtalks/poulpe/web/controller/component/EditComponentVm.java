@@ -103,7 +103,7 @@ public class EditComponentVm {
      *
      * @param componentService the new value of the service instance
      */
-    public void setComponentService(ComponentService componentService) {
+    public final void setComponentService(ComponentService componentService) {
         this.componentService = componentService;
     }
 
