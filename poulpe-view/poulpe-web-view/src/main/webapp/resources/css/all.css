@@ -22,6 +22,10 @@
 	background: rgb(204, 204, 204);
 }
 
+.userbanning-grid{
+    padding: 8px;
+}
+
 .manage-groups-dialog-vertical-buttons img {
 	cursor: pointer;
 }

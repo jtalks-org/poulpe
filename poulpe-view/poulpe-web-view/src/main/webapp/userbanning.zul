@@ -23,7 +23,7 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style="padding: 8px" width="100%">
+    <hbox style="/resources/all.css.userbanning-grid" width="100%">
       <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@bind(userBanningVm.addBanFor)" width="300px"
           autodrop="true" autocomplete="true" buttonVisible="false"
           onChanging="@command('setAvailableFilter', filterText=event.value)">
