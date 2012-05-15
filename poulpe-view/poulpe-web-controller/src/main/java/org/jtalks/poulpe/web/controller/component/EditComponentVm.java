@@ -41,6 +41,9 @@ public class EditComponentVm {
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
     public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
     public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
+    private static final String COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name", CAPTION_PROP = "caption",
+            DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+            SESSION_TIMEOUT_PROP = "sessionTimeout";
 
     /**
      * Current component we are working with
@@ -83,9 +86,9 @@ public class EditComponentVm {
      */
     private Map<String, String> validationMessages = new HashMap<String, String>();
 
-    protected ComponentService componentService;
-    protected DialogManager dialogManager;
-    protected WindowManager windowManager;
+    private ComponentService componentService;
+    private DialogManager dialogManager;
+    private WindowManager windowManager;
 
     /**
      * Opens window for editing component.
@@ -140,8 +143,10 @@ public class EditComponentVm {
     /**
      * Inits the data on the form.
      */
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout"})
-    public void initData() {
+    @NotifyChange
+            ({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
+                    POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP})
+    public final void initData() {
         currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
 
         if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
