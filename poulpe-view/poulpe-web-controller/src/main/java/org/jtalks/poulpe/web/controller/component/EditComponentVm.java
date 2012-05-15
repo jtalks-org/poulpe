@@ -43,7 +43,7 @@ public class EditComponentVm {
     public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
     private static final String COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name", CAPTION_PROP = "caption",
             DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout";
+            SESSION_TIMEOUT_PROP = "sessionTimeout", VALIDATION_MESSAGES_PROP = "validationMessages";
 
     /**
      * Current component we are working with
@@ -179,7 +179,8 @@ public class EditComponentVm {
      * Saves a component. Shows validation messages, if something is wrong
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "sessionTimeout"})
+    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP, POST_PREVIEW_SIZE_PROP,
+            SESSION_TIMEOUT_PROP})
     public void save() {
         boolean correct = true;
         validationMessages.clear();
@@ -210,8 +211,8 @@ public class EditComponentVm {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({"componentName", "name", "description", "caption", "postPreviewSize", "validationMessages",
-            "sessionTimeout"})
+    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP, POST_PREVIEW_SIZE_PROP,
+            VALIDATION_MESSAGES_PROP, SESSION_TIMEOUT_PROP})
     public void cancel() {
         initData();
         validationMessages.clear();
@@ -377,7 +378,7 @@ public class EditComponentVm {
      *
      * @return session timeout
      */
-    @NotEmpty(message = "Last name can not be null")
+    @NotEmpty
     public String getSessionTimeout() {
         return sessionTimeout;
     }
