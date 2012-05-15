@@ -34,8 +34,21 @@ public interface ForumStructureService {
      */
     Jcommune getJcommune();
 
+    /**
+     * Removes the branch from database (and this from its section), it takes a section inside the branch in order to
+     * remove it from section
+     *
+     * @param branch a branch to be removed from database
+     */
     void removeBranch(PoulpeBranch branch);
 
+    /**
+     * Moves the branch from one section to another. Note, that if the section was the same as the branch is in, it will
+     * result in no-op.
+     *
+     * @param branch    a branch to move from its section to another one
+     * @param toSection a target section to add the branch to
+     */
     void moveBranch(PoulpeBranch branch, PoulpeSection toSection);
 
     void moveBranch(PoulpeBranch branch, PoulpeBranch target);
