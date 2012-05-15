@@ -17,8 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Group;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -34,7 +34,6 @@ public class PoulpeBranch extends Branch {
      * Creates an empty branch, all fields are set to null,
      */
     public PoulpeBranch() {
-        super();
     }
 
     /**
@@ -44,6 +43,22 @@ public class PoulpeBranch extends Branch {
      */
     public PoulpeBranch(String name) {
         super(name, "");
+    }
+
+    /**
+     * Moves the branch from one section to another, which effectively means removing it from the old one and adding to
+     * another. If the target section is the same as the old one, then nothing happens.
+     *
+     * @param target a section to add branch to
+     * @return the old section where branch was in or {@code null} if it's a new branch and wasn't added anywhere yet
+     */
+    public PoulpeSection moveTo(@Nonnull PoulpeSection target) {
+        PoulpeSection removeFrom = (PoulpeSection) getSection();
+        if (!target.equals(removeFrom)) {
+            removeFrom.deleteBranch(this);
+            target.addOrUpdateBranch(this);
+        }
+        return removeFrom;
     }
 
     /**

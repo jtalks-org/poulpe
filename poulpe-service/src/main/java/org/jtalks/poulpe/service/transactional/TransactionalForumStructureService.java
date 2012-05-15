@@ -76,9 +76,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public void moveBranch(PoulpeBranch branch, PoulpeSection toSection) {
-        PoulpeSection fromSection = (PoulpeSection) branch.getSection();
-        fromSection.deleteBranch(branch);
-        toSection.addOrUpdateBranch(branch);
+        PoulpeSection fromSection = branch.moveTo(toSection);
         sectionDao.saveOrUpdate(fromSection);
         sectionDao.saveOrUpdate(toSection);
     }

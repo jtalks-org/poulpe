@@ -14,8 +14,10 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Section;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 /**
@@ -73,7 +75,67 @@ public class PoulpeSection extends Section {
         return this.getName();
     }
 
-    public void clearBranches(){
+    /**
+     * Removes all the branches from the section.
+     */
+    public void clearBranches() {
         this.getBranches().clear();
+    }
+
+    /**
+     * Returns the amount of branches inside of the section.
+     *
+     * @return the amount of branches inside of the section
+     */
+    public int getAmountOfBranches() {
+        return getBranches().size();
+    }
+
+    /**
+     * Returns the branch that is located at the specified index in the list of branches.
+     *
+     * @param index the index of branch to return
+     * @return a branch that is at the specified position in the list of branches
+     * @throws IndexOutOfBoundsException if the specified index is {@code branches.size() < index < 0}
+     */
+    public PoulpeBranch getBranch(int index) {
+        return (PoulpeBranch) getBranches().get(index);
+    }
+
+    /**
+     * Defines whether such branch is already in the list of branches of the section.
+     *
+     * @param branch a branch to check whether it's already in the list
+     * @return {@code true} if the branch is already in the list, {@code false} if it's not. If specified branch is
+     *         {@code null}, then the result is <i>always</i> {@code false}.
+     */
+    public boolean containsBranch(@Nullable Branch branch) {
+        return getBranches().contains(branch);
+    }
+
+    /**
+     * Gets the last branch in the list of branches of the section.
+     *
+     * @return the last branch in the section or {@code null} if there are no branches
+     */
+    public PoulpeBranch getLastBranch() {
+        if (getBranches().size() == 0) {
+            return null;
+        }
+        return (PoulpeBranch) getBranches().get(getBranches().size() - 1);
+    }
+
+    /**
+     * Adds a new branch to the list of branches and sets its section to current one. Results in no-op if the branch is
+     * {@code null} or it's already in the list.
+     *
+     * @param branch a branch to be added to the list of branches in section
+     */
+    public void addBranchIfAbsent(@Nullable Branch branch) {
+        List<Branch> branches = getBranches();
+        if (branch != null && !branches.contains(branch)) {
+            branches.add(branch);
+            branch.setSection(this);
+        }
     }
 }
