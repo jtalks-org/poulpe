@@ -63,16 +63,58 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
         return super.getChild(path);
     }
 
+    /**
+     * Removes the node that is currently selected in the tree mode. Does nothing if no node is selected at the moment.
+     *
+     * @return the node that was selected or {@code null} if nothing was
+     */
+    public TreeNode<E> removeSelected() {
+        int[] selectionPath = getSelectionPath();
+        if(selectionPath == null){
+            return null;
+        }
+        return removeChild(selectionPath);
+    }
+
+    /**
+     * Removes the child located at the specified path. Does nothing if the specified path doesn't exist
+     *
+     * @param path the path of the child to be removed from the tree or empty array if the root should be removed
+     * @return the removed child or {@code null} if there wasn't such child
+     */
+    public TreeNode<E> removeChild(int... path) {
+        TreeNode<E> toRemove = getChild(path);
+        if (toRemove != null) {
+            toRemove.getParent().remove(toRemove);
+        }
+        return toRemove;
+    }
+
+    /**
+     * Searches the node with specified {@code data} in the node or its children.
+     *
+     * @param toSearchIn a tree node to find out whether it's the one that contains the specified {@code data} or one of
+     *                   its children does
+     * @param data       the node data to find the node with it
+     * @return the node that contains the specified data or {@code null} if nothing was found
+     */
     private TreeNode<E> find(TreeNode<E> toSearchIn, E data) {
         if (toSearchIn.getData().equals(data)) {
             return toSearchIn;
-        }
-        if (toSearchIn.isLeaf()) {
+        } else if (toSearchIn.isLeaf()) {
             return null;
         }
         return findOnlyInChildren(toSearchIn, data);
     }
 
+    /**
+     * Doesn't check whether the specified data is in one of specified node's child, but doesn't check the root node
+     * itself. It searches for children recursively.
+     *
+     * @param toSearchIn a node to take its children and check them whether they contain {@code data}
+     * @param data       the data to search for the containing node
+     * @return the node that contains data or {@code null} if no such node was found
+     */
     private TreeNode<E> findOnlyInChildren(TreeNode<E> toSearchIn, E data) {
         for (TreeNode<E> nextChild : toSearchIn.getChildren()) {
             if (nextChild.getData().equals(data)) {

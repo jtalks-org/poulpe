@@ -16,14 +16,15 @@
 
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_item}" visible="@load(not vm.selectedItem.branch)"
-                onClick="@command('showNewSectionDialog', createNew=false)"/>
-      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(vm.selectedItem.branch)"
-                onClick="@command('showNewBranchDialog', createNew=false)"/>
-      <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"/>
+                onClick="@command('showNewSectionDialog', createNew=false)" image="/resources/img/edit16.png"/>
+      <menuitem label="${labels.forum_structure.edit_item}"  visible="@load(vm.selectedItem.branch)"
+                onClick="@command('showNewBranchDialog', createNew=false)" image="/resources/img/edit16.png"/>
       <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewBranchDialog', createNew=true)"/>
       <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
                 onClick="@command('openBranchPermissions')"/>
+      <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"
+                image="/resources/img/remove.png"/>
     </menupopup>
     <!--SECTION DIALOG-->
     <window id="editSectionDialog"

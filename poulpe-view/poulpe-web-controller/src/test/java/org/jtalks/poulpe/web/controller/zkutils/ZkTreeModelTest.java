@@ -52,6 +52,33 @@ public class ZkTreeModelTest {
         assertSame(sut.find(toSearch), sut.getRoot().getChildAt(1).getChildAt(2));
     }
 
+    @Test
+    public void testRemoveChild() throws Exception {
+        TreeNode<Object> childToRemove = sut.getChild(1, 1);
+        assertSame(sut.removeChild(1, 1), childToRemove);
+        assertNotSame(sut.getChild(1, 1), childToRemove);
+    }
+
+    @Test
+    public void testRemoveChild_thatDoesntExist() throws Exception {
+        assertNull(sut.removeChild(0, 100));
+    }
+
+    @Test
+    public void testRemoveSelected() {
+        TreeNode<Object> child = sut.getChild(1, 1);
+        sut.addToSelection(child);
+
+        sut.removeSelected();
+        assertTrue(sut.getSelection().isEmpty());
+        assertNotSame(sut.getChild(1, 1), child);
+    }
+
+    @Test
+    public void testRemoveSelected_withNoSelection() {
+        assertNull(sut.removeSelected());
+    }
+
 
     @Test
     public void testGetChild() throws Exception {

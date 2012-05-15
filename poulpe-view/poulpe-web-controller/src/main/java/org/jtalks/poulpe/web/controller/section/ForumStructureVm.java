@@ -118,8 +118,7 @@ public class ForumStructureVm {
     @Command
     public void openBranchPermissions() {
         selectedBranchForPermissions.setEntity(getSelectedItem().getItem(PoulpeBranch.class));
-        BranchPermissionManagementVm.
-                showBranchPermissionManagementPage(windowManager, getSelectedItem().getItem(PoulpeBranch.class));
+        BranchPermissionManagementVm.showPage(windowManager, getSelectedItem().getItem(PoulpeBranch.class));
     }
 
     /**

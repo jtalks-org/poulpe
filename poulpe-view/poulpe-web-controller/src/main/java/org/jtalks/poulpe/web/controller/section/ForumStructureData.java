@@ -84,13 +84,7 @@ public class ForumStructureData {
      * @return the item that was previously set as selected (the one that is removed by this method)
      */
     public ForumStructureItem removeSelectedItem() {
-        int[] selectedPath = getSectionTree().getSelectionPath();
-        if (getSelectedItem().isBranch()) {
-            getSectionTree().getRoot().getChildAt(selectedPath[0]).remove(selectedPath[1]);
-        } else {
-            getSectionTree().getRoot().remove(selectedPath[0]);
-        }
-        return setSelectedItem(new ForumStructureItem());
+        return sectionTree.removeSelected().getData();
     }
 
     /**

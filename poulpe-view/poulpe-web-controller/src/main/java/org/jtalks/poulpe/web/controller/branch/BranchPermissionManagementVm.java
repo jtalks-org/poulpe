@@ -98,7 +98,7 @@ public class BranchPermissionManagementVm {
         return branch;
     }
 
-    public static void showBranchPermissionManagementPage(WindowManager windowManager, Branch branch) {
+    public static void showPage(WindowManager windowManager, Branch branch) {
         windowManager.open(BRANCH_PERMISSION_MANAGEMENT_PAGE);
     }
 
