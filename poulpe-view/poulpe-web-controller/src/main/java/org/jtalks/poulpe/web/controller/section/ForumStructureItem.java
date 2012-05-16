@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 import javax.annotation.Nonnull;
 
@@ -69,6 +70,17 @@ public class ForumStructureItem {
     }
 
     /**
+     * Helps to understand whether the item inside is {@link PoulpeSection} or not. Will return {@code false} in both
+     * options - whether the item inside is not an instance of section or it's {@code null}.
+     *
+     * @return {@code true} if the item inside is an instance of section, {@code false} if the wrapped item is {@code
+     *         null} or not an instance of section (e.g. a branch)
+     */
+    public boolean isSection() {
+        return item != null && item instanceof PoulpeSection;
+    }
+
+    /**
      * Defines whether the item inside is already persisted or it's a new entity which wasn't saved yet.
      *
      * @return {@code true} if the item inside is already saved into database, {@code false} if the item is {@code null}
@@ -76,6 +88,29 @@ public class ForumStructureItem {
      */
     public boolean isPersisted() {
         return item != null && item.getId() != 0;
+    }
+
+    /**
+     * Returns item cast to branch, note that it throws an exception if it's not actually a branch, so use {@link
+     * #isBranch()} before you use this method.
+     *
+     * @return a branch inside the item if it is a branch or {@code null}
+     * @throws ClassCastException if the entity inside is not actually a branch
+     */
+    public PoulpeBranch getBranchItem() {
+        return (PoulpeBranch) item;
+    }
+
+
+    /**
+     * Returns item cast to section, note that it throws an exception if it's not actually a section, so use {@link
+     * #isBranch()} before you use this method.
+     *
+     * @return a section inside the item if it is a section or {@code null}
+     * @throws ClassCastException if the entity inside is not actually a section
+     */
+    public PoulpeSection getSectionItem() {
+        return (PoulpeSection) item;
     }
 
     /**

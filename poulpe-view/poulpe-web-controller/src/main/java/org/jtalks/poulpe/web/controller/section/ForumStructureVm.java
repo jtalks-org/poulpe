@@ -94,7 +94,7 @@ public class ForumStructureVm {
     }
 
     /**
-     * Deletes the selected entity no matter what it is - a branch or a section. It does both - back end removal from DB
+     * Deletes the selected entity no matter what it is - a branch or a section. It does both: back-end removal from DB
      * and ask the {@link ForumStructureData} to remove the item from the tree.
      *
      * @see ForumStructureData#getSelectedItem()
@@ -104,11 +104,19 @@ public class ForumStructureVm {
     public void deleteSelected() {
         ForumStructureItem selectedItem = viewData.removeSelectedItem();
         if (selectedItem.isBranch()) {
-            forumStructureService.removeBranch(selectedItem.getItem(PoulpeBranch.class));
+            deleteSelectedBranch(selectedItem.getBranchItem());
         } else {
-            Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedItem.getItem(PoulpeSection.class));
-            viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
+            deleteSelectedSection(selectedItem.getSectionItem());
         }
+    }
+
+    void deleteSelectedSection(PoulpeSection selectedSection) {
+        Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedSection);
+        viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
+    }
+
+    void deleteSelectedBranch(PoulpeBranch branchItem) {
+        forumStructureService.removeBranch(branchItem);
     }
 
     /**
@@ -117,8 +125,8 @@ public class ForumStructureVm {
      */
     @Command
     public void openBranchPermissions() {
-        selectedBranchForPermissions.setEntity(getSelectedItem().getItem(PoulpeBranch.class));
-        BranchPermissionManagementVm.showPage(windowManager, getSelectedItem().getItem(PoulpeBranch.class));
+        selectedBranchForPermissions.setEntity(getSelectedItem().getBranchItem());
+        BranchPermissionManagementVm.showPage(windowManager, getSelectedItem().getBranchItem());
     }
 
     /**
@@ -161,7 +169,7 @@ public class ForumStructureVm {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
         Group moderatingGroup = new Group(selectedBranch.getName() + " Moderators");
         selectedBranch.setModeratorsGroup(moderatingGroup);
-        PoulpeSection section = viewData.getSectionSelectedInDropdown().getItem(PoulpeSection.class);
+        PoulpeSection section = viewData.getSectionSelectedInDropdown().getSectionItem();
         return forumStructureService.saveBranch(section, selectedBranch);
     }
 
@@ -214,8 +222,8 @@ public class ForumStructureVm {
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
         if (draggedItem.isBranch() && targetItem.isBranch()) {
-            PoulpeBranch draggedBranch = draggedItem.getItem(PoulpeBranch.class);
-            PoulpeBranch targetBranch = targetItem.getItem(PoulpeBranch.class);
+            PoulpeBranch draggedBranch = draggedItem.getBranchItem();
+            PoulpeBranch targetBranch = targetItem.getBranchItem();
             forumStructureService.moveBranch(draggedBranch, targetBranch);
             viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
         }

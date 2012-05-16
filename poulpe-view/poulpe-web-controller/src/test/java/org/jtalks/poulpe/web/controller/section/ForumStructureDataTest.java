@@ -135,7 +135,7 @@ public class ForumStructureDataTest {
 
     @Test
     public void testShowSectionDialog_editingExisting() throws Exception {
-        ForumStructureItem selectedItem = new ForumStructureItem();
+        ForumStructureItem selectedItem = new ForumStructureItem(new PoulpeSection());
         sut.setSelectedItem(selectedItem);
         sut.showSectionDialog(false);
         assertTrue(sut.isShowSectionDialog());
@@ -202,6 +202,7 @@ public class ForumStructureDataTest {
 
     @Test
     public void testIsShowSectionDialog() throws Exception {
+        sut.setSelectedItem(new ForumStructureItem(new PoulpeSection()));
         sut.showSectionDialog(false);
         assertTrue(sut.isShowSectionDialog());
         assertFalse(sut.isShowSectionDialog());

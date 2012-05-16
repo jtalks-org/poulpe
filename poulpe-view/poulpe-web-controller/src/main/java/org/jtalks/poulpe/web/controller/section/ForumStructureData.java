@@ -52,6 +52,11 @@ public class ForumStructureData {
         return (Jcommune) (Object) sectionTree.getRoot().getData();
     }
 
+    /**
+     * Closes all the dialogs.
+     *
+     * @return this
+     */
     public ForumStructureData closeDialog() {
         showSectionDialog = false;
         showBranchDialog = false;
@@ -62,7 +67,7 @@ public class ForumStructureData {
         if (createNew) {
             selectedItem = new ForumStructureItem(new PoulpeBranch());
         }
-        TreeNode<ForumStructureItem> section = sectionTree.getRoot().getChildAt(sectionTree.getSelectionPath()[0]);
+        TreeNode<ForumStructureItem> section = sectionTree.getChild(sectionTree.getSelectionPath()[0]);
         sectionTree.clearSelection();
         sectionList.addToSelection(section.getData());
         showBranchDialog = true;
@@ -152,7 +157,7 @@ public class ForumStructureData {
      * @see #showSectionDialog
      */
     public boolean isShowSectionDialog() {
-        boolean show = showSectionDialog && !selectedItem.isBranch();
+        boolean show = showSectionDialog && selectedItem.isSection();
         this.showSectionDialog = false;
         return show;
     }
@@ -234,11 +239,11 @@ public class ForumStructureData {
     public void setSectionTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
         this.sectionList.clear();
-        List<ForumStructureItem> sections = unwrap(sectionTree.getRoot().getChildren());
+        List<ForumStructureItem> sections = unwrapSections(sectionTree.getRoot().getChildren());
         this.sectionList.addAll(sections);
     }
 
-    private List<ForumStructureItem> unwrap(List<TreeNode<ForumStructureItem>> sectionNodes) {
+    private List<ForumStructureItem> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
         List<ForumStructureItem> sections = new ArrayList<ForumStructureItem>();
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
             sections.add(sectionNode.getData());

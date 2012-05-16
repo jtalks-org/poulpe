@@ -16,7 +16,6 @@ package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -31,6 +30,59 @@ public class ForumStructureItemTest {
     @BeforeMethod
     public void setUp() throws Exception {
         item = new ForumStructureItem();
+    }
+
+    @Test
+    public void testIsSection() throws Exception {
+        item.setItem(new PoulpeSection());
+        assertTrue(item.isSection());
+    }
+
+    @Test
+    public void testIsSection_whenNull() throws Exception {
+        assertFalse(item.isSection());
+    }
+
+    @Test
+    public void testGetItemAsBranch() throws Exception {
+        PoulpeBranch branch = new PoulpeBranch();
+        item.setItem(branch);
+        assertSame(item.getBranchItem(), branch);
+    }
+
+    @Test(expectedExceptions = ClassCastException.class)
+    public void testGetItemAsBranch_isNotBranch() throws Exception {
+        item.setItem(new PoulpeSection());
+        item.getBranchItem();
+    }
+
+    @Test
+    public void testGetItemAsBranch_isNull() throws Exception {
+        assertNull(item.getBranchItem());
+    }
+
+    @Test
+    public void testGetItemAsSection() throws Exception {
+        PoulpeSection branch = new PoulpeSection();
+        item.setItem(branch);
+        assertSame(item.getSectionItem(), branch);
+    }
+
+    @Test(expectedExceptions = ClassCastException.class)
+    public void testGetItemAsSection_isNotSection() throws Exception {
+        item.setItem(new PoulpeBranch());
+        item.getSectionItem();
+    }
+
+    @Test
+    public void testGetItemAsSection_isNull() throws Exception {
+        assertNull(item.getSectionItem());
+    }
+
+    @Test
+    public void testIsSection_whenBranch() throws Exception {
+        item.setItem(new PoulpeBranch());
+        assertFalse(item.isSection());
     }
 
     @Test
