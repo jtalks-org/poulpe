@@ -96,7 +96,7 @@ public class UserGroupVm {
      * Deletes selected group.
      */
     @Command
-    @NotifyChange(SELECTED_GROUP)
+    @NotifyChange({SELECTED_GROUP,SHOW_DELETE_DIALOG})
     public void deleteGroup() {
         groupService.deleteGroup(selectedGroup);
         closeDialog();
