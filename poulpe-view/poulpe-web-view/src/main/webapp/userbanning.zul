@@ -18,12 +18,11 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <style src="/resources/css/all.css" />
-  <window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%"
+   <window id="userBanningWindow" title="${labels.userbanning.title}" width="100%" height="100%"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style=".userbanning-grid" width="100%">
+    <hbox style="/resources/css/all.css.simple-grid" width="100%">
       <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@bind(userBanningVm.addBanFor)" width="300px"
           autodrop="true" autocomplete="true" buttonVisible="false"
           onChanging="@command('setAvailableFilter', filterText=event.value)">
