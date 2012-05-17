@@ -9,7 +9,8 @@
       :
       <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false"
         maxlength="20" />
-      <button label="${labels.users.label.button.search}" onClick="@command('searchUser')" sclass="users.searchButton" />
+      <button label="${labels.users.label.button.search}" sclass="users.searchButton"
+              onClick="@command('searchUser')" />
     </hbox>
     <listbox id="listbox" model="@bind(vm.users)" mold="paging" pageSize="50" pagingPosition="both" vflex="true"
       height="500px">
@@ -21,7 +22,8 @@
         <listheader label="${labels.users.role}" sort="auto(role)" />
       </listhead>
       <template name="model" var="user">
-        <listitem onDoubleClick="@command('editUser', user=user)" setDisabled="true" onOK="@command('editUser', user=user)">
+        <listitem onDoubleClick="@command('editUser', user=user)"
+                  onOK="@command('editUser', user=user)">
           <listcell label="@load(user.username)" />
           <listcell label="@load(user.email)" />
           <listcell label="@load(user.firstName)" />
@@ -29,10 +31,9 @@
           <listcell label="@load(user.role)" />
         </listitem>
       </template>
-      <zscript><![CDATA[
-    listbox.pagingChild.mold = "os";
-    listbox.paginal.pageIncrement = 10;
-]]></zscript>
+      <zscript><![CDATA[listbox.pagingChild.mold = "os";
+                        listbox.paginal.pageIncrement = 10;]]>
+      </zscript>
     </listbox>
   </window>
 </zk>
