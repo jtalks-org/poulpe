@@ -50,7 +50,7 @@
 					<row>
 						${labels.component.title}
 						<textbox id="titlebox" width="300px" constraint="no empty" value="
-							@load(vm.selected.name, after={'newComponent', 'editComponent'})
+							@load(vm.selected.name, after={'showAddComponentDialog', 'editComponent'})
 							@save(vm.selected.name, before='saveComponent')
 							@validator('beanValidator')"/>
 						<label value="@load(vmsgs[titlebox])" sclass="redAlert" />
@@ -58,14 +58,14 @@
 					<row>
 						${labels.component.description}
 						<textbox width="300px" constraint="no empty"
-							value="@load(vm.selected.description, after={'newComponent', 'editComponent'}) 
+							value="@load(vm.selected.description, after={'showAddComponentDialog', 'editComponent'}) 
 								@save(vm.selected.description, before='saveComponent')"/>
 					</row>
 					<row>
 						${labels.component.type}
 						<combobox
-							model="@load(vm.availableComponentTypes, after={'newComponent', 'editComponent'})"
-							selectedItem="@load(vm.selected.componentType, after={'newComponent', 'editComponent'})
+							model="@load(vm.availableComponentTypes, after={'showAddComponentDialog', 'editComponent'})"
+							selectedItem="@load(vm.selected.componentType, after={'showAddComponentDialog', 'editComponent'})
 								@save(vm.selected.componentType, before='saveComponent')" 
 							width="300px" readonly="true" constraint="no empty">
 							<template name="model" var="componentType">
