@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -32,9 +31,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author Leonid Kazancev
@@ -42,7 +39,7 @@ import static org.testng.Assert.assertSame;
 public class UserGroupVmTest {
 
     private static final String SEARCH_STRING = "searchString";
-
+    
     @Mock
     private GroupService groupService;
     @Mock
@@ -58,7 +55,7 @@ public class UserGroupVmTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        viewModel = new UserGroupVm(groupService, selectedEntity, windowManager);
+        viewModel = spy (new UserGroupVm(groupService, selectedEntity, windowManager));
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
         groups = new ListModelList<Group>();
@@ -95,28 +92,36 @@ public class UserGroupVmTest {
         doNothing().when(groupService).deleteGroup(any(Group.class));
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
+        verify(viewModel).updateView();
         assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
     public void testShowNewGroupDialog() {
         viewModel.showNewGroupDialog();
-        assert (viewModel.isShowNewDialog());
+        assertTrue(viewModel.isShowNewDialog());
     }
 
     @Test
     public void testSaveGroup() throws Exception {
         Group group = new Group();
-
         viewModel.saveGroup(group);
         verify(groupService).saveGroup(group);
+        verify(viewModel).updateView();
         assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
     public void testCloseDialog(){
+        viewModel.showNewGroupDialog();
         viewModel.closeDialog();
         assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+    }
+    @Test
+    public void testIsShowNewDialog(){
+        viewModel.showNewGroupDialog();
+        assertTrue(viewModel.isShowNewDialog());
+        assertFalse(viewModel.isShowNewDialog());
     }
 
     @DataProvider
