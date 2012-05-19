@@ -169,22 +169,13 @@
     <resources>
       <resource>
         <directory>src/main/resources</directory>
-        <filtering>true</filtering>
-        <includes>
-          <include>**/datasource.properties</include>
-        </includes>
-      </resource>
-      <resource>
-        <directory>src/main/resources</directory>
         <includes>
           <include>**/*.xml</include>
+          <include>**/*.properties</include>
           <include>**/migrations/**</include>
         </includes>
       </resource>
     </resources>
   </build>
-  <properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 </project>
 
