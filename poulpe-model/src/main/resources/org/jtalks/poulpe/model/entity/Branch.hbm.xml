@@ -18,19 +18,22 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <class name="org.jtalks.poulpe.model.entity.PoulpeBranch" table="BRANCHES">
-    <cache usage="nonstrict-read-write"/>
+  <class name="org.jtalks.common.model.entity.Branch" table="BRANCHES" abstract="true">
+    <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
     <id column="BRANCH_ID" name="id" unsaved-value="0">
       <generator class="native"/>
     </id>
+    <discriminator formula="'BRANCH'"/>
     <property column="UUID" name="uuid" not-null="true" unique="true"/>
     <property column="NAME" name="name" not-null="true"/>
     <property column="DESCRIPTION" name="description"/>
-    <property column="POSITION" name="position" insert="false" update="false"/>
     <many-to-one column="SECTION_ID" name="section" class="org.jtalks.poulpe.model.entity.PoulpeSection" lazy="false"
                  update="false" insert="false"/>
 
-    <many-to-one name="moderatorsGroup" cascade="save-update" foreign-key="FK_MODERATORS_GROUP_ID"
-                 column="MODERATORS_GROUP_ID" class="org.jtalks.common.model.entity.Group"/>
+    <subclass name="org.jtalks.poulpe.model.entity.PoulpeBranch" extends="org.jtalks.common.model.entity.Branch"
+              discriminator-value="BRANCH">
+      <many-to-one name="moderatorsGroup" cascade="save-update" foreign-key="FK_MODERATORS_GROUP_ID"
+                   column="MODERATORS_GROUP_ID" class="org.jtalks.common.model.entity.Group"/>
+    </subclass>
   </class>
 </hibernate-mapping>

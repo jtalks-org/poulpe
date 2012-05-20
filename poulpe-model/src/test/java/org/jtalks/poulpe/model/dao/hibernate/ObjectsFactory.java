@@ -65,7 +65,6 @@ public final class ObjectsFactory {
         for (int i = 0; i < branchesAmount; i++) {
             PoulpeBranch branch = createBranch();
             branch.setSection(section);
-            branch.setPosition(i);
             section.addOrUpdateBranch(branch);
         }
 

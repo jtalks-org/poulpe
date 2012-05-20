@@ -14,23 +14,12 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.Collections;
-import java.util.List;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
@@ -39,16 +28,21 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import javax.validation.ConstraintViolationException;
+import java.util.Collections;
+import java.util.List;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for {@link SectionHibernateDao}.
- * 
+ *
  * @author Dmitriy Sukharev
  * @author Vahluev Vyacheslav
  * @author Alexey Grigorev
  * @author Guram Savinov
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -57,10 +51,10 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     private SessionFactory sessionFactory;
     @Autowired
     private SectionDao dao;
-    
+
     private Session session;
     private PoulpeSection section;
-    
+
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
@@ -78,7 +72,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         PoulpeSection actual = retrieveActualSection();
         assertReflectionEquals(section, actual);
     }
-    
+
     private PoulpeSection retrieveActualSection() {
         return ObjectRetriever.retrieveUpdated(section, session);
     }
@@ -114,7 +108,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         section.setName(newName);
 
         dao.saveOrUpdate(section);
-        
+
         assertNameChanged(newName);
     }
 

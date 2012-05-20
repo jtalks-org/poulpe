@@ -16,15 +16,13 @@
 
 -->
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
   <class name="org.jtalks.poulpe.model.entity.User" table="USERS">
-    <cache usage="nonstrict-read-write"/>
-    
+    <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
     <id column="ID" name="id" unsaved-value="0">
       <generator class="native"/>
     </id>
-    
     <property column="UUID" name="uuid" unique="true" not-null="true"/>
     
     <property column="FIRST_NAME" name="firstName"/>
