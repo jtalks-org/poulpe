@@ -1,5 +1,10 @@
 package org.jtalks.poulpe.service.transactional;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
+
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -12,6 +17,7 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
 /**
@@ -46,17 +52,65 @@ public class TransactionalForumStructureServiceTest {
         sut.deleteSectionAndMoveBranches(null, null);
     }
 
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testMoveBranchInSameSection(Jcommune jcommune) {
+        PoulpeSection section = jcommune.getSections().get(0);
+        PoulpeBranch branch = section.getBranch(1);
+        PoulpeBranch target = section.getBranch(3);
+        List<PoulpeBranch> expectedBranches = new ArrayList<PoulpeBranch>(section.getPoulpeBranches());
+        expectedBranches.remove(branch);
+        expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
+        sut.moveBranchTo(branch, target);
+        assertEquals(section.getPoulpeBranches(), expectedBranches);
+        branch = section.getBranch(4);
+        target = section.getBranch(0);
+        expectedBranches.remove(branch);
+        expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
+        sut.moveBranchTo(branch, target);
+        assertEquals(section.getPoulpeBranches(), expectedBranches);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testMoveBranchToAnotherSection(Jcommune jcommune) {
+        PoulpeSection section1 = jcommune.getSections().get(0);
+        PoulpeSection section2 = jcommune.getSections().get(1);
+        PoulpeBranch branch = section1.getBranch(0);
+        PoulpeBranch target = section2.getBranch(0);
+        List<PoulpeBranch> expectedBranchesInSection1 = new ArrayList<PoulpeBranch>(section1.getPoulpeBranches());
+        List<PoulpeBranch> expectedBranchesInSection2 = new ArrayList<PoulpeBranch>(section2.getPoulpeBranches());
+        expectedBranchesInSection1.remove(branch);
+        expectedBranchesInSection2.add(0, branch);
+        sut.moveBranchTo(branch, target);
+        assertEquals(section1.getBranches(), expectedBranchesInSection1);
+        assertEquals(section2.getBranches(), expectedBranchesInSection2);
+        target = section1.getBranch(0);
+        expectedBranchesInSection2.remove(branch);
+        expectedBranchesInSection1.add(0, branch);
+        sut.moveBranchTo(branch, target);
+        assertEquals(section1.getBranches(), expectedBranchesInSection1);
+        assertEquals(section2.getBranches(), expectedBranchesInSection2);
+    }
+
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
         Jcommune jcommune = new Jcommune();
         PoulpeSection sectionA = new PoulpeSection("SectionA");
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));
+        for (int i = 0; i < 5; i++) {
+            sectionA.addOrUpdateBranch(createBranch(sectionA, "Branch" + i));
+        }
         jcommune.addSection(sectionA);
         PoulpeSection sectionB = new PoulpeSection("SectionB");
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
+        for (int i = 5; i < 10; i++) {
+            sectionB.addOrUpdateBranch(createBranch(sectionB, "Branch" + i));
+        }
         jcommune.addSection(sectionB);
         return new Object[][]{{jcommune}};
+    }
+
+    private PoulpeBranch createBranch(PoulpeSection section, String branchName) {
+        PoulpeBranch branch = new PoulpeBranch(branchName);
+        branch.setId(new Random().nextLong());
+        branch.setSection(section);
+        return branch;
     }
 }

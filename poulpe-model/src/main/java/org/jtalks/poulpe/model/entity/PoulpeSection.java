@@ -18,6 +18,8 @@ import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Section;
 
 import javax.annotation.Nullable;
+import javax.swing.text.AbstractDocument.BranchElement;
+
 import java.util.List;
 
 /**
@@ -137,5 +139,10 @@ public class PoulpeSection extends Section {
             branches.add(branch);
             branch.setSection(this);
         }
+    }
+
+    public void addBranchTo(int index, PoulpeBranch branch) {
+        branch.setSection(this);
+        getPoulpeBranches().add(index, branch);
     }
 }
