@@ -51,8 +51,6 @@ public interface ForumStructureService {
      */
     void moveBranch(PoulpeBranch branch, PoulpeSection toSection);
 
-    void moveBranch(PoulpeBranch branch, PoulpeBranch target);
-
     /**
      * Deletes the specified section from its JCommune instance and returns updated JCommune. Results in no-op if there
      * is no such section in DB.
@@ -67,4 +65,6 @@ public interface ForumStructureService {
     PoulpeBranch saveBranch(PoulpeSection inSection, PoulpeBranch notYetSavedBranch);
 
     void deleteBranch(PoulpeBranch branch);
+
+    void moveBranchTo(PoulpeBranch branch, PoulpeBranch target);
 }
