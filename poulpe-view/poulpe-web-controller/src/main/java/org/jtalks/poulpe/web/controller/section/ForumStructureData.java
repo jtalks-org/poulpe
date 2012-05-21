@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.DefaultTreeNode;

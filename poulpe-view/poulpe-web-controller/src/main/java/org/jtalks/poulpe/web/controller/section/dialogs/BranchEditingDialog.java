@@ -1,5 +1,6 @@
-package org.jtalks.poulpe.web.controller.section;
+package org.jtalks.poulpe.web.controller.section.dialogs;
 
+import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
