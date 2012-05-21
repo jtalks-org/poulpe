@@ -23,11 +23,8 @@ import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 
 import com.google.common.collect.Lists;
 
@@ -75,17 +72,17 @@ public final class ObjectsFactory {
         return new PoulpeSection(RandomStringUtils.random(15));
     }
 
-    public static User createUser(String username) {
+    public static PoulpeUser createUser(String username) {
         String email = username + "@" + RandomStringUtils.randomAlphanumeric(10) + "."
                 + RandomStringUtils.randomAlphabetic(3);
-        return new User(username, email, RandomStringUtils.randomAlphanumeric(8), "");
+        return new PoulpeUser(username, email, RandomStringUtils.randomAlphanumeric(8), "");
     }
 
-    public static List<User> createBannedUsers(String... usernames) {
-        List<User> result = Lists.newArrayList();
+    public static List<PoulpeUser> createBannedUsers(String... usernames) {
+        List<PoulpeUser> result = Lists.newArrayList();
 
         for (String username : usernames) {
-            User user = createUser(username);
+            PoulpeUser user = createUser(username);
             user.setBanReason("any reason");
             result.add(user);
         }
@@ -93,8 +90,8 @@ public final class ObjectsFactory {
         return result;
     }
 
-    public static List<User> createUsers(String... usernames) {
-        List<User> result = Lists.newArrayList();
+    public static List<PoulpeUser> createUsers(String... usernames) {
+        List<PoulpeUser> result = Lists.newArrayList();
 
         for (String username : usernames) {
             result.add(createUser(username));

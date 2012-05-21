@@ -24,7 +24,7 @@ import java.util.Collection;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -43,7 +43,7 @@ public class TransactionalUserServiceTest {
     private static final String EMAIL = "username@mail.com";
     private static final String PASSWORD = "password";
     private static final String BAN_REASON = "ban reason";
-    private static Collection<User> users;
+    private static Collection<PoulpeUser> users;
 
     @BeforeMethod
     public void setUp() {
@@ -51,7 +51,7 @@ public class TransactionalUserServiceTest {
 
         userService = new TransactionalUserService(userDao);
 
-        users = new ArrayList<User>();
+        users = new ArrayList<PoulpeUser>();
         users.add(getUser("tony"));
         users.add(getUser("antony"));
         users.add(getUser("jack"));
@@ -75,7 +75,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void testUpdateUser() {
-        User user = new User("username", "email", "password", "salt");
+        PoulpeUser user = new PoulpeUser("username", "email", "password", "salt");
         
         userService.updateUser(user);
         
@@ -108,14 +108,14 @@ public class TransactionalUserServiceTest {
     }
 
     /**
-     * Creates and return the {@link User} entity with default username, email
+     * Creates and return the {@link org.jtalks.poulpe.model.entity.PoulpeUser} entity with default username, email
      * and password, etc.
      * 
      * @param username username
      * @return the user entity
      */
-    private User getUser(String username) {
-        return new User(username, EMAIL, PASSWORD, "salt");
+    private PoulpeUser getUser(String username) {
+        return new PoulpeUser(username, EMAIL, PASSWORD, "salt");
     }
 
 }

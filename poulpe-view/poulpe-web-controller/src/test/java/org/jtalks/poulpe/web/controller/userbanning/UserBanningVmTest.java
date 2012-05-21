@@ -28,7 +28,7 @@ import java.util.List;
 import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
@@ -50,8 +50,8 @@ public class UserBanningVmTest {
     @Mock
     private UserService userService;
 
-    private List<User> allUsers;
-    private List<User> bannedUsers;
+    private List<PoulpeUser> allUsers;
+    private List<PoulpeUser> bannedUsers;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -62,7 +62,7 @@ public class UserBanningVmTest {
 
         // assuming that 9 allUsers, starting from 1 has banned state
         for (int i = 1; i < 10; i++) {
-            User user = allUsers.get(i);
+            PoulpeUser user = allUsers.get(i);
             user.setBanReason("some reason");
             bannedUsers.add(user);
         }
@@ -75,7 +75,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testAddBanToUser() {
-        User user = allUsers.get(0);
+        PoulpeUser user = allUsers.get(0);
 
         viewModel.setAddBanFor(user);
         viewModel.addBanToUser();
@@ -88,7 +88,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testCloseEditBanWindow() {
-        User user = allUsers.get(0);
+        PoulpeUser user = allUsers.get(0);
 
         viewModel.setAddBanFor(user);
         viewModel.addBanToUser();
@@ -101,7 +101,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testGetAvailableUsers() {
-        List<User> available = viewModel.getAvailableUsers();
+        List<PoulpeUser> available = viewModel.getAvailableUsers();
 
         assertTrue(allUsers.containsAll(available));
         assertTrue(ListUtils.intersection(available, bannedUsers).isEmpty());
@@ -111,7 +111,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testGetBannedUsers() {
-        List<User> banned = viewModel.getBannedUsers();
+        List<PoulpeUser> banned = viewModel.getBannedUsers();
 
         assertTrue(bannedUsers.containsAll(banned));
         assertTrue(banned.containsAll(bannedUsers));
@@ -121,7 +121,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testRevokeBan() throws NotFoundException {
-        User user = allUsers.get(0);
+        PoulpeUser user = allUsers.get(0);
         long userId = user.getId();
 
         when(userService.get(eq(userId))).thenReturn(user);
@@ -133,7 +133,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testEditBan() throws NotFoundException {
-        User user = allUsers.get(0);
+        PoulpeUser user = allUsers.get(0);
         long userId = user.getId();
 
         when(userService.get(eq(userId))).thenReturn(user);
@@ -148,7 +148,7 @@ public class UserBanningVmTest {
 
     @Test
     public void testSaveBanProperties() throws NotFoundException {
-        User user = allUsers.get(0);
+        PoulpeUser user = allUsers.get(0);
         long userId = user.getId();
 
         when(userService.get(eq(userId))).thenReturn(user);
@@ -160,6 +160,6 @@ public class UserBanningVmTest {
     }
 
     private void vefiryNothingChanges() {
-        verify(userService, never()).updateUser(any(User.class));
+        verify(userService, never()).updateUser(any(PoulpeUser.class));
     }
 }

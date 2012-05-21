@@ -81,10 +81,10 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * @return an unmodifiable list of {@link User} which are signed to moderate this branch
+     * @return an unmodifiable list of {@link PoulpeUser} which are signed to moderate this branch
      */
-    public List<User> getModeratorsList() {
-        List<User> moderators = getPoulpeUsersConvertedFromCommonGroupUsers();
+    public List<PoulpeUser> getModeratorsList() {
+        List<PoulpeUser> moderators = getPoulpeUsersConvertedFromCommonGroupUsers();
         return Collections.unmodifiableList(moderators);
     }
 
@@ -93,16 +93,16 @@ public class PoulpeBranch extends Branch {
      *
      * @return the list of moderators.
      */
-    protected List<User> getModerators() {
+    protected List<PoulpeUser> getModerators() {
         return getPoulpeUsersConvertedFromCommonGroupUsers();
     }
 
     /**
      * Sets the list of users which will be signed to moderate this branch. Protected for using only by hibernate.
      *
-     * @param moderators a list of {@link User}
+     * @param moderators a list of {@link PoulpeUser}
      */
-    protected void setModerators(List<User> moderators) {
+    protected void setModerators(List<PoulpeUser> moderators) {
         moderatorsGroup.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(moderators));
     }
 
@@ -139,11 +139,11 @@ public class PoulpeBranch extends Branch {
         return getName();
     }
 
-    private List<User> getPoulpeUsersConvertedFromCommonGroupUsers() {
+    private List<PoulpeUser> getPoulpeUsersConvertedFromCommonGroupUsers() {
         List<org.jtalks.common.model.entity.User> commonUsers = getGroupUsers();
-        List<User> moderators = new ArrayList<User>(commonUsers.size());
+        List<PoulpeUser> moderators = new ArrayList<PoulpeUser>(commonUsers.size());
         for (org.jtalks.common.model.entity.User user : commonUsers) {
-            moderators.add((User) user);
+            moderators.add((PoulpeUser) user);
         }
         return moderators;
     }

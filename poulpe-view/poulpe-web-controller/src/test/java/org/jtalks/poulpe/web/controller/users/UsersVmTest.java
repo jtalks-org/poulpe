@@ -20,10 +20,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationResult;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.mockito.Mock;
@@ -58,14 +55,14 @@ public class UsersVmTest {
 
     @Test
     public void testEditUser() throws Exception {
-        vm.editUser(new User());
+        vm.editUser(new PoulpeUser());
         verify(zkHelper).wireToZul(EDIT_USER_URL);
     }
 
     @Test
     public void testUpdateUser() throws Exception {
         when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
-        User user = new User();
+        PoulpeUser user = new PoulpeUser();
 
         vm.saveUser(user);
         verify(service).updateUser(user);

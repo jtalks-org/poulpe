@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.bind.annotation.*;
@@ -34,9 +34,9 @@ public class UsersVm {
     public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
     private final UserService userService;
-    private final ListModelList<User> users;
+    private final ListModelList<PoulpeUser> users;
     private String searchString;
-    private User selectedUser;
+    private PoulpeUser selectedUser;
     private ZkHelper zkHelper;
 
     /**
@@ -44,7 +44,7 @@ public class UsersVm {
      */
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
-        this.users = new BindingListModelList<User>(userService.getAll(), true);
+        this.users = new BindingListModelList<PoulpeUser>(userService.getAll(), true);
     }
 
     /**
@@ -73,7 +73,7 @@ public class UsersVm {
      * @param user selected user
      */
     @Command
-    public void editUser(@BindingParam(value = "user") User user) {
+    public void editUser(@BindingParam(value = "user") PoulpeUser user) {
         selectedUser = user;
         zkHelper.wireToZul(EDIT_USER_URL);
     }
@@ -84,7 +84,7 @@ public class UsersVm {
      * @param user editing user
      */
     @Command
-    public void saveUser(@BindingParam(value = "user") User user) {
+    public void saveUser(@BindingParam(value = "user") PoulpeUser user) {
         userService.updateUser(user);
         closeEditDialog();
     }
@@ -101,7 +101,7 @@ public class UsersVm {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
     }
 
-    public ListModelList<User> getUsers() {
+    public ListModelList<PoulpeUser> getUsers() {
         users.clear();
         users.addAll(userService.getAll());
         return users;
@@ -121,11 +121,11 @@ public class UsersVm {
      *
      * @return the user selected on the UI
      */
-    public User getSelectedUser() {
+    public PoulpeUser getSelectedUser() {
         return selectedUser;
     }
 
-    public void setSelectedUser(User selectedUser) {
+    public void setSelectedUser(PoulpeUser selectedUser) {
         this.selectedUser = selectedUser;
     }
 

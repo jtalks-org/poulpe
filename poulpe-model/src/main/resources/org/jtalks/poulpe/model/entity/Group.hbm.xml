@@ -33,7 +33,7 @@
     <bag name="users" table="GROUP_USER_REF" lazy="extra" fetch="select">
       <cache usage="nonstrict-read-write" />
       <key column="GROUP_ID" not-null="true" />
-      <many-to-many class="org.jtalks.poulpe.model.entity.User">
+      <many-to-many class="org.jtalks.poulpe.model.entity.PoulpeUser">
         <column name="USER_ID" not-null="true" />
       </many-to-many>
     </bag>

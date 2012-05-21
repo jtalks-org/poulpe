@@ -17,55 +17,55 @@ package org.jtalks.poulpe.model.dao;
 import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 
 /**
- * This interface provides persistence operations for {@link User} objects.
+ * This interface provides persistence operations for {@link org.jtalks.poulpe.model.entity.PoulpeUser} objects.
  * 
  * @author Vyacheslav Zhivaev
  */
-public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepository<User> {
+public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepository<PoulpeUser> {
 
     /**
-     * Get {@link User} with corresponding username.
+     * Get {@link org.jtalks.poulpe.model.entity.PoulpeUser} with corresponding username.
      * 
      * @param username name of requested user.
-     * @return {@link User} with given username.
-     * @see User
+     * @return {@link org.jtalks.poulpe.model.entity.PoulpeUser} with given username.
+     * @see org.jtalks.poulpe.model.entity.PoulpeUser
      */
-    User getPoulpeUserByUsername(String username);
+    PoulpeUser getPoulpeUserByUsername(String username);
 
     /**
      * Find all users whose username contains specified string.
      * 
      * @param substring or symbol in user name of requested user.
      * @return List of users with given string in username.
-     * @see User
+     * @see org.jtalks.poulpe.model.entity.PoulpeUser
      */
-    List<User> getPoulpeUserByUsernamePart(String substring);
+    List<PoulpeUser> getPoulpeUserByUsernamePart(String substring);
 
     /**
-     * Get {@link User} with corresponding encodedUsername.
+     * Get {@link org.jtalks.poulpe.model.entity.PoulpeUser} with corresponding encodedUsername.
      * 
      * @param encodedUsername encoded name of requested user.
-     * @return {@link User} with given encodedUsername.
-     * @see User
+     * @return {@link org.jtalks.poulpe.model.entity.PoulpeUser} with given encodedUsername.
+     * @see org.jtalks.poulpe.model.entity.PoulpeUser
      */
-    User getPoulpeUserByEncodedUsername(String encodedUsername);
+    PoulpeUser getPoulpeUserByEncodedUsername(String encodedUsername);
 
     /**
      * Get {@link List} with all Users.
      * 
      * @return {@code List<User>}
      */
-    List<User> getAllPoulpeUsers();
+    List<PoulpeUser> getAllPoulpeUsers();
 
     /**
      * Get {@link List} with all banned Users.
      * 
      * @return {@code List<User>}
      */
-    List<User> getAllBannedUsers();
+    List<PoulpeUser> getAllBannedUsers();
 
     /**
      * Gets all non banned users with username like in parameter.
@@ -74,6 +74,6 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepo
      * @param maxCount max count of returned results
      * @return list of non banned users with username like in parameter
      */
-    List<User> getNonBannedByUsername(String word, int maxCount);
+    List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
 
 }

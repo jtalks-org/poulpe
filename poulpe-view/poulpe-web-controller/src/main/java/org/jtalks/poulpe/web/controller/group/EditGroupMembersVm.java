@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.group;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -39,7 +39,7 @@ import static org.hamcrest.text.StringContains.containsString;
  *
  * @author Vyacheslav Zhivaev
  */
-public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
+public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
     private final GroupService groupService;
     private final UserService userService;
@@ -67,7 +67,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
         this.groupService = groupService;
         this.userService = userService;
 
-        List<User> users = (List<User>) (List<?>)groupToEdit.getUsers();
+        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>)groupToEdit.getUsers();
         setStateAfterEdit(users);
     }
 
@@ -91,7 +91,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     @Command
     @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-        List<User> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
+        List<PoulpeUser> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
         users.removeAll(getStateAfterEdit());
         getAvail().clear();
         getAvail().addAll(users);
@@ -105,7 +105,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<User> {
     @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterExist() {
         getExist().clear();
-        getExist().addAll(filter(having(on(User.class).getUsername(), containsString(getExistFilterTxt())), getStateAfterEdit()));
+        getExist().addAll(filter(having(on(PoulpeUser.class).getUsername(), containsString(getExistFilterTxt())), getStateAfterEdit()));
     }
 
     /**

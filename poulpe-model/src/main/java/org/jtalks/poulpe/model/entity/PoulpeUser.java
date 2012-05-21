@@ -25,7 +25,7 @@ import org.jtalks.common.model.entity.Group;
  * @author Vyacheslav Zhivaev
  * 
  */
-public class User extends org.jtalks.common.model.entity.User {
+public class PoulpeUser extends org.jtalks.common.model.entity.User {
 
     private static final long serialVersionUID = -6429539956660665057L;
 
@@ -34,7 +34,7 @@ public class User extends org.jtalks.common.model.entity.User {
     /**
      * Only for hibernate usage.
      */
-    public User() {
+    public PoulpeUser() {
         super();
     }
 
@@ -46,7 +46,7 @@ public class User extends org.jtalks.common.model.entity.User {
      * @param password password
      * @param salt salt
      */
-    public User(String username, String email, String password, String salt) {
+    public PoulpeUser(String username, String email, String password, String salt) {
         super(username, email, password, salt);
     }
 

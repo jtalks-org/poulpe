@@ -17,7 +17,7 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.List;
 
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 
 /**
@@ -33,7 +33,7 @@ public class TransactionalUserService implements UserService {
     /**
      * Create an instance of user entity based service.
      * 
-     * @param userDao a DAO providing persistence operations over {@link User} entities
+     * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser} entities
      */
     public TransactionalUserService(UserDao userDao) {
         this.userDao = userDao;
@@ -43,7 +43,7 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<User> getAll() {
+    public List<PoulpeUser> getAll() {
         return userDao.getAllPoulpeUsers();
     }
 
@@ -51,7 +51,7 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<User> getUsersByUsernameWord(String word) {
+    public List<PoulpeUser> getUsersByUsernameWord(String word) {
         return userDao.getPoulpeUserByUsernamePart(word);
     }
 
@@ -59,7 +59,7 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void updateUser(User user) {
+    public void updateUser(PoulpeUser user) {
         userDao.update(user);
     }
 
@@ -67,12 +67,12 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public User get(long id) {
+    public PoulpeUser get(long id) {
         return userDao.get(id);
     }
 
     @Override
-    public List<User> getAllBannedUsers() {
+    public List<PoulpeUser> getAllBannedUsers() {
         return userDao.getAllBannedUsers();
     }
 
@@ -80,7 +80,7 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<User> getNonBannedByUsername(String word, int maxCount) {
+    public List<PoulpeUser> getNonBannedByUsername(String word, int maxCount) {
         return userDao.getNonBannedByUsername(word, maxCount);
     }
 

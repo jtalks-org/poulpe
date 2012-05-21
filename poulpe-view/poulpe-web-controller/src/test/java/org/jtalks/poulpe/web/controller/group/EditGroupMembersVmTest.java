@@ -33,7 +33,7 @@ import java.util.Set;
 import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -58,9 +58,9 @@ public class EditGroupMembersVmTest {
     private EditGroupMembersVm viewModel;
 
     private Group groupToEdit;
-    private List<User> usersAll;
-    private Set<User> usersSelectedInAvailable;
-    private Set<User> usersSelectedInExist;
+    private List<PoulpeUser> usersAll;
+    private Set<PoulpeUser> usersSelectedInAvailable;
+    private Set<PoulpeUser> usersSelectedInExist;
     private SelectedEntity<Group> selectedEntity;
 
     @Mock
@@ -76,7 +76,7 @@ public class EditGroupMembersVmTest {
 
         usersAll = ObjectsFactory.getFakeUsers(50);
         // we are assert, that half of users already in group
-        List<User> usersAlreadyInGroup = new ArrayList<User>(usersAll.subList(0, usersAll.size() / 2));
+        List<PoulpeUser> usersAlreadyInGroup = new ArrayList<PoulpeUser>(usersAll.subList(0, usersAll.size() / 2));
         groupToEdit = createGroupWithUsers(usersAlreadyInGroup);
 
         usersSelectedInAvailable = Sets.newHashSet(usersAll.get(0));
@@ -122,7 +122,7 @@ public class EditGroupMembersVmTest {
      */
     @Test
     public void testAddAll() {
-        List<User> selected = viewModel.getAvail();
+        List<PoulpeUser> selected = viewModel.getAvail();
 
         viewModel.addAll();
 
@@ -148,7 +148,7 @@ public class EditGroupMembersVmTest {
      */
     @Test
     public void testRemoveAll() {
-        List<User> selected = viewModel.getExist();
+        List<PoulpeUser> selected = viewModel.getExist();
 
         viewModel.removeAll();
 
@@ -177,7 +177,7 @@ public class EditGroupMembersVmTest {
     }
 
     private void vefiryNothingChanges() {
-        verify(userService, never()).updateUser(any(User.class));
+        verify(userService, never()).updateUser(any(PoulpeUser.class));
 
         verify(groupService, never()).saveGroup(any(Group.class));
         verify(groupService, never()).deleteGroup(any(Group.class));
@@ -197,7 +197,7 @@ public class EditGroupMembersVmTest {
         when(viewModel.getExistSelected()).thenReturn(usersSelectedInExist);
     }
 
-    private Group createGroupWithUsers(List<User> usersInGroup) {
+    private Group createGroupWithUsers(List<PoulpeUser> usersInGroup) {
         Group group = new Group(RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20));
         group.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(usersInGroup));
         return group;
