@@ -69,27 +69,27 @@
       </vlayout>
     </window>
     <!--BRANCH DIALOG-->
-    <window id="deleteBranchConfirmationDialog"
-            title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"
-            border="normal"
-            onClose="self.visible=false;event.stopPropagation();"
-            onCancel="self.visible=false"
-            forward="onOK=confirmBranchDeletionButton.onClick">
-      <!--visible="@load(vm.viewData.showBranchDialog)" height="270px" width="300px">-->
-      <vlayout><!-- form="@id('fx') @save(vm.deleteBranchConfirmationVm, before='confirmBranchDeletion') @load(vm.deleteBranchConfirmationVm)">-->
-        <radiogroup>
-          <vlayout>
-            <radio label="Move topics to another branch:"/>
-            <combobox model="@load(fx.availableBranches)"/>
-            <radio label="Delete With Content"/>
-          </vlayout>
-        </radiogroup>
-        <cell>
-          <button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"
-                  onClick="@command('confirmBranchDeletion')"/>
-          <button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>
-        </cell>
-      </vlayout>
-    </window>
+    <!--<window id="deleteBranchConfirmationDialog"-->
+            <!--title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"-->
+            <!--border="normal"-->
+            <!--onClose="self.visible=false;event.stopPropagation();"-->
+            <!--onCancel="self.visible=false"-->
+            <!--forward="onOK=confirmBranchDeletionButton.onClick">-->
+      <!--&lt;!&ndash;visible="@load(vm.viewData.showBranchDialog)" height="270px" width="300px">&ndash;&gt;-->
+      <!--<vlayout>&lt;!&ndash; form="@id('fx') @save(vm.deleteBranchConfirmationVm, before='confirmBranchDeletion') @load(vm.deleteBranchConfirmationVm)">&ndash;&gt;-->
+        <!--<radiogroup>-->
+          <!--<vlayout>-->
+            <!--<radio label="Move topics to another branch:"/>-->
+            <!--<combobox model="@load(fx.availableBranches)"/>-->
+            <!--<radio label="Delete With Content"/>-->
+          <!--</vlayout>-->
+        <!--</radiogroup>-->
+        <!--<cell>-->
+          <!--<button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"-->
+                  <!--onClick="@command('confirmBranchDeletion')"/>-->
+          <!--<button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>-->
+        <!--</cell>-->
+      <!--</vlayout>-->
+    <!--</window>-->
   </window>
 </zk>
