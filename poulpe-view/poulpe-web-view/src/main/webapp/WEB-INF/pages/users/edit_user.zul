@@ -13,20 +13,20 @@
       <rows>
         <row>
           <label value="${labels.users.label.firstname}" />
-          <textbox value="@bind(vm.selectedUser.firstName)" width="100%" focus="true" />
+          <textbox value="@bind(vm.selectedUser.firstName) @validator('beanValidator')" width="100%" focus="true" />
         </row>
         <row>
           <label value="${labels.users.label.lastname}" />
-          <textbox value="@bind(vm.selectedUser.lastName)" width="100%" />
+          <textbox value="@bind(vm.selectedUser.lastName) @validator('beanValidator')" width="100%" />
         </row>
         <row>
           <label value="${labels.users.label.email}" />
-          <textbox value="@bind(vm.selectedUser.email)" width="100%"
+          <textbox value="@bind(vm.selectedUser.email) @validator('beanValidator')" width="100%"
             constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
         </row>
         <row>
           <label value="${labels.users.label.password}" />
-          <textbox value="@bind(vm.selectedUser.password)" width="100%" type="password"
+          <textbox value="@bind(vm.selectedUser.password) @validator('beanValidator')" width="100%" type="password"
             constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
         </row>
       </rows>

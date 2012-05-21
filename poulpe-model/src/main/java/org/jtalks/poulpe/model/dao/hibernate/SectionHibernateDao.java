@@ -41,7 +41,7 @@ public class SectionHibernateDao extends AbstractHibernateParentRepository<Poulp
     public boolean deleteRecursively(PoulpeSection section) {
         PoulpeSection victim = (PoulpeSection) getSession().load(PoulpeSection.class, section.getId());
         getSession().delete(victim);
-        return true; // otherwise exception is thrown by Hibernate
+        return true;
     }
 
     /** {@inheritDoc} */

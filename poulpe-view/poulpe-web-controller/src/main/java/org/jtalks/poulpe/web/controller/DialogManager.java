@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 
 /**
  * The interface represents the manager for showing different types of dialog
@@ -76,7 +76,7 @@ public interface DialogManager {
      * @param reason of banning
      * @param performable action after confirming
      */
-    void confirmBan(List<User> usersToBan, String reason, Performable performable);
+    void confirmBan(List<PoulpeUser> usersToBan, String reason, Performable performable);
 
     /**
      * The interface for storing some actions that ought to be performed when

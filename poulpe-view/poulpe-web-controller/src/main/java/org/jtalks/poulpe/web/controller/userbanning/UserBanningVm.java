@@ -21,7 +21,7 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang.Validate;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -43,12 +43,12 @@ public class UserBanningVm {
     /**
      * User selected in list of banned, also this instance used by window for editing ban properties.
      */
-    private User selectedUser;
+    private PoulpeUser selectedUser;
 
     /**
      * User selected in list of available users to add ban for.
      */
-    private User addBanFor;
+    private PoulpeUser addBanFor;
 
     /**
      * Flag variable which indicates that window to edit ban properties should be shown.
@@ -77,7 +77,7 @@ public class UserBanningVm {
      * @return list of users, list instance is UNMODIFIABLE
      */
     @Nonnull
-    public List<User> getAvailableUsers() {
+    public List<PoulpeUser> getAvailableUsers() {
         return userService.getNonBannedByUsername(availableFilterText, 10);
     }
 
@@ -87,7 +87,7 @@ public class UserBanningVm {
      * @return list of users, list instance is UNMODIFIABLE
      */
     @Nonnull
-    public List<User> getBannedUsers() {
+    public List<PoulpeUser> getBannedUsers() {
         return userService.getAllBannedUsers();
     }
 
@@ -97,7 +97,7 @@ public class UserBanningVm {
      * @return currently selected user, can be {@code null}
      */
     @Nullable
-    public User getSelectedUser() {
+    public PoulpeUser getSelectedUser() {
         return selectedUser;
     }
 
@@ -117,7 +117,7 @@ public class UserBanningVm {
      * @return the user currently selected to add ban state
      */
     @Nullable
-    public User getAddBanFor() {
+    public PoulpeUser getAddBanFor() {
         return addBanFor;
     }
 
@@ -126,7 +126,7 @@ public class UserBanningVm {
      * 
      * @param addBanFor the user which be used to add ban state
      */
-    public void setAddBanFor(@Nonnull User addBanFor) {
+    public void setAddBanFor(@Nonnull PoulpeUser addBanFor) {
         this.addBanFor = addBanFor;
     }
 
@@ -183,7 +183,7 @@ public class UserBanningVm {
     }
 
     /**
-     * Save ban properties to already selected user. User must be already selected by {@link #editBan(User)} or
+     * Save ban properties to already selected user. User must be already selected by {@link #editBan(org.jtalks.poulpe.model.entity.PoulpeUser)} or
      * {@link #addBanToUser()}. This method also closes window for ban editing.
      */
     @Command
@@ -218,7 +218,7 @@ public class UserBanningVm {
      * @param user the user to edit for
      * @throws NotFoundException
      */
-    private void editBan(User user) {
+    private void editBan(PoulpeUser user) {
         selectedUser = user;
         editBanWindowOpened = true;
     }
@@ -229,7 +229,7 @@ public class UserBanningVm {
      * @param user the user to enable for
      * @return the user instance same as parameter
      */
-    private User enableBannedState(User user) {
+    private PoulpeUser enableBannedState(PoulpeUser user) {
         if (user.getBanReason() == null) {
             user.setBanReason("");
         }
@@ -242,7 +242,7 @@ public class UserBanningVm {
      * @param user the user to disable for
      * @return the user instance same as parameter
      */
-    private User disableBannedState(User user) {
+    private PoulpeUser disableBannedState(PoulpeUser user) {
         user.setBanReason(null);
         return user;
     }

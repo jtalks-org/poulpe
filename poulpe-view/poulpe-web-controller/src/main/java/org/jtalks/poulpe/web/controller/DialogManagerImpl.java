@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
@@ -94,14 +94,14 @@ public class DialogManagerImpl implements DialogManager {
 
     /** {@inheritDoc} */
     @Override
-    public void confirmBan(List<User> usersToBan, String reason, Performable performable) {
+    public void confirmBan(List<PoulpeUser> usersToBan, String reason, Performable performable) {
 
         String title = String.format(Labels.getLabel("dialogmanager.userbanning.title"));
 
         String delimeterBetweenUsers = Labels.getLabel("dialogmanager.userbanning.delim");
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < usersToBan.size(); i++) {
-            User user = usersToBan.get(i);
+            PoulpeUser user = usersToBan.get(i);
             sb.append(user.getUsername());
             if (i != usersToBan.size() - 1) {
                 sb.append(delimeterBetweenUsers);

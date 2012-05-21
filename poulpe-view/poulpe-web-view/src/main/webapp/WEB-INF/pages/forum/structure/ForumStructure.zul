@@ -10,21 +10,21 @@
     <tree model="@bind(vm.viewData.sectionTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
       <template name="model">
         <treeitem draggable="@load(each.data.branch)" droppable="@load(each.data.branch)" label="@load(each)"
-                onDrop="@command('onDropItem', event=event)"/>
+                  onDrop="@command('onDropItem', event=event)"/>
       </template>
     </tree>
 
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_item}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewSectionDialog', createNew=false)" image="/resources/img/edit16.png"/>
-      <menuitem label="${labels.forum_structure.edit_item}"  visible="@load(vm.selectedItem.branch)"
+      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(vm.selectedItem.branch)"
                 onClick="@command('showNewBranchDialog', createNew=false)" image="/resources/img/edit16.png"/>
       <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
                 onClick="@command('showNewBranchDialog', createNew=true)"/>
       <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
                 onClick="@command('openBranchPermissions')"/>
       <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"
-                image="/resources/img/remove.png"/>
+                image="/resources/img/remove16.png"/>
     </menupopup>
     <!--SECTION DIALOG-->
     <window id="editSectionDialog"
@@ -68,5 +68,28 @@
         </cell>
       </vlayout>
     </window>
+    <!--BRANCH DIALOG-->
+    <!--<window id="deleteBranchConfirmationDialog"-->
+            <!--title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"-->
+            <!--border="normal"-->
+            <!--onClose="self.visible=false;event.stopPropagation();"-->
+            <!--onCancel="self.visible=false"-->
+            <!--forward="onOK=confirmBranchDeletionButton.onClick">-->
+      <!--&lt;!&ndash;visible="@load(vm.viewData.showBranchDialog)" height="270px" width="300px">&ndash;&gt;-->
+      <!--<vlayout>&lt;!&ndash; form="@id('fx') @save(vm.deleteBranchConfirmationVm, before='confirmBranchDeletion') @load(vm.deleteBranchConfirmationVm)">&ndash;&gt;-->
+        <!--<radiogroup>-->
+          <!--<vlayout>-->
+            <!--<radio label="Move topics to another branch:"/>-->
+            <!--<combobox model="@load(fx.availableBranches)"/>-->
+            <!--<radio label="Delete With Content"/>-->
+          <!--</vlayout>-->
+        <!--</radiogroup>-->
+        <!--<cell>-->
+          <!--<button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"-->
+                  <!--onClick="@command('confirmBranchDeletion')"/>-->
+          <!--<button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>-->
+        <!--</cell>-->
+      <!--</vlayout>-->
+    <!--</window>-->
   </window>
 </zk>

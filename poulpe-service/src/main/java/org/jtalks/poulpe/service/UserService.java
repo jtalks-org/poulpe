@@ -17,7 +17,7 @@ package org.jtalks.poulpe.service;
 import java.util.List;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 
 /**
  * Service interface for operations with {@code User} persistent entity.
@@ -32,7 +32,7 @@ public interface UserService {
      * 
      * @return list of all users
      */
-    List<User> getAll();
+    List<PoulpeUser> getAll();
 
     /**
      * Gets Users with corresponding word in user name
@@ -40,30 +40,30 @@ public interface UserService {
      * @param word to look up
      * @return list of users with the word in the name
      */
-    List<User> getUsersByUsernameWord(String word);
+    List<PoulpeUser> getUsersByUsernameWord(String word);
 
     /**
      * Updates the user
      * 
      * @param user entity to be updated
      */
-    void updateUser(User user);
+    void updateUser(PoulpeUser user);
 
     /**
      * Retrieves user by its id
      * 
      * @param id to look up
-     * @return retrieved {@link User} instance
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
      * @throws NotFoundException when user can't be found
      */
-    User get(long id) throws NotFoundException;
+    PoulpeUser get(long id) throws NotFoundException;
 
     /**
      * Gets all banned users from the database
      * 
      * @return list of all users
      */
-    List<User> getAllBannedUsers();
+    List<PoulpeUser> getAllBannedUsers();
 
     /**
      * Gets all non banned users with username like in parameter.
@@ -72,6 +72,6 @@ public interface UserService {
      * @param maxCount max count of returned results
      * @return list of non banned users with username like in parameter
      */
-    List<User> getNonBannedByUsername(String word, int maxCount);
+    List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
 
 }

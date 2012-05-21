@@ -19,6 +19,7 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * The class is dedicated to contain any entity (in our particular case is either Section or Branch) so that we can
@@ -31,10 +32,19 @@ import javax.annotation.Nonnull;
 public class ForumStructureItem {
     private Entity item;
 
+    /**
+     * Creates an empty item which represents a null item, but in the same time can provide useful methods without
+     * throwing NPE. See Null Object design pattern for more information.
+     */
     public ForumStructureItem() {
     }
 
-    public ForumStructureItem(Entity item) {
+    /**
+     * @param item the entity inside of the item, can be either branch or section. Also can be {@code null} which
+     *             represents a null item, but in the same time can provide useful methods without throwing NPE. See
+     *             Null Object design pattern for more information.
+     */
+    public ForumStructureItem(@Nullable Entity item) {
         this.item = item;
     }
 
@@ -114,6 +124,32 @@ public class ForumStructureItem {
     }
 
     /**
+     * Prepared the item to be edited (shown in the branch editing dialog) by returning the new instance of item or
+     * returning {@code this} by depending on the specified flag.
+     *
+     * @param createNew specify {@code false} if you want the branch to be edited, or {@code false} if you want to
+     *                  create a new branch item
+     * @return new branch item if {@code createNew} was set or returns {@code this} (which will mean that the branch is
+     *         rather being edited than a dialog to create a new branch was created)
+     */
+    public ForumStructureItem prepareBranchItemForEditing(boolean createNew) {
+        return createNew ? new ForumStructureItem(new PoulpeBranch()) : this;
+    }
+
+    /**
+     * Prepared the item to be edited (shown in the section editing dialog) by returning the new instance of item or
+     * returning {@code this} by depending on the specified flag.
+     *
+     * @param createNew specify {@code false} if you want the section to be edited, or {@code false} if you want to
+     *                  create a new section item
+     * @return new section item if {@code createNew} was set or returns {@code this} (which will mean that the section
+     *         is rather being edited than a dialog to create a new section was created)
+     */
+    public ForumStructureItem prepareSectionItemForEditing(boolean createNew) {
+        return createNew ? new ForumStructureItem(new PoulpeSection()) : this;
+    }
+
+    /**
      * Gets the wrapped entity and casts it to the class specified as a parameter.
      *
      * @param itemClass the class of the item inside to be casted to
@@ -130,7 +166,8 @@ public class ForumStructureItem {
     }
 
     /**
-     * Sets the wrapped item to {@code null}.
+     * Sets the wrapped item to {@code null} which effectively means that the item is null (or empty), but still can
+     * provide useful methods without throwing NPE.
      *
      * @return this
      */
@@ -139,6 +176,9 @@ public class ForumStructureItem {
         return this;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return item == null ? "null" : item.toString();

@@ -21,25 +21,25 @@ import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.entity.User;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 
 /**
  * Hibernate implementation of UserDao.
  * 
  * @author Vyacheslav Zhivaev
  */
-public class UserHibernateDao extends AbstractHibernateParentRepository<User> implements UserDao {
+public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
     /**
      * Class on which hibernate mapping is set
      */
-    private final static Class<User> type = User.class;
+    private final static Class<PoulpeUser> type = PoulpeUser.class;
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public User getPoulpeUserByUsername(String username) {
-        return (User) getSession().createQuery("from " + type.getSimpleName() + " u where u.username = ?")
+    public PoulpeUser getPoulpeUserByUsername(String username) {
+        return (PoulpeUser) getSession().createQuery("from " + type.getSimpleName() + " u where u.username = ?")
                 .setString(0, username).uniqueResult();
     }
 
@@ -47,8 +47,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
      * {@inheritDoc}
      */
     @Override
-    public User getPoulpeUserByEncodedUsername(String encodedUsername) {
-        return (User) getSession().createQuery("from " + type.getSimpleName() + " u where u.encodedUsername = ?")
+    public PoulpeUser getPoulpeUserByEncodedUsername(String encodedUsername) {
+        return (PoulpeUser) getSession().createQuery("from " + type.getSimpleName() + " u where u.encodedUsername = ?")
                 .setCacheable(true).setString(0, encodedUsername).uniqueResult();
     }
 
@@ -57,8 +57,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<User> getAllPoulpeUsers() {
-        return (List<User>) getSession().createQuery("from " + type.getSimpleName()).list();
+    public List<PoulpeUser> getAllPoulpeUsers() {
+        return (List<PoulpeUser>) getSession().createQuery("from " + type.getSimpleName()).list();
     }
 
     /**
@@ -66,9 +66,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<User> getPoulpeUserByUsernamePart(String substring) {
+    public List<PoulpeUser> getPoulpeUserByUsernamePart(String substring) {
         String param = MessageFormat.format("%{0}%", substring);
-        return (List<User>) getSession().createQuery("from " + type.getSimpleName() + " u where u.username like ?")
+        return (List<PoulpeUser>) getSession().createQuery("from " + type.getSimpleName() + " u where u.username like ?")
                 .setString(0, param).list();
     }
 
@@ -81,9 +81,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
     }
 
     @Override
-    public List<User> getAllBannedUsers() {
-        Criteria criteria = getSession().createCriteria(User.class).add(Restrictions.isNotNull("banReason"));
-        return (List<User>) criteria.list();
+    public List<PoulpeUser> getAllBannedUsers() {
+        Criteria criteria = getSession().createCriteria(PoulpeUser.class).add(Restrictions.isNotNull("banReason"));
+        return (List<PoulpeUser>) criteria.list();
     }
 
     /**
@@ -91,8 +91,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<User> im
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<User> getNonBannedByUsername(String word, int maxResults) {
-        return (List<User>) getSession()
+    public List<PoulpeUser> getNonBannedByUsername(String word, int maxResults) {
+        return (List<PoulpeUser>) getSession()
                 .createQuery("from " + type.getSimpleName() + " u where u.banReason is null and u.username like ?")
                 .setString(0, MessageFormat.format("%{0}%", word)).setMaxResults(maxResults).list();
     }
