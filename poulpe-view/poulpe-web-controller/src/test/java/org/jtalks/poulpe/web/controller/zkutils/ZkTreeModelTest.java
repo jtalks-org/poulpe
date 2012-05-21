@@ -79,6 +79,15 @@ public class ZkTreeModelTest {
         assertNull(sut.removeSelected());
     }
 
+    @Test
+    public void testGetChildData() throws Exception {
+        assertSame(sut.getChildData(1, 0), sut.getRoot().getChildAt(1).getChildAt(0).getData());
+    }
+
+    @Test
+    public void testGetChildData_withNoSuchPathExisting() throws Exception {
+        assertNull(sut.getChildData(5));
+    }
 
     @Test
     public void testGetChild() throws Exception {

@@ -19,6 +19,8 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.testng.Assert.*;
 
 /**
@@ -66,6 +68,32 @@ public class ForumStructureItemTest {
         PoulpeSection branch = new PoulpeSection();
         item.setItem(branch);
         assertSame(item.getSectionItem(), branch);
+    }
+
+    @Test
+    public void testPrepareBranchItemForEditing_whenCreatingNew() throws Exception {
+        ForumStructureItem preparedItem = item.prepareBranchItemForEditing(true);
+        assertNotSame(preparedItem, item);
+        assertThat(preparedItem.getItem(), instanceOf(PoulpeBranch.class));
+    }
+
+    @Test
+    public void testPrepareBranchItemForEditing_whenEditingExisting() throws Exception {
+        ForumStructureItem preparedItem = item.prepareBranchItemForEditing(false);
+        assertSame(preparedItem, item);
+    }
+
+    @Test
+    public void testPrepareSectionItemForEditing_whenCreatingNew() throws Exception {
+        ForumStructureItem preparedItem = item.prepareBranchItemForEditing(true);
+        assertNotSame(preparedItem, item);
+        assertThat(preparedItem.getItem(), instanceOf(PoulpeBranch.class));
+    }
+
+    @Test
+    public void testPrepareSectionItemForEditing_whenEditingExisting() throws Exception {
+        ForumStructureItem preparedItem = item.prepareBranchItemForEditing(false);
+        assertSame(preparedItem, item);
     }
 
     @Test(expectedExceptions = ClassCastException.class)

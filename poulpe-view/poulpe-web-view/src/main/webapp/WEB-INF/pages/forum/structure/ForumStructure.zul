@@ -24,7 +24,7 @@
       <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
                 onClick="@command('openBranchPermissions')"/>
       <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"
-                image="/resources/img/remove.png"/>
+                image="/resources/img/remove16.png"/>
     </menupopup>
     <!--SECTION DIALOG-->
     <window id="editSectionDialog"

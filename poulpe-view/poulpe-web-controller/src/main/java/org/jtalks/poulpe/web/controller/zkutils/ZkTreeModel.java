@@ -64,13 +64,30 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
     }
 
     /**
+     * Returns the data of the child located at specified path or {@code null} if no such child was found or the found
+     * child contains {@code null} data.
+     *
+     * @param path a list of indices of the nodes in the tree. E.g. if you specify 5,4,1, then will be taken the node
+     *             with index 5 from the first level of the tree, next will be the 4th child, and then the 1st child of
+     *             the 4th child.
+     * @return the data of the child located at specified path or {@code null} if no node was found there
+     */
+    public E getChildData(int... path) {
+        TreeNode<E> child = getChild(path);
+        if (child == null) {
+            return null;
+        }
+        return child.getData();
+    }
+
+    /**
      * Removes the node that is currently selected in the tree mode. Does nothing if no node is selected at the moment.
      *
      * @return the node that was selected or {@code null} if nothing was
      */
     public TreeNode<E> removeSelected() {
         int[] selectionPath = getSelectionPath();
-        if(selectionPath == null){
+        if (selectionPath == null) {
             return null;
         }
         return removeChild(selectionPath);

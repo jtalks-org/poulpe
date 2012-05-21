@@ -26,7 +26,6 @@ import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Is used to contain data for the view and do operations on view. It doesn't do any business logic, only logic that is
@@ -36,11 +35,10 @@ import java.util.List;
  * @author Guram Savinov
  */
 public class ForumStructureData {
-    private ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
+    private final BranchEditingDialog branchDialog = new BranchEditingDialog();
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private ZkTreeModel<ForumStructureItem> sectionTree;
     private boolean showSectionDialog;
-    private boolean showBranchDialog;
 
     /**
      * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
@@ -53,31 +51,42 @@ public class ForumStructureData {
     }
 
     /**
-     * Closes all the dialogs.
+     * You can use it to close both section dialog and branch dialog.
      *
      * @return this
      */
     public ForumStructureData closeDialog() {
         showSectionDialog = false;
-        showBranchDialog = false;
+        branchDialog.closeDialog();
         return this;
     }
 
+    /**
+     * Shows the branch dialog and decides whether it should be a dialog for the new branch creation or it will be an
+     * editing of the existing item.
+     *
+     * @param createNew a flag to decide whether we're going to create a new branch or will be editing the existing
+     *                  one
+     * @return this
+     */
     public ForumStructureData showBranchDialog(boolean createNew) {
-        if (createNew) {
-            selectedItem = new ForumStructureItem(new PoulpeBranch());
-        }
-        TreeNode<ForumStructureItem> section = sectionTree.getChild(sectionTree.getSelectionPath()[0]);
+        selectedItem = selectedItem.prepareBranchItemForEditing(createNew);
+        ForumStructureItem containingSection = sectionTree.getChildData(sectionTree.getSelectionPath()[0]);
         sectionTree.clearSelection();
-        sectionList.addToSelection(section.getData());
-        showBranchDialog = true;
+        branchDialog.selectSection(containingSection).showDialog();
         return this;
     }
 
+    /**
+     * Shows the section dialog and decides whether it should be a dialog for the new section creation or it will be an
+     * editing of the existing item.
+     *
+     * @param createNew a flag to decide whether we're going to create a new section or will be editing the existing
+     *                  one
+     * @return this
+     */
     public ForumStructureData showSectionDialog(boolean createNew) {
-        if (createNew) {
-            selectedItem = new ForumStructureItem(new PoulpeSection());
-        }
+        selectedItem = selectedItem.prepareSectionItemForEditing(createNew);
         showSectionDialog = true;
         return this;
     }
@@ -109,7 +118,7 @@ public class ForumStructureData {
      * @return the list of available sections
      */
     public ListModelList<ForumStructureItem> getSectionList() {
-        return sectionList;
+        return branchDialog.getSectionList();
     }
 
     /**
@@ -143,8 +152,8 @@ public class ForumStructureData {
      * @see #showBranchDialog
      */
     public boolean isShowBranchDialog() {
-        boolean show = showBranchDialog && selectedItem.isBranch();
-        this.showBranchDialog = false;
+        boolean show = branchDialog.isShowDialog() && selectedItem.isBranch();
+        branchDialog.closeDialog();
         return show;
     }
 
@@ -238,16 +247,7 @@ public class ForumStructureData {
 
     public void setSectionTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
         this.sectionTree = sectionTree;
-        this.sectionList.clear();
-        List<ForumStructureItem> sections = unwrapSections(sectionTree.getRoot().getChildren());
-        this.sectionList.addAll(sections);
+        branchDialog.renewSectionsFromTree(sectionTree);
     }
 
-    private List<ForumStructureItem> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<ForumStructureItem> sections = new ArrayList<ForumStructureItem>();
-        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData());
-        }
-        return sections;
-    }
 }
