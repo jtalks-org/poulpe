@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -66,7 +67,7 @@ public class ComponentsVm {
     @Command
     @NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
     public void showAddComponentDialog() {
-        selected = new Component();
+        selected = new Jcommune();
         editWindowVisible = true;
     }
 
@@ -121,6 +122,22 @@ public class ComponentsVm {
     @Command
     @NotifyChange({COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE})
     public void saveComponent() {
+//        if(selected.getComponentType().equals(ComponentType.FORUM)){
+//            String name =  selected.getName();
+//            String description = selected.getDescription();
+//            selected = new Jcommune();
+//            selected.setName(name);
+//            selected.setDescription(description);
+//            selected.setComponentType(ComponentType.FORUM);
+//        }
+//        if(selected.getComponentType().equals(ComponentType.ADMIN_PANEL)){
+//            String name =  selected.getName();
+//            String description = selected.getDescription();
+//            selected = new Poulpe();
+//            selected.setName(name);
+//            selected.setDescription(description);
+//            selected.setComponentType(ComponentType.ADMIN_PANEL);
+//        }
         componentService.saveComponent(selected);
         editWindowVisible = false;
         updateListComponentsData();
