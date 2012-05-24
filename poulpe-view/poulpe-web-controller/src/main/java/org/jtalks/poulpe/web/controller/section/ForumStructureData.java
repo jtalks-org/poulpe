@@ -19,6 +19,8 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
+import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
+import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.DefaultTreeNode;
@@ -37,6 +39,8 @@ import java.util.ArrayList;
  */
 public class ForumStructureData {
     private final BranchEditingDialog branchDialog = new BranchEditingDialog();
+    private final ConfirmBranchDeletionDialogVm confirmBranchDeletionDialogVm = new ConfirmBranchDeletionDialogVm();
+    private final ConfirmSectionDeletionDialogVm confirmSectionDeletionDialogVm = new ConfirmSectionDeletionDialogVm();
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private ZkTreeModel<ForumStructureItem> sectionTree;
     private boolean showSectionDialog;
@@ -66,8 +70,7 @@ public class ForumStructureData {
      * Shows the branch dialog and decides whether it should be a dialog for the new branch creation or it will be an
      * editing of the existing item.
      *
-     * @param createNew a flag to decide whether we're going to create a new branch or will be editing the existing
-     *                  one
+     * @param createNew a flag to decide whether we're going to create a new branch or will be editing the existing one
      * @return this
      */
     public ForumStructureData showBranchDialog(boolean createNew) {
@@ -170,6 +173,29 @@ public class ForumStructureData {
         boolean show = showSectionDialog && selectedItem.isSection();
         this.showSectionDialog = false;
         return show;
+    }
+
+    public void setShowSectionDialog(boolean showSectionDialog) {
+        this.showSectionDialog = showSectionDialog;
+    }
+
+
+    /**
+     * Gets the VM that is responsible for showing the section deletion confirmation.
+     *
+     * @return the VM that is responsible for showing the section deletion confirmation
+     */
+    public ConfirmSectionDeletionDialogVm getConfirmSectionDeletionDialogVm() {
+        return confirmSectionDeletionDialogVm;
+    }
+
+    /**
+     * Gets the VM that is responsible for showing the branch deletion confirmation.
+     *
+     * @return the VM that is responsible for showing the branch deletion confirmation
+     */
+    public ConfirmBranchDeletionDialogVm getConfirmBranchDeletionDialogVm() {
+        return confirmBranchDeletionDialogVm;
     }
 
     /**

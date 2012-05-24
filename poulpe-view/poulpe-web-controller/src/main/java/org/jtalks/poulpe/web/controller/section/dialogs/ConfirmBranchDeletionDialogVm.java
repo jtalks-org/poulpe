@@ -6,25 +6,6 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
  *
  * @author stanislav bashkirtsev
  */
-public class ConfirmBranchDeletionDialogVm {
-    private boolean showDialog;
+public class ConfirmBranchDeletionDialogVm extends AbstractDialogVm {
 
-    /**
-     * Sets the flag of showing the dialog to {@code true}, is used by ZUL.
-     *
-     * @return this
-     */
-    public ConfirmBranchDeletionDialogVm showDialog() {
-        showDialog = true;
-        return this;
-    }
-
-    /**
-     * Decides whether to show the dialog or not (is used by ZUL).
-     *
-     * @return {@code true} if the confirmation dialog should be shown, {@code false} otherwise
-     */
-    public boolean isShowDialog() {
-        return showDialog;
-    }
 }

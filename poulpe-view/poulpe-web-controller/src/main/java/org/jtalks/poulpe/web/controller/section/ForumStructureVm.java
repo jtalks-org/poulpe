@@ -94,20 +94,45 @@ public class ForumStructureVm {
     }
 
     /**
-     * Deletes the selected entity no matter what it is - a branch or a section. It does both: back-end removal from DB
-     * and ask the {@link ForumStructureData} to remove the item from the tree.
+     * Shows the confirmation message before deleting the branch.
+     *
+     * @see ForumStructureData#getSelectedItem()
+     */
+    @Command
+    @NotifyChange({VIEW_DATA_PROP})
+    public void deleteSelected() {
+        if (viewData.getSelectedItem().isBranch()) {
+            viewData.getConfirmBranchDeletionDialogVm().showDialog();
+        } else {
+            viewData.getConfirmSectionDeletionDialogVm().showDialog();
+        }
+    }
+
+    /**
+     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData} to
+     * remove the item from the tree.
      *
      * @see ForumStructureData#getSelectedItem()
      */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void deleteSelected() {
+    public void confirmBranchDeletion() {
         ForumStructureItem selectedItem = viewData.removeSelectedItem();
-        if (selectedItem.isBranch()) {
-            deleteSelectedBranch(selectedItem.getBranchItem());
-        } else {
-            deleteSelectedSection(selectedItem.getSectionItem());
-        }
+        deleteSelectedBranch(selectedItem.getBranchItem());
+    }
+
+    /**
+     * Deletes the selected section. It does both: back-end removal from DB and ask the {@link ForumStructureData} to
+     * remove the item from the tree.
+     *
+     * @see ForumStructureData#getSelectedItem()
+     */
+    @Command
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
+    public void confirmSectionDeletion() {
+        ForumStructureItem selectedItem = viewData.removeSelectedItem();
+        deleteSelectedSection(selectedItem.getSectionItem());
+
     }
 
     void deleteSelectedSection(PoulpeSection selectedSection) {
