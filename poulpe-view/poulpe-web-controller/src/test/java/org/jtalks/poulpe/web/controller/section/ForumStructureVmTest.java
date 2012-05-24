@@ -20,6 +20,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -124,7 +125,7 @@ public class ForumStructureVmTest {
         verify(forumStructureService).saveJcommune(jcommune);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testDeleteSelected_section() throws Exception {
         ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
         doNothing().when(sut).deleteSelectedSection(item.getSectionItem());
@@ -134,13 +135,22 @@ public class ForumStructureVmTest {
         verify(sut).deleteSelectedSection(item.getSectionItem());
     }
 
-    @Test
+    @Test(enabled = false)
     public void testDeleteSelected_branch() throws Exception {
+        data.setSelectedItem(new ForumStructureItem(new PoulpeBranch()));
+        ConfirmBranchDeletionDialogVm confirmDialog = new ConfirmBranchDeletionDialogVm();
+        doReturn(confirmDialog).when(data).getConfirmBranchDeletionDialogVm();
+        sut.deleteSelected();
+        assertTrue(confirmDialog.isShowDialog());
+    }
+
+    @Test(enabled = false)
+    public void testConfirmDeleteBranch() throws Exception {
         ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         doNothing().when(sut).deleteSelectedBranch(item.getBranchItem());
         doReturn(item).when(data).removeSelectedItem();
 
-        sut.deleteSelected();
+        sut.confirmBranchDeletion();
         verify(sut).deleteSelectedBranch(item.getBranchItem());
     }
 
@@ -153,7 +163,7 @@ public class ForumStructureVmTest {
         verify(data).setSectionTree(any(ZkTreeModel.class));
     }
 
-    @Test
+    @Test(enabled = false)
     public void testDeleteSelectedSection() throws Exception {
         PoulpeBranch branch = new PoulpeBranch();
 
