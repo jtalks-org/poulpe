@@ -31,6 +31,7 @@ import javax.annotation.Nonnull;
  * @author dim42
  */
 public class UsersVm {
+	private static final String SELECTED_ITEM_PROP = "selectedUser", VIEW_DATA_PROP = "viewData";
     public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
     private final UserService userService;
@@ -84,6 +85,7 @@ public class UsersVm {
      * @param user editing user
      */
     @Command
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveUser(@BindingParam(value = "user") PoulpeUser user) {
         userService.updateUser(user);
         closeEditDialog();
@@ -93,12 +95,15 @@ public class UsersVm {
      * Closes edit user dialog.
      */
     @Command
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void cancelEdit() {
         closeEditDialog();
     }
 
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
+        users.clear();
+        users.addAll(userService.getAll());
     }
 
     public ListModelList<PoulpeUser> getUsers() {
