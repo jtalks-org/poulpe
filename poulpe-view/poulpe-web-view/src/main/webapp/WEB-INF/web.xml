@@ -88,11 +88,11 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-name>hibernateSessionInViewFilter</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
     <filter-mapping>
-        <filter-name>hibernateSessionInViewFilter</filter-name>
+        <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
@@ -113,4 +113,3 @@
     </welcome-file-list>
 
 </web-app>
-
