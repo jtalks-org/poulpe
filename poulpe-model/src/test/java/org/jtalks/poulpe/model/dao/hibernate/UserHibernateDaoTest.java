@@ -24,6 +24,7 @@ import java.util.List;
 import org.apache.commons.collections.ListUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,11 +83,21 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     }
 
     @Test
+    public void testGetPoulpeUserByUsername() {
+        PoulpeUser user = ObjectsFactory.createUser("testGetPoulpeUserByUserna");
+
+        givenUserSavedAndEvicted(user);
+        PoulpeUser actual = dao.getPoulpeUserByUsername(user.getUsername());
+
+        assertReflectionEquals(actual, user);
+    }
+
+    @Test
     public void testGetByUsername() {
         PoulpeUser user = ObjectsFactory.createUser("testGetByUsername");
 
         givenUserSavedAndEvicted(user);
-        PoulpeUser actual = dao.getPoulpeUserByUsername(user.getUsername());
+        User actual = dao.getByUsername(user.getUsername());
 
         assertReflectionEquals(actual, user);
     }
@@ -129,8 +140,8 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testGetAllBannedUsers() {
-        List<PoulpeUser> bannedUsers = ObjectsFactory.createBannedUsers("testGetAllBannedUsers1", "testGetAllBannedUsers2",
-                "testGetAllBannedUsers3");
+        List<PoulpeUser> bannedUsers = ObjectsFactory.createBannedUsers("testGetAllBannedUsers1",
+                "testGetAllBannedUsers2", "testGetAllBannedUsers3");
 
         givenUsersSavedAndEvicted(bannedUsers);
         List<PoulpeUser> actual = dao.getAllBannedUsers();

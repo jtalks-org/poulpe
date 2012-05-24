@@ -68,8 +68,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public List<PoulpeUser> getPoulpeUserByUsernamePart(String substring) {
         String param = MessageFormat.format("%{0}%", substring);
-        return (List<PoulpeUser>) getSession().createQuery("from " + type.getSimpleName() + " u where u.username like ?")
-                .setString(0, param).list();
+        return (List<PoulpeUser>) getSession()
+                .createQuery("from " + type.getSimpleName() + " u where u.username like ?").setString(0, param).list();
     }
 
     /**
