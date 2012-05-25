@@ -236,7 +236,11 @@ public class ForumStructureVm {
      * @return instance of JCommune from database
      */
     private Jcommune loadJcommune() {
-        return forumStructureService.getJcommune();
+        Jcommune jcommune = forumStructureService.getJcommune();
+        if (jcommune == null) {
+            throw new IllegalStateException("Please, create a Forum Component first.");
+        }
+        return jcommune;
     }
 
     /**
