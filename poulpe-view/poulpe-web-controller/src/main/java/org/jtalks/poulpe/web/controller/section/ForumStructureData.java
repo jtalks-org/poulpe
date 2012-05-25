@@ -277,4 +277,17 @@ public class ForumStructureData {
         branchDialog.renewSectionsFromTree(sectionTree);
     }
 
+    /**
+     * Moves node to the target node place. Switches target and all next nodes after inserted node. 
+     * 
+     * @param node the node that will be inserted to the target node place
+     * @param target the node that will be placed with all next nodes after inserted
+     */
+    public void moveNodeTo(TreeNode<ForumStructureItem> node,
+	        TreeNode<ForumStructureItem> target) {
+	    sectionTree.removeChild(sectionTree.getPath(node));
+	    TreeNode<ForumStructureItem> targetParent = target.getParent();
+	    targetParent.insert(node, targetParent.getIndex(target));
+    }
+
 }
