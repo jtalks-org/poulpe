@@ -178,6 +178,7 @@ public class UserGroupVm {
      */
     @SuppressWarnings("unused")
     public ListModelList<Group> getGroups() {
+        updateView();
         return groups;
     }
 

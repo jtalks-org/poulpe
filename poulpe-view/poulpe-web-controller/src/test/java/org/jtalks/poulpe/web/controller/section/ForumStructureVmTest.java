@@ -20,6 +20,8 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
+import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -70,38 +72,6 @@ public class ForumStructureVmTest {
         verify(sut).storeNewSection(selectedSection);
     }
 
-    @Test(enabled = false)
-    public void testSaveBranch() throws Exception {
-        doNothing().when(sut).storeSelectedBranch();
-        sut.saveBranch();
-        verify(data).putSelectedBranchToSectionInDropdown();
-        verify(sut).storeSelectedBranch();
-    }
-
-    @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
-    public void testStoreSelectedBranch(Jcommune jcommune) throws Exception {
-        PoulpeBranch selectedBranch = jcommune.getSections().get(0).getPoulpeBranches().get(0);
-        doReturn(jcommune).when(data).getRootAsJcommune();
-        doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
-        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropdown();
-        sut.storeSelectedBranch();
-        assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
-        assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
-        assertFalse(jcommune.getSections().get(0).getPoulpeBranches().contains(selectedBranch));
-    }
-
-    @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
-    public void testStoreSelectedBranch_withNewBranch(Jcommune jcommune) throws Exception {
-        PoulpeBranch selectedBranch = new PoulpeBranch("test");
-        doReturn(jcommune).when(data).getRootAsJcommune();
-        doReturn(selectedBranch).when(data).getSelectedEntity(PoulpeBranch.class);
-        doReturn(jcommune.getSections().get(1)).when(data).getSectionSelectedInDropdown();
-        sut.storeSelectedBranch();
-        assertSame(jcommune.getSections().get(1), selectedBranch.getSection());
-        assertTrue(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
-        assertFalse(jcommune.getSections().get(0).getPoulpeBranches().contains(selectedBranch));
-    }
-
     @Test
     public void testShowNewSection() throws Exception {
         sut.showNewSectionDialog(true);
@@ -127,50 +97,41 @@ public class ForumStructureVmTest {
     @Test
     public void testDeleteSelected_section() throws Exception {
         ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
-        doNothing().when(sut).deleteSelectedSection(item.getSectionItem());
-        doReturn(item).when(data).removeSelectedItem();
+        ConfirmSectionDeletionDialogVm confirmDialog = new ConfirmSectionDeletionDialogVm();
+        doReturn(confirmDialog).when(data).getConfirmSectionDeletionDialogVm();
+        doReturn(item).when(data).getSelectedItem();
 
         sut.deleteSelected();
-        verify(sut).deleteSelectedSection(item.getSectionItem());
+        assertTrue(confirmDialog.isShowDialog());
     }
 
     @Test
     public void testDeleteSelected_branch() throws Exception {
+        ConfirmBranchDeletionDialogVm confirmDialog = new ConfirmBranchDeletionDialogVm();
+        doReturn(new ForumStructureItem(new PoulpeBranch())).when(data).getSelectedItem();
+        doReturn(confirmDialog).when(data).getConfirmBranchDeletionDialogVm();
+        sut.deleteSelected();
+        assertTrue(confirmDialog.isShowDialog());
+    }
+
+    @Test
+    public void testConfirmDeleteBranch() throws Exception {
         ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         doNothing().when(sut).deleteSelectedBranch(item.getBranchItem());
         doReturn(item).when(data).removeSelectedItem();
 
-        sut.deleteSelected();
+        sut.confirmBranchDeletion();
         verify(sut).deleteSelectedBranch(item.getBranchItem());
     }
 
-    @Test(dataProvider = "provideRandomJcommuneWithSections")
-    public void testDeleteSelectedSection(Jcommune jcommune) throws Exception {
-        PoulpeSection selectedSection = new PoulpeSection();
-        doReturn(jcommune).when(forumStructureService).deleteSectionWithBranches(selectedSection);
-
-        sut.deleteSelectedSection(selectedSection);
-        verify(data).setSectionTree(any(ZkTreeModel.class));
-    }
-
     @Test
-    public void testDeleteSelectedSection() throws Exception {
-        PoulpeBranch branch = new PoulpeBranch();
+    public void testConfirmDeleteSection() throws Exception {
+        ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
+        doNothing().when(sut).deleteSelectedSection(item.getSectionItem());
+        doReturn(item).when(data).removeSelectedItem();
 
-        sut.deleteSelectedBranch(branch);
-        verify(forumStructureService).removeBranch(branch);
-    }
-
-    @Test(dataProvider = "provideRandomJcommuneWithSections", enabled = false)
-    public void testDeleteSelected_branch(Jcommune jcommune) throws Exception {
-        doReturn(jcommune).when(data).getRootAsJcommune();
-        PoulpeBranch selectedBranch = jcommune.getSections().get(1).getPoulpeBranches().get(0);
-        doReturn(new ForumStructureItem(selectedBranch)).when(data).removeSelectedItem();
-
-        sut.deleteSelected();
-        assertFalse(jcommune.getSections().get(1).getPoulpeBranches().contains(selectedBranch));
-        assertNull(selectedBranch.getSection());
-        verify(forumStructureService).saveJcommune(jcommune);
+        sut.confirmSectionDeletion();
+        verify(sut).deleteSelectedSection(item.getSectionItem());
     }
 
     @DataProvider

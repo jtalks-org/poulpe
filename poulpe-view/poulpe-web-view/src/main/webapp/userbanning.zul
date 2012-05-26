@@ -22,7 +22,7 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style="/resources/css/all.css.simple-grid" width="100%">
+    <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
       <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@bind(userBanningVm.addBanFor)" width="300px"
           autodrop="true" autocomplete="true" buttonVisible="false"
           onChanging="@command('setAvailableFilter', filterText=event.value)">
@@ -36,15 +36,16 @@
     </hbox>
 
     <!-- Banned users list -->
-    <hbox width="100%">
-      <grid model="@load(userBanningVm.bannedUsers)" hflex="1">
+    <hbox width="100%" vflex="1">
+      <grid model="@load(userBanningVm.bannedUsers)" hflex="1" vflex="1" mold="paging" pageSize="50"
+          pagingPosition="both">
         <columns>
           <column label="${labels.userbanning.username}" />
           <column label="${labels.userbanning.firstname_lastname}" />
           <column label="${labels.userbanning.email}" />
         </columns>
         <template name="model" var="user">
-          <row onDoubleClick="@command('editBan', userId=user.id)" context="contextMenu">
+          <row onDoubleClick="@command('editBan', userId=user.id)" context="contextMenu_user${user.id}">
             <label value="@load(user.username)" />
             <hbox>
               <label value="@load(user.firstName)" />
@@ -63,7 +64,7 @@
              -->
             <hbox>
                <!--CONTEXT MENU-->
-                <menupopup id="contextMenu">
+                <menupopup id="contextMenu_user${user.id}">
                     <menuitem label="${labels.userbanning.edit}"
                               image="/resources/img/edit16.png" onClick="@command('editBan', userId=user.id)" />
                     <menuitem label="${labels.userbanning.revoke}"

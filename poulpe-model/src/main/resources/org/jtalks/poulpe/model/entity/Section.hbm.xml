@@ -18,11 +18,16 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
+  <!--we need to use a hierarchy here in order to be able to leverage distributed cache. This is important because -->
+  <!--other apps in JTalks are not using PoulpeXxx classes, they use common ones and thus they can interchange -->
+  <!--only entities from common-->
   <class name="org.jtalks.common.model.entity.Section" table="SECTIONS" abstract="true">
     <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
     <id column="SECTION_ID" name="id" unsaved-value="0">
       <generator class="native"/>
     </id>
+    <!--we don't want to add a real inheritance with real columns or different tables, it's enough for us to -->
+    <!--emulate it with discriminator formula. See subclass mapping for more details-->
     <discriminator formula="'SECTION'"/>
     <property column="UUID" name="uuid" not-null="true"/>
     <property column="NAME" name="name" not-null="true"/>
@@ -35,6 +40,10 @@
       <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
     </list>
 
+    <!--we specify here a strange discriminator value in order the query be like:-->
+    <!--select from.. where 'SECTION'='SECTION'-->
+    <!--which won't have any effect on the query, but the whole table content will be actually instances of-->
+    <!--this subclass, not the abstract class. See mapping of abstract class for other details.-->
     <subclass name="org.jtalks.poulpe.model.entity.PoulpeSection" extends="org.jtalks.common.model.entity.Section"
               discriminator-value="SECTION">
     </subclass>

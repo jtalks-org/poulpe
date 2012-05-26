@@ -20,9 +20,9 @@
       <menuitem label="${labels.forum_structure.edit_item}" visible="@load(vm.selectedItem.branch)"
                 onClick="@command('showNewBranchDialog', createNew=false)" image="/resources/img/edit16.png"/>
       <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
-                onClick="@command('showNewBranchDialog', createNew=true)"/>
+                onClick="@command('showNewBranchDialog', createNew=true)"  image="/resources/img/add16.png"/>
       <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
-                onClick="@command('openBranchPermissions')"/>
+                onClick="@command('openBranchPermissions')" image="/resources/img/permissions16.png"/>
       <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"
                 image="/resources/img/remove16.png"/>
     </menupopup>
@@ -68,28 +68,50 @@
         </cell>
       </vlayout>
     </window>
-    <!--BRANCH DIALOG-->
-    <!--<window id="deleteBranchConfirmationDialog"-->
-            <!--title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"-->
-            <!--border="normal"-->
-            <!--onClose="self.visible=false;event.stopPropagation();"-->
-            <!--onCancel="self.visible=false"-->
-            <!--forward="onOK=confirmBranchDeletionButton.onClick">-->
-      <!--&lt;!&ndash;visible="@load(vm.viewData.showBranchDialog)" height="270px" width="300px">&ndash;&gt;-->
-      <!--<vlayout>&lt;!&ndash; form="@id('fx') @save(vm.deleteBranchConfirmationVm, before='confirmBranchDeletion') @load(vm.deleteBranchConfirmationVm)">&ndash;&gt;-->
-        <!--<radiogroup>-->
-          <!--<vlayout>-->
-            <!--<radio label="Move topics to another branch:"/>-->
-            <!--<combobox model="@load(fx.availableBranches)"/>-->
-            <!--<radio label="Delete With Content"/>-->
-          <!--</vlayout>-->
-        <!--</radiogroup>-->
-        <!--<cell>-->
-          <!--<button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"-->
-                  <!--onClick="@command('confirmBranchDeletion')"/>-->
-          <!--<button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>-->
-        <!--</cell>-->
-      <!--</vlayout>-->
-    <!--</window>-->
+    <!--BRANCH DELETE CONFIRMATION DIALOG-->
+    <window id="deleteBranchConfirmationDialog"
+            title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"
+            border="normal"
+            onClose="self.visible=false;event.stopPropagation();"
+            onCancel="self.visible=false"
+            forward="onOK=confirmBranchDeletionButton.onClick"
+            visible="@load(vm.viewData.confirmBranchDeletionDialogVm.showDialog)" height="150px" width="270px">
+      <vlayout
+              form="@id('fx') @save(vm.viewData.confirmBranchDeletionDialogVm, before='confirmBranchDeletion') @load(vm.viewData.confirmBranchDeletionDialogVm)">
+        <label value="${labels.forum_structure.delete_branch_confirmation_dialog.text}"/>
+        <separator/>
+        <separator bar="true"/>
+        <separator/>
+        <separator/>
+        <hbox align="end" pack="center" hflex="1">
+          <button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"
+                  onClick="@command('confirmBranchDeletion')"/>
+          <button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>
+        </hbox>
+      </vlayout>
+    </window>
+    <!--SECTION DELETE CONFIRMATION DIALOG-->
+
+    <window id="deleteSectionConfirmationDialog" use="org.zkoss.zul.impl.MessageboxDlg"
+            title="${labels.forum_structure.delete_section_confirmation_dialog.title}" closable="true" mode="modal"
+            border="normal"
+            onClose="self.visible=false;event.stopPropagation();"
+            onCancel="self.visible=false"
+            forward="onOK=confirmSectionDeletionButton.onClick"
+            visible="@load(vm.viewData.confirmSectionDeletionDialogVm.showDialog)" height="150px" width="270px">
+      <vlayout
+              form="@id('fx') @save(vm.viewData.confirmSectionDeletionDialogVm, before='confirmSectionDeletion') @load(vm.viewData.confirmSectionDeletionDialogVm)">
+        <label value="${labels.forum_structure.delete_section_confirmation_dialog.text}" vflex="2"/>
+        <separator/>
+        <separator bar="true"/>
+        <separator/>
+        <separator/>
+        <hbox align="end" pack="center" hflex="1">
+          <button id="confirmSectionDeletionButton" label="${labels.dialogs.delete_button}"
+                  onClick="@command('confirmSectionDeletion')"/>
+          <button label="${labels.dialogs.cancel_button}" onClick="deleteSectionConfirmationDialog.visible=false;"/>
+        </hbox>
+      </vlayout>
+    </window>
   </window>
 </zk>
