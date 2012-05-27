@@ -146,10 +146,6 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         assertForumUnavailable(availableTypes);
     }
 
-    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
-        assertFalse(availableTypes.contains(forum.getComponentType()));
-    }
-
     @Test
     public void testSectionPositions() {
         for (int i = 0; i < 5; i++) {
@@ -172,16 +168,21 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         assertReflectionEquals(forum, actual);
     }
 
-//    @Test
-//    public void deleteForum() {
-//        forum.setName("ForumName");
-//        forum.setDescription("ForumDescription");
-//
-//        dao.saveOrUpdate(forum);
-//        dao.delete(forum);
-//
-//        assertForumUnavailable(dao.getAvailableTypes());
-//    }
+    @Test
+    public void deleteForum() {
+        forum.setName("ForumName");
+        forum.setDescription("ForumDescription");
+
+        dao.saveOrUpdate(forum);
+        dao.delete(forum);
+        session.clear();
+
+        assertForumUnavailable(dao.getAvailableTypes());
+    }
+
+    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
+        assertFalse(availableTypes.contains(forum.getComponentType()));
+    }
 
 
 }
