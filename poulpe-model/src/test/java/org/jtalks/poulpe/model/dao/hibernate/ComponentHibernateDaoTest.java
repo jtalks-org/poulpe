@@ -47,6 +47,11 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
+    private final String JCOMMUNE = "jcommune";
+    private String name="name";
+    private String caption="caption";
+    private String postPreviewSize="postPreviewSize";
+    private String sessionTimeout="sessionTimeout";
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -173,11 +178,21 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         forum.setName("ForumName");
         forum.setDescription("ForumDescription");
 
+        forum.setProperty(JCOMMUNE + ".name",name);
+        forum.setProperty(JCOMMUNE + ".caption",caption);
+        forum.setProperty(JCOMMUNE + ".postPreviewSize", postPreviewSize);
+        forum.setProperty(JCOMMUNE + ".session_timeout", sessionTimeout);
+
         dao.saveOrUpdate(forum);
         dao.delete(forum);
-        session.clear();
 
-        assertForumUnavailable(dao.getAvailableTypes());
+        session.clear();
+        session.flush();
+        assertForumDeleted(dao.getAvailableTypes());
+    }
+
+    private void assertForumDeleted(Set<ComponentType> availableTypes) {
+        assertTrue(availableTypes.contains(forum.getComponentType()));
     }
 
     private void assertForumUnavailable(Set<ComponentType> availableTypes) {
