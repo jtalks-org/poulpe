@@ -18,11 +18,6 @@
     <constructor-arg ref="branchService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>
-    
-  <bean id="componentsDeleteTest" scope="prototype"
-    class="org.jtalks.poulpe.web.controller.component.ComponentsDeleteTest">
-      <property name="componentService" ref="componentService"/>
-  </bean>
 
   <bean id="editGroupsForBranchPermissionVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">

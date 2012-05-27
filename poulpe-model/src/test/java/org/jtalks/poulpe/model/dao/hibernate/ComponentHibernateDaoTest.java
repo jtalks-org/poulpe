@@ -38,12 +38,12 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
- * 
+ *
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  * @author Guram Savinov
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -167,9 +167,21 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @Test
     public void testGetForum() {
-    	givenTwoComponents();
-    	Component actual = dao.getByType(ComponentType.FORUM);
-    	assertReflectionEquals(forum, actual);
+        givenTwoComponents();
+        Component actual = dao.getByType(ComponentType.FORUM);
+        assertReflectionEquals(forum, actual);
     }
+
+//    @Test
+//    public void deleteForum() {
+//        forum.setName("ForumName");
+//        forum.setDescription("ForumDescription");
+//
+//        dao.saveOrUpdate(forum);
+//        dao.delete(forum);
+//
+//        assertForumUnavailable(dao.getAvailableTypes());
+//    }
+
 
 }
