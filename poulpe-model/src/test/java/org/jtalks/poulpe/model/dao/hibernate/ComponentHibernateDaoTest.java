@@ -173,23 +173,22 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         assertReflectionEquals(forum, actual);
     }
 
-//    @Test
-//    public void deleteForum() {
-//        forum.setName("ForumName");
-//        forum.setDescription("ForumDescription");
-//
-//        forum.setProperty(JCOMMUNE + ".name",name);
-//        forum.setProperty(JCOMMUNE + ".caption",caption);
-//        forum.setProperty(JCOMMUNE + ".postPreviewSize", postPreviewSize);
-//        forum.setProperty(JCOMMUNE + ".session_timeout", sessionTimeout);
-//
-//        dao.saveOrUpdate(forum);
-//        dao.delete(forum);
-//
-//        session.clear();
-//        session.flush();
-//        assertForumDeleted(dao.getAvailableTypes());
-//    }
+    @Test
+    public void deleteForum() {
+        forum.setName("ForumName");
+        forum.setDescription("ForumDescription");
+
+        forum.setProperty(JCOMMUNE + ".name",name);
+        forum.setProperty(JCOMMUNE + ".caption",caption);
+        forum.setProperty(JCOMMUNE + ".postPreviewSize", postPreviewSize);
+        forum.setProperty(JCOMMUNE + ".session_timeout", sessionTimeout);
+
+        dao.saveOrUpdate(forum);
+        dao.delete(forum);
+
+        session.flush();
+        assertForumDeleted(dao.getAvailableTypes());
+    }
 
     private void assertForumDeleted(Set<ComponentType> availableTypes) {
         assertTrue(availableTypes.contains(forum.getComponentType()));

@@ -102,7 +102,7 @@ public class TransactionalComponentServiceTest {
     @Test
     public void testDeleteComponent() {
         componentService.deleteComponent(component);
-        verify(componentDao).delete(component.getId());
+        verify(componentDao).delete(component);
     }
 
     @Test
