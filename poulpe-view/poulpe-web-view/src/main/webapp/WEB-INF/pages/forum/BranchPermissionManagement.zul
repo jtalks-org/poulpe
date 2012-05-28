@@ -17,14 +17,55 @@
 -->
 <?page id="BranchPermissionManagement" title="Branch Permission Management" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
-<?component name="user-groups-block" macroURI="/WEB-INF/zkmacros/add-usergroups-block.zul"?>
-<?component name="add-caption-block" macroURI="/WEB-INF/zkmacros/add-caption-block.zul"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
-          viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal">
-    <add-caption-block prefix="${labels.branches.label.combobox}" text="${branchPermissionManagementVm.branch.name}" />
-    <style src="/resources/css/all.css" />
-    <user-groups-block forEach="${branchPermissionManagementVm.blocks}" block="${each}" />
-  </window>
+    <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
+            viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal">
+        <label value="${labels.branches.label.branch}" sclass="caption-label"/>
+        <label value="@bind(branchPermissionManagementVm.branch.name)" sclass="caption-label"/>
+        <style src="/resources/css/all.css"/>
+        <vlayout children="@load(branchPermissionManagementVm.blocks) @template('blockTemplate')">
+            <template name="blockTemplate" var="bt">
+                <groupbox>
+                    <caption label="@bind(bt.permission)"/>
+                    <borderlayout height="30px">
+                        <west border="none" width="80px">
+                            <label value="@bind(bt.allowRow.rowLabel)"/>
+                        </west>
+                        <center border="none">
+                            <hlayout children="@bind(bt.allowRow.groups) @template('allowRowTemplate')">
+
+                                <template name="allowRowTemplate" var="art">
+                                    <label value="@bind(art.name)" sclass="manage-permissions-added-group-label"/>
+                                </template>
+                            </hlayout>
+                        </center>
+                        <east border="none">
+                            <button label="${labels.groups.button.edit}" sclass="add-group-button"
+                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='allow')">
+                            </button>
+                        </east>
+                    </borderlayout>
+                    <borderlayout height="30px">
+                        <west border="none" width="80px">
+                            <label value="@bind(bt.restrictRow.rowLabel)"/>
+                        </west>
+                        <center border="none">
+                            <hlayout children="@load(bt.restrictRow.groups) @template('restrictRowTemplate')">
+
+                                <template name="restrictRowTemplate" var="rrt">
+                                    <label value="@bind(rrt.name)" sclass="manage-permissions-added-group-label"/>
+                                </template>
+                            </hlayout>
+                        </center>
+                        <east border="none">
+                            <button label="${labels.groups.button.edit}" sclass="add-group-button"
+                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='restrict')">
+                            </button>
+                        </east>
+                    </borderlayout>
+                </groupbox>
+            </template>
+        </vlayout>
+    </window>
 </zk>

@@ -4,15 +4,18 @@
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window title="Change Groups for Branch Permission" closable="true" border="normal" mode="modal" width="70%"
-            onClose="@command('cancel')" apply="org.zkoss.bind.BindComposer"
+    <window title="Change Groups for Branch Permission" closable="true" border="normal" mode="modal" width="70%" height="60%"
+            onClose="@command('cancel')"
+            onCancel="@command('cancel')"
+            forward="onOK=savePermissionsButton.onClick"
+            apply="org.zkoss.bind.BindComposer"
             viewModel="@id('editGroupsForBranchPermissionVm') @init(editGroupsForBranchPermissionVm)">
-        <vbox hflex="1">
-            <hbox hflex="1">
-                <panel hflex="1" title="Available" border="normal">
+        <vbox hflex="1" vflex="1">
+            <hbox hflex="1" vflex="1">
+                <panel title="Available" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.avail)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" height="240px">
+                                 multiple="true" checkmark="true">
                             <listhead>
                                 <listheader label="Group" sclass="boldstyle"/>
                             </listhead>
@@ -22,20 +25,20 @@
                         </listbox>
                     </panelchildren>
                 </panel>
-                <vbox style="padding-top: 100px" width="40px" align="center">
-                    <button onClick="@command('add')" disabled="@load(empty editGroupsForBranchPermissionVm.availSelected)"
-                            image="/resources/img/rightarrow.png" width="36px"/>
-                    <button onClick="@command('addAll')" disabled="@load(empty editGroupsForBranchPermissionVm.avail)"
-                            image="/resources/img/rightrightarrow.png" width="36px"/>
-                    <button onClick="@command('remove')" disabled="@load(empty editGroupsForBranchPermissionVm.existSelected)"
-                            image="/resources/img/leftarrow.png" width="36px"/>
-                    <button onClick="@command('removeAll')" disabled="@load(empty editGroupsForBranchPermissionVm.exist)"
-                            image="/resources/img/leftleftarrow.png" width="36px"/>
+                <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
+                    <image onClick="@command('add')" disabled="@load(empty editGroupsForBranchPermissionVm.availSelected)"
+                           src="/resources/img/rightarrow.png"/>
+                    <image onClick="@command('addAll')" disabled="@load(empty editGroupsForBranchPermissionVm.avail)"
+                           src="/resources/img/rightrightarrow.png"/>
+                    <image onClick="@command('remove')" disabled="@load(empty editGroupsForBranchPermissionVm.existSelected)"
+                           src="/resources/img/leftarrow.png"/>
+                    <image onClick="@command('removeAll')" disabled="@load(empty editGroupsForBranchPermissionVm.exist)"
+                           src="/resources/img/leftleftarrow.png"/>
                 </vbox>
-                <panel hflex="1" title="Already added" border="normal">
+                <panel title="Already added" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.exist)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" height="240px">
+                                 multiple="true" checkmark="true">
                             <listhead>
                                 <listheader label="Group" sclass="boldstyle"/>
                             </listhead>
@@ -47,8 +50,8 @@
                 </panel>
             </hbox>
             <hbox align="center" pack="center" height="30px">
-                <button label="${labels.window.save}" onClick="@command('save')" sclass="manage.groups.saveButton"/>
-                <button label="${labels.window.cancel}" onClick="@command('cancel')"/>
+                <button id="savePermissionsButton" label="${labels.window.save}" onClick="@command('save')" sclass="manage.groups.saveButton"/>
+                <button id="cancelPermissionsButton" label="${labels.window.cancel}" onClick="@command('cancel')"/>
             </hbox>
         </vbox>
     </window>
