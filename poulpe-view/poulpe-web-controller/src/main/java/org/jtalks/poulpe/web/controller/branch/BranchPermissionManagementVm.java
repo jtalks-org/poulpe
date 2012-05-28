@@ -40,6 +40,7 @@ import java.util.List;
  *
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
+ * @author Maxim Reshetov
  */
 public class BranchPermissionManagementVm {
 	private static final String
@@ -48,7 +49,7 @@ public class BranchPermissionManagementVm {
 	private final WindowManager windowManager;
 	private final BranchService branchService;
 	private final SelectedEntity<Object> selectedEntity;
-	private final PoulpeBranch branch;
+	private PoulpeBranch branch;
 	private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
 
 	/**
@@ -63,7 +64,6 @@ public class BranchPermissionManagementVm {
 		this.windowManager = windowManager;
 		this.branchService = branchService;
 		this.selectedEntity = selectedEntity;
-		this.branch = (PoulpeBranch) selectedEntity.getEntity();
 	}
 
 	/**
@@ -107,6 +107,7 @@ public class BranchPermissionManagementVm {
 	@Init
 	public void initDataForView() {
 		blocks.clear();
+		this.branch = (PoulpeBranch) selectedEntity.getEntity();
 		PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
 		for (BranchPermission permission : permissionsMap.getPermissions()) {
 			blocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels
