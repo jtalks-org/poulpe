@@ -48,5 +48,7 @@
                 <one-to-many class="org.jtalks.poulpe.model.entity.PoulpeSection"/>
             </list>
         </subclass>
+        <subclass name="org.jtalks.poulpe.model.entity.Poulpe" discriminator-value="POULPE" />
+
     </class>
 </hibernate-mapping>
