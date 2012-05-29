@@ -6,7 +6,6 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', createNew=true)"/>
-
     <tree model="@bind(vm.viewData.structureTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
       <template name="model">
         <treeitem draggable="@load(each.data.branch)" droppable="@load(each.data.branch)" label="@load(each)"

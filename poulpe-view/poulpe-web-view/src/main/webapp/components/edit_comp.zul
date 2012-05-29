@@ -2,7 +2,6 @@
 <window border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer"
         viewModel="@id('vm') @init(editCompViewModel)"
         onClose="@command('cancel')">
-
     <grid form="@id('fx') @load(vm.sessionTimeout ) @save(vm.sessionTimeout, before='save')">
         <columns>
             <column width="20%" />

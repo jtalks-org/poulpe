@@ -52,7 +52,6 @@ public class ComponentsVm {
     private List<Component> componentList;
     private List<ComponentType> availableComponentTypes;
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
-
     // List of injectable properties
     private ComponentService componentService;
     private DialogManager dialogManager;

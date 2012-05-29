@@ -83,7 +83,6 @@ public class EditComponentVm {
     private String sessionTimeout;
 
     private boolean jcommune;
-
      /**
      * Web-form validation messages
      */

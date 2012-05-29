@@ -27,7 +27,6 @@
         <property column="UUID" name="uuid" not-null="true" unique="true"/>
         <property column="NAME" name="name" not-null="true" unique="true"/>
         <property column="DESCRIPTION" name="description"/>
-
         <bag name="properties" cascade="all-delete-orphan" inverse="false" lazy="false">
             <cache usage="nonstrict-read-write"/>
             <key column="CMP_ID" foreign-key="FK_COMPONENT"/>

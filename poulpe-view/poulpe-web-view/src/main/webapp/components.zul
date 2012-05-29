@@ -8,12 +8,9 @@
         <vlayout>
             <listbox model="@load(vm.componentList)" selectedItem="@bind(vm.selected)">
                 <listhead>
-                    <listheader align="center"
-                                label="${labels.component.title}" sclass="boldstyle" />
-                    <listheader align="center"
-                                label="${labels.component.description}" />
-                    <listheader align="center"
-                                label="${labels.component.type}" />
+                    <listheader align="center" label="${labels.component.title}" sclass="boldstyle" />
+                    <listheader align="center" label="${labels.component.description}" />
+                    <listheader align="center" label="${labels.component.type}" />
                 </listhead>
                 <template name="model" var="component">
                     <listitem value="component">
@@ -24,14 +21,11 @@
                 </template>
             </listbox>
             <div>
-                <button label="${labels.componentlist.add}"
-                        onClick="@command('showAddComponentDialog')"
+                <button label="${labels.componentlist.add}" onClick="@command('showAddComponentDialog')"
                         disabled="@load(!vm.canCreateNewComponent)"/>
-                <button label="${labels.componentlist.delete}"
-                        onClick="@command('deleteComponent')"
+                <button label="${labels.componentlist.delete}" onClick="@command('deleteComponent')"
                         disabled="@load(empty vm.selected)"/>
-                <button label="${labels.componentlist.configure}"
-                        onClick="@command('configureComponent')"
+                <button label="${labels.componentlist.configure}" onClick="@command('configureComponent')"
                         disabled="@load(empty vm.selected)"/>
             </div>
         </vlayout>
@@ -77,10 +71,8 @@
                     </row>
                     <row align="right" spans="3">
                         <hbox>
-                            <button label="${labels.componentedit.save}"
-                                    onClick="@command('createComponent')" />
-                            <button label="${labels.componentedit.cancel}"
-                                    onClick="@command('cancelEdit')" />
+                            <button label="${labels.componentedit.save}" onClick="@command('createComponent')" />
+                            <button label="${labels.componentedit.cancel}" onClick="@command('cancelEdit')"/>
                         </hbox>
                     </row>
                 </rows>
