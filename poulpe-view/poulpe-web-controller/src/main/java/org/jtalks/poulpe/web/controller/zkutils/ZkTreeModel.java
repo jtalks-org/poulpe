@@ -17,7 +17,9 @@ package org.jtalks.poulpe.web.controller.zkutils;
 import org.zkoss.zul.DefaultTreeModel;
 import org.zkoss.zul.TreeNode;
 
+import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.Arrays;
 
 /**
  * Since default ZK implementation of {@link org.zkoss.zul.TreeModel} doesn't provide handy methods e.g. for searching
@@ -78,6 +80,29 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
             return null;
         }
         return child.getData();
+    }
+
+    /**
+     * Gets the data of the selected node with specified depth. So if you have a tree with selected path: [1,4]; and the
+     * specified depth is 0, then 1 will be returned, if the specified was 1, then 4 will be returned.
+     *
+     * @param depth the depth of the selected node (because the selected path is an array of nodes including both
+     *              selected nodes and all its parents, well except the root)
+     * @return the data of the selected node with depth equal to {@code depth}, or {@code null} if nothing is selected
+     * @throws IndexOutOfBoundsException if the specified depth is larger than the selected path array. E.g. you have a
+     *                                   node selected with path [2,3,0], then if you specify 4, which is larger than
+     *                                   the path, then the exception will be raisen.
+     */
+    public E getSelectedData(@Nonnegative int depth) {
+        int[] selectionPath = getSelectionPath();
+        if (selectionPath == null) {
+            return null;
+        }
+        if (selectionPath.length <= depth) {
+            throw new IndexOutOfBoundsException("There is no selection with level: " + depth +
+                    " in the tree. Selected path: " + Arrays.toString(selectionPath));
+        }
+        return getChildData(Arrays.copyOf(selectionPath, depth + 1));
     }
 
     /**

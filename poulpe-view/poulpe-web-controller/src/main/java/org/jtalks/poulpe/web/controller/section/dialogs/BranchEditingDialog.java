@@ -1,5 +1,8 @@
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.zul.ListModelList;
@@ -15,8 +18,14 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class BranchEditingDialog {
+    private final GroupDao groupDao;
     private final ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
+    private ForumStructureItem editedBranch = new ForumStructureItem(new PoulpeBranch());
     private boolean showDialog;
+
+    public BranchEditingDialog(GroupDao groupDao) {
+        this.groupDao = groupDao;
+    }
 
     /**
      * Closes the dialog without removing any underlying state.
@@ -44,7 +53,9 @@ public class BranchEditingDialog {
      * @return whether to show the branch editing dialog
      */
     public boolean isShowDialog() {
-        return showDialog;
+        boolean result = showDialog;
+        showDialog = false;
+        return result;
     }
 
     /**
@@ -92,5 +103,48 @@ public class BranchEditingDialog {
             sections.add(sectionNode.getData());
         }
         return sections;
+    }
+
+    /**
+     * Gets the section that was chosen in the list of available sections while moving the branch to another section (or
+     * creating new).
+     *
+     * @return the section that was chosen in the list of available sections
+     */
+    public ForumStructureItem getSectionSelectedInDropdown() {
+        return sectionList.getSelection().iterator().next();
+    }
+
+    public ForumStructureItem getEditedBranch() {
+        return editedBranch;
+    }
+
+    public BranchEditingDialog setEditedBranch(ForumStructureItem editedBranch) {
+        this.editedBranch = editedBranch;
+        return this;
+    }
+
+    public List<Group> getCandidatesToModerate() {
+        return groupDao.getAll();
+    }
+
+    public Group getModeratingGroup() {
+        Group moderatorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
+        if (moderatorsGroup == null) {
+            moderatorsGroup = new Group("Moderators of " + editedBranch.getBranchItem().getName());
+        }
+        return moderatorsGroup;
+    }
+
+    public void setModeratingGroup(Group moderatingGroup) {
+        editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
+    }
+
+    public Group getGroupToCreate() {
+        return new Group("Moderators of " + editedBranch.getBranchItem().getName());
+    }
+
+    public void setGroupToCreate(Group groupToCreate) {
+        setModeratingGroup(groupToCreate);
     }
 }
