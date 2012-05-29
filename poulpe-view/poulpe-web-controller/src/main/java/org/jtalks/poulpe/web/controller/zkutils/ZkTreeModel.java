@@ -26,6 +26,7 @@ import java.util.Arrays;
  * nodes, this one is created to provide it and a lot more.
  *
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  * @since 0.15
  */
 public class ZkTreeModel<E> extends DefaultTreeModel<E> {
@@ -168,5 +169,29 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
             }
         }
         return null;
+    }
+
+    /**
+     * Drops node before the target node. Switches target and all next nodes
+     * after dropped node. 
+     * 
+     * @param node the node that will be dropped before the target node
+     * @param target the node that will be placed with all next nodes after dropped
+     */
+    public void dropNodeBefore(TreeNode<E> node,
+            TreeNode<E> target) {
+        removeChild(getPath(node));
+        TreeNode<E> targetParent = target.getParent();
+        targetParent.insert(node, targetParent.getIndex(target));
+    }
+
+    /**
+     * Selects the node
+     * 
+     * @param node the node that will be selected
+     */
+    public void setSelectedNode(TreeNode<E> node) {
+        clearSelection();
+        addToSelection(node);        
     }
 }

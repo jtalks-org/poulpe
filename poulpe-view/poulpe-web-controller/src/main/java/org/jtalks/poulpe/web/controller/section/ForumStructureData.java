@@ -251,15 +251,16 @@ public class ForumStructureData {
     }
 
     /**
-     * Moves node to the target node place. Switches target and all next nodes after inserted node.
-     *
-     * @param node   the node that will be inserted to the target node place
-     * @param target the node that will be placed with all next nodes after inserted
+     * Drops node before the target and selects it
+     * 
+     * @param node the node that will be dropped and selected
+     * @param target the node to which place will be dropped node
      */
-    public void moveNodeTo(TreeNode<ForumStructureItem> node, TreeNode<ForumStructureItem> target) {
-        structureTree.removeChild(structureTree.getPath(node));
-        TreeNode<ForumStructureItem> targetParent = target.getParent();
-        targetParent.insert(node, targetParent.getIndex(target));
+    public void dropAndSelect(TreeNode<ForumStructureItem> node,
+            TreeNode<ForumStructureItem> target) {
+        structureTree.dropNodeBefore(node, target);
+        structureTree.setSelectedNode(node);
+        setSelectedItem(node.getData());
     }
 
 }
