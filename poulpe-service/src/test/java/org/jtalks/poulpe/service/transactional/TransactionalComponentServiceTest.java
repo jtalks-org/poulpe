@@ -53,7 +53,6 @@ import static org.mockito.Mockito.*;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalComponentServiceTest {
-
     private TransactionalComponentService componentService;
     
     @Mock

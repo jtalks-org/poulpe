@@ -38,7 +38,6 @@ import java.util.Set;
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
-
     private final PermissionManager permissionManager;
     private final EntityValidator validator;
     private PropertyLoader propertyLoader;
