@@ -33,7 +33,7 @@
   </http>
   
   <authentication-manager>
-    <authentication-provider ref="poulpeAuthenticationProvider" />
+    <authentication-provider user-service-ref="poulpeSecurityService" />
   </authentication-manager>
   
   </beans:beans>
