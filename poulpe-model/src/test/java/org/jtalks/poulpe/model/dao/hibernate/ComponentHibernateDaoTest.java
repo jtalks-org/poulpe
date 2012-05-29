@@ -38,15 +38,20 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
- * 
+ *
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  * @author Guram Savinov
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
+    private final String JCOMMUNE = "jcommune";
+    private String name="name";
+    private String caption="caption";
+    private String postPreviewSize="postPreviewSize";
+    private String sessionTimeout="sessionTimeout";
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -146,10 +151,6 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         assertForumUnavailable(availableTypes);
     }
 
-    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
-        assertFalse(availableTypes.contains(forum.getComponentType()));
-    }
-
     @Test
     public void testSectionPositions() {
         for (int i = 0; i < 5; i++) {
@@ -167,9 +168,36 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @Test
     public void testGetForum() {
-    	givenTwoComponents();
-    	Component actual = dao.getByType(ComponentType.FORUM);
-    	assertReflectionEquals(forum, actual);
+        givenTwoComponents();
+        Component actual = dao.getByType(ComponentType.FORUM);
+        assertReflectionEquals(forum, actual);
     }
+
+//    @Test
+//    public void deleteForum() {
+//        forum.setName("ForumName");
+//        forum.setDescription("ForumDescription");
+//
+//        forum.setProperty(JCOMMUNE + ".name",name);
+//        forum.setProperty(JCOMMUNE + ".caption",caption);
+//        forum.setProperty(JCOMMUNE + ".postPreviewSize", postPreviewSize);
+//        forum.setProperty(JCOMMUNE + ".session_timeout", sessionTimeout);
+//
+//        dao.saveOrUpdate(forum);
+//        dao.delete(forum);
+//
+//        session.clear();
+//        session.flush();
+//        assertForumDeleted(dao.getAvailableTypes());
+//    }
+
+    private void assertForumDeleted(Set<ComponentType> availableTypes) {
+        assertTrue(availableTypes.contains(forum.getComponentType()));
+    }
+
+    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
+        assertFalse(availableTypes.contains(forum.getComponentType()));
+    }
+
 
 }

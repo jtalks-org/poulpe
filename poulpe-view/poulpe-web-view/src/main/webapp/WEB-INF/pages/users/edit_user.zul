@@ -5,32 +5,34 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="editUserDialog" title="${labels.users.edituserdialog.title}" closable="true" border="normal"
     width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
-    <grid>
-      <columns>
-        <column label="${labels.field.description}" hflex="min" />
-        <column label="${labels.field.input}" />
-      </columns>
-      <rows>
-        <row>
-          <label value="${labels.users.label.firstname}" />
-          <textbox value="@bind(vm.selectedUser.firstName) @validator('beanValidator')" width="100%" focus="true" />
-        </row>
-        <row>
-          <label value="${labels.users.label.lastname}" />
-          <textbox value="@bind(vm.selectedUser.lastName) @validator('beanValidator')" width="100%" />
-        </row>
-        <row>
-          <label value="${labels.users.label.email}" />
-          <textbox value="@bind(vm.selectedUser.email) @validator('beanValidator')" width="100%"
-            constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
-        </row>
-        <row>
-          <label value="${labels.users.label.password}" />
-          <textbox value="@bind(vm.selectedUser.password) @validator('beanValidator')" width="100%" type="password"
-            constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
-        </row>
-      </rows>
-    </grid>
+    <groupbox form="@id('fx') @load(vm.selectedUser) @save(vm.selectedUser, before='saveUser')">
+      <grid>
+        <columns>
+          <column label="${labels.field.description}" hflex="min" />
+          <column label="${labels.field.input}" />
+        </columns>
+        <rows>
+          <row>
+            <label value="${labels.users.label.firstname}" />
+            <textbox value="@bind(fx.firstName) @validator('beanValidator')" width="100%" focus="true" />
+          </row>
+          <row>
+            <label value="${labels.users.label.lastname}" />
+            <textbox value="@bind(fx.lastName) @validator('beanValidator')" width="100%" />
+          </row>
+          <row>
+            <label value="${labels.users.label.email}" />
+            <textbox value="@bind(fx.email) @validator('beanValidator')" width="100%"
+              constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
+          </row>
+          <row>
+            <label value="${labels.users.label.password}" />
+            <textbox value="@bind(fx.password) @validator('beanValidator')" width="100%" type="password"
+              constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
+          </row>
+        </rows>
+      </grid>
+    </groupbox>
     <hbox align="end">
       <button id="editButton" label="${labels.item.save}" onClick="@command('saveUser', user=vm.selectedUser)" sclass="edit.user.saveButton" />
       <button label="${labels.window.cancel}" onClick="@command('cancelEdit')" sclass="edit.user.cancelButton" />
