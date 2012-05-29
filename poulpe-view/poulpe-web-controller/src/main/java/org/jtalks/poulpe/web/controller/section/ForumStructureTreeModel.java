@@ -7,6 +7,8 @@ import org.zkoss.zul.TreeNode;
 import javax.annotation.Nonnull;
 
 /**
+ * A tree model specifically dedicated to work with forum structure.
+ *
  * @author stanislav bashkirtsev
  */
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
@@ -14,7 +16,16 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         super(root);
     }
 
-    public ForumStructureTreeModel putBranch(ForumStructureItem branchToPut, ForumStructureItem destinationSection){
+    /**
+     * Puts the specified branch to the specified section. It moves the branch from its parent if it's already existing
+     * one or it will simply create a new node inside the section.The branch doesn't change its position if it's already
+     * in the specified section.
+     *
+     * @param branchToPut        a branch item to be moved/added to the specified section
+     * @param destinationSection a section that is accepting a specified branch
+     * @return this
+     */
+    public ForumStructureTreeModel putBranch(ForumStructureItem branchToPut, ForumStructureItem destinationSection) {
         TreeNode<ForumStructureItem> destinationSectionNode = find(destinationSection);
         ZkTreeNode<ForumStructureItem> branchNodeToPut = (ZkTreeNode<ForumStructureItem>) find(branchToPut);
         if (branchNodeToPut == null) {
