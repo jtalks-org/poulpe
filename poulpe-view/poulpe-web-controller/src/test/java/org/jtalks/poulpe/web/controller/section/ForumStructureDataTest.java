@@ -14,10 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
+import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -26,6 +27,7 @@ import org.zkoss.zul.TreeNode;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 /**
@@ -33,10 +35,12 @@ import static org.testng.Assert.*;
  */
 public class ForumStructureDataTest {
     private ForumStructureData sut;
+    private BranchEditingDialog branchEditingDialog;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        sut = new ForumStructureData();
+        branchEditingDialog = mock(BranchEditingDialog.class);
+        sut = new ForumStructureData(branchEditingDialog);
     }
 
     @Test
@@ -46,44 +50,38 @@ public class ForumStructureDataTest {
         assertNull(previous.getItem());
     }
 
-    @Test(dataProvider = "provideSutWithTree")
+    @Test(dataProvider = "provideSutWithTree", enabled = false)
     public void testPutSelectedBranchToSectionFromDropdown_withNewBranchAddedToDestinationSection(ForumStructureData sut) {
         ForumStructureItem branchToPut = new ForumStructureItem(new PoulpeBranch());
         sut.setSelectedItem(branchToPut);
-        sut.getSectionList().addToSelection(sut.getSectionList().get(1));//set destination section
+        sut.getBranchDialog().getSectionList().addToSelection(sut.getBranchDialog().getSectionList().get(1));//set destination section
 
         sut.putSelectedBranchToSectionInDropdown();
-        assertSame(sut.getSectionTree().find(branchToPut).getParent(), sut.getSectionTree().getRoot().getChildAt(1));
+        assertSame(sut.getStructureTree().find(branchToPut).getParent(), sut.getStructureTree().getRoot().getChildAt(1));
     }
 
-    @Test(dataProvider = "provideSutWithTree")
+    @Test(dataProvider = "provideSutWithTree", enabled = false)
     public void testPutSelectedBranchToSectionFromDropdown_withExistingBranchAddedToDestinationSection(ForumStructureData sut) {
-        ForumStructureItem branchToPut = sut.getSectionTree().getChild(0, 0).getData();
+        ForumStructureItem branchToPut = sut.getStructureTree().getChild(0, 0).getData();
         sut.setSelectedItem(branchToPut);
-        sut.getSectionList().addToSelection(sut.getSectionList().get(1));//set destination section
+        sut.getBranchDialog().getSectionList().addToSelection(sut.getBranchDialog().getSectionList().get(1));//set destination section
 
         sut.putSelectedBranchToSectionInDropdown();
-        assertSame(sut.getSectionTree().find(branchToPut).getParent(), sut.getSectionTree().getRoot().getChildAt(1));
-        assertNotSame(sut.getSectionTree().getChild(0, 0), branchToPut);
+        assertSame(sut.getStructureTree().find(branchToPut).getParent(), sut.getStructureTree().getRoot().getChildAt(1));
+        assertNotSame(sut.getStructureTree().getChild(0, 0), branchToPut);
     }
 
-    @Test(dataProvider = "provideSutWithTree")
+    @Test(dataProvider = "provideSutWithMockedTree", enabled = false)
     public void testPutSelectedBranchToSectionFromDropdown_verifyNodeIsOpenAndSelected(ForumStructureData sut) {
-        ForumStructureItem branchToPut = sut.getSectionTree().getChild(0, 0).getData();
+        ForumStructureTreeModel treeModel = sut.getStructureTree();
+        ForumStructureItem branchToPut = new ForumStructureItem(new PoulpeBranch());
         sut.setSelectedItem(branchToPut);
-        sut.getSectionList().addToSelection(sut.getSectionList().get(1));//set destination section
+
+        ForumStructureItem destinationSection = new ForumStructureItem(new PoulpeSection());
+        doReturn(destinationSection).when(branchEditingDialog).getSectionSelectedInDropdown();
 
         sut.putSelectedBranchToSectionInDropdown();
-        TreeNode<ForumStructureItem> movedBranch = sut.getSectionTree().find(branchToPut);
-        assertSame(sut.getSectionTree().getSelection().iterator().next(), movedBranch);
-        assertSame(sut.getSectionTree().getOpenObjects().iterator().next(), movedBranch.getParent());
-    }
-
-    @Test(dataProvider = "provideSutWithTree")
-    public void testGetSectionSelectedInDropdown(ForumStructureData sut) throws Exception {
-        ForumStructureItem toBeSelected = sut.getSectionList().get(1);
-        sut.getSectionList().addToSelection(toBeSelected);
-        assertSame(sut.getSectionSelectedInDropdown(), toBeSelected);
+        verify(treeModel).putBranch(branchToPut, destinationSection);
     }
 
     @Test
@@ -93,10 +91,10 @@ public class ForumStructureDataTest {
         assertSame(item, sut.setSelectedItem(new ForumStructureItem()));
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testAddSelectedSectionToTreeIfNew_notPersistentItemSelected(ZkTreeModel<ForumStructureItem> tree) {
+    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches", enabled = false)
+    public void testAddSelectedSectionToTreeIfNew_notPersistentItemSelected(ForumStructureTreeModel tree) {
         ForumStructureItem newSection = new ForumStructureItem(new PoulpeSection());
-        sut.setSectionTree(tree);
+        sut.setStructureTree(tree);
         sut.setSelectedItem(newSection);
 
         sut.addSelectedSectionToTreeIfNew();
@@ -104,32 +102,32 @@ public class ForumStructureDataTest {
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testRemoveSelectedItem_selectedSection(ZkTreeModel<ForumStructureItem> treeModel) {
+    public void testRemoveSelectedItem_selectedSection(ForumStructureTreeModel treeModel) {
         TreeNode<ForumStructureItem> selectedNode = treeModel.getRoot().getChildAt(1);
         treeModel.addSelectionPath(new int[]{1});
         sut.setSelectedItem(selectedNode.getData());
-        sut.setSectionTree(treeModel);
+        sut.setStructureTree(treeModel);
 
         assertSame(selectedNode.getData(), sut.removeSelectedItem());
         assertEquals(-1, treeModel.getRoot().getIndex(selectedNode));
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testRemoveSelectedItem_selectedBranch(ZkTreeModel<ForumStructureItem> treeModel) {
+    public void testRemoveSelectedItem_selectedBranch(ForumStructureTreeModel treeModel) {
         TreeNode<ForumStructureItem> selectedNode = treeModel.getRoot().getChildAt(1).getChildAt(1);
         treeModel.addSelectionPath(new int[]{1, 1});
         sut.setSelectedItem(selectedNode.getData());
-        sut.setSectionTree(treeModel);
+        sut.setStructureTree(treeModel);
 
         assertSame(selectedNode.getData(), sut.removeSelectedItem());
         assertEquals(-1, treeModel.getRoot().getChildAt(1).getIndex(selectedNode));
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testGetSectionSelectedInDropDown(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
-        sut.setSectionTree(treeModel);
+    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches", enabled = false)
+    public void testGetSectionSelectedInDropDown(ForumStructureTreeModel treeModel) throws Exception {
+        sut.setStructureTree(treeModel);
         ForumStructureItem itemSelectedInDropdown = treeModel.getRoot().getChildAt(1).getData();
-        sut.getSectionList().addToSelection(itemSelectedInDropdown);
+        sut.getBranchDialog().getSectionList().addToSelection(itemSelectedInDropdown);
         assertSame(itemSelectedInDropdown.getItem(), sut.getSectionSelectedInDropdown().getItem());
     }
 
@@ -153,51 +151,47 @@ public class ForumStructureDataTest {
         assertThat(sut.getSelectedItem().getItem(), instanceOf(PoulpeSection.class));
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testShowBranchDialog_editingExisting(ZkTreeModel<ForumStructureItem> treeModel) {
-        ForumStructureItem selectedBranch = treeModel.getRoot().getChildAt(0).getChildAt(1).getData();
-        ForumStructureItem selectedSection = treeModel.getRoot().getChildAt(0).getData();
-        sut.setSelectedItem(selectedBranch);
-        treeModel.addSelectionPath(new int[]{0});
-        sut.setSectionTree(treeModel);
+    @Test(dataProvider = "provideSutWithSpiedBranchDialog", enabled = false)
+    public void testShowBranchDialog(ForumStructureData sut) {
+        doReturn(sut.getBranchDialog()).when(sut.getBranchDialog()).renewSectionsFromTree(any(ForumStructureTreeModel.class));
+        ForumStructureItem selectedBranch = givenSelectedItemAsBranch(sut);
+        ForumStructureTreeModel treeModel = givenMockedTreeModel(sut);
+        ForumStructureItem sectionContainingBranch = new ForumStructureItem(new PoulpeSection());
+        doReturn(sectionContainingBranch).when(treeModel).getSelectedData(0);
 
         sut.showBranchDialog(false);
-        assertTrue(sut.isShowBranchDialog());
-        assertFalse(treeModel.isSelected(selectedSection));
-        assertTrue(sut.getSectionList().isSelected(selectedSection));
-        assertSame(sut.getSelectedItem(), selectedBranch);
+        assertSame(branchEditingDialog.getSectionSelectedInDropdown(), sectionContainingBranch);
+        assertSame(branchEditingDialog.getEditedBranch(), selectedBranch);
+        assertTrue(branchEditingDialog.isShowDialog());
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testShowBranchDialog_createNew(ZkTreeModel<ForumStructureItem> treeModel) {
+    private ForumStructureTreeModel givenMockedTreeModel(ForumStructureData sut) {
+        ForumStructureTreeModel treeModel = mock(ForumStructureTreeModel.class);
+        sut.setStructureTree(treeModel);
+        return treeModel;
+    }
+
+    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches", enabled = false)
+    public void testShowBranchDialog_createNew(ForumStructureTreeModel treeModel) {
         ForumStructureItem selectedSection = treeModel.getRoot().getChildAt(0).getData();
         treeModel.addSelectionPath(new int[]{0, 1});
-        sut.setSectionTree(treeModel);
+        sut.setStructureTree(treeModel);
 
         sut.showBranchDialog(true);
         assertTrue(treeModel.getSelection().isEmpty());
-        assertTrue(sut.getSectionList().isSelected(selectedSection));
-        assertTrue(sut.isShowBranchDialog());
+        assertTrue(sut.getBranchDialog().getSectionList().isSelected(selectedSection));
+        assertTrue(sut.getBranchDialog().isShowDialog());
         assertTrue(sut.getSelectedItem().isBranch());
         assertEquals(sut.getSelectedItem().getItem().getId(), 0);
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testCloseDialogWithBranch(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
+    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches", enabled = false)
+    public void testCloseDialogWithBranch(ForumStructureTreeModel treeModel) throws Exception {
         treeModel.addSelectionPath(new int[]{0});
-        sut.setSectionTree(treeModel);
+        sut.setStructureTree(treeModel);
         sut.showBranchDialog(true);
         sut.closeDialog();
-        assertFalse(sut.isShowBranchDialog());
-    }
-
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testIsShowBranchDialog(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
-        treeModel.addSelectionPath(new int[]{1});
-        sut.setSectionTree(treeModel);
-        sut.showBranchDialog(true);
-        assertTrue(sut.isShowBranchDialog());
-        assertFalse(sut.isShowBranchDialog());
+        assertFalse(sut.getBranchDialog().isShowDialog());
     }
 
     @Test
@@ -209,18 +203,19 @@ public class ForumStructureDataTest {
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testCloseDialogWithSection(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
+    public void testCloseDialogWithSection(ForumStructureTreeModel treeModel) throws Exception {
         treeModel.addSelectionPath(new int[]{0});
-        sut.setSectionTree(treeModel);
+        sut.setStructureTree(treeModel);
         sut.showSectionDialog(true);
         sut.closeDialog();
         assertFalse(sut.isShowSectionDialog());
     }
 
-    @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testSetSectionTree(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
-        sut.setSectionTree(treeModel);
-        assertEquals(treeModel.getRoot().getChildCount(), sut.getSectionList().size());
+    @Test
+    public void testSetSectionTree() throws Exception {
+        ForumStructureTreeModel treeModel = mock(ForumStructureTreeModel.class);
+        sut.setStructureTree(treeModel);
+        verify(branchEditingDialog).renewSectionsFromTree(treeModel);
     }
 
     @DataProvider
@@ -234,8 +229,18 @@ public class ForumStructureDataTest {
         sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
         sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
         jcommune.addSection(sectionB);
-        return new Object[][]{{new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune))}};
+        return new Object[][]{{new ForumStructureTreeModel(buildForumStructure(jcommune))}};
     }
+
+    @DataProvider
+    public Object[][] provideSutWithSpiedBranchDialog() {
+        BranchEditingDialog branchDialog = new BranchEditingDialog(mock(GroupDao.class));
+        BranchEditingDialog spy = spy(branchDialog);
+        ForumStructureData data = new ForumStructureData(spy);
+        data.setStructureTree((ForumStructureTreeModel) provideTreeModelWithSectionsAndBranches()[0][0]);
+        return new Object[][]{{data}};
+    }
+
 
     /**
      * Provides the {@link ForumStructureData} with the tree already set.
@@ -244,10 +249,32 @@ public class ForumStructureDataTest {
      */
     @DataProvider
     public Object[][] provideSutWithTree() {
-        ForumStructureData data = new ForumStructureData();
-        data.setSectionTree((ZkTreeModel<ForumStructureItem>) provideTreeModelWithSectionsAndBranches()[0][0]);
+        ForumStructureData data = new ForumStructureData(mock(BranchEditingDialog.class));
+        data.setStructureTree((ForumStructureTreeModel) provideTreeModelWithSectionsAndBranches()[0][0]);
         return new Object[][]{{data}};
     }
 
+    /**
+     * Provides the {@link ForumStructureData} with the tree set to mock.
+     *
+     * @return the {@link ForumStructureData} with the tree set to mock
+     */
+    @DataProvider
+    public Object[][] provideSutWithMockedTree() {
+        ForumStructureData data = new ForumStructureData(mock(BranchEditingDialog.class));
+        data.setStructureTree(mock(ForumStructureTreeModel.class));
+        return new Object[][]{{data}};
+    }
 
+    /**
+     * Creates a {@link ForumStructureItem} with branch as the entity inside and sets it to the specified {@code sut}.
+     *
+     * @param sut the newly created item will be set here
+     * @return the created item
+     */
+    private ForumStructureItem givenSelectedItemAsBranch(ForumStructureData sut) {
+        ForumStructureItem selectedItem = new ForumStructureItem(new PoulpeBranch());
+        sut.setSelectedItem(selectedItem);
+        return selectedItem;
+    }
 }

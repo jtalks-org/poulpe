@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -24,14 +23,12 @@ import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.ListModel;
 import org.zkoss.zul.Treeitem;
 
 import javax.annotation.Nonnull;
@@ -52,13 +49,14 @@ public class ForumStructureVm {
     private final ForumStructureService forumStructureService;
     private final WindowManager windowManager;
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
-    private ForumStructureData viewData = new ForumStructureData();
+    private ForumStructureData viewData;
 
     public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
-                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions) {
+                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions, ForumStructureData viewData) {
         this.forumStructureService = forumStructureService;
         this.windowManager = windowManager;
         this.selectedBranchForPermissions = selectedBranchForPermissions;
+        this.viewData = viewData;
     }
 
     /**
@@ -67,7 +65,7 @@ public class ForumStructureVm {
      */
     @Init
     public void init() {
-        viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
+        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(loadJcommune())));
     }
 
     /**
@@ -137,7 +135,7 @@ public class ForumStructureVm {
 
     void deleteSelectedSection(PoulpeSection selectedSection) {
         Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedSection);
-        viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune)));
+        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(jcommune)));
     }
 
     void deleteSelectedBranch(PoulpeBranch branchItem) {
@@ -198,16 +196,6 @@ public class ForumStructureVm {
         return forumStructureService.saveBranch(section, selectedBranch);
     }
 
-    /**
-     * Returns all the sections from our database in list model representation in order they are actually sorted.
-     *
-     * @return all the sections from our database in list model representation in order they are actually sorted or
-     *         empty tree if there are no sections. Can't return {@code null}.
-     */
-    public ListModel<ForumStructureItem> getSectionList() {
-        return viewData.getSectionList();
-    }
-
     public ForumStructureData getViewData() {
         return viewData;
     }
@@ -259,13 +247,8 @@ public class ForumStructureVm {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
             PoulpeBranch targetBranch = targetItem.getBranchItem();
             forumStructureService.moveBranchTo(draggedBranch, targetBranch);
-            //viewData.setSectionTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
+            //viewData.setStructureTree(new ZkTreeModel<ForumStructureItem>(buildForumStructure(loadJcommune())));
             viewData.moveNodeTo(draggedNode, targetNode);
         }
-    }
-
-    @VisibleForTesting
-    void setViewData(ForumStructureData viewData) {
-        this.viewData = viewData;
     }
 }

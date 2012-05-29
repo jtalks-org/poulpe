@@ -22,7 +22,6 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -33,9 +32,9 @@ import org.testng.annotations.Test;
 
 import java.util.Random;
 
-import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author stanislav bashkirtsev
@@ -51,8 +50,7 @@ public class ForumStructureVmTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        sut = new ForumStructureVm(forumStructureService, mock(WindowManager.class), mock(SelectedEntity.class));
-        sut.setViewData(data);
+        sut = new ForumStructureVm(forumStructureService, mock(WindowManager.class), mock(SelectedEntity.class), data);
         sut = spy(sut);
     }
 

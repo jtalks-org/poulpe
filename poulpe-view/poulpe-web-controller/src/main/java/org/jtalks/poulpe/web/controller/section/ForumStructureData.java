@@ -21,10 +21,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
@@ -38,12 +35,20 @@ import java.util.ArrayList;
  * @author Guram Savinov
  */
 public class ForumStructureData {
-    private final BranchEditingDialog branchDialog = new BranchEditingDialog();
+    /**
+     * The level of the section in the tree, e.g. branch is the next level = 1.
+     */
+    private static final int SECTION_TREE_LEVEL = 0;
+    private final BranchEditingDialog branchDialog;
     private final ConfirmBranchDeletionDialogVm confirmBranchDeletionDialogVm = new ConfirmBranchDeletionDialogVm();
     private final ConfirmSectionDeletionDialogVm confirmSectionDeletionDialogVm = new ConfirmSectionDeletionDialogVm();
     private ForumStructureItem selectedItem = new ForumStructureItem();
-    private ZkTreeModel<ForumStructureItem> sectionTree;
+    private ForumStructureTreeModel structureTree;
     private boolean showSectionDialog;
+
+    public ForumStructureData(BranchEditingDialog branchDialog) {
+        this.branchDialog = branchDialog;
+    }
 
     /**
      * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
@@ -52,7 +57,7 @@ public class ForumStructureData {
      * @return the {@link Jcommune} object that is the root of the Forum Structure tree
      */
     public Jcommune getRootAsJcommune() {
-        return (Jcommune) (Object) sectionTree.getRoot().getData();
+        return (Jcommune) (Object) structureTree.getRoot().getData();
     }
 
     /**
@@ -75,9 +80,9 @@ public class ForumStructureData {
      */
     public ForumStructureData showBranchDialog(boolean createNew) {
         selectedItem = selectedItem.prepareBranchItemForEditing(createNew);
-        ForumStructureItem containingSection = sectionTree.getChildData(sectionTree.getSelectionPath()[0]);
-        sectionTree.clearSelection();
-        branchDialog.selectSection(containingSection).showDialog();
+        ForumStructureItem containingSection = structureTree.getSelectedData(SECTION_TREE_LEVEL);
+        structureTree.clearSelection();
+        branchDialog.setEditedBranch(selectedItem).selectSection(containingSection).showDialog();
         return this;
     }
 
@@ -102,7 +107,7 @@ public class ForumStructureData {
      * @return the item that was previously set as selected (the one that is removed by this method)
      */
     public ForumStructureItem removeSelectedItem() {
-        return sectionTree.removeSelected().getData();
+        return structureTree.removeSelected().getData();
     }
 
     /**
@@ -112,17 +117,7 @@ public class ForumStructureData {
      * @return the section that was chosen in the list of available sections
      */
     public ForumStructureItem getSectionSelectedInDropdown() {
-        return getSectionList().getSelection().iterator().next();
-    }
-
-    /**
-     * The list of available sections (in the branch dialog where Admin can choose to what section this branch should
-     * go).
-     *
-     * @return the list of available sections
-     */
-    public ListModelList<ForumStructureItem> getSectionList() {
-        return branchDialog.getSectionList();
+        return branchDialog.getSectionSelectedInDropdown();
     }
 
     /**
@@ -148,20 +143,6 @@ public class ForumStructureData {
     }
 
     /**
-     * Figures out whether the Branch Editing Dialog should be shown right now. It also changes the flag to {@code
-     * false} each time because we don't send anything to the server when closing window, so during next change
-     * notification ZK will think that we need to show that dialog again which is wrong.
-     *
-     * @return {@code true} if the Branch Editing dialog should be shown
-     * @see #showBranchDialog
-     */
-    public boolean isShowBranchDialog() {
-        boolean show = branchDialog.isShowDialog() && selectedItem.isBranch();
-        branchDialog.closeDialog();
-        return show;
-    }
-
-    /**
      * Figures out whether the Section Editing Dialog should be shown right now. It also changes the flag to {@code
      * false} each time because we don't send anything to the server when closing window, so during next change
      * notification ZK will think that we need to show that dialog again which is wrong.
@@ -174,11 +155,6 @@ public class ForumStructureData {
         this.showSectionDialog = false;
         return show;
     }
-
-    public void setShowSectionDialog(boolean showSectionDialog) {
-        this.showSectionDialog = showSectionDialog;
-    }
-
 
     /**
      * Gets the VM that is responsible for showing the section deletion confirmation.
@@ -203,8 +179,8 @@ public class ForumStructureData {
      *
      * @return the tree of sections and branches
      */
-    public ZkTreeModel<ForumStructureItem> getSectionTree() {
-        return sectionTree;
+    public ForumStructureTreeModel getStructureTree() {
+        return structureTree;
     }
 
     /**
@@ -230,9 +206,9 @@ public class ForumStructureData {
         if (!getSelectedItem().isPersisted()) {
             TreeNode<ForumStructureItem> sectionNode = new DefaultTreeNode<ForumStructureItem>(
                     getSelectedItem(), new ArrayList<TreeNode<ForumStructureItem>>());
-            getSectionTree().getRoot().add(sectionNode);
-            getSectionTree().addToSelection(sectionNode);
-            getSectionList().add(sectionNode.getData());
+            getStructureTree().getRoot().add(sectionNode);
+            getStructureTree().addToSelection(sectionNode);
+            branchDialog.getSectionList().add(sectionNode.getData());
         }
         return this;
     }
@@ -254,15 +230,12 @@ public class ForumStructureData {
      */
     public ForumStructureData putSelectedBranchToSectionInDropdown() {
         ForumStructureItem branchToPut = getSelectedItem();
-        TreeNode<ForumStructureItem> destinationSectionNode = getSectionTree().find(getSectionSelectedInDropdown());
-        ZkTreeNode<ForumStructureItem> branchNodeToPut = (ZkTreeNode<ForumStructureItem>) getSectionTree().find(branchToPut);
-        if (branchNodeToPut == null) {
-            branchNodeToPut = new ZkTreeNode<ForumStructureItem>(branchToPut);
-        }
-        branchNodeToPut.moveTo(destinationSectionNode);
-        getSectionTree().addToSelection(branchNodeToPut);
-        getSectionTree().addOpenObject(destinationSectionNode);
+        getStructureTree().putBranch(branchToPut, getSectionSelectedInDropdown());
         return this;
+    }
+
+    public BranchEditingDialog getBranchDialog() {
+        return branchDialog;
     }
 
     /**
@@ -272,22 +245,21 @@ public class ForumStructureData {
      * @param sectionTree the new tree of sections and branches to be shown on the Forum Structure page
      */
 
-    public void setSectionTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
-        this.sectionTree = sectionTree;
+    public void setStructureTree(@Nonnull ForumStructureTreeModel sectionTree) {
+        this.structureTree = sectionTree;
         branchDialog.renewSectionsFromTree(sectionTree);
     }
 
     /**
-     * Moves node to the target node place. Switches target and all next nodes after inserted node. 
-     * 
-     * @param node the node that will be inserted to the target node place
+     * Moves node to the target node place. Switches target and all next nodes after inserted node.
+     *
+     * @param node   the node that will be inserted to the target node place
      * @param target the node that will be placed with all next nodes after inserted
      */
-    public void moveNodeTo(TreeNode<ForumStructureItem> node,
-	        TreeNode<ForumStructureItem> target) {
-	    sectionTree.removeChild(sectionTree.getPath(node));
-	    TreeNode<ForumStructureItem> targetParent = target.getParent();
-	    targetParent.insert(node, targetParent.getIndex(target));
+    public void moveNodeTo(TreeNode<ForumStructureItem> node, TreeNode<ForumStructureItem> target) {
+        structureTree.removeChild(structureTree.getPath(node));
+        TreeNode<ForumStructureItem> targetParent = target.getParent();
+        targetParent.insert(node, targetParent.getIndex(target));
     }
 
 }
