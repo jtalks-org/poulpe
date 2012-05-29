@@ -19,6 +19,7 @@ import org.testng.annotations.Test;
 
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -31,7 +32,8 @@ import static org.testng.Assert.assertSame;
  */
 
 public class SecurityServiceTest {
-    private static User user = new User("user", "user@mail.ru", "password", "salt");
+    private static String username = "user";
+    private static User user = new User(username, "user@mail.ru", "password", "salt");
     private UserDao userDao;
     private SecurityService securityService;
 
@@ -43,8 +45,13 @@ public class SecurityServiceTest {
 
     @Test
     public void testLoadUserByUsername() throws Exception {
-        when(userDao.getByUsername("user")).thenReturn(user);
-        assertSame(user, securityService.loadUserByUsername("user"));
+        when(userDao.getByUsername(username)).thenReturn(user);
+        assertSame(user, securityService.loadUserByUsername(username));
     }
     
+    @Test(expectedExceptions = UsernameNotFoundException.class)
+    public void testUserNotFound() {
+        when(userDao.getByUsername(username)).thenReturn(null);
+        securityService.loadUserByUsername(username);
+    }
 }
