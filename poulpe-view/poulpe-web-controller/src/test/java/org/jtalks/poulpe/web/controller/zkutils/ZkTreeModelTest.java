@@ -27,34 +27,34 @@ import static org.testng.Assert.*;
  * @author stanislav bashkirtsev
  */
 public class ZkTreeModelTest {
-    ZkTreeModel<Object> sut;
+    ZkTreeModel<String> sut;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        sut = new ZkTreeModel<Object>(new DefaultTreeNode<Object>(new Object(), new ArrayList<TreeNode<Object>>()));
-        sut.getRoot().add(new DefaultTreeNode<Object>(new Object(), new ArrayList<TreeNode<Object>>()));
-        sut.getRoot().add(new DefaultTreeNode<Object>(new Object(), new ArrayList<TreeNode<Object>>()));
-        sut.getRoot().add(new DefaultTreeNode<Object>(new Object()));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<Object>(new Object()));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<Object>(new Object()));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<Object>(new Object()));
+        sut = new ZkTreeModel<String>(new ZkTreeNode<String>("0", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("1", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("2", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("3"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,0"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,1"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,2"));
     }
 
     @Test
     public void testFindWithRootDataSpecified() throws Exception {
-        Object toSearch = sut.getRoot().getData();
+        String toSearch = sut.getRoot().getData();
         assertSame(sut.find(toSearch), sut.getRoot());
     }
 
     @Test
     public void testFind() throws Exception {
-        Object toSearch = sut.getRoot().getChildAt(1).getChildAt(2).getData();
+        String toSearch = sut.getRoot().getChildAt(1).getChildAt(2).getData();
         assertSame(sut.find(toSearch), sut.getRoot().getChildAt(1).getChildAt(2));
     }
 
     @Test
     public void testRemoveChild() throws Exception {
-        TreeNode<Object> childToRemove = sut.getChild(1, 1);
+        TreeNode<String> childToRemove = sut.getChild(1, 1);
         assertSame(sut.removeChild(1, 1), childToRemove);
         assertNotSame(sut.getChild(1, 1), childToRemove);
     }
@@ -66,7 +66,7 @@ public class ZkTreeModelTest {
 
     @Test
     public void testRemoveSelected() {
-        TreeNode<Object> child = sut.getChild(1, 1);
+        TreeNode<String> child = sut.getChild(1, 1);
         sut.addToSelection(child);
 
         sut.removeSelected();
@@ -106,6 +106,40 @@ public class ZkTreeModelTest {
 
     @Test
     public void testFindWithoutSuchElement() throws Exception {
-        assertNull(sut.find(new Object()));
+        assertNull(sut.find("123"));
+    }
+
+    @Test
+    public void testGetSelectedData() throws Exception {
+        sut.addSelectionPath(new int[]{1, 0});
+        Object selectedData = sut.getSelectedData(1);
+        assertSame(selectedData, sut.getChild(1, 0).getData());
+    }
+
+    @Test(expectedExceptions = IndexOutOfBoundsException.class)
+    public void getSelectedDataShouldThrowWithTooLargeDepth() throws Exception {
+        sut.addSelectionPath(new int[]{1});
+        sut.getSelectedData(1);//throw
+    }
+
+    @Test
+    public void getSelectedDataWhenNothingIsSelected() throws Exception {
+        assertNull(sut.getSelectedData(1));
+    }
+
+    @Test
+    public void testAddExpandableNode() throws Exception {
+        TreeNode<String> resultNode = sut.addExpandableNode("1,10", 1);
+
+        assertTrue(sut.getChild(1).getChildren().contains(resultNode));
+        assertFalse(resultNode.isLeaf());
+    }
+
+    @Test
+    public void testAddExpandableNode_toRoot() throws Exception {
+        TreeNode<String> resultNode = sut.addExpandableNode("0,10");
+
+        assertTrue(sut.getRoot().getChildren().contains(resultNode));
+        assertFalse(resultNode.isLeaf());
     }
 }

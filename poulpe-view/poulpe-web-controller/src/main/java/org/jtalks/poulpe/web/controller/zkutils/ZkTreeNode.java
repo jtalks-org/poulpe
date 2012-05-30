@@ -76,4 +76,14 @@ public class ZkTreeNode<E> extends DefaultTreeNode<E> {
         destinationNode.add(this);
         return this;
     }
+
+    /**
+     * Adds the node to selection in its tree model.
+     *
+     * @return this
+     */
+    public ZkTreeNode<E> select() {
+        getModel().addToSelection(this);
+        return this;
+    }
 }

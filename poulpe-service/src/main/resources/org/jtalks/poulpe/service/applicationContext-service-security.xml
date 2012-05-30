@@ -88,10 +88,6 @@
   </bean>
 
   <!-- Spring Security Authentication -->
-  <bean id="poulpeAuthenticationProvider" class="org.jtalks.poulpe.logic.UsernameAuthenticationProvider">
-    <constructor-arg index="0" ref="poulpeSecurityService" />
-  </bean>
-
   <bean id="poulpeSecurityService" class="org.jtalks.poulpe.service.SecurityService">
     <constructor-arg index="0" ref="userDao" />
   </bean>

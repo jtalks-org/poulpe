@@ -29,7 +29,7 @@
             <h:form id="f" name="f" action="j_spring_security_check" method="POST" xmlns:h="native">
               <grid style="border:none">
                 <rows>
-                  <row>${labels.login.username}: <textbox id="u" name="j_username" /></row>
+                  <row>${labels.login.username}: <textbox id="u" name="j_username" focus="true" /></row>
                   <row>${labels.login.password}: <textbox id="p" type="password" name="j_password" /></row>
                 </rows>
               </grid>

@@ -1,88 +1,82 @@
 <?page id="componentListPage" title="Component List" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk>
-	<window title="${labels.componentlist.title}" border="none"
-		width="800px" position="center,top" apply="org.zkoss.bind.BindComposer"
-		viewModel="@id('vm') @init(componentListVm)" validationMessages="@id('vmsgs')">
-		<style src="/resources/css/all.css" />
-		<vlayout>
-			<listbox model="@load(vm.componentList)" selectedItem="@bind(vm.selected)">
-				<listhead>
-					<listheader align="center"
-						label="${labels.component.title}" sclass="boldstyle" />
-					<listheader align="center"
-						label="${labels.component.description}" />
-					<listheader align="center"
-						label="${labels.component.type}" />
-				</listhead>
-				<template name="model" var="component">
-					<listitem value="component"
-						onDoubleClick="@command('editComponent', component=component)">
-						<listcell label="@load(component.name)"/>
-						<listcell label="@load(component.description)"/>
-						<listcell label="@load(component.componentType)"/>
-					</listitem>
-				</template>
-			</listbox>
-			<div>
-				<button label="${labels.componentlist.add}"
-					onClick="@command('showAddComponentDialog')"
-					disabled="@load(!vm.canCreateNewComponent)"/>
-				<button label="${labels.componentlist.delete}"
-					onClick="@command('deleteComponent')"
-					disabled="@load(empty vm.selected)"/>
-				<button label="${labels.componentlist.configure}"
-					onClick="@command('configureComponent')"
-					disabled="@load(empty vm.selected)"/>
-			</div>
-		</vlayout>
+    <window title="${labels.componentlist.title}" border="none"
+            width="800px" position="center,top" apply="org.zkoss.bind.BindComposer"
+            viewModel="@id('vm') @init(componentListVm)" validationMessages="@id('vmsgs')">
+        <style src="/resources/css/all.css" />
+        <vlayout>
+            <listbox model="@load(vm.componentList)" selectedItem="@bind(vm.selected)">
+                <listhead>
+                    <listheader align="center" label="${labels.component.title}" sclass="boldstyle" />
+                    <listheader align="center" label="${labels.component.description}" />
+                    <listheader align="center" label="${labels.component.type}" />
+                </listhead>
+                <template name="model" var="component">
+                    <listitem value="component">
+                        <listcell label="@load(component.name)"/>
+                        <listcell label="@load(component.description)"/>
+                        <listcell label="@load(component.componentType)"/>
+                    </listitem>
+                </template>
+            </listbox>
+            <div>
+                <button label="${labels.componentlist.add}" onClick="@command('showAddComponentDialog')"
+                        disabled="@load(!vm.canCreateNewComponent)"/>
+                <button label="${labels.componentlist.delete}" onClick="@command('deleteComponent')"
+                        disabled="@load(empty vm.selected)"/>
+                <button label="${labels.componentlist.configure}" onClick="@command('configureComponent')"
+                        disabled="@load(empty vm.selected)"/>
+            </div>
+        </vlayout>
 
-		<!-- This is the window which used for edit selected component or for creating new component, is not visible by default-->
-		<window title="${labels.componentedit.title}" border="normal"
-			width="430px" mode="modal" onClose="@command('cancelEdit')"
-			visible="@load(vm.editWindowVisible)">
-			<grid>
-				<columns>
-					<column width="100px" />
-					<column width="310px" />
-				</columns>
-				<rows>
-					<row>
-						${labels.component.title}
-						<textbox id="titlebox" width="300px" constraint="no empty" value="
-							@load(vm.selected.name, after={'showAddComponentDialog', 'editComponent'})
-							@save(vm.selected.name, before='saveComponent')
-							@validator('beanValidator')"/>
-						<label value="@load(vmsgs[titlebox])" sclass="redAlert" />
-					</row>
-					<row>
-						${labels.component.description}
-						<textbox width="300px" constraint="no empty"
-							value="@load(vm.selected.description, after={'showAddComponentDialog', 'editComponent'}) 
-								@save(vm.selected.description, before='saveComponent')"/>
-					</row>
-					<row>
-						${labels.component.type}
-						<combobox
-							model="@load(vm.availableComponentTypes, after={'showAddComponentDialog', 'editComponent'})"
-							selectedItem="@load(vm.selected.componentType, after={'showAddComponentDialog', 'editComponent'})
-								@save(vm.selected.componentType, before='saveComponent')" 
-							width="300px" readonly="true" constraint="no empty">
-							<template name="model" var="componentType">
-								<comboitem label="@load(componentType)" />
-							</template>
-						</combobox>
-					</row>
-					<row align="right" spans="3">
-						<hbox>
-							<button label="${labels.componentedit.save}"
-								onClick="@command('saveComponent')" />
-							<button label="${labels.componentedit.cancel}"
-								onClick="@command('cancelEdit')" />
-						</hbox>
-					</row>
-				</rows>
-			</grid>
-		</window>
-	</window>
+        <!-- This is the window which used for edit selected component or for creating new component, is not visible by default-->
+        <window title="${labels.componentedit.title}" border="normal"
+                width="430px" mode="modal" onClose="@command('cancelEdit')"
+                visible="@load(vm.editWindowVisible)">
+            <grid>
+                <columns>
+                    <column width="100px" />
+                    <column width="310px" />
+                </columns>
+                <rows>
+                    <row>
+                        ${labels.component.title}
+                        <textbox id="titlebox" width="300px" constraint="no empty"
+                                 value="@load(vm.componentDescription)
+							            @save(vm.componentName, before='createComponent')
+							            @validator('beanValidator')"/>
+                        <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
+                    </row>
+                    <row>
+                        ${labels.component.description}
+                        <textbox width="300px" constraint="no empty"
+                                 value="@load(vm.componentDescription)
+                                        @save(vm.componentDescription, before='createComponent')
+                                        @validator('beanValidator')"/>
+                    </row>
+                    <row>
+                        ${labels.component.type}
+                        <combobox
+                                model="@load(vm.availableComponentTypes, after='showAddComponentDialog')"
+                                selectedItem="@bind(vm.componentType)"
+                                width="300px" readonly="true">
+                            <attribute name="onCreate">
+                                self.setConstraint("no empty");
+                            </attribute>
+                            <template name="model" var="componentType">
+                                <comboitem label="@load(componentType)" />
+                            </template>
+                        </combobox>
+                    </row>
+                    <row align="right" spans="3">
+                        <hbox>
+                            <button label="${labels.componentedit.save}" onClick="@command('createComponent')" />
+                            <button label="${labels.componentedit.cancel}" onClick="@command('cancelEdit')"/>
+                        </hbox>
+                    </row>
+                </rows>
+            </grid>
+        </window>
+    </window>
 </zk>

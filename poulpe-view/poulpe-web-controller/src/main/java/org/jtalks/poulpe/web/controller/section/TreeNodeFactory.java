@@ -18,8 +18,6 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
-import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -38,7 +36,7 @@ public class TreeNodeFactory {
      * @return the whole tree of sections and branches built
      */
     @SuppressWarnings("unchecked")
-    public static TreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
+    public static ZkTreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
         List<ZkTreeNode> sectionNodes = wrapInTreeNodes(jcommune.getSections());
         return new ZkTreeNode(jcommune, sectionNodes);
     }

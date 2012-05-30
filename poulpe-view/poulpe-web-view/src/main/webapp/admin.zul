@@ -36,10 +36,10 @@
                 <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')" />
                 <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')" />
                 <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')" />
-                <treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />
+                <!--<treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />-->
               </treechildren>
             </treeitem>
-            <treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />
+            <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
           </treechildren>
         </tree>
       </west>

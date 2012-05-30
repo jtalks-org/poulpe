@@ -76,7 +76,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public org.jtalks.common.model.entity.User getByUsername(String username) {
+    public PoulpeUser getByUsername(String username) {
         return getPoulpeUserByUsername(username);
     }
 

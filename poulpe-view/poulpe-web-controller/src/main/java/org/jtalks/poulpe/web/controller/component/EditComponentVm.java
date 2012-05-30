@@ -43,7 +43,8 @@ public class EditComponentVm {
     public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
     private static final String COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name", CAPTION_PROP = "caption",
             DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout", VALIDATION_MESSAGES_PROP = "validationMessages";
+            SESSION_TIMEOUT_PROP = "sessionTimeout", VALIDATION_MESSAGES_PROP = "validationMessages",
+            IS_JCOMMUNE ="jcommune";
 
     /**
      * Current component we are working with
@@ -81,7 +82,8 @@ public class EditComponentVm {
 
     private String sessionTimeout;
 
-    /**
+    private boolean jcommune;
+     /**
      * Web-form validation messages
      */
     private Map<String, String> validationMessages = new HashMap<String, String>();
@@ -145,21 +147,37 @@ public class EditComponentVm {
      */
     @NotifyChange
             ({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
-                    POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP})
+                    POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP, IS_JCOMMUNE})
     public final void initData() {
-        currentComponent = (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
+        currentComponent = getSelectedComponent();
 
         if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
             componentType = "jcommune";
+            jcommune = true;
+            name = valueOf(currentComponent.getProperty(componentType + ".name"));
+            caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
+            postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
+            sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
         } else {
-            componentType = "antarcticle";
+            componentType = currentComponent.getComponentType().toString();
+            jcommune = false;
+            name = "name";
+            caption = "caption";
+            postPreviewSize = "10";
+            sessionTimeout = "10";
         }
         componentName = valueOf(currentComponent.getName());
-        name = valueOf(currentComponent.getProperty(componentType + ".name"));
         description = valueOf(currentComponent.getDescription());
-        caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
-        postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
-        sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+
+    }
+
+    /**
+     * Returns selected component.
+     *
+     * @return current selected component.
+     */
+    public Component getSelectedComponent() {
+        return (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
     }
 
     // service functions
@@ -171,6 +189,10 @@ public class EditComponentVm {
      */
     public List<Component> getComponents() {
         return componentService.getAll();
+    }
+
+    public boolean isJcommune() {
+        return jcommune;
     }
 
     // commands
@@ -188,10 +210,12 @@ public class EditComponentVm {
         if (checkCorrect()) {
             currentComponent.setName(componentName);
             currentComponent.setDescription(description);
+            if(jcommune){
             currentComponent.setProperty(componentType + ".name", name);
             currentComponent.setProperty(componentType + ".caption", caption);
             currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
             currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+            }
 
             try {
                 componentService.saveComponent(currentComponent);

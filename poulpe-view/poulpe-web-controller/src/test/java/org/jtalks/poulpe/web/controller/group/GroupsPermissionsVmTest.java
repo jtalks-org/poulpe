@@ -110,7 +110,7 @@ public class GroupsPermissionsVmTest {
     public Object[][] dataProviderForShowGroupsDialog() {
         return new Object[][] { { ObjectsFactory.fakeBranch(), GeneralPermission.READ, "allow" },
                 { ObjectsFactory.fakeBranch(), GeneralPermission.ADMIN, "restrict" },
-                { ObjectsFactory.fakeSection(), BranchPermission.DELETE_POSTS, "allow" }, };
+                { ObjectsFactory.fakeSection(), BranchPermission.DELETE_OWN_POSTS, "allow" }, };
     }
 
     @DataProvider

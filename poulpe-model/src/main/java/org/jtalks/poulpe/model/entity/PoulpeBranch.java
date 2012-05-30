@@ -28,7 +28,6 @@ import java.util.List;
  * @author Pavel Vervenko
  */
 public class PoulpeBranch extends Branch {
-    private Group moderatorsGroup;
 
     /**
      * Creates an empty branch, all fields are set to null,
@@ -81,54 +80,6 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * @return an unmodifiable list of {@link PoulpeUser} which are signed to moderate this branch
-     */
-    public List<PoulpeUser> getModeratorsList() {
-        List<PoulpeUser> moderators = getPoulpeUsersConvertedFromCommonGroupUsers();
-        return Collections.unmodifiableList(moderators);
-    }
-
-    /**
-     * Protected for using only by hibernate.
-     *
-     * @return the list of moderators.
-     */
-    protected List<PoulpeUser> getModerators() {
-        return getPoulpeUsersConvertedFromCommonGroupUsers();
-    }
-
-    /**
-     * Sets the list of users which will be signed to moderate this branch. Protected for using only by hibernate.
-     *
-     * @param moderators a list of {@link PoulpeUser}
-     */
-    protected void setModerators(List<PoulpeUser> moderators) {
-        moderatorsGroup.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(moderators));
-    }
-
-    /**
-     * Returns a {@link Group} of moderators of this branch. This field is an extra information about moderators, since
-     * we already have ACL records that explain what permissions groups have on branches, but this moderators group is
-     * just for convenience - in order to easily work with moderators.
-     *
-     * @return a group of moderators for this branch
-     */
-    public Group getModeratorsGroup() {
-        return moderatorsGroup;
-    }
-
-    /**
-     * Sets a {@link Group} of moderators for this branch. This field is an extra information about moderators, since we
-     * already have ACL records that explain what permissions groups have on branches, but this moderators group is just
-     * for convenience - in order to easily work with moderators.
-     *
-     * @param moderatorsGroup a group of moderators for this branch
-     */
-    public void setModeratorsGroup(Group moderatorsGroup) {
-        this.moderatorsGroup = moderatorsGroup;
-    }
-
-    /**
      * Unlike usual situation, in our case this method is used by presentation layer to depict forum structure, so this
      * method should be changed only if this presentation changed the way it shows branches.
      *
@@ -137,18 +88,5 @@ public class PoulpeBranch extends Branch {
     @Override
     public String toString() {
         return getName();
-    }
-
-    private List<PoulpeUser> getPoulpeUsersConvertedFromCommonGroupUsers() {
-        List<org.jtalks.common.model.entity.User> commonUsers = getGroupUsers();
-        List<PoulpeUser> moderators = new ArrayList<PoulpeUser>(commonUsers.size());
-        for (org.jtalks.common.model.entity.User user : commonUsers) {
-            moderators.add((PoulpeUser) user);
-        }
-        return moderators;
-    }
-
-    private List<org.jtalks.common.model.entity.User> getGroupUsers() {
-        return moderatorsGroup.getUsers();
     }
 }

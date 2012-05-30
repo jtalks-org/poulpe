@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.component;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -39,15 +40,18 @@ public class ComponentsVm {
     public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
             AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
             SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-            COMPONENT_LIST = "componentList";
+            COMPONENT_LIST = "componentList", NAME ="componentName", DESCRIPTION="componentDescription",
+            TYPE="componentType";
 
     private Component selected;
+    private String componentName;
+    private String componentDescription;
+    private ComponentType componentType;
     private boolean editWindowVisible;
     private boolean canCreateNewComponent;
     private List<Component> componentList;
     private List<ComponentType> availableComponentTypes;
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
-
     // List of injectable properties
     private ComponentService componentService;
     private DialogManager dialogManager;
@@ -67,7 +71,6 @@ public class ComponentsVm {
     @Command
     @NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
     public void showAddComponentDialog() {
-        selected = new Jcommune();
         editWindowVisible = true;
     }
 
@@ -121,30 +124,33 @@ public class ComponentsVm {
      */
     @Command
     @NotifyChange({COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE})
-    public void saveComponent() {
-//        if(selected.getComponentType().equals(ComponentType.FORUM)){
-//            String name =  selected.getName();
-//            String description = selected.getDescription();
-//            selected = new Jcommune();
-//            selected.setName(name);
-//            selected.setDescription(description);
-//            selected.setComponentType(ComponentType.FORUM);
-//        }
-//        if(selected.getComponentType().equals(ComponentType.ADMIN_PANEL)){
-//            String name =  selected.getName();
-//            String description = selected.getDescription();
-//            selected = new Poulpe();
-//            selected.setName(name);
-//            selected.setDescription(description);
-//            selected.setComponentType(ComponentType.ADMIN_PANEL);
-//        }
+    public void createComponent() {
+        if (componentType.equals(ComponentType.FORUM)) {
+            selected = new Jcommune();
+        } else if (componentType.equals(ComponentType.ADMIN_PANEL)) {
+            selected = new Poulpe();
+        } else {
+            selected = new Component();
+        }
+        selected.setName(componentName);
+        selected.setDescription(componentDescription);
+        selected.setComponentType(componentType);
         componentService.saveComponent(selected);
         editWindowVisible = false;
+        clearComponent();
         updateListComponentsData();
     }
 
+    @NotifyChange({SELECTED, NAME, DESCRIPTION,TYPE })
+    public void clearComponent() {
+        setComponentName(null);
+        setComponentDescription(null);
+        setComponentType(null);
+        selected = null;
+    }
+
     /**
-     * Event which happen when user cansel editing of component.
+     * Event which happen when user cancel editing of component.
      */
     @Command
     @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE})
@@ -237,4 +243,27 @@ public class ComponentsVm {
         this.windowManager = windowManager;
     }
 
+    public void setComponentName(String componentName) {
+        this.componentName = componentName;
+    }
+
+    public void setComponentDescription(String componentDescription) {
+        this.componentDescription = componentDescription;
+    }
+
+    public void setComponentType(ComponentType componentType) {
+        this.componentType = componentType;
+        }
+
+    public String getComponentName() {
+        return componentName;
+    }
+
+    public String getComponentDescription() {
+        return componentDescription;
+    }
+
+    public ComponentType getComponentType() {
+        return componentType;
+    }
 }

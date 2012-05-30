@@ -53,7 +53,6 @@ import static org.mockito.Mockito.*;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalComponentServiceTest {
-
     private TransactionalComponentService componentService;
     
     @Mock
@@ -102,7 +101,7 @@ public class TransactionalComponentServiceTest {
     @Test
     public void testDeleteComponent() {
         componentService.deleteComponent(component);
-        verify(componentDao).delete(component.getId());
+        verify(componentDao).delete(component);
     }
 
     @Test

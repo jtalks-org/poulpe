@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-import java.util.Set;
-
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.permissions.GeneralPermission;
@@ -29,6 +26,9 @@ import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.PropertyLoader;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * Transactional implementation of {@link ComponentService}. Transactions are provided by AOP.
  * 
@@ -38,7 +38,6 @@ import org.jtalks.poulpe.service.PropertyLoader;
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
-
     private final PermissionManager permissionManager;
     private final EntityValidator validator;
     private PropertyLoader propertyLoader;
@@ -70,7 +69,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteComponent(Component component) {
-        dao.delete(component.getId());
+        dao.delete(component);
     }
 
     /** {@inheritDoc} */
