@@ -24,7 +24,7 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
  * 
  * @author Vyacheslav Zhivaev
  */
-public interface UserDao extends org.jtalks.common.model.dao.UserDao, ParentRepository<PoulpeUser> {
+public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
     /**
      * Get {@link org.jtalks.poulpe.model.entity.PoulpeUser} with corresponding username.
