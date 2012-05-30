@@ -190,8 +190,6 @@ public class ForumStructureVm {
      */
     PoulpeBranch storeSelectedBranch() {
         PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
-        Group moderatingGroup = new Group(selectedBranch.getName() + " Moderators");
-        selectedBranch.setModeratorsGroup(moderatingGroup);
         PoulpeSection section = viewData.getSectionSelectedInDropdown().getSectionItem();
         return forumStructureService.saveBranch(section, selectedBranch);
     }

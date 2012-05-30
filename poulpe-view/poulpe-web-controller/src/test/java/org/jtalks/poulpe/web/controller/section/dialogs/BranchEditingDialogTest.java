@@ -18,7 +18,6 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author stanislav bashkirtsev
@@ -44,24 +43,24 @@ public class BranchEditingDialogTest {
     public void testGetCandidatesToModerate(List<Group> givenGroups) throws Exception {
         doReturn(givenGroups).when(groupDao).getAll();
 
-        List<Group> candidatesToModerate = sut.getCandidatesToModerate();
-        assertSame(candidatesToModerate, givenGroups);
+        List<Group> candidatesToModerate = sut.showDialog().getCandidatesToModerate();
+        assertEquals(candidatesToModerate, givenGroups);
     }
 
     @Test(dataProvider = "provideBranchWithModeratingGroup")
     public void getModeratorsGroupShouldReturnGroupFromBranch(PoulpeBranch branch) {
-        sut.setEditedBranch(new ForumStructureItem(branch));
+        doReturn(Arrays.asList(branch.getModeratorsGroup())).when(groupDao).getAll();
+        sut.showDialog().setEditedBranch(new ForumStructureItem(branch));
         assertEquals(sut.getModeratingGroup(), branch.getModeratorsGroup());
     }
 
     /**
-     * If the branch doesn't contain a moderating group yet, then a new group should be created with name Moderators Of
-     * [Branch Name].
+     * If the branch doesn't contain a moderating group yet, null should be returned.
      */
     @Test
-    public void getModeratorsGroupShouldReturnNewGroup() {
+    public void getModeratorsGroupShouldNull() {
         sut.setEditedBranch(new ForumStructureItem(new PoulpeBranch("test-branch")));
-        assertNull(sut.getModeratingGroup().getName());
+        assertNull(sut.getModeratingGroup());
     }
 
     @Test

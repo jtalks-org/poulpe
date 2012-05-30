@@ -38,10 +38,12 @@
     <!--select from.. where 'BRANCH'='BRANCH'-->
     <!--which won't have any effect on the query, but the whole table content will be actually instances of-->
     <!--this subclass, not the abstract class. See mapping of abstract class for other details.-->
-    <subclass name="org.jtalks.poulpe.model.entity.PoulpeBranch" extends="org.jtalks.common.model.entity.Branch"
-              discriminator-value="BRANCH">
+    <subclass name="org.jtalks.poulpe.model.entity.PoulpeBranch" discriminator-value="BRANCH">
+      <!--TODO: make moderatingGroup lazy, but then we need to come up with session-per-conversation
+      TODO: pattern in Hibernate, since we don't load branches on each request and after they were loaded, they are
+      TODO: staying without session. This is an issue in Branch Editing dialog-->
       <many-to-one name="moderatorsGroup" cascade="save-update" foreign-key="FK_MODERATORS_GROUP_ID"
-                   column="MODERATORS_GROUP_ID" class="org.jtalks.common.model.entity.Group"/>
+                   column="MODERATORS_GROUP_ID" class="org.jtalks.common.model.entity.Group" lazy="false"/>
     </subclass>
   </class>
 </hibernate-mapping>

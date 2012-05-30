@@ -51,24 +51,23 @@
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
             forward="onOK=saveBranchButton.onClick"
-            visible="@load(vm.viewData.branchDialog.showDialog)" height="350px" width="300px">
+            visible="@load(vm.viewData.branchDialog.showDialog)" height="320px" width="300px">
       <vlayout form="@id('fx') @save(vm.viewData.branchDialog, before='saveBranch') @load(vm.viewData.branchDialog)">
         ${labels.forum_structure.branch_dialog.section}
-        <combobox readonly="true" model="@load(fx.sectionList)"/>
+        <combobox readonly="true" model="@load(fx.sectionList)" hflex="1"/>
         ${labels.forum_structure.branch_dialog.branch_name}
-        <textbox id="branchNameBox" value="@bind(fx.editedBranch.item.name) @validator('beanValidator')" width="97%"
+        <textbox id="branchNameBox" value="@bind(fx.editedBranch.item.name) @validator('beanValidator')" hflex="1"
                  errorMessage="@load(vmsgs[branchNameBox])"/>
         <label value="Moderating Group:"/>
-        <radiogroup>
-          <radio label="Choose esisting" />
-          <combobox model="@load(fx.candidatesToModerate)" selectedItem="@bind(fx.moderatingGroup)">
-            <template name="model">
-              <comboitem label="@load(each.name)"/>
-            </template>
-          </combobox>
-          <radio id="createNewGroupRadio" label="Create New" onCheck="createNewGroupText.disabled = !self.checked"/>
-          <textbox id="createNewGroupText" value="@save(fx.groupToCreate)" />
-        </radiogroup>
+        <!--<radiogroup>-->
+          <!--<radio label="Choose esisting" />-->
+          <!--<combobox model="@load(fx.candidatesToModerate)" selectedItem="@bind(fx.moderatingGroup)">-->
+          <!--<template name="model">-->
+          <!--<comboitem label="@load(each.name)"/>-->
+          <!--</template>-->
+          <!--</combobox>-->
+          <!--<radio id="createNewGroupRadio" label="Create New" onCheck="createNewGroupText.disabled = !self.checked"/>-->
+          <textbox id="createNewGroupText" value="@save(fx.groupToCreate)" hflex="1" constraint="no empty"/>
         ${labels.forum_structure.branch_dialog.branch_description}
         <textbox rows="5" id="branchDescriptionBox"
                  value="@bind(fx.editedBranch.item.description) @validator('beanValidator')"

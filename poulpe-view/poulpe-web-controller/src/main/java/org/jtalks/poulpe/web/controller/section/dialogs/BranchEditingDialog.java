@@ -20,6 +20,7 @@ import java.util.List;
 public class BranchEditingDialog {
     private final GroupDao groupDao;
     private final ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
+    private final GroupList groupList = new GroupList();
     private ForumStructureItem editedBranch = new ForumStructureItem(new PoulpeBranch());
     private boolean showDialog;
 
@@ -43,6 +44,7 @@ public class BranchEditingDialog {
      * @return decides to show the dialog
      */
     public BranchEditingDialog showDialog() {
+        groupList.setGroups(groupDao.getAll());
         showDialog = true;
         return this;
     }
@@ -125,7 +127,7 @@ public class BranchEditingDialog {
     }
 
     public List<Group> getCandidatesToModerate() {
-        return groupDao.getAll();
+        return groupList.getGroups();
     }
 
     /**
@@ -142,18 +144,22 @@ public class BranchEditingDialog {
      */
     public Group getModeratingGroup() {
         Group currentModeratorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
-        Group toReturn = new Group();
-        if (currentModeratorsGroup != null) {
-            toReturn.setUuid(currentModeratorsGroup.getUuid());
-        }
-        return toReturn;
+        return groupList.getEqual(currentModeratorsGroup);
     }
 
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
     }
 
+    /**
+     * Used by ZK in order to set the field from the form if we want to create a moderating group along with the branch
+     * instead of using some existing group. Does nothing if the specified name is empty.
+     *
+     * @param groupNameToCreate
+     */
     public void setGroupToCreate(String groupNameToCreate) {
-        setModeratingGroup(new Group(groupNameToCreate));
+        if (!groupNameToCreate.isEmpty()) {
+            setModeratingGroup(new Group(groupNameToCreate));
+        }
     }
 }
