@@ -67,7 +67,7 @@
             </template>
           </combobox>
           <radio id="createNewGroupRadio" label="Create New" onCheck="createNewGroupText.disabled = !self.checked"/>
-          <textbox id="createNewGroupText" value="@bind(fx.groupToCreate)" />
+          <textbox id="createNewGroupText" value="@save(fx.groupToCreate)" />
         </radiogroup>
         ${labels.forum_structure.branch_dialog.branch_description}
         <textbox rows="5" id="branchDescriptionBox"

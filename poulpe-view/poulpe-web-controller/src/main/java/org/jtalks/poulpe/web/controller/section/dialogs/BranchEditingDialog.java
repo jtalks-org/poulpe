@@ -128,20 +128,29 @@ public class BranchEditingDialog {
         return groupDao.getAll();
     }
 
+    /**
+     * Gets the group that is equal to the one that is currently moderating the selected branch. A new group with the
+     * empty fields will be created if there is no moderating group of the branch (it's a new branch). Note, that this
+     * method will be used by ZK in order to identify currently selected item in Combo Box, which means that it doesn't
+     * actually need a real object to be returned, but it will be enough if we return an equal object (in our case
+     * equals means they have the same UUID). Due to this and due to the problem with ZK binding (Hibernate will return
+     * a proxy here, but method {@link #getCandidatesToModerate()} returns non-proxies, and when ZK tries to set the
+     * value, it throws a class cast exception because proxy != a usual class instance). That's why this method returns
+     * an instance that is equal to the real moderating group, not the actual one.
+     *
+     * @return the group that is equal to the one that is currently moderating the selected branch
+     */
     public Group getModeratingGroup() {
-        Group moderatorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
-        if (moderatorsGroup == null) {
-            moderatorsGroup = new Group("Moderators of " + editedBranch.getBranchItem().getName());
+        Group currentModeratorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
+        Group toReturn = new Group();
+        if (currentModeratorsGroup != null) {
+            toReturn.setUuid(currentModeratorsGroup.getUuid());
         }
-        return moderatorsGroup;
+        return toReturn;
     }
 
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
-    }
-
-    public String getGroupToCreate() {
-        return "Moderators of " + editedBranch.getBranchItem().getName();
     }
 
     public void setGroupToCreate(String groupNameToCreate) {

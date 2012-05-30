@@ -18,6 +18,7 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author stanislav bashkirtsev
@@ -50,7 +51,7 @@ public class BranchEditingDialogTest {
     @Test(dataProvider = "provideBranchWithModeratingGroup")
     public void getModeratorsGroupShouldReturnGroupFromBranch(PoulpeBranch branch) {
         sut.setEditedBranch(new ForumStructureItem(branch));
-        assertSame(sut.getModeratingGroup(), branch.getModeratorsGroup());
+        assertEquals(sut.getModeratingGroup(), branch.getModeratorsGroup());
     }
 
     /**
@@ -60,7 +61,7 @@ public class BranchEditingDialogTest {
     @Test
     public void getModeratorsGroupShouldReturnNewGroup() {
         sut.setEditedBranch(new ForumStructureItem(new PoulpeBranch("test-branch")));
-        assertEquals(sut.getModeratingGroup().getName(), "Moderators of test-branch");
+        assertNull(sut.getModeratingGroup().getName());
     }
 
     @Test
