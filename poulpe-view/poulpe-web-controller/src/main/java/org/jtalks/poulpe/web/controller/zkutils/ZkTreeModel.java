@@ -19,6 +19,7 @@ import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
@@ -172,26 +173,39 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
     }
 
     /**
-     * Drops node before the target node. Switches target and all next nodes
-     * after dropped node. 
-     * 
-     * @param node the node that will be dropped before the target node
+     * Creates a new node with the specified data and puts it into the specified path. The node is going to be not a
+     * leaf, but rather the one that can contain other nodes. Adds to the root of the tree if path is not specified.
+     *
+     * @param data           a data the resulting node will be created with
+     * @param parentNodePath a node to find in order to add a child to it, don't specify anything if you want to add a
+     *                       node in the root
+     * @return just created node
+     */
+    public ZkTreeNode<E> addExpandableNode(E data, int... parentNodePath) {
+        ZkTreeNode<E> node = new ZkTreeNode<E>(data, new ArrayList<TreeNode<E>>());
+        getChild(parentNodePath).add(node);
+        return node;
+    }
+
+    /**
+     * Drops node before the target node. Switches target and all next nodes after dropped node.
+     *
+     * @param node   the node that will be dropped before the target node
      * @param target the node that will be placed with all next nodes after dropped
      */
-    public void dropNodeBefore(TreeNode<E> node,
-            TreeNode<E> target) {
+    public void dropNodeBefore(TreeNode<E> node, TreeNode<E> target) {
         removeChild(getPath(node));
         TreeNode<E> targetParent = target.getParent();
         targetParent.insert(node, targetParent.getIndex(target));
     }
 
     /**
-     * Selects the node
-     * 
+     * Selects the node.
+     *
      * @param node the node that will be selected
      */
     public void setSelectedNode(TreeNode<E> node) {
         clearSelection();
-        addToSelection(node);        
+        addToSelection(node);
     }
 }

@@ -140,11 +140,11 @@ public class BranchEditingDialog {
         editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
     }
 
-    public Group getGroupToCreate() {
-        return new Group("Moderators of " + editedBranch.getBranchItem().getName());
+    public String getGroupToCreate() {
+        return "Moderators of " + editedBranch.getBranchItem().getName();
     }
 
-    public void setGroupToCreate(Group groupToCreate) {
-        setModeratingGroup(groupToCreate);
+    public void setGroupToCreate(String groupNameToCreate) {
+        setModeratingGroup(new Group(groupNameToCreate));
     }
 }

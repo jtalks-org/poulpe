@@ -21,11 +21,10 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
-import org.zkoss.zul.DefaultTreeNode;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
 
 /**
  * Is used to contain data for the view and do operations on view. It doesn't do any business logic, only logic that is
@@ -204,10 +203,9 @@ public class ForumStructureData {
      */
     public ForumStructureData addSelectedSectionToTreeIfNew() {
         if (!getSelectedItem().isPersisted()) {
-            TreeNode<ForumStructureItem> sectionNode = new DefaultTreeNode<ForumStructureItem>(
-                    getSelectedItem(), new ArrayList<TreeNode<ForumStructureItem>>());
-            getStructureTree().getRoot().add(sectionNode);
-            getStructureTree().addToSelection(sectionNode);
+            ZkTreeNode<ForumStructureItem> sectionNode = structureTree
+                    .addExpandableNode(getSelectedItem())
+                    .select();
             branchDialog.getSectionList().add(sectionNode.getData());
         }
         return this;
@@ -234,6 +232,12 @@ public class ForumStructureData {
         return this;
     }
 
+    /**
+     * Gets the Branch Editing Dialog View Data which is used while creating a new branch or editing the existing one.
+     *
+     * @return the Branch Editing Dialog View Data which is used while creating a new branch or editing the existing
+     *         one
+     */
     public BranchEditingDialog getBranchDialog() {
         return branchDialog;
     }
@@ -252,12 +256,12 @@ public class ForumStructureData {
 
     /**
      * Drops node before the target and selects it
-     * 
-     * @param node the node that will be dropped and selected
+     *
+     * @param node   the node that will be dropped and selected
      * @param target the node to which place will be dropped node
      */
     public void dropAndSelect(TreeNode<ForumStructureItem> node,
-            TreeNode<ForumStructureItem> target) {
+                              TreeNode<ForumStructureItem> target) {
         structureTree.dropNodeBefore(node, target);
         structureTree.setSelectedNode(node);
         setSelectedItem(node.getData());

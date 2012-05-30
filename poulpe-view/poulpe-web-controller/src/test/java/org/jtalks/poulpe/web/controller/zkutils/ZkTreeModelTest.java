@@ -31,13 +31,13 @@ public class ZkTreeModelTest {
 
     @BeforeMethod
     public void setUp() throws Exception {
-        sut = new ZkTreeModel<String>(new DefaultTreeNode<String>("0", new ArrayList<TreeNode<String>>()));
-        sut.getRoot().add(new DefaultTreeNode<String>("1", new ArrayList<TreeNode<String>>()));
-        sut.getRoot().add(new DefaultTreeNode<String>("2", new ArrayList<TreeNode<String>>()));
-        sut.getRoot().add(new DefaultTreeNode<String>("3"));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<String>("1,0"));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<String>("1,1"));
-        sut.getRoot().getChildAt(1).add(new DefaultTreeNode<String>("1,2"));
+        sut = new ZkTreeModel<String>(new ZkTreeNode<String>("0", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("1", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("2", new ArrayList<TreeNode<String>>()));
+        sut.getRoot().add(new ZkTreeNode<String>("3"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,0"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,1"));
+        sut.getRoot().getChildAt(1).add(new ZkTreeNode<String>("1,2"));
     }
 
     @Test
@@ -113,7 +113,7 @@ public class ZkTreeModelTest {
     public void testGetSelectedData() throws Exception {
         sut.addSelectionPath(new int[]{1, 0});
         Object selectedData = sut.getSelectedData(1);
-        assertSame(selectedData, sut.getChild(1,0).getData());
+        assertSame(selectedData, sut.getChild(1, 0).getData());
     }
 
     @Test(expectedExceptions = IndexOutOfBoundsException.class)
@@ -125,5 +125,21 @@ public class ZkTreeModelTest {
     @Test
     public void getSelectedDataWhenNothingIsSelected() throws Exception {
         assertNull(sut.getSelectedData(1));
+    }
+
+    @Test
+    public void testAddExpandableNode() throws Exception {
+        TreeNode<String> resultNode = sut.addExpandableNode("1,10", 1);
+
+        assertTrue(sut.getChild(1).getChildren().contains(resultNode));
+        assertFalse(resultNode.isLeaf());
+    }
+
+    @Test
+    public void testAddExpandableNode_toRoot() throws Exception {
+        TreeNode<String> resultNode = sut.addExpandableNode("0,10");
+
+        assertTrue(sut.getRoot().getChildren().contains(resultNode));
+        assertFalse(resultNode.isLeaf());
     }
 }

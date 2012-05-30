@@ -12,6 +12,7 @@ import javax.annotation.Nonnull;
  * @author stanislav bashkirtsev
  */
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
+    private static final long serialVersionUID = 20110138264143L;
     public ForumStructureTreeModel(@Nonnull ZkTreeNode<ForumStructureItem> root) {
         super(root);
     }
