@@ -39,13 +39,11 @@ import static org.testng.Assert.*;
 public class UserGroupVmTest {
 
     private static final String SEARCH_STRING = "searchString";
-    
+
     @Mock
     private GroupService groupService;
     @Mock
     private WindowManager windowManager;
-    @Mock
-    private DialogManager.Performable preformable;
 
     private UserGroupVm viewModel;
     private SelectedEntity<Group> selectedEntity;
@@ -55,7 +53,7 @@ public class UserGroupVmTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        viewModel = spy (new UserGroupVm(groupService, selectedEntity, windowManager));
+        viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager));
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
         groups = new ListModelList<Group>();
@@ -93,7 +91,6 @@ public class UserGroupVmTest {
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
         verify(viewModel).updateView();
-        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
     }
 
     @Test
@@ -108,24 +105,33 @@ public class UserGroupVmTest {
         viewModel.saveGroup(group);
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();
-        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+        assertFalse(viewModel.isShowNewDialog());
     }
 
     @Test
-    public void testCloseDialog(){
+    public void testCloseDialog() {
         viewModel.showNewGroupDialog();
+        assertTrue(viewModel.isShowNewDialog());
         viewModel.closeDialog();
-        assertFalse((viewModel.isShowDeleteDialog()) && (viewModel.isShowEditDialog()) && (viewModel.isShowNewDialog()));
+        assertFalse(viewModel.isShowNewDialog());
     }
+
     @Test
-    public void testIsShowNewDialog(){
+    public void testIsShowNewDialog() {
         viewModel.showNewGroupDialog();
         assertTrue(viewModel.isShowNewDialog());
         assertFalse(viewModel.isShowNewDialog());
     }
 
+    @Test
+    public void testGetGroups() {
+        assertEquals(viewModel.getGroups(), groups);
+        verify(viewModel).updateView();
+    }
+
+
     @DataProvider
-    public Object[][] provideRandomGroupsList(){
+    public Object[][] provideRandomGroupsList() {
         return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
     }
 

@@ -89,7 +89,7 @@
     <!--EDIT DIALOG-->
     <window id="editGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.editdialog.title}"
             closable="true" border="normal"  width="300px"  mode="modal"
-            visible="@load(vm.showEditDialog)"
+            visible="false"
             onClose="self.visible=false;event.stopPropagation();"
             onOK="@command('saveGroup', group=vm.selectedGroup)"
             onCancel="self.visible=false">
@@ -120,7 +120,7 @@
     <!--DELETE CONFIRM DIALOG-->
       <window id="deleteConfirmDialog"
              title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-             visible="@bind(vm.showDeleteDialog)"
+             visible="false"
              onClose="self.visible=false;event.stopPropagation();"
              onCancel="self.visible=false"
              onOK="@command('deleteGroup')"

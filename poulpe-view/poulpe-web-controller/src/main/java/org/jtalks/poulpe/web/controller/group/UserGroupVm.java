@@ -32,8 +32,7 @@ import javax.annotation.Nonnull;
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
-            SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
+    private static final String SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
 
     //Injected
     private GroupService groupService;
@@ -44,8 +43,6 @@ public class UserGroupVm {
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
-    private boolean showDeleteDialog;
-    private boolean showEditDialog;
     private boolean showNewDialog;
 
     /**
@@ -96,7 +93,7 @@ public class UserGroupVm {
      * Deletes selected group.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP,SHOW_DELETE_DIALOG})
+    @NotifyChange({SELECTED_GROUP})
     public void deleteGroup() {
         groupService.deleteGroup(selectedGroup);
         closeDialog();
@@ -120,7 +117,7 @@ public class UserGroupVm {
      */
 
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
+    @NotifyChange({SHOW_NEW_DIALOG})
     public void saveGroup(@BindingParam(value = "group") Group group) {
         groupService.saveGroup(group);
         closeDialog();
@@ -131,33 +128,12 @@ public class UserGroupVm {
      * Close all dialogs by set visibility to false.
      */
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
+    @NotifyChange({SHOW_NEW_DIALOG})
     public void closeDialog() {
         showNewDialog = false;
-        showDeleteDialog = false;
-        showEditDialog = false;
     }
 
     // -- Getters/Setters --------------------
-
-    /**
-     * Gets visibility status of Delete dialog window.
-     *
-     * @return true if dialog is visible false if dialog is invisible
-     */
-    public boolean isShowDeleteDialog() {
-        return showDeleteDialog;
-    }
-
-    /**
-     * Gets visibility status of Edit dialog window.
-     *
-     * @return true if dialog is visible false if dialog is invisible
-     */
-    public boolean isShowEditDialog() {
-        return showEditDialog;
-    }
-
     /**
      * Gets visibility status of New group dialog window, boolean show added as fix for onClose action, which don't send
      * anything to the server when closing window because of event.stopPropagation, so during next change notification
