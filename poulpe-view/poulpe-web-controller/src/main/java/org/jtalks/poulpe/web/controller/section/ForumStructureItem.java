@@ -183,4 +183,34 @@ public class ForumStructureItem {
     public String toString() {
         return item == null ? "null" : item.toString();
     }
+
+    /**
+     * Gets the list of draggable identifiers for the current item
+     * 
+     * @return comma separated list of draggable identifiers
+     */
+    public String getDraggableId() {
+        if (isBranch()) {
+            return "branch";
+        } else if (isSection()) {
+            return "section";
+        } else {
+            return "false";
+        }
+    }
+
+    /**
+     * Gets the list of droppable identifiers for the current item
+     * 
+     * @return comma separated list of droppable identifiers
+     */
+    public String getDroppableId() {
+        if (isBranch()) {
+            return "branch";
+        } else if (isSection()) {
+            return "branch, section";
+        } else {
+            return "false";
+        }
+    }
 }
