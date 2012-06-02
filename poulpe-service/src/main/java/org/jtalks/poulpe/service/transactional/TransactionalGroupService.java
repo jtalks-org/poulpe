@@ -32,6 +32,7 @@ import ru.javatalks.utils.general.Assert;
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao> implements
         GroupService {
+    public static final String BANNED_USERS_GROUP_NAME = "Banned Users";
     private final EntityValidator validator;
 
     /**
@@ -80,5 +81,22 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         validator.throwOnValidationFailure(group);
         dao.saveOrUpdate(group);
     }
+
+
+    public Group getBannedUsersGroup() {
+        List<Group> bannedUserGroups = this.dao.getMatchedByName(BANNED_USERS_GROUP_NAME);
+        if (bannedUserGroups.isEmpty()) {
+            return createBannedUserGroup();
+        } else {
+            return bannedUserGroups.get(0);
+        }
+    }
+
+    private Group createBannedUserGroup() {
+        Group bannedUsersGroup = new Group(BANNED_USERS_GROUP_NAME, "Group for banned users");
+        dao.saveOrUpdate(bannedUsersGroup);
+        return bannedUsersGroup;
+    }
+
 
 }

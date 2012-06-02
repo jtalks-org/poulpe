@@ -86,6 +86,7 @@
 
   <bean id="userBanningVm" scope="desktop" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
     <constructor-arg index="0" ref="userService"/>
+    <constructor-arg index="1" ref="groupService" />
   </bean>
 
   <bean id="componentListVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
