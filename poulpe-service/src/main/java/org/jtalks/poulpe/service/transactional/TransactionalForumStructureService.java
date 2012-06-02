@@ -127,7 +127,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public void moveBranchTo(PoulpeBranch branch, PoulpeBranch target) {
+    public void moveBranch(PoulpeBranch branch, PoulpeBranch target) {
         PoulpeSection targetSection = target.getPoulpeSection();
         List<PoulpeBranch> branches = targetSection.getPoulpeBranches();
         int index = branches.indexOf(target);

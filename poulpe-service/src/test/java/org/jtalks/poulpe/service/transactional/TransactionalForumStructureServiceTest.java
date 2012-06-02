@@ -60,13 +60,13 @@ public class TransactionalForumStructureServiceTest {
         List<PoulpeBranch> expectedBranches = new ArrayList<PoulpeBranch>(section.getPoulpeBranches());
         expectedBranches.remove(branch);
         expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section.getPoulpeBranches(), expectedBranches);
         branch = section.getBranch(4);
         target = section.getBranch(0);
         expectedBranches.remove(branch);
         expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section.getPoulpeBranches(), expectedBranches);
     }
 
@@ -80,13 +80,13 @@ public class TransactionalForumStructureServiceTest {
         List<PoulpeBranch> expectedBranchesInSection2 = new ArrayList<PoulpeBranch>(section2.getPoulpeBranches());
         expectedBranchesInSection1.remove(branch);
         expectedBranchesInSection2.add(0, branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section1.getBranches(), expectedBranchesInSection1);
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
         target = section1.getBranch(0);
         expectedBranchesInSection2.remove(branch);
         expectedBranchesInSection1.add(0, branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section1.getBranches(), expectedBranchesInSection1);
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
     }

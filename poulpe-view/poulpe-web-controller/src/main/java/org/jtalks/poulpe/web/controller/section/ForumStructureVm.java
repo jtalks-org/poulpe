@@ -241,11 +241,19 @@ public class ForumStructureVm {
         DefaultTreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
-        if (draggedItem.isBranch() && targetItem.isBranch()) {
+        if (draggedItem.isBranch()) {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            PoulpeBranch targetBranch = targetItem.getBranchItem();
-            forumStructureService.moveBranchTo(draggedBranch, targetBranch);
-            viewData.dropAndSelect(draggedNode, targetNode);
+            if (targetItem.isBranch()) {
+                forumStructureService.moveBranch(draggedBranch, targetItem.getBranchItem());
+                viewData.dropBeforeAndSelect(draggedNode, targetNode);
+            } else {
+                PoulpeSection targetSection = targetItem.getSectionItem();
+                if (draggedBranch.getPoulpeSection().equals(targetSection)) {
+                    return;
+                }
+                forumStructureService.moveBranch(draggedBranch, targetItem.getSectionItem());
+                viewData.dropInAndSelect(draggedNode, targetNode);
+            }
         }
     }
 }

@@ -66,5 +66,11 @@ public interface ForumStructureService {
 
     void deleteBranch(PoulpeBranch branch);
 
-    void moveBranchTo(PoulpeBranch branch, PoulpeBranch target);
+    /**
+     * Moves the branch to the target branch place. Shifts the target branch and any subsequent branches to the right. 
+     * 
+     * @param branch a branch to move
+     * @param target a target branch that will be shifted
+     */
+    void moveBranch(PoulpeBranch branch, PoulpeBranch target);
 }
