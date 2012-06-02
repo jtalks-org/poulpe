@@ -64,6 +64,7 @@
   <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
     <constructor-arg index="0" ref="groupDao" />
     <constructor-arg index="1" ref="entityValidator" />
+    <constructor-arg index="2" ref="userBanner"/>
   </bean>
   <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
     <constructor-arg index="0" ref="rankDao" />
@@ -78,4 +79,7 @@
     <bean id="propertyLoader" class="org.jtalks.poulpe.service.PropertyLoader">
         <property name="pathToProperties" value="org/jtalks/poulpe/service/config/" />
     </bean>
+  <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">
+    <constructor-arg ref="groupDao" />
+  </bean>
 </beans>

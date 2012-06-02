@@ -14,14 +14,16 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.logic.UserList;
+
+import java.util.List;
 
 /**
  * Service for dealing with {@link Group} objects
- * 
+ *
  * @author unascribed
  */
 public interface GroupService extends EntityService<Group> {
@@ -39,18 +41,26 @@ public interface GroupService extends EntityService<Group> {
 
     /**
      * Delete group
-     * 
+     *
      * @param group to be delete
-     * @exception IllegalArgumentException if group is null
+     * @throws IllegalArgumentException if group is null
      */
     void deleteGroup(Group group);
 
     /**
      * Save or update group.
-     * 
+     *
      * @param selectedGroup instance to save
-     * @exception IllegalArgumentException if group is null
+     * @throws IllegalArgumentException if group is null
      */
     void saveGroup(Group selectedGroup);
 
+    /**
+     * Gets a list of users that are banned and are not allowed to do restricted actions on Forum for instance.
+     *
+     * @return a list of users that are banned
+     */
+    UserList getBannedUsers();
+
+    void banUsers(PoulpeUser... usersToBan);
 }

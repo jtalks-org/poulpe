@@ -16,9 +16,7 @@ package org.jtalks.poulpe.web.controller.userbanning;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -29,6 +27,7 @@ import org.apache.commons.collections.ListUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
@@ -67,7 +66,7 @@ public class UserBanningVmTest {
             bannedUsers.add(user);
         }
 
-        viewModel = new UserBanningVm(userService);
+        viewModel = new UserBanningVm(userService, mock(GroupService.class));
 
         when(userService.getAll()).thenReturn(allUsers);
         when(userService.getAllBannedUsers()).thenReturn(bannedUsers);

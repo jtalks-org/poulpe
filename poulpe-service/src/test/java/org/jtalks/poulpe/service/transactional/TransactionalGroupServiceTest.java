@@ -20,22 +20,17 @@ import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.mockito.ArgumentCaptor;
+import org.jtalks.poulpe.model.logic.UserBanner;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.stubbing.answers.DoesNothing;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertSame;
 
 /**
  * Test for {@link TransactionalGroupService}
@@ -53,7 +48,7 @@ public class TransactionalGroupServiceTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        service = new TransactionalGroupService(dao, entityValidator);
+        service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class));
     }
 
     @Test
@@ -70,18 +65,20 @@ public class TransactionalGroupServiceTest {
 
     @Test
     public void testGetBannedUsersGroup() throws Exception {
-        Group expectedGroup = new Group();
-        doReturn(Arrays.asList(expectedGroup)).when(dao).getMatchedByName("Banned Users");
-        Group bannedUsersGroup = service.getBannedUsersGroup();
-        assertSame(bannedUsersGroup, expectedGroup);
+        throw new UnsupportedOperationException("test should be changed");
+//        Group expectedGroup = new Group();
+//        doReturn(Arrays.asList(expectedGroup)).when(dao).getMatchedByName("Banned Users");
+//        Group bannedUsersGroup = service.getBannedUsers();
+//        assertSame(bannedUsersGroup, expectedGroup);
     }
 
     @Test
     public void testGetBannedUsersGroup_withEmpty() throws Exception {
-        doReturn(new ArrayList()).when(dao).getMatchedByName("Banned Users");
-        Group bannedUsersGroup=service.getBannedUsersGroup();
-        verify(dao).saveOrUpdate(any(Group.class));
-        assertEquals(bannedUsersGroup.getName(),"Banned Users");
+        throw new UnsupportedOperationException("test should be changed");
+//        doReturn(new ArrayList()).when(dao).getMatchedByName("Banned Users");
+//        Group bannedUsersGroup=service.getBannedUsers();
+//        verify(dao).saveOrUpdate(any(Group.class));
+//        assertEquals(bannedUsersGroup.getName(),"Banned Users");
     }
 
     @Test

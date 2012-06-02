@@ -14,35 +14,29 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.logic.UserBanner;
+import org.jtalks.poulpe.model.logic.UserList;
 import org.jtalks.poulpe.service.GroupService;
-
 import ru.javatalks.utils.general.Assert;
 
-/**
- * Implementation of {@link GroupService}
- * 
- * @author Vitaliy Kravchenko
- * @author Pavel Vervenko
- */
-public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao> implements
-        GroupService {
-    public static final String BANNED_USERS_GROUP_NAME = "Banned Users";
-    private final EntityValidator validator;
+import java.util.List;
 
-    /**
-     * Create an instance of entity based service
-     * 
-     * @param groupDao - data access object, which should be able do all CRUD
-     * operations.
-     * @param validator - an entity validator
-     */
-    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
+/**
+ * @author alexander afanasiev
+ * @author stanislav bashkirtsev
+ */
+public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
+        implements GroupService {
+    private final EntityValidator validator;
+    private final UserBanner userBanner;
+
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
+        this.userBanner = userBanner;
         this.dao = groupDao;
         this.validator = validator;
     }
@@ -82,21 +76,17 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         dao.saveOrUpdate(group);
     }
 
-
-    public Group getBannedUsersGroup() {
-        List<Group> bannedUserGroups = this.dao.getMatchedByName(BANNED_USERS_GROUP_NAME);
-        if (bannedUserGroups.isEmpty()) {
-            return createBannedUserGroup();
-        } else {
-            return bannedUserGroups.get(0);
-        }
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserList getBannedUsers() {
+        return userBanner.getBannedUsers();
     }
 
-    private Group createBannedUserGroup() {
-        Group bannedUsersGroup = new Group(BANNED_USERS_GROUP_NAME, "Group for banned users");
-        dao.saveOrUpdate(bannedUsersGroup);
-        return bannedUsersGroup;
+    @Override
+    public void banUsers(PoulpeUser... usersToBan) {
+        userBanner.banUsers(new UserList(usersToBan));
     }
-
 
 }

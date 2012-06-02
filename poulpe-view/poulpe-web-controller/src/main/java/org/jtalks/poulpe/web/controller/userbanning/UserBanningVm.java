@@ -15,8 +15,6 @@
 package org.jtalks.poulpe.web.controller.userbanning;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
@@ -27,8 +25,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.util.Collection;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -47,8 +43,7 @@ public class UserBanningVm {
     private final GroupService groupService;
 
     /**
-     * User selected in list of banned, also this instance used by window for
-     * editing ban properties.
+     * User selected in list of banned, also this instance used by window for editing ban properties.
      */
     private PoulpeUser selectedUser;
 
@@ -58,8 +53,7 @@ public class UserBanningVm {
     private PoulpeUser addBanFor;
 
     /**
-     * Flag variable which indicates that window to edit ban properties should
-     * be shown.
+     * Flag variable which indicates that window to edit ban properties should be shown.
      */
     private boolean editBanWindowOpened = false;
 
@@ -76,8 +70,7 @@ public class UserBanningVm {
     /**
      * Constructs VM.
      *
-     * @param userService the UserService instance, used to obtain data related
-     *                    to users for VM
+     * @param userService the UserService instance, used to obtain data related to users for VM
      */
     public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
         this.groupService = groupService;
@@ -105,12 +98,11 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<PoulpeUser> getBannedUsers() {
-        return new UserList(getBannedUsersGroup().getUsers()).getUsers();
+        return groupService.getBannedUsers().getUsers();
     }
 
     /**
-     * Gets currently selected user. This user instance used by window to edit
-     * ban properties.
+     * Gets currently selected user. This user instance used by window to edit ban properties.
      *
      * @return currently selected user, can be {@code null}
      */
@@ -120,8 +112,8 @@ public class UserBanningVm {
     }
 
     /**
-     * Gets status of editBanWindowOpened flag. This flag used to control
-     * visibility of window which used to edit ban properties of user.
+     * Gets status of editBanWindowOpened flag. This flag used to control visibility of window which used to edit ban
+     * properties of user.
      *
      * @return the editBanWindowOpened state
      */
@@ -151,9 +143,8 @@ public class UserBanningVm {
     // -- ZK bindings ----------------------------
 
     /**
-     * Sets new value to filter text for users in available list. This value
-     * later will be used to filter users by username in list of available
-     * users.
+     * Sets new value to filter text for users in available list. This value later will be used to filter users by
+     * username in list of available users.
      *
      * @param filterText the text to filter by
      */
@@ -181,16 +172,14 @@ public class UserBanningVm {
     @Command
     @NotifyChange({"selectedUser", "bannedUsers"})
     public void addUserToBannedGroup() {
-        getBannedUsersGroup().getUsers().add(addBanFor);
-        groupService.saveGroup(getBannedUsersGroup());
+        groupService.banUsers(addBanFor);
     }
 
     /**
      * Edit ban properties for specified user.
      *
      * @param userId the id property of user to edit for
-     * @throws NotFoundException when user can't be found by specified
-     *                           {@code userId}
+     * @throws NotFoundException when user can't be found by specified {@code userId}
      */
     // why we're using userId, not by User instance? - look comment in
     // userbanning.zul
@@ -204,8 +193,7 @@ public class UserBanningVm {
      * Revoke ban for specified user.
      *
      * @param userId the id property of user to revoke for
-     * @throws NotFoundException when user can't be found by specified
-     *                           {@code userId}
+     * @throws NotFoundException when user can't be found by specified {@code userId}
      */
     // why we're using userId, not by User instance? - look comment in
     // userbanning.zul
@@ -216,10 +204,9 @@ public class UserBanningVm {
     }
 
     /**
-     * Save ban properties to already selected user. User must be already
-     * selected by {@link #editBan(org.jtalks.poulpe.model.entity.PoulpeUser)}
-     * or {@link #addBanToUser()}. This method also closes window for ban
-     * editing.
+     * Save ban properties to already selected user. User must be already selected by {@link
+     * #editBan(org.jtalks.poulpe.model.entity.PoulpeUser)} or {@link #addBanToUser()}. This method also closes window
+     * for ban editing.
      */
     @Command
     @NotifyChange({"addBanFor", "selectedUser", "availableUsers", "bannedUsers", "editBanWindowOpened"})
@@ -281,26 +268,4 @@ public class UserBanningVm {
         return user;
     }
 
-    /**
-     * Get banned users group.
-     * If there is no such group, then it's created
-     *
-     * @return Banned users group
-     */
-
-
-
-}
-
-class UserList {
-    private List<PoulpeUser> users = new LinkedList<PoulpeUser>();
-
-    public UserList(List<User> users) {
-        this.users.clear();
-        this.users.addAll((Collection<? extends PoulpeUser>) users);
-    }
-
-    public List<PoulpeUser> getUsers() {
-        return users;
-    }
 }
