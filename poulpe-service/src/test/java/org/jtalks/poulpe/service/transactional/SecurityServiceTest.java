@@ -12,8 +12,9 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.service;
+package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.poulpe.service.transactional.SecurityService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
