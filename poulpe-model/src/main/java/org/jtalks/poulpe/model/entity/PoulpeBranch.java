@@ -56,6 +56,7 @@ public class PoulpeBranch extends Branch {
         if (!target.equals(removeFrom)) {
             removeFrom.deleteBranch(this);
             target.addOrUpdateBranch(this);
+            this.setSection(target);
         }
         return removeFrom;
     }
