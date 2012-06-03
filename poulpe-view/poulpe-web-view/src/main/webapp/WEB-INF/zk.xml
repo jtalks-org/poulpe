@@ -19,7 +19,9 @@
   <system-config>
     <label-location>/WEB-INF/i18n/poulpe.properties</label-location>
   </system-config>
-  
+  <listener>
+    <listener-class>org.jtalks.poulpe.web.osod.OpenSessionOnDesktopZkListener</listener-class>
+  </listener>
   <library-property>
     <description>Sets English as default language for all users</description>
     <name>org.zkoss.web.preferred.locale</name>

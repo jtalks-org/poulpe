@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
@@ -46,6 +47,11 @@ public class AdminWindow {
     private Window adminWindow;
     private WindowManager windowManager;
     private ZkHelper zkHelper = new ZkHelper(adminWindow);
+    private final OpenSessions openSessions;
+
+    public AdminWindow(OpenSessions openSessions) {
+        this.openSessions = openSessions;
+    }
 
     @Init
     public void init(@ContextParam(ContextType.VIEW) Component view) {

@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jtalks.poulpe.service;
+package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
