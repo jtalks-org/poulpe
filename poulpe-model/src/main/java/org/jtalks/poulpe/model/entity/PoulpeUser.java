@@ -68,4 +68,9 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
         this.groups = groups;
     }
 
+    @Override
+    public String toString() {
+        return "PoulpeUser [id=" + getId() + ", email=" + getEmail() + ", username=" + getUsername() + "]";
+    }
+
 }

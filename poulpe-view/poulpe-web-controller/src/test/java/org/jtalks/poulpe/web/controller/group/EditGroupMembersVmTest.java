@@ -188,7 +188,7 @@ public class EditGroupMembersVmTest {
     }
 
     private void givenAvailableUsersExist() {
-        when(userService.getUsersByUsernameWord(anyString())).thenReturn(usersAll);
+        when(userService.withUsernamesMatching(anyString())).thenReturn(usersAll);
         when(userService.getAll()).thenReturn(usersAll);
     }
 

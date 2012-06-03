@@ -28,7 +28,8 @@ import org.jtalks.poulpe.service.UserService;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalUserService implements UserService {
-
+    private static final String NO_FILTER = "";
+    
     private final UserDao userDao;
 
     /**
@@ -45,26 +46,25 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public List<PoulpeUser> getAll() {
-        return userDao.getAllPoulpeUsers();
-    }
-    
-    
-    @Override
-    public List<PoulpeUser> allUsersPaginated(int page, int itemsPerPage) {
-        return userDao.getAllPoulpeUsersPaginated(Pages.paginate(page, itemsPerPage));
+        return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
     }
     
     @Override
-    public int allUsersCount() {
-        return userDao.getAllUsersCount();
+    public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
+    }
+
+    @Override
+    public int countUsernameMatches(String searchString) {
+        return userDao.countUsernameMatches(searchString);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> getUsersByUsernameWord(String word) {
-        return userDao.getPoulpeUserByUsernamePart(word);
+    public List<PoulpeUser> withUsernamesMatching(String searchString) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
     }
 
     /**
@@ -92,8 +92,8 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> getNonBannedByUsername(String word, int maxCount) {
-        return userDao.getNonBannedByUsername(word, maxCount);
+    public List<PoulpeUser> getNonBannedByUsername(String searchString, int limit) {
+        return userDao.getNonBannedByUsername(searchString, limit);
     }
 
 

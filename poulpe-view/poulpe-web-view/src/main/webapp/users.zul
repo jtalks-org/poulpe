@@ -9,12 +9,12 @@
       :
       <textbox id="searchBox" onOK="@command('searchUser', searchString=self.value)" width="150px" multiline="false" maxlength="20" />
       <button label="${labels.users.label.button.search}" sclass="users.searchButton"
-              onClick="@command('searchUser', searchString=searchBox.value)" />
+              onClick="@command('searchUsers', searchString=searchBox.value)" />
               
-      <button label="${labels.users.label.button.clearSearchResult}" onClick="@command('clearSearch')" />        
+      <button label="${labels.users.label.button.clearSearchResult}" onClick="@command('clearSearch', searchBox=searchBox)" />        
     </hbox>
     
-    <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@save(vm.activePage)" />
+    <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@bind(vm.activePage)" />
     <listbox id="listbox" model="@bind(vm.users)" vflex="true" height="500px">
        <listhead>
         <listheader label="${labels.users.username}" sort="auto(username)" />

@@ -91,7 +91,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-        List<PoulpeUser> users = Lists.newLinkedList(userService.getUsersByUsernameWord(getAvailFilterTxt()));
+        List<PoulpeUser> users = Lists.newLinkedList(userService.withUsernamesMatching(getAvailFilterTxt()));
         users.removeAll(getStateAfterEdit());
         getAvail().clear();
         getAvail().addAll(users);
