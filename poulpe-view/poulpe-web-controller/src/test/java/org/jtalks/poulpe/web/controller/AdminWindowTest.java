@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.web.osop.OpenSessions;
+import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

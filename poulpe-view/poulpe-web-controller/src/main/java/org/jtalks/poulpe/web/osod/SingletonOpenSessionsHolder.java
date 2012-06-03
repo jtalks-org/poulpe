@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.web.osop;
+package org.jtalks.poulpe.web.osod;
 
 import org.hibernate.SessionFactory;
 

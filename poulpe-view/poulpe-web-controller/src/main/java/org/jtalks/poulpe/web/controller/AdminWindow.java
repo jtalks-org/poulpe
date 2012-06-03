@@ -14,13 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.web.osop.OpenSessions;
+import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
 import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.select.annotation.Wire;
 import org.zkoss.zul.Center;
 import org.zkoss.zul.Window;
@@ -99,8 +98,6 @@ public class AdminWindow {
      */
     @Command
     public void onShowBranches() {
-//        openSessions.closeSession(Executions.getCurrent().getDesktop().getId());
-//        openSessions.openSession(Executions.getCurrent().getDesktop().getId());
         windowManager.open("brancheditor.zul");
     }
 

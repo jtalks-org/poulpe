@@ -104,7 +104,7 @@
     <property name="dialogManager" ref="dialogManager"/>
     <property name="windowManager" ref="windowManager"/>
   </bean>
-  <bean id="openSessions" class="org.jtalks.poulpe.web.osop.SingletonOpenSessionsHolder" factory-method="instantiate">
+  <bean id="openSessions" class="org.jtalks.poulpe.web.osod.SingletonOpenSessionsHolder" factory-method="instantiate">
     <constructor-arg ref="sessionFactory"/>
   </bean>
 </beans>

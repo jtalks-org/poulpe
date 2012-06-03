@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.web.osop;
+package org.jtalks.poulpe.web.osod;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,20 +22,48 @@ import java.util.List;
  * again. After thread finishes, we do the same as in previous bullet.</li><li>When ZK Desktop dies, we close the
  * session.</li></ol><br/><b>Justification:</b><br/> In ZK applications it's not very convenient to use <a
  * href="https://community.jboss.org/wiki/OpenSessionInView">Open Session In View</a>, because this would effectively
- * mean we need to close the session after each request (AJAX as well). But <ul><li>in ZK apps we don't reload the whole
- * page - we might open some dialogs which would require lazy fields to be loaded - but this will be a separate request
- * and the original Hibernate Session that loaded original objects is already closed, and this will cause {@link
+ * mean we need to close the session after each request (AJAX as well). But <ul> <li>in ZK apps we don't reload the
+ * whole page - we might open some dialogs which would require lazy fields to be loaded - but this will be a separate
+ * request and the original Hibernate Session that loaded original objects is already closed, and this will cause {@link
  * org.hibernate.LazyInitializationException}. </li> <li>when session is closed and we need to open dialogs, this would
  * lead the same data being loaded twice or thrice or even more. The leaks of memory here is not a big deal usually, but
  * when we try to associate different objects loaded in different sessions, we risk to have exceptions while saving the
  * objects - Hibernate will recognize that the objects were loaded 2 times and won't allow to save them until only one
- * instance is associated with the session.</li><ul/>
+ * instance is associated with the session.</li><ul/><br/> <b>Possible Issues:</b><br/> The fact that we keep sessions
+ * opened means that at some point they might contain too many objects - this would both lead to Hibernate work slower
+ * and increasing the risks of out-of-memory exception. Thus when using it, we need to figure out at what point we need
+ * to clear the session. This question is to be solved in the future.
  *
  * @author stanislav bashkirtsev
+ * @see OpenSessions
  */
-public class OpenSessionOnPageZkListener implements ExecutionInit, DesktopCleanup, ExecutionCleanup {
-    private final OpenSessions openSessions = SingletonOpenSessionsHolder.getOpenSessions();
+public class OpenSessionOnDesktopZkListener implements ExecutionInit, DesktopCleanup, ExecutionCleanup {
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final OpenSessions openSessions;
+
+    /**
+     * Creates a ZK Listener that uses {@link OpenSessions} provided by {@link SingletonOpenSessionsHolder} which should
+     * be initialized by Spring Context beforehand. If you find a solution that allows to inject beans from the Spring
+     * Context directly to the ZK listeners, this constructor should be removed, but as for now this is the only way to
+     * create {@link OpenSessions} in Spring Context and then the same instance to be used in ZK Listeners out of Spring
+     * Contexts.
+     */
+    public OpenSessionOnDesktopZkListener() {
+        this(SingletonOpenSessionsHolder.getOpenSessions());
+    }
+
+    /**
+     * This constructor should be used in preference to the default one because it gives an ability to provide an
+     * instance of {@link OpenSessions} instead of using {@link SingletonOpenSessionsHolder} which smells bad, but as
+     * for now we didn't find a way to use Spring IoC in zk.xml so in production {@link #OpenSessionOnDesktopZkListener()}
+     * is used.
+     *
+     * @param openSessions an instance of Hibernate Sessions container to be able to bind/unbind/close sessions
+     *                     according to events in ZK App Lifecycle
+     */
+    public OpenSessionOnDesktopZkListener(OpenSessions openSessions) {
+        this.openSessions = openSessions;
+    }
 
     /**
      * Is called when current desktop 'dies' - this happens if user closes the browser, or refreshes the page or the
