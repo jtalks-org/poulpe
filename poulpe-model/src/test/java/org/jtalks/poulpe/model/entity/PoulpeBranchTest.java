@@ -15,6 +15,7 @@ public class PoulpeBranchTest {
         PoulpeSection addTo = new PoulpeSection("section2");
 
         assertSame(branch.moveTo(addTo), moveFrom);
+        assertSame(branch.getPoulpeSection(), addTo);
         assertNotSame(moveFrom, addTo);
     }
 

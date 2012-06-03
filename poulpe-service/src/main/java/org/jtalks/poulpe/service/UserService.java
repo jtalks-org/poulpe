@@ -34,6 +34,13 @@ public interface UserService {
      */
     List<PoulpeUser> getAll();
 
+    List<PoulpeUser> allUsersPaginated(int page, int itemsPerPage);
+    
+    /**
+     * @return amount of all users
+     */
+    int allUsersCount();
+    
     /**
      * Gets Users with corresponding word in user name
      * 
@@ -73,5 +80,8 @@ public interface UserService {
      * @return list of non banned users with username like in parameter
      */
     List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
+
+    
+
 
 }

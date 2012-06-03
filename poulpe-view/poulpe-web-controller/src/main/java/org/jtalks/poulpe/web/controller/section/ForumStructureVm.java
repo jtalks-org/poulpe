@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.List;
+
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -230,7 +232,7 @@ public class ForumStructureVm {
     }
 
     /**
-     * Handler of event when one item was dragged and dropped to another
+     * Handler of event when one item was dragged and dropped to another.
      *
      * @param event contains all needed info about event
      */
@@ -241,11 +243,49 @@ public class ForumStructureVm {
         DefaultTreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
-        if (draggedItem.isBranch() && targetItem.isBranch()) {
+        if (draggedItem.isBranch()) {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            PoulpeBranch targetBranch = targetItem.getBranchItem();
-            forumStructureService.moveBranchTo(draggedBranch, targetBranch);
-            viewData.dropAndSelect(draggedNode, targetNode);
+            if (noEffectAfterDrop(draggedBranch, targetItem)) {
+                return;
+            }
+            if (targetItem.isBranch()) {
+                forumStructureService.moveBranch(draggedBranch, targetItem.getBranchItem());
+                viewData.dropBeforeAndSelect(draggedNode, targetNode);
+            } else {
+                forumStructureService.moveBranch(draggedBranch, targetItem.getSectionItem());
+                viewData.dropInAndSelect(draggedNode, targetNode);
+            }
         }
+    }
+
+    /**
+     * Checks that dropping branch haven't effect.
+     * 
+     * @param draggedBranch the branch to move
+     * @param targetItem the target item, may be branch as well as section
+     * 
+     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     */
+    private boolean noEffectAfterDrop(PoulpeBranch draggedBranch,
+            ForumStructureItem targetItem) {
+        PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
+        if (targetItem.isSection()) {
+            if (draggedSection.equals(targetItem.getSectionItem())) {
+                return true;
+            }
+        }
+
+        PoulpeBranch targetBranch = targetItem.getBranchItem();
+        PoulpeSection targetSection = targetBranch.getPoulpeSection();
+        if (draggedSection.equals(targetSection)) {
+            List<PoulpeBranch> branches = draggedSection.getPoulpeBranches();
+            int draggedIndex = branches.indexOf(draggedBranch);
+            int targetIndex = branches.indexOf(targetBranch);
+            if (targetIndex - 1 == draggedIndex) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

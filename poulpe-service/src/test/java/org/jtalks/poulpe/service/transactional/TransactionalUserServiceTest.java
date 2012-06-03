@@ -14,17 +14,17 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
-import java.util.ArrayList;
-import java.util.Collection;
+import static org.mockito.Matchers.*;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.RandomUtils;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -37,60 +37,50 @@ import org.testng.annotations.Test;
  */
 public class TransactionalUserServiceTest {
 
-    private UserDao userDao;
+    // sut
     private UserService userService;
 
-    private static final String EMAIL = "username@mail.com";
-    private static final String PASSWORD = "password";
-    private static final String BAN_REASON = "ban reason";
-    private static Collection<PoulpeUser> users;
+    // dependencies
+    private UserDao userDao;
 
     @BeforeMethod
     public void setUp() {
         userDao = mock(UserDao.class);
-
         userService = new TransactionalUserService(userDao);
-
-        users = new ArrayList<PoulpeUser>();
-        users.add(getUser("tony"));
-        users.add(getUser("antony"));
-        users.add(getUser("jack"));
     }
 
     @Test
     public void testGetAll() {
         userService.getAll();
-
         verify(userDao).getAllPoulpeUsers();
+    }
+
+    @Test
+    public void allUsersCount() {
+        userService.allUsersCount();
+        verify(userDao).getAllUsersCount();
+    }
+
+    @Test
+    public void testAllUsersPaginated() {
+        int page = 1, limit = 10;
+        userService.allUsersPaginated(page, limit);
+        verify(userDao).getAllPoulpeUsersPaginated(paginationWith(page, limit));
     }
 
     @Test
     public void testGetUsersByUsernameWord() {
         String word = "word";
-
         userService.getUsersByUsernameWord(word);
-
         verify(userDao).getPoulpeUserByUsernamePart(word);
     }
 
     @Test
     public void testUpdateUser() {
-        PoulpeUser user = new PoulpeUser("username", "email", "password", "salt");
-        
+        PoulpeUser user = user();
         userService.updateUser(user);
-        
         verify(userDao).update(user);
     }
-
-    /*@Test
-    public void testUpdateLastLoginTime() {
-        User user = mock(User.class);
-        
-        userService.updateLastLoginTime(user);
-        
-        verify(user).updateLastLoginTime();
-        verify(userDao).update(user);
-    }*/
 
     @Test
     public void testGetAllBannedUsers() {
@@ -100,22 +90,34 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void testGetNonBannedByUsername() {
-        String usernameWord = RandomStringUtils.randomAlphanumeric(15);
-        int maxCount = RandomUtils.nextInt() + 1000;
+        String usernameWord = "word";
+        int maxCount = 1000;
 
         userService.getNonBannedByUsername(usernameWord, maxCount);
-        verify(userDao).getNonBannedByUsername(eq(usernameWord), eq(maxCount));
+        verify(userDao).getNonBannedByUsername(usernameWord, maxCount);
     }
 
-    /**
-     * Creates and return the {@link org.jtalks.poulpe.model.entity.PoulpeUser} entity with default username, email
-     * and password, etc.
-     * 
-     * @param username username
-     * @return the user entity
-     */
-    private PoulpeUser getUser(String username) {
-        return new PoulpeUser(username, EMAIL, PASSWORD, "salt");
+    private static PoulpeUser user() {
+        return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
+    }
+
+    public static Pagination paginationWith(int page, int limit) {
+        final Pagination expected = Pages.paginate(page, limit);
+
+        return argThat(new BaseMatcher<Pagination>() {
+            @Override
+            public boolean matches(Object o) {
+                if (o instanceof Pagination) {
+                    Pagination second = (Pagination) o;
+                    return expected.getFrom() == second.getFrom() && expected.getCount() == second.getCount();
+                }
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description d) {
+            }
+        });
     }
 
 }

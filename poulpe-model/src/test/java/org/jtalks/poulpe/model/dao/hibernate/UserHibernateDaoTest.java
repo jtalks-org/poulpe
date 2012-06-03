@@ -20,13 +20,14 @@ import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.util.List;
+import java.util.Set;
 
-import org.apache.commons.collections.ListUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pages;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -34,6 +35,9 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Sets;
 
 /**
  * @author Vyacheslav Zhivaev
@@ -57,12 +61,9 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         session = sessionFactory.getCurrentSession();
     }
 
-    /**
-     * Straightforward saving of the user
-     */
     @Test
     public void testSave() {
-        PoulpeUser user = ObjectsFactory.createUser("testSave");
+        PoulpeUser user = ObjectsFactory.createUser();
 
         givenUserSavedAndEvicted(user);
         PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
@@ -72,9 +73,8 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testSaveIdGeneration() {
+        PoulpeUser user = ObjectsFactory.createUser();
         long initialId = 0;
-
-        PoulpeUser user = ObjectsFactory.createUser("testSaveIdGeneration");
         user.setId(initialId);
 
         givenUserSavedAndEvicted(user);
@@ -84,39 +84,41 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testGetPoulpeUserByUsername() {
-        PoulpeUser user = ObjectsFactory.createUser("testGetPoulpeUserByUserna");
-
+        PoulpeUser user = ObjectsFactory.createUser();
         givenUserSavedAndEvicted(user);
+        
         PoulpeUser actual = dao.getPoulpeUserByUsername(user.getUsername());
-
         assertReflectionEquals(actual, user);
     }
 
     @Test
     public void testGetByUsername() {
-        PoulpeUser user = ObjectsFactory.createUser("testGetByUsername");
-
+        PoulpeUser user = ObjectsFactory.createUser();
         givenUserSavedAndEvicted(user);
+        
         User actual = dao.getByUsername(user.getUsername());
-
         assertReflectionEquals(actual, user);
     }
 
     @Test
     public void testGetByUsernamePart() {
-        String username = "testGetByUsernamePart";
-
-        PoulpeUser user = ObjectsFactory.createUser(username);
-
+        PoulpeUser user = ObjectsFactory.createUser();
         givenUserSavedAndEvicted(user);
-        List<PoulpeUser> users = dao.getPoulpeUserByUsernamePart(username.substring(0, username.length() / 2));
+        
+        String part = extractPartOfUsername(user);
+        List<PoulpeUser> users = dao.getPoulpeUserByUsernamePart(part);
 
         assertTrue(users.contains(user));
     }
 
+    private static String extractPartOfUsername(PoulpeUser user) {
+        String username = user.getUsername();
+        return username.substring(0, username.length() / 2);
+    }
+
     @Test
     public void testGetByEncodedUsername() {
-        PoulpeUser user = ObjectsFactory.createUser("testGetByEncodedUsername");
+        PoulpeUser user = ObjectsFactory.createUser();
 
         givenUserSavedAndEvicted(user);
         PoulpeUser actual = dao.getPoulpeUserByEncodedUsername(user.getEncodedUsername());
@@ -124,74 +126,97 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         assertReflectionEquals(actual, user);
     }
 
-    /**
-     * Try get all users
-     */
     @Test
     public void testGetAllPoulpeUsers() {
-        List<PoulpeUser> users = ObjectsFactory.createUsers("testGetAllPoulpeUsers1", "testGetAllPoulpeUsers2",
-                "testGetAllPoulpeUsers3");
-
+        List<PoulpeUser> users = ObjectsFactory.usersListOf(3);
         givenUsersSavedAndEvicted(users);
         List<PoulpeUser> actual = dao.getAllPoulpeUsers();
 
-        assertListsHasSameElements(actual, users);
+        assertContainsSameElements(actual, users);
+    }
+    
+    @Test
+    public void testGetAllPoulpeUsersPaginated_AllOnFirstPage() {
+        List<PoulpeUser> users = ObjectsFactory.usersListOf(3);
+        givenUsersSavedAndEvicted(users);
+        List<PoulpeUser> actual = dao.getAllPoulpeUsersPaginated(Pages.paginate(1, 10));
+
+        assertContainsSameElements(actual, users);
+    }
+    
+    @Test
+    public void testGetAllPoulpeUsersPaginated_MoreThenForOnePage() {
+        List<PoulpeUser> users = ObjectsFactory.usersListOf(13);
+        givenUsersSavedAndEvicted(users);
+        int itemsPerPage = 10;
+        
+        List<PoulpeUser> actual = dao.getAllPoulpeUsersPaginated(Pages.paginate(1, itemsPerPage));
+        assertContainsOnlyFristNElements(users, actual, itemsPerPage);
     }
 
+    private static void assertContainsOnlyFristNElements(List<PoulpeUser> users, List<PoulpeUser> actual, int itemsPerPage) {
+        assertContainsSameElements(actual, Iterables.limit(users, itemsPerPage));
+    }
+    
+    @Test
+    public void getAllUsersCount() {
+        int count = 13;
+        List<PoulpeUser> users = ObjectsFactory.usersListOf(count);
+        givenUsersSavedAndEvicted(users);
+        
+        int actual = dao.getAllUsersCount();
+        assertEquals(actual, count);
+    }
+    
     @Test
     public void testGetAllBannedUsers() {
-        List<PoulpeUser> bannedUsers = ObjectsFactory.createBannedUsers("testGetAllBannedUsers1",
-                "testGetAllBannedUsers2", "testGetAllBannedUsers3");
+        List<PoulpeUser> bannedUsers = ObjectsFactory.bannedUsersListOf(3);
 
         givenUsersSavedAndEvicted(bannedUsers);
         List<PoulpeUser> actual = dao.getAllBannedUsers();
 
-        assertListsHasSameElements(actual, bannedUsers);
+        assertContainsSameElements(actual, bannedUsers);
     }
 
-    @SuppressWarnings("unchecked")
     @Test
     public void testGetNonBannedByUsernameWithOnlyBanned() {
-        List<PoulpeUser> banned = ObjectsFactory.createBannedUsers("user0", "user1", "user2");
-
+        List<PoulpeUser> banned = ObjectsFactory.bannedUsersListOf(3);
         givenUsersSavedAndEvicted(banned);
+        
+        // TODO: unclear what "" means
         List<PoulpeUser> actual = dao.getNonBannedByUsername("", 1000);
 
-        assertListsHasSameElements(actual, ListUtils.EMPTY_LIST);
+        assertTrue(actual.isEmpty());
     }
 
     @Test
     public void testGetNonBannedByUsernameWithVarious() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.createUsers("user3", "user4", "user5");
-
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> all = ListUtils.union(ObjectsFactory.createBannedUsers("user6", "user7", "user8"), nonBanned);
-
-        givenUsersSavedAndEvicted(all);
+        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(3);
+        List<PoulpeUser> banned = ObjectsFactory.bannedUsersListOf(3);
+        
+        givenUsersSavedAndEvicted(Iterables.concat(banned, nonBanned));
+        
         List<PoulpeUser> actual = dao.getNonBannedByUsername("", 1000);
-
-        assertListsHasSameElements(actual, nonBanned);
+        assertContainsSameElements(actual, nonBanned);
     }
 
     @Test
     public void testGetNonBannedByUsernameWithOnlyNonBanned() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.createUsers("user9", "user10", "user11");
-
+        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(3);
         givenUsersSavedAndEvicted(nonBanned);
+        
         List<PoulpeUser> actual = dao.getNonBannedByUsername("", 1000);
 
-        assertListsHasSameElements(actual, nonBanned);
+        assertContainsSameElements(actual, nonBanned);
     }
 
     @Test
     public void testGetNonBannedByUsernameWithLimit() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.createUsers("user9", "user10", "user11");
-
+        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(2);
         givenUsersSavedAndEvicted(nonBanned);
+        
         List<PoulpeUser> actual = dao.getNonBannedByUsername("", 2);
-
-        assertEquals(actual.size(), 2);
-        assertTrue(nonBanned.containsAll(actual));
+        assertContainsSameElements(actual, nonBanned);
     }
 
     private void givenUserSavedAndEvicted(PoulpeUser user) {
@@ -199,14 +224,16 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         session.evict(user);
     }
 
-    private void givenUsersSavedAndEvicted(List<PoulpeUser> users) {
+    private void givenUsersSavedAndEvicted(Iterable<PoulpeUser> users) {
         for (PoulpeUser user : users) {
             givenUserSavedAndEvicted(user);
         }
     }
 
-    public static <T> void assertListsHasSameElements(List<T> first, List<T> second) {
-        assertEquals(first.size(), second.size());
-        assertTrue(first.containsAll(second));
+    // TODO: move away from here
+    public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
+        Set<T> set1 = Sets.newLinkedHashSet(first);
+        Set<T> set2 = Sets.newLinkedHashSet(second);
+        assertEquals(set1, set2);
     }
 }
