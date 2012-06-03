@@ -80,6 +80,7 @@ public class UsersVm {
 
     @VisibleForTesting
     void init(Component component, ZkHelper zkHelper) {
+        this.zkHelper = zkHelper;
         zkHelper.wireComponents(component, this);
         prepareForListing();
     }
