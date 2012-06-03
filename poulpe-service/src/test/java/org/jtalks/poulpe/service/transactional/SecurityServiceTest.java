@@ -14,22 +14,18 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.poulpe.service.transactional.SecurityService;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 import org.jtalks.common.model.dao.UserDao;
 import org.jtalks.common.model.entity.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertSame;
 
 /**
- * 
  * @author Oleg Kokarev
- *
  */
 
 public class SecurityServiceTest {
@@ -49,7 +45,7 @@ public class SecurityServiceTest {
         when(userDao.getByUsername(username)).thenReturn(user);
         assertSame(user, securityService.loadUserByUsername(username));
     }
-    
+
     @Test(expectedExceptions = UsernameNotFoundException.class)
     public void testUserNotFound() {
         when(userDao.getByUsername(username)).thenReturn(null);
