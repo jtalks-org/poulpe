@@ -29,6 +29,15 @@ public class OpenSessions {
         this.sessionFactory = sessionFactory;
     }
 
+    /**
+     * Opens a new session and binds it to current thread. Results in no-op if there is already a session bound. Binding
+     * to the tread means saving the session as a {@link ThreadLocal} variable for the thread so that any class at any
+     * point can access that variable (particularly Spring Transaction related classes) within a single thread, it won't
+     * be visible to other threads.
+     *
+     * @param desktopId a ZK desktop ID to associate session with, later it will be possible to close session having
+     *                  this id
+     */
     public void openSession(String desktopId) {
         if (noSessionBoundToThread()) {
             Session session = getOrCreateSession(desktopId);
@@ -37,10 +46,23 @@ public class OpenSessions {
         }
     }
 
+    /**
+     * Unbinds (removes from the {@link ThreadLocal} variables of the thread) the session which means that Spring
+     * Transaction related classes won't have access to the session anymore. This usually should be done when request
+     * processing is finished. This doesn't close the session, it still there and is associated with desktop id.
+     */
     public void unbindSession() {
         TransactionSynchronizationManager.unbindResource(sessionFactory);
     }
 
+    /**
+     * Closes the session inside the {@link OpenSessions} so that it won't ever be reusable. If some class of this
+     * session is going to access to lazy fields, it will result in {@link org.hibernate.LazyInitializationException}.
+     * This usually should be done when the desktop of the user is going to be recycled (e.g. page refresh).
+     *
+     * @param desktopId the id of the desktop to find an associated session for, if there is no session found for this
+     *                  id, method will result in no-op
+     */
     public void closeSession(String desktopId) {
         Session session = sessions.remove(desktopId);
         if (session != null) {
@@ -48,6 +70,15 @@ public class OpenSessions {
         }
     }
 
+    /**
+     * Creates a new session for the specified desktop id if doesn't exist. If it's already inside {@link OpenSessions},
+     * then it will be returned. It also sets the flush mode to {@link FlushMode#MANUAL} when session is opened. This
+     * method doesn't bind sessions to the thread.
+     *
+     * @param desktopId an id of the desktop to search the session for
+     * @return a session that is bound to the desktop or new session that is not bound to anything if no desktop with
+     *         such id was registered
+     */
     @VisibleForTesting
     Session getOrCreateSession(String desktopId) {
         Session session = sessions.get(desktopId);
