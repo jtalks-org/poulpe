@@ -1,13 +1,18 @@
 package org.jtalks.poulpe.pages;
 
-
 /**
  * Class for building {@link Pagination} objects
  * 
  * @author Alexey Grigorev
  */
 public class Pages {
-    
+
+    /**
+     * Hides for preventing instantiation of utility-class
+     */
+    private Pages() {
+    }
+
     /**
      * No pagination needed - {@link Pagination} object with
      * {@link Pagination#isNeeded()} returning {@code false}
@@ -26,5 +31,5 @@ public class Pages {
     public static Pagination paginate(int page, int limit) {
         return new PageWithLimitPagination(page, limit);
     }
-    
+
 }
