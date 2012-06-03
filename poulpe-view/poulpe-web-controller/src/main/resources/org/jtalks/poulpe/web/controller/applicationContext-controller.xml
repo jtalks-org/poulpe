@@ -58,8 +58,10 @@
     <constructor-arg index="0" ref="rankService"/>
   </bean>
 
-  <bean id="editCompViewModel" scope="desktop" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
+  <bean id="editComponentVm" scope="desktop" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
     <constructor-arg index="0" ref="componentService"/>
+    <property name="selectedEntity" ref="selectedEntity"/>
+    <property name="windowManager" ref="windowManager"/>
   </bean>
 
   <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
@@ -88,10 +90,11 @@
     <constructor-arg index="0" ref="userService"/>
   </bean>
 
-  <bean id="componentListVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
+  <bean id="componentsVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
     <property name="componentService" ref="componentService"/>
     <property name="dialogManager" ref="dialogManager"/>
     <property name="windowManager" ref="windowManager"/>
+    <property name="selectedEntity" ref="selectedEntity" />
   </bean>
 
 </beans>
