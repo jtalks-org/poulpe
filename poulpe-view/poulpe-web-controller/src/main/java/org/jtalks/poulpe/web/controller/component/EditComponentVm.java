@@ -20,8 +20,10 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Executions;
@@ -35,22 +37,30 @@ import java.util.Map;
  * ViewModel class for EditComponent View
  *
  * @author Vahluev Vyacheslav
+ * @author Kazancev Leonid
  */
 public class EditComponentVm {
-    public static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul";
-    public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty";
-    public static final String EMPTY_NAME = "component.error.name_shouldnt_be_empty";
-    public static final String ITEM_ALREADY_EXISTS = "item.already.exist";
-    private static final String COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name", CAPTION_PROP = "caption",
-            DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout", VALIDATION_MESSAGES_PROP = "validationMessages",
-            IS_JCOMMUNE ="jcommune";
+    public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
+                               EMPTY_NAME = "component.error.name_shouldnt_be_empty",
+                               ITEM_ALREADY_EXISTS = "item.already.exist";
+
+    private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
+                                COMPONENTS_WINDOW = "components.zul",
+                                COMPONENT_NAME_PROP = "componentName",
+                                NAME_PROP = "name",
+                                CAPTION_PROP = "caption",
+                                DESCRIPTION_PROP = "description",
+                                POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+                                SESSION_TIMEOUT_PROP = "sessionTimeout",
+                                VALIDATION_MESSAGES_PROP = "validationMessages",
+                                IS_JCOMMUNE = "jcommune";
 
     /**
      * Current component we are working with
      */
-    private Component currentComponent = (Component) Executions.getCurrent().getDesktop()
-            .getAttribute("componentToEdit");
+    private Component currentComponent;
+
+    private SelectedEntity<Component> selectedEntity;
 
     /**
      * The name of the component
@@ -83,23 +93,20 @@ public class EditComponentVm {
     private String sessionTimeout;
 
     private boolean jcommune;
-     /**
+    /**
      * Web-form validation messages
      */
     private Map<String, String> validationMessages = new HashMap<String, String>();
 
     private ComponentService componentService;
-    private DialogManager dialogManager;
     private WindowManager windowManager;
 
     /**
      * Opens window for editing component.
      *
      * @param windowManager The object which is responsible for creation and closing application windows
-     * @param component     component for editing
      */
-    public static void openWindowForEdit(WindowManager windowManager, Component component) {
-        Executions.getCurrent().getDesktop().setAttribute("componentToEdit", component);
+    public static void openWindowForEdit(WindowManager windowManager) {
         windowManager.open(EDIT_COMPONENT_LOCATION);
     }
 
@@ -110,15 +117,6 @@ public class EditComponentVm {
      */
     public final void setComponentService(ComponentService componentService) {
         this.componentService = componentService;
-    }
-
-    /**
-     * Sets the dialog manager which is used for showing different types of dialog messages.
-     *
-     * @param dialogManager the new value of the dialog manager
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
     }
 
     /**
@@ -139,7 +137,6 @@ public class EditComponentVm {
      */
     public EditComponentVm(@Nonnull ComponentService componentService) {
         this.setComponentService(componentService);
-        initData();
     }
 
     /**
@@ -148,11 +145,11 @@ public class EditComponentVm {
     @NotifyChange
             ({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
                     POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP, IS_JCOMMUNE})
-    public final void initData() {
-        currentComponent = getSelectedComponent();
-
+    @Init
+    public void initData() {
+        currentComponent = selectedEntity.getEntity();
         if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
-            componentType = "jcommune";
+            componentType = IS_JCOMMUNE;
             jcommune = true;
             name = valueOf(currentComponent.getProperty(componentType + ".name"));
             caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
@@ -161,23 +158,11 @@ public class EditComponentVm {
         } else {
             componentType = currentComponent.getComponentType().toString();
             jcommune = false;
-            name = "name";
-            caption = "caption";
-            postPreviewSize = "10";
-            sessionTimeout = "10";
+            setDefaultValues();
         }
         componentName = valueOf(currentComponent.getName());
         description = valueOf(currentComponent.getDescription());
 
-    }
-
-    /**
-     * Returns selected component.
-     *
-     * @return current selected component.
-     */
-    public Component getSelectedComponent() {
-        return (Component) Executions.getCurrent().getDesktop().getAttribute("componentToEdit");
     }
 
     // service functions
@@ -210,11 +195,11 @@ public class EditComponentVm {
         if (checkCorrect()) {
             currentComponent.setName(componentName);
             currentComponent.setDescription(description);
-            if(jcommune){
-            currentComponent.setProperty(componentType + ".name", name);
-            currentComponent.setProperty(componentType + ".caption", caption);
-            currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
-            currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+            if (jcommune) {
+                currentComponent.setProperty(componentType + ".name", name);
+                currentComponent.setProperty(componentType + ".caption", caption);
+                currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
+                currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
             }
 
             try {
@@ -226,7 +211,7 @@ public class EditComponentVm {
 
             if (correct) {
                 validationMessages.clear();
-                Executions.sendRedirect("");
+                switchToComponentsWindow();
             }
         }
     }
@@ -235,12 +220,9 @@ public class EditComponentVm {
      * Cancels all the actions
      */
     @Command()
-    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP, POST_PREVIEW_SIZE_PROP,
-            VALIDATION_MESSAGES_PROP, SESSION_TIMEOUT_PROP})
     public void cancel() {
-        initData();
         validationMessages.clear();
-        Executions.sendRedirect("");
+        switchToComponentsWindow();
     }
 
     // helpers
@@ -415,5 +397,24 @@ public class EditComponentVm {
     public void setSessionTimeout(String sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
+    /**
+     * Sets selected entity.
+     */
+    public void setSelectedEntity(SelectedEntity<Component> selectedEntity) {
+        this.selectedEntity = selectedEntity;
+    }
+
+
+    private void setDefaultValues(){
+        name = NAME_PROP;
+        caption = CAPTION_PROP;
+        postPreviewSize = "10";
+        sessionTimeout = "10";
+    }
+
+    private void switchToComponentsWindow() {
+        windowManager.open(COMPONENTS_WINDOW);
+    }
+
 
 }

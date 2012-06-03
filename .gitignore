@@ -11,9 +11,11 @@
 
 # IntelliJ Idea project files
 .idea
+.gradle
 *.iml
 *.ipr
 *.iws
+atlassian-ide-plugin.xml
 
 # Netbeans project files
 nbproject

@@ -140,6 +140,6 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
 	 */
 	private void openBranchPermissionsWindow() {
 		selectedEntity.setEntity(branch);
-		BranchPermissionManagementVm.showPage(windowManager, branch);
+		BranchPermissionManagementVm.showPage(windowManager);
 	}
 }

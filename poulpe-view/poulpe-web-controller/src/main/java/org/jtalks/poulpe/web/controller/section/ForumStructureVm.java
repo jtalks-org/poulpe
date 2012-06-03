@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import java.util.List;
-
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -34,6 +31,7 @@ import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Treeitem;
 
 import javax.annotation.Nonnull;
+import java.util.List;
 
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 
@@ -62,8 +60,7 @@ public class ForumStructureVm {
     }
 
     /**
-     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is
-     * opening.
+     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is opening.
      */
     @Init
     public void init() {
@@ -82,8 +79,8 @@ public class ForumStructureVm {
     }
 
     /**
-     * Shows the dialog for creating or editing the branch. Whether it's a creating or editing is decided by the
-     * specified parameter.
+     * Shows the dialog for creating or editing the branch. Whether it's a creating or editing is decided by the specified
+     * parameter.
      *
      * @param createNew pass {@code true} if this is a window for creating a new branch
      */
@@ -109,8 +106,8 @@ public class ForumStructureVm {
     }
 
     /**
-     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData} to
-     * remove the item from the tree.
+     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData} to remove
+     * the item from the tree.
      *
      * @see ForumStructureData#getSelectedItem()
      */
@@ -151,12 +148,12 @@ public class ForumStructureVm {
     @Command
     public void openBranchPermissions() {
         selectedBranchForPermissions.setEntity(getSelectedItem().getBranchItem());
-        BranchPermissionManagementVm.showPage(windowManager, getSelectedItem().getBranchItem());
+        BranchPermissionManagementVm.showPage(windowManager);
     }
 
     /**
-     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and cleans
-     * the selected section. Also makes the create section dialog to be closed.
+     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and cleans the
+     * selected section. Also makes the create section dialog to be closed.
      */
     @Command
     @NotifyChange({VIEW_DATA_PROP})
@@ -184,9 +181,9 @@ public class ForumStructureVm {
     }
 
     /**
-     * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches of
-     * the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved to
-     * another section.
+     * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches of the
+     * section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved to another
+     * section.
      *
      * @return the stored branch with id being set
      */
@@ -260,14 +257,13 @@ public class ForumStructureVm {
 
     /**
      * Checks that dropping branch haven't effect.
-     * 
+     *
      * @param draggedBranch the branch to move
-     * @param targetItem the target item, may be branch as well as section
-     * 
+     * @param targetItem    the target item, may be branch as well as section
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
     private boolean noEffectAfterDrop(PoulpeBranch draggedBranch,
-            ForumStructureItem targetItem) {
+                                      ForumStructureItem targetItem) {
         PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
         if (targetItem.isSection()) {
             if (draggedSection.equals(targetItem.getSectionItem())) {

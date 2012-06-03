@@ -14,7 +14,25 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import static org.mockito.Matchers.anyString;
+import com.google.common.collect.Lists;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
+import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.ZkHelper;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
+import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -22,116 +40,117 @@ import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-import java.util.List;
-
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
-import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 /**
  * Tests for {@link BranchPermissionManagementVm}.
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
+ * @author Maxim Reshetov
  */
 public class BranchPermissionManagementVmTest {
 
-    // SUT
-    private BranchPermissionManagementVm sut;
+	private static final String MANAGE_GROUPS_DIALOG_ZUL = "WEB-INF/pages/forum/EditGroupsForBranchPermission.zul";
 
-    // context related
-    @Mock
-    private WindowManager windowManager;
-    @Mock
-    private BranchService branchService;
+	// context related
+	@Mock
+	private WindowManager windowManager;
+	@Mock
+	private BranchService branchService;
+	@Mock
+	ZkHelper zkHelper;
 
-    // context related
-    private PoulpeBranch branch;
-    private SelectedEntity<Object> selectedEntity;
+	// SUT
+	private BranchPermissionManagementVm sut;
 
-    // sample/affected data
-    private BranchPermission allowedPermission;
-    private BranchPermission restrictedPermission;
-    private Group allowedGroup;
-    private Group restrictedGroup;
 
-    @BeforeMethod
-    public void beforeMethod() {
-        MockitoAnnotations.initMocks(this);
+	@BeforeMethod
+	public void beforeMethod() {
+		MockitoAnnotations.initMocks(this);
+		PoulpeBranch branch = new PoulpeBranch("branch");
 
-        selectedEntity = new SelectedEntity<Object>();
-        selectedEntity.setEntity(branch);
+		SelectedEntity<Object> selectedEntity = new SelectedEntity<Object>();
+		selectedEntity.setEntity(branch);
 
-        allowedPermission = BranchPermission.CREATE_TOPICS;
-        restrictedPermission = BranchPermission.VIEW_TOPICS;
+		sut = new BranchPermissionManagementVm(windowManager, branchService, selectedEntity);
+		sut.setZkHelper(zkHelper);
+	}
 
-        allowedGroup = ObjectsFactory.fakeGroup();
-        restrictedGroup = ObjectsFactory.fakeGroup();
+	/**
+	 * Check that dialog really opens.
+	 */
+	@Test(dataProvider = "provideTypeOfPermissionsToBranch")
+	public void testShowGroupsDialog(BranchPermission permission) {
+		sut.showGroupsDialog(permission, "allow");
+		sut.showGroupsDialog(permission, "restrict");
 
-        PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>();
-        permissionsMap.addAllowed(allowedPermission, allowedGroup);
-        permissionsMap.addRestricted(restrictedPermission, restrictedGroup);
+		verify(windowManager, times(2)).open(MANAGE_GROUPS_DIALOG_ZUL);
+	}
 
-        when(branchService.getPermissionsFor(branch)).thenReturn(permissionsMap);
+	@Test(expectedExceptions = {IllegalArgumentException.class}, dataProvider = "provideTypeOfPermissionsToBranch")
+	public void testShowGroupsDialog_IllegalFormat(BranchPermission permission) {
+		sut.showGroupsDialog(permission, "HERE_ILLEGAL_FORMATTED_STRING");
+		verify(windowManager, never()).open(MANAGE_GROUPS_DIALOG_ZUL);
+	}
 
-        sut = new BranchPermissionManagementVm(windowManager, branchService, selectedEntity);
-    }
 
-    /**
-     * Checks that we are have all data passed in VM.
-     */
-    @Test
-    public void testGetBlocks() {
-        List<PermissionManagementBlock> blocks = sut.getBlocks();
+	/**
+	 * Check method for generate data of view.
+	 */
+	@Test(dataProvider = "provideInitDataForView")
+	public void testInitDataForView(PermissionsMap<BranchPermission> permissionsMap, Group allowedGroup, Group restrictedGroup) {
+		PoulpeBranch branch = (PoulpeBranch) sut.getSelectedEntity().getEntity();
+		when(branchService.getPermissionsFor(branch)).thenReturn(permissionsMap);
+		sut.initDataForView();
+		assertEquals(sut.getBranch(), branch);
 
-        for (PermissionManagementBlock block : blocks) {
-            JtalksPermission permission = block.getPermission();
+		List<PermissionManagementBlock> blocks = sut.getBlocks();
+		blocks.get(0).getAllowRow().getGroups().contains(allowedGroup);
+		blocks.get(1).getRestrictRow().getGroups().contains(restrictedGroup);
+		assertTrue(blocks.size() == 2);
+	}
 
-            assertTrue(permission == allowedPermission || permission == restrictedPermission);
 
-            if (permission == allowedPermission) {
-                assertTrue(block.getAllowRow().getGroups().contains(allowedGroup));
-            } else {
-                assertTrue(block.getRestrictRow().getGroups().contains(restrictedGroup));
-            }
-        }
-    }
+	/*
+	* Data providers
+	*/
+	@DataProvider
+	public Object[][] provideTypeOfPermissionsToBranch() {
+		return new Object[][]{
+				{BranchPermission.CREATE_TOPICS},
+				{BranchPermission.CLOSE_TOPICS},
+				{BranchPermission.VIEW_TOPICS},
+				{BranchPermission.DELETE_TOPICS},
+				{BranchPermission.MOVE_TOPICS},
+				{BranchPermission.SPLIT_TOPICS},
+				{BranchPermission.CREATE_POSTS},
+				{BranchPermission.DELETE_OTHERS_POSTS},
+				{BranchPermission.DELETE_OWN_POSTS},
 
-    /**
-     * What we are provide, that we must get back in same state.
-     */
-    @Test
-    public void testGetBranch() {
-        assertEquals(sut.getBranch(), branch);
-    }
+		};
+	}
 
-    /**
-     * Check that dialog really opens.
-     */
-    @Test
-    public void testShowGroupsDialog() {
-        sut.showGroupsDialog(allowedPermission, "allow");
-        sut.showGroupsDialog(restrictedPermission, "restrict");
+	@DataProvider
+	public Object[][] provideInitDataForView() {
 
-        verify(windowManager, times(2)).open(anyString());
-    }
+		Group allowedGroup = ObjectsFactory.fakeGroup();
+		Group restrictedGroup = ObjectsFactory.fakeGroup();
 
-    @Test(expectedExceptions = { IllegalArgumentException.class })
-    public void testShowGroupsDialog_IllegalFormat() {
-        sut.showGroupsDialog(restrictedPermission, "HERE_ILLEGAL_FORMATTED_STRING");
+		List<PermissionManagementBlock> blocks = Lists.newArrayList();
+		BranchPermission allowedPermission = BranchPermission.CREATE_TOPICS;
+		BranchPermission restrictPermission = BranchPermission.CLOSE_TOPICS;
 
-        verify(windowManager, never()).open(anyString());
-    }
+		PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>();
+		permissionsMap.addAllowed(allowedPermission, allowedGroup);
+		permissionsMap.addRestricted(restrictPermission, restrictedGroup);
+
+		for (BranchPermission permission : permissionsMap.getPermissions()) {
+			blocks.add(new PermissionManagementBlock(permission, permissionsMap, "allow", "restrict"));
+		}
+
+		return new Object[][]{
+				{permissionsMap, allowedGroup, restrictedGroup}
+
+		};
+	}
+
 
 }

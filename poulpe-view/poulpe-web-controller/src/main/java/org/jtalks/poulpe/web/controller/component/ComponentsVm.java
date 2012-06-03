@@ -20,9 +20,9 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class ComponentsVm {
 
-    public static final String EDIT_WINDOW_VISIBLE = "editWindowVisible",
+    public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
             AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
             SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
             COMPONENT_LIST = "componentList", NAME ="componentName", DESCRIPTION="componentDescription",
@@ -47,7 +47,7 @@ public class ComponentsVm {
     private String componentName;
     private String componentDescription;
     private ComponentType componentType;
-    private boolean editWindowVisible;
+    private boolean addNewComponentWindowVisible;
     private boolean canCreateNewComponent;
     private List<Component> componentList;
     private List<ComponentType> availableComponentTypes;
@@ -56,6 +56,7 @@ public class ComponentsVm {
     private ComponentService componentService;
     private DialogManager dialogManager;
     private WindowManager windowManager;
+    private SelectedEntity<Component> selectedEntity;
 
     /**
      * Inits the data on the form.
@@ -71,20 +72,7 @@ public class ComponentsVm {
     @Command
     @NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
     public void showAddComponentDialog() {
-        editWindowVisible = true;
-    }
-
-    /**
-     * Edits the selected component.
-     *
-     * @param component selected component
-     */
-    @Command
-    @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
-    public void editComponent(@BindingParam("component") Component component) {
-        selected = component;
-        availableComponentTypes.add(selected.getComponentType());
-        editWindowVisible = true;
+        addNewComponentWindowVisible = true;
     }
 
     /**
@@ -116,7 +104,8 @@ public class ComponentsVm {
      */
     @Command
     public void configureComponent() {
-        EditComponentVm.openWindowForEdit(windowManager, selected);
+        selectedEntity.setEntity(selected);
+        showComponentEditWindow();
     }
 
     /**
@@ -136,7 +125,7 @@ public class ComponentsVm {
         selected.setDescription(componentDescription);
         selected.setComponentType(componentType);
         componentService.saveComponent(selected);
-        editWindowVisible = false;
+        addNewComponentWindowVisible = false;
         clearComponent();
         updateListComponentsData();
     }
@@ -156,7 +145,7 @@ public class ComponentsVm {
     @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE})
     public void cancelEdit() {
         selected = null;
-        editWindowVisible = false;
+        addNewComponentWindowVisible = false;
         updateListComponentsData();
     }
 
@@ -172,8 +161,8 @@ public class ComponentsVm {
     /**
      * @return {@code true} if the window for editing component should be visible, unless false.
      */
-    public boolean isEditWindowVisible() {
-        return editWindowVisible;
+    public boolean isAddNewComponentWindowVisible() {
+        return addNewComponentWindowVisible;
     }
 
     /**
@@ -243,27 +232,66 @@ public class ComponentsVm {
         this.windowManager = windowManager;
     }
 
+    /**
+     * Sets selected entity.
+     *
+     * @param selectedEntity the new selected entity
+     */
+    public void setSelectedEntity(SelectedEntity selectedEntity) {
+        this.selectedEntity = selectedEntity;
+    }
+
+    /**
+     * Sets component name.
+     * @param componentName the new name for component
+     */
     public void setComponentName(String componentName) {
         this.componentName = componentName;
     }
-
+    /**
+     * Sets component description.
+     * @param componentDescription the new description for component
+     */
     public void setComponentDescription(String componentDescription) {
         this.componentDescription = componentDescription;
     }
 
+    /**
+     * Sets component type.
+     * @param componentType the new type for component
+     */
     public void setComponentType(ComponentType componentType) {
         this.componentType = componentType;
         }
 
+    /**
+     * Returns the component name.
+     *
+     * @return component name.
+     */
     public String getComponentName() {
         return componentName;
     }
 
+    /**
+     * Returns the component description.
+     *
+     * @return component description.
+     */
     public String getComponentDescription() {
         return componentDescription;
     }
 
+    /**
+     * Returns the component type.
+     *
+     * @return {@link org.jtalks.common.model.entity.ComponentType}
+     */
     public ComponentType getComponentType() {
         return componentType;
     }
+    public void showComponentEditWindow(){
+        EditComponentVm.openWindowForEdit(windowManager);
+    }
+
 }
