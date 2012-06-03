@@ -7,13 +7,14 @@
     <hbox>
       <label value="${labels.users.label.search}" />
       :
-      <textbox onOK="@command('searchUser')" value="@save(vm.searchString)" width="150px" multiline="false"
-        maxlength="20" />
+      <textbox id="searchBox" onOK="@command('searchUser', searchString=self.value)" width="150px" multiline="false" maxlength="20" />
       <button label="${labels.users.label.button.search}" sclass="users.searchButton"
-              onClick="@command('searchUser')" />
+              onClick="@command('searchUser', searchString=searchBox.value)" />
+              
+      <button label="${labels.users.label.button.clearSearchResult}" onClick="@command('clearSearch')" />        
     </hbox>
     
-    <paging id="paging" pageSize="50" totalSize="@load(vm.totalSize)" activePage="@save(vm.activePage)" />
+    <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@save(vm.activePage)" />
     <listbox id="listbox" model="@bind(vm.users)" vflex="true" height="500px">
        <listhead>
         <listheader label="${labels.users.username}" sort="auto(username)" />

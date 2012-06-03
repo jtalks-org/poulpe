@@ -18,7 +18,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pagination;
+import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.UserService;
 
 /**
@@ -48,11 +48,16 @@ public class TransactionalUserService implements UserService {
         return userDao.getAllPoulpeUsers();
     }
     
+    
     @Override
-    public List<PoulpeUser> allUsersPaginated(Pagination pagination) {
-        return userDao.getAllPoulpeUsersPaginated(pagination);
+    public List<PoulpeUser> allUsersPaginated(int page, int itemsPerPage) {
+        return userDao.getAllPoulpeUsersPaginated(Pages.paginate(page, itemsPerPage));
     }
     
+    @Override
+    public int allUsersCount() {
+        return userDao.getAllUsersCount();
+    }
 
     /**
      * {@inheritDoc}
@@ -90,5 +95,6 @@ public class TransactionalUserService implements UserService {
     public List<PoulpeUser> getNonBannedByUsername(String word, int maxCount) {
         return userDao.getNonBannedByUsername(word, maxCount);
     }
+
 
 }

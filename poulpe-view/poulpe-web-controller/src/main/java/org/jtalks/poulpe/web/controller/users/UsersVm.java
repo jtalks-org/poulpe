@@ -14,10 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.bind.annotation.BindingParam;
@@ -27,8 +28,6 @@ import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModelList;
 
 import com.google.common.annotations.VisibleForTesting;
 
@@ -38,17 +37,21 @@ import com.google.common.annotations.VisibleForTesting;
  * @author dim42
  */
 public class UsersVm {
-
-    private static final String SELECTED_ITEM_PROP = "selectedUser", VIEW_DATA_PROP = "viewData";
-
+    
     public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     public static final String EDIT_USER_DIALOG = "#editUserDialog";
+    
+    private static final int ITEMS_PER_PAGE = 50;
+    
+    private static final String SELECTED_ITEM_PROP = "selectedUser", 
+            VIEW_DATA_PROP = "viewData",
+            USERS = "users";
 
     private final UserService userService;
-    private final ListModelList<PoulpeUser> users;
-    private String searchString;
-    private PoulpeUser selectedUser;
     private ZkHelper zkHelper;
+
+    private List<PoulpeUser> users;
+    private PoulpeUser selectedUser;
 
     /**
      * @param userService the service to get access to users and to store
@@ -56,32 +59,64 @@ public class UsersVm {
      */
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
-        this.users = new BindingListModelList<PoulpeUser>(userService.getAll(), true);
     }
 
     /**
      * Wires users window to this ViewModel.
-     * 
      * @param component users window
      */
     @Init
     public void init(@ContextParam(ContextType.VIEW) Component component) {
-        zkHelper = new ZkHelper(component);
+        init(component, new ZkHelper(component));
+    }
+    
+    @VisibleForTesting
+    void init(Component component, ZkHelper zkHelper) {
         zkHelper.wireComponents(component, this);
+        prepareForListing();
+    }
+    
+    // === listing ===
+    
+    public void prepareForListing() {
+        this.users = getPaginated(0);
+    }
+    
+    public List<PoulpeUser> getUsers() {
+        return users;
+    }
+    
+    private List<PoulpeUser> getPaginated(int page) {
+        return userService.allUsersPaginated(page + 1, ITEMS_PER_PAGE);
+    }
+    
+    public int getTotalSize() {
+        return userService.allUsersCount();
     }
 
-    /**
-     * Look for the users matching specified pattern from the search textbox.
-     */
-    @Command
-    public void searchUser() {
-        users.clear();
-        users.addAll(userService.getUsersByUsernameWord(searchString));
+    @NotifyChange({ USERS })
+    public void setActivePage(int activePage) {
+        this.users = getPaginated(activePage);
     }
+
+    // ===  search ===
+    
+    @Command
+    @NotifyChange({ USERS })
+    public void searchUser(@BindingParam(value = "searchString") String searchString) {
+        this.users = userService.getUsersByUsernameWord(searchString);
+    }
+    
+    @Command
+    @NotifyChange({ USERS })
+    public void clearSearch() {
+        prepareForListing();
+    }
+    
+    // === edit & save ===
 
     /**
      * Opens edit user dialog.
-     * 
      * @param user selected user
      */
     @Command
@@ -103,9 +138,6 @@ public class UsersVm {
         closeEditDialog();
     }
 
-    /**
-     * Closes edit user dialog.
-     */
     @Command
     @NotifyChange({ VIEW_DATA_PROP, SELECTED_ITEM_PROP })
     public void cancelEdit() {
@@ -114,34 +146,8 @@ public class UsersVm {
 
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
-        // ??
-        users.clear();
-        users.addAll(userService.getAll());
     }
-
-    public ListModelList<PoulpeUser> getUsers() {
-        setActivePage(0);
-        return users;
-    }
-
-    public int getTotalSize() {
-        return userService.getAll().size();
-    }
-
-    public void setActivePage(int activePage) {
-        users.clear();
-        users.addAll(userService.allUsersPaginated(Pages.paginate(activePage + 1, 50)));
-    }
-
-    /**
-     * Sets the search keyword to find the users by it. Is used by ZK Binder.
-     * 
-     * @param searchString search keyword to find the users by it
-     */
-    public void setSearchString(String searchString) {
-        this.searchString = searchString;
-    }
-
+  
     /**
      * Gets the user selected on the UI.
      * 
@@ -155,6 +161,10 @@ public class UsersVm {
         this.selectedUser = selectedUser;
     }
 
+    public int getItemsPerPage() {
+        return ITEMS_PER_PAGE;
+    }
+    
     @VisibleForTesting
     void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;

@@ -14,10 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
-import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
-import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.*;
+import static org.mockito.Mockito.*;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
@@ -26,31 +24,72 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Window;
 
 public class UsersVmTest {
-    private static final String SEARCH_STRING = "searchString";
-    
     // sut
     UsersVm usersVm;
     
     // dependencies
-    @Mock UserService service;
+    @Mock UserService userService;
     @Mock ZkHelper zkHelper;
     @Mock Window userDialog;
+    @Mock Component component;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        usersVm = new UsersVm(service);
+        usersVm = new UsersVm(userService);
         usersVm.setZkHelper(zkHelper);
     }
 
     @Test
+    public void init_componentsWired() {
+        usersVm.init(component, zkHelper);
+        verify(zkHelper).wireComponents(component, usersVm);
+    }
+    
+    @Test
+    public void init_firtsPageShown() {
+        usersVm.init(component, zkHelper);
+        verifyFirstPageShown();
+    }
+
+    private void verifyFirstPageShown() {
+        verifyNthPageShown(1);
+    }
+
+    private void verifyNthPageShown(int page) {
+        verify(userService).allUsersPaginated(page, usersVm.getItemsPerPage());
+    }
+    
+    @Test
+    public void setActivePage_contentChanged() {
+        int activePage = 2; 
+        // zk passes values decremented on 1
+        usersVm.setActivePage(activePage - 1);
+        
+        verifyNthPageShown(activePage);
+    }
+    
+    @Test
+    public void clearSearch_firtsPageShown() {
+        usersVm.clearSearch();
+        verifyFirstPageShown();
+    }
+    
+    @Test
+    public void getTotalSize() {
+        usersVm.getTotalSize();
+        verify(userService).allUsersCount();
+    }
+    
+    @Test
     public void testSearchUser() {
-        usersVm.setSearchString(SEARCH_STRING);
-        usersVm.searchUser();
-        verify(service).getUsersByUsernameWord(SEARCH_STRING);
+        String searchString = "searchString";
+        usersVm.searchUser(searchString);
+        verify(userService).getUsersByUsernameWord(searchString);
     }
 
     @Test
@@ -61,19 +100,24 @@ public class UsersVmTest {
 
     @Test
     public void testUpdateUser() throws Exception {
-        when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
+        initEditUserDialog();
         PoulpeUser user = new PoulpeUser();
 
         usersVm.saveUser(user);
         
-        verify(service).updateUser(user);
+        verify(userService).updateUser(user);
         verify(userDialog).detach();
+    }
+
+    private void initEditUserDialog() {
+        when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
     }
 
     @Test
     public void testCancelEdit() {
-        when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
+        initEditUserDialog();
         usersVm.cancelEdit();
         verify(userDialog).detach();
     }
+
 }

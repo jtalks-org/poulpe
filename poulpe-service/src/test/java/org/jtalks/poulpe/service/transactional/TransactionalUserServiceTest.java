@@ -16,8 +16,11 @@ package org.jtalks.poulpe.service.transactional;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Matchers.*;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.hamcrest.BaseMatcher;
+import org.hamcrest.Description;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
@@ -33,7 +36,7 @@ import org.testng.annotations.Test;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalUserServiceTest {
-    
+
     // sut
     private UserService userService;
 
@@ -51,12 +54,18 @@ public class TransactionalUserServiceTest {
         userService.getAll();
         verify(userDao).getAllPoulpeUsers();
     }
-    
+
+    @Test
+    public void allUsersCount() {
+        userService.allUsersCount();
+        verify(userDao).getAllUsersCount();
+    }
+
     @Test
     public void testAllUsersPaginated() {
-        Pagination pagination = Pages.NONE;
-        userService.allUsersPaginated(pagination);
-        verify(userDao).getAllPoulpeUsersPaginated(pagination);
+        int page = 1, limit = 10;
+        userService.allUsersPaginated(page, limit);
+        verify(userDao).getAllPoulpeUsersPaginated(paginationWith(page, limit));
     }
 
     @Test
@@ -90,6 +99,25 @@ public class TransactionalUserServiceTest {
 
     private static PoulpeUser user() {
         return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
+    }
+
+    public static Pagination paginationWith(int page, int limit) {
+        final Pagination expected = Pages.paginate(page, limit);
+
+        return argThat(new BaseMatcher<Pagination>() {
+            @Override
+            public boolean matches(Object o) {
+                if (o instanceof Pagination) {
+                    Pagination second = (Pagination) o;
+                    return expected.getFrom() == second.getFrom() && expected.getCount() == second.getCount();
+                }
+                return false;
+            }
+
+            @Override
+            public void describeTo(Description d) {
+            }
+        });
     }
 
 }

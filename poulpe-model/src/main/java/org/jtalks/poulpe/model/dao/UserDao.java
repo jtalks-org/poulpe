@@ -62,6 +62,11 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> getAllPoulpeUsers();
 
     /**
+     * @return amount of all users
+     */
+    int getAllUsersCount();
+    
+    /**
      * Paginates the list of all poulpe users
      * 
      * @param pagination settings for pagination
@@ -84,7 +89,6 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of non banned users with username like in parameter
      */
     List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
-
 
     
 

@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pagination;
 
 /**
  * Service interface for operations with {@code User} persistent entity.
@@ -35,12 +34,13 @@ public interface UserService {
      */
     List<PoulpeUser> getAll();
 
+    List<PoulpeUser> allUsersPaginated(int page, int itemsPerPage);
+    
     /**
-     * @param pagination settings for pagination
-     * @return paginated list of all users
+     * @return amount of all users
      */
-    List<PoulpeUser> allUsersPaginated(Pagination pagination);
-
+    int allUsersCount();
+    
     /**
      * Gets Users with corresponding word in user name
      * 
@@ -80,6 +80,8 @@ public interface UserService {
      * @return list of non banned users with username like in parameter
      */
     List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
+
+    
 
 
 }

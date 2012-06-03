@@ -70,6 +70,14 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         List<PoulpeUser> result = query.list();
         return result;
     }
+    
+    /** {@inheritDoc} */
+    @Override
+    public int getAllUsersCount() {
+        Query query = getSession().createQuery("select count(*) from " + TYPE_NAME);
+        Number result = (Number) query.uniqueResult();
+        return result.intValue();
+    }
 
     /** {@inheritDoc} */
     @Override
@@ -111,5 +119,6 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         List<PoulpeUser> result = query.list();
         return result;
     }
+
 
 }

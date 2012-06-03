@@ -159,6 +159,16 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     }
     
     @Test
+    public void getAllUsersCount() {
+        int count = 13;
+        List<PoulpeUser> users = ObjectsFactory.usersListOf(count);
+        givenUsersSavedAndEvicted(users);
+        
+        int actual = dao.getAllUsersCount();
+        assertEquals(actual, count);
+    }
+    
+    @Test
     public void testGetAllBannedUsers() {
         List<PoulpeUser> bannedUsers = ObjectsFactory.bannedUsersListOf(3);
 
