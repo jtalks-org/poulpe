@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pagination;
 
 /**
  * This interface provides persistence operations for {@link org.jtalks.poulpe.model.entity.PoulpeUser} objects.
@@ -61,6 +62,14 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> getAllPoulpeUsers();
 
     /**
+     * Paginates the list of all poulpe users
+     * 
+     * @param pagination settings for pagination
+     * @return paginated list of all poulpe users 
+     */
+    List<PoulpeUser> getAllPoulpeUsersPaginated(Pagination pagination);
+    
+    /**
      * Get {@link List} with all banned Users.
      * 
      * @return {@code List<User>}
@@ -75,5 +84,8 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of non banned users with username like in parameter
      */
     List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
+
+
+    
 
 }

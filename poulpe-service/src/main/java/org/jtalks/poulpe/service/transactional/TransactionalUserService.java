@@ -18,6 +18,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 /**
@@ -46,6 +47,12 @@ public class TransactionalUserService implements UserService {
     public List<PoulpeUser> getAll() {
         return userDao.getAllPoulpeUsers();
     }
+    
+    @Override
+    public List<PoulpeUser> allUsersPaginated(Pagination pagination) {
+        return userDao.getAllPoulpeUsersPaginated(pagination);
+    }
+    
 
     /**
      * {@inheritDoc}

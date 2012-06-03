@@ -16,7 +16,6 @@ package org.jtalks.poulpe.web.controller.users;
 
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -31,31 +30,32 @@ import org.zkoss.zul.Window;
 
 public class UsersVmTest {
     private static final String SEARCH_STRING = "searchString";
-    UsersVm vm;
-    @Mock
-    UserService service;
-    @Mock
-    ZkHelper zkHelper;
-    @Mock
-    Window userDialog;
+    
+    // sut
+    UsersVm usersVm;
+    
+    // dependencies
+    @Mock UserService service;
+    @Mock ZkHelper zkHelper;
+    @Mock Window userDialog;
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        vm = new UsersVm(service);
-        vm.setZkHelper(zkHelper);
+        usersVm = new UsersVm(service);
+        usersVm.setZkHelper(zkHelper);
     }
 
     @Test
     public void testSearchUser() {
-        vm.setSearchString(SEARCH_STRING);
-        vm.searchUser();
+        usersVm.setSearchString(SEARCH_STRING);
+        usersVm.searchUser();
         verify(service).getUsersByUsernameWord(SEARCH_STRING);
     }
 
     @Test
     public void testEditUser() throws Exception {
-        vm.editUser(new PoulpeUser());
+        usersVm.editUser(new PoulpeUser());
         verify(zkHelper).wireToZul(EDIT_USER_URL);
     }
 
@@ -64,7 +64,8 @@ public class UsersVmTest {
         when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
         PoulpeUser user = new PoulpeUser();
 
-        vm.saveUser(user);
+        usersVm.saveUser(user);
+        
         verify(service).updateUser(user);
         verify(userDialog).detach();
     }
@@ -72,7 +73,7 @@ public class UsersVmTest {
     @Test
     public void testCancelEdit() {
         when(zkHelper.findComponent(EDIT_USER_DIALOG)).thenReturn(userDialog);
-        vm.cancelEdit();
+        usersVm.cancelEdit();
         verify(userDialog).detach();
     }
 }
