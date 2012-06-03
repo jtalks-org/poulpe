@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
-import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
@@ -24,11 +24,14 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
 import org.zkoss.bind.annotation.Init;
-import org.zkoss.util.resource.Labels;
+import org.zkoss.zk.ui.Component;
 
 import javax.annotation.Nonnull;
 import java.util.Collections;
@@ -51,6 +54,7 @@ public class BranchPermissionManagementVm {
 	private final SelectedEntity<Object> selectedEntity;
 	private PoulpeBranch branch;
 	private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
+	private ZkHelper zkHelper;
 
 	/**
 	 * Constructs the VM with given dependencies.
@@ -97,7 +101,7 @@ public class BranchPermissionManagementVm {
 		return branch;
 	}
 
-	public static void showPage(WindowManager windowManager, Branch branch) {
+	public static void showPage(WindowManager windowManager) {
 		windowManager.open(BRANCH_PERMISSION_MANAGEMENT_PAGE);
 	}
 
@@ -105,14 +109,29 @@ public class BranchPermissionManagementVm {
 	 * Initializes the data for view.
 	 */
 	@Init
+	public void init(@ContextParam(ContextType.VIEW) Component component) {
+		zkHelper = new ZkHelper(component);
+		zkHelper.wireComponents(component, this);
+		initDataForView();
+	}
+
+
 	public void initDataForView() {
 		blocks.clear();
 		this.branch = (PoulpeBranch) selectedEntity.getEntity();
 		PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
 		for (BranchPermission permission : permissionsMap.getPermissions()) {
-			blocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels
-					.getLabel("permissions.allow_label"), Labels.getLabel("permissions.restrict_label")));
+			blocks.add(new PermissionManagementBlock(permission, permissionsMap, zkHelper.getLabel("permissions.allow_label"),
+					zkHelper.getLabel("permissions.restrict_label")));
 		}
 	}
 
+	public SelectedEntity<Object> getSelectedEntity() {
+		return selectedEntity;
+	}
+
+	@VisibleForTesting
+	void setZkHelper(ZkHelper zkHelper) {
+		this.zkHelper = zkHelper;
+	}
 }
