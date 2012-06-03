@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<chapter version="5.0"
+         xml:lang="en"
+         xml:id="blah"
+         xmlns="http://docbook.org/ns/docbook"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns:xl="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd"
+        >
+  <title>Poulpe Web View</title>
+  <section>
+    <title>ZK Overview</title>
+    <para>As for now we use ZK6 for development of Poulpe. It provides 3 models (patterns) to work with it:
+      <itemizedlist>
+        <listitem>
+          <para>Model View Presenter (MVP) - divides all the web parts into Model which is, let's say, database, View -
+            a class responsible for containing of the logic how to show the parts of the page and Presenter - a
+            controller part, the request processing part. This pattern is a goodness when we have a very complicated
+            view with a lot of components, effects, events, etc., but we decided not to use it as far as it's possible
+            because it always requires the View part even if the depicting logic is straightforward, and in general it
+            looks pretty cumbersome. We decided not to use it as long as it's possible.
+          </para>
+        </listitem>
+        <listitem>
+          <para>Model View Controller (MVC), or more precisely Model2 - ZK implements this by having methods annotated
+            with @Listen and listening to the events from the UI. This is the most common pattern for Java Web apps and
+            it's suitable for frameworks like Spring MVC, Struts, etc. But we decided not to use it as well since it
+            requires us thinking more about UI Events and components rather than not thinking about them ;)
+          </para>
+        </listitem>
+        <listitem>
+          <para>Model View ViewModel (MVVM) - this is a pattern that defines some page (in our case it's ZUL) and the
+            binding model where we specify what components is bound to what property and if the property changes, then
+            the value in the component is changed, and vice versa. We decided to use this model as the our main coarse:
+            first of all it allows us in most cases to abstract away from Events and Components, and it also requires
+            having only one class for processing the user requests which looks as the right way to write web apps. It
+            has drawbacks comparing to MVP when it comes to very complicated pages, but we don't have much of them and
+            moreover we can emulate the MVP via MVVM facilities and still have the binding abilities that are provided
+            by ZK.
+          </para>
+        </listitem>
+      </itemizedlist>
+    </para>
+  </section>
+  <section>
+    <title>ZK MVVM usage in Poulpe</title>
+    <para>So in order to understand MVVM in ZK you should read some resources, like:
+      <link xl:href="http://books.zkoss.org/wiki/Small%20Talks/2011/November/Hello%20ZK%20MVVM">ZK MVVM Overview</link>,
+      <link xl:href="http://books.zkoss.org/wiki/Small_Talks/2011/November/MVVM_in_ZK_6_-_Design_your_first_MVVM_page">
+        Design Your First MVVM Page
+      </link>,
+      <link xl:href="http://books.zkoss.org/wiki/Small_Talks/2012/February/MVVM_in_ZK6:_Form_Binding">Form Binding
+      </link>
+    </para>
+  </section>
+</chapter>
