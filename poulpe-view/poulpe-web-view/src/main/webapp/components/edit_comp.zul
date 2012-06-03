@@ -10,7 +10,7 @@
         <rows>
             <row>
                 ${labels.component.title}
-                <textbox width="30%" value="@bind(vm.componentName) @validator('beanValidator')" />
+                <textbox width="40%" value="@bind(vm.componentName) @validator('beanValidator')" />
             </row>
             <row>
                 ${labels.component.description}
@@ -18,19 +18,19 @@
             </row>
             <row visible="@load(vm.jcommune)">
                 <label value="${labels.component.property.title}" visible="@load(vm.jcommune)" />
-                <textbox width="30%" value="@bind(vm.name) @validator('beanValidator')" visible="@load(vm.jcommune)"  maxlength="50" />
+                <textbox width="40%" value="@bind(vm.name) @validator('beanValidator')" visible="@load(vm.jcommune)"  maxlength="50" />
            </row>
             <row visible="@load(vm.jcommune)">
                 <label value="${labels.component.property.caption}" visible="@load(vm.jcommune)" />
-                <textbox width="30%" value="@bind(vm.caption) @validator('beanValidator')" visible="@load(vm.jcommune)" maxlength="100" />
+                <textbox width="95%" value="@bind(vm.caption) @validator('beanValidator')" visible="@load(vm.jcommune)" maxlength="100" />
             </row>
             <row visible="@load(vm.jcommune)">
                 <label value="${labels.component.property.post_preview_size}" visible="@load(vm.jcommune)" />
-                <textbox width="30%" value="@bind(vm.postPreviewSize) @validator('beanValidator')" visible="@load(vm.jcommune)"  constraint="/[0-9]+/: Digits only!" />
+                <textbox width="20%" value="@bind(vm.postPreviewSize) @validator('beanValidator')" visible="@load(vm.jcommune)"  constraint="/[0-9]+/: Digits only!" />
             </row>
             <row visible="@load(vm.jcommune)">
                 <label value="${labels.component.property.session_timeout}" visible="@load(vm.jcommune)" />
-                <intbox id="st" width="30%" value="@bind(vm.sessionTimeout) @validator('beanValidator')" visible="@load(vm.jcommune)"  />
+                <intbox id="st" width="20%" value="@bind(vm.sessionTimeout) @validator('beanValidator')" visible="@load(vm.jcommune)"  />
             </row>
         </rows>
     </grid>
