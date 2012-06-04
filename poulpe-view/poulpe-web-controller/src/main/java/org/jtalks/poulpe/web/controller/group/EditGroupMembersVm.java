@@ -67,7 +67,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         this.groupService = groupService;
         this.userService = userService;
 
-        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>)groupToEdit.getUsers();
+        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>) groupToEdit.getUsers();
         setStateAfterEdit(users);
     }
 
@@ -105,7 +105,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterExist() {
         getExist().clear();
-        getExist().addAll(filter(having(on(PoulpeUser.class).getUsername(), containsString(getExistFilterTxt())), getStateAfterEdit()));
+        getExist().addAll(filter(having(on(PoulpeUser.class).getUsername(), containsString(getExistFilterTxt())),
+                getStateAfterEdit()));
     }
 
     /**

@@ -14,26 +14,25 @@
  */
 package org.jtalks.poulpe.model.dto;
 
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.JtalksPermission;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
-
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.JtalksPermission;
-
-import com.google.common.collect.Maps;
+import java.util.concurrent.ConcurrentSkipListMap;
 
 /**
  * Container for permissions and related to it access lists. Contains several methods to simple management of access
  * lists.
- * 
+ *
  * @author Vyacheslav Zhivaev
  */
 public class PermissionsMap<T extends JtalksPermission> {
 
-    private final ConcurrentMap<T, GroupAccessList> accessListMap = Maps.newConcurrentMap();
+    private final ConcurrentMap<T, GroupAccessList> accessListMap = new ConcurrentSkipListMap<T, GroupAccessList>();
 
     /**
      * Constructs {@link PermissionsMap} with empty internal state. Use add* methods to fill this map.
@@ -44,7 +43,7 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Constructs {@link PermissionsMap} with given list of permissions and empty restrict\allow data.
-     * 
+     *
      * @param permissions to be added to the access lists
      */
     public PermissionsMap(List<T> permissions) {
@@ -55,7 +54,7 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Constructs {@link PermissionsMap} with predefined values to be added to the access lists.
-     * 
+     *
      * @param accessLists values to initialize this container
      */
     public PermissionsMap(Map<T, GroupAccessList> accessLists) {
@@ -64,9 +63,9 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Adds new permission to the access list.
-     * 
+     *
      * @param permission to be added
-     * @param toAllow group to allow
+     * @param toAllow    group to allow
      * @param toRestrict group to restrict
      * @return {@code this} instance for providing fluent interface
      */
@@ -78,9 +77,9 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Adds new 'allowed' permission.
-     * 
+     *
      * @param permission the permission to add
-     * @param group the group for which permission added
+     * @param group      the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
     public PermissionsMap<T> addAllowed(T permission, Group group) {
@@ -89,9 +88,9 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Adds new 'restricted' permission.
-     * 
+     *
      * @param permission the permission to add
-     * @param group the group for which permission added
+     * @param group      the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
     public PermissionsMap<T> addRestricted(T permission, Group group) {
@@ -100,10 +99,10 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Based on 'allow' flag, add 'allow' permission (if it's {@code true}), or 'restrict' permission on it (otherwise).
-     * 
+     *
      * @param permission the permission to add
-     * @param group the group for which permission added
-     * @param allow {@code true} if allowance is needed, {@code false} otherwise
+     * @param group      the group for which permission added
+     * @param allow      {@code true} if allowance is needed, {@code false} otherwise
      * @return {@code this} instance for providing fluent interface
      */
     public PermissionsMap<T> add(T permission, Group group, boolean allow) {
@@ -112,7 +111,7 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * For given permission, retrieves list of {@link Group} that are allowed.
-     * 
+     *
      * @param permission the permission to get for
      * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
@@ -122,7 +121,7 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * For given permission, retrieves list of {@link Group} that are restricted.
-     * 
+     *
      * @param permission the permission to get for
      * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
@@ -133,9 +132,9 @@ public class PermissionsMap<T extends JtalksPermission> {
     /**
      * For given permission, retrieves list of {@link Group} that are allowed or restricted relative to parameter
      * {@code allowed}.
-     * 
+     *
      * @param permission the permission to get for
-     * @param allowed the flag indicating which type of groups needed: allowed (if {@code true}) or restricted
+     * @param allowed    the flag indicating which type of groups needed: allowed (if {@code true}) or restricted
      * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
     public List<Group> get(T permission, boolean allowed) {
@@ -144,7 +143,7 @@ public class PermissionsMap<T extends JtalksPermission> {
 
     /**
      * Gets all permissions defined in this map.
-     * 
+     *
      * @return set of all permissions defined in this map, set instance is UNMODIFIABLE
      */
     public Set<T> getPermissions() {
