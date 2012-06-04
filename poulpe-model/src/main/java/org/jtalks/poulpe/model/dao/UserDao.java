@@ -21,59 +21,31 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 
 /**
- * This interface provides persistence operations for {@link org.jtalks.poulpe.model.entity.PoulpeUser} objects.
+ * This interface provides persistence operations for
+ * {@link org.jtalks.poulpe.model.entity.PoulpeUser} objects.
  * 
  * @author Vyacheslav Zhivaev
+ * @author Alexey Grigorev
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
     /**
-     * Get {@link org.jtalks.poulpe.model.entity.PoulpeUser} with corresponding username.
+     * Looks for users whose nicknames matches the given string
      * 
-     * @param username name of requested user.
-     * @return {@link org.jtalks.poulpe.model.entity.PoulpeUser} with given username.
-     * @see org.jtalks.poulpe.model.entity.PoulpeUser
+     * @param searchString string to search
+     * @param pagination setting for pagination
+     * @return paginated result list
      */
-    PoulpeUser getPoulpeUserByUsername(String username);
+    List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination pagination);
 
     /**
-     * Find all users whose username contains specified string.
+     * Counts how many usernames matches the given string
      * 
-     * @param substring or symbol in user name of requested user.
-     * @return List of users with given string in username.
-     * @see org.jtalks.poulpe.model.entity.PoulpeUser
+     * @param searchString for matching with usernames
+     * @return amount of matches
      */
-    List<PoulpeUser> getPoulpeUserByUsernamePart(String substring);
+    int countUsernameMatches(String searchString);
 
-    /**
-     * Get {@link org.jtalks.poulpe.model.entity.PoulpeUser} with corresponding encodedUsername.
-     * 
-     * @param encodedUsername encoded name of requested user.
-     * @return {@link org.jtalks.poulpe.model.entity.PoulpeUser} with given encodedUsername.
-     * @see org.jtalks.poulpe.model.entity.PoulpeUser
-     */
-    PoulpeUser getPoulpeUserByEncodedUsername(String encodedUsername);
-
-    /**
-     * Get {@link List} with all Users.
-     * 
-     * @return {@code List<User>}
-     */
-    List<PoulpeUser> getAllPoulpeUsers();
-
-    /**
-     * @return amount of all users
-     */
-    int getAllUsersCount();
-    
-    /**
-     * Paginates the list of all poulpe users
-     * 
-     * @param pagination settings for pagination
-     * @return paginated list of all poulpe users 
-     */
-    List<PoulpeUser> getAllPoulpeUsersPaginated(Pagination pagination);
-    
     /**
      * Get {@link List} with all banned Users.
      * 
@@ -89,7 +61,5 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of non banned users with username like in parameter
      */
     List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
-
-    
 
 }

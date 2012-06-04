@@ -12,14 +12,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.section.dialogs;
-
 /**
- * This VM is responsible for deleting the branch: whether to move the content of the branch to the other branch or
- * should the branch be deleted with whole its content.
- *
- * @author stanislav bashkirtsev
+ * Contains implementation of Open Session On Desktop listener (session-per-conversation Hibernate pattern).
+ * @see OpenSessionOnDesktopZkListener
  */
-public class ConfirmBranchDeletionDialogVm extends AbstractDialogVm {
-
-}
+package org.jtalks.poulpe.web.osod;

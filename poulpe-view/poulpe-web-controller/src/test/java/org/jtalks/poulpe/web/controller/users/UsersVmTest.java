@@ -14,8 +14,13 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
-import static org.jtalks.poulpe.web.controller.users.UsersVm.*;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
@@ -25,6 +30,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
 public class UsersVmTest {
@@ -36,6 +42,9 @@ public class UsersVmTest {
     @Mock ZkHelper zkHelper;
     @Mock Window userDialog;
     @Mock Component component;
+    @Mock Textbox searchTextBox;
+    
+    final String searchString = "searchString";
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -53,15 +62,57 @@ public class UsersVmTest {
     @Test
     public void init_firtsPageShown() {
         usersVm.init(component, zkHelper);
-        verifyFirstPageShown();
+        verifyFirstPageShown(UsersVm.NO_FILTER_SEARCH_STRING);
     }
 
-    private void verifyFirstPageShown() {
-        verifyNthPageShown(1);
+    private void verifyFirstPageShown(String searchString) {
+        verifyNthPageShown(searchString, 1);
     }
 
-    private void verifyNthPageShown(int page) {
-        verify(userService).allUsersPaginated(page, usersVm.getItemsPerPage());
+    private void verifyNthPageShown(String searchString, int page) {
+        userService.findUsersPaginated(searchString, page + 1, usersVm.getItemsPerPage());
+    }
+    
+    @Test 
+    public void init_searchStringIsEmpty() {
+        usersVm.init(component, zkHelper);
+        assertEquals(usersVm.getSearchString(), UsersVm.NO_FILTER_SEARCH_STRING);
+    }
+    
+    @Test 
+    public void init_activePageIs0() {
+        usersVm.init(component, zkHelper);
+        assertEquals(usersVm.getActivePage(), 0);
+    }
+    
+    @Test 
+    public void init_usersFromFirstPageBound() {
+        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 1);
+        usersVm.init(component, zkHelper);
+        assertUsersBound(users);
+    }
+
+    private void assertUsersBound(List<PoulpeUser> users) {
+        assertEquals(usersVm.getUsers(), users);
+    }
+
+    private List<PoulpeUser> givenPageWithData(String searchString, int page) {
+        List<PoulpeUser> result = Arrays.asList(new PoulpeUser(), new PoulpeUser());
+        when(userService.findUsersPaginated(searchString, page, usersVm.getItemsPerPage())).thenReturn(result);
+        return result;
+    }
+    
+    @Test
+    public void getTotalSize_allRecords() {
+        usersVm.getTotalSize();
+        verify(userService).countUsernameMatches(UsersVm.NO_FILTER_SEARCH_STRING);
+    }
+    
+    @Test
+    public void getTotalSize_withSearchString() {
+        usersVm.searchUsers(searchString);
+        usersVm.getTotalSize();
+        verify(userService).countUsernameMatches(searchString);
     }
     
     @Test
@@ -70,26 +121,93 @@ public class UsersVmTest {
         // zk passes values decremented on 1
         usersVm.setActivePage(activePage - 1);
         
-        verifyNthPageShown(activePage);
+        verifyNthPageShown(UsersVm.NO_FILTER_SEARCH_STRING, activePage);
     }
     
     @Test
-    public void clearSearch_firtsPageShown() {
-        usersVm.clearSearch();
-        verifyFirstPageShown();
+    public void setActivePage_pageChanged() {
+        int activePage = 2; 
+        usersVm.setActivePage(activePage - 1);
+        assertActivePageIs(activePage);
+    }
+
+    private void assertActivePageIs(int activePage) {
+        assertEquals(usersVm.getActivePage(), activePage - 1);
     }
     
     @Test
-    public void getTotalSize() {
-        usersVm.getTotalSize();
-        verify(userService).allUsersCount();
+    public void setActive_usersBound() {
+        int activePage = 2; 
+        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, activePage);
+        
+        usersVm.setActivePage(activePage - 1);
+        
+        assertUsersBound(users);
     }
     
     @Test
-    public void testSearchUser() {
-        String searchString = "searchString";
-        usersVm.searchUser(searchString);
-        verify(userService).getUsersByUsernameWord(searchString);
+    public void searchUsers_firstPageRequested() {
+        usersVm.searchUsers(searchString);
+        verifyFirstPageShown(searchString);
+    }
+    
+    @Test
+    public void searchUsers_firstPageShown() {
+        usersVm.searchUsers(searchString);
+        verifyFirstPageShown(searchString);
+        assertActivePageIs(1);
+    }
+    
+    @Test
+    public void clearSearch_firstPageWithNoFilterRequested() {
+        givenSearchStringInSeachbox();
+        usersVm.clearSearch(searchTextBox);
+        verifyFirstPageShown(UsersVm.NO_FILTER_SEARCH_STRING);
+    }
+
+    private void givenSearchStringInSeachbox() {
+        when(searchTextBox.getValue()).thenReturn(searchString);
+    }
+    
+    @Test
+    public void clearSearch_firstPageShown() {
+        givenSearchStringInSeachbox();
+        usersVm.clearSearch(searchTextBox);
+        assertActivePageIs(1);
+    }
+    
+    @Test
+    public void clearSearch_searchStringCleared() {
+        givenSearchStringInSeachbox();
+        usersVm.clearSearch(searchTextBox);
+        verify(searchTextBox).setValue("");
+    }
+    
+    @Test
+    public void clearSearch_usersFromFirstPageBound() {
+        givenSearchStringInSeachbox();
+        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 1);
+        
+        usersVm.clearSearch(searchTextBox);
+        assertUsersBound(users);
+    }
+    
+    @Test
+    public void clearSearch_withEmptyString_nothingCalled() {
+        givenNoSearchStringInSeachbox();
+        usersVm.clearSearch(searchTextBox);
+        verify(searchTextBox, never()).setValue(anyString());
+        verify(userService, never()).findUsersPaginated(anyString(), anyInt(), anyInt());
+    }
+    
+    private void givenNoSearchStringInSeachbox() {
+        when(searchTextBox.getValue()).thenReturn(UsersVm.NO_FILTER_SEARCH_STRING);
+    }
+    
+    @Test
+    public void clearSearch_withNullComponent_nothingCalled() {
+        usersVm.clearSearch(null);
+        verify(userService, never()).findUsersPaginated(anyString(), anyInt(), anyInt());
     }
 
     @Test

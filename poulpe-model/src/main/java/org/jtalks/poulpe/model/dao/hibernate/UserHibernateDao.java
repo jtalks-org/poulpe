@@ -23,13 +23,13 @@ import org.hibernate.criterion.Restrictions;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.pages.Pagination;
 
 /**
  * Hibernate implementation of UserDao.
  * 
  * @author Vyacheslav Zhivaev
+ * @author Alexey Grigorev
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
@@ -37,66 +37,36 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
 
     /** {@inheritDoc} */
     @Override
-    public PoulpeUser getPoulpeUserByUsername(String username) {
+    public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
+        Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.username like ?");
+        query.setString(0, MessageFormat.format("%{0}%", searchString));
+        paginate.addPagination(query);
+
+        @SuppressWarnings("unchecked")
+        List<PoulpeUser> result = query.list();
+        return result;
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public int countUsernameMatches(String searchString) {
+        Query query = getSession().createQuery("select count(*) from " + TYPE_NAME + " u where u.username like ?");
+        query.setString(0, MessageFormat.format("%{0}%", searchString));
+        
+        Number result = (Number) query.uniqueResult();
+        return result.intValue();
+    }
+    
+
+    /** {@inheritDoc} */
+    @Override
+    public PoulpeUser getByUsername(String username) {
         Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.username = ?");
         query.setString(0, username);
         
         return (PoulpeUser) query.uniqueResult();
     }
-
-    /** {@inheritDoc} */
-    @Override
-    public PoulpeUser getPoulpeUserByEncodedUsername(String encodedUsername) {
-        Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.encodedUsername = ?");
-        query.setString(0, encodedUsername);
-        query.setCacheable(true);
-
-        return (PoulpeUser) query.uniqueResult();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<PoulpeUser> getAllPoulpeUsers() {
-        return getAllPoulpeUsersPaginated(Pages.NONE);
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<PoulpeUser> getAllPoulpeUsersPaginated(Pagination pagination) {
-        Query query = getSession().createQuery("from " + TYPE_NAME);
-        pagination.addPagination(query);
-
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> result = query.list();
-        return result;
-    }
     
-    /** {@inheritDoc} */
-    @Override
-    public int getAllUsersCount() {
-        Query query = getSession().createQuery("select count(*) from " + TYPE_NAME);
-        Number result = (Number) query.uniqueResult();
-        return result.intValue();
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public List<PoulpeUser> getPoulpeUserByUsernamePart(String substring) {
-        String param = MessageFormat.format("%{0}%", substring);
-        Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.username like ?");
-        query.setString(0, param);
-
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> result = query.list();
-        return result;
-    }
-
-    /** {@inheritDoc} */
-    @Override
-    public PoulpeUser getByUsername(String username) {
-        return getPoulpeUserByUsername(username);
-    }
-
     /** {@inheritDoc} */
     @Override
     public List<PoulpeUser> getAllBannedUsers() {
@@ -119,6 +89,5 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         List<PoulpeUser> result = query.list();
         return result;
     }
-
 
 }
