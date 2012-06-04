@@ -40,8 +40,8 @@ public class ComponentsVm {
     public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
             AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
             SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-            COMPONENT_LIST = "componentList", NAME ="componentName", DESCRIPTION="componentDescription",
-            TYPE="componentType";
+            COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
+            TYPE = "componentType";
 
     private Component selected;
     private String componentName;
@@ -121,16 +121,17 @@ public class ComponentsVm {
         } else {
             selected = new Component();
         }
-        selected.setName(componentName);
-        selected.setDescription(componentDescription);
-        selected.setComponentType(componentType);
+        setBasicFields();
         componentService.saveComponent(selected);
         addNewComponentWindowVisible = false;
         clearComponent();
         updateListComponentsData();
     }
 
-    @NotifyChange({SELECTED, NAME, DESCRIPTION,TYPE })
+    /**
+     * Clears variables used for component creation.
+     */
+    @NotifyChange({SELECTED, NAME, DESCRIPTION, TYPE})
     public void clearComponent() {
         setComponentName(null);
         setComponentDescription(null);
@@ -199,6 +200,9 @@ public class ComponentsVm {
         return availableComponentTypes;
     }
 
+    /**
+     * Updates components list and list of available component types.
+     */
     private void updateListComponentsData() {
         availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
         componentList = componentService.getAll();
@@ -243,13 +247,16 @@ public class ComponentsVm {
 
     /**
      * Sets component name.
+     *
      * @param componentName the new name for component
      */
     public void setComponentName(String componentName) {
         this.componentName = componentName;
     }
+
     /**
      * Sets component description.
+     *
      * @param componentDescription the new description for component
      */
     public void setComponentDescription(String componentDescription) {
@@ -258,11 +265,12 @@ public class ComponentsVm {
 
     /**
      * Sets component type.
+     *
      * @param componentType the new type for component
      */
     public void setComponentType(ComponentType componentType) {
         this.componentType = componentType;
-        }
+    }
 
     /**
      * Returns the component name.
@@ -290,8 +298,21 @@ public class ComponentsVm {
     public ComponentType getComponentType() {
         return componentType;
     }
-    public void showComponentEditWindow(){
+
+    /**
+     * Opens window used for component edit.
+     */
+    public void showComponentEditWindow() {
         EditComponentVm.openWindowForEdit(windowManager);
+    }
+
+    /**
+     * Sets basic field of selected components. Values taken from textboxes.
+     */
+    private void setBasicFields() {
+        selected.setName(componentName);
+        selected.setDescription(componentDescription);
+        selected.setComponentType(componentType);
     }
 
 }

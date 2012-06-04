@@ -39,6 +39,8 @@
         <!-- This is the window which used for creating new component, is not visible by default-->
         <window title="${labels.componentedit.title}" border="normal"
                 width="430px" mode="modal" onClose="@command('cancelEdit')"
+                onOk="@command('createComponent')"
+                onCancel="@command('cancelEdit')"
                 visible="@load(vm.addNewComponentWindowVisible)">
             <grid>
                 <columns>
@@ -51,7 +53,8 @@
                         <textbox id="titlebox" width="300px" constraint="no empty"
                                  value="@load(vm.componentDescription)
 							            @save(vm.componentName, before='createComponent')
-							            @validator('beanValidator')"/>
+							            @validator('beanValidator')"
+                                 onOK="@command('createComponent')" />
                         <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
                     </row>
                     <row>
@@ -59,17 +62,18 @@
                         <textbox width="300px" constraint="no empty"
                                  value="@load(vm.componentDescription)
                                         @save(vm.componentDescription, before='createComponent')
-                                        @validator('beanValidator')"/>
+                                        @validator('beanValidator')"
+                                 onOK="@command('createComponent')" />
                     </row>
                     <row>
                         ${labels.component.type}
                         <combobox
                                 model="@load(vm.availableComponentTypes, after='showAddComponentDialog')"
                                 selectedItem="@bind(vm.componentType)"
-                                width="300px" readonly="true">
-                            <attribute name="onCreate">
-                                self.setConstraint("no empty");
-                            </attribute>
+                                width="300px" readonly="true"
+                                onOK="@command('createComponent')"
+                                onCancel="@command('cancelEdit')"
+                                constraint="no empty">
                             <template name="model" var="componentType">
                                 <comboitem label="@load(componentType)" />
                             </template>
@@ -77,8 +81,10 @@
                     </row>
                     <row align="right" spans="3">
                         <hbox>
-                            <button label="${labels.componentedit.save}" onClick="@command('createComponent')" />
-                            <button label="${labels.componentedit.cancel}" onClick="@command('cancelEdit')"/>
+                            <button image="/resources/img/accept16.png" label="${labels.componentedit.save}"
+                                    onClick="@command('createComponent')" />
+                            <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}"
+                                    onClick="@command('cancelEdit')"/>
                         </hbox>
                     </row>
                 </rows>
