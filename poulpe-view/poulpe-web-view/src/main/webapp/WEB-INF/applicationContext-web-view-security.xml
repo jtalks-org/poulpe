@@ -33,7 +33,11 @@
   </http>
   
   <authentication-manager>
-    <authentication-provider user-service-ref="poulpeSecurityService" />
+    <authentication-provider user-service-ref="poulpeSecurityService">
+      <password-encoder hash="md5">
+        <salt-source user-property="salt" />
+      </password-encoder>
+    </authentication-provider>
   </authentication-manager>
   
-  </beans:beans>
+</beans:beans>
