@@ -100,8 +100,9 @@ public class BranchPermissionManagementVmTest {
         assertEquals(sut.getBranch(), branch);
 
         List<PermissionManagementBlock> blocks = sut.getBlocks();
-        assertTrue(blocks.get(1).getAllowRow().getGroups().contains(allowedGroup));
-        assertTrue(blocks.get(0).getRestrictRow().getGroups().contains(restrictedGroup));
+        assertTrue(blocks.get(0).getAllowRow().getGroups().contains(allowedGroup));
+        assertTrue(blocks.get(1).getRestrictRow().getGroups().contains(restrictedGroup));
+        assertTrue(blocks.size() == 2);
     }
 
 
