@@ -49,8 +49,8 @@ public class SingletonOpenSessionsHolder {
      * initialize class via {@link #instantiate(org.hibernate.SessionFactory)} in Spring Context so that it's possible
      * to return ready-to use {@link OpenSessions}.
      *
-     * @return container of sessions with the session factory instantiated in {@link #instantiate(org.hibernate.SessionFactory)}
-     *         by spring context
+     * @return container of sessions with the session factory instantiated in
+     *         {@link #instantiate(org.hibernate.SessionFactory)}  by spring context
      * @throws IllegalStateException if the method is accessed before {@link #instantiate(org.hibernate.SessionFactory)}
      *                               was invoked
      */

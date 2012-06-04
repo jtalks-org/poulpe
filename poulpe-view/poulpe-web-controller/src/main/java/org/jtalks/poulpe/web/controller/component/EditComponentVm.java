@@ -19,14 +19,12 @@ import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.Executions;
 
 import javax.annotation.Nonnull;
 import java.util.HashMap;
@@ -41,19 +39,19 @@ import java.util.Map;
  */
 public class EditComponentVm {
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
-                               EMPTY_NAME = "component.error.name_shouldnt_be_empty",
-                               ITEM_ALREADY_EXISTS = "item.already.exist";
+            EMPTY_NAME = "component.error.name_shouldnt_be_empty",
+            ITEM_ALREADY_EXISTS = "item.already.exist";
 
     private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
-                                COMPONENTS_WINDOW = "components.zul",
-                                COMPONENT_NAME_PROP = "componentName",
-                                NAME_PROP = "name",
-                                CAPTION_PROP = "caption",
-                                DESCRIPTION_PROP = "description",
-                                POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-                                SESSION_TIMEOUT_PROP = "sessionTimeout",
-                                VALIDATION_MESSAGES_PROP = "validationMessages",
-                                IS_JCOMMUNE = "jcommune";
+            COMPONENTS_WINDOW = "components.zul",
+            COMPONENT_NAME_PROP = "componentName",
+            NAME_PROP = "name",
+            CAPTION_PROP = "caption",
+            DESCRIPTION_PROP = "description",
+            POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+            SESSION_TIMEOUT_PROP = "sessionTimeout",
+            VALIDATION_MESSAGES_PROP = "validationMessages",
+            IS_JCOMMUNE = "jcommune";
 
     /**
      * Current component we are working with
@@ -397,6 +395,7 @@ public class EditComponentVm {
     public void setSessionTimeout(String sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
+
     /**
      * Sets selected entity.
      */
@@ -405,7 +404,7 @@ public class EditComponentVm {
     }
 
 
-    private void setDefaultValues(){
+    private void setDefaultValues() {
         name = NAME_PROP;
         caption = CAPTION_PROP;
         postPreviewSize = "10";

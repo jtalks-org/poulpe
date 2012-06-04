@@ -69,8 +69,8 @@ public class OpenSessionOnDesktopZkListener implements ExecutionInit, DesktopCle
     /**
      * This constructor should be used in preference to the default one because it gives an ability to provide an
      * instance of {@link OpenSessions} instead of using {@link SingletonOpenSessionsHolder} which smells bad, but as
-     * for now we didn't find a way to use Spring IoC in zk.xml so in production {@link #OpenSessionOnDesktopZkListener()}
-     * is used.
+     * for now we didn't find a way to use Spring IoC in zk.xml so in production
+     * {@link #OpenSessionOnDesktopZkListener()} is used.
      *
      * @param openSessions an instance of Hibernate Sessions container to be able to bind/unbind/close sessions
      *                     according to events in ZK App Lifecycle
