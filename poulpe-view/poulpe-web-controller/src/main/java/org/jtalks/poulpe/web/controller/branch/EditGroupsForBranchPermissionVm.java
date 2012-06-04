@@ -61,7 +61,8 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
 	 *                       VM state
 	 */
 	public EditGroupsForBranchPermissionVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
-										   @Nonnull GroupService groupService, @Nonnull SelectedEntity<Object> selectedEntity) {
+										   @Nonnull GroupService groupService,
+										   @Nonnull SelectedEntity<Object> selectedEntity) {
 		permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
 
 		this.windowManager = windowManager;

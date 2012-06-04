@@ -101,12 +101,19 @@ public class BranchPermissionManagementVm {
 		return branch;
 	}
 
+	/**
+	 * Method opens page with permissions to choosen branch
+	 *
+	 * @param windowManager the window manager instance
+	 */
 	public static void showPage(WindowManager windowManager) {
 		windowManager.open(BRANCH_PERMISSION_MANAGEMENT_PAGE);
 	}
 
 	/**
 	 * Initializes the data for view.
+	 *
+	 * @param component Component of View (BranchPermissionManagement.zul)
 	 */
 	@Init
 	public void init(@ContextParam(ContextType.VIEW) Component component) {
@@ -115,21 +122,31 @@ public class BranchPermissionManagementVm {
 		initDataForView();
 	}
 
-
+	/**
+	 * Method calls by init method. It generate permissions block to view
+	 */
 	public void initDataForView() {
 		blocks.clear();
 		this.branch = (PoulpeBranch) selectedEntity.getEntity();
 		PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
 		for (BranchPermission permission : permissionsMap.getPermissions()) {
-			blocks.add(new PermissionManagementBlock(permission, permissionsMap, zkHelper.getLabel("permissions.allow_label"),
-					zkHelper.getLabel("permissions.restrict_label")));
+			blocks.add(new PermissionManagementBlock(permission, permissionsMap,
+					zkHelper.getLabel("permissions.allow_label"), zkHelper.getLabel("permissions.restrict_label")));
 		}
 	}
 
+	/**
+	 * Method to get currently selected item
+	 *
+	 * @return currently selected entity
+	 */
 	public SelectedEntity<Object> getSelectedEntity() {
 		return selectedEntity;
 	}
 
+	/**
+	 * @param zkHelper the zkHelper to set
+	 */
 	@VisibleForTesting
 	void setZkHelper(ZkHelper zkHelper) {
 		this.zkHelper = zkHelper;
