@@ -39,18 +39,12 @@ import java.util.Map;
  */
 public class EditComponentVm {
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
-            EMPTY_NAME = "component.error.name_shouldnt_be_empty",
-            ITEM_ALREADY_EXISTS = "item.already.exist";
+    EMPTY_NAME = "component.error.name_shouldnt_be_empty",ITEM_ALREADY_EXISTS = "item.already.exist";
 
     private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
-            COMPONENTS_WINDOW = "components.zul",
-            COMPONENT_NAME_PROP = "componentName",
-            NAME_PROP = "name",
-            CAPTION_PROP = "caption",
-            DESCRIPTION_PROP = "description",
-            POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout",
-            IS_JCOMMUNE = "jcommune";
+    COMPONENTS_WINDOW = "components.zul", COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name",
+    CAPTION_PROP = "caption", DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+    SESSION_TIMEOUT_PROP = "sessionTimeout", IS_JCOMMUNE = "jcommune";
 
     /**
      * Current component we are working with
@@ -410,6 +404,9 @@ public class EditComponentVm {
         sessionTimeout = "10";
     }
 
+    /**
+     * Read forum properties to class variables.
+     */
     private void readForumProperties() {
         name = valueOf(currentComponent.getProperty(componentType + ".name"));
         caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
