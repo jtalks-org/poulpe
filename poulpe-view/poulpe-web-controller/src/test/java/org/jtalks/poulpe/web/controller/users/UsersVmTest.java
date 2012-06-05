@@ -70,7 +70,7 @@ public class UsersVmTest {
     }
 
     private void verifyNthPageShown(String searchString, int page) {
-        userService.findUsersPaginated(searchString, page + 1, usersVm.getItemsPerPage());
+        userService.findUsersPaginated(searchString, page, usersVm.getItemsPerPage());
     }
     
     @Test 
@@ -87,7 +87,7 @@ public class UsersVmTest {
     
     @Test 
     public void init_usersFromFirstPageBound() {
-        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 1);
+        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 0);
         usersVm.init(component, zkHelper);
         assertUsersBound(users);
     }
@@ -117,9 +117,8 @@ public class UsersVmTest {
     
     @Test
     public void setActivePage_contentChanged() {
-        int activePage = 2; 
-        // zk passes values decremented on 1
-        usersVm.setActivePage(activePage - 1);
+        int activePage = 1; 
+        usersVm.setActivePage(activePage);
         
         verifyNthPageShown(UsersVm.NO_FILTER_SEARCH_STRING, activePage);
     }
@@ -127,12 +126,12 @@ public class UsersVmTest {
     @Test
     public void setActivePage_pageChanged() {
         int activePage = 2; 
-        usersVm.setActivePage(activePage - 1);
+        usersVm.setActivePage(activePage);
         assertActivePageIs(activePage);
     }
 
     private void assertActivePageIs(int activePage) {
-        assertEquals(usersVm.getActivePage(), activePage - 1);
+        assertEquals(usersVm.getActivePage(), activePage);
     }
     
     @Test
@@ -140,7 +139,7 @@ public class UsersVmTest {
         int activePage = 2; 
         List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, activePage);
         
-        usersVm.setActivePage(activePage - 1);
+        usersVm.setActivePage(activePage);
         
         assertUsersBound(users);
     }
@@ -155,7 +154,7 @@ public class UsersVmTest {
     public void searchUsers_firstPageShown() {
         usersVm.searchUsers(searchString);
         verifyFirstPageShown(searchString);
-        assertActivePageIs(1);
+        assertActivePageIs(0);
     }
     
     @Test
@@ -173,7 +172,7 @@ public class UsersVmTest {
     public void clearSearch_firstPageShown() {
         givenSearchStringInSeachbox();
         usersVm.clearSearch(searchTextBox);
-        assertActivePageIs(1);
+        assertActivePageIs(0);
     }
     
     @Test
@@ -186,7 +185,7 @@ public class UsersVmTest {
     @Test
     public void clearSearch_usersFromFirstPageBound() {
         givenSearchStringInSeachbox();
-        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 1);
+        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 0);
         
         usersVm.clearSearch(searchTextBox);
         assertUsersBound(users);
@@ -204,12 +203,6 @@ public class UsersVmTest {
         when(searchTextBox.getValue()).thenReturn(UsersVm.NO_FILTER_SEARCH_STRING);
     }
     
-    @Test
-    public void clearSearch_withNullComponent_nothingCalled() {
-        usersVm.clearSearch(null);
-        verify(userService, never()).findUsersPaginated(anyString(), anyInt(), anyInt());
-    }
-
     @Test
     public void testEditUser() throws Exception {
         usersVm.editUser(new PoulpeUser());
@@ -232,7 +225,7 @@ public class UsersVmTest {
     }
 
     @Test
-    public void testCancelEdit() {
+    public void cancelEdit_shouldDetachDialog() {
         initEditUserDialog();
         usersVm.cancelEdit();
         verify(userDialog).detach();

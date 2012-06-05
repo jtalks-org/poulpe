@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.pages;
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 
@@ -27,34 +25,6 @@ import org.hibernate.Query;
  */
 public interface Pagination {
 
-    /**
-     * @return {@code true} if pagination is needed, {@code false} otherwise
-     */
-    boolean isNeeded();
-
-    /**
-     * @return item from which the pagination should start
-     * @exception UnsupportedOperationException if pagination is not needed
-     */
-    int getFrom();
-
-    /**
-     * @return amount of items after the 'from' index
-     * @exception UnsupportedOperationException if pagination is not needed
-     */
-    int getCount();
-
-    /**
-     * Applies this pagination for given list. Note: changes applied to result
-     * may change the original list
-     * 
-     * @param source list to be paginated
-     * @return sublist of the given list
-     * @exception IllegalArgumentException if this pagination is not applicable
-     * (say, when trying to paginate list with not enough pages)
-     */
-    <E> List<E> paginate(List<E> source);
-    
     /**
      * Adds pagination to hibernate's ctiteria
      * 
