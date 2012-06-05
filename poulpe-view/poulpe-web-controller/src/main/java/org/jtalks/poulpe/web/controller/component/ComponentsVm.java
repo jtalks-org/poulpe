@@ -38,10 +38,10 @@ import java.util.List;
 public class ComponentsVm {
 
     public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
-            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
-            SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-            COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
-            TYPE = "componentType";
+    AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+    SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
+    COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
+    TYPE = "componentType";
 
     private Component selected;
     private String componentName;
@@ -121,15 +121,16 @@ public class ComponentsVm {
         } else {
             selected = new Component();
         }
-        selected.setName(componentName);
-        selected.setDescription(componentDescription);
-        selected.setComponentType(componentType);
+        setBasicFields();
         componentService.saveComponent(selected);
         addNewComponentWindowVisible = false;
         clearComponent();
         updateListComponentsData();
     }
 
+    /**
+     * Clears variables used for component creation.
+     */
     @NotifyChange({SELECTED, NAME, DESCRIPTION, TYPE})
     public void clearComponent() {
         setComponentName(null);
@@ -199,6 +200,9 @@ public class ComponentsVm {
         return availableComponentTypes;
     }
 
+    /**
+     * Updates components list and list of available component types.
+     */
     private void updateListComponentsData() {
         availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
         componentList = componentService.getAll();
@@ -295,8 +299,20 @@ public class ComponentsVm {
         return componentType;
     }
 
+    /**
+     * Opens window used for component edit.
+     */
     public void showComponentEditWindow() {
         EditComponentVm.openWindowForEdit(windowManager);
+    }
+
+    /**
+     * Sets basic field of selected components. Values taken from textboxes.
+     */
+    private void setBasicFields() {
+        selected.setName(componentName);
+        selected.setDescription(componentDescription);
+        selected.setComponentType(componentType);
     }
 
 }

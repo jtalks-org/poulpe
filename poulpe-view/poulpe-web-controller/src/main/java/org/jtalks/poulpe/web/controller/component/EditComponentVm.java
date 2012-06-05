@@ -39,19 +39,12 @@ import java.util.Map;
  */
 public class EditComponentVm {
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
-            EMPTY_NAME = "component.error.name_shouldnt_be_empty",
-            ITEM_ALREADY_EXISTS = "item.already.exist";
+    EMPTY_NAME = "component.error.name_shouldnt_be_empty",ITEM_ALREADY_EXISTS = "item.already.exist";
 
     private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
-            COMPONENTS_WINDOW = "components.zul",
-            COMPONENT_NAME_PROP = "componentName",
-            NAME_PROP = "name",
-            CAPTION_PROP = "caption",
-            DESCRIPTION_PROP = "description",
-            POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout",
-            VALIDATION_MESSAGES_PROP = "validationMessages",
-            IS_JCOMMUNE = "jcommune";
+    COMPONENTS_WINDOW = "components.zul", COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name",
+    CAPTION_PROP = "caption", DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+    SESSION_TIMEOUT_PROP = "sessionTimeout", IS_JCOMMUNE = "jcommune";
 
     /**
      * Current component we are working with
@@ -146,21 +139,14 @@ public class EditComponentVm {
     @Init
     public void initData() {
         currentComponent = selectedEntity.getEntity();
-        if (currentComponent.getComponentType().equals(ComponentType.FORUM)) {
+        if (isForum()) {
             componentType = IS_JCOMMUNE;
-            jcommune = true;
-            name = valueOf(currentComponent.getProperty(componentType + ".name"));
-            caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
-            postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
-            sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+            readForumProperties();
         } else {
             componentType = currentComponent.getComponentType().toString();
-            jcommune = false;
-            setDefaultValues();
+            setDefaultProperties();
         }
-        componentName = valueOf(currentComponent.getName());
-        description = valueOf(currentComponent.getDescription());
-
+        readBasicFields();
     }
 
     // service functions
@@ -174,6 +160,11 @@ public class EditComponentVm {
         return componentService.getAll();
     }
 
+    /**
+     * Returns current value of jcommune.
+     *
+     * @return return true if component has jcommune type.
+     */
     public boolean isJcommune() {
         return jcommune;
     }
@@ -191,13 +182,9 @@ public class EditComponentVm {
         validationMessages.clear();
 
         if (checkCorrect()) {
-            currentComponent.setName(componentName);
-            currentComponent.setDescription(description);
+            setBasicFields();
             if (jcommune) {
-                currentComponent.setProperty(componentType + ".name", name);
-                currentComponent.setProperty(componentType + ".caption", caption);
-                currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
-                currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+                setForumProperties();
             }
 
             try {
@@ -398,21 +385,75 @@ public class EditComponentVm {
 
     /**
      * Sets selected entity.
+     *
+     * @param selectedEntity to set entity for edit
      */
     public void setSelectedEntity(SelectedEntity<Component> selectedEntity) {
         this.selectedEntity = selectedEntity;
     }
 
 
-    private void setDefaultValues() {
+    /**
+     * Sets default values for variables witch are editable only if component type are jcommune,
+     * this values don't saves and uses just for verification.
+     */
+    private void setDefaultProperties() {
         name = NAME_PROP;
         caption = CAPTION_PROP;
         postPreviewSize = "10";
         sessionTimeout = "10";
     }
 
+    /**
+     * Read forum properties to class variables.
+     */
+    private void readForumProperties() {
+        name = valueOf(currentComponent.getProperty(componentType + ".name"));
+        caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
+        postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
+        sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+    }
+
+
+    /**
+     * Opens component view window.
+     */
     private void switchToComponentsWindow() {
         windowManager.open(COMPONENTS_WINDOW);
+    }
+
+    /**
+     * Sets properties of the forum.
+     */
+    private void setForumProperties() {
+        currentComponent.setProperty(componentType + ".name", name);
+        currentComponent.setProperty(componentType + ".caption", caption);
+        currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
+        currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+    }
+
+    /**
+     * Sets the basic params common for all components.
+     */
+    private void setBasicFields() {
+        currentComponent.setName(componentName);
+        currentComponent.setDescription(description);
+    }
+
+    /**
+     * Read basic params from component to class variables.
+     */
+    private void readBasicFields() {
+        componentName = valueOf(currentComponent.getName());
+        description = valueOf(currentComponent.getDescription());
+    }
+
+    /**
+     * @return true if component type are forum.
+     */
+    private boolean isForum() {
+        jcommune = currentComponent.getComponentType().equals(ComponentType.FORUM);
+        return jcommune;
     }
 
 
