@@ -14,18 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.argThat;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.hamcrest.BaseMatcher;
-import org.hamcrest.Description;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
-import org.jtalks.poulpe.pages.Pagination;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -68,7 +63,7 @@ public class TransactionalUserServiceTest {
     public void findUsersPaginated() {
         int page = 1, limit = 10;
         userService.findUsersPaginated(searchString, page, limit);
-        verify(userDao).findPoulpeUsersPaginated(eq(searchString), paginatedWith(page, limit));
+        verify(userDao).findPoulpeUsersPaginated(searchString, Pages.paginate(page, limit));
     }
 
     @Test
@@ -93,7 +88,6 @@ public class TransactionalUserServiceTest {
     @Test
     public void testGetNonBannedByUsername() {
         int maxCount = 1000;
-
         userService.getNonBannedByUsername(searchString, maxCount);
         verify(userDao).getNonBannedByUsername(searchString, maxCount);
     }
@@ -101,25 +95,5 @@ public class TransactionalUserServiceTest {
     private static PoulpeUser user() {
         return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
     }
-
-    // TODO: i think it should be moved away
-    public static Pagination paginatedWith(int page, int limit) {
-        final Pagination expected = Pages.paginate(page, limit);
-
-        return argThat(new BaseMatcher<Pagination>() {
-            @Override
-            public boolean matches(Object o) {
-                if (o instanceof Pagination) {
-                    Pagination second = (Pagination) o;
-                    return expected.getFrom() == second.getFrom() && expected.getCount() == second.getCount();
-                }
-                return false;
-            }
-
-            @Override
-            public void describeTo(Description d) {
-            }
-        });
-    }
-
+    
 }

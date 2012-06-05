@@ -94,25 +94,9 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     }
 
     @Test
-    public void findPoulpeUsersPaginated_withNoPagination() {
-        PoulpeUser user = ObjectsFactory.createUser();
-        saveAndEvict(user);
-        
-        String part = extractPartOfUsername(user);
-        List<PoulpeUser> users = dao.findPoulpeUsersPaginated(part, Pages.NONE);
-
-        assertTrue(users.contains(user));
-    }
-
-    private static String extractPartOfUsername(PoulpeUser user) {
-        String username = user.getUsername();
-        return username.substring(0, username.length() / 2);
-    }
-    
-    @Test
     public void findPoulpeUsersPaginated_withPagination() {
         String startsWith = "SomeString";
-        givenMoreWithOnePage(startsWith);
+        givenMoreThanOnePage(startsWith);
         
         int limit = 10;
         List<PoulpeUser> users = dao.findPoulpeUsersPaginated(startsWith, Pages.paginate(1, limit));
@@ -120,7 +104,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         assertEquals(users.size(), limit);
     }
 
-    private void givenMoreWithOnePage(String startsWith) {
+    private void givenMoreThanOnePage(String startsWith) {
         int n = 20;
         
         while (n > 0) {
@@ -144,7 +128,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         List<PoulpeUser> users = ObjectsFactory.usersListOf(3);
         saveAndEvict(users);
         
-        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(1, 10));
+        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
 
         assertContainsSameElements(actual, users);
     }
@@ -155,12 +139,11 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         saveAndEvict(users);
         
         int limit = 10;
-        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(1, limit));
+        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, limit));
         
         assertEquals(actual.size(), limit);
     }
 
-    
     @Test
     public void getAllUsersCount() {
         int count = 13;

@@ -37,7 +37,7 @@ public interface UserService {
     /**
      * 
      * @param searchString string for searching users, if empty - all users will be returned
-     * @param page number of page for retrieving
+     * @param page page number for retrieving
      * @param itemsPerPage limit of items per page
      * @return users matched given search string paginated 
      */

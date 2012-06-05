@@ -27,8 +27,6 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 /**
- * ViewModel for users page.
- *
  * @author dim42
  * @author Alexey Grigorev
  */
@@ -41,10 +39,10 @@ public class UsersVm {
             ACTIVE_PAGE = "activePage",
             USERS = "users",
             TOTAL_SIZE = "totalSize";
-
-    public static final String NO_FILTER_SEARCH_STRING = "";
-    public static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
-    public static final String EDIT_USER_DIALOG = "#editUserDialog";
+    
+    static final String NO_FILTER_SEARCH_STRING = "";
+    static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
+    static final String EDIT_USER_DIALOG = "#editUserDialog";
 
     private final UserService userService;
     private ZkHelper zkHelper;
@@ -86,14 +84,12 @@ public class UsersVm {
     }
 
     private void displayFirstPage(String searchString) {
-        int zeroPage = 0;
         this.searchString = searchString;
-        this.activePage = zeroPage;
-        this.users = usersOf(zeroPage);
+        setActivePage(0);
     }
 
     private List<PoulpeUser> usersOf(int page) {
-        return userService.findUsersPaginated(searchString, page + 1, ITEMS_PER_PAGE);
+        return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
     }
 
     /**
@@ -111,11 +107,12 @@ public class UsersVm {
     }
 
     /**
-     * Updates the active page value with the current page of pagination
+     * Updates the active page value with the current page of pagination.
+     * Updates the list of users so it displays the needed page.
      *
      * @param activePage current page of pagination
      */
-    @NotifyChange({USERS})
+    @NotifyChange({ USERS })
     public void setActivePage(int activePage) {
         this.activePage = activePage;
         this.users = usersOf(activePage);
@@ -129,7 +126,7 @@ public class UsersVm {
     }
 
     /**
-     * Filters all the users using the given string
+     * Filters all the users using the given string.
      *
      * @param searchString string for filtering
      */
@@ -140,14 +137,14 @@ public class UsersVm {
     }
 
     /**
-     * Resets the search - clears searchbox, rewinds to the first page
+     * Resets the search - clears searchbox, rewinds to the first page.
      *
      * @param searchBox component with search string
      */
     @Command
     @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE})
-    public void clearSearch(@BindingParam(value = "searchBox") Textbox searchBox) {
-        if (searchBox != null && StringUtils.isNotEmpty(searchBox.getValue())) {
+    public void clearSearch(@BindingParam(value = "searchBox") @Nonnull Textbox searchBox) {
+        if (StringUtils.isNotEmpty(searchBox.getValue())) {
             searchBox.setValue("");
             prepareForListing();
         }
