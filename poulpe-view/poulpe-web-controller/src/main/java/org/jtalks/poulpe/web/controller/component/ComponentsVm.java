@@ -38,10 +38,10 @@ import java.util.List;
 public class ComponentsVm {
 
     public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
-            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
-            SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-            COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
-            TYPE = "componentType";
+    AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+    SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
+    COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
+    TYPE = "componentType";
 
     private Component selected;
     private String componentName;
