@@ -39,7 +39,7 @@
         <!-- This is the window which used for creating new component, is not visible by default-->
         <window title="${labels.componentedit.title}" border="normal"
                 width="430px" mode="modal" onClose="@command('cancelEdit')"
-                onOk="@command('createComponent')"
+                onOK="@command('createComponent')"
                 onCancel="@command('cancelEdit')"
                 visible="@load(vm.addNewComponentWindowVisible)">
             <grid>
@@ -53,8 +53,7 @@
                         <textbox id="titlebox" width="300px" constraint="no empty"
                                  value="@load(vm.componentDescription)
 							            @save(vm.componentName, before='createComponent')
-							            @validator('beanValidator')"
-                                 onOK="@command('createComponent')" />
+							            @validator('beanValidator')" />
                         <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
                     </row>
                     <row>
@@ -62,8 +61,7 @@
                         <textbox width="300px" constraint="no empty"
                                  value="@load(vm.componentDescription)
                                         @save(vm.componentDescription, before='createComponent')
-                                        @validator('beanValidator')"
-                                 onOK="@command('createComponent')" />
+                                        @validator('beanValidator')" />
                     </row>
                     <row>
                         ${labels.component.type}
@@ -71,8 +69,6 @@
                                 model="@load(vm.availableComponentTypes, after='showAddComponentDialog')"
                                 selectedItem="@bind(vm.componentType)"
                                 width="300px" readonly="true"
-                                onOK="@command('createComponent')"
-                                onCancel="@command('cancelEdit')"
                                 constraint="no empty">
                             <template name="model" var="componentType">
                                 <comboitem label="@load(componentType)" />
