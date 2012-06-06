@@ -218,7 +218,7 @@ public class EditComponentVm {
      * @param value value of the string
      * @return string value of the field or empty string if string is null
      */
-    public String valueOf(String value) {
+    private String valueOf(String value) {
         return (value == null) ? "" : value;
     }
 
@@ -227,7 +227,7 @@ public class EditComponentVm {
      *
      * @return true if input is correct, else otherwise
      */
-    public boolean checkCorrect() {
+    private boolean checkCorrect() {
         boolean correct = true;
 
         if (name == null || name.equals("")) {
