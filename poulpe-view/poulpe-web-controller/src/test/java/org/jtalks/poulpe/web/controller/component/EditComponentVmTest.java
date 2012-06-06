@@ -39,21 +39,10 @@ import static org.testng.Assert.*;
  * @author Kazancev Leonid
  */
 public class EditComponentVmTest {
-   private static final String
-            COMPONENT_NAME = "name",
-            OTHER_COMPONENT_NAME = "notName",
-            DESCRIPTION = "desc",
-            PROP_NAME = ".name",
-            PROP_CAPTION = ".caption",
-            PROP_PREVIEW_SIZE = ".postPreviewSize",
-            PROP_SESSION_TIMEOUT = ".session_timeout",
-            NAME = "nameProp",
-            OTHER_NAME = "otherName",
-            POST_PREVIEW_SIZE = "100",
-            SESSION_TIMEOUT = "100",
-            CAPTION = "aCaption",
-            JCOMMUNE_TYPE = "jcommune";
-
+    private static final String COMPONENT_NAME = "name", OTHER_COMPONENT_NAME = "notName", DESCRIPTION = "desc",
+            PROP_NAME = ".name", PROP_CAPTION = ".caption", PROP_PREVIEW_SIZE = ".postPreviewSize",
+            PROP_SESSION_TIMEOUT = ".session_timeout", NAME = "nameProp", OTHER_NAME = "otherName",
+            POST_PREVIEW_SIZE = "100", SESSION_TIMEOUT = "100", CAPTION = "aCaption", JCOMMUNE_TYPE = "jcommune";
 
     @Mock
     private ComponentService componentService;
@@ -74,7 +63,7 @@ public class EditComponentVmTest {
     }
 
     @Test
-    public void initData() {
+    public void initDataForJcommune() {
         selectedEntity.setEntity(getSomeForum());
         viewModel.initData();
         assertNotNull(viewModel.getCurrentComponent());
@@ -84,7 +73,10 @@ public class EditComponentVmTest {
         assertEquals(viewModel.getSessionTimeout(), SESSION_TIMEOUT);
         assertEquals(viewModel.getComponentName(), COMPONENT_NAME);
         assertEquals(viewModel.getDescription(), DESCRIPTION);
-        
+    }
+
+    @Test
+    public void initDataForPoulpe() {
         selectedEntity.setEntity(getSomePoulpe());
         viewModel.initData();
         assertNotNull(viewModel.getCurrentComponent());
@@ -108,24 +100,29 @@ public class EditComponentVmTest {
         viewModel.initData();
         viewModel.setComponentName(OTHER_COMPONENT_NAME);
         viewModel.setName(OTHER_NAME);
-        assertNotSame(viewModel.getCurrentComponent().getName(), OTHER_COMPONENT_NAME);
-        assertNotSame(viewModel.getCurrentComponent().getProperty(JCOMMUNE_TYPE + PROP_NAME),OTHER_NAME);
         doNothing().when(windowManager).open(any(String.class));
         viewModel.save();
         verify(windowManager).open(any(String.class));
         assertEquals(viewModel.getCurrentComponent().getName(), OTHER_COMPONENT_NAME);
-        assertEquals(viewModel.getCurrentComponent().getProperty(JCOMMUNE_TYPE+PROP_NAME),OTHER_NAME);
+        assertEquals(viewModel.getCurrentComponent().getProperty(JCOMMUNE_TYPE + PROP_NAME), OTHER_NAME);
     }
-    
+
     @Test
-    public void cancel(){
+    public void validation() {
         viewModel.setName(null);
         viewModel.save();
         assertFalse(viewModel.getValidationMessages().isEmpty());
+
+    }
+
+    @Test
+    public void cancel() {
+        viewModel.setName(null);
+        viewModel.save();
         viewModel.cancel();
         assertTrue(viewModel.getValidationMessages().isEmpty());
         verify(windowManager).open(any(String.class));
-     }
+    }
 
 
     private Poulpe getSomePoulpe() {
