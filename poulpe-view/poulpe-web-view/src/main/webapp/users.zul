@@ -7,7 +7,7 @@
     <hbox>
       <label value="${labels.users.label.search}" />
       :
-      <textbox id="searchBox" onOK="@command('searchUser', searchString=self.value)" width="150px" multiline="false" maxlength="20" />
+      <textbox id="searchBox" onOK="@command('searchUsers', searchString=self.value)" width="150px" multiline="false" maxlength="20" />
       <button label="${labels.users.label.button.search}" sclass="users.searchButton"
               onClick="@command('searchUsers', searchString=searchBox.value)" />
               

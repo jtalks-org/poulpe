@@ -22,6 +22,9 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 
+/**
+ * @author Alexey Grigorev
+ */
 public class NoPaginationTest {
     
     @Mock Query query;

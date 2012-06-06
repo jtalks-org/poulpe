@@ -22,7 +22,7 @@ package org.jtalks.poulpe.pages;
 public class Pages {
 
     /**
-     * Hides for preventing instantiation of utility-class
+     * Hidden for preventing instantiation of utility-class
      */
     private Pages() {
     }
@@ -36,7 +36,7 @@ public class Pages {
     /**
      * Creates pagination for given page and amount of items per page
      * 
-     * @param page number of page
+     * @param page number of page, starting from zero
      * @param limit amount of items per page
      * @return {@link Pagination} object with {@link Pagination#isNeeded()}
      * returning {@code true}
