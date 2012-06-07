@@ -17,6 +17,7 @@ import static org.testng.Assert.assertTrue;
 
 /**
  * @author stanislav bashkirtsev
+ * @author alexandr afanasev
  */
 public class UserBannerTest {
     GroupDao groupDao;
@@ -44,9 +45,24 @@ public class UserBannerTest {
     }
 
 
-    @Test
-    public void testBanUsers() throws Exception {
+    @Test (dataProvider = "provideGroupWithUsers")
+    public void testBanUsers(Group bannedUsersGroup) throws Exception {
+          doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getMatchedByName("Banned Users");
+          PoulpeUser bannedUser= new PoulpeUser("c","c","c","c");
+          sut.banUsers(new UserList(Arrays.asList(bannedUser)));
+          bannedUsersGroup.getUsers().add(bannedUser);
+          assertEquals(sut.getBannedUsers().getUsers(), bannedUsersGroup.getUsers());
+          verify(groupDao).saveOrUpdate(bannedUsersGroup);
+    }
 
+    @Test (dataProvider = "provideGroupWithUsers")
+    public void testRevokeBan(Group bannedUsersGroup) throws Exception {
+        doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getMatchedByName("Banned Users");
+        PoulpeUser userToRevokeBan=new PoulpeUser("a","b","c","d");
+        sut.revokeBan(new UserList(Arrays.asList(userToRevokeBan)));
+        bannedUsersGroup.getUsers().removeAll(Arrays.asList(userToRevokeBan));
+        assertEquals(sut.getBannedUsers().getUsers(),bannedUsersGroup.getUsers());
+        verify(groupDao).saveOrUpdate(bannedUsersGroup);
     }
 
     @DataProvider
@@ -54,8 +70,9 @@ public class UserBannerTest {
         Group bannedUsersGroup = new Group();
         bannedUsersGroup.getUsers().addAll(Arrays.asList(
                 new PoulpeUser("a", "b", "c", "d"),
-                new PoulpeUser("a", "b", "c", "d"),
-                new PoulpeUser("a", "b", "c", "d")));
+                new PoulpeUser("e", "f", "g", "h"),
+                new PoulpeUser("i", "j", "k", "l")));
         return new Object[][]{{bannedUsersGroup}};
     }
+
 }

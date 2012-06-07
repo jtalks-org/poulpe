@@ -84,9 +84,20 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         return userBanner.getBannedUsers();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void banUsers(PoulpeUser... usersToBan) {
         userBanner.banUsers(new UserList(usersToBan));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
+        userBanner.revokeBan(new UserList(bannedUsersToRevoke));
     }
 
 }

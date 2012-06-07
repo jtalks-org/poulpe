@@ -62,5 +62,15 @@ public interface GroupService extends EntityService<Group> {
      */
     UserList getBannedUsers();
 
+    /**
+     * Adds users to banned users group
+     * @param usersToBan users to add to banned users group
+     */
     void banUsers(PoulpeUser... usersToBan);
+
+    /**
+     * Revokes ban state from users, deleting them from banned users group
+      * @param bannedUsersToRevoke   users to remove from banned users group
+     */
+    void revokeBan(PoulpeUser... bannedUsersToRevoke);
 }

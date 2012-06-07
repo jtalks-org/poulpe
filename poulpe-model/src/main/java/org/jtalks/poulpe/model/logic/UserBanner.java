@@ -6,6 +6,8 @@ import org.jtalks.poulpe.model.dao.GroupDao;
 import java.util.List;
 
 /**
+ * Class for working with users banning
+ *
  * @author stanislav bashkirtsev
  */
 public class UserBanner {
@@ -17,10 +19,10 @@ public class UserBanner {
     }
 
     /**
-     * TODO: update the comment Gets a list of banned users or creates one if it wasn't found in database. Note, that
+     * Gets a {@link UserList} of banned users from banned users group. If group wasn't found in database, then
+     * creates new one.Note, that
      * creating of this group is a temporal solution until we implement Permission Schemas.
-     *
-     * @return the group of banned users (the one where users will be added to when they are banned)
+     * @return the {@link UserList} with banned users.
      */
     public UserList getBannedUsers() {
         List<Group> bannedUserGroups = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME);
@@ -31,9 +33,23 @@ public class UserBanner {
         }
     }
 
+    /**
+     * Adds users to banned users group.
+     * @param usersToBan {@link UserList} with users to ban
+     */
     public void banUsers(UserList usersToBan) {
         Group bannedUserGroup = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME).get(0);
         bannedUserGroup.getUsers().addAll(usersToBan.getUsers());
+        groupDao.saveOrUpdate(bannedUserGroup);
+    }
+
+    /**
+     * Revokes ban from users, deleting them from banned users group.
+     * @param usersToRevoke  {@link UserList} with users to revoke ban.
+     */
+    public void revokeBan(UserList usersToRevoke){
+        Group bannedUserGroup = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME).get(0);
+        bannedUserGroup.getUsers().removeAll(usersToRevoke.getUsers());
         groupDao.saveOrUpdate(bannedUserGroup);
     }
 
