@@ -21,7 +21,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 /**
- * Used when pagination is needed. Typically invoked from {@link Pages#from(int)} static factory method
+ * Used when pagination is needed. Typically invoked from {@link Pages#paginate(int, int)} static factory method
  * 
  * @author Alexey Grigorev
  */
@@ -32,7 +32,7 @@ class PageWithLimitPagination implements Pagination {
 
     /**
      * For instantiation, use {@link Pages#paginate(int, int)}
-     * @param page page number
+     * @param page page number, starting from 0
      * @param limit maximal amount of items per page
      */
     PageWithLimitPagination(int page, int limit) {
