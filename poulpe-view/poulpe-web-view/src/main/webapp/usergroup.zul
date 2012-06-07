@@ -70,12 +70,12 @@
          <rows>
            <row>
              <label value="${labels.groups.editdialog.name}" />
-             <textbox id="newGroupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
-                      errorMessage="@load(vmsgs[groupNameBox])" />
+             <textbox id="newGroupNameBox" value="@save(vm.selectedGroup.name, before='saveGroup') @validator('beanValidator'))" width="100%" focus="true"
+                      constraint="no empty" />
            </row>
            <row>
              <label value="${labels.groups.editdialog.description}" />
-             <textbox id="newGroupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
+             <textbox id="newGroupDescriptionBox" value="@save(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
                       errorMessage="@load(vmsgs[groupDescriptionBox])" />
            </row>
          </rows>
@@ -89,7 +89,7 @@
     <!--EDIT DIALOG-->
     <window id="editGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.editdialog.title}"
             closable="true" border="normal"  width="300px"  mode="modal"
-            visible="false"
+            visible="@bind(vm.showEditDialog)"
             onClose="self.visible=false;event.stopPropagation();"
             onOK="@command('saveGroup', group=vm.selectedGroup)"
             onCancel="self.visible=false">
@@ -101,8 +101,8 @@
         <rows>
           <row>
             <label value="${labels.groups.editdialog.name}" />
-            <textbox id="groupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
-                     errorMessage="@load(vmsgs[groupNameBox])" />
+            <textbox id="groupNameBox" value="@load(vm.selectedGroup.name) @save(vm.selectedGroup.name, before='saveGroup') @validator('beanValidator'))" width="100%" focus="true"
+                     constraint="no empty" />
           </row>
           <row>
             <label value="${labels.groups.editdialog.description}" />
@@ -120,7 +120,7 @@
     <!--DELETE CONFIRM DIALOG-->
       <window id="deleteConfirmDialog"
              title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-             visible="false"
+             visible="@bind(vm.showDeleteDialog)"
              onClose="self.visible=false;event.stopPropagation();"
              onCancel="self.visible=false"
              onOK="@command('deleteGroup')"

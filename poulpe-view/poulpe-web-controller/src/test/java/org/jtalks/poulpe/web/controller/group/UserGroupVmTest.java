@@ -106,6 +106,8 @@ public class UserGroupVmTest {
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();
         assertFalse(viewModel.isShowNewDialog());
+        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowDeleteDialog());
     }
 
     @Test
@@ -114,6 +116,8 @@ public class UserGroupVmTest {
         assertTrue(viewModel.isShowNewDialog());
         viewModel.closeDialog();
         assertFalse(viewModel.isShowNewDialog());
+        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowDeleteDialog());
     }
 
     @Test
