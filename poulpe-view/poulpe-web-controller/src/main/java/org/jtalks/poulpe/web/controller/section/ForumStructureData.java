@@ -258,11 +258,24 @@ public class ForumStructureData {
      * Drops node before the target and selects it
      *
      * @param node   the node that will be dropped and selected
-     * @param target the node to which place will be dropped node
+     * @param target the target to which place will be dropped node
      */
-    public void dropAndSelect(TreeNode<ForumStructureItem> node,
+    public void dropBeforeAndSelect(TreeNode<ForumStructureItem> node,
                               TreeNode<ForumStructureItem> target) {
         structureTree.dropNodeBefore(node, target);
+        structureTree.setSelectedNode(node);
+        setSelectedItem(node.getData());
+    }
+
+    /**
+     * Drops node in the target and selects it
+     *
+     * @param node   the node that will be dropped and selected
+     * @param target the target in which will be dropped node
+     */
+    public void dropInAndSelect(TreeNode<ForumStructureItem> node,
+            TreeNode<ForumStructureItem> target) {
+        structureTree.dropNodeIn(node, target);
         structureTree.setSelectedNode(node);
         setSelectedItem(node.getData());
     }

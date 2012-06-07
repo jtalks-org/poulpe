@@ -14,11 +14,9 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Section;
 
 import javax.annotation.Nullable;
-import javax.swing.text.AbstractDocument.BranchElement;
 
 import java.util.List;
 
@@ -111,7 +109,7 @@ public class PoulpeSection extends Section {
      * @return {@code true} if the branch is already in the list, {@code false} if it's not. If specified branch is
      *         {@code null}, then the result is <i>always</i> {@code false}.
      */
-    public boolean containsBranch(@Nullable Branch branch) {
+    public boolean containsBranch(@Nullable PoulpeBranch branch) {
         return getBranches().contains(branch);
     }
 
@@ -133,16 +131,23 @@ public class PoulpeSection extends Section {
      *
      * @param branch a branch to be added to the list of branches in section
      */
-    public void addBranchIfAbsent(@Nullable Branch branch) {
-        List<Branch> branches = getBranches();
-        if (branch != null && !branches.contains(branch)) {
-            branches.add(branch);
-            branch.setSection(this);
-        }
+    public void addBranchIfAbsent(@Nullable PoulpeBranch branch) {
+        addBranchIfAbsentTo(getBranches().size(), branch);
     }
 
-    public void addBranchTo(int index, PoulpeBranch branch) {
-        branch.setSection(this);
-        getPoulpeBranches().add(index, branch);
+    
+    /**
+     * Adds a new branch to the list of branches in a specified index and sets its section to current one.
+     * Results in no-op if the branch is {@code null} or it's already in the list.
+     *
+     * @param index the index of list where branch will be added
+     * @param branch a branch to be added to the list of branches in section
+     */
+    public void addBranchIfAbsentTo(int index, @Nullable PoulpeBranch branch) {
+        List<PoulpeBranch> branches = getPoulpeBranches();
+        if (branch != null && !branches.contains(branch)) {
+            branches.add(index, branch);
+            branch.setSection(this);
+        }
     }
 }

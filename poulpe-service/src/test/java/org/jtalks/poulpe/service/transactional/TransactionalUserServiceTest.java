@@ -14,18 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import org.apache.commons.lang.RandomStringUtils;
-import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.pages.Pages;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,60 +32,52 @@ import org.testng.annotations.Test;
  */
 public class TransactionalUserServiceTest {
 
-    private UserDao userDao;
-    private UserService userService;
+    // sut
+    private TransactionalUserService userService;
 
-    private static final String EMAIL = "username@mail.com";
-    private static final String PASSWORD = "password";
-    private static final String BAN_REASON = "ban reason";
-    private static Collection<PoulpeUser> users;
+    // dependencies
+    private UserDao userDao;
+    
+    final String searchString = "searchString";
 
     @BeforeMethod
     public void setUp() {
         userDao = mock(UserDao.class);
-
         userService = new TransactionalUserService(userDao);
-
-        users = new ArrayList<PoulpeUser>();
-        users.add(getUser("tony"));
-        users.add(getUser("antony"));
-        users.add(getUser("jack"));
     }
 
     @Test
-    public void testGetAll() {
+    public void getAll() {
+        String NO_FILTER = "";
         userService.getAll();
+        verify(userDao).findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+    }
 
-        verify(userDao).getAllPoulpeUsers();
+    @Test
+    public void countUsernameMatches() {
+        userService.countUsernameMatches(searchString);
+        verify(userDao).countUsernameMatches(searchString);
+    }
+
+    @Test
+    public void findUsersPaginated() {
+        int page = 1, limit = 10;
+        userService.findUsersPaginated(searchString, page, limit);
+        verify(userDao).findPoulpeUsersPaginated(searchString, Pages.paginate(page, limit));
     }
 
     @Test
     public void testGetUsersByUsernameWord() {
-        String word = "word";
-
-        userService.getUsersByUsernameWord(word);
-
-        verify(userDao).getPoulpeUserByUsernamePart(word);
+        userService.withUsernamesMatching(searchString);
+        verify(userDao).findPoulpeUsersPaginated(searchString, Pages.NONE);
     }
 
     @Test
     public void testUpdateUser() {
-        PoulpeUser user = new PoulpeUser("username", "email", "password", "salt");
-        
+        PoulpeUser user = user();
         userService.updateUser(user);
-        
         verify(userDao).update(user);
     }
-
-    /*@Test
-    public void testUpdateLastLoginTime() {
-        User user = mock(User.class);
-        
-        userService.updateLastLoginTime(user);
-        
-        verify(user).updateLastLoginTime();
-        verify(userDao).update(user);
-    }*/
 
     @Test
     public void testGetAllBannedUsers() {
@@ -100,22 +87,13 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void testGetNonBannedByUsername() {
-        String usernameWord = RandomStringUtils.randomAlphanumeric(15);
-        int maxCount = RandomUtils.nextInt() + 1000;
-
-        userService.getNonBannedByUsername(usernameWord, maxCount);
-        verify(userDao).getNonBannedByUsername(eq(usernameWord), eq(maxCount));
+        int maxCount = 1000;
+        userService.getNonBannedByUsername(searchString, maxCount);
+        verify(userDao).getNonBannedByUsername(searchString, maxCount);
     }
 
-    /**
-     * Creates and return the {@link org.jtalks.poulpe.model.entity.PoulpeUser} entity with default username, email
-     * and password, etc.
-     * 
-     * @param username username
-     * @return the user entity
-     */
-    private PoulpeUser getUser(String username) {
-        return new PoulpeUser(username, EMAIL, PASSWORD, "salt");
+    private static PoulpeUser user() {
+        return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
     }
-
+    
 }

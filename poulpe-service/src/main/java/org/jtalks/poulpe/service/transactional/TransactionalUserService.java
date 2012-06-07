@@ -14,26 +14,29 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.UserService;
+
+import java.util.List;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
- * 
+ *
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalUserService implements UserService {
+    private static final String NO_FILTER = "";
 
     private final UserDao userDao;
 
     /**
      * Create an instance of user entity based service.
-     * 
-     * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser} entities
+     *
+     * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
+     *                entities
      */
     public TransactionalUserService(UserDao userDao) {
         this.userDao = userDao;
@@ -44,15 +47,25 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public List<PoulpeUser> getAll() {
-        return userDao.getAllPoulpeUsers();
+        return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+    }
+
+    @Override
+    public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
+    }
+
+    @Override
+    public int countUsernameMatches(String searchString) {
+        return userDao.countUsernameMatches(searchString);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> getUsersByUsernameWord(String word) {
-        return userDao.getPoulpeUserByUsernamePart(word);
+    public List<PoulpeUser> withUsernamesMatching(String searchString) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
     }
 
     /**
@@ -80,8 +93,9 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> getNonBannedByUsername(String word, int maxCount) {
-        return userDao.getNonBannedByUsername(word, maxCount);
+    public List<PoulpeUser> getNonBannedByUsername(String searchString, int limit) {
+        return userDao.getNonBannedByUsername(searchString, limit);
     }
+
 
 }

@@ -188,15 +188,26 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
     }
 
     /**
-     * Drops node before the target node. Switches target and all next nodes after dropped node.
+     * Drops node before the target. Switches target and all next nodes after dropped.
      *
-     * @param node   the node that will be dropped before the target node
-     * @param target the node that will be placed with all next nodes after dropped
+     * @param node   the node that will be dropped before the target
+     * @param target the target, it will be placed with all next nodes after dropped
      */
     public void dropNodeBefore(TreeNode<E> node, TreeNode<E> target) {
         removeChild(getPath(node));
         TreeNode<E> targetParent = target.getParent();
         targetParent.insert(node, targetParent.getIndex(target));
+    }
+
+    /**
+     * Drops node in the target node as child to the end. Removes node from old place.
+     *
+     * @param node   the node that will be dropped in the target
+     * @param target the target in which be dropped node
+     */
+    public void dropNodeIn(TreeNode<E> node, TreeNode<E> target) {
+        removeChild(getPath(node));
+        target.add(node);
     }
 
     /**

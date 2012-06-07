@@ -15,12 +15,9 @@
 package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Group;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
 
 /**
  * Forum branch that contains topics.
@@ -56,6 +53,7 @@ public class PoulpeBranch extends Branch {
         if (!target.equals(removeFrom)) {
             removeFrom.deleteBranch(this);
             target.addOrUpdateBranch(this);
+            this.setSection(target);
         }
         return removeFrom;
     }

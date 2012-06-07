@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.service.transactional;
 
 import java.util.ArrayList;
@@ -60,13 +74,13 @@ public class TransactionalForumStructureServiceTest {
         List<PoulpeBranch> expectedBranches = new ArrayList<PoulpeBranch>(section.getPoulpeBranches());
         expectedBranches.remove(branch);
         expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section.getPoulpeBranches(), expectedBranches);
         branch = section.getBranch(4);
         target = section.getBranch(0);
         expectedBranches.remove(branch);
         expectedBranches.add(section.getPoulpeBranches().indexOf(target), branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section.getPoulpeBranches(), expectedBranches);
     }
 
@@ -80,13 +94,13 @@ public class TransactionalForumStructureServiceTest {
         List<PoulpeBranch> expectedBranchesInSection2 = new ArrayList<PoulpeBranch>(section2.getPoulpeBranches());
         expectedBranchesInSection1.remove(branch);
         expectedBranchesInSection2.add(0, branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section1.getBranches(), expectedBranchesInSection1);
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
         target = section1.getBranch(0);
         expectedBranchesInSection2.remove(branch);
         expectedBranchesInSection1.add(0, branch);
-        sut.moveBranchTo(branch, target);
+        sut.moveBranch(branch, target);
         assertEquals(section1.getBranches(), expectedBranchesInSection1);
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
     }

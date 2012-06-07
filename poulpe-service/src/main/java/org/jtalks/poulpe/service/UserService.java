@@ -35,12 +35,28 @@ public interface UserService {
     List<PoulpeUser> getAll();
 
     /**
+     * 
+     * @param searchString string for searching users, if empty - all users will be returned
+     * @param page page number for retrieving
+     * @param itemsPerPage limit of items per page
+     * @return users matched given search string paginated 
+     */
+    List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
+    
+    /**
+     * 
+     * @param searchString string for searching users, if empty - all users will be returned
+     * @return amount of users matched the given string
+     */
+    int countUsernameMatches(String searchString);
+    
+    /**
      * Gets Users with corresponding word in user name
      * 
-     * @param word to look up
+     * @param usernamePart to look up
      * @return list of users with the word in the name
      */
-    List<PoulpeUser> getUsersByUsernameWord(String word);
+    List<PoulpeUser> withUsernamesMatching(String usernamePart);
 
     /**
      * Updates the user

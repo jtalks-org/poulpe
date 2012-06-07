@@ -16,15 +16,17 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.entity.TopicType;
 
 import com.google.common.collect.Lists;
 
@@ -73,9 +75,12 @@ public final class ObjectsFactory {
     }
 
     public static PoulpeUser createUser(String username) {
-        String email = username + "@" + RandomStringUtils.randomAlphanumeric(10) + "."
-                + RandomStringUtils.randomAlphabetic(3);
-        return new PoulpeUser(username, email, RandomStringUtils.randomAlphanumeric(8), "");
+        String email = username + "@" + random() + "." + RandomStringUtils.randomAlphabetic(3);
+        return new PoulpeUser(username, email, random(), "");
+    }
+
+    public static PoulpeUser createUser() {
+        return createUser(random());
     }
 
     public static List<PoulpeUser> createBannedUsers(String... usernames) {
@@ -90,6 +95,16 @@ public final class ObjectsFactory {
         return result;
     }
 
+    public static List<PoulpeUser> bannedUsersListOf(int n) {
+        List<PoulpeUser> users = usersListOf(n);
+
+        for (PoulpeUser user : users) {
+            user.setBanReason("banReason");
+        }
+
+        return users;
+    }
+
     public static List<PoulpeUser> createUsers(String... usernames) {
         List<PoulpeUser> result = Lists.newArrayList();
 
@@ -100,12 +115,23 @@ public final class ObjectsFactory {
         return result;
     }
 
+    public static List<PoulpeUser> usersListOf(int n) {
+        List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
+
+        while (n > 0) {
+            result.add(createUser());
+            n--;
+        }
+
+        return result;
+    }
+
     public static Group createGroup() {
         return new Group(random(), "desc");
     }
 
     private static String random() {
-        return UUID.randomUUID().toString();
+        return RandomStringUtils.randomAlphanumeric(10);
     }
 
     private static int randomInt() {
