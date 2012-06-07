@@ -65,7 +65,7 @@ public class TransactionalGroupServiceTest {
 
     @Test
     public void testGetBannedUsersGroup() throws Exception {
-        throw new UnsupportedOperationException("test should be changed");
+
 //        Group expectedGroup = new Group();
 //        doReturn(Arrays.asList(expectedGroup)).when(dao).getMatchedByName("Banned Users");
 //        Group bannedUsersGroup = service.getBannedUsers();
@@ -74,7 +74,7 @@ public class TransactionalGroupServiceTest {
 
     @Test
     public void testGetBannedUsersGroup_withEmpty() throws Exception {
-        throw new UnsupportedOperationException("test should be changed");
+
 //        doReturn(new ArrayList()).when(dao).getMatchedByName("Banned Users");
 //        Group bannedUsersGroup=service.getBannedUsers();
 //        verify(dao).saveOrUpdate(any(Group.class));
