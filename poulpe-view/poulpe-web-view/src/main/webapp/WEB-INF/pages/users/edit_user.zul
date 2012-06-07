@@ -26,15 +26,22 @@
               constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
           </row>
           <row>
-            <label value="${labels.users.label.password}" />
-            <textbox value="@bind(fx.password) @validator('beanValidator')" width="100%" type="password"
-              constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" />
+            <cell colspan="2">
+              <checkbox id="newPasswordCheckbox" label="Set new password" onCheck="newPassword.disabled = !self.checked" />
+            </cell>
+          </row>
+          <row>
+            <label value="${labels.users.label.new_password}" />
+            <textbox id="newPassword" value="@save(fx.newPassword, after='saveUser')" width="100%" type="password"
+               disabled="true" />
+             <!-- constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" -->
           </row>
         </rows>
       </grid>
     </groupbox>
     <hbox align="end">
-      <button id="editButton" label="${labels.item.save}" onClick="@command('saveUser', user=vm.selectedUser)" sclass="edit.user.saveButton" />
+      <button id="editButton" label="${labels.item.save}" onClick="@command('saveUser', user=vm.selectedUser))" 
+      	sclass="edit.user.saveButton" />
       <button label="${labels.window.cancel}" onClick="@command('cancelEdit')" sclass="edit.user.cancelButton" />
     </hbox>
   </window>
