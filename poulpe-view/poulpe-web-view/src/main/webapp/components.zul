@@ -51,7 +51,7 @@
                     <row>
                         ${labels.component.title}
                         <textbox id="titlebox" width="300px" constraint="no empty"
-                                 value="@load(vm.componentDescription)
+                                 value="@load(vm.componentName)
 							            @save(vm.componentName, before='createComponent')
 							            @validator('beanValidator')" />
                         <label value="@load(vmsgs[titlebox])" sclass="redAlert" />

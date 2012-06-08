@@ -17,19 +17,16 @@ package org.jtalks.poulpe.web.controller.component;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * ViewModel class for EditComponent View
@@ -39,13 +36,14 @@ import java.util.Map;
  */
 public class EditComponentVm {
     public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
-    EMPTY_NAME = "component.error.name_shouldnt_be_empty",ITEM_ALREADY_EXISTS = "item.already.exist";
+            EMPTY_NAME = "component.error.name_shouldnt_be_empty", ITEM_ALREADY_EXISTS = "item.already.exist";
 
     private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
-    COMPONENTS_WINDOW = "components.zul", COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name",
-    CAPTION_PROP = "caption", DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-    SESSION_TIMEOUT_PROP = "sessionTimeout", IS_JCOMMUNE = "jcommune";
+            COMPONENTS_WINDOW = "components.zul", COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name",
+            CAPTION_PROP = "caption", DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
+            SESSION_TIMEOUT_PROP = "sessionTimeout", IS_JCOMMUNE = "jcommune";
 
+    private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     /**
      * Current component we are working with
      */
@@ -79,15 +77,11 @@ public class EditComponentVm {
     /**
      * The post preview size of the forum
      */
-    private String postPreviewSize;
+    private Integer postPreviewSize;
 
-    private String sessionTimeout;
+    private Integer sessionTimeout;
 
     private boolean jcommune;
-    /**
-     * Web-form validation messages
-     */
-    private Map<String, String> validationMessages = new HashMap<String, String>();
 
     private ComponentService componentService;
     private WindowManager windowManager;
@@ -172,33 +166,18 @@ public class EditComponentVm {
     // commands
 
     /**
-     * Saves a component. Shows validation messages, if something is wrong
+     * Saves a component.
      */
     @Command()
-    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP, POST_PREVIEW_SIZE_PROP,
-            SESSION_TIMEOUT_PROP})
+    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
+            POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP})
     public void save() {
-        boolean correct = true;
-        validationMessages.clear();
-
-        if (checkCorrect()) {
-            setBasicFields();
-            if (jcommune) {
-                setForumProperties();
-            }
-
-            try {
-                componentService.saveComponent(currentComponent);
-            } catch (ValidationException e) {
-                validationMessages.put("componentName", Labels.getLabel(ITEM_ALREADY_EXISTS));
-                correct = false;
-            }
-
-            if (correct) {
-                validationMessages.clear();
-                switchToComponentsWindow();
-            }
+        setBasicFields();
+        if(jcommune){
+            setForumProperties();
         }
+        componentService.saveComponent(currentComponent);
+        switchToComponentsWindow();
     }
 
     /**
@@ -206,7 +185,6 @@ public class EditComponentVm {
      */
     @Command()
     public void cancel() {
-        validationMessages.clear();
         switchToComponentsWindow();
     }
 
@@ -220,27 +198,6 @@ public class EditComponentVm {
      */
     private String valueOf(String value) {
         return (value == null) ? "" : value;
-    }
-
-    /**
-     * Check if input data is correct
-     *
-     * @return true if input is correct, else otherwise
-     */
-    private boolean checkCorrect() {
-        boolean correct = true;
-
-        if (name == null || name.equals("")) {
-            validationMessages.put("name", Labels.getLabel(EMPTY_TITLE));
-            correct = false;
-        }
-
-        if (componentName == null || componentName.equals("")) {
-            validationMessages.put("componentName", Labels.getLabel(EMPTY_NAME));
-            correct = false;
-        }
-
-        return correct;
     }
 
     // getters & setters for web-form
@@ -299,15 +256,6 @@ public class EditComponentVm {
         this.componentName = componentName;
     }
 
-    /**
-     * Returns validation messages for data input
-     *
-     * @return validation messages
-     */
-    public Map<String, String> getValidationMessages() {
-        return validationMessages;
-    }
-
     // getter and setter for current component we edit
 
     /**
@@ -351,7 +299,7 @@ public class EditComponentVm {
      *
      * @return post preview size
      */
-    public String getPostPreviewSize() {
+    public Integer getPostPreviewSize() {
         return postPreviewSize;
     }
 
@@ -360,7 +308,7 @@ public class EditComponentVm {
      *
      * @param postPreviewSize - to set on web-form
      */
-    public void setPostPreviewSize(String postPreviewSize) {
+    public void setPostPreviewSize(Integer postPreviewSize) {
         this.postPreviewSize = postPreviewSize;
     }
 
@@ -370,7 +318,7 @@ public class EditComponentVm {
      * @return session timeout
      */
     @NotEmpty
-    public String getSessionTimeout() {
+    public Integer getSessionTimeout() {
         return sessionTimeout;
     }
 
@@ -379,7 +327,7 @@ public class EditComponentVm {
      *
      * @param sessionTimeout - to set on web-form
      */
-    public void setSessionTimeout(String sessionTimeout) {
+    public void setSessionTimeout(Integer sessionTimeout) {
         this.sessionTimeout = sessionTimeout;
     }
 
@@ -400,8 +348,8 @@ public class EditComponentVm {
     private void setDefaultProperties() {
         name = NAME_PROP;
         caption = CAPTION_PROP;
-        postPreviewSize = "10";
-        sessionTimeout = "10";
+        postPreviewSize = 10;
+        sessionTimeout = 10;
     }
 
     /**
@@ -410,8 +358,12 @@ public class EditComponentVm {
     private void readForumProperties() {
         name = valueOf(currentComponent.getProperty(componentType + ".name"));
         caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
-        postPreviewSize = valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
-        sessionTimeout = valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+        if (currentComponent.getProperty(componentType + ".postPreviewSize") != null) {
+            postPreviewSize = Integer.valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
+        }
+        if (currentComponent.getProperty(currentComponent.getProperty(componentType + ".session_timeout")) != null) {
+            sessionTimeout = Integer.valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
+        }
     }
 
 
@@ -428,8 +380,8 @@ public class EditComponentVm {
     private void setForumProperties() {
         currentComponent.setProperty(componentType + ".name", name);
         currentComponent.setProperty(componentType + ".caption", caption);
-        currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize);
-        currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout);
+        currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize.toString());
+        currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout.toString());
     }
 
     /**
