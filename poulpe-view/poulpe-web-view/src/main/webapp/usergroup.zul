@@ -48,7 +48,7 @@
     <!--CONTEXT MENU-->
     <menupopup id="editPopupMenu">
       <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
-                onClick="editGroupDialog.visible=true" />
+                onClick="@command('showEditDialog')" />
       <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')" />
       <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
@@ -70,19 +70,24 @@
          <rows>
            <row>
              <label value="${labels.groups.editdialog.name}" />
-             <textbox id="newGroupNameBox" value="@save(vm.selectedGroup.name, before='saveGroup') @validator('beanValidator'))" width="100%" focus="true"
+             <textbox id="newGroupNameBox" value="@bind(vm.selectedGroup.name)
+                                                  @validator('beanValidator')" width="100%" focus="true"
                       constraint="no empty" />
            </row>
            <row>
              <label value="${labels.groups.editdialog.description}" />
-             <textbox id="newGroupDescriptionBox" value="@save(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
+             <textbox id="newGroupDescriptionBox" value="@load(vm.selectedGroup.description)
+                                                         @save(vm.selectedGroup.description)
+                                                         @validator('beanValidator')" width="100%"
                       errorMessage="@load(vmsgs[groupDescriptionBox])" />
            </row>
          </rows>
          </grid>
            <hbox align="end">
-             <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-             <button image="/resources/img/deny16.png" label="${labels.window.cancel}" onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
+             <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
+                     onClick="@command('saveGroup')" sclass="edit.group.confirmButton" />
+             <button image="/resources/img/deny16.png" label="${labels.window.cancel}"
+                     onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
            </hbox>
      </window>
 
@@ -101,19 +106,24 @@
         <rows>
           <row>
             <label value="${labels.groups.editdialog.name}" />
-            <textbox id="groupNameBox" value="@load(vm.selectedGroup.name) @save(vm.selectedGroup.name, before='saveGroup') @validator('beanValidator'))" width="100%" focus="true"
-                     constraint="no empty" />
+            <textbox id="groupNameBox" value="@load(vm.selectedGroup.name)
+                                              @save(vm.selectedGroup.name, before='saveGroup')
+                                              @validator('beanValidator')" width="100%" focus="true"
+                                              constraint="no empty" />
           </row>
           <row>
             <label value="${labels.groups.editdialog.description}" />
-            <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
-                     errorMessage="@load(vmsgs[groupDescriptionBox])" />
+            <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description)
+                                                     @validator('beanValidator'))" width="100%"
+                                                     errorMessage="@load(vmsgs[groupDescriptionBox])" />
           </row>
         </rows>
       </grid>
       <hbox align="end">
-        <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-        <button image="/resources/img/deny16.png" label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
+        <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
+                onClick="@command('saveGroup')" sclass="edit.group.confirmButton" />
+        <button image="/resources/img/deny16.png" label="${labels.window.cancel}"
+                onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
       </hbox>
     </window>
 

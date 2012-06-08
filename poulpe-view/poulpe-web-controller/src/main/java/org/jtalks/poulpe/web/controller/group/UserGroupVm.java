@@ -114,15 +114,23 @@ public class UserGroupVm {
     }
 
     /**
+     * Opens group edit dialog.
+     */
+    @Command
+    @NotifyChange({SELECTED_GROUP, SHOW_EDIT_DIALOG})
+    public void showEditDialog() {
+         showEditDialog = true;
+    }
+
+    /**
      * Saves group, closing group edit(add) dialog and updates view.
      *
-     * @param group editing group
      */
 
     @Command
     @NotifyChange({SHOW_NEW_DIALOG, SHOW_EDIT_DIALOG})
-    public void saveGroup(@BindingParam(value = "group") Group group) {
-        groupService.saveGroup(group);
+    public void saveGroup() {
+        groupService.saveGroup(selectedGroup);
         closeDialog();
         updateView();
     }
