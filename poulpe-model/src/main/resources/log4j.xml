@@ -43,6 +43,11 @@
   <logger name="net.sf.ehcache.distribution">
     <level value="DEBUG"/>
   </logger>
+  <logger name="com.googlecode.flyway.core.migration" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="fileAppender"/>
+    <appender-ref ref="consoleAppender"/>
+  </logger>
   <root>
     <priority value="INFO"/>
     <appender-ref ref="consoleAppender"/>

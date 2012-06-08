@@ -18,8 +18,19 @@ import org.hibernate.Criteria;
 import org.hibernate.Query;
 
 /**
- * Class for paginating a result. If is not needed, {@link #getFrom()} and
- * {@link #getCount()} may throw {@link UnsupportedOperationException}
+ * Class for paginating a result, used when retrieving the whole list of result is undesirable, and instead it retrieves
+ * only one page. <br>
+ * <br>
+ * 
+ * Instances of this class obtained from {@link Pages} factory methods; and currently there are two implementations of
+ * this class:
+ * 
+ * <ul>
+ * <li>With no pagination at all - for this type of pagination use {@link Pages#NONE}</li>
+ * 
+ * <li>Pagination for a needed page with a given limit for the maximal amount of items retrieved per query - for this
+ * type of pagination use {@link Pages#paginate(int, int)}</li>
+ * </ul>
  * 
  * @author Alexey Grigorev
  */
@@ -32,7 +43,7 @@ public interface Pagination {
      * @return paginated criteria
      */
     Criteria addPagination(Criteria criteria);
-    
+
     /**
      * Adds pagination to hibernate's query
      * 

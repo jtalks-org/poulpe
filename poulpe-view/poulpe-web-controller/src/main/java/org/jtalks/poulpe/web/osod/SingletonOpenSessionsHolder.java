@@ -37,7 +37,7 @@ public class SingletonOpenSessionsHolder {
      * @param sessionFactory a session factory to be pushed to {@link OpenSessions}
      * @return a new instance of {@link OpenSessions} that can be used in {@link OpenSessionOnDesktopZkListener}
      */
-    public static OpenSessions instantiate(SessionFactory sessionFactory) {
+    public synchronized static OpenSessions instantiate(SessionFactory sessionFactory) {
         if (HOLDER == null) {
             HOLDER = new SingletonOpenSessionsHolder(sessionFactory);
         }
