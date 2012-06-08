@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+
+
+
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  
+  <window mode="modal" border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer"
+    viewModel="@id('vm') @init(editComponentVm)" closable="true" width="35%" onClose="@command('cancel')" onOK="@command('save')"
+    onCancel="@command('cancel')">
+    
+    <grid>
+      <columns>
+        <column width="25%" />
+        <column width="75%" />
+      </columns>
+      <rows>
+        <row>
+          ${labels.component.title}
+          <textbox width="40%" value="@bind(vm.component.name) @validator('beanValidator')" />
+        </row>
+        <row>
+          ${labels.component.description}
+          <textbox width="95%" value="@bind(vm.component.description) @validator('beanValidator')" />
+        </row>
+      </rows>
+    </grid>
+
+    <grid model="@load(vm.component.properties)">
+      <columns>
+        <column width="25%" />
+        <column width="75%" />
+      </columns>
+      <template name="model" var="property">
+        <row>
+          ${c:l('component.property.'.concat(property.name))}
+          <textbox width="95%" value="@bind(property.value)" constraint="@load(property.validationRule)" />
+        </row>
+      </template>
+    </grid>
+   
+    <hlayout>
+      <button image="/resources/img/accept16.png" label="${labels.componentedit.save}" onClick="@command('save')"
+        sclass="edit.comp.saveButton" />
+      <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}" onClick="@command('cancel')"
+        sclass="edit.comp.cancelButton" />
+    </hlayout>
+
+  </window>
+
+</zk>

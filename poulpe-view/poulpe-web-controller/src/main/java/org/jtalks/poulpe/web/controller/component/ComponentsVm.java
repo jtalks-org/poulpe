@@ -38,10 +38,14 @@ import java.util.List;
 public class ComponentsVm {
 
     public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
-    AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
-    SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-    COMPONENT_LIST = "componentList", NAME = "componentName", DESCRIPTION = "componentDescription",
-    TYPE = "componentType";
+            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", 
+            SELECTED_COMPONENT_TYPE = "selectedComponentType",
+            SELECTED = "selected", 
+            CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
+            COMPONENT_LIST = "componentList", 
+            NAME = "componentName", 
+            DESCRIPTION = "componentDescription",
+            TYPE = "componentType";
 
     private Component selected;
     private String componentName;
@@ -49,9 +53,11 @@ public class ComponentsVm {
     private ComponentType componentType;
     private boolean addNewComponentWindowVisible;
     private boolean canCreateNewComponent;
+    
     private List<Component> componentList;
     private List<ComponentType> availableComponentTypes;
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
+    
     // List of injectable properties
     private ComponentService componentService;
     private DialogManager dialogManager;
@@ -70,7 +76,7 @@ public class ComponentsVm {
      * Creates new TopicType and adds it on form
      */
     @Command
-    @NotifyChange({EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE})
+    @NotifyChange({ EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
     public void showAddComponentDialog() {
         addNewComponentWindowVisible = true;
     }
@@ -88,9 +94,9 @@ public class ComponentsVm {
                 updateListComponentsData();
                 selected = null;
                 /*
-                     * Because confirmation needed, we need to send notification
-                     * event programmatically
-                     */
+                 * Because confirmation needed, we need to send notification
+                 * event programmatically
+                 */
                 bindWrapper.postNotifyChange(null, null, ComponentsVm.this, SELECTED);
                 bindWrapper.postNotifyChange(null, null, ComponentsVm.this, COMPONENT_LIST);
                 bindWrapper.postNotifyChange(null, null, ComponentsVm.this, CAN_CREATE_NEW_COMPPONENT);
@@ -112,7 +118,7 @@ public class ComponentsVm {
      * Saves the created or edited component in component list.
      */
     @Command
-    @NotifyChange({COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE})
+    @NotifyChange({ COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
     public void createComponent() {
         if (componentType.equals(ComponentType.FORUM)) {
             selected = new Jcommune();
@@ -131,7 +137,7 @@ public class ComponentsVm {
     /**
      * Clears variables used for component creation.
      */
-    @NotifyChange({SELECTED, NAME, DESCRIPTION, TYPE})
+    @NotifyChange({ SELECTED, NAME, DESCRIPTION, TYPE })
     public void clearComponent() {
         setComponentName(null);
         setComponentDescription(null);
@@ -143,7 +149,7 @@ public class ComponentsVm {
      * Event which happen when user cancel editing of component.
      */
     @Command
-    @NotifyChange({SELECTED, EDIT_WINDOW_VISIBLE})
+    @NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE })
     public void cancelEdit() {
         selected = null;
         addNewComponentWindowVisible = false;
@@ -241,7 +247,7 @@ public class ComponentsVm {
      *
      * @param selectedEntity the new selected entity
      */
-    public void setSelectedEntity(SelectedEntity selectedEntity) {
+    public void setSelectedEntity(SelectedEntity<Component> selectedEntity) {
         this.selectedEntity = selectedEntity;
     }
 
