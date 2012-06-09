@@ -77,7 +77,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
 
-        if (component.getId() == 0) {
+        if (!component.isPersistent()) {
             propertyLoader.loadDefaults(component);
         }
         dao.saveOrUpdate(component);
