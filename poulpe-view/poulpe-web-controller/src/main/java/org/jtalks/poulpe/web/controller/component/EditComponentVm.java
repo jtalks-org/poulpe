@@ -26,14 +26,15 @@ import org.zkoss.bind.annotation.Command;
 
 /**
  * ViewModel class for EditComponent View
- *
+ * 
  * @author Vahluev Vyacheslav
  * @author Kazancev Leonid
+ * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    private static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul",
+    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul",
             COMPONENTS_WINDOW = "components.zul";
-            
+
     private final ComponentService componentService;
     private final Component component;
 
@@ -41,23 +42,27 @@ public class EditComponentVm {
 
     /**
      * Opens window for editing component.
-     *
+     * 
      * @param windowManager The object which is responsible for creation and closing application windows
      */
-    // TODO: get rid of this static method
     public static void openWindowForEdit(WindowManager windowManager) {
         windowManager.open(EDIT_COMPONENT_LOCATION);
     }
 
-    // constructor
-
-    public EditComponentVm(@Nonnull ComponentService componentService, @Nonnull SelectedEntity<Component> component) {
+    /**
+     * Creates edit dialog for editing currently selected component
+     * 
+     * @param componentService service for saving component
+     * @param selectedComponent currently selected component
+     */
+    public EditComponentVm(@Nonnull ComponentService componentService,
+            @Nonnull SelectedEntity<Component> selectedComponent) {
         this.componentService = componentService;
-        this.component = notNull(component.getEntity());
+        this.component = notNull(selectedComponent.getEntity());
     }
 
     /**
-     * Saves a component. Shows validation messages, if something is wrong
+     * Saves a component
      */
     @Command
     public void save() {
@@ -81,13 +86,16 @@ public class EditComponentVm {
     }
 
     /**
-     * @param windowManager the new window manager
+     * @return component being edited
+     */
+    public Component getComponent() {
+        return component;
+    }
+
+    /**
+     * @param windowManager manager responsible for creation and closing application windows
      */
     public void setWindowManager(WindowManager windowManager) {
         this.windowManager = windowManager;
-    }
-
-    public Component getComponent() {
-        return component;
     }
 }

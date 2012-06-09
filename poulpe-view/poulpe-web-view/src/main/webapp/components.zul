@@ -50,16 +50,16 @@
             ${labels.component.title}
             <textbox id="titlebox" width="300px" constraint="no empty"
               value="@load(vm.componentName)
-		            @save(vm.componentName, before='createComponent')
-		            @validator('beanValidator')" />
+		             @save(vm.componentName, before='createComponent')
+		             @validator('beanValidator')" />
             <label value="@load(vmsgs[titlebox])" sclass="redAlert" />
           </row>
           <row>
             ${labels.component.description}
             <textbox width="300px" constraint="no empty"
               value="@load(vm.componentDescription)
-                    @save(vm.componentDescription, before='createComponent')
-                    @validator('beanValidator')" />
+                     @save(vm.componentDescription, before='createComponent')
+                     @validator('beanValidator')" />
           </row>
           <row>
             ${labels.component.type}

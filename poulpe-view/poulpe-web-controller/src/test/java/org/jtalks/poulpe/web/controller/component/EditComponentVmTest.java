@@ -14,144 +14,75 @@
 */
 package org.jtalks.poulpe.web.controller.component;
 
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
 import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.entity.Property;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-
 /**
 * @author Kazancev Leonid
+* @author Alexey Grigorev
 */
 public class EditComponentVmTest {
-    private static final String COMPONENT_NAME = "name", OTHER_COMPONENT_NAME = "notName", DESCRIPTION = "desc",
-            PROP_NAME = ".name", PROP_CAPTION = ".caption", PROP_PREVIEW_SIZE = ".postPreviewSize",
-            PROP_SESSION_TIMEOUT = ".session_timeout", NAME = "nameProp", OTHER_NAME = "otherName",
-            CAPTION = "aCaption", JCOMMUNE_TYPE = "jcommune", POST_PREVIEW_SIZE_STRING = "10",
-            SESSION_TIMEOUT_STRING = "15";
-    private static final int    POST_PREVIEW_SIZE = 10, SESSION_TIMEOUT = 15;
 
-    @Mock
-    private ComponentService componentService;
-    @Mock
-    private WindowManager windowManager;
+    // sut
+    EditComponentVm editComponentVm;
+    
+    // dependencies
+    @Mock ComponentService componentService;
+    @Mock WindowManager windowManager;
 
-    private SelectedEntity<Component> selectedEntity = new SelectedEntity<Component>();
-
-    @InjectMocks
-    private EditComponentVm viewModel;
+    Component component = new Component();
 
     @BeforeMethod
     public void setUp() {
-        viewModel = spy(new EditComponentVm(componentService));
         MockitoAnnotations.initMocks(this);
-        viewModel.setWindowManager(windowManager);
-        viewModel.setSelectedEntity(selectedEntity);
+        SelectedEntity<Component> selectedEntity = new SelectedEntity<Component>();
+        selectedEntity.setEntity(component);
+        
+        editComponentVm = new EditComponentVm(componentService, selectedEntity);
+        editComponentVm.setWindowManager(windowManager);
     }
 
     @Test
-    public void testPropertiesSaveJcommune() {
-        selectedEntity.setEntity(getSomeForum());
-        viewModel.initData();
-        assertNotNull(viewModel.getCurrentComponent());
-        assertEquals(viewModel.getName(), NAME);
-        assertEquals(viewModel.getCaption(), CAPTION);
-        assertEquals(viewModel.getComponentName(), COMPONENT_NAME);
-        assertEquals(viewModel.getDescription(), DESCRIPTION);
+    public void save_componentSaved() {
+        editComponentVm.save();
+        verify(componentService).saveComponent(component);
     }
-
-    /**
-     * This test are fails by some reasons. So if you know how to fix it, fix and commune it to
-     * testPropertiesSaveJcommune().
-     */
-    @Test(enabled = false)
-    public void testOtherPropertiesSaveJcommune() {
-        selectedEntity.setEntity(getSomeForum());
-        viewModel.initData();
-
-        assertEquals(viewModel.getPostPreviewSize(), POST_PREVIEW_SIZE_STRING);
-        assertEquals(viewModel.getSessionTimeout(), SESSION_TIMEOUT_STRING);
-
-    }
-
-
+    
     @Test
-    public void testSavingPoulpe() {
-        selectedEntity.setEntity(getSomePoulpe());
-        viewModel.initData();
-        assertNotNull(viewModel.getCurrentComponent());
-        assertNotSame(viewModel.getName(), NAME);
-        assertNotSame(viewModel.getCaption(), CAPTION);
-        assertNotSame(viewModel.getPostPreviewSize(), POST_PREVIEW_SIZE_STRING);
-        assertNotSame(viewModel.getSessionTimeout(), SESSION_TIMEOUT_STRING);
-        assertEquals(viewModel.getComponentName(), COMPONENT_NAME);
-        assertEquals(viewModel.getDescription(), DESCRIPTION);
+    public void save_editWindowClosed() {
+        editComponentVm.save();
+        verify(windowManager).open(EditComponentVm.COMPONENTS_WINDOW);
     }
-
+    
     @Test
-    public void getComponents() {
-        viewModel.getComponents();
-        verify(componentService).getAll();
+    public void cancel_componentIsNotSaved() {
+        editComponentVm.cancel();
+        verify(componentService, never()).saveComponent(component);
     }
-
-    @Test(enabled = false)
-    public void save() {
-        Jcommune forum = getSomeForum();
-        selectedEntity.setEntity(forum);
-        viewModel.initData();
-        doNothing().when(windowManager).open(any(String.class));
-        viewModel.save();
-        verify(windowManager).open(any(String.class));
-        verify(componentService).saveComponent(forum);
-    }
-
+    
     @Test
-    public void cancel() {
-        viewModel.cancel();
-        verify(windowManager).open(any(String.class));
+    public void cancel_editWindowClosed() {
+        editComponentVm.cancel();
+        verify(windowManager).open(EditComponentVm.COMPONENTS_WINDOW);
     }
-
-
-    private Poulpe getSomePoulpe() {
-        Poulpe poulpe = new Poulpe();
-        poulpe.setComponentType(ComponentType.FORUM);
-        poulpe.setName(COMPONENT_NAME);
-        poulpe.setDescription(DESCRIPTION);
-        return poulpe;
+    
+    @Test
+    public void getComponent_componentFromSelectedEntityUsed() {
+        assertSame(component, editComponentVm.getComponent());
     }
-
-    private Jcommune getSomeForum() {
-        Jcommune jcommune = new Jcommune();
-        jcommune.setComponentType(ComponentType.FORUM);
-        jcommune.setName(COMPONENT_NAME);
-        jcommune.setDescription(DESCRIPTION);
-        jcommune.setProperties(getSomeProperties());
-        return jcommune;
+    
+    @Test
+    public void openWindowForEdit() {
+        EditComponentVm.openWindowForEdit(windowManager);
+        verify(windowManager).open(EditComponentVm.EDIT_COMPONENT_LOCATION);
     }
-
-    private List<Property> getSomeProperties() {
-        List<Property> props = new ArrayList<Property>(4);
-        props.add(new Property(JCOMMUNE_TYPE + PROP_NAME, NAME));
-        props.add(new Property(JCOMMUNE_TYPE + PROP_CAPTION, CAPTION));
-        props.add(new Property(JCOMMUNE_TYPE + PROP_PREVIEW_SIZE, POST_PREVIEW_SIZE_STRING));
-        props.add(new Property(JCOMMUNE_TYPE + PROP_SESSION_TIMEOUT, SESSION_TIMEOUT_STRING));
-
-        return props;
-    }
-
 }

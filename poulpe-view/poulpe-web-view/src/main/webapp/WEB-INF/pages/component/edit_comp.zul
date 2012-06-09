@@ -35,6 +35,7 @@
       </columns>
       <template name="model" var="property">
         <row>
+          <!-- TODO: it may be better to move somewhere out this 'component.property' prefix -->
           ${c:l('component.property.'.concat(property.name))}
           <textbox width="95%" value="@bind(property.value)" constraint="@load(property.validationRule)" />
         </row>
