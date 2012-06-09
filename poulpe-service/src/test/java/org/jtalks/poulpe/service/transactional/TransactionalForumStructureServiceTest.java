@@ -27,6 +27,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -108,7 +109,7 @@ public class TransactionalForumStructureServiceTest {
 
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
-        Jcommune jcommune = (Jcommune) ComponentType.FORUM.newComponent("name", "description", Collections.<Property>emptyList());
+        Jcommune jcommune = Fixtures.createJcommune();
         
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         for (int i = 0; i < 5; i++) {

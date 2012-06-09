@@ -119,7 +119,7 @@ public class ObjectsFactory {
     }
 
     public static Jcommune fakeForum() {
-        Jcommune forum = (Jcommune) ComponentType.FORUM.newComponent("name", "description", new ArrayList<Property>());
+        Jcommune forum = (Jcommune) Fixtures.createComponent(ComponentType.FORUM);
         forum.setSections(fakeSections());
         return forum;
     }

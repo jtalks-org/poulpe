@@ -24,8 +24,6 @@ import org.hibernate.validator.constraints.NotBlank;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Property;
 
-import ru.javatalks.utils.general.Assert;
-
 /**
  * Represent jtalks engine component.
  *
@@ -51,31 +49,26 @@ public class Component extends Entity {
     @NotNull(message = COMPONENT_EMPTY_COMPONENT_TYPE)
     private ComponentType componentType;
 
-    /**
-     * Properties of the component
-     */
     private List<Property> properties = new ArrayList<Property>();
 
     /**
      * Default constructor, sets nothing - all values are nulls.
+     * Visible for hibernate
      */
     protected Component() {
     }
-
+    
     /**
-     * Constructor
-     *
-     * @param name name of the component
-     * @param description description of the component
-     * @param componentType type of the component 
-     * @see ComponentType
+     * For subclasses
+     * @param componentType
      */
-    Component(String name, String description, ComponentType componentType) {
-        this(name, description, componentType, new ArrayList<Property>());
+    protected Component(ComponentType componentType) {
+        this.componentType = componentType;
     }
 
     /**
-     * Constructor with all parameters
+     * Constructor with all parameters.
+     * Instances should be created using {@link BaseComponent#newComponent(String, String)}.
      *
      * @param name name of the component
      * @param description description of the component
@@ -90,67 +83,55 @@ public class Component extends Entity {
     }
 
     /**
-     * Get the component properties
-     * @return properties
+     * @return properties the component properties
      */
     public List<Property> getProperties() {
         return properties;
     }
 
     /**
-     * Set the component properties
-     * @param properties to set
+     * @param properties the component properties
      */
     public void setProperties(List<Property> properties) {
         this.properties = properties;
     }
 
     /**
-     * Get the component description.
-     * @return description description of the component
+     * @return description of the component
      */
     public String getDescription() {
         return description;
     }
 
     /**
-     * Set components description.
      * @param description new description of the component
-     * @exception IllegalArgumentException if the description is null
      */
     public void setDescription(String description) {
-        Assert.throwIfNull(description, "description");
         this.description = description;
     }
 
     /**
-     * Get component's name.
-     * @return name name of the component
+     * @return name of the component
      */
     public String getName() {
         return name;
     }
 
     /**
-     * Set the name of the component.
      * @param name new name of the component
-     * @exception IllegalArgumentException if the name is null
      */
     public void setName(String name) {
-        Assert.throwIfNull(name, "name");
         this.name = name;
     }
 
     /**
-     * Get the type of the component.
-     * @return type type of the component
+     * @return type of the component
      */
     public ComponentType getComponentType() {
         return componentType;
     }
 
     /**
-     * Set component's type.
      * @param type new type of the component
      */
     public void setComponentType(ComponentType type) {

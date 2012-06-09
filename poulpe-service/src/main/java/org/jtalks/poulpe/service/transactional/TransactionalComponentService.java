@@ -21,6 +21,7 @@ import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -77,9 +78,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
 
-        if (!component.isPersistent()) {
+       /* if (!component.isPersistent()) {
             propertyLoader.loadDefaults(component);
-        }
+        }*/
+        
         dao.saveOrUpdate(component);
     }
 
@@ -91,6 +93,11 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         return dao.getAvailableTypes();
     }
 
+    @Override
+    public BaseComponent baseComponentFor(ComponentType componentType) {
+        return dao.getBaseComponent(componentType);
+    }
+    
     /**
      * Sets property loader. See {@link PropertyLoader}
      * 

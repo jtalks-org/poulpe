@@ -34,7 +34,7 @@ public class Jcommune extends Component {
      * Visible for hibernate.
      */
     protected Jcommune() {
-        setComponentType(ComponentType.FORUM);
+        super(ComponentType.FORUM);
     }
 
     /**

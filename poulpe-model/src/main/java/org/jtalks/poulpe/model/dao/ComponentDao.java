@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
@@ -44,8 +45,14 @@ public interface ComponentDao extends ParentRepository<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param the component's type 
+     * @param componentType the component's type 
      * @return the component
      */
-    Component getByType(ComponentType type);
+    Component getByType(ComponentType componentType);
+
+    /**
+     * @param componentType
+     * @return base component for the given type
+     */
+    BaseComponent getBaseComponent(ComponentType componentType);
 }

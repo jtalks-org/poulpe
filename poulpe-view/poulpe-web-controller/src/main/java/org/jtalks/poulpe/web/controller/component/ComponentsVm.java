@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import org.jtalks.common.model.entity.Property;
+import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -119,10 +120,12 @@ public class ComponentsVm {
     @Command
     @NotifyChange({ COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
     public void createComponent() {
-        // TODO: use BaseComponent for creation
-        selected = componentType.newComponent(componentName, componentDescription, new ArrayList<Property>());
         
-        componentService.saveComponent(selected);
+        BaseComponent baseComponent = componentService.baseComponentFor(componentType);
+        Component component = baseComponent.newComponent(componentName, componentDescription);
+        selected = component;
+        componentService.saveComponent(component);
+        
         addNewComponentWindowVisible = false;
         clearComponent();
         updateListComponentsData();

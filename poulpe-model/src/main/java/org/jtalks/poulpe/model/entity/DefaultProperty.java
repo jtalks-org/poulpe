@@ -6,6 +6,8 @@ import org.jtalks.common.model.entity.Property;
 
 /**
  * 
+ * Usually only for reading
+ * 
  * @author Alexey Grigorev
  *
  */

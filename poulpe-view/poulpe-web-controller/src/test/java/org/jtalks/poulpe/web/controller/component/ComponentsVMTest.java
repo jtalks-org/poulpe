@@ -28,6 +28,7 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -152,6 +153,8 @@ public class ComponentsVMTest {
 
     @Test
     public void createJcommune() {
+        givenBaseComponents();
+        
         setComponentAttributes();
         viewModel.setSelected(forumComponent());
         viewModel.setComponentType(viewModel.getSelected().getComponentType());
@@ -178,6 +181,12 @@ public class ComponentsVMTest {
         assertTrue(viewModel.getComponentName() == null);
         assertTrue(viewModel.getComponentDescription() == null);
         assertTrue(viewModel.getSelected() == null);
+    }
+
+    private void givenBaseComponents() {
+        when(componentService.baseComponentFor(ComponentType.FORUM)).thenReturn(new BaseComponent(ComponentType.FORUM));
+        when(componentService.baseComponentFor(ComponentType.ADMIN_PANEL)).thenReturn(new BaseComponent(ComponentType.ADMIN_PANEL));
+        when(componentService.baseComponentFor(ComponentType.ARTICLE)).thenReturn(new BaseComponent(ComponentType.ARTICLE));
     }
 
     @Test

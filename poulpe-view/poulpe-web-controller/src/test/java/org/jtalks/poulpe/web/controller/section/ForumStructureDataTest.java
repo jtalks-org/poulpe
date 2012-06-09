@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -224,7 +225,8 @@ public class ForumStructureDataTest {
 
     @DataProvider
     public Object[][] provideTreeModelWithSectionsAndBranches() {
-        Jcommune jcommune = (Jcommune) ComponentType.FORUM.newComponent("name", "description", new ArrayList<Property>());
+        Jcommune jcommune = (Jcommune) Fixtures.createJcommune();
+
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));

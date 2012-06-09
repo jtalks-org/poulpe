@@ -64,7 +64,6 @@ public enum ComponentType {
      * @param properties
      * @return
      */
-    // TODO: make it package-private
-    public abstract Component newComponent(String name, String description, List<Property> properties);
+    abstract Component newComponent(String name, String description, List<Property> properties);
     
 }

@@ -27,6 +27,11 @@ import org.jtalks.poulpe.model.entity.*;
 import com.google.common.collect.Lists;
 
 /**
+ * Provides unified way for creating text fixtures.<br>
+ * <br>
+ * 
+ * This class is not under test source folder because it should be accessible for all components.
+ * 
  * @author Kirill Afonin
  * @author Alexey Grigorev
  * 
@@ -47,17 +52,20 @@ public final class Fixtures {
     }
 
     public static Component createComponent(ComponentType type) {
-        BaseComponent base = new BaseComponent(type); 
+        BaseComponent base = new BaseComponent(type);
         Component c = base.newComponent(random(), random());
         c.addProperty("prop.name", "prop.value");
         return c;
     }
     
+    public static Jcommune createJcommune() {
+        return (Jcommune) createComponent(ComponentType.FORUM);
+    }
+
     public static Component randomComponent() {
         ComponentType[] types = ComponentType.values();
         return createComponent(types[randomInt(types.length)]);
     }
-    
 
     public static PoulpeSection createSectionWithBranches() {
         return createSectionWithBranches(randomInt());
@@ -142,7 +150,7 @@ public final class Fixtures {
     private static int randomInt() {
         return RANDOM.nextInt(10) + 1;
     }
-    
+
     private static int randomInt(int max) {
         return RANDOM.nextInt(max);
     }

@@ -30,7 +30,7 @@ public class Poulpe extends Component {
      * Visible for hibernate
      */
     protected Poulpe() {
-        setComponentType(ComponentType.ADMIN_PANEL);
+        super(ComponentType.ADMIN_PANEL);
     }
     
     /**
@@ -41,7 +41,7 @@ public class Poulpe extends Component {
      * @param properties
      */
     Poulpe(String name, String description, List<Property> properties) {
-        super(name, description, ComponentType.FORUM, properties);
+        super(name, description, ComponentType.ADMIN_PANEL, properties);
     }
     
 

@@ -28,25 +28,24 @@
 */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+
+import java.util.Collections;
+import java.util.Set;
+
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.PropertyLoader;
 import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Collections;
-import java.util.Set;
-
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
 
 /**
  * @author Pavel Vervenko
@@ -56,21 +55,17 @@ import static org.mockito.Mockito.*;
 public class TransactionalComponentServiceTest {
     private TransactionalComponentService componentService;
     
-    @Mock
-    private ComponentDao componentDao;
-    @Mock
-    private EntityValidator validator;
+    @Mock ComponentDao componentDao;
+    @Mock EntityValidator validator;
+    @Mock PropertyLoader propertyLoader;
+    @Mock PermissionManager permissionManager;
     
     Component component = Fixtures.randomComponent();
 
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        
-        componentDao = mock(ComponentDao.class);
-        validator = mock(EntityValidator.class);
-        componentService = new TransactionalComponentService(componentDao, mock(PermissionManager.class), validator);
-        PropertyLoader propertyLoader = mock(PropertyLoader.class);
+        componentService = new TransactionalComponentService(componentDao, permissionManager, validator);
         componentService.setPropertyLoader(propertyLoader);
     }
 

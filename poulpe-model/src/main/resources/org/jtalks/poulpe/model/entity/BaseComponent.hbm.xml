@@ -39,4 +39,8 @@
 
   </class>
   
+  <query name="findBaseComponentByComponentType">
+    <![CDATA[from BaseComponent where componentType = :componentType]]>
+  </query>
+  
 </hibernate-mapping>

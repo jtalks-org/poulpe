@@ -59,4 +59,12 @@
 
   </class>
   
+  <query name="allComponents">
+    <![CDATA[from Component]]>
+  </query>
+  
+  <query name="findComponentByComponentType">
+    <![CDATA[from Component where componentType = :componentType]]>
+  </query>
+
 </hibernate-mapping>

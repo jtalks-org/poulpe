@@ -45,7 +45,7 @@ public class BaseComponent {
         return componentType.newComponent(name, description, copy(defaultProperties));
     }
     
-    private List<Property> copy(List<DefaultProperty> defaults) {
+    private static List<Property> copy(List<DefaultProperty> defaults) {
         List<Property> result = Lists.newArrayListWithCapacity(defaults.size());
         
         for (DefaultProperty property : defaults) {
