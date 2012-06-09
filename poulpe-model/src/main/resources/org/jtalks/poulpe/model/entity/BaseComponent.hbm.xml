@@ -23,11 +23,17 @@
   
     <cache usage="read-only" />
     
-    <id type="org.jtalks.poulpe.model.entity.ComponentType" column="COMPONENT_TYPE" name="componentType" />
+    <id column="COMPONENT_TYPE" name="componentType">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <!-- 12 means 'VARCHAR', see java.sql.Types.VARCHAR -->
+        <param name="type">12</param>
+      </type>
+    </id>
     
     <set name="defaultProperties" cascade="all" inverse="false" lazy="false">
       <cache usage="read-only" />
-      <key column="CMP_ID" foreign-key="FK_COMPONENT" />
+      <key column="BASE_COMPONENT_TYPE" foreign-key="COMPONENT_TYPE" />
       <one-to-many class="org.jtalks.poulpe.model.entity.DefaultProperty" />
     </set>
 
