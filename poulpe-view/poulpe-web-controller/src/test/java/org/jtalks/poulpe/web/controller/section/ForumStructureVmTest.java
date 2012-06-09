@@ -59,16 +59,6 @@ public class ForumStructureVmTest {
         Mockito.validateMockitoUsage();
     }
 
-    @Test
-    public void testSaveSection() throws Exception {
-        PoulpeSection selectedSection = new PoulpeSection("section", "description");
-        doReturn(selectedSection).when(data).getSelectedEntity(PoulpeSection.class);
-        doNothing().when(sut).storeNewSection(selectedSection);
-        sut.saveSection();
-        verify(data).addSelectedSectionToTreeIfNew();
-        verify(data).closeDialog();
-        verify(sut).storeNewSection(selectedSection);
-    }
 
     @Test
     public void testShowNewSection() throws Exception {
@@ -78,8 +68,8 @@ public class ForumStructureVmTest {
 
     @Test
     public void testShowNewBranch() throws Exception {
-        sut.showNewBranchDialog(true);
-        verify(data).showBranchDialog(true);
+//        sut.showNewBranchDialog(true);
+//        verify(data).showBranchDialog(true);
     }
 
     @Test(dataProvider = "provideRandomJcommuneWithSections")

@@ -22,10 +22,7 @@ import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.Treeitem;
@@ -45,11 +42,13 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
  * @author Guram Savinov
  */
 public class ForumStructureVm {
-    private static final String SELECTED_ITEM_PROP = "selectedItem", VIEW_DATA_PROP = "viewData";
+    private static final String SELECTED_ITEM_PROP = "selectedItemInTree", VIEW_DATA_PROP = "viewData", TREE_MODEL = "treeModel";
     private final ForumStructureService forumStructureService;
     private final WindowManager windowManager;
+    private ForumStructureItem selectedItemInTree = new ForumStructureItem();
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
     private ForumStructureData viewData;
+    private ForumStructureTreeModel treeModel;
 
     public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
                             @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions,
@@ -61,11 +60,12 @@ public class ForumStructureVm {
     }
 
     /**
-     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is opening.
+     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is
+     * opening.
      */
     @Init
     public void init() {
-        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(loadJcommune())));
+        treeModel = new ForumStructureTreeModel(buildForumStructure(loadJcommune()));
     }
 
     /**
@@ -74,21 +74,14 @@ public class ForumStructureVm {
      * @param createNew whether or not it's a creating of new section or just editing existing one
      */
     @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
+    @NotifyChange({SELECTED_ITEM_PROP})
     public void showNewSectionDialog(@BindingParam("createNew") boolean createNew) {
         viewData.showSectionDialog(createNew);
     }
 
-    /**
-     * Shows the dialog for creating or editing the branch. Whether it's a creating or editing is decided by the
-     * specified parameter.
-     *
-     * @param createNew pass {@code true} if this is a window for creating a new branch
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew) {
-        viewData.showBranchDialog(createNew);
+    @GlobalCommand
+    @NotifyChange(TREE_MODEL)
+    public void refreshTree() {
     }
 
     /**
@@ -107,8 +100,8 @@ public class ForumStructureVm {
     }
 
     /**
-     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData}
-     * to remove the item from the tree.
+     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData} to
+     * remove the item from the tree.
      *
      * @see ForumStructureData#getSelectedItem()
      */
@@ -148,18 +141,12 @@ public class ForumStructureVm {
      */
     @Command
     public void openBranchPermissions() {
-        selectedBranchForPermissions.setEntity(getSelectedItem().getBranchItem());
+        selectedBranchForPermissions.setEntity(getSelectedItemInTree().getBranchItem());
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
-    /**
-     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and cleans
-     * the selected section. Also makes the create section dialog to be closed.
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP})
     public void saveSection() {
-        viewData.addSelectedSectionToTreeIfNew();
+//        viewData.addSelectedSectionToTreeIfNew();
         storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
         viewData.closeDialog();
     }
@@ -174,36 +161,22 @@ public class ForumStructureVm {
      * Processes onOK of the Branch Dialog in order to save the branch being edited. Also saves a new branch.
      */
     @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void saveBranch() {
-        viewData.putSelectedBranchToSectionInDropdown();
-        PoulpeBranch createdBranch = storeSelectedBranch();
-        viewData.getSelectedItem().setItem(createdBranch);
-    }
-
-    /**
-     * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches
-     * of the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved
-     * to another section.
-     *
-     * @return the stored branch with id being set
-     */
-    PoulpeBranch storeSelectedBranch() {
-        PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
-        PoulpeSection section = viewData.getSectionSelectedInDropdown().getSectionItem();
-        return forumStructureService.saveBranch(section, selectedBranch);
+    @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
+    public void updateBranchInTree(PoulpeBranch branch) {
+        treeModel.moveBranchIfSectionChanged(branch);
+        selectedItemInTree.setItem(branch);
     }
 
     public ForumStructureData getViewData() {
         return viewData;
     }
 
-    public ForumStructureItem getSelectedItem() {
-        return viewData.getSelectedItem();
+    public ForumStructureItem getSelectedItemInTree() {
+        return selectedItemInTree;
     }
 
-    public void setSelectedItem(ForumStructureItem selectedItem) {
-        this.viewData.setSelectedItem(selectedItem);
+    public void setSelectedItemInTree(ForumStructureItem selectedItemInTree) {
+        this.selectedItemInTree = selectedItemInTree;
     }
 
     /**
@@ -213,7 +186,7 @@ public class ForumStructureVm {
      */
     @NotifyChange(SELECTED_ITEM_PROP)
     public void setSelectedNode(DefaultTreeNode<ForumStructureItem> selectedNode) {
-        this.viewData.setSelectedItem(selectedNode.getData());
+        this.selectedItemInTree = selectedNode.getData();
     }
 
     /**
@@ -284,5 +257,9 @@ public class ForumStructureVm {
         }
 
         return false;
+    }
+
+    public ForumStructureTreeModel getTreeModel() {
+        return treeModel;
     }
 }

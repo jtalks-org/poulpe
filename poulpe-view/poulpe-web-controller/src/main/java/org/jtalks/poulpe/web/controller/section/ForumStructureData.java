@@ -21,7 +21,6 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
@@ -38,16 +37,13 @@ public class ForumStructureData {
      * The level of the section in the tree, e.g. branch is the next level = 1.
      */
     private static final int SECTION_TREE_LEVEL = 0;
-    private final BranchEditingDialog branchDialog;
+    private final BranchEditingDialog branchDialog = new BranchEditingDialog(null, null, null);
     private final ConfirmBranchDeletionDialogVm confirmBranchDeletionDialogVm = new ConfirmBranchDeletionDialogVm();
     private final ConfirmSectionDeletionDialogVm confirmSectionDeletionDialogVm = new ConfirmSectionDeletionDialogVm();
     private ForumStructureItem selectedItem = new ForumStructureItem();
     private ForumStructureTreeModel structureTree;
     private boolean showSectionDialog;
 
-    public ForumStructureData(BranchEditingDialog branchDialog) {
-        this.branchDialog = branchDialog;
-    }
 
     /**
      * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
@@ -67,21 +63,6 @@ public class ForumStructureData {
     public ForumStructureData closeDialog() {
         showSectionDialog = false;
         branchDialog.closeDialog();
-        return this;
-    }
-
-    /**
-     * Shows the branch dialog and decides whether it should be a dialog for the new branch creation or it will be an
-     * editing of the existing item.
-     *
-     * @param createNew a flag to decide whether we're going to create a new branch or will be editing the existing one
-     * @return this
-     */
-    public ForumStructureData showBranchDialog(boolean createNew) {
-        selectedItem = selectedItem.prepareBranchItemForEditing(createNew);
-        ForumStructureItem containingSection = structureTree.getSelectedData(SECTION_TREE_LEVEL);
-        structureTree.clearSelection();
-        branchDialog.setEditedBranch(selectedItem).selectSection(containingSection).showDialog();
         return this;
     }
 
@@ -107,16 +88,6 @@ public class ForumStructureData {
      */
     public ForumStructureItem removeSelectedItem() {
         return structureTree.removeSelected().getData();
-    }
-
-    /**
-     * Gets the section that was chosen in the list of available sections while moving the branch to another section (or
-     * creating new).
-     *
-     * @return the section that was chosen in the list of available sections
-     */
-    public ForumStructureItem getSectionSelectedInDropdown() {
-        return branchDialog.getSectionSelectedInDropdown();
     }
 
     /**
@@ -195,44 +166,6 @@ public class ForumStructureData {
     }
 
     /**
-     * If a new section was created (and thus was put into {@link #setSelectedItem(ForumStructureItem)}, then we need to
-     * add that section to the Forum Structure tree to the last position. This method does exactly this and it results
-     * in no-op if the selected section is already persistent.
-     *
-     * @return this
-     */
-    public ForumStructureData addSelectedSectionToTreeIfNew() {
-        if (!getSelectedItem().isPersisted()) {
-            ZkTreeNode<ForumStructureItem> sectionNode = structureTree
-                    .addExpandableNode(getSelectedItem())
-                    .select();
-            branchDialog.getSectionList().add(sectionNode.getData());
-        }
-        return this;
-    }
-
-    /**
-     * Finds the branch that is currently set as selected and if this is a new branch (was just added via branch
-     * creation dialog), adds it to the list of branches of the section. The section that is chosen - the one that was
-     * selected in the dropdown list of sections (and it can be accessed via {@link #getSectionSelectedInDropdown()}. It
-     * results in the branch been moved to another section if the currently selected section is not persisted yet. When
-     * you trigger this method, conditions should be met:
-     * <pre>
-     *   <li>{@link #getSelectedItem()} should return a non null branch (no matter whether it's already persistent or
-     *         not)
-     *   </li>
-     *   <li>{@link #getSectionSelectedInDropdown()} should return a section chosen in the Branch Editing dialog</li>
-     * </pre>
-     *
-     * @return this
-     */
-    public ForumStructureData putSelectedBranchToSectionInDropdown() {
-        ForumStructureItem branchToPut = getSelectedItem();
-        getStructureTree().putBranch(branchToPut, getSectionSelectedInDropdown());
-        return this;
-    }
-
-    /**
      * Gets the Branch Editing Dialog View Data which is used while creating a new branch or editing the existing one.
      *
      * @return the Branch Editing Dialog View Data which is used while creating a new branch or editing the existing
@@ -261,7 +194,7 @@ public class ForumStructureData {
      * @param target the target to which place will be dropped node
      */
     public void dropBeforeAndSelect(TreeNode<ForumStructureItem> node,
-                              TreeNode<ForumStructureItem> target) {
+                                    TreeNode<ForumStructureItem> target) {
         structureTree.dropNodeBefore(node, target);
         structureTree.setSelectedNode(node);
         setSelectedItem(node.getData());
@@ -274,7 +207,7 @@ public class ForumStructureData {
      * @param target the target in which will be dropped node
      */
     public void dropInAndSelect(TreeNode<ForumStructureItem> node,
-            TreeNode<ForumStructureItem> target) {
+                                TreeNode<ForumStructureItem> target) {
         structureTree.dropNodeIn(node, target);
         structureTree.setSelectedNode(node);
         setSelectedItem(node.getData());

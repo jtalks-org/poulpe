@@ -45,9 +45,13 @@ public class GroupList {
      * @return a group in the list that is equal to the specified one or {@code null} if such group wasn't found
      */
     public Group getEqual(@Nullable Group group) {
-        int groupIndex = groups.indexOf(group);
-        if (groupIndex >= 0) {
-            return groups.get(groupIndex);
+        if (group == null) {
+            return null;
+        }
+        for (Group next : groups) {
+            if (next.getUuid().equals(group.getUuid())) {
+                return next;
+            }
         }
         return null;
     }

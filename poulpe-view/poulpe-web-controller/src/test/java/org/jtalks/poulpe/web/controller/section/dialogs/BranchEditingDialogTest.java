@@ -43,7 +43,7 @@ public class BranchEditingDialogTest {
     @BeforeMethod
     public void setUp() throws Exception {
         groupDao = mock(GroupDao.class);
-        sut = new BranchEditingDialog(groupDao);
+//        sut = new BranchEditingDialog(groupDao, forumStructureVm);
         sut.renewSectionsFromTree((ZkTreeModel<ForumStructureItem>) provideTreeModelWithSectionsAndBranches()[0][0]);
     }
 
@@ -57,14 +57,16 @@ public class BranchEditingDialogTest {
     public void testGetCandidatesToModerate(List<Group> givenGroups) throws Exception {
         doReturn(givenGroups).when(groupDao).getAll();
 
-        List<Group> candidatesToModerate = sut.showDialog().getCandidatesToModerate();
+        sut.showBranchDialog();
+        List<Group> candidatesToModerate = sut.getCandidatesToModerate();
         assertEquals(candidatesToModerate, givenGroups);
     }
 
     @Test(dataProvider = "provideBranchWithModeratingGroup")
     public void getModeratorsGroupShouldReturnGroupFromBranch(PoulpeBranch branch) {
         doReturn(Arrays.asList(branch.getModeratorsGroup())).when(groupDao).getAll();
-        sut.showDialog().setEditedBranch(new ForumStructureItem(branch));
+        sut.showBranchDialog();
+        sut.setEditedBranch(new ForumStructureItem(branch));
         assertEquals(sut.getModeratingGroup(), branch.getModeratorsGroup());
     }
 
@@ -79,16 +81,9 @@ public class BranchEditingDialogTest {
 
     @Test
     public void isShowingDialogShouldChangeFlagAfterFirstInvocation() {
-        sut.showDialog();
+        sut.showBranchDialog();
         assertTrue(sut.isShowDialog());
         assertFalse(sut.isShowDialog());
-    }
-
-    @Test
-    public void testGetSectionSelectedInDropdown() throws Exception {
-        ForumStructureItem toBeSelected = sut.getSectionList().get(1);
-        sut.getSectionList().addToSelection(toBeSelected);
-        assertSame(sut.getSectionSelectedInDropdown(), toBeSelected);
     }
 
     @DataProvider

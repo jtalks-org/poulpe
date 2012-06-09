@@ -6,7 +6,7 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
     <button label="${labels.forum_structure.create_section_button}"
             onClick="@command('showNewSectionDialog', createNew=true)"/>
-    <tree model="@bind(vm.viewData.structureTree)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
+    <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
       <template name="model">
         <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)" label="@load(each)"
                   onDrop="@command('onDropItem', event=event)"/>
@@ -14,25 +14,27 @@
     </tree>
 
     <menupopup id="treeContextMenu">
-      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(not vm.selectedItem.branch)"
+      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(not vm.selectedItemInTree.branch)"
                 onClick="@command('showNewSectionDialog', createNew=false)" image="/resources/img/edit16.png"/>
-      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(vm.selectedItem.branch)"
-                onClick="@command('showNewBranchDialog', createNew=false)" image="/resources/img/edit16.png"/>
-      <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItem.branch)"
-                onClick="@command('showNewBranchDialog', createNew=true)" image="/resources/img/add16.png"/>
-      <menuitem label="${labels.forum_structure.branch_permissions_button}" visible="@load(vm.selectedItem.branch)"
+      <menuitem label="${labels.forum_structure.edit_item}" visible="@load(vm.selectedItemInTree.branch)"
+                onClick="@global-command('showBranchDialog')" image="/resources/img/edit16.png"/>
+      <menuitem label="${labels.forum_structure.create_branch_button}" visible="@load(not vm.selectedItemInTree.branch)"
+                onClick="@global-command('showCreateBranchDialog')" image="/resources/img/add16.png"/>
+      <menuitem label="${labels.forum_structure.branch_permissions_button}"
+                visible="@load(vm.selectedItemInTree.branch)"
                 onClick="@command('openBranchPermissions')" image="/resources/img/permissions16.png"/>
       <menuitem label="${labels.forum_structure.delete_item}" onClick="@command('deleteSelected')"
                 image="/resources/img/remove16.png"/>
     </menupopup>
     <!--SECTION DIALOG-->
-    <window id="editSectionDialog"
+    <window id="editSectionDialog"  viewModel="@id('sectionVm') @init(forumStructureSectionDialogVm)"
             title="${labels.forum_structure.create_section_dialog.title}" closable="true" mode="modal" border="normal"
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
             forward="onOK=saveSectionButton.onClick"
-            visible="@load(vm.viewData.showSectionDialog)" height="230px" width="300px">
-      <vlayout form="@id('fx') @save(vm.selectedItem.item, before='saveSection') @load(vm.selectedItem.item)">
+            visible="@load(sectionVm.showDialog)" height="230px" width="300px">
+      <vlayout
+              form="@id('fx') @save(vm.selectedItemInTree.item, before='saveSection') @load(vm.selectedItemInTree.item)">
         ${labels.forum_structure.section_dialog.section_name}
         <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1" vflex="min"
                  errorMessage="@load(vmsgs[sectionNameBox])"/>
@@ -51,29 +53,28 @@
             onClose="self.visible=false;event.stopPropagation();"
             onCancel="self.visible=false"
             forward="onOK=saveBranchButton.onClick"
-            visible="@load(vm.viewData.branchDialog.showDialog)" height="320px" width="300px">
-      <vlayout form="@id('fx') @save(vm.viewData.branchDialog, before='saveBranch') @load(vm.viewData.branchDialog)">
+            visible="@load(branchVm.showDialog)" height="320px" width="300px"
+            viewModel="@id('branchVm') @init(forumStructureBranchDialogVm)"
+            apply="org.zkoss.bind.BindComposer">
+      <vlayout>
         ${labels.forum_structure.branch_dialog.section}
-        <combobox readonly="true" model="@load(fx.sectionList)" hflex="1"/>
+        <combobox readonly="true" model="@load(branchVm.sectionList)" hflex="1"/>
         ${labels.forum_structure.branch_dialog.branch_name}
-        <textbox id="branchNameBox" value="@bind(fx.editedBranch.item.name) @validator('beanValidator')" hflex="1"
-                 errorMessage="@load(vmsgs[branchNameBox])"/>
+        <textbox id="branchNameBox" value="@bind(branchVm.editedBranch.item.name) @validator('beanValidator')" hflex="1"
+                 errorMessage="@load(branchMsgs[branchNameBox])"/>
         <label value="Moderating Group:"/>
-        <!--<radiogroup>-->
-          <!--<radio label="Choose esisting" />-->
-          <!--<combobox model="@load(fx.candidatesToModerate)" selectedItem="@bind(fx.moderatingGroup)">-->
-          <!--<template name="model">-->
-          <!--<comboitem label="@load(each.name)"/>-->
-          <!--</template>-->
-          <!--</combobox>-->
-          <!--<radio id="createNewGroupRadio" label="Create New" onCheck="createNewGroupText.disabled = !self.checked"/>-->
-          <textbox id="createNewGroupText" value="@save(fx.groupToCreate)" hflex="1" constraint="no empty"/>
+        <combobox model="@load(branchVm.candidatesToModerate)" selectedItem="@bind(branchVm.moderatingGroup)" hflex="1">
+          <template name="model">
+            <comboitem label="@load(each.name)"/>
+          </template>
+        </combobox>
         ${labels.forum_structure.branch_dialog.branch_description}
         <textbox rows="5" id="branchDescriptionBox"
-                 value="@bind(fx.editedBranch.item.description) @validator('beanValidator')"
-                 errorMessage="@load(vmsgs[branchDescriptionText])" width="97%"/>
+                 value="@bind(branchVm.editedBranch.item.description) @validator('beanValidator')"
+                 errorMessage="@load(vmsgs[branchDescriptionText])" hflex="1"/>
         <cell>
-          <button id="saveBranchButton" label="${labels.dialogs.save_button}" onClick="@command('saveBranch')"/>
+          <button id="saveBranchButton" label="${labels.dialogs.save_button}"
+                  onClick="@command('saveBranch') @global-command('refreshTree')"/>
           <button label="${labels.dialogs.cancel_button}" onClick="editBranchDialog.visible=false;"/>
         </cell>
       </vlayout>

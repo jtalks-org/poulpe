@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
@@ -27,6 +28,7 @@ import javax.annotation.Nonnull;
  */
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     private static final long serialVersionUID = 20110138264143L;
+
     public ForumStructureTreeModel(@Nonnull ZkTreeNode<ForumStructureItem> root) {
         super(root);
     }
@@ -49,6 +51,18 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         branchNodeToPut.moveTo(destinationSectionNode);
         addToSelection(branchNodeToPut);
         addOpenObject(destinationSectionNode);
+        return this;
+    }
+
+    public ForumStructureTreeModel moveBranchIfSectionChanged(PoulpeBranch branch) {
+        ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch));
+        ZkTreeNode<ForumStructureItem> sectionNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch.getSection()));
+        if(branchNode == null){
+            branchNode = new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
+        }
+        branchNode.moveTo(sectionNode);
+        setSelectedNode(branchNode);
+        addOpenObject(sectionNode);
         return this;
     }
 }
