@@ -161,7 +161,7 @@ public class ComponentsVMTest {
         assertTrue(viewModel.getComponentName()==null);
         assertTrue(viewModel.getComponentDescription()==null);
         assertTrue(viewModel.getSelected()==null);
-  
+
         setComponentAttributes();
         viewModel.setSelected(poulpeComponent());
         viewModel.setComponentType(viewModel.getSelected().getComponentType());
@@ -170,7 +170,7 @@ public class ComponentsVMTest {
         assertTrue(viewModel.getComponentName()==null);
         assertTrue(viewModel.getComponentDescription()==null);
         assertTrue(viewModel.getSelected()==null);
-   
+
         setComponentAttributes();
         viewModel.setSelected(articleComponent());
         viewModel.setComponentType(viewModel.getSelected().getComponentType());
@@ -213,7 +213,7 @@ public class ComponentsVMTest {
 		when(componentService.getAll()).thenReturn(new ArrayList<Component>(listOfTreeComponent));
 	}
     private Component forumComponent(){
-        return new Component("name", "description", ComponentType.FORUM); 
+        return new Component("name", "description", ComponentType.FORUM);
     }
     private Component poulpeComponent(){
         return new Component("name", "description", ComponentType.ADMIN_PANEL);
@@ -226,7 +226,7 @@ public class ComponentsVMTest {
         viewModel.setComponentDescription("desc");
         viewModel.setComponentType(ComponentType.FORUM);
     }
-    
-    
+
+
 
 }

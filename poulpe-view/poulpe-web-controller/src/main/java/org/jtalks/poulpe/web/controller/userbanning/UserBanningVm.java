@@ -14,16 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.zkoss.bind.annotation.*;
-import org.zkoss.zk.ui.Component;
-import org.zkoss.zkplus.databind.BindingListModelList;
-import org.zkoss.zul.ListModelList;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -44,8 +40,11 @@ public class UserBanningVm {
     private final UserService userService;
     private final GroupService groupService;
 
+    // Max count to combobox of users with filter
+    private final static int MAX_COUNT = 10;
 
-    public final String AVAILABLE_USERS_PROP="availableUsers" ,BANNED_USERS_PROP="bannedUsers",ADD_BAN_FOR_PROP="addBanFor";
+
+    public final String AVAILABLE_USERS_PROP = "availableUsers", BANNED_USERS_PROP = "bannedUsers", ADD_BAN_FOR_PROP = "addBanFor";
 
 
     /**
@@ -68,7 +67,7 @@ public class UserBanningVm {
     /**
      * Constructs VM.
      *
-     * @param userService used to obtain data related to users for VM
+     * @param userService  used to obtain data related to users for VM
      * @param groupService used to obtain data related to groups for VM
      */
     public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
@@ -83,9 +82,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<PoulpeUser> getAvailableUsers() {
-        List<PoulpeUser> available = userService.getAll();
-        available.removeAll(getBannedUsers());
-        return available;
+        return userService.getNonBannedByUsername(availableFilterText, MAX_COUNT);
     }
 
 
@@ -96,7 +93,7 @@ public class UserBanningVm {
      */
     @Nonnull
 
-    public List<PoulpeUser> getBannedUsers(){
+    public List<PoulpeUser> getBannedUsers() {
         return groupService.getBannedUsers().getUsers();
     }
 
@@ -112,10 +109,11 @@ public class UserBanningVm {
 
     /**
      * Sets selected banned user
-     * @param selectedUser   the banned user currently selected
+     *
+     * @param selectedUser the banned user currently selected
      */
-    public void setSelectedUser(PoulpeUser selectedUser){
-        this.selectedUser=selectedUser;
+    public void setSelectedUser(PoulpeUser selectedUser) {
+        this.selectedUser = selectedUser;
     }
 
     /**
@@ -158,7 +156,7 @@ public class UserBanningVm {
     @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
     public void addUserToBannedGroup() {
         groupService.banUsers(addBanFor);
-        addBanFor=null;
+        addBanFor = null;
     }
 
     /**
@@ -166,12 +164,10 @@ public class UserBanningVm {
      */
     @Command
     @NotifyChange({AVAILABLE_USERS_PROP, BANNED_USERS_PROP})
-    public void revokeBan(){
+    public void revokeBan() {
         groupService.revokeBan(selectedUser);
-        selectedUser=null;
+        selectedUser = null;
     }
-
-
 
 
 }

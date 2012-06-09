@@ -25,17 +25,17 @@
             <textbox value="@bind(fx.email) @validator('beanValidator')" width="100%"
               constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
           </row>
-          <row>
-            <cell colspan="2">
-              <checkbox id="newPasswordCheckbox" label="Set new password" onCheck="newPassword.disabled = !self.checked" />
-            </cell>
-          </row>
-          <row>
-            <label value="${labels.users.label.new_password}" />
-            <textbox id="newPassword" value="@save(fx.newPassword, after='saveUser')" width="100%" type="password"
-               disabled="true" />
+          <!--<row>-->
+            <!--<cell colspan="2">-->
+              <!--<checkbox id="newPasswordCheckbox" label="Set new password" onCheck="newPassword.disabled = !self.checked" />-->
+            <!--</cell>-->
+          <!--</row>-->
+          <!--<row>-->
+            <!--<label value="${labels.users.label.new_password}" />-->
+            <!--<textbox id="newPassword" value="@save(fx.newPassword, after='saveUser')" width="100%" type="password"-->
+               <!--disabled="true" />-->
              <!-- constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" -->
-          </row>
+          <!--</row>-->
         </rows>
       </grid>
     </groupbox>

@@ -102,10 +102,13 @@ public class UserGroupVmTest {
     @Test
     public void testSaveGroup() throws Exception {
         Group group = new Group();
-        viewModel.saveGroup(group);
+        viewModel.setSelectedGroup(group);
+        viewModel.saveGroup();
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();
         assertFalse(viewModel.isShowNewDialog());
+        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowDeleteDialog());
     }
 
     @Test
@@ -114,6 +117,8 @@ public class UserGroupVmTest {
         assertTrue(viewModel.isShowNewDialog());
         viewModel.closeDialog();
         assertFalse(viewModel.isShowNewDialog());
+        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowDeleteDialog());
     }
 
     @Test
@@ -127,6 +132,12 @@ public class UserGroupVmTest {
     public void testGetGroups() {
         assertEquals(viewModel.getGroups(), groups);
         verify(viewModel).updateView();
+    }
+
+    @Test
+    public void testShowEditDialog(){
+        viewModel.showEditDialog();
+        assertTrue(viewModel.isShowEditDialog());
     }
 
 
