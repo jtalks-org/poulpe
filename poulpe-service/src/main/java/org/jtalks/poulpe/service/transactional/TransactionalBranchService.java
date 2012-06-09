@@ -47,7 +47,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     public TransactionalBranchService(BranchDao branchDao, PermissionManager branchPermissionManager,
             EntityValidator validator) {
-        this.dao = branchDao;
+        super.setDao(branchDao);
         this.branchPermissionManager = branchPermissionManager;
         this.validator = validator;
     }
@@ -57,7 +57,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public List<PoulpeBranch> getAll() {
-        return dao.getAll();
+        return getDao().getAll();
     }
 
     /**
@@ -66,7 +66,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
     @Override
     public void saveBranch(PoulpeBranch selectedBranch) {
         validator.throwOnValidationFailure(selectedBranch);
-        dao.saveOrUpdate(selectedBranch);
+        getDao().saveOrUpdate(selectedBranch);
     }
 
     /**
@@ -74,7 +74,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void deleteBranchRecursively(PoulpeBranch victim) {
-        dao.delete(victim.getId());
+        getDao().delete(victim.getId());
     }
 
     /**
@@ -82,7 +82,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient) {
-        dao.delete(victim.getId());
+        getDao().delete(victim.getId());
     }
 
     /**

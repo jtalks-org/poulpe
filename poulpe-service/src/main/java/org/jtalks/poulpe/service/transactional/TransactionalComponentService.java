@@ -51,7 +51,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     public TransactionalComponentService(ComponentDao dao, PermissionManager permissionManager,
             EntityValidator validator) {
-        this.dao = dao;
+        super.setDao(dao);
         this.permissionManager = permissionManager;
         this.validator = validator;
     }
@@ -61,7 +61,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public List<Component> getAll() {
-        return dao.getAll();
+        return getDao().getAll();
     }
 
     /**
@@ -69,7 +69,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteComponent(Component component) {
-        dao.delete(component);
+        getDao().delete(component);
     }
 
     /** {@inheritDoc} */
@@ -80,7 +80,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         if (!component.isPersistent()) {
             propertyLoader.loadDefaults(component);
         }
-        dao.saveOrUpdate(component);
+        getDao().saveOrUpdate(component);
     }
 
     /**
@@ -88,7 +88,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public Set<ComponentType> getAvailableTypes() {
-        return dao.getAvailableTypes();
+        return getDao().getAvailableTypes();
     }
 
     /**
@@ -112,7 +112,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     /** {@inheritDoc} */
     @Override
     public Component getByType(ComponentType type) {
-        return dao.getByType(type);
+        return getDao().getByType(type);
     }
 
     /**
