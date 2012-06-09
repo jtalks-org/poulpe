@@ -28,29 +28,23 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import org.jtalks.poulpe.model.entity.BaseComponent;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.Poulpe;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.AssertJUnit.*;
+
+import java.util.*;
+
+import org.jtalks.poulpe.model.entity.*;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.mockito.*;
 import org.testng.annotations.BeforeTest;
-
 import org.testng.annotations.Test;
-
-import javax.validation.constraints.AssertTrue;
-import java.util.*;
-
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
-import static org.testng.AssertJUnit.*;
 
 /**
  * Test for {@link org.jtalks.poulpe.web.controller.component.ComponentsVm}
@@ -74,7 +68,7 @@ public class ComponentsVMTest {
     @Mock
     private BindUtilsWrapper bindWrapper;
     @Captor
-    private ArgumentCaptor<Performable> deleteCallbackCaptor;
+    private ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
     @InjectMocks
     private ComponentsVm viewModel;
 
@@ -116,7 +110,7 @@ public class ComponentsVMTest {
         viewModel.setSelected(selected);
         viewModel.deleteComponent();
         verify(dialogManager).confirmDeletion(eq("testDelete"), deleteCallbackCaptor.capture());
-        Performable callback = deleteCallbackCaptor.getValue();
+        DialogManager.Performable callback = deleteCallbackCaptor.getValue();
 
         // Nothing should be happen before user confirms deletion.
         verify(componentService, never()).deleteComponent(selected);

@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.model.entity;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
@@ -15,7 +16,7 @@ import com.google.common.collect.Lists;
 public class BaseComponent {
 
     private ComponentType componentType;
-    private List<DefaultProperty> defaultProperties = Lists.newArrayList();
+    private Collection<DefaultProperty> defaultProperties = Lists.newArrayList();
 
     public BaseComponent() {
     }
@@ -32,11 +33,11 @@ public class BaseComponent {
         this.componentType = componentType;
     }
 
-    public List<DefaultProperty> getDefaultProperties() {
+    public Collection<DefaultProperty> getDefaultProperties() {
         return defaultProperties;
     }
 
-    public void setDefaultProperties(List<DefaultProperty> defaultProperties) {
+    public void setDefaultProperties(Collection<DefaultProperty> defaultProperties) {
         this.defaultProperties = defaultProperties;
     }
 
@@ -45,8 +46,8 @@ public class BaseComponent {
         return componentType.newComponent(name, description, copy(defaultProperties));
     }
     
-    private static List<Property> copy(List<DefaultProperty> defaults) {
-        List<Property> result = Lists.newArrayListWithCapacity(defaults.size());
+    private static List<Property> copy(Iterable<DefaultProperty> defaults) {
+        List<Property> result = Lists.newArrayListWithExpectedSize(4);
         
         for (DefaultProperty property : defaults) {
             result.add(property.toProperty());
