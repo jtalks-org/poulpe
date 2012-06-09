@@ -38,7 +38,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * @param validator entity validator
      */
     public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
-        super.setDao(sectionDao);
+        this.dao = sectionDao;
         this.validator = validator;
     }
 
@@ -47,7 +47,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      */
     @Override
     public List<PoulpeSection> getAll() {
-        return getDao().getAll();
+        return dao.getAll();
     }
 
     /**
@@ -56,13 +56,13 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
     @Override
     public void saveSection(PoulpeSection section) {
         validator.throwOnValidationFailure(section);
-        getDao().saveOrUpdate(section);
+        dao.saveOrUpdate(section);
     }
 
     /** {@inheritDoc} */
     @Override
     public boolean deleteRecursively(PoulpeSection victim) {
-        return getDao().deleteRecursively(victim);
+        return dao.deleteRecursively(victim);
     }
 
     /** {@inheritDoc} */
@@ -71,7 +71,7 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
         if (victim.getId() == recipient.getId()) {
             throw new IllegalArgumentException("Victim and recipient can't be the same section");
         }
-        return getDao().deleteAndMoveBranchesTo(victim, recipient);
+        return dao.deleteAndMoveBranchesTo(victim, recipient);
     }
 
 }

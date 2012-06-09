@@ -42,7 +42,7 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      * @param validator entity validator
      */
     public TransactionalTopicTypeService(TopicTypeDao topicDao, EntityValidator validator) {
-        super.setDao(topicDao);
+        this.dao = topicDao;
         this.validator = validator;
     }
 
@@ -51,7 +51,7 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      */
     @Override
     public List<TopicType> getAll() {
-        return getDao().getAll();
+        return dao.getAll();
     }
 
     /**
@@ -59,7 +59,7 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteTopicType(TopicType topicType) {
-        getDao().delete(topicType.getId());
+        dao.delete(topicType.getId());
     }
 
     /**
@@ -68,7 +68,7 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
     @Override
     public void saveOrUpdate(TopicType topicType) {
         validator.throwOnValidationFailure(topicType);
-        getDao().saveOrUpdate(topicType);
+        dao.saveOrUpdate(topicType);
     }
 
     /**

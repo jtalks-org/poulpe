@@ -43,7 +43,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * @param validator - an entity validator
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
-        super.setDao(groupDao);
+        this.dao = groupDao;
         this.userBanner = userBanner;
         this.validator = validator;
     }
@@ -53,7 +53,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      */
     @Override
     public List<Group> getAll() {
-        return getDao().getAll();
+        return dao.getAll();
     }
 
     /**
@@ -61,7 +61,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      */
     @Override
     public List<Group> getAllMatchedByName(String name) {
-        return getDao().getMatchedByName(name);
+        return dao.getMatchedByName(name);
     }
 
     /**
@@ -70,7 +70,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public void deleteGroup(Group group) {
         Assert.throwIfNull(group, "group");
-        getDao().delete(group);
+        dao.delete(group);
     }
 
     /**
@@ -80,7 +80,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     public void saveGroup(Group group) {
         Assert.throwIfNull(group, "group");
         validator.throwOnValidationFailure(group);
-        getDao().saveOrUpdate(group);
+        dao.saveOrUpdate(group);
     }
 
     /**

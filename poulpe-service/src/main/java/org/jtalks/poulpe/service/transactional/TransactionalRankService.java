@@ -37,7 +37,7 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      * @param validator entity validator
      */
     public TransactionalRankService(RankDao rankDao, EntityValidator validator) {
-        super.setDao(rankDao);
+        this.dao = rankDao;
         this.validator = validator;
     }
 
@@ -46,7 +46,7 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      */
     @Override
     public List<Rank> getAll() {
-        return getDao().getAll();
+        return dao.getAll();
     }
 
     /**
@@ -54,7 +54,7 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      */
     @Override
     public void deleteRank(Rank rank) {
-        getDao().delete(rank);
+        dao.delete(rank);
     }
 
     /**
@@ -63,6 +63,6 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
     @Override
     public void saveRank(Rank rank) {
         validator.throwOnValidationFailure(rank);
-        getDao().saveOrUpdate(rank);
+        dao.saveOrUpdate(rank);
     }
 }
