@@ -14,11 +14,20 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.Collections;
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -26,13 +35,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.validation.ConstraintViolationException;
-import java.util.Collections;
-import java.util.List;
-
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for {@link SectionHibernateDao}.
@@ -58,7 +60,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        section = ObjectsFactory.createSectionWithBranches(10);
+        section = Fixtures.createSectionWithBranches(10);
     }
 
     @Test
@@ -132,8 +134,8 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     }
 
     private void givenTwoSections() {
-        session.save(ObjectsFactory.createSection());
-        session.save(ObjectsFactory.createSection());
+        session.save(Fixtures.createSection());
+        session.save(Fixtures.createSection());
     }
 
     @Test

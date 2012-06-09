@@ -14,12 +14,21 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -27,14 +36,6 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
@@ -122,11 +123,11 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     }
 
     private Jcommune createForum() {
-        return ObjectsFactory.createJcommune(10);
+        return Fixtures.createJcommune(10);
     }
 
     private Component createArticle() {
-        return ObjectsFactory.createComponent(ComponentType.ARTICLE);
+        return Fixtures.createComponent(ComponentType.ARTICLE);
     }
 
     @Test

@@ -16,10 +16,12 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -105,7 +107,7 @@ public class BranchEditingDialogTest {
 
     @DataProvider
     public Object[][] provideTreeModelWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = ObjectsFactory.fakeForum();
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));

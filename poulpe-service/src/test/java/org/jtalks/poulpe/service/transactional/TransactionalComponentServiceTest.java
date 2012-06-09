@@ -28,14 +28,15 @@
 */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.PropertyLoader;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -60,7 +61,7 @@ public class TransactionalComponentServiceTest {
     @Mock
     private EntityValidator validator;
     
-    Component component = new Component("", "", ComponentType.FORUM);
+    Component component = Fixtures.randomComponent();
 
     @BeforeMethod
     public void setUp() throws Exception {

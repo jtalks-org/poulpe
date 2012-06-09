@@ -15,9 +15,9 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;

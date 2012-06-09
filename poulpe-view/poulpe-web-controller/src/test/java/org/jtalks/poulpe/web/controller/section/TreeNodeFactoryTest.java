@@ -16,10 +16,12 @@ package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Entity;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
@@ -107,7 +109,7 @@ public class TreeNodeFactoryTest {
 
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = ObjectsFactory.fakeForum();
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));

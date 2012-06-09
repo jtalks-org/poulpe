@@ -26,8 +26,6 @@ import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -40,7 +38,9 @@ import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -69,22 +69,19 @@ import com.google.common.collect.Lists;
  */
 public class PermissionManagerTest {
 
+    @Deprecated
     public static PoulpeBranch randomBranch() {
         return new PoulpeBranch(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
     }
 
+    @Deprecated
     public static Group randomGroup(long id) {
         Group group = new Group(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
         group.setId(id);
         return group;
     }
 
-    public static Component randomComponent() {
-        ComponentType[] types = ComponentType.values();
-        return new Component(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20),
-                types[RandomUtils.nextInt(types.length)]);
-    }
-
+    @Deprecated
     public static Group getGroupWithId(List<Group> groups, long id) {
         for (Group group : groups) {
             if (group.getId() == id) {
@@ -181,7 +178,7 @@ public class PermissionManagerTest {
 
     @Test
     public void testGetPermissionsMapForComponent() throws Exception {
-        Component component = randomComponent();
+        Component component = Fixtures.randomComponent();
 
         givenPermissions(component, GeneralPermission.values());
 
@@ -192,8 +189,8 @@ public class PermissionManagerTest {
         assertTrue(permissionsMap.getPermissions().containsAll(permissions));
 
         for (GroupAce groupAce : groupAces) {
-            List<Group> groups = permissionsMap.get(
-                    GeneralPermission.findByMask(groupAce.getBranchPermissionMask()), groupAce.isGranting());
+            List<Group> groups = permissionsMap.get(GeneralPermission.findByMask(groupAce.getBranchPermissionMask()),
+                    groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }
     }
@@ -251,15 +248,14 @@ public class PermissionManagerTest {
                 groups.add(group);
 
                 this.permissions.add(permissions[i]);
-                groupAces
-                        .add(buildGroupAce(entity, permissions[i], (i % 2 == 1), acl, new UserGroupSid(group.getId())));
+                groupAces.add(buildGroupAce(entity, permissions[i], (i % 2 == 1), acl, new UserGroupSid(group.getId())));
             }
         }
     }
 
     private GroupAce buildGroupAce(Entity entity, JtalksPermission permission, boolean isGranting, Acl acl, Sid sid) {
-        AccessControlEntry accessControlEntry = new AccessControlEntryImpl(entity.getId(), acl, sid,
-                permission, true, true, false);
+        AccessControlEntry accessControlEntry = new AccessControlEntryImpl(entity.getId(), acl, sid, permission, true,
+                true, false);
         return new GroupAce(accessControlEntry);
     }
 }

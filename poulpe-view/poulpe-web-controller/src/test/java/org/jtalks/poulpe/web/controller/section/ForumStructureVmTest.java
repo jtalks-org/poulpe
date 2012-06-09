@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -22,6 +23,7 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
+import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
@@ -134,7 +136,7 @@ public class ForumStructureVmTest {
 
     @DataProvider
     public Object[][] provideRandomJcommuneWithSections() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = ObjectsFactory.fakeForum();
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         sectionA.addOrUpdateBranch(createBranch(sectionA, "BranchA"));
         sectionA.addOrUpdateBranch(createBranch(sectionA, "BranchB"));

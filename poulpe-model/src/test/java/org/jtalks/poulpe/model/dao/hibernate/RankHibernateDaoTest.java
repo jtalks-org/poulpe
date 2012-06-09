@@ -14,27 +14,25 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.List;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.List;
+
+import javax.validation.ConstraintViolationException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.dao.RankDao;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.validation.ConstraintViolationException;
 
 /**
  * Test for RankHiberanateDao
@@ -58,7 +56,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testSave() {
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         dao.saveOrUpdate(rank);
 
         assertNotSame(rank.getId(), 0, "Id not created");
@@ -79,7 +77,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testGet() {
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         session.save(rank);
 
         Rank result = dao.get(rank.getId());
@@ -91,7 +89,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     @Test
     public void testUpdate() {
         String newName = "new name";
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         session.save(rank);
         rank.setRankName(newName);
 
@@ -104,7 +102,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testDelete() {
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         session.save(rank);
 
         boolean result = dao.delete(rank.getId());
@@ -116,9 +114,9 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testGetAll() {
-        Rank rank1 = ObjectsFactory.createRank();
+        Rank rank1 = Fixtures.createRank();
         session.save(rank1);
-        Rank rank2 = ObjectsFactory.createRank();
+        Rank rank2 = Fixtures.createRank();
         session.save(rank2);
 
         List<Rank> branches = dao.getAll();
@@ -128,7 +126,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testIsExist() {
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         session.save(rank);
 
         assertTrue(dao.isExist(rank.getId()));
@@ -136,7 +134,7 @@ public class RankHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     
     @Test
     public void testIsRankNameExists() {
-        Rank rank = ObjectsFactory.createRank();
+        Rank rank = Fixtures.createRank();
         session.save(rank);
         
         assertTrue(dao.isRankNameExists(rank.getRankName()));

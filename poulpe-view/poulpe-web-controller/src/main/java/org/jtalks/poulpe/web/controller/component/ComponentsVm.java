@@ -14,10 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.Poulpe;
+import org.jtalks.common.model.entity.Property;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -120,14 +119,9 @@ public class ComponentsVm {
     @Command
     @NotifyChange({ COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
     public void createComponent() {
-        if (componentType.equals(ComponentType.FORUM)) {
-            selected = new Jcommune();
-        } else if (componentType.equals(ComponentType.ADMIN_PANEL)) {
-            selected = new Poulpe();
-        } else {
-            selected = new Component();
-        }
-        setBasicFields();
+        // TODO: use BaseComponent for creation
+        selected = componentType.newComponent(componentName, componentDescription, new ArrayList<Property>());
+        
         componentService.saveComponent(selected);
         addNewComponentWindowVisible = false;
         clearComponent();
@@ -175,7 +169,7 @@ public class ComponentsVm {
     /**
      * Sets the selected component from the list which displays components.
      *
-     * @param selected {@link org.jtalks.common.model.entity.Component}
+     * @param selected {@link org.jtalks.poulpe.model.entity.Component}
      */
     public void setSelected(Component selected) {
         this.selected = selected;
@@ -184,7 +178,7 @@ public class ComponentsVm {
     /**
      * Returns the component which currently is edited, created or selected in a list which displays components.
      *
-     * @return {@link org.jtalks.common.model.entity.Component}
+     * @return {@link org.jtalks.poulpe.model.entity.Component}
      */
     public Component getSelected() {
         return selected;
@@ -299,7 +293,7 @@ public class ComponentsVm {
     /**
      * Returns the component type.
      *
-     * @return {@link org.jtalks.common.model.entity.ComponentType}
+     * @return {@link org.jtalks.poulpe.model.entity.ComponentType}
      */
     public ComponentType getComponentType() {
         return componentType;
@@ -310,15 +304,6 @@ public class ComponentsVm {
      */
     public void showComponentEditWindow() {
         EditComponentVm.openWindowForEdit(windowManager);
-    }
-
-    /**
-     * Sets basic field of selected components. Values taken from textboxes.
-     */
-    private void setBasicFields() {
-        selected.setName(componentName);
-        selected.setDescription(componentDescription);
-        selected.setComponentType(componentType);
     }
 
 }

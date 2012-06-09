@@ -19,11 +19,10 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.poulpe.model.entity.*;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 
 import com.google.common.collect.Lists;
@@ -31,10 +30,13 @@ import com.google.common.collect.Lists;
 /**
  * @author unascribed
  * @author Vyacheslav Zhivaev
+ * @deprecated use {@link Fixtures}
  */
+@Deprecated
 public class ObjectsFactory {
     public static Component createComponent(long id, String name, String description, ComponentType type) {
-        Component comp = new Component(name, description, type);
+        BaseComponent base = new BaseComponent(type); 
+        Component comp = base.newComponent(name, description);
         comp.setId(id);
         return comp;
     }
@@ -44,29 +46,18 @@ public class ObjectsFactory {
 
         for (ComponentType type : ComponentType.values()) {
             String random = random();
-            list.add(new Component(random, random, type));
+            list.add(createComponent(0, random, random, type));
         }
 
         return list;
     }
 
     public static List<PoulpeSection> getFakeSections(int sizeOfCollection) {
-        return Collections.nCopies(sizeOfCollection, new PoulpeSection(random(), "desc"));
+        return Lists.newArrayList(Collections.nCopies(sizeOfCollection, new PoulpeSection(random(), "desc")));
     }
 
     public static List<PoulpeSection> fakeSections() {
         return getFakeSections(10);
-    }
-
-    /**
-     * @deprecated use {@link PoulpeSection#Section(String, String)} constructor instead
-     */
-    @Deprecated
-    public static PoulpeSection getFakeSection(String name, String description) {
-        PoulpeSection section = new PoulpeSection();
-        section.setName(name);
-        section.setDescription(description);
-        return section;
     }
 
     public static PoulpeSection fakeSection() {
@@ -86,17 +77,6 @@ public class ObjectsFactory {
 
     public static PoulpeSection sectionWithBranches() {
         return sectionWithBranches(10);
-    }
-
-    /**
-     * @deprecated use {@link PoulpeBranch#Branch(String, String)} constructor instead
-     */
-    @Deprecated
-    public static PoulpeBranch getFakeBranch(String name, String description) {
-        PoulpeBranch branch = new PoulpeBranch();
-        branch.setName(name);
-        branch.setDescription(description);
-        return branch;
     }
 
     public static PoulpeBranch fakeBranch() {
@@ -139,7 +119,7 @@ public class ObjectsFactory {
     }
 
     public static Jcommune fakeForum() {
-        Jcommune forum = new Jcommune();
+        Jcommune forum = (Jcommune) ComponentType.FORUM.newComponent("name", "description", new ArrayList<Property>());
         forum.setSections(fakeSections());
         return forum;
     }

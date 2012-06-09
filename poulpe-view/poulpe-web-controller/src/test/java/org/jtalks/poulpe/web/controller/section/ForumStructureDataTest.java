@@ -14,7 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import java.util.ArrayList;
+
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -220,7 +224,7 @@ public class ForumStructureDataTest {
 
     @DataProvider
     public Object[][] provideTreeModelWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = (Jcommune) ComponentType.FORUM.newComponent("name", "description", new ArrayList<Property>());
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
         sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));

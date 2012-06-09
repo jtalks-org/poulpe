@@ -15,14 +15,15 @@
 package org.jtalks.poulpe.service.transactional;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -107,7 +108,8 @@ public class TransactionalForumStructureServiceTest {
 
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = (Jcommune) ComponentType.FORUM.newComponent("name", "description", Collections.<Property>emptyList());
+        
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         for (int i = 0; i < 5; i++) {
             sectionA.addOrUpdateBranch(createBranch(sectionA, "Branch" + i));

@@ -14,12 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.util.List;
@@ -34,6 +29,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.Fixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -76,8 +72,8 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void givenParentSection() {
-        branch = ObjectsFactory.createBranch();
-        group = ObjectsFactory.createGroup();
+        branch = Fixtures.createBranch();
+        group = Fixtures.createGroup();
         branch.setModeratorsGroup(group);
         session.save(branch.getSection());
     }
@@ -218,7 +214,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void addBranch() {
-        PoulpeBranch randomBranch = ObjectsFactory.createBranch();
+        PoulpeBranch randomBranch = Fixtures.createBranch();
         session.save(randomBranch.getSection());
         session.save(randomBranch);
     }
@@ -248,8 +244,8 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
      */
     @Test
     public void branchSectionBidirectionalTest() {
-        PoulpeBranch branch = ObjectsFactory.createBranch();
-        PoulpeSection section = ObjectsFactory.createSection();
+        PoulpeBranch branch = Fixtures.createBranch();
+        PoulpeSection section = Fixtures.createSection();
         session.save(section);
 
         section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());

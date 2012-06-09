@@ -12,21 +12,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao.hibernate;
+package org.jtalks.poulpe.test.fixtures;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.*;
 
 import com.google.common.collect.Lists;
 
@@ -35,7 +31,9 @@ import com.google.common.collect.Lists;
  * @author Alexey Grigorev
  * 
  */
-public final class ObjectsFactory {
+public final class Fixtures {
+
+    private static final Random RANDOM = new Random();
 
     public static PoulpeBranch createBranch() {
         PoulpeBranch newBranch = new PoulpeBranch(RandomStringUtils.random(15), "desc");
@@ -49,10 +47,17 @@ public final class ObjectsFactory {
     }
 
     public static Component createComponent(ComponentType type) {
-        Component c = new Component(random(), "desc", type);
+        BaseComponent base = new BaseComponent(type); 
+        Component c = base.newComponent(random(), random());
         c.addProperty("prop.name", "prop.value");
         return c;
     }
+    
+    public static Component randomComponent() {
+        ComponentType[] types = ComponentType.values();
+        return createComponent(types[randomInt(types.length)]);
+    }
+    
 
     public static PoulpeSection createSectionWithBranches() {
         return createSectionWithBranches(randomInt());
@@ -135,7 +140,11 @@ public final class ObjectsFactory {
     }
 
     private static int randomInt() {
-        return new Random().nextInt(10) + 1;
+        return RANDOM.nextInt(10) + 1;
+    }
+    
+    private static int randomInt(int max) {
+        return RANDOM.nextInt(max);
     }
 
     /**
@@ -144,12 +153,12 @@ public final class ObjectsFactory {
      * @return new rank
      */
     public static Rank createRank() {
-        int randNum = new Random().nextInt(1000);
+        int randNum = RANDOM.nextInt(1000);
         return new Rank("Rank" + randNum, randNum);
     }
 
     public static Jcommune createJcommune(int sectionsAmount) {
-        Jcommune jcommune = Jcommune.fromComponent(createComponent(ComponentType.FORUM));
+        Jcommune jcommune = new Jcommune("name", "description", new ArrayList<Property>());
 
         for (int i = 0; i < sectionsAmount; i++) {
             PoulpeSection section = createSectionWithBranches();

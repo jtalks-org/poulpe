@@ -18,8 +18,6 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertNull;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
