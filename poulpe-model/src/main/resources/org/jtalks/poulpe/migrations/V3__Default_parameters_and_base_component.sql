@@ -27,6 +27,7 @@ INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`
 INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES 
 	('f989f4d4-877d-44f8-a0aa-ed26196c93d7', 'FORUM', 'jcommune.caption', 'The best forum engine ever', '');
 INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES 
-	('d34c48eb-8afb-4c28-b61a-82c81c33cd26', 'FORUM', 'jcommune.post_preview_size', '200', '');
+	('d34c48eb-8afb-4c28-b61a-82c81c33cd26', 'FORUM', 'jcommune.post_preview_size', '200', '/[0-9]+/');
 INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES 
-	('3f48867c-3a9d-410f-94c0-40945e26154e', 'FORUM', 'jcommune.session_timeout', '24', '');
+	('3f48867c-3a9d-410f-94c0-40945e26154e', 'FORUM', 'jcommune.session_timeout', '24', '/[0-9]+/');
+	
