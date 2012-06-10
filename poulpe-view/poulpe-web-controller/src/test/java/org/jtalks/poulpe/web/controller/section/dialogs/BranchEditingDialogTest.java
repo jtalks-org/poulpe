@@ -26,8 +26,10 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.testng.annotations.BeforeMethod;
@@ -44,7 +46,7 @@ public class BranchEditingDialogTest {
     @BeforeMethod
     public void setUp() throws Exception {
         groupDao = mock(GroupDao.class);
-        sut = new BranchEditingDialog(groupDao);
+//        sut = new BranchEditingDialog(groupDao, mock(ForumStructureVm.class), mock(ForumStructureService.class));
         sut.renewSectionsFromTree(buildTreeModel());
     }
 

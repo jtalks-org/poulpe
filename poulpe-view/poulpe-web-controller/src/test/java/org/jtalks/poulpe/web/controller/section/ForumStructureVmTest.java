@@ -14,26 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertSame;
-import static org.testng.Assert.assertTrue;
-
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
-import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
-import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
 
 /**
  * @author stanislav bashkirtsev
@@ -44,6 +27,6 @@ public class ForumStructureVmTest {
     @DataProvider
     public Object[][] provideRandomJcommuneWithSections() {
         Jcommune jcommune = TestFixtures.jcommuneWithSections();
-        return new Object[][] { { jcommune } };
+        return new Object[][]{{jcommune}};
     }
 }
