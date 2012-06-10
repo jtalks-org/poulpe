@@ -40,7 +40,7 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -178,7 +178,7 @@ public class PermissionManagerTest {
 
     @Test
     public void testGetPermissionsMapForComponent() throws Exception {
-        Component component = Fixtures.randomComponent();
+        Component component = TestFixtures.randomComponent();
 
         givenPermissions(component, GeneralPermission.values());
 

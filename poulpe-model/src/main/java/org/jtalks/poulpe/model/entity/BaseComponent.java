@@ -7,40 +7,70 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.common.model.entity.Property;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 /**
  * 
  * @author Alexey Grigorev
- *
  */
 public class BaseComponent {
 
     private ComponentType componentType;
-    private Collection<DefaultProperty> defaultProperties = Lists.newArrayList();
+    private Collection<DefaultProperty> defaultProperties = Sets.newLinkedHashSet();
 
-    public BaseComponent() {
+    /**
+     * Visible for hibernate
+     */
+    protected BaseComponent() {
     }
     
+    /**
+     * 
+     * @param componentType
+     */
     public BaseComponent(ComponentType componentType) {
         this.componentType = componentType;
     }
 
+    /**
+     * @return component type of this base component
+     */
     public ComponentType getComponentType() {
         return componentType;
     }
 
-    public void setComponentType(ComponentType componentType) {
+    /**
+     * Visible for hibernate
+     * 
+     * @param componentType type of the component
+     */
+    protected void setComponentType(ComponentType componentType) {
         this.componentType = componentType;
     }
 
+    /**
+     * @return default properties 
+     */
     public Collection<DefaultProperty> getDefaultProperties() {
         return defaultProperties;
     }
 
-    public void setDefaultProperties(Collection<DefaultProperty> defaultProperties) {
+    /**
+     * Visible for hibernate
+     * @param defaultProperties collection of default properties
+     */
+    protected void setDefaultProperties(Collection<DefaultProperty> defaultProperties) {
         this.defaultProperties = defaultProperties;
     }
 
+    /**
+     * Based on current component type, creates a component of this type 
+     * and fills it with default properties.
+     * 
+     * @param name of the component
+     * @param description its description
+     * @return component of needed type
+     */
     public Component newComponent(String name, String description) {
         Validate.validState(componentType != null, "componentType must be set");
         return componentType.newComponent(name, description, copy(defaultProperties));

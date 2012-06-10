@@ -14,7 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import org.jtalks.common.model.entity.Property;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -27,13 +29,11 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * The class which manages actions and represents information about components displayed in administrator panel.
  *
  * @author Vermut
+ * @author Alexey Grigorev
  */
 public class ComponentsVm {
 
@@ -93,25 +93,20 @@ public class ComponentsVm {
                 componentService.deleteComponent(selected);
                 updateListComponentsData();
                 selected = null;
-                /*
-                 * Because confirmation needed, we need to send notification
-                 * event programmatically
-                 */
-                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, SELECTED);
-                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, COMPONENT_LIST);
-                bindWrapper.postNotifyChange(null, null, ComponentsVm.this, CAN_CREATE_NEW_COMPPONENT);
+                // Because confirmation needed, we need to send notification event programmatically
+                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENT_LIST, CAN_CREATE_NEW_COMPPONENT);
             }
         };
         dialogManager.confirmDeletion(selected.getName(), dc);
     }
-
+    
     /**
      * Shows a component edit window
      */
     @Command
     public void configureComponent() {
         selectedEntity.setEntity(selected);
-        showComponentEditWindow();
+        EditComponentVm.openWindowForEdit(windowManager);
     }
 
     /**
@@ -302,11 +297,5 @@ public class ComponentsVm {
         return componentType;
     }
 
-    /**
-     * Opens window used for component edit.
-     */
-    public void showComponentEditWindow() {
-        EditComponentVm.openWindowForEdit(windowManager);
-    }
 
 }

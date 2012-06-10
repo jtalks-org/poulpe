@@ -14,16 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
 
 import java.util.List;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
@@ -31,9 +26,9 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
@@ -48,7 +43,6 @@ import com.google.common.collect.Lists;
  * Tests for {@link EditGroupsForComponentPermissionVm}.
  * 
  * @author Vyacheslav Zhivaev
- * 
  */
 public class EditGroupsForComponentPermissionVmTest {
 
@@ -58,12 +52,9 @@ public class EditGroupsForComponentPermissionVmTest {
     // SUT
     private EditGroupsForComponentPermissionVm viewModel;
 
-    @Mock
-    private WindowManager windowManager;
-    @Mock
-    private ComponentService componentService;
-    @Mock
-    private GroupService groupService;
+    @Mock WindowManager windowManager;
+    @Mock ComponentService componentService;
+    @Mock GroupService groupService;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -120,11 +111,7 @@ public class EditGroupsForComponentPermissionVmTest {
         PermissionsMap<GeneralPermission> permissionsMap = new PermissionsMap<GeneralPermission>(
                 GeneralPermission.getAllAsList());
 
-        // target entity (Component)
-        ComponentType[] componentTypes = ComponentType.values();
-        Component target = ObjectsFactory.createComponent(RandomUtils.nextLong(),
-                RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20),
-                componentTypes[RandomUtils.nextInt(componentTypes.length)]);
+        Component target = TestFixtures.randomComponent();
 
         // permissions to work with
         GeneralPermission[] permissions = GeneralPermission.values();
@@ -136,7 +123,7 @@ public class EditGroupsForComponentPermissionVmTest {
             permissionsForEntity.add(new PermissionForEntity(target, false, permissions[i]));
 
             for (int j = 0, countj = RandomUtils.nextInt(4) + 2; j < countj; j++) {
-                permissionsMap.add(permissions[i], ObjectsFactory.fakeGroup(), ObjectsFactory.fakeGroup());
+                permissionsMap.add(permissions[i], TestFixtures.group(), TestFixtures.group());
             }
         }
 
@@ -153,8 +140,8 @@ public class EditGroupsForComponentPermissionVmTest {
     }
 
     private void initTest(PermissionForEntity permissionForEntity, PermissionsMap<GeneralPermission> permissionsMap) {
-        when(componentService.getPermissionsMapFor(eq((Component) permissionForEntity.getTarget()))).thenReturn(
-                permissionsMap);
+        Component component = (Component) permissionForEntity.getTarget();
+        when(componentService.getPermissionsMapFor(component)).thenReturn(permissionsMap);
 
         viewModel = new EditGroupsForComponentPermissionVm(windowManager, componentService, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));

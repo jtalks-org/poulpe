@@ -21,15 +21,13 @@ import java.util.List;
 
 import javax.validation.ConstraintViolationException;
 
-import junit.framework.AssertionFailedError;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -72,13 +70,13 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void givenParentSection() {
-        branch = Fixtures.createBranch();
-        group = Fixtures.createGroup();
+        branch = TestFixtures.branch();
+        group = TestFixtures.group();
         branch.setModeratorsGroup(group);
         session.save(branch.getSection());
     }
 
-    private void assertBranchSaved() throws AssertionFailedError {
+    private void assertBranchSaved() {
         assertNotSame(branch.getId(), 0, "Id not created");
         PoulpeBranch actual = retrieveActualBranch();
         actual.setSection(branch.getSection());
@@ -111,7 +109,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
 
         PoulpeBranch result = dao.get(branch.getId());
 
-        assertNotNull(result);
         assertEquals(result.getId(), branch.getId());
     }
 
@@ -214,7 +211,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     }
 
     private void addBranch() {
-        PoulpeBranch randomBranch = Fixtures.createBranch();
+        PoulpeBranch randomBranch = TestFixtures.branch();
         session.save(randomBranch.getSection());
         session.save(randomBranch);
     }
@@ -244,8 +241,8 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
      */
     @Test
     public void branchSectionBidirectionalTest() {
-        PoulpeBranch branch = Fixtures.createBranch();
-        PoulpeSection section = Fixtures.createSection();
+        PoulpeBranch branch = TestFixtures.branch();
+        PoulpeSection section = TestFixtures.section();
         session.save(section);
 
         section = (PoulpeSection) session.load(PoulpeSection.class, section.getId());

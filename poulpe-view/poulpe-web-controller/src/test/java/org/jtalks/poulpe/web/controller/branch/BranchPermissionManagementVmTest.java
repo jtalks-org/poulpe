@@ -20,6 +20,7 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -47,22 +48,18 @@ public class BranchPermissionManagementVmTest {
 
     private static final String MANAGE_GROUPS_DIALOG_ZUL = "WEB-INF/pages/forum/EditGroupsForBranchPermission.zul";
 
-    // context related
-    @Mock
-    private WindowManager windowManager;
-    @Mock
-    private BranchService branchService;
-    @Mock
-    ZkHelper zkHelper;
-
     // SUT
     private BranchPermissionManagementVm sut;
-
+    
+    // context related
+    @Mock WindowManager windowManager;
+    @Mock BranchService branchService;
+    @Mock ZkHelper zkHelper;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        PoulpeBranch branch = new PoulpeBranch("branch");
+        PoulpeBranch branch = TestFixtures.branch();
 
         SelectedEntity<Object> selectedEntity = new SelectedEntity<Object>();
         selectedEntity.setEntity(branch);
@@ -106,30 +103,25 @@ public class BranchPermissionManagementVmTest {
     }
 
 
-    /*
-     * Data providers
-     */
     @DataProvider
     public Object[][] provideTypeOfPermissionsToBranch() {
         return new Object[][]{
-                {BranchPermission.CREATE_TOPICS},
-                {BranchPermission.CLOSE_TOPICS},
-                {BranchPermission.VIEW_TOPICS},
-                {BranchPermission.DELETE_TOPICS},
-                {BranchPermission.MOVE_TOPICS},
-                {BranchPermission.SPLIT_TOPICS},
-                {BranchPermission.CREATE_POSTS},
-                {BranchPermission.DELETE_OTHERS_POSTS},
-                {BranchPermission.DELETE_OWN_POSTS},
-
+            { BranchPermission.CREATE_TOPICS },
+            { BranchPermission.CLOSE_TOPICS },
+            { BranchPermission.VIEW_TOPICS },
+            { BranchPermission.DELETE_TOPICS },
+            { BranchPermission.MOVE_TOPICS },
+            { BranchPermission.SPLIT_TOPICS },
+            { BranchPermission.CREATE_POSTS },
+            { BranchPermission.DELETE_OTHERS_POSTS },
+            { BranchPermission.DELETE_OWN_POSTS },
         };
     }
 
     @DataProvider
     public Object[][] provideInitDataForView() {
-
-        Group allowedGroup = ObjectsFactory.fakeGroup();
-        Group restrictedGroup = ObjectsFactory.fakeGroup();
+        Group allowedGroup = TestFixtures.group();
+        Group restrictedGroup = TestFixtures.group();
 
         List<PermissionManagementBlock> blocks = Lists.newArrayList();
         BranchPermission allowedPermission = BranchPermission.CREATE_TOPICS;
@@ -143,11 +135,7 @@ public class BranchPermissionManagementVmTest {
             blocks.add(new PermissionManagementBlock(permission, permissionsMap, "allow", "restrict"));
         }
 
-        return new Object[][]{
-                {permissionsMap, allowedGroup, restrictedGroup}
-
-        };
+        return new Object[][] { { permissionsMap, allowedGroup, restrictedGroup } };
     }
-
 
 }

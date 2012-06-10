@@ -26,7 +26,7 @@ import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -64,7 +64,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testSave() {
-        PoulpeUser user = Fixtures.createUser();
+        PoulpeUser user = TestFixtures.user();
 
         saveAndEvict(user);
         PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
@@ -74,7 +74,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testSaveIdGeneration() {
-        PoulpeUser user = Fixtures.createUser();
+        PoulpeUser user = TestFixtures.user();
         long initialId = 0;
         user.setId(initialId);
 
@@ -85,7 +85,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void testGetByUsername() {
-        PoulpeUser user = Fixtures.createUser();
+        PoulpeUser user = TestFixtures.user();
         saveAndEvict(user);
         
         User actual = dao.getByUsername(user.getUsername());
@@ -107,7 +107,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         int n = 20;
         
         while (n > 0) {
-            PoulpeUser user = Fixtures.createUser(startsWith + n);
+            PoulpeUser user = TestFixtures.user(startsWith + n);
             saveAndEvict(user);
             n--;
         }
@@ -115,7 +115,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void findPoulpeUsersPaginated_noFilterAndNoPagination() {
-        List<PoulpeUser> users = Fixtures.usersListOf(3);
+        List<PoulpeUser> users = TestFixtures.usersListOf(3);
         saveAndEvict(users);
         List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
 
@@ -124,7 +124,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     
     @Test
     public void findPoulpeUsersPaginated_noFilterAndAllOnFirstPage() {
-        List<PoulpeUser> users = Fixtures.usersListOf(3);
+        List<PoulpeUser> users = TestFixtures.usersListOf(3);
         saveAndEvict(users);
         
         List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
@@ -134,7 +134,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     
     @Test
     public void findPoulpeUsersPaginated_noFilterAndMoreThanOnePage() {
-        List<PoulpeUser> users = Fixtures.usersListOf(13);
+        List<PoulpeUser> users = TestFixtures.usersListOf(13);
         saveAndEvict(users);
         
         int limit = 10;
@@ -146,7 +146,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     @Test
     public void getAllUsersCount() {
         int count = 13;
-        List<PoulpeUser> users = Fixtures.usersListOf(count);
+        List<PoulpeUser> users = TestFixtures.usersListOf(count);
         saveAndEvict(users);
         
         int actual = dao.countUsernameMatches(NO_FILTER);
@@ -155,7 +155,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     
     @Test
     public void testGetAllBannedUsers() {
-        List<PoulpeUser> bannedUsers = Fixtures.bannedUsersListOf(3);
+        List<PoulpeUser> bannedUsers = TestFixtures.bannedUsersListOf(3);
 
         saveAndEvict(bannedUsers);
         List<PoulpeUser> actual = dao.getAllBannedUsers();
@@ -165,7 +165,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void getNonBannedByUsername_withOnlyBannedUsers() {
-        List<PoulpeUser> banned = Fixtures.bannedUsersListOf(3);
+        List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3);
         saveAndEvict(banned);
         
         List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, 1000);
@@ -175,8 +175,8 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void getNonBannedByUsername_withBothKindsOfUsers() {
-        List<PoulpeUser> nonBanned = Fixtures.usersListOf(3);
-        List<PoulpeUser> banned = Fixtures.bannedUsersListOf(3);
+        List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
+        List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3);
         
         saveAndEvict(Iterables.concat(banned, nonBanned));
         
@@ -186,7 +186,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void getNonBannedByUsername_withBannedUsers() {
-        List<PoulpeUser> nonBanned = Fixtures.usersListOf(3);
+        List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
         saveAndEvict(nonBanned);
         
         List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, 1000);
@@ -196,7 +196,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
     @Test
     public void getNonBannedByUsername_withLimit() {
-        List<PoulpeUser> nonBanned = Fixtures.usersListOf(10);
+        List<PoulpeUser> nonBanned = TestFixtures.usersListOf(10);
         saveAndEvict(nonBanned);
         
         int limit = 2;

@@ -14,24 +14,18 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.common.model.entity.Branch;
+import static org.testng.Assert.*;
+
 import org.jtalks.common.model.entity.Entity;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeNode;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.jtalks.poulpe.web.controller.utils.ObjectsFactory.*;
-import static org.testng.Assert.*;
 
 /**
  * The test class for {@link TreeNodeFactory}
@@ -39,10 +33,11 @@ import static org.testng.Assert.*;
  * @author Konstantin Akimov
  */
 @Test
+// TODO: what is going on here?
 public class TreeNodeFactoryTest {
-    PoulpeSection emptySection = fakeSection();
-    PoulpeSection section = sectionWithBranches();
-    PoulpeBranch branch = fakeBranch();
+    PoulpeSection emptySection = TestFixtures.section();
+    PoulpeSection section = TestFixtures.sectionWithBranches();
+    PoulpeBranch branch = TestFixtures.branch();
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches", enabled = false)
     public void testBuildForumStructure(Jcommune jcommune) throws Exception {
@@ -91,14 +86,6 @@ public class TreeNodeFactoryTest {
         assertEquals(testNode.getChildAt(0).getData(), section.getPoulpeBranches().get(0));
     }
 
-    private void assertSectionsContainsAllBranches(List<DefaultTreeNode> nodes) {
-        for (DefaultTreeNode<PoulpeSection> node : nodes) {
-            List<Branch> childBranches = node.getData().getBranches();
-            assertEquals(node.getChildCount(), childBranches.size());
-            assertChildrenAreLeafs(node);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     private void assertChildrenAreLeafs(DefaultTreeNode<PoulpeSection> node) {
         for (Object obj : node.getChildren()) {
@@ -108,17 +95,9 @@ public class TreeNodeFactoryTest {
     }
 
     @DataProvider
-    private Object[][] provideJcommuneWithSectionsAndBranches() {
-        Jcommune jcommune = ObjectsFactory.fakeForum();
-        PoulpeSection sectionA = new PoulpeSection("SectionA");
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));
-        jcommune.addSection(sectionA);
-        PoulpeSection sectionB = new PoulpeSection("SectionB");
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
-        jcommune.addSection(sectionB);
-        return new Object[][]{{jcommune}};
+    public Object[][] provideJcommuneWithSectionsAndBranches() {
+        Jcommune jcommune = TestFixtures.jcommuneWithSections();
+        return new Object[][] { { jcommune } };
     }
 
 }

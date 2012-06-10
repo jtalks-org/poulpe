@@ -37,7 +37,7 @@ import java.util.*;
 
 import org.jtalks.poulpe.model.entity.*;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -45,6 +45,8 @@ import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.mockito.*;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
+
+import com.google.common.collect.Sets;
 
 /**
  * Test for {@link org.jtalks.poulpe.web.controller.component.ComponentsVm}
@@ -57,47 +59,32 @@ public class ComponentsVMTest {
     private static final boolean CAN_CREATE_NEW_COMPONENT = true;
     private static final boolean EDIT_WINDOW_VISIBLE = true;
     private static final Component EMPTY_SELECTION = null;
-    @Mock
-    private WindowManager windowManager;
-    @Mock
-    private ComponentService componentService;
-    @Mock
-    private SelectedEntity<Component> selectedEntity;
-    @Mock
-    private DialogManager dialogManager;
-    @Mock
-    private BindUtilsWrapper bindWrapper;
-    @Captor
-    private ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
-    @InjectMocks
-    private ComponentsVm viewModel;
+
+    @Mock WindowManager windowManager;
+    @Mock ComponentService componentService;
+    @Mock SelectedEntity<Component> selectedEntity;
+    @Mock DialogManager dialogManager;
+    @Mock BindUtilsWrapper bindWrapper;
+    @Captor ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
+    
+    @InjectMocks ComponentsVm viewModel;
 
     private List<Component> listOfTwoComponent;
     private List<Component> listOfTreeComponent;
     private Set<ComponentType> setOfAvailableComponentTypeWithOneMemeber;
-    private Set<ComponentType> emptySetOfAvailableComponentTypes;
 
     @BeforeTest
     public void beforeTest() {
         viewModel = spy(new ComponentsVm());
         MockitoAnnotations.initMocks(this);
 
-        Component component1 = Fixtures.createComponent(ComponentType.ADMIN_PANEL);
-        Component component2 = Fixtures.createComponent(ComponentType.FORUM);
-        Component component3 = Fixtures.createComponent(ComponentType.ARTICLE);
+        Component component1 = TestFixtures.component(ComponentType.ADMIN_PANEL);
+        Component component2 = TestFixtures.component(ComponentType.FORUM);
+        Component component3 = TestFixtures.component(ComponentType.ARTICLE);
         listOfTwoComponent = Arrays.asList(component1, component2);
         listOfTreeComponent = Arrays.asList(component1, component3);
 
-        setOfAvailableComponentTypeWithOneMemeber = new HashSet();
-        setOfAvailableComponentTypeWithOneMemeber.add(ComponentType.ARTICLE);
-        emptySetOfAvailableComponentTypes = new HashSet();
-    }
-
-    @Test
-    public void configureComponent() {
-        viewModel.configureComponent();
-        verify(selectedEntity).setEntity(any(Component.class));
-        verify(viewModel).showComponentEditWindow();
+        setOfAvailableComponentTypeWithOneMemeber = Sets.newHashSet(ComponentType.ARTICLE);
     }
 
     @Test
@@ -121,9 +108,7 @@ public class ComponentsVMTest {
         verify(componentService).deleteComponent(selected);
         assertNull(viewModel.getSelected());
         verify(componentService).getAvailableTypes();
-        verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.SELECTED);
-        verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.COMPONENT_LIST);
-        verify(bindWrapper).postNotifyChange(null, null, viewModel, ComponentsVm.CAN_CREATE_NEW_COMPPONENT);
+        verify(bindWrapper).postNotifyChange(viewModel, ComponentsVm.SELECTED, ComponentsVm.COMPONENT_LIST, ComponentsVm.CAN_CREATE_NEW_COMPPONENT);
         verifyStateOfViewModel(CAN_CREATE_NEW_COMPONENT, !EDIT_WINDOW_VISIBLE, listOfTwoComponent,
                 setOfAvailableComponentTypeWithOneMemeber, EMPTY_SELECTION);
     }
@@ -213,21 +198,21 @@ public class ComponentsVMTest {
 
     private void prepareMocksWithThreeExistedComponentsAndUnableToCreateNewComponent() {
         reset(componentService);
-        when(componentService.getAvailableTypes()).thenReturn(
-                new HashSet<ComponentType>(emptySetOfAvailableComponentTypes));
+        Set<ComponentType> emptySet = Collections.emptySet();
+        when(componentService.getAvailableTypes()).thenReturn(emptySet);
         when(componentService.getAll()).thenReturn(new ArrayList<Component>(listOfTreeComponent));
     }
 
     private Component forumComponent() {
-        return Fixtures.createComponent(ComponentType.FORUM);
+        return TestFixtures.component(ComponentType.FORUM);
     }
 
     private Component poulpeComponent() {
-        return Fixtures.createComponent(ComponentType.ADMIN_PANEL);
+        return TestFixtures.component(ComponentType.ADMIN_PANEL);
     }
 
     private Component articleComponent() {
-        return Fixtures.createComponent(ComponentType.ARTICLE);
+        return TestFixtures.component(ComponentType.ARTICLE);
     }
 
     private void setComponentAttributes() {

@@ -16,12 +16,8 @@ package org.jtalks.poulpe.web.controller.group;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 import java.util.List;
 
@@ -33,9 +29,9 @@ import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.jtalks.poulpe.web.controller.zkmacro.EntityPermissionsBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.mockito.Mock;
@@ -108,15 +104,15 @@ public class GroupsPermissionsVmTest {
 
     @DataProvider
     public Object[][] dataProviderForShowGroupsDialog() {
-        return new Object[][] { { ObjectsFactory.fakeBranch(), GeneralPermission.READ, "allow" },
-                { ObjectsFactory.fakeBranch(), GeneralPermission.ADMIN, "restrict" },
-                { ObjectsFactory.fakeSection(), BranchPermission.DELETE_OWN_POSTS, "allow" }, };
+        return new Object[][] { { TestFixtures.branch(), GeneralPermission.READ, "allow" },
+                { TestFixtures.branch(), GeneralPermission.ADMIN, "restrict" },
+                { TestFixtures.branch(), BranchPermission.DELETE_OWN_POSTS, "allow" }, };
     }
 
     @DataProvider
     public Object[][] dataProviderForGetBlocks() {
         List<GeneralPermission> permissions = GeneralPermission.getAllAsList();
-        List<Component> components = ObjectsFactory.createComponents();
+        List<Component> components = TestFixtures.allComponents();
 
         return new Object[][] {
                 { Lists.newArrayList(), Lists.newArrayList(), new PermissionsMap<GeneralPermission>() },

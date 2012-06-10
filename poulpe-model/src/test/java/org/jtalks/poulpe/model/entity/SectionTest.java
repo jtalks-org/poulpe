@@ -18,7 +18,7 @@ import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -28,7 +28,7 @@ public class SectionTest {
 
     @BeforeMethod
     public void setUp() {
-        section = Fixtures.createSection();
+        section = TestFixtures.section();
     }
 
     @Test

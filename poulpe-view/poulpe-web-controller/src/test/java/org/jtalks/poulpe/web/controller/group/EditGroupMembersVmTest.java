@@ -14,31 +14,22 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.mockito.Matchers.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -50,31 +41,27 @@ import com.google.common.collect.Sets;
  * Tests for {@link EditGroupMembersVm}
  * 
  * @author Vyacheslav Zhivaev
- * 
  */
 public class EditGroupMembersVmTest {
 
     // SUT
     private EditGroupMembersVm viewModel;
 
+    @Mock GroupService groupService;
+    @Mock UserService userService;
+    @Mock WindowManager windowManager;
+    
     private Group groupToEdit;
     private List<PoulpeUser> usersAll;
     private Set<PoulpeUser> usersSelectedInAvailable;
     private Set<PoulpeUser> usersSelectedInExist;
     private SelectedEntity<Group> selectedEntity;
 
-    @Mock
-    private GroupService groupService;
-    @Mock
-    private UserService userService;
-    @Mock
-    private WindowManager windowManager;
-
     @BeforeMethod
     public void setUp() throws NotFoundException {
         MockitoAnnotations.initMocks(this);
 
-        usersAll = ObjectsFactory.getFakeUsers(50);
+        usersAll = TestFixtures.usersListOf(50);
         // we are assert, that half of users already in group
         List<PoulpeUser> usersAlreadyInGroup = new ArrayList<PoulpeUser>(usersAll.subList(0, usersAll.size() / 2));
         groupToEdit = createGroupWithUsers(usersAlreadyInGroup);
@@ -98,17 +85,11 @@ public class EditGroupMembersVmTest {
         givenUsersSelectedInView();
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#getGroupToEdit()}.
-     */
     @Test
     public void testGetGroupToEdit() {
         assertEquals(viewModel.getGroupToEdit(), groupToEdit);
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#add()}.
-     */
     @Test
     public void testAdd() {
         viewModel.add();
@@ -117,9 +98,6 @@ public class EditGroupMembersVmTest {
         assertFalse(viewModel.getAvail().containsAll(usersSelectedInAvailable));
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#addAll()}.
-     */
     @Test
     public void testAddAll() {
         List<PoulpeUser> selected = viewModel.getAvail();
@@ -130,9 +108,6 @@ public class EditGroupMembersVmTest {
         assertTrue(viewModel.getAvail().isEmpty());
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#remove()}.
-     */
     @Test
     public void testRemove() {
         givenUsersSelectedInView();
@@ -143,9 +118,6 @@ public class EditGroupMembersVmTest {
         assertTrue(viewModel.getAvail().containsAll(usersSelectedInExist));
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#removeAll()}.
-     */
     @Test
     public void testRemoveAll() {
         List<PoulpeUser> selected = viewModel.getExist();
@@ -156,9 +128,6 @@ public class EditGroupMembersVmTest {
         assertTrue(viewModel.getAvail().containsAll(selected));
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#save()}.
-     */
     @Test
     public void testSave() {
         viewModel.save();
@@ -166,9 +135,6 @@ public class EditGroupMembersVmTest {
         verify(groupService).saveGroup(groupToEdit);
     }
 
-    /**
-     * Test method for {@link EditGroupMembersVm#cancel()}.
-     */
     @Test
     public void testCancel() {
         viewModel.cancel();
@@ -198,7 +164,7 @@ public class EditGroupMembersVmTest {
     }
 
     private Group createGroupWithUsers(List<PoulpeUser> usersInGroup) {
-        Group group = new Group(RandomStringUtils.randomAlphanumeric(10), RandomStringUtils.randomAlphanumeric(20));
+        Group group = TestFixtures.group();
         group.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(usersInGroup));
         return group;
     }

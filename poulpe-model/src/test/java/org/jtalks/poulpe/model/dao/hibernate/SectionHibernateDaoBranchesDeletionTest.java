@@ -22,7 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -97,7 +97,7 @@ public class SectionHibernateDaoBranchesDeletionTest extends AbstractTransaction
     }
     
     private PoulpeSection sectionWithSomeBranches(int brancesAmount) {
-        PoulpeSection section = Fixtures.createSectionWithBranches(brancesAmount);
+        PoulpeSection section = TestFixtures.sectionWithBranches(brancesAmount);
         session.save(section);
         return section;
     }

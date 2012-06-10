@@ -14,13 +14,11 @@
  */
 package org.jtalks.poulpe.test.fixtures;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.entity.*;
 
@@ -34,48 +32,77 @@ import com.google.common.collect.Lists;
  * 
  * @author Kirill Afonin
  * @author Alexey Grigorev
- * 
  */
-public final class Fixtures {
+public final class TestFixtures {
 
     private static final Random RANDOM = new Random();
 
-    public static PoulpeBranch createBranch() {
-        PoulpeBranch newBranch = new PoulpeBranch(RandomStringUtils.random(15), "desc");
-        newBranch.setSection(createSection());
-        newBranch.setModeratorsGroup(createGroup());
+    public static PoulpeBranch branch() {
+        PoulpeBranch newBranch = new PoulpeBranch(random(), random());
+        newBranch.setSection(section());
+        newBranch.setModeratorsGroup(group());
         return newBranch;
     }
 
     public static TopicType topicType() {
-        return new TopicType(random(), "desc");
+        return new TopicType(random(), random());
     }
 
-    public static Component createComponent(ComponentType type) {
+    public static Component component(ComponentType type) {
         BaseComponent base = new BaseComponent(type);
         Component c = base.newComponent(random(), random());
-        c.addProperty("prop.name", "prop.value");
+        // TODO: check if it's needed
+        c.addProperty(random(), random());
         return c;
     }
     
-    public static Jcommune createJcommune() {
-        return (Jcommune) createComponent(ComponentType.FORUM);
+    public static List<Component> allComponents() {
+        List<Component> result = Lists.newArrayList();
+        
+        for (ComponentType componentType : ComponentType.values()) {
+            result.add(component(componentType));
+        }
+        
+        return result;
+    }
+
+    public static Jcommune jcommune() {
+        return (Jcommune) component(ComponentType.FORUM);
+    }
+
+    public static Jcommune jcommuneWithSections(int sectionsAmount) {
+        Jcommune jcommune = jcommune();
+
+        for (int i = 0; i < sectionsAmount; i++) {
+            PoulpeSection section = sectionWithBranches();
+            jcommune.addSection(section);
+        }
+
+        return jcommune;
+    }
+    
+    public static Jcommune jcommuneWithSections() {
+        return jcommuneWithSections(10);
     }
 
     public static Component randomComponent() {
+        return component(randomComponentType());
+    }
+
+    private static ComponentType randomComponentType() {
         ComponentType[] types = ComponentType.values();
-        return createComponent(types[randomInt(types.length)]);
+        return types[randomInt(types.length)];
     }
 
-    public static PoulpeSection createSectionWithBranches() {
-        return createSectionWithBranches(randomInt());
+    public static PoulpeSection sectionWithBranches() {
+        return sectionWithBranches(randomInt(10));
     }
 
-    public static PoulpeSection createSectionWithBranches(int branchesAmount) {
+    public static PoulpeSection sectionWithBranches(int branchesAmount) {
         PoulpeSection section = new PoulpeSection(random());
 
         for (int i = 0; i < branchesAmount; i++) {
-            PoulpeBranch branch = createBranch();
+            PoulpeBranch branch = branch();
             branch.setSection(section);
             section.addOrUpdateBranch(branch);
         }
@@ -83,25 +110,25 @@ public final class Fixtures {
         return section;
     }
 
-    public static PoulpeSection createSection() {
-        return new PoulpeSection(RandomStringUtils.random(15));
+    public static PoulpeSection section() {
+        return new PoulpeSection(random());
     }
 
-    public static PoulpeUser createUser(String username) {
-        String email = username + "@" + random() + "." + RandomStringUtils.randomAlphabetic(3);
+    public static PoulpeUser user(String username) {
+        String email = username + "@" + random() + ".com";
         return new PoulpeUser(username, email, random(), "");
     }
 
-    public static PoulpeUser createUser() {
-        return createUser(random());
+    public static PoulpeUser user() {
+        return user(random());
     }
 
-    public static List<PoulpeUser> createBannedUsers(String... usernames) {
+    public static List<PoulpeUser> bannedUsers(String... usernames) {
         List<PoulpeUser> result = Lists.newArrayList();
 
         for (String username : usernames) {
-            PoulpeUser user = createUser(username);
-            user.setBanReason("any reason");
+            PoulpeUser user = user(username);
+            user.setBanReason("anyBanReason");
             result.add(user);
         }
 
@@ -112,7 +139,7 @@ public final class Fixtures {
         List<PoulpeUser> users = usersListOf(n);
 
         for (PoulpeUser user : users) {
-            user.setBanReason("banReason");
+            user.setBanReason("anyBanReason");
         }
 
         return users;
@@ -122,7 +149,7 @@ public final class Fixtures {
         List<PoulpeUser> result = Lists.newArrayList();
 
         for (String username : usernames) {
-            result.add(createUser(username));
+            result.add(user(username));
         }
 
         return result;
@@ -132,48 +159,27 @@ public final class Fixtures {
         List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
 
         while (n > 0) {
-            result.add(createUser());
+            result.add(user());
             n--;
         }
 
         return result;
     }
 
-    public static Group createGroup() {
-        return new Group(random(), "desc");
+    public static Group group() {
+        return new Group(random(), random());
+    }
+
+    public static Rank rank() {
+        return new Rank(random(), randomInt(1000));
     }
 
     private static String random() {
         return RandomStringUtils.randomAlphanumeric(10);
     }
 
-    private static int randomInt() {
-        return RANDOM.nextInt(10) + 1;
-    }
-
     private static int randomInt(int max) {
         return RANDOM.nextInt(max);
-    }
-
-    /**
-     * Create rank with random name and postCount.
-     * 
-     * @return new rank
-     */
-    public static Rank createRank() {
-        int randNum = RANDOM.nextInt(1000);
-        return new Rank("Rank" + randNum, randNum);
-    }
-
-    public static Jcommune createJcommune(int sectionsAmount) {
-        Jcommune jcommune = new Jcommune("name", "description", new ArrayList<Property>());
-
-        for (int i = 0; i < sectionsAmount; i++) {
-            PoulpeSection section = createSectionWithBranches();
-            jcommune.addSection(section);
-        }
-
-        return jcommune;
     }
 
 }

@@ -27,7 +27,7 @@ import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.test.fixtures.Fixtures;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -60,7 +60,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @BeforeMethod
     public void setUp() throws Exception {
         session = sessionFactory.getCurrentSession();
-        section = Fixtures.createSectionWithBranches(10);
+        section = TestFixtures.sectionWithBranches(10);
     }
 
     @Test
@@ -134,8 +134,8 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     }
 
     private void givenTwoSections() {
-        session.save(Fixtures.createSection());
-        session.save(Fixtures.createSection());
+        session.save(TestFixtures.section());
+        session.save(TestFixtures.section());
     }
 
     @Test
