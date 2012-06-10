@@ -1,0 +1,2 @@
+INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES 
+	('7149f814-3421-43f0-b890-ed26196c93d7', 'FORUM', 'jcommune.sending_notifications_enabled', 'true', '/(true)|(false)/');
