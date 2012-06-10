@@ -14,20 +14,16 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
 
 /**
  * The class which manages actions and represents information about components displayed in administrator panel.
@@ -41,63 +37,60 @@ public class ComponentsVm {
             AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", 
             SELECTED_COMPONENT_TYPE = "selectedComponentType",
             SELECTED = "selected", 
-            CAN_CREATE_NEW_COMPPONENT = "canCreateNewComponent",
-            COMPONENT_LIST = "componentList", 
-            NAME = "componentName", 
-            DESCRIPTION = "componentDescription",
-            TYPE = "componentType";
+            CAN_CREATE_NEW_COMPPONENT = "ableToCreateNewComponent",
+            COMPONENTS = "components"; 
 
-    private Component selected;
-    private String componentName;
-    private String componentDescription;
-    private ComponentType componentType;
-    private boolean addNewComponentWindowVisible;
-    private boolean canCreateNewComponent;
+    private final ComponentService componentService;
+    private final DialogManager dialogManager;
+    private final WindowManager windowManager;
+    private final SelectedEntity<Component> selectedEntity;
     
-    private List<Component> componentList;
-    private List<ComponentType> availableComponentTypes;
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     
-    // List of injectable properties
-    private ComponentService componentService;
-    private DialogManager dialogManager;
-    private WindowManager windowManager;
-    private SelectedEntity<Component> selectedEntity;
+    private Component selected;
 
-    /**
-     * Inits the data on the form.
-     */
-    @Init
-    public void init() {
-        updateListComponentsData();
+    public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
+            SelectedEntity<Component> selectedEntity) {
+        this.componentService = componentService;
+        this.dialogManager = dialogManager;
+        this.windowManager = windowManager;
+        this.selectedEntity = selectedEntity;
     }
 
     /**
-     * Creates new TopicType and adds it on form
+     * @return list of all component
      */
-    @Command
-    @NotifyChange({ EDIT_WINDOW_VISIBLE, AVAILABLE_COMPONENT_TYPES, SELECTED_COMPONENT_TYPE })
-    public void showAddComponentDialog() {
-        addNewComponentWindowVisible = true;
+    public List<Component> getComponents() {
+        return componentService.getAll();
     }
 
     /**
-     * Deletes the selected component
+     * Deletes selected component
+     * @exception IllegalStateException if no component selected
      */
     @Command
     public void deleteComponent() {
+        Validate.validState(selected != null, "entity to delete must be selected");
+        
         DialogManager.Performable dc = new DialogManager.Performable() {
-            /** {@inheritDoc} */
             @Override
             public void execute() {
                 componentService.deleteComponent(selected);
-                updateListComponentsData();
                 selected = null;
-                // Because confirmation needed, we need to send notification event programmatically
-                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENT_LIST, CAN_CREATE_NEW_COMPPONENT);
+                // Because confirmation needed, we have to send notification event programmatically
+                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPPONENT);
             }
         };
+        
         dialogManager.confirmDeletion(selected.getName(), dc);
+    }
+    
+    /**
+     * Shows a window for adding component
+     */
+    @Command
+    public void addNewComponent() {
+        AddComponentVm.openWindowForAdding(windowManager);
     }
     
     /**
@@ -110,192 +103,23 @@ public class ComponentsVm {
     }
 
     /**
-     * Saves the created or edited component in component list.
+     * @return {@code true} only if new component can be created, {@code false} otherwise.
      */
-    @Command
-    @NotifyChange({ COMPONENT_LIST, SELECTED, CAN_CREATE_NEW_COMPPONENT, EDIT_WINDOW_VISIBLE })
-    public void createComponent() {
-        
-        BaseComponent baseComponent = componentService.baseComponentFor(componentType);
-        Component component = baseComponent.newComponent(componentName, componentDescription);
-        selected = component;
-        componentService.saveComponent(component);
-        
-        addNewComponentWindowVisible = false;
-        clearComponent();
-        updateListComponentsData();
+    public boolean isAbleToCreateNewComponent() {
+        boolean noAvailableTypes = componentService.getAvailableTypes().isEmpty();
+        return !noAvailableTypes;
     }
 
     /**
-     * Clears variables used for component creation.
-     */
-    @NotifyChange({ SELECTED, NAME, DESCRIPTION, TYPE })
-    public void clearComponent() {
-        setComponentName(null);
-        setComponentDescription(null);
-        setComponentType(null);
-        selected = null;
-    }
-
-    /**
-     * Event which happen when user cancel editing of component.
-     */
-    @Command
-    @NotifyChange({ SELECTED, EDIT_WINDOW_VISIBLE })
-    public void cancelEdit() {
-        selected = null;
-        addNewComponentWindowVisible = false;
-        updateListComponentsData();
-    }
-
-    /**
-     * Returns the list of all components.
-     *
-     * @return list of components
-     */
-    public List<Component> getComponentList() {
-        return componentList;
-    }
-
-    /**
-     * @return {@code true} if the window for editing component should be visible, unless false.
-     */
-    public boolean isAddNewComponentWindowVisible() {
-        return addNewComponentWindowVisible;
-    }
-
-    /**
-     * Sets the selected component from the list which displays components.
-     *
-     * @param selected {@link org.jtalks.poulpe.model.entity.Component}
+     * @param selected currently selected component
      */
     public void setSelected(Component selected) {
         this.selected = selected;
     }
 
-    /**
-     * Returns the component which currently is edited, created or selected in a list which displays components.
-     *
-     * @return {@link org.jtalks.poulpe.model.entity.Component}
-     */
-    public Component getSelected() {
-        return selected;
+    
+    public void setBindWrapper(BindUtilsWrapper bindWrapper) {
+        this.bindWrapper = bindWrapper;
     }
-
-    /**
-     * @return {@code true} only if new component can be created, {@code false} in other cases.
-     */
-    public boolean isCanCreateNewComponent() {
-        return canCreateNewComponent;
-    }
-
-    /**
-     * Returns all available component types which available to be set to editable component.
-     *
-     * @return list of available component types
-     */
-    public List<ComponentType> getAvailableComponentTypes() {
-        return availableComponentTypes;
-    }
-
-    /**
-     * Updates components list and list of available component types.
-     */
-    private void updateListComponentsData() {
-        availableComponentTypes = new ArrayList<ComponentType>(componentService.getAvailableTypes());
-        componentList = componentService.getAll();
-        canCreateNewComponent = !availableComponentTypes.isEmpty();
-    }
-
-    /**
-     * Sets the service instance which is used for manipulating with stored components.
-     *
-     * @param componentService the new value of the service instance
-     */
-    public void setComponentService(ComponentService componentService) {
-        this.componentService = componentService;
-    }
-
-    /**
-     * Sets the dialog manager which is used for showing different types of dialog messages.
-     *
-     * @param dialogManager the new value of the dialog manager
-     */
-    public void setDialogManager(DialogManager dialogManager) {
-        this.dialogManager = dialogManager;
-    }
-
-    /**
-     * Sets window manager.
-     *
-     * @param windowManager the new window manager
-     */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
-
-    /**
-     * Sets selected entity.
-     *
-     * @param selectedEntity the new selected entity
-     */
-    public void setSelectedEntity(SelectedEntity<Component> selectedEntity) {
-        this.selectedEntity = selectedEntity;
-    }
-
-    /**
-     * Sets component name.
-     *
-     * @param componentName the new name for component
-     */
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
-    }
-
-    /**
-     * Sets component description.
-     *
-     * @param componentDescription the new description for component
-     */
-    public void setComponentDescription(String componentDescription) {
-        this.componentDescription = componentDescription;
-    }
-
-    /**
-     * Sets component type.
-     *
-     * @param componentType the new type for component
-     */
-    public void setComponentType(ComponentType componentType) {
-        this.componentType = componentType;
-    }
-
-    /**
-     * Returns the component name.
-     *
-     * @return component name.
-     */
-    public String getComponentName() {
-        return componentName;
-    }
-
-    /**
-     * Returns the component description.
-     *
-     * @return component description.
-     */
-    public String getComponentDescription() {
-        return componentDescription;
-    }
-
-    /**
-     * Returns the component type.
-     *
-     * @return {@link org.jtalks.poulpe.model.entity.ComponentType}
-     */
-    public ComponentType getComponentType() {
-        return componentType;
-    }
-
 
 }
