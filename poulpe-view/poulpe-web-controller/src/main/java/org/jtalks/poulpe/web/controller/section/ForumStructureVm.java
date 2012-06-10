@@ -128,7 +128,7 @@ public class ForumStructureVm {
 
     void deleteSelectedSection(PoulpeSection selectedSection) {
         Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedSection);
-        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(jcommune)));
+//        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(jcommune)));
     }
 
     void deleteSelectedBranch(PoulpeBranch branchItem) {
@@ -145,21 +145,11 @@ public class ForumStructureVm {
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
-    public void saveSection() {
-//        viewData.addSelectedSectionToTreeIfNew();
-        storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
-        viewData.closeDialog();
+    public void updateSectionInTree(PoulpeSection section){
+        treeModel.addIfAbsent(section);
+        selectedItemInTree.setItem(section);
     }
 
-    void storeNewSection(PoulpeSection section) {
-        Jcommune jcommune = viewData.getRootAsJcommune();
-        jcommune.addSection(section);
-        forumStructureService.saveJcommune(jcommune);
-    }
-
-    /**
-     * Processes onOK of the Branch Dialog in order to save the branch being edited. Also saves a new branch.
-     */
     @Command
     @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void updateBranchInTree(PoulpeBranch branch) {

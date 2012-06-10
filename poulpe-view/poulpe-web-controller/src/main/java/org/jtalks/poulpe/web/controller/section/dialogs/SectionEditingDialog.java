@@ -1,5 +1,6 @@
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
@@ -22,6 +23,26 @@ public class SectionEditingDialog {
         this.forumStructureService = forumStructureService;
     }
 
+    @GlobalCommand
+    @NotifyChange({EDITED_SECTION, SHOW_DIALOG})
+    public void showNewSectionDialog() {
+        editedSection = new PoulpeSection();
+        showDialog = true;
+    }
+
+    @Command
+    @NotifyChange(SHOW_DIALOG)
+    public void save() {
+        forumStructureVm.updateSectionInTree(editedSection);
+        storeNewSection(editedSection);
+    }
+
+    void storeNewSection(PoulpeSection section) {
+        Jcommune jcommune = (Jcommune) (Object) forumStructureVm.getTreeModel().getRoot().getData();
+        jcommune.addSection(section);
+        forumStructureService.saveJcommune(jcommune);
+    }
+
     /**
      * By this flag the ZUL decides whether to show the branch editing dialog or not.
      *
@@ -33,14 +54,7 @@ public class SectionEditingDialog {
         return result;
     }
 
-    @GlobalCommand
-    @NotifyChange({EDITED_SECTION, SHOW_DIALOG})
-    public void showSectionDialog() {
-        editedSection = forumStructureVm.getSelectedItemInTree().getSectionItem();
-    }
-
-    @Command
-    @NotifyChange(SHOW_DIALOG)
-    public void save() {
+    public PoulpeSection getEditedSection() {
+        return editedSection;
     }
 }

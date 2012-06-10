@@ -1,0 +1,26 @@
+<?page id="forumStructurePage" title="Forum Structure" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="editSectionDialog" viewModel="@id('sectionVm') @init(forumStructureSectionDialogVm)"
+          apply="org.zkoss.bind.BindComposer" closable="true" mode="modal" border="normal"
+          title="${labels.forum_structure.create_section_dialog.title}"
+          onClose="self.visible=false;event.stopPropagation();"
+          onCancel="self.visible=false" forward="onOK=saveSectionButton.onClick"
+          visible="@load(sectionVm.showDialog)" height="230px" width="300px">
+    <vlayout>
+      ${labels.forum_structure.section_dialog.section_name}
+      <textbox id="sectionNameBox" value="@bind(sectionVm.editedSection.name) @validator('beanValidator')" hflex="1"
+               vflex="min"
+               errorMessage="@load(vmsgs[sectionNameBox])"/>
+      ${labels.forum_structure.section_dialog.section_description}
+      <textbox id="sectionDescriptionBox" value="@bind(sectionVm.editedSection.description) @validator('beanValidator')"
+               errorMessage="@load(vmsgs[sectionDescriptionText])" rows="6" hflex="1"/>
+      <cell>
+        <button id="saveSectionButton" label="${labels.dialogs.save_button}"
+                onClick="@command('save') @global-command('refreshTree')"/>
+        <button label="${labels.dialogs.cancel_button}" onClick="editSectionDialog.visible=false;"/>
+      </cell>
+    </vlayout>
+  </window>
+</zk>

@@ -15,11 +15,13 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * A tree model specifically dedicated to work with forum structure.
@@ -64,5 +66,18 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         setSelectedNode(branchNode);
         addOpenObject(sectionNode);
         return this;
+    }
+
+    public void addIfAbsent(PoulpeSection section){
+        TreeNode<ForumStructureItem> sectionNode = find(new ForumStructureItem(section));
+        if(sectionNode == null){
+            sectionNode = createSectionNode(section);
+            getRoot().add(sectionNode);
+        }
+    }
+
+    private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section){
+        ForumStructureItem sectionItem = new ForumStructureItem(section);
+        return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
     }
 }

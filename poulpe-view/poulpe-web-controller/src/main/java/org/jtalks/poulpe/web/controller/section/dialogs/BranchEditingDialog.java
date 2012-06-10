@@ -40,7 +40,7 @@ import java.util.List;
 public class BranchEditingDialog {
     private static final String SHOW_DIALOG = "showDialog", EDITED_BRANCH = "editedBranch",
             MODERATING_GROUP = "moderatingGroup", CANDIDATES_TO_MODERATE = "candidatesToModerate";
-    private final GroupService groupService;//TODO: replace with service
+    private final GroupService groupService;
     private final ListModelList<PoulpeSection> sectionList = new ListModelList<PoulpeSection>();
     private final GroupList groupList = new GroupList();
     private final ForumStructureVm forumStructureVm;
@@ -52,13 +52,6 @@ public class BranchEditingDialog {
         this.groupService = groupService;
         this.forumStructureVm = forumStructureVm;
         this.forumStructureService = forumStructureService;
-    }
-
-    /**
-     * Closes the dialog without removing any underlying state.
-     */
-    public void closeDialog() {
-        showDialog = false;
     }
 
     @GlobalCommand
@@ -73,11 +66,26 @@ public class BranchEditingDialog {
         showDialog(new ForumStructureItem(new PoulpeBranch()));
     }
 
+    @Command
+    @NotifyChange(SHOW_DIALOG)
+    public void saveBranch() {
+        PoulpeBranch updatedBranch = storeSelectedBranch();
+        forumStructureVm.updateBranchInTree(updatedBranch);
+        closeDialog();
+    }
+
+    /**
+     * Closes the dialog without removing any underlying state.
+     */
+    public void closeDialog() {
+        showDialog = false;
+    }
+
     private void showDialog(ForumStructureItem editedBranch) {
         groupList.setGroups(groupService.getAll());
         this.editedBranch = editedBranch;
         renewSectionsFromTree(forumStructureVm.getTreeModel());
-        selectSection(forumStructureVm.getSelectedItemInTree().getSectionItem());
+        selectSection(forumStructureVm.getSelectedItemInTree().getBranchItem().getPoulpeSection());
         showDialog = true;
     }
 
@@ -110,7 +118,7 @@ public class BranchEditingDialog {
      *
      * @param sectionTree a forum structure tree to get sections from it
      */
-    public void renewSectionsFromTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
+    void renewSectionsFromTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
         this.sectionList.clear();
         List<PoulpeSection> sections = unwrapSections(sectionTree.getRoot().getChildren());
         this.sectionList.addAll(sections);
@@ -134,17 +142,8 @@ public class BranchEditingDialog {
         return editedBranch;
     }
 
-    public BranchEditingDialog setEditedBranch(ForumStructureItem editedBranch) {
+    public void setEditedBranch(ForumStructureItem editedBranch) {
         this.editedBranch = editedBranch;
-        return this;
-    }
-
-    @Command
-    @NotifyChange(SHOW_DIALOG)
-    public void saveBranch() {
-        PoulpeBranch updatedBranch = storeSelectedBranch();
-        forumStructureVm.updateBranchInTree(updatedBranch);
-        closeDialog();
     }
 
     PoulpeBranch storeSelectedBranch() {

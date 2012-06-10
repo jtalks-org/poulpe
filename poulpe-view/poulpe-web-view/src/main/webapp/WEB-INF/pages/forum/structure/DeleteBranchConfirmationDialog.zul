@@ -1,0 +1,21 @@
+<window id="deleteBranchConfirmationDialog"
+        title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"
+        border="normal"
+        onClose="self.visible=false;event.stopPropagation();"
+        onCancel="self.visible=false"
+        forward="onOK=confirmBranchDeletionButton.onClick"
+        visible="@load(vm.viewData.confirmBranchDeletionDialogVm.showDialog)" height="150px" width="270px">
+  <vlayout
+          form="@id('fx') @save(vm.viewData.confirmBranchDeletionDialogVm, before='confirmBranchDeletion') @load(vm.viewData.confirmBranchDeletionDialogVm)">
+    <label value="${labels.forum_structure.delete_branch_confirmation_dialog.text}"/>
+    <separator/>
+    <separator bar="true"/>
+    <separator/>
+    <separator/>
+    <hbox align="end" pack="center" hflex="1">
+      <button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"
+              onClick="@command('confirmBranchDeletion')"/>
+      <button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>
+    </hbox>
+  </vlayout>
+</window>

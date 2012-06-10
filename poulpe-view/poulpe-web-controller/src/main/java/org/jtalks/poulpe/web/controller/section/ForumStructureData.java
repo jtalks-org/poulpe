@@ -176,18 +176,6 @@ public class ForumStructureData {
     }
 
     /**
-     * Sets and rebuilds the Forum Structure tree and also updates the branch dialog with the list of available sections
-     * so that in combo box we have only sections that are present in the section tree.
-     *
-     * @param sectionTree the new tree of sections and branches to be shown on the Forum Structure page
-     */
-
-    public void setStructureTree(@Nonnull ForumStructureTreeModel sectionTree) {
-        this.structureTree = sectionTree;
-        branchDialog.renewSectionsFromTree(sectionTree);
-    }
-
-    /**
      * Drops node before the target and selects it
      *
      * @param node   the node that will be dropped and selected
