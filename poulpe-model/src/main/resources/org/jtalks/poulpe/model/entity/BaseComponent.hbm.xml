@@ -34,7 +34,7 @@
     <set name="defaultProperties" cascade="all" inverse="false" lazy="false">
       <cache usage="read-only" />
       <key column="BASE_COMPONENT_TYPE" foreign-key="COMPONENT_TYPE" />
-      <one-to-many class="org.jtalks.poulpe.model.entity.DefaultProperty" />
+      <one-to-many class="org.jtalks.common.model.entity.Property" entity-name="DefaultProperty" />
     </set>
 
   </class>

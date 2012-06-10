@@ -19,6 +19,7 @@ import java.util.Random;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.poulpe.model.entity.*;
 
@@ -86,15 +87,25 @@ public final class TestFixtures {
         return component(randomComponentType());
     }
 
-    private static ComponentType randomComponentType() {
+    public static ComponentType randomComponentType() {
         ComponentType[] types = ComponentType.values();
         return types[randomInt(types.length)];
+    }
+    
+    public static BaseComponent baseComponent() {
+        return new BaseComponent(randomComponentType());
     }
 
     public static PoulpeSection sectionWithBranches() {
         return sectionWithBranches(randomInt(10));
     }
 
+    public static Property property() {
+        Property property = new Property(random(), random());
+        property.setValidationRule(random());
+        return property;
+    }
+    
     public static PoulpeSection sectionWithBranches(int branchesAmount) {
         PoulpeSection section = new PoulpeSection(random());
 

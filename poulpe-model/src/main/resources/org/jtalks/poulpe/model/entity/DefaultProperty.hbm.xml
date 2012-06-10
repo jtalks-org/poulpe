@@ -18,7 +18,7 @@
 
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <class name="org.jtalks.poulpe.model.entity.DefaultProperty" table="DEFAULT_PROPERTIES">
+  <class name="org.jtalks.common.model.entity.Property" table="DEFAULT_PROPERTIES" entity-name="DefaultProperty">
     <cache usage="read-only" />
 
     <id column="PROPERTY_ID" name="id" unsaved-value="0">

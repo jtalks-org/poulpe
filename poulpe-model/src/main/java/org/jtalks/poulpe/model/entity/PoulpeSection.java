@@ -119,7 +119,7 @@ public class PoulpeSection extends Section {
      * @return the last branch in the section or {@code null} if there are no branches
      */
     public PoulpeBranch getLastBranch() {
-        if (getBranches().size() == 0) {
+        if (getBranches().isEmpty()) {
             return null;
         }
         return (PoulpeBranch) getBranches().get(getBranches().size() - 1);

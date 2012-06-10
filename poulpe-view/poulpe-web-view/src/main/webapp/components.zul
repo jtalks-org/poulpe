@@ -27,13 +27,13 @@
         </template>
       </listbox>
       <div>
-        <button label="${labels.componentlist.add}" onClick="@command('showAddComponentDialog')" disabled="@load(!vm.ableToCreateNewComponent)" />
+        <button label="${labels.componentlist.add}" onClick="@command('addNewComponent')" disabled="@load(!vm.ableToCreateNewComponent)" />
       </div>
     </vlayout>
 
     <!--CONTEXT MENU -->
     <menupopup id="popupMenu">
-      <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}" onClick="@command('addNewComponent')" />
+      <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}" onClick="@command('configureComponent')" />
       <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}" onClick="@command('deleteComponent')" />
     </menupopup>
 

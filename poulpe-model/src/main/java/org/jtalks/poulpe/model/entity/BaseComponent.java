@@ -16,7 +16,7 @@ import com.google.common.collect.Sets;
 public class BaseComponent {
 
     private ComponentType componentType;
-    private Collection<DefaultProperty> defaultProperties = Sets.newLinkedHashSet();
+    private Collection<Property> defaultProperties = Sets.newLinkedHashSet();
 
     /**
      * Visible for hibernate
@@ -33,37 +33,6 @@ public class BaseComponent {
     }
 
     /**
-     * @return component type of this base component
-     */
-    public ComponentType getComponentType() {
-        return componentType;
-    }
-
-    /**
-     * Visible for hibernate
-     * 
-     * @param componentType type of the component
-     */
-    protected void setComponentType(ComponentType componentType) {
-        this.componentType = componentType;
-    }
-
-    /**
-     * @return default properties 
-     */
-    public Collection<DefaultProperty> getDefaultProperties() {
-        return defaultProperties;
-    }
-
-    /**
-     * Visible for hibernate
-     * @param defaultProperties collection of default properties
-     */
-    protected void setDefaultProperties(Collection<DefaultProperty> defaultProperties) {
-        this.defaultProperties = defaultProperties;
-    }
-
-    /**
      * Based on current component type, creates a component of this type 
      * and fills it with default properties.
      * 
@@ -73,16 +42,52 @@ public class BaseComponent {
      */
     public Component newComponent(String name, String description) {
         Validate.validState(componentType != null, "componentType must be set");
-        return componentType.newComponent(name, description, copy(defaultProperties));
+        return componentType.newComponent(name, description, copyAll(defaultProperties));
     }
     
-    private static List<Property> copy(Iterable<DefaultProperty> defaults) {
+    private static List<Property> copyAll(Iterable<Property> defaults) {
         List<Property> result = Lists.newArrayListWithExpectedSize(4);
         
-        for (DefaultProperty property : defaults) {
-            result.add(property.toProperty());
+        for (Property property : defaults) {
+            result.add(copy(property));
         }
         
         return result;
+    }
+
+    private static Property copy(Property property) {
+        Property copy = new Property(property.getName(), property.getValue());
+        copy.setValidationRule(property.getValidationRule());
+        return copy;
+    }
+    
+    /**
+     * @return component type of this base component
+     */
+    public ComponentType getComponentType() {
+        return componentType;
+    }
+
+    /**
+     * Visible for hibernate
+     * @param componentType type of the component
+     */
+    protected void setComponentType(ComponentType componentType) {
+        this.componentType = componentType;
+    }
+
+    /**
+     * @return default properties 
+     */
+    public Collection<Property> getDefaultProperties() {
+        return defaultProperties;
+    }
+
+    /**
+     * Visible for hibernate
+     * @param defaultProperties collection of default properties
+     */
+    protected void setDefaultProperties(Collection<Property> defaultProperties) {
+        this.defaultProperties = defaultProperties;
     }
 }

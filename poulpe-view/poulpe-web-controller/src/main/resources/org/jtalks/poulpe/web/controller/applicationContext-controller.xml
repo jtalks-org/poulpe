@@ -118,10 +118,10 @@
   </bean>
 
   <bean id="componentsVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
-    <property name="componentService" ref="componentService"/>
-    <property name="dialogManager" ref="dialogManager"/>
-    <property name="windowManager" ref="windowManager"/>
-    <property name="selectedEntity" ref="selectedEntity" />
+    <constructor-arg index="0" ref="componentService" />
+    <constructor-arg index="1" ref="dialogManager" />
+    <constructor-arg index="2" ref="windowManager" />
+    <constructor-arg index="3" ref="selectedEntity" />
   </bean>
   <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
     <constructor-arg index="0" ref="componentService" />

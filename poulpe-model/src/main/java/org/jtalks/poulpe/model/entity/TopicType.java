@@ -48,6 +48,8 @@ public class TopicType extends Entity {
 
     /**
      * Construct TopicType with specified title and description.
+     * @param title of the topictype
+     * @param description its description
      */
     public TopicType(String title, String description) {
         this.title = title;

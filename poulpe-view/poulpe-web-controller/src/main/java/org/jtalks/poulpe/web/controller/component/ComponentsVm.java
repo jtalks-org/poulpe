@@ -27,26 +27,23 @@ import org.zkoss.bind.annotation.Command;
 
 /**
  * The class which manages actions and represents information about components displayed in administrator panel.
- *
+ * 
  * @author Vermut
  * @author Alexey Grigorev
  */
 public class ComponentsVm {
 
     public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
-            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", 
-            SELECTED_COMPONENT_TYPE = "selectedComponentType",
-            SELECTED = "selected", 
-            CAN_CREATE_NEW_COMPPONENT = "ableToCreateNewComponent",
-            COMPONENTS = "components"; 
+            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+            SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "ableToCreateNewComponent", COMPONENTS = "components";
 
     private final ComponentService componentService;
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
-    
+
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
-    
+
     private Component selected;
 
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
@@ -65,13 +62,14 @@ public class ComponentsVm {
     }
 
     /**
-     * Deletes selected component
+     * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
+     * 
      * @exception IllegalStateException if no component selected
      */
     @Command
     public void deleteComponent() {
         Validate.validState(selected != null, "entity to delete must be selected");
-        
+
         DialogManager.Performable dc = new DialogManager.Performable() {
             @Override
             public void execute() {
@@ -81,10 +79,10 @@ public class ComponentsVm {
                 bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPPONENT);
             }
         };
-        
+
         dialogManager.confirmDeletion(selected.getName(), dc);
     }
-    
+
     /**
      * Shows a window for adding component
      */
@@ -92,9 +90,10 @@ public class ComponentsVm {
     public void addNewComponent() {
         AddComponentVm.openWindowForAdding(windowManager);
     }
-    
+
     /**
-     * Shows a component edit window
+     * Shows a component edit window for currently selected element. Selected component is set using
+     * {@link #setSelected(Component)}.
      */
     @Command
     public void configureComponent() {
@@ -117,7 +116,6 @@ public class ComponentsVm {
         this.selected = selected;
     }
 
-    
     public void setBindWrapper(BindUtilsWrapper bindWrapper) {
         this.bindWrapper = bindWrapper;
     }
