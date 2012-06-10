@@ -14,30 +14,25 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 import java.util.List;
+
+import javax.validation.ConstraintViolationException;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import javax.validation.ConstraintViolationException;
 
 /**
  * 
@@ -62,7 +57,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testSave() {
-        TopicType topicType = ObjectsFactory.topicType();
+        TopicType topicType = TestFixtures.topicType();
         dao.saveOrUpdate(topicType);
 
         assertNotSame(topicType.getId(), 0, "Id not created");
@@ -83,7 +78,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testGet() {
-        TopicType TopicType = ObjectsFactory.topicType();
+        TopicType TopicType = TestFixtures.topicType();
         session.save(TopicType);
 
         TopicType result = dao.get(TopicType.getId());
@@ -101,7 +96,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testUpdate() {
-        TopicType topicType = ObjectsFactory.topicType();
+        TopicType topicType = TestFixtures.topicType();
         session.save(topicType);
 
         String newTitle = "new title";
@@ -124,7 +119,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testDelete() {
-        TopicType topicType = ObjectsFactory.topicType();
+        TopicType topicType = TestFixtures.topicType();
         session.save(topicType);
 
         boolean result = dao.delete(topicType.getId());
@@ -143,9 +138,9 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testGetAll() {
-        TopicType topicType1 = ObjectsFactory.topicType();
+        TopicType topicType1 = TestFixtures.topicType();
         session.save(topicType1);
-        TopicType topicType2 = ObjectsFactory.topicType();
+        TopicType topicType2 = TestFixtures.topicType();
         session.save(topicType2);
 
         List<TopicType> topicTypes = dao.getAll();
@@ -162,7 +157,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
 
     @Test
     public void testIsExist() {
-        TopicType TopicType = ObjectsFactory.topicType();
+        TopicType TopicType = TestFixtures.topicType();
         session.save(TopicType);
 
         assertTrue(dao.isExist(TopicType.getId()));

@@ -17,8 +17,9 @@ package org.jtalks.poulpe.web.controller.component;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
-import org.jtalks.common.model.entity.Component;
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.mockito.Mock;
@@ -39,7 +40,7 @@ public class EditComponentVmTest {
     @Mock ComponentService componentService;
     @Mock WindowManager windowManager;
 
-    Component component = new Component();
+    Component component = TestFixtures.randomComponent();
 
     @BeforeMethod
     public void setUp() {

@@ -465,6 +465,7 @@
           </mapping>
         </configuration>
       </plugin>
+      
     </plugins>
   </build>
 

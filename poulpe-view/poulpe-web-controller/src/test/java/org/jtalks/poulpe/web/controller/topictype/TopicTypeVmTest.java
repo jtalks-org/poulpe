@@ -14,48 +14,38 @@
  */
 package org.jtalks.poulpe.web.controller.topictype;
 
-import org.jtalks.common.validation.EntityValidator;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.*;
+
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.*;
-
 /**
-* Tests for TopicType ViewModel
-* See {@see TopicTypeVm}
-*
-* @author Vahluev Vyacheslav
-*/
+ * Tests for TopicType ViewModel See {@link TopicTypeVm}
+ * 
+ * @author Vahluev Vyacheslav
+ */
 public class TopicTypeVmTest {
 
     private TopicTypeVm topicTypeVm;
-    @Mock
-    private TopicTypeService topicTypeService;
-    @Mock
-    private DialogManager dialogManager;
+    
+    @Mock TopicTypeService topicTypeService;
+    @Mock DialogManager dialogManager;
 
-    public TopicType getTopicType() {
-        TopicType topicType = new TopicType();
-        topicType.setDescription("Desc");
-        topicType.setTitle("Title");
-        topicType.setId(12345);
-
-        return topicType;
-    }
 
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
 
         topicTypeVm = new TopicTypeVm(topicTypeService, dialogManager);
-        TopicType selected = getTopicType();
+        TopicType selected = TestFixtures.topicType();
         topicTypeVm.setSelected(selected);
         topicTypeVm.getTopicTypes().add(selected);
     }
@@ -66,14 +56,14 @@ public class TopicTypeVmTest {
 
         TopicType newTT = topicTypeVm.getSelected();
         assertEquals(newTT.getTitle(), "New Title");
-        assertEquals(newTT.getDescription(),"New Description");
+        assertEquals(newTT.getDescription(), "New Description");
     }
 
     @Test
     public void testEditTopicType() {
         topicTypeVm.editTopicType();
 
-        //due to static - message is null
+        // due to static - message is null
         assertNotNull(topicTypeVm.getShowPopUp());
     }
 
@@ -108,6 +98,5 @@ public class TopicTypeVmTest {
         assertFalse(topicTypeVm.getTopicTypes().contains(selected));
         assertNull(topicTypeVm.getSelected());
     }
-
 
 }

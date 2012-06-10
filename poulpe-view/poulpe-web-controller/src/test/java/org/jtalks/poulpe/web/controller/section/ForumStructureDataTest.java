@@ -14,21 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.TreeNode;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev

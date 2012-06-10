@@ -63,6 +63,7 @@
     <property name="mappingResources">
       <list>
         <value>/org/jtalks/poulpe/model/entity/Branch.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/BaseComponent.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Component.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/TopicType.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Section.hbm.xml</value>
@@ -70,6 +71,7 @@
         <value>/org/jtalks/poulpe/model/entity/Rank.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/User.hbm.xml</value>
         <value>/org/jtalks/poulpe/model/entity/Property.hbm.xml</value>
+        <value>/org/jtalks/poulpe/model/entity/DefaultProperty.hbm.xml</value>
       </list>
     </property>
     <property name="hibernateProperties">

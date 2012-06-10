@@ -19,9 +19,9 @@
        xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
   http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
-
-  <zksp:zk-config/>
-
+ 
+  <zksp:zk-config />
+  
   <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
     <property name="scopes">
       <map>
@@ -46,6 +46,11 @@
       </bean>
     </constructor-arg>
   </bean>
+  <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
+    <constructor-arg index="0" ref="openSessions"/>
+    <property name="windowManager" ref="windowManager"/>
+  </bean>
+
   <bean id="forumStructureBranchDialogVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog">
     <constructor-arg index="0" ref="groupService"/>
@@ -82,7 +87,6 @@
   <bean id="usersVm" scope="desktop" class="org.jtalks.poulpe.web.controller.users.UsersVm">
     <constructor-arg index="0" ref="userService"/>
   </bean>
-
   <bean id="userGroupVm" scope="desktop" class="org.jtalks.poulpe.web.controller.group.UserGroupVm">
     <constructor-arg index="0" ref="groupService"/>
     <constructor-arg index="1" ref="selectedEntity"/>
@@ -91,12 +95,6 @@
 
   <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
     <constructor-arg index="0" ref="rankService"/>
-  </bean>
-
-  <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
-    <constructor-arg index="0" ref="componentService"/>
-    <constructor-arg index="1" ref="selectedEntity"/>
-    <property name="windowManager" ref="windowManager"/>
   </bean>
 
   <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
@@ -112,10 +110,6 @@
     <constructor-arg ref="selectedEntity"/>
   </bean>
 
-  <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
-    <constructor-arg index="0" ref="openSessions"/>
-    <property name="windowManager" ref="windowManager"/>
-  </bean>
 
   <bean id="topicTypeVm" class="org.jtalks.poulpe.web.controller.topictype.TopicTypeVm" scope="desktop">
     <constructor-arg index="0" ref="topicTypeService"/>
@@ -128,12 +122,22 @@
   </bean>
 
   <bean id="componentsVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">
-    <property name="componentService" ref="componentService"/>
-    <property name="dialogManager" ref="dialogManager"/>
-    <property name="windowManager" ref="windowManager"/>
-    <property name="selectedEntity" ref="selectedEntity"/>
+    <constructor-arg index="0" ref="componentService" />
+    <constructor-arg index="1" ref="dialogManager" />
+    <constructor-arg index="2" ref="windowManager" />
+    <constructor-arg index="3" ref="selectedEntity" />
   </bean>
-
+  <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
+    <constructor-arg index="0" ref="componentService" />
+    <constructor-arg index="1" ref="selectedEntity" />
+    <property name="windowManager" ref="windowManager" />
+  </bean>
+  <bean id="addComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.AddComponentVm">
+    <constructor-arg index="0" ref="componentService" />
+    <constructor-arg index="1" ref="windowManager" />
+  </bean>
+  
+  
   <bean id="openSessions" class="org.jtalks.poulpe.web.osod.SingletonOpenSessionsHolder" factory-method="instantiate">
     <constructor-arg ref="sessionFactory"/>
   </bean>

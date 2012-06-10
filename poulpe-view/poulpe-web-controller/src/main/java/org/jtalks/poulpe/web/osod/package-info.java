@@ -14,6 +14,6 @@
  */
 /**
  * Contains implementation of Open Session On Desktop listener (session-per-conversation Hibernate pattern).
- * @see OpenSessionOnDesktopZkListener
+ * @see org.jtalks.poulpe.web.osod.OpenSessionOnDesktopZkListener
  */
 package org.jtalks.poulpe.web.osod;
