@@ -117,7 +117,7 @@ public class ForumStructureDataTest {
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
     public void testRemoveSelectedItem_selectedBranch(ForumStructureTreeModel treeModel) {
         TreeNode<ForumStructureItem> selectedNode = treeModel.getRoot().getChildAt(1).getChildAt(1);
-        treeModel.addSelectionPath(new int[]{1, 1});
+        treeModel.addSelectionPath(new int[] { 1, 1 });
         sut.setSelectedItem(selectedNode.getData());
         sut.setStructureTree(treeModel);
 

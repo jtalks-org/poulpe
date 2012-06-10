@@ -97,7 +97,7 @@ public final class TestFixtures {
     }
 
     public static PoulpeSection sectionWithBranches() {
-        return sectionWithBranches(randomInt(10));
+        return sectionWithBranches(5 + randomInt(10));
     }
 
     public static Property property() {
