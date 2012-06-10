@@ -14,6 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import static org.jtalks.poulpe.web.controller.AdminWindow.EN_LOCALE_LANG;
+import static org.jtalks.poulpe.web.controller.AdminWindow.RU_LOCALE_LANG;
+import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
+import static org.mockito.Mockito.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -21,27 +29,15 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
-import static org.jtalks.poulpe.web.controller.AdminWindow.EN_LOCALE_LANG;
-import static org.jtalks.poulpe.web.controller.AdminWindow.RU_LOCALE_LANG;
-import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
-import static org.mockito.Mockito.*;
-
 public class AdminWindowTest {
 
-    @InjectMocks
+    @InjectMocks 
     AdminWindow adminWindow = new AdminWindow(mock(OpenSessions.class));
-    @Mock
-    ZkHelper zkHelper;
-    @Mock
-    HttpServletResponse response;
-    @Mock
-    Cookie cookie;
-    @Mock
-    WindowManager windowManager;
+
+    @Mock ZkHelper zkHelper;
+    @Mock HttpServletResponse response;
+    @Mock Cookie cookie;
+    @Mock WindowManager windowManager;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -49,7 +45,7 @@ public class AdminWindowTest {
     }
 
     @Test
-    public void testOnChangeLocaleToRu() throws IOException {
+    public void testOnChangeLocaleToRu() {
         when(zkHelper.getResponse()).thenReturn(response);
         when(zkHelper.createCookie(USER_LOCALE, RU_LOCALE_LANG)).thenReturn(cookie);
 
@@ -60,7 +56,7 @@ public class AdminWindowTest {
     }
 
     @Test
-    public void testOnChangeLocaleToEn() throws IOException {
+    public void testOnChangeLocaleToEn() {
         when(zkHelper.getResponse()).thenReturn(response);
         when(zkHelper.createCookie(USER_LOCALE, EN_LOCALE_LANG)).thenReturn(cookie);
 

@@ -29,15 +29,15 @@ import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.ConventionWires;
 
 /**
- * Helper class for zk-based view objects - mainly for easing the testing. It
- * encapsulates static method calls and methods inherited from zk classes. <br>
+ * Helper class for zk-based view objects - mainly for easing the testing. It encapsulates static method calls and
+ * methods inherited from zk classes. <br>
  * <br>
  * 
  * Helps with:<br>
  * <ul>
  * 
- * <li>Initializing components and wiring its variables to actual ui components
- * ({@link #wireByConvention()} and {@link #wireToZul(String)}</li>
+ * <li>Initializing components and wiring its variables to actual ui components ({@link #wireByConvention()} and
+ * {@link #wireToZul(String)}</li>
  * 
  * <li>Managing child objects via {@link #addComponent(Component)} and the like</li>
  * 
@@ -50,6 +50,7 @@ public class ZkHelper {
 
     /**
      * Creates a helper with a component to work with.
+     * 
      * @param component the component this helper will be working with
      */
     public ZkHelper(@Nonnull Component component) {
@@ -70,6 +71,7 @@ public class ZkHelper {
      * Wires view to zul file
      * 
      * @param zul file to be wired to
+     * @return created component
      */
     public Component wireToZul(String zul) {
         return Executions.createComponents(zul, component, null);
@@ -84,6 +86,7 @@ public class ZkHelper {
     public void wireComponents(Component component, Object controller) {
         Selectors.wireComponents(component, controller, false);
     }
+
     /**
      * Removes all children of the given class
      * 
@@ -98,20 +101,19 @@ public class ZkHelper {
     /**
      * Returns the first component that match the selector.
      * 
-     * @param root the reference component for selector
      * @param selector the selector string
      * @return component matching the selector
      */
     public Component findComponent(String selector) {
         List<Component> comps = Selectors.find(component, selector);
-        if(comps.size() > 0)
+        if (comps.size() > 0)
             return comps.get(0);
         return null;
     }
 
     /**
      * Find the component by id.
-     *
+     * 
      * @param id component's Id
      * @return found component or null
      */
@@ -166,8 +168,8 @@ public class ZkHelper {
     }
 
     /**
-     * Returns the label of the specified key based on the current Locale, or null if no found. 
-     *
+     * Returns the label of the specified key based on the current Locale, or null if no found.
+     * 
      * @param key the label code to return its value
      * @return the label value according to current locale
      * @see Labels#getLabel(String)
@@ -177,8 +179,8 @@ public class ZkHelper {
     }
 
     /**
-     * Sends a temporary redirect response to the client using the specified redirect location URL by use of the
-     * current execution, {@link Executions#getCurrent}. 
+     * Sends a temporary redirect response to the client using the specified redirect location URL by use of the current
+     * execution, {@link Executions#getCurrent}.
      * 
      * @param uri the URI to redirect to, or null to reload the same page
      */
@@ -203,8 +205,8 @@ public class ZkHelper {
     }
 
     /**
-     * Constructs a cookie with a specified name and value. See {@link Cookie#Cookie(String, String)}.
-     * The method is used to ease testing.
+     * Constructs a cookie with a specified name and value. See {@link Cookie#Cookie(String, String)}. The method is
+     * used to ease testing.
      * 
      * @param name a <code>String</code> specifying the name of the cookie
      * @param value a <code>String</code> specifying the value of the cookie

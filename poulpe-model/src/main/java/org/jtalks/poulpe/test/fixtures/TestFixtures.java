@@ -50,10 +50,7 @@ public final class TestFixtures {
 
     public static Component component(ComponentType type) {
         BaseComponent base = new BaseComponent(type);
-        Component c = base.newComponent(random(), random());
-        // TODO: check if it's needed
-        c.addProperty(random(), random());
-        return c;
+        return base.newComponent(random(), random());
     }
     
     public static List<Component> allComponents() {
@@ -123,18 +120,6 @@ public final class TestFixtures {
         return user(random());
     }
 
-    public static List<PoulpeUser> bannedUsers(String... usernames) {
-        List<PoulpeUser> result = Lists.newArrayList();
-
-        for (String username : usernames) {
-            PoulpeUser user = user(username);
-            user.setBanReason("anyBanReason");
-            result.add(user);
-        }
-
-        return result;
-    }
-
     public static List<PoulpeUser> bannedUsersListOf(int n) {
         List<PoulpeUser> users = usersListOf(n);
 
@@ -143,16 +128,6 @@ public final class TestFixtures {
         }
 
         return users;
-    }
-
-    public static List<PoulpeUser> createUsers(String... usernames) {
-        List<PoulpeUser> result = Lists.newArrayList();
-
-        for (String username : usernames) {
-            result.add(user(username));
-        }
-
-        return result;
     }
 
     public static List<PoulpeUser> usersListOf(int n) {

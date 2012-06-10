@@ -27,14 +27,12 @@ import java.util.List;
 
 /**
  * View-Model for banning of users purposes.
- *
+ * 
  * @author Tatiana Birina
  * @author Vyacheslav Zhivaev
  * @author alexandr afanasev
  */
 public class UserBanningVm {
-
-    private static final String NOT_SELECTED_ERROR = "To provide save action for user, user must be already selected";
 
     // Injected
     private final UserService userService;
@@ -43,9 +41,9 @@ public class UserBanningVm {
     // Max count to combobox of users with filter
     private final static int MAX_COUNT = 10;
 
-
-    public final String AVAILABLE_USERS_PROP = "availableUsers", BANNED_USERS_PROP = "bannedUsers", ADD_BAN_FOR_PROP = "addBanFor";
-
+    public final String AVAILABLE_USERS_PROP = "availableUsers", 
+            BANNED_USERS_PROP = "bannedUsers",
+            ADD_BAN_FOR_PROP = "addBanFor";
 
     /**
      * User selected in list of banned, also this instance used by window for editing ban properties.
@@ -57,17 +55,15 @@ public class UserBanningVm {
      */
     private PoulpeUser addBanFor;
 
-
     /**
      * Text to filter users by username in available list.
      */
     private String availableFilterText = "";
 
-
     /**
      * Constructs VM.
-     *
-     * @param userService  used to obtain data related to users for VM
+     * 
+     * @param userService used to obtain data related to users for VM
      * @param groupService used to obtain data related to groups for VM
      */
     public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
@@ -77,7 +73,7 @@ public class UserBanningVm {
 
     /**
      * Gets list of user which hasn't banned state.
-     *
+     * 
      * @return list of users, list instance is UNMODIFIABLE
      */
     @Nonnull
@@ -85,21 +81,19 @@ public class UserBanningVm {
         return userService.getNonBannedByUsername(availableFilterText, MAX_COUNT);
     }
 
-
     /**
      * Gets list of user which already has banned state.
-     *
+     * 
      * @return list of users, list instance is UNMODIFIABLE
      */
     @Nonnull
-
     public List<PoulpeUser> getBannedUsers() {
         return groupService.getBannedUsers().getUsers();
     }
 
     /**
      * Gets currently selected user. This user instance used by window to edit ban properties.
-     *
+     * 
      * @return currently selected user, can be {@code null}
      */
     @Nullable
@@ -109,7 +103,7 @@ public class UserBanningVm {
 
     /**
      * Sets selected banned user
-     *
+     * 
      * @param selectedUser the banned user currently selected
      */
     public void setSelectedUser(PoulpeUser selectedUser) {
@@ -118,7 +112,7 @@ public class UserBanningVm {
 
     /**
      * Gets user selected to ban.
-     *
+     * 
      * @return the user currently selected to add ban state
      */
     @Nullable
@@ -128,32 +122,30 @@ public class UserBanningVm {
 
     /**
      * Sets user selected to ban.
-     *
+     * 
      * @param addBanFor the user which be used to add ban state
      */
     public void setAddBanFor(@Nonnull PoulpeUser addBanFor) {
         this.addBanFor = addBanFor;
     }
 
-
     /**
      * Sets new value to filter text for users in available list. This value later will be used to filter users by
      * username in list of available users.
-     *
+     * 
      * @param filterText the text to filter by
      */
     @Command
-    @NotifyChange({AVAILABLE_USERS_PROP})
+    @NotifyChange({ AVAILABLE_USERS_PROP })
     public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
         this.availableFilterText = filterText;
     }
-
 
     /**
      * Add user to Banned Users group
      */
     @Command
-    @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
+    @NotifyChange({ ADD_BAN_FOR_PROP, BANNED_USERS_PROP })
     public void addUserToBannedGroup() {
         groupService.banUsers(addBanFor);
         addBanFor = null;
@@ -163,11 +155,10 @@ public class UserBanningVm {
      * Revoke user ban
      */
     @Command
-    @NotifyChange({AVAILABLE_USERS_PROP, BANNED_USERS_PROP})
+    @NotifyChange({ AVAILABLE_USERS_PROP, BANNED_USERS_PROP })
     public void revokeBan() {
         groupService.revokeBan(selectedUser);
         selectedUser = null;
     }
-
 
 }

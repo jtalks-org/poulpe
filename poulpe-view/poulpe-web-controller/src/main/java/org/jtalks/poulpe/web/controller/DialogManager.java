@@ -45,7 +45,7 @@ public interface DialogManager {
     /**
      * Asks user if they want to create item
      * 
-     * @param victim the item to be created
+     * @param target the item to be created
      * @param performable the action to be performed when user confirms item
      * deletion
      */
@@ -54,7 +54,7 @@ public interface DialogManager {
     /**
      * Asks user if they want to edit item
      * 
-     * @param victim the item to be edit
+     * @param target the item to be edit
      * @param performable the action to be performed when user confirms item
      * deletion
      */

@@ -14,19 +14,18 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
 
-import javax.servlet.ServletContextEvent;
 import java.sql.Driver;
-import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 
-import static org.mockito.Mockito.*;
+import javax.servlet.ServletContextEvent;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author @author Leonid Kazancev
@@ -43,7 +42,7 @@ public class JdbcDriverUnregisteringListenerTest {
     }
 
     @Test
-    public void testContextDestroyed() throws SQLException {
+    public void testContextDestroyed() {
         when(spyJdbcDriverUnregisteringListener.getDrivers()).thenReturn(drivers);
         doNothing().when(spyJdbcDriverUnregisteringListener).deregisterDriver(driver);
 

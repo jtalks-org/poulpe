@@ -17,17 +17,10 @@ package org.jtalks.poulpe.web.controller;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jtalks.poulpe.model.entity.TopicType;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
-import org.springframework.util.Assert;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
 import org.zkoss.zk.ui.event.Event;
 import org.zkoss.zk.ui.event.EventListener;
-import org.zkoss.zk.ui.event.Events;
-import org.zkoss.zk.ui.util.ConventionWires;
 import org.zkoss.zul.Window;
 
 /**
@@ -35,14 +28,11 @@ import org.zkoss.zul.Window;
  * 
  * @author Dmitriy Sukharev
  * @author Vyacheslav Zhivaev
- * 
  */
-public final class WindowManagerImpl implements WindowManager, ApplicationContextAware {
+public final class WindowManagerImpl implements WindowManager {
 
     /** The path to the web-page for adding / editing component. */
     private static final String EDIT_COMPONENT_URL = "/WEB-INF/pages/edit_component.zul";
-
-    private ApplicationContext applicationContext;
 
     private Component workArea;
     private Component currentWindow;
@@ -82,73 +72,11 @@ public final class WindowManagerImpl implements WindowManager, ApplicationContex
 
     /** {@inheritDoc} */
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
-
-    /**
-     * Retrieves a bean from the context
-     * 
-     * @param beanName name of the bean
-     * @param comp to be wired
-     * @return bean
-     */
-    private Object getBean(String beanName, Component comp) {
-        assertBeanDefined(beanName);
-        assertBeanPrototype(beanName);
-        Object presenter = applicationContext.getBean(beanName);
-        Events.addEventListeners(comp, presenter);
-        return presenter;
-    }
-
-    /**
-     * @param pathToZulFile path to the file
-     * @return new Component
-     */
-    private Component createComponent(String pathToZulFile) {
-        Component component = Executions.createComponents(pathToZulFile, null, null);
-        ConventionWires.wireVariables(component, component);
-        return component;
-    }
-
-    /**
-     * @param beanName name of the bean
-     * @exception IllegalArgumentException if the bean does not exist
-     */
-    private void assertBeanDefined(String beanName) {
-        Assert.isTrue(applicationContext.containsBean(beanName));
-    }
-
-    /**
-     * @param beanName name of the bean
-     * @exception IllegalArgumentException if the bean is not prototype
-     */
-    private void assertBeanPrototype(String beanName) {
-        Assert.isTrue(applicationContext.isPrototype(beanName));
-    }
-
-    /**
-     * @param win to be opened
-     */
-    private void doModal(Window win) {
-        try {
-            win.doModal();
-        } catch (Exception e) {
-            throw new AssertionError(e); // can't happen
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void setWorkArea(Component workArea) {
         this.workArea = workArea;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void open(String pathToZulFile) {
         if (currentWindow != null) {
