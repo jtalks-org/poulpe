@@ -33,13 +33,12 @@ import org.jtalks.poulpe.pages.Pagination;
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
-    private static final String TYPE_NAME = PoulpeUser.class.getSimpleName();
 
     /** {@inheritDoc} */
     @Override
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
-        Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.username like ?");
-        query.setString(0, MessageFormat.format("%{0}%", searchString));
+        Query query = getSession().getNamedQuery("findUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
         paginate.addPagination(query);
 
         @SuppressWarnings("unchecked")
@@ -50,8 +49,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     /** {@inheritDoc} */
     @Override
     public int countUsernameMatches(String searchString) {
-        Query query = getSession().createQuery("select count(*) from " + TYPE_NAME + " u where u.username like ?");
-        query.setString(0, MessageFormat.format("%{0}%", searchString));
+        Query query = getSession().getNamedQuery("countUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
         
         Number result = (Number) query.uniqueResult();
         return result.intValue();
@@ -61,8 +60,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     /** {@inheritDoc} */
     @Override
     public PoulpeUser getByUsername(String username) {
-        Query query = getSession().createQuery("from " + TYPE_NAME + " u where u.username = ?");
-        query.setString(0, username);
+        Query query = getSession().getNamedQuery("findUsersByUsername");
+        query.setString("username", username);
         
         return (PoulpeUser) query.uniqueResult();
     }
@@ -81,9 +80,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     /** {@inheritDoc} */
     @Override
     public List<PoulpeUser> getNonBannedByUsername(String word, int maxResults) {
-        String queryString = "from " + TYPE_NAME + " u where u.banReason is null and u.username like ?";
-        Query query = getSession().createQuery(queryString);
-        query.setString(0, MessageFormat.format("%{0}%", word)).setMaxResults(maxResults);
+        Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", word));
+        query.setMaxResults(maxResults);
 
         @SuppressWarnings("unchecked")
         List<PoulpeUser> result = query.list();

@@ -14,25 +14,26 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.logic.UserBanner;
+import org.jtalks.poulpe.model.logic.UserList;
 import org.jtalks.poulpe.service.GroupService;
-
 import ru.javatalks.utils.general.Assert;
 
+import java.util.List;
+
 /**
- * Implementation of {@link GroupService}
- * 
- * @author Vitaliy Kravchenko
- * @author Pavel Vervenko
+ * @author alexander afanasiev
+ * @author stanislav bashkirtsev
  */
-public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao> implements
-        GroupService {
+public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
+        implements GroupService {
     private final EntityValidator validator;
+    private final UserBanner userBanner;
 
     /**
      * Create an instance of entity based service
@@ -41,8 +42,9 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * operations.
      * @param validator - an entity validator
      */
-    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator) {
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
         this.dao = groupDao;
+        this.userBanner = userBanner;
         this.validator = validator;
     }
 
@@ -79,6 +81,30 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         Assert.throwIfNull(group, "group");
         validator.throwOnValidationFailure(group);
         dao.saveOrUpdate(group);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public UserList getBannedUsers() {
+        return userBanner.getBannedUsers();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void banUsers(PoulpeUser... usersToBan) {
+        userBanner.banUsers(new UserList(usersToBan));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
+        userBanner.revokeBan(new UserList(bannedUsersToRevoke));
     }
 
 }

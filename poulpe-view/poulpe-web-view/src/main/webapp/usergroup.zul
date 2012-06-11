@@ -48,7 +48,7 @@
     <!--CONTEXT MENU-->
     <menupopup id="editPopupMenu">
       <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
-                onClick="editGroupDialog.visible=true" />
+                onClick="@command('showEditDialog')" />
       <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')" />
       <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
@@ -70,26 +70,31 @@
          <rows>
            <row>
              <label value="${labels.groups.editdialog.name}" />
-             <textbox id="newGroupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
-                      errorMessage="@load(vmsgs[groupNameBox])" />
+             <textbox id="newGroupNameBox" value="@bind(vm.selectedGroup.name)
+                                                  @validator('beanValidator')" width="100%" focus="true"
+                      constraint="no empty" />
            </row>
            <row>
              <label value="${labels.groups.editdialog.description}" />
-             <textbox id="newGroupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
+             <textbox id="newGroupDescriptionBox" value="@load(vm.selectedGroup.description)
+                                                         @save(vm.selectedGroup.description)
+                                                         @validator('beanValidator')" width="100%"
                       errorMessage="@load(vmsgs[groupDescriptionBox])" />
            </row>
          </rows>
          </grid>
            <hbox align="end">
-             <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-             <button image="/resources/img/deny16.png" label="${labels.window.cancel}" onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
+             <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
+                     onClick="@command('saveGroup')" sclass="edit.group.confirmButton" />
+             <button image="/resources/img/deny16.png" label="${labels.window.cancel}"
+                     onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
            </hbox>
      </window>
 
     <!--EDIT DIALOG-->
     <window id="editGroupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.editdialog.title}"
             closable="true" border="normal"  width="300px"  mode="modal"
-            visible="false"
+            visible="@bind(vm.showEditDialog)"
             onClose="self.visible=false;event.stopPropagation();"
             onOK="@command('saveGroup', group=vm.selectedGroup)"
             onCancel="self.visible=false">
@@ -101,26 +106,31 @@
         <rows>
           <row>
             <label value="${labels.groups.editdialog.name}" />
-            <textbox id="groupNameBox" value="@bind(vm.selectedGroup.name) @validator('beanValidator'))" width="100%" focus="true"
-                     errorMessage="@load(vmsgs[groupNameBox])" />
+            <textbox id="groupNameBox" value="@load(vm.selectedGroup.name)
+                                              @save(vm.selectedGroup.name, before='saveGroup')
+                                              @validator('beanValidator')" width="100%" focus="true"
+                                              constraint="no empty" />
           </row>
           <row>
             <label value="${labels.groups.editdialog.description}" />
-            <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description) @validator('beanValidator'))" width="100%"
-                     errorMessage="@load(vmsgs[groupDescriptionBox])" />
+            <textbox id="groupDescriptionBox" value="@bind(vm.selectedGroup.description)
+                                                     @validator('beanValidator'))" width="100%"
+                                                     errorMessage="@load(vmsgs[groupDescriptionBox])" />
           </row>
         </rows>
       </grid>
       <hbox align="end">
-        <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}" onClick="@command('saveGroup', group=vm.selectedGroup)" sclass="edit.group.confirmButton" />
-        <button image="/resources/img/deny16.png" label="${labels.window.cancel}" onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
+        <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
+                onClick="@command('saveGroup')" sclass="edit.group.confirmButton" />
+        <button image="/resources/img/deny16.png" label="${labels.window.cancel}"
+                onClick="editGroupDialog.visible=false" sclass="edit.group.rejectButton" />
       </hbox>
     </window>
 
     <!--DELETE CONFIRM DIALOG-->
       <window id="deleteConfirmDialog"
              title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-             visible="false"
+             visible="@bind(vm.showDeleteDialog)"
              onClose="self.visible=false;event.stopPropagation();"
              onCancel="self.visible=false"
              onOK="@command('deleteGroup')"

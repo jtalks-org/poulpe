@@ -14,135 +14,13 @@
  */
 package org.jtalks.poulpe.web.controller.utils;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.entity.*;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
-
-import com.google.common.collect.Lists;
 
 /**
  * @author unascribed
  * @author Vyacheslav Zhivaev
  */
 public class ObjectsFactory {
-    public static Component createComponent(long id, String name, String description, ComponentType type) {
-        Component comp = new Component(name, description, type);
-        comp.setId(id);
-        return comp;
-    }
-
-    public static List<Component> createComponents() {
-        List<Component> list = new ArrayList<Component>();
-
-        for (ComponentType type : ComponentType.values()) {
-            String random = random();
-            list.add(new Component(random, random, type));
-        }
-
-        return list;
-    }
-
-    public static List<PoulpeSection> getFakeSections(int sizeOfCollection) {
-        return Collections.nCopies(sizeOfCollection, new PoulpeSection(random(), "desc"));
-    }
-
-    public static List<PoulpeSection> fakeSections() {
-        return getFakeSections(10);
-    }
-
-    /**
-     * @deprecated use {@link PoulpeSection#Section(String, String)} constructor instead
-     */
-    @Deprecated
-    public static PoulpeSection getFakeSection(String name, String description) {
-        PoulpeSection section = new PoulpeSection();
-        section.setName(name);
-        section.setDescription(description);
-        return section;
-    }
-
-    public static PoulpeSection fakeSection() {
-        return new PoulpeSection(random(), random());
-    }
-
-    public static PoulpeSection sectionWithBranches(int n) {
-        PoulpeSection section = new PoulpeSection(random(), random());
-        while (n > 0) {
-            PoulpeBranch branch = fakeBranch();
-            section.addOrUpdateBranch(branch);
-            branch.setSection(section);
-            n--;
-        }
-        return section;
-    }
-
-    public static PoulpeSection sectionWithBranches() {
-        return sectionWithBranches(10);
-    }
-
-    /**
-     * @deprecated use {@link PoulpeBranch#Branch(String, String)} constructor instead
-     */
-    @Deprecated
-    public static PoulpeBranch getFakeBranch(String name, String description) {
-        PoulpeBranch branch = new PoulpeBranch();
-        branch.setName(name);
-        branch.setDescription(description);
-        return branch;
-    }
-
-    public static PoulpeBranch fakeBranch() {
-        return new PoulpeBranch(random(), random());
-    }
-
-    public static List<PoulpeUser> getFakeUsers(int size) {
-        List<PoulpeUser> users = new ArrayList<PoulpeUser>();
-        for (int i = 0; i < size; i++) {
-            String random = random();
-            users.add(new PoulpeUser(random, random, random, random));
-        }
-        return users;
-    }
-
-    public static TopicType getFakeTopicType(long id, String title, String description) {
-        TopicType topicType = new TopicType(title, description);
-        topicType.setId(id);
-        return topicType;
-    }
-
-    public static Group fakeGroup() {
-        return new Group(random(), random());
-    }
-
-    public static List<Group> fakeGroupList(int listSize) {
-        List<Group> result = Lists.newArrayList();
-
-        if (listSize > 0) {
-            for (int i = 0; i < listSize; i++) {
-                result.add(fakeGroup());
-            }
-        }
-
-        return result;
-    }
-
-    private static String random() {
-        return RandomStringUtils.randomAlphanumeric(10);
-    }
-
-    public static Jcommune fakeForum() {
-        Jcommune forum = new Jcommune();
-        forum.setSections(fakeSections());
-        return forum;
-    }
 
     /**
      * Create {@link SelectedEntity} instance with predefined internal {@code SelectedEntity.entity}.

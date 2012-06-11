@@ -19,7 +19,6 @@ import java.util.List;
 import javax.annotation.Nonnull;
 
 import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -31,6 +30,7 @@ import org.jtalks.common.security.acl.builders.AclBuilders;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.Component;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.

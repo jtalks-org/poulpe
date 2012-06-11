@@ -14,8 +14,7 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Property;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,43 +30,20 @@ public class Jcommune extends Component {
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
-     * Creates Component with {@link ComponentType#FORUM} and empty section list
+     * Creates Component with {@link ComponentType#FORUM} and empty section list.
+     * Visible for hibernate.
      */
-    public Jcommune() {
-        setComponentType(ComponentType.FORUM);
+    protected Jcommune() {
+        super(ComponentType.FORUM);
     }
 
     /**
-     * Converts given {@link Component} to {@link Jcommune}, keeping the identity of the first (i.e. id and uuid are
-     * copied as well)
-     *
-     * @param component to be converted
-     * @return converted {@link Jcommune}
-     * @throws IllegalArgumentException when passed component is not Forum (its componentType != {@link
-     *                                  ComponentType#FORUM})
+     * @param name
+     * @param description
+     * @param defaultProperties
      */
-    public static Jcommune fromComponent(Component component) {
-        checkComponentType(component.getComponentType());
-
-        Jcommune jcommune = new Jcommune();
-        jcommune.setId(component.getId());
-        jcommune.setUuid(component.getUuid());
-        jcommune.setName(component.getName());
-        jcommune.setDescription(component.getDescription());
-        jcommune.setProperties(component.getProperties());
-
-        return jcommune;
-    }
-
-    /**
-     * @param componentType to be checked
-     * @throws IllegalArgumentException if componentType is not {@link ComponentType#FORUM}
-     */
-    private static void checkComponentType(ComponentType componentType) {
-        if (componentType != ComponentType.FORUM) {
-            throw new IllegalArgumentException("Can't convert component to Forum because componentType == FORUM " +
-                    "is expected, got " + componentType);
-        }
+    public Jcommune(String name, String description, List<Property> defaultProperties) {
+        super(name, description, ComponentType.FORUM, defaultProperties);
     }
 
     /**

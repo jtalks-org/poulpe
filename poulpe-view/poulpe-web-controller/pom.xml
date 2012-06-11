@@ -33,6 +33,7 @@
       <groupId>org.jtalks.poulpe</groupId>
       <artifactId>poulpe-model</artifactId>
     </dependency>
+    
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>

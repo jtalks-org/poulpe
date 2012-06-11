@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.List;
 import java.util.Set;
@@ -94,5 +95,12 @@ public interface ComponentService extends EntityService<Component> {
      * @param changes the {@link PermissionChanges} which needs to be applied
      */
     void changeRestrictions(Component component, PermissionChanges changes);
+    
+    /**
+     * 
+     * @param componentType
+     * @return
+     */
+    BaseComponent baseComponentFor(ComponentType componentType);
 
 }

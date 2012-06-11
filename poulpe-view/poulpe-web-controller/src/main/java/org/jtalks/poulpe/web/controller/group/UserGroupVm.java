@@ -14,16 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
-
-import javax.annotation.Nonnull;
 
 /**
  * View-model for 'User Groups' Is used to order to work with page that allows admin to manage groups(add, edit,
@@ -32,7 +31,8 @@ import javax.annotation.Nonnull;
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    private static final String SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
+    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
+            SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
 
     //Injected
     private GroupService groupService;
@@ -44,6 +44,8 @@ public class UserGroupVm {
     private String searchString = "";
 
     private boolean showNewDialog;
+    private boolean showDeleteDialog;
+    private boolean showEditDialog;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -93,7 +95,7 @@ public class UserGroupVm {
      * Deletes selected group.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP})
+    @NotifyChange({SELECTED_GROUP, SHOW_DELETE_DIALOG})
     public void deleteGroup() {
         groupService.deleteGroup(selectedGroup);
         closeDialog();
@@ -111,15 +113,23 @@ public class UserGroupVm {
     }
 
     /**
+     * Opens group edit dialog.
+     */
+    @Command
+    @NotifyChange({SELECTED_GROUP, SHOW_EDIT_DIALOG})
+    public void showEditDialog() {
+         showEditDialog = true;
+    }
+
+    /**
      * Saves group, closing group edit(add) dialog and updates view.
      *
-     * @param group editing group
      */
 
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG})
-    public void saveGroup(@BindingParam(value = "group") Group group) {
-        groupService.saveGroup(group);
+    @NotifyChange({SHOW_NEW_DIALOG, SHOW_EDIT_DIALOG})
+    public void saveGroup() {
+        groupService.saveGroup(selectedGroup);
         closeDialog();
         updateView();
     }
@@ -128,12 +138,33 @@ public class UserGroupVm {
      * Close all dialogs by set visibility to false.
      */
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG})
+    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
     public void closeDialog() {
         showNewDialog = false;
+        showDeleteDialog = false;
+        showEditDialog = false;
     }
 
     // -- Getters/Setters --------------------
+
+    /**
+     * Gets visibility status of Delete dialog window.
+     *
+     * @return true if dialog is visible false if dialog is invisible
+     */
+    public boolean isShowDeleteDialog() {
+        return showDeleteDialog;
+    }
+
+    /**
+     * Gets visibility status of Edit dialog window.
+     *
+     * @return true if dialog is visible false if dialog is invisible
+     */
+    public boolean isShowEditDialog() {
+        return showEditDialog;
+    }
+
     /**
      * Gets visibility status of New group dialog window, boolean show added as fix for onClose action, which don't send
      * anything to the server when closing window because of event.stopPropagation, so during next change notification
@@ -152,7 +183,6 @@ public class UserGroupVm {
      *
      * @return Groups currently displayed at UI.
      */
-    @SuppressWarnings("unused")
     public ListModelList<Group> getGroups() {
         updateView();
         return groups;
@@ -163,7 +193,6 @@ public class UserGroupVm {
      *
      * @return Group selected at UI.
      */
-    @SuppressWarnings("unused")
     public Group getSelectedGroup() {
         return selectedGroup;
     }

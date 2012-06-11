@@ -83,6 +83,7 @@ public class OpenSessionsTest {
         verify(session).close();
     }
 
+    @SuppressWarnings ("unchecked")
     private Session givenSutWithSession(OpenSessions sut, String desktopId) throws Exception {
         Session session = mock(Session.class);
         Field sessionsField = sut.getClass().getDeclaredField("sessions");

@@ -14,10 +14,12 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -36,9 +38,12 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
 
     /** {@inheritDoc} */
     @Override
-    @SuppressWarnings("unchecked")
     public List<Component> getAll() {
-        return getSession().createQuery("from Component").list();
+        Query query = getSession().getNamedQuery("allComponents");
+        
+        @SuppressWarnings("unchecked")
+        List<Component> result = query.list();
+        return result;
     }
 
     /** {@inheritDoc} */
@@ -54,11 +59,20 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
         return result;
     }
 
+    /** {@inheritDoc} */
     @Override
-    public Component getByType(ComponentType type) {
-        return (Component) getSession().createQuery(
-                "from Component where componentType = :type").setParameter(
-                "type", type).uniqueResult();
+    public Component getByType(ComponentType componentType) {
+        Query query = getSession().getNamedQuery("findComponentByComponentType");
+        query.setParameter("componentType", componentType);
+        return (Component) query.uniqueResult();
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public BaseComponent getBaseComponent(ComponentType componentType) {
+        Query query = getSession().getNamedQuery("findBaseComponentByComponentType");
+        query.setParameter("componentType", componentType);
+        return (BaseComponent) query.uniqueResult();
     }
 
 }

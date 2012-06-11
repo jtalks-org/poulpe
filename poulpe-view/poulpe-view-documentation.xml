@@ -1,12 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<chapter version="5.0"
-         xml:lang="en"
-         xml:id="blah"
-         xmlns="http://docbook.org/ns/docbook"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns:xl="http://www.w3.org/1999/xlink"
-         xsi:schemaLocation="http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd"
-        >
+<chapter version="5.0" xml:lang="en" xml:id="blah" xmlns="http://docbook.org/ns/docbook"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xl="http://www.w3.org/1999/xlink"
+         xsi:schemaLocation="http://www.w3.org/1999/xlink http://www.docbook.org/xml/5.0/xsd/xlink.xsd">
   <title>Poulpe Web View</title>
   <section>
     <title>ZK Overview</title>

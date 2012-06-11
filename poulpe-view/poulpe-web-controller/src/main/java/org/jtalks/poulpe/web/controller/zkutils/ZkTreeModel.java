@@ -63,6 +63,7 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
      * @return the node at the specified path or {@code null} if there is no such path exists, or returns root element
      *         if zero size array was specified
      */
+    @Override
     public TreeNode<E> getChild(int... path) {
         return super.getChild(path);
     }

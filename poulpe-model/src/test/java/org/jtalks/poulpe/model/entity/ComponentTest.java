@@ -15,64 +15,16 @@
 package org.jtalks.poulpe.model.entity;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertNull;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-// TODO: Do we really need get-set test? 
 public class ComponentTest {
     Component component;
 
     @BeforeMethod
     public void setUp() {
         component = new Component();
-    }
-
-    @Test
-    public void testGetDescription() {
-        String description = "blahblahblah";
-        component.setDescription(description);
-        assertEquals(component.getDescription(), description);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSetDescription() {
-        String description = "blahblahblah";
-        component.setDescription(description);
-        assertEquals(component.getDescription(), description);
-        component.setDescription(null);
-    }
-
-    @Test
-    public void testGetName() {
-        String name = "blahblahblah";
-        component.setDescription(name);
-        assertEquals(component.getDescription(), name);
-    }
-
-    @Test(expectedExceptions = IllegalArgumentException.class)
-    public void testSetName() {
-        component.setName(null);
-    }
-
-    @Test
-    public void testGetComponentTypeArticle() {
-        assertNull(component.getComponentType());
-        component.setComponentType(ComponentType.ARTICLE);
-        assertEquals(ComponentType.ARTICLE, component.getComponentType());
-        assertNotSame(ComponentType.FORUM, component.getComponentType());
-    }
-
-    @Test
-    public void testGetComponentTypeForum() {
-        assertNull(component.getComponentType());
-        component.setComponentType(ComponentType.FORUM);
-        assertEquals(ComponentType.FORUM, component.getComponentType());
-        assertNotSame(ComponentType.ARTICLE, component.getComponentType());
     }
 
     @Test
@@ -107,24 +59,13 @@ public class ComponentTest {
     @Test
     public void testGetProperty() {
         component.addProperty("setname", "setval");
-
         assertEquals(component.getProperty("setname"), "setval");
     }
 
     @Test
     public void testGetPropertyNull() {
-        component.addProperty("setname", "setval");
-
         assertEquals(component.getProperty("unknown"), null);
     }
 
-    @Test
-    public void testToString() {
-        String
-                expected = "Component [id=" + 0 + ", name=" + component.getName() + ", description="
-                            + component.getDescription() + ", componentType=" + component.getComponentType() + "]",
-                returned = component.toString();
-        assertEquals(expected, returned);
-    }
 
 }

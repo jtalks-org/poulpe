@@ -14,25 +14,25 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
-
-import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
+import org.jtalks.poulpe.model.dao.BranchDao;
+import org.jtalks.poulpe.model.dao.ComponentDao;
+import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * @author stanislav bashkirtsev
@@ -107,7 +107,8 @@ public class TransactionalForumStructureServiceTest {
 
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
+        Jcommune jcommune = TestFixtures.jcommune();
+        
         PoulpeSection sectionA = new PoulpeSection("SectionA");
         for (int i = 0; i < 5; i++) {
             sectionA.addOrUpdateBranch(createBranch(sectionA, "Branch" + i));

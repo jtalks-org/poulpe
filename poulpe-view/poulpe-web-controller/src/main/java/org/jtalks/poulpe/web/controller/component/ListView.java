@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.List;
 
-import org.jtalks.common.model.entity.Component;
+import org.jtalks.poulpe.model.entity.Component;
 
 /**
  * The interface for managing actions and represents information about

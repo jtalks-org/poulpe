@@ -14,14 +14,13 @@
  */
 package org.jtalks.poulpe.web.controller.zkutils;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.TreeNode;
+import static org.testng.Assert.*;
 
 import java.util.ArrayList;
 
-import static org.testng.Assert.*;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.zkoss.zul.TreeNode;
 
 /**
  * @author stanislav bashkirtsev

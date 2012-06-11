@@ -170,17 +170,27 @@ public class UsersVm {
      * @param user editing user
      */
     @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
+    @NotifyChange({ VIEW_DATA_PROP, SELECTED_ITEM_PROP })
     public void saveUser(@BindingParam(value = "user") PoulpeUser user) {
         userService.updateUser(user);
         closeEditDialog();
     }
 
     @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
+    @NotifyChange({ VIEW_DATA_PROP, SELECTED_ITEM_PROP })
     public void cancelEdit() {
         closeEditDialog();
     }
+    
+    @Command
+    public void newPassword(String newPassword) {
+        System.out.println(newPassword);
+    }
+    
+    public void setNewPassword(String newPassword) {
+        System.out.println(newPassword);
+    }
+    
 
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();

@@ -14,21 +14,23 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
+import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.TreeNode;
-
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
-import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
@@ -115,7 +117,7 @@ public class ForumStructureDataTest {
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
     public void testRemoveSelectedItem_selectedBranch(ForumStructureTreeModel treeModel) {
         TreeNode<ForumStructureItem> selectedNode = treeModel.getRoot().getChildAt(1).getChildAt(1);
-        treeModel.addSelectionPath(new int[]{1, 1});
+        treeModel.addSelectionPath(new int[] { 1, 1 });
         sut.setSelectedItem(selectedNode.getData());
         sut.setStructureTree(treeModel);
 
@@ -220,16 +222,8 @@ public class ForumStructureDataTest {
 
     @DataProvider
     public Object[][] provideTreeModelWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
-        PoulpeSection sectionA = new PoulpeSection("SectionA");
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));
-        jcommune.addSection(sectionA);
-        PoulpeSection sectionB = new PoulpeSection("SectionB");
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
-        jcommune.addSection(sectionB);
-        return new Object[][]{{new ForumStructureTreeModel(buildForumStructure(jcommune))}};
+        Jcommune jcommune = TestFixtures.jcommuneWithSections();
+        return new Object[][] { { new ForumStructureTreeModel(buildForumStructure(jcommune)) } };
     }
 
     @DataProvider
@@ -238,7 +232,7 @@ public class ForumStructureDataTest {
         BranchEditingDialog spy = spy(branchDialog);
         ForumStructureData data = new ForumStructureData(spy);
         data.setStructureTree((ForumStructureTreeModel) provideTreeModelWithSectionsAndBranches()[0][0]);
-        return new Object[][]{{data}};
+        return new Object[][] { { data } };
     }
 
 
