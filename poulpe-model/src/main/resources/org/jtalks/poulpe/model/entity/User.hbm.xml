@@ -18,75 +18,75 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <!--
-    we need to use a hierarchy here in order to be able to leverage distributed cache. This is important because
-    other apps in JTalks are not using PoulpeXxx classes, they use common ones and thus they can interchange
-    only entities from common
-  -->
-  <class name="org.jtalks.common.model.entity.User" table="USERS" abstract="true">
-    <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON" />
-    <id column="ID" name="id" unsaved-value="0">
-      <generator class="native"/>
-    </id>
     <!--
-      we don't want to add a real inheritance with real columns or different tables, it's enough for us to 
-      emulate it with discriminator formula. See subclass mapping for more details
-    -->
-    <discriminator formula="'USER'" />
-    <property column="UUID" name="uuid" unique="true" not-null="true" />
+        we need to use a hierarchy here in order to be able to leverage distributed cache. This is important because
+        other apps in JTalks are not using PoulpeXxx classes, they use common ones and thus they can interchange
+        only entities from common
+      -->
+    <class name="org.jtalks.common.model.entity.User" table="USERS" abstract="true">
+        <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
+        <id column="ID" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
+        <!--
+              we don't want to add a real inheritance with real columns or different tables, it's enough for us to
+              emulate it with discriminator formula. See subclass mapping for more details
+            -->
+        <discriminator formula="'USER'"/>
+        <property column="UUID" name="uuid" unique="true" not-null="true"/>
 
-    <property column="FIRST_NAME" name="firstName" />
-    <property column="LAST_NAME" name="lastName" />
+        <property column="FIRST_NAME" name="firstName"/>
+        <property column="LAST_NAME" name="lastName"/>
 
-    <property column="USERNAME" name="username" unique="true" not-null="true" />
-    <property column="ENCODED_USERNAME" name="encodedUsername" not-null="true" />
+        <property column="USERNAME" name="username" unique="true" not-null="true"/>
+        <property column="ENCODED_USERNAME" name="encodedUsername" not-null="true"/>
 
-    <property column="EMAIL" name="email" unique="true" not-null="true" />
-    <property column="PASSWORD" name="password" not-null="true" />
+        <property column="EMAIL" name="email" unique="true" not-null="true"/>
+        <property column="PASSWORD" name="password" not-null="true"/>
 
-    <property column="ROLE" name="role" />
+        <property column="ROLE" name="role"/>
 
-    <property column="LAST_LOGIN" name="lastLogin"
-              type="org.joda.time.contrib.hibernate.PersistentDateTime" not-null="false" />
+        <property column="LAST_LOGIN" name="lastLogin"
+                  type="org.joda.time.contrib.hibernate.PersistentDateTime" not-null="false"/>
 
-    <property name="avatar" lazy="true" not-null="false">
-      <column name="AVATAR" sql-type="blob" />
-    </property>
-    
-    <property column="BAN_REASON" name="banReason" type="text" not-null="false" />
+        <property name="avatar" lazy="true" not-null="false">
+            <column name="AVATAR" sql-type="blob"/>
+        </property>
 
-    <property column="SALT" name="salt" not-null="true" />
+        <property column="BAN_REASON" name="banReason" type="text" not-null="false"/>
 
-    <!-- 
-      we specify here a strange discriminator value in order the query be like: "select from.. where 'USER'='USER'" 
-      which won't have any effect on the query, but the whole table content will be actually instances of this subclass,
-      not the abstract class. See mapping of abstract class for other details. 
-    -->
-    <subclass name="org.jtalks.poulpe.model.entity.PoulpeUser" discriminator-value="USER">
-      <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
-        <cache usage="nonstrict-read-write" />
-        <key column="USER_ID" not-null="true" />
-        <many-to-many class="org.jtalks.common.model.entity.Group">
-          <column name="GROUP_ID" not-null="true" />
-        </many-to-many>
-      </bag>
-    </subclass>
-  </class>
+        <property column="SALT" name="salt" not-null="true"/>
 
-  <query name="findUsersByLikeUsername">
-    <![CDATA[from PoulpeUser u where u.username like :username]]>
-  </query>
+        <!--
+              we specify here a strange discriminator value in order the query be like: "select from.. where 'USER'='USER'"
+              which won't have any effect on the query, but the whole table content will be actually instances of this subclass,
+              not the abstract class. See mapping of abstract class for other details.
+            -->
+        <subclass name="org.jtalks.poulpe.model.entity.PoulpeUser" discriminator-value="USER">
+            <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
+                <cache usage="nonstrict-read-write"/>
+                <key column="USER_ID" not-null="true"/>
+                <many-to-many class="org.jtalks.common.model.entity.Group">
+                    <column name="GROUP_ID" not-null="true"/>
+                </many-to-many>
+            </bag>
+        </subclass>
+    </class>
 
-  <query name="countUsersByLikeUsername">
-    <![CDATA[select count(*) from PoulpeUser u where u.username like :username]]>
-  </query>
-  
-  <query name="findUsersByUsername">
-    <![CDATA[from PoulpeUser u where u.username = :username]]>
-  </query>
-  
-  <query name="findUnbannedUsersByLikeUsername">
-    <![CDATA[from PoulpeUser u where u.banReason is null and u.username like :username]]>
-  </query>
-  
+    <query name="findUsersByLikeUsername">
+        <![CDATA[from PoulpeUser u where u.username like :username]]>
+    </query>
+
+    <query name="countUsersByLikeUsername">
+        <![CDATA[select count(*) from PoulpeUser u where u.username like :username]]>
+    </query>
+
+    <query name="findUsersByUsername">
+        <![CDATA[from PoulpeUser u where u.username = :username]]>
+    </query>
+
+    <query name="findUnbannedUsersByLikeUsername">
+        <![CDATA[from PoulpeUser u where u.username like :username and not exists (from u.groups gr where gr.id in (:bannedGroup)) ]]>
+    </query>
+
 </hibernate-mapping>

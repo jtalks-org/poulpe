@@ -28,49 +28,59 @@ import java.util.List;
  */
 public interface GroupService extends EntityService<Group> {
 
-    /**
-     * @return list of all {@link Group} objects
-     */
-    List<Group> getAll();
+	/**
+	 * @return list of all {@link Group} objects
+	 */
+	List<Group> getAll();
 
-    /**
-     * @param name to look up
-     * @return list of groups that names match the given name
-     */
-    List<Group> getAllMatchedByName(String name);
+	/**
+	 * @param name to look up
+	 * @return list of groups that names match the given name
+	 */
+	List<Group> getAllMatchedByName(String name);
 
-    /**
-     * Delete group
-     *
-     * @param group to be delete
-     * @throws IllegalArgumentException if group is null
-     */
-    void deleteGroup(Group group);
+	/**
+	 * Delete group
+	 *
+	 * @param group to be delete
+	 * @throws IllegalArgumentException if group is null
+	 */
+	void deleteGroup(Group group);
 
-    /**
-     * Save or update group.
-     *
-     * @param selectedGroup instance to save
-     * @throws IllegalArgumentException if group is null
-     */
-    void saveGroup(Group selectedGroup);
+	/**
+	 * Save or update group.
+	 *
+	 * @param selectedGroup instance to save
+	 * @throws IllegalArgumentException if group is null
+	 */
+	void saveGroup(Group selectedGroup);
 
-    /**
-     * Gets a list of users that are banned and are not allowed to do restricted actions on Forum for instance.
-     *
-     * @return a list of users that are banned
-     */
-    UserList getBannedUsers();
+	/**
+	 * Gets a list of users that are banned and are not allowed to do restricted actions on Forum for instance.
+	 *
+	 * @return a list of users that are banned
+	 */
+	UserList getBannedUsers();
 
-    /**
-     * Adds users to banned users group
-     * @param usersToBan users to add to banned users group
-     */
-    void banUsers(PoulpeUser... usersToBan);
+	/**
+	 * Adds users to banned users group
+	 *
+	 * @param usersToBan users to add to banned users group
+	 */
+	void banUsers(PoulpeUser... usersToBan);
 
-    /**
-     * Revokes ban state from users, deleting them from banned users group
-      * @param bannedUsersToRevoke   users to remove from banned users group
-     */
-    void revokeBan(PoulpeUser... bannedUsersToRevoke);
+	/**
+	 * Revokes ban state from users, deleting them from banned users group
+	 *
+	 * @param bannedUsersToRevoke users to remove from banned users group
+	 */
+	void revokeBan(PoulpeUser... bannedUsersToRevoke);
+
+
+	/**
+	 * Return list of banned groups
+	 *
+	 * @return List of Group
+	 */
+	List<Group> getBannedUsersGroups();
 }
