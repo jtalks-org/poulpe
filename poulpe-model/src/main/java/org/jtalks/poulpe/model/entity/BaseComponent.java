@@ -23,18 +23,18 @@ public class BaseComponent {
      */
     protected BaseComponent() {
     }
-    
+
     /**
+     * Typically shouldn't be invoked manually - because all {@link BaseComponent} entities are in the database already
      * 
-     * @param componentType
+     * @param componentType type for the component
      */
     public BaseComponent(ComponentType componentType) {
         this.componentType = componentType;
     }
 
     /**
-     * Based on current component type, creates a component of this type 
-     * and fills it with default properties.
+     * Based on current component type, creates a component of this type and fills it with default properties.
      * 
      * @param name of the component
      * @param description its description
@@ -44,23 +44,28 @@ public class BaseComponent {
         Validate.validState(componentType != null, "componentType must be set");
         return componentType.newComponent(name, description, copyAll(defaultProperties));
     }
-    
+
     private static List<Property> copyAll(Iterable<Property> defaults) {
         List<Property> result = Lists.newArrayListWithExpectedSize(4);
-        
+
         for (Property property : defaults) {
             result.add(copy(property));
         }
-        
+
         return result;
     }
 
+    /**
+     * Ensures that a property is cloned, not used by reference
+     * @param property to copy
+     * @return cloned property
+     */
     private static Property copy(Property property) {
         Property copy = new Property(property.getName(), property.getValue());
         copy.setValidationRule(property.getValidationRule());
         return copy;
     }
-    
+
     /**
      * @return component type of this base component
      */
@@ -70,6 +75,7 @@ public class BaseComponent {
 
     /**
      * Visible for hibernate
+     * 
      * @param componentType type of the component
      */
     protected void setComponentType(ComponentType componentType) {
@@ -77,7 +83,7 @@ public class BaseComponent {
     }
 
     /**
-     * @return default properties 
+     * @return default properties
      */
     public Collection<Property> getDefaultProperties() {
         return defaultProperties;
@@ -85,6 +91,7 @@ public class BaseComponent {
 
     /**
      * Visible for hibernate
+     * 
      * @param defaultProperties collection of default properties
      */
     protected void setDefaultProperties(Collection<Property> defaultProperties) {

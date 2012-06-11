@@ -52,7 +52,8 @@ public interface ComponentService extends EntityService<Component> {
      * Saves new component or updates existent
      * 
      * @param component to save
-     * @exception ValidationException when entity being saved violates validation constraints
+     * @exception org.jtalks.common.validation.ValidationException when entity being saved violates validation
+     * constraints
      */
     void saveComponent(Component component);
 
@@ -66,7 +67,7 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param the component's type
+     * @param type the component's type
      * @return the component
      */
     Component getByType(ComponentType type);
@@ -95,11 +96,12 @@ public interface ComponentService extends EntityService<Component> {
      * @param changes the {@link PermissionChanges} which needs to be applied
      */
     void changeRestrictions(Component component, PermissionChanges changes);
-    
+
     /**
+     * By given type retrieves {@link BaseComponent}
      * 
-     * @param componentType
-     * @return
+     * @param componentType of the component
+     * @return base component of needed type
      */
     BaseComponent baseComponentFor(ComponentType componentType);
 
