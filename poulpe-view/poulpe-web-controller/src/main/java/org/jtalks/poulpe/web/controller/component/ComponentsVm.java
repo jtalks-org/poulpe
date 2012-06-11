@@ -63,7 +63,6 @@ public class ComponentsVm {
 
     /**
      * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
-     * 
      * @exception IllegalStateException if no component selected
      */
     @Command

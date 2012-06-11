@@ -29,7 +29,8 @@
 package org.jtalks.poulpe.service.transactional;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.verify;
 
 import java.util.Collections;
 import java.util.Set;
@@ -40,7 +41,6 @@ import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.service.PropertyLoader;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -57,7 +57,6 @@ public class TransactionalComponentServiceTest {
     
     @Mock ComponentDao componentDao;
     @Mock EntityValidator validator;
-    @Mock PropertyLoader propertyLoader;
     @Mock PermissionManager permissionManager;
     
     Component component = TestFixtures.randomComponent();
@@ -66,7 +65,6 @@ public class TransactionalComponentServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         componentService = new TransactionalComponentService(componentDao, permissionManager, validator);
-        componentService.setPropertyLoader(propertyLoader);
     }
 
     @Test

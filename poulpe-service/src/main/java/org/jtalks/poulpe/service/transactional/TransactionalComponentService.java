@@ -25,7 +25,6 @@ import org.jtalks.poulpe.model.entity.BaseComponent;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.PropertyLoader;
 
 import java.util.List;
 import java.util.Set;
@@ -41,7 +40,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         implements ComponentService {
     private final PermissionManager permissionManager;
     private final EntityValidator validator;
-    private PropertyLoader propertyLoader;
 
     /**
      * Creates new instance of the service
@@ -57,17 +55,13 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         this.validator = validator;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Component> getAll() {
         return dao.getAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void deleteComponent(Component component) {
         dao.delete(component);
@@ -77,45 +71,21 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
-
-       /* if (!component.isPersistent()) {
-            propertyLoader.loadDefaults(component);
-        }*/
-        
         dao.saveOrUpdate(component);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Set<ComponentType> getAvailableTypes() {
         return dao.getAvailableTypes();
     }
 
+    /** {@inheritDoc} */
     @Override
     public BaseComponent baseComponentFor(ComponentType componentType) {
         return dao.getBaseComponent(componentType);
     }
     
-    /**
-     * Sets property loader. See {@link PropertyLoader}
-     * 
-     * @param propertyLoader property loader to set
-     */
-    public void setPropertyLoader(PropertyLoader propertyLoader) {
-        this.propertyLoader = propertyLoader;
-    }
-
-    /**
-     * Gets currently used property loader. See {@link PropertyLoader}
-     * 
-     * @return property loader
-     */
-    public PropertyLoader getPropertyLoader() {
-        return propertyLoader;
-    }
-
     /** {@inheritDoc} */
     @Override
     public Component getByType(ComponentType type) {
