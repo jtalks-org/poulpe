@@ -27,7 +27,7 @@
       <generator class="native" />
     </id>
     
-    <discriminator column="COMPONENT_TYPE" />
+    <discriminator column="COMPONENT_TYPE" force="false" insert="false" />
     
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     
@@ -40,13 +40,16 @@
       <one-to-many class="org.jtalks.common.model.entity.Property" />
     </bag>
 
-    <property name="componentType" column="C_TYPE" unique="true">
+    <property name="componentType" column="COMPONENT_TYPE" unique="true">
       <type name="org.hibernate.type.EnumType">
         <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <!-- 12 means 'VARCHAR', see java.sql.Types.VARCHAR -->
+        <param name="type">12</param>
       </type>
     </property>
 
-    <subclass name="org.jtalks.poulpe.model.entity.Jcommune" discriminator-value="JCOMMUNE">
+    <!-- discriminator - ComponentType.FORUM -->
+    <subclass name="org.jtalks.poulpe.model.entity.Jcommune" discriminator-value="FORUM">
       <list name="sections" cascade="all-delete-orphan" inverse="false" lazy="false">
         <cache usage="nonstrict-read-write" />
         <key column="COMPONENT_ID" foreign-key="FK_JCOMMUNE" />
@@ -55,7 +58,8 @@
       </list>
     </subclass>
     
-    <subclass name="org.jtalks.poulpe.model.entity.Poulpe" discriminator-value="POULPE" />
+    <!-- discriminator - ComponentType.ADMIN_PANEL -->
+    <subclass name="org.jtalks.poulpe.model.entity.Poulpe" discriminator-value="ADMIN_PANEL" />
 
   </class>
   
