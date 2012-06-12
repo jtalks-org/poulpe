@@ -45,7 +45,7 @@ public class ForumStructureVm {
     private static final String SELECTED_ITEM_PROP = "selectedItemInTree", VIEW_DATA_PROP = "viewData", TREE_MODEL = "treeModel";
     private final ForumStructureService forumStructureService;
     private final WindowManager windowManager;
-    private ForumStructureItem selectedItemInTree = new ForumStructureItem();
+    private ForumStructureItem selectedItemInTree = new ForumStructureItem(null);
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
     private ForumStructureData viewData;
     private ForumStructureTreeModel treeModel;
@@ -80,7 +80,7 @@ public class ForumStructureVm {
     }
 
     @GlobalCommand
-    @NotifyChange(TREE_MODEL)
+    @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void refreshTree() {
     }
 
@@ -145,28 +145,18 @@ public class ForumStructureVm {
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
-    public void updateSectionInTree(PoulpeSection section){
-        treeModel.addIfAbsent(section);
-        selectedItemInTree.setItem(section);
-    }
-
-    @Command
-    @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void updateBranchInTree(PoulpeBranch branch) {
         treeModel.moveBranchIfSectionChanged(branch);
-        selectedItemInTree.setItem(branch);
+        selectedItemInTree = new ForumStructureItem(branch);
     }
 
-    public ForumStructureData getViewData() {
-        return viewData;
+    public void updateSectionInTree(PoulpeSection section){
+        treeModel.addIfAbsent(section);
+        selectedItemInTree = new ForumStructureItem(section);
     }
 
     public ForumStructureItem getSelectedItemInTree() {
         return selectedItemInTree;
-    }
-
-    public void setSelectedItemInTree(ForumStructureItem selectedItemInTree) {
-        this.selectedItemInTree = selectedItemInTree;
     }
 
     /**
@@ -251,5 +241,9 @@ public class ForumStructureVm {
 
     public ForumStructureTreeModel getTreeModel() {
         return treeModel;
+    }
+
+    public ForumStructureData getViewData() {
+        return viewData;
     }
 }

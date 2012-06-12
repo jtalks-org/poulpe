@@ -36,11 +36,10 @@ public class ForumStructureData {
     /**
      * The level of the section in the tree, e.g. branch is the next level = 1.
      */
-    private static final int SECTION_TREE_LEVEL = 0;
     private final BranchEditingDialog branchDialog = new BranchEditingDialog(null, null, null);
     private final ConfirmBranchDeletionDialogVm confirmBranchDeletionDialogVm = new ConfirmBranchDeletionDialogVm();
     private final ConfirmSectionDeletionDialogVm confirmSectionDeletionDialogVm = new ConfirmSectionDeletionDialogVm();
-    private ForumStructureItem selectedItem = new ForumStructureItem();
+    private ForumStructureItem selectedItem = new ForumStructureItem(null);
     private ForumStructureTreeModel structureTree;
     private boolean showSectionDialog;
 

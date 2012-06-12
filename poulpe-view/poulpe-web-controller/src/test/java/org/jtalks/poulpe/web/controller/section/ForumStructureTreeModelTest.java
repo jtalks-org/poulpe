@@ -60,10 +60,10 @@ public class ForumStructureTreeModelTest {
     }
 
     private ZkTreeNode<ForumStructureItem> createBranchNode() {
-        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem());
+        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(null));
     }
 
     private ZkTreeNode<ForumStructureItem> createSectionNode() {
-        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(), new ArrayList<TreeNode<ForumStructureItem>>());
+        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(null), new ArrayList<TreeNode<ForumStructureItem>>());
     }
 }

@@ -45,7 +45,7 @@ public class BranchEditingDialog {
     private final GroupList groupList = new GroupList();
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
-    private ForumStructureItem editedBranch = new ForumStructureItem(new PoulpeBranch());
+    private PoulpeBranch editedBranch = new PoulpeBranch();
     private boolean showDialog;
 
     public BranchEditingDialog(GroupService groupService, ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
@@ -57,13 +57,13 @@ public class BranchEditingDialog {
     @GlobalCommand
     @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
     public void showBranchDialog() {
-        showDialog(forumStructureVm.getSelectedItemInTree());
+        showDialog(forumStructureVm.getSelectedItemInTree().getBranchItem());
     }
 
     @GlobalCommand
     @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
     public void showCreateBranchDialog() {
-        showDialog(new ForumStructureItem(new PoulpeBranch()));
+        showDialog(new PoulpeBranch());
     }
 
     @Command
@@ -81,11 +81,11 @@ public class BranchEditingDialog {
         showDialog = false;
     }
 
-    private void showDialog(ForumStructureItem editedBranch) {
+    private void showDialog(PoulpeBranch editedBranch) {
         groupList.setGroups(groupService.getAll());
         this.editedBranch = editedBranch;
         renewSectionsFromTree(forumStructureVm.getTreeModel());
-        selectSection(forumStructureVm.getSelectedItemInTree().getBranchItem().getPoulpeSection());
+        selectSection(forumStructureVm.getTreeModel().getSelectedSection().getSectionItem());
         showDialog = true;
     }
 
@@ -138,17 +138,17 @@ public class BranchEditingDialog {
         return sections;
     }
 
-    public ForumStructureItem getEditedBranch() {
+    public PoulpeBranch getEditedBranch() {
         return editedBranch;
     }
 
-    public void setEditedBranch(ForumStructureItem editedBranch) {
+    public void setEditedBranch(PoulpeBranch editedBranch) {
         this.editedBranch = editedBranch;
     }
 
     PoulpeBranch storeSelectedBranch() {
         PoulpeSection section = sectionList.getSelection().iterator().next();
-        return forumStructureService.saveBranch(section, editedBranch.getBranchItem());
+        return forumStructureService.saveBranch(section, editedBranch);
     }
 
     public List<Group> getCandidatesToModerate() {
@@ -168,20 +168,13 @@ public class BranchEditingDialog {
      * @return the group that is equal to the one that is currently moderating the selected branch
      */
     public Group getModeratingGroup() {
-        Group currentModeratorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
+        Group currentModeratorsGroup = editedBranch.getModeratorsGroup();
         return groupList.getEqual(currentModeratorsGroup);
     }
 
     public void setModeratingGroup(Group moderatingGroup) {
-        editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
+        editedBranch.setModeratorsGroup(moderatingGroup);
     }
-
-    /**
-     * Used by ZK in order to set the field from the form if we want to create a moderating group along with the branch
-     * instead of using some existing group. Does nothing if the specified name is empty.
-     *
-     * @param groupNameToCreate
-     */
     public void setGroupToCreate(String groupNameToCreate) {
         if (!groupNameToCreate.isEmpty()) {
             setModeratingGroup(new Group(groupNameToCreate));

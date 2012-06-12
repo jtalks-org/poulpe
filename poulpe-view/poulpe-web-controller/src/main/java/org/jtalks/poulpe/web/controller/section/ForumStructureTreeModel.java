@@ -76,6 +76,10 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         }
     }
 
+    public ForumStructureItem getSelectedSection(){
+        return getSelectedData(0);
+    }
+
     private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section){
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());

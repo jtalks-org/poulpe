@@ -52,9 +52,9 @@ public class TreeNodeFactory {
     public static <T extends Entity> ZkTreeNode getTreeNode(T entity) {
         if (entity instanceof PoulpeSection) {
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
-            return new ZkTreeNode(new ForumStructureItem().setItem(entity), wrapInTreeNodes(branches));
+            return new ZkTreeNode(new ForumStructureItem(entity), wrapInTreeNodes(branches));
         } else {
-            return new ZkTreeNode(new ForumStructureItem().setItem(entity));
+            return new ZkTreeNode(new ForumStructureItem(entity));
         }
     }
 

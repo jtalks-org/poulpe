@@ -30,6 +30,13 @@ public class SectionEditingDialog {
         showDialog = true;
     }
 
+    @GlobalCommand
+    @NotifyChange({EDITED_SECTION, SHOW_DIALOG})
+    public void showEditSectionDialog() {
+        editedSection = forumStructureVm.getSelectedItemInTree().getSectionItem();
+        showDialog = true;
+    }
+
     @Command
     @NotifyChange(SHOW_DIALOG)
     public void save() {

@@ -10,7 +10,7 @@
     ${labels.forum_structure.branch_dialog.section}
     <combobox readonly="true" model="@load(branchVm.sectionList)" hflex="1"/>
     ${labels.forum_structure.branch_dialog.branch_name}
-    <textbox id="branchNameBox" value="@bind(branchVm.editedBranch.item.name) @validator('beanValidator')" hflex="1"
+    <textbox id="branchNameBox" value="@bind(branchVm.editedBranch.name) @validator('beanValidator')" hflex="1"
              errorMessage="@load(branchMsgs[branchNameBox])"/>
     <label value="Moderating Group:"/>
     <combobox model="@load(branchVm.candidatesToModerate)" selectedItem="@bind(branchVm.moderatingGroup)" hflex="1">
@@ -20,7 +20,7 @@
     </combobox>
     ${labels.forum_structure.branch_dialog.branch_description}
     <textbox rows="5" id="branchDescriptionBox"
-             value="@bind(branchVm.editedBranch.item.description) @validator('beanValidator')"
+             value="@bind(branchVm.editedBranch.description) @validator('beanValidator')"
              errorMessage="@load(vmsgs[branchDescriptionText])" hflex="1"/>
     <cell>
       <button id="saveBranchButton" label="${labels.dialogs.save_button}"
