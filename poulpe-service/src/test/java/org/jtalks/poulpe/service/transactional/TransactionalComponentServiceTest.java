@@ -41,6 +41,7 @@ import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -99,8 +100,16 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    void testGetAvailableTypes() {
+    public void testGetAvailableTypes() {
         componentService.getAvailableTypes();
         verify(componentDao).getAvailableTypes();
+    }
+    
+    @Test
+    public void baseComponentFor() {
+        ComponentType componentType = TestFixtures.randomComponentType();
+        componentService.baseComponentFor(componentType);
+        verify(componentDao).getBaseComponent(componentType);
+        
     }
 }
