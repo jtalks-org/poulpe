@@ -21,7 +21,7 @@ import java.util.List;
 
 /**
  * The central JCommune entity that contains all the configuration for respective component.
- *
+ * 
  * @author Guram Savinov
  * @author Vahluev Vyacheslav
  */
@@ -30,35 +30,33 @@ public class Jcommune extends Component {
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
-     * Creates Component with {@link ComponentType#FORUM} and empty section list.
-     * Visible for hibernate.
+     * Creates Component with {@link ComponentType#FORUM} and empty section list. Visible for hibernate.
      */
     protected Jcommune() {
         super(ComponentType.FORUM);
     }
 
     /**
-     * @param name
-     * @param description
-     * @param defaultProperties
+     * Creates JCommune component with ComponentType.FORUM type, given name, description and the list of properties.
+     * Instances should be created using {@link ComponentBase#newComponent(String, String)} with FORUM ComponentBase
+     * 
+     * @param name of the component
+     * @param description its descriptions
+     * @param defaultProperties of the component
      */
-    public Jcommune(String name, String description, List<Property> defaultProperties) {
+    Jcommune(String name, String description, List<Property> defaultProperties) {
         super(name, description, ComponentType.FORUM, defaultProperties);
     }
 
     /**
-     * Gets the sections.
-     *
-     * @return the sections
+     * @return component's sections
      */
     public List<PoulpeSection> getSections() {
         return sections;
     }
 
     /**
-     * Sets the sections.
-     *
-     * @param sections the sections to set
+     * @param sections new list of sections
      */
     public void setSections(List<PoulpeSection> sections) {
         this.sections = sections;
@@ -66,7 +64,7 @@ public class Jcommune extends Component {
 
     /**
      * Removes the specified section from jcommune instance if it's there, does nothing if it's not there.
-     *
+     * 
      * @param section the section to remove it from the list
      * @return {@code true} if the specified section wasn't in the list
      */
@@ -76,7 +74,7 @@ public class Jcommune extends Component {
 
     /**
      * Adds a section to the list.
-     *
+     * 
      * @param section the section to add
      */
     public void addSection(PoulpeSection section) {

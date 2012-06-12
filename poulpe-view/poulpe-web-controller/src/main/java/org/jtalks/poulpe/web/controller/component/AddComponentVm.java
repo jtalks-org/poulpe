@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -50,7 +50,7 @@ public class AddComponentVm {
 
         // TODO: move to service? looks like logic
         // but then in service it would be 3 params
-        BaseComponent baseComponent = componentService.baseComponentFor(componentType);
+        ComponentBase baseComponent = componentService.baseComponentFor(componentType);
         Component component = baseComponent.newComponent(title, description);
         componentService.saveComponent(component);
 

@@ -18,7 +18,7 @@ import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
@@ -98,11 +98,11 @@ public interface ComponentService extends EntityService<Component> {
     void changeRestrictions(Component component, PermissionChanges changes);
 
     /**
-     * By given type retrieves {@link BaseComponent}
+     * By given type retrieves {@link ComponentBase}
      * 
      * @param componentType of the component
      * @return base component of needed type
      */
-    BaseComponent baseComponentFor(ComponentType componentType);
+    ComponentBase baseComponentFor(ComponentType componentType);
 
 }

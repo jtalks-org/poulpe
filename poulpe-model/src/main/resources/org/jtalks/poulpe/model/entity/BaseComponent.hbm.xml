@@ -19,7 +19,7 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-  <class name="org.jtalks.poulpe.model.entity.BaseComponent" table="BASE_COMPONENTS">
+  <class name="org.jtalks.poulpe.model.entity.ComponentBase" table="BASE_COMPONENTS">
   
     <cache usage="read-only" />
     
@@ -40,7 +40,7 @@
   </class>
   
   <query name="findBaseComponentByComponentType">
-    <![CDATA[from BaseComponent where componentType = :componentType]]>
+    <![CDATA[from ComponentBase where componentType = :componentType]]>
   </query>
   
 </hibernate-mapping>

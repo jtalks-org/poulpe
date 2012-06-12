@@ -19,7 +19,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -57,7 +57,7 @@ public final class TestFixtures {
 	}
 
 	public static Component component(ComponentType type) {
-		BaseComponent base = new BaseComponent(type);
+		ComponentBase base = new ComponentBase(type);
 		return base.newComponent(random(), random());
 	}
 
@@ -99,8 +99,8 @@ public final class TestFixtures {
 		return types[randomInt(types.length)];
 	}
 
-	public static BaseComponent baseComponent() {
-		return new BaseComponent(randomComponentType());
+	public static ComponentBase baseComponent() {
+		return new ComponentBase(randomComponentType());
 	}
 
 	public static PoulpeSection sectionWithBranches() {

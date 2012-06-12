@@ -21,7 +21,7 @@ import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -82,7 +82,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     /** {@inheritDoc} */
     @Override
-    public BaseComponent baseComponentFor(ComponentType componentType) {
+    public ComponentBase baseComponentFor(ComponentType componentType) {
         return dao.getBaseComponent(componentType);
     }
     

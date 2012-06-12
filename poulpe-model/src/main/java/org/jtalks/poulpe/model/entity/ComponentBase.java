@@ -10,10 +10,18 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 /**
+ * "Template" for producing components. It stores default properties and, when creating a component, copies all of them
+ * to a new component. For each {@link ComponentType} there must be only one {@link ComponentType}.<br>
+ * <br>
+ * 
+ * If adding a new value to {@link ComponentType} enum, make sure that corresponding {@link ComponentBase} entity is
+ * created.
  * 
  * @author Alexey Grigorev
+ * @see ComponentType
+ * @see Component
  */
-public class BaseComponent {
+public class ComponentBase {
 
     private ComponentType componentType;
     private Collection<Property> defaultProperties = Sets.newLinkedHashSet();
@@ -21,15 +29,16 @@ public class BaseComponent {
     /**
      * Visible for hibernate
      */
-    protected BaseComponent() {
+    protected ComponentBase() {
     }
 
     /**
-     * Typically shouldn't be invoked manually - because all {@link BaseComponent} entities are in the database already
+     * Constructs {@link ComponentBase} with given {@link ComponentType}. Typically shouldn't be invoked manually -
+     * because all {@link ComponentBase} entities should in the database already.
      * 
      * @param componentType type for the component
      */
-    public BaseComponent(ComponentType componentType) {
+    public ComponentBase(ComponentType componentType) {
         this.componentType = componentType;
     }
 
@@ -45,6 +54,12 @@ public class BaseComponent {
         return componentType.newComponent(name, description, copyAll(defaultProperties));
     }
 
+    /**
+     * Ensures that properties are cloned, not used by reference
+     * 
+     * @param defaults properties
+     * @return list of cloned properties
+     */
     private static List<Property> copyAll(Iterable<Property> defaults) {
         List<Property> result = Lists.newArrayListWithExpectedSize(4);
 
@@ -55,11 +70,6 @@ public class BaseComponent {
         return result;
     }
 
-    /**
-     * Ensures that a property is cloned, not used by reference
-     * @param property to copy
-     * @return cloned property
-     */
     private static Property copy(Property property) {
         Property copy = new Property(property.getName(), property.getValue());
         copy.setValidationRule(property.getValidationRule());

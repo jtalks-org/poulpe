@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 
@@ -28,8 +28,7 @@ import java.util.Set;
 
 
 /**
- * Implementation of dao for {@link Component}. The most part of methods were
- * inherited from superclass.
+ * Implementation of dao for {@link Component}.
  * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
@@ -69,10 +68,10 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
 
     /** {@inheritDoc} */
     @Override
-    public BaseComponent getBaseComponent(ComponentType componentType) {
+    public ComponentBase getBaseComponent(ComponentType componentType) {
         Query query = getSession().getNamedQuery("findBaseComponentByComponentType");
         query.setParameter("componentType", componentType);
-        return (BaseComponent) query.uniqueResult();
+        return (ComponentBase) query.uniqueResult();
     }
 
 }

@@ -16,10 +16,20 @@ package org.jtalks.poulpe.model.entity;
 
 import static org.testng.Assert.assertEquals;
 
+import java.util.List;
+
+import org.apache.commons.lang3.RandomStringUtils;
+import org.jtalks.common.model.entity.Property;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+/**
+ * 
+ * @author unascribed
+ * @author Alexey Grigorev
+ */
 public class ComponentTest {
+    
     Component component;
 
     @BeforeMethod
@@ -28,22 +38,44 @@ public class ComponentTest {
     }
 
     @Test
-    public void testAddProperty() {
+    public void addProperty_addedToList_listSize() {
         component.addProperty("someprop", "someval");
 
-        assertEquals(component.getProperties().size(), 1);
-        assertEquals(component.getProperties().get(0).getName(), "someprop");
-        assertEquals(component.getProperties().get(0).getValue(), "someval");
+        List<Property> properties = component.getProperties();
+        assertEquals(properties.size(), 1);
+    }
+    
+    @Test
+    public void addProperty_addedToList() {
+        String name = random(), value = random();
+        
+        component.addProperty(name, value);
+
+        Property property = firstProperty(component);
+        
+        assertNeededProperty(name, value, property);
+        
+    }
+
+    private Property firstProperty(Component component) {
+        List<Property> properties = component.getProperties();
+        return properties.get(0);
+    }
+
+    private static void assertNeededProperty(String name, String value, Property property) {
+        assertEquals(property.getName(), name);
+        assertEquals(property.getValue(), value);
     }
 
     @Test
     public void testSetProperty() {
-        component.addProperty("setname", "setval");
-        component.setProperty("setname", "x");
+        String name = "someprop", value = "someval";
+        
+        component.addProperty(name, random());
+        component.setProperty(name, value);
 
-        assertEquals(component.getProperties().size(), 1);
-        assertEquals(component.getProperties().get(0).getName(), "setname");
-        assertEquals(component.getProperties().get(0).getValue(), "x");
+        assertEquals(component.getProperties().get(0).getName(), name);
+        assertEquals(component.getProperties().get(0).getValue(), value);
     }
 
     @Test
@@ -67,5 +99,7 @@ public class ComponentTest {
         assertEquals(component.getProperty("unknown"), null);
     }
 
-
+    private static String random() {
+        return RandomStringUtils.randomAlphanumeric(10);
+    }
 }
