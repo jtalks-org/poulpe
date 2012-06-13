@@ -38,11 +38,25 @@ public class AddComponentVm {
     private final ComponentService componentService;
     private final WindowManager windowManager;
 
+    /**
+     * Constructs new dialog for creating components. It should be used as a prototype, new object for every new
+     * component.
+     * 
+     * @param componentService service for saving component
+     * @param windowManager object for opening and closing application windows
+     */
     public AddComponentVm(ComponentService componentService, WindowManager windowManager) {
         this.componentService = componentService;
         this.windowManager = windowManager;
     }
 
+    /**
+     * Creates and saves component.
+     * 
+     * @param title of the component
+     * @param description its description
+     * @param componentType its component type
+     */
     @Command
     public void createComponent(@BindingParam(value = "title") String title,
             @BindingParam(value = "description") String description,
@@ -57,20 +71,33 @@ public class AddComponentVm {
         switchToComponentsWindow();
     }
 
+    /**
+     * Cancels edit and switches to components window
+     */
     @Command
     public void cancelEdit() {
         switchToComponentsWindow();
     }
 
+    /**
+     * @return list of all available component types
+     */
     public List<ComponentType> getAvailableComponentTypes() {
         return Lists.newArrayList(componentService.getAvailableTypes());
     }
 
+    /**
+     * Opens components view, closing it
+     */
     private void switchToComponentsWindow() {
         windowManager.open(COMPONENTS_WINDOW);
     }
 
-    // TODO: find out how to get rid of it
+    /**
+     * With given window manager, opens this dialog from {@link ComponentsVm}
+     * 
+     * @param windowManager to be used for opening the dialog
+     */
     public static void openWindowForAdding(WindowManager windowManager) {
         windowManager.open(ADD_COMPONENT_LOCATION);
     }

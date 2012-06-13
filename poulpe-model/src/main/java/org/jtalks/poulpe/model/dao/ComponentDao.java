@@ -35,9 +35,10 @@ public interface ComponentDao extends ParentRepository<Component> {
      * @return components list
      */
     List<Component> getAll();
-    
+
     /**
      * Get the set of unoccupied ComponentType.
+     * 
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
@@ -45,13 +46,13 @@ public interface ComponentDao extends ParentRepository<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param componentType the component's type 
+     * @param componentType the component's type
      * @return the component
      */
     Component getByType(ComponentType componentType);
 
     /**
-     * @param componentType
+     * @param componentType for base component
      * @return base component for the given type
      */
     ComponentBase getBaseComponent(ComponentType componentType);
