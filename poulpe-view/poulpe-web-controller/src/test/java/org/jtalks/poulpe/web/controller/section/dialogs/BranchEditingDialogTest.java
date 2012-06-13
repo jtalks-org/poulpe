@@ -14,24 +14,25 @@
  */
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.*;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 /**
  * @author stanislav bashkirtsev
@@ -44,7 +45,7 @@ public class BranchEditingDialogTest {
     public void setUp() throws Exception {
         groupDao = mock(GroupDao.class);
         sut = new BranchEditingDialog(groupDao);
-        sut.renewSectionsFromTree((ZkTreeModel<ForumStructureItem>) provideTreeModelWithSectionsAndBranches()[0][0]);
+        sut.renewSectionsFromTree(buildTreeModel());
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
@@ -73,7 +74,7 @@ public class BranchEditingDialogTest {
      */
     @Test
     public void getModeratorsGroupShouldNull() {
-        sut.setEditedBranch(new ForumStructureItem(new PoulpeBranch("test-branch")));
+        sut.setEditedBranch(new ForumStructureItem(TestFixtures.branch()));
         assertNull(sut.getModeratingGroup());
     }
 
@@ -93,27 +94,25 @@ public class BranchEditingDialogTest {
 
     @DataProvider
     public Object[][] provideBranchWithModeratingGroup() {
-        PoulpeBranch branch = new PoulpeBranch("branch");
-        branch.setModeratorsGroup(new Group("group"));
-        return new Object[][]{{branch}};
+        PoulpeBranch branch = TestFixtures.branch();
+        branch.setModeratorsGroup(TestFixtures.group());
+        return new Object[][] { { branch } };
     }
 
     @DataProvider
     public Object[][] provideGroups() {
-        return new Object[][]{{Arrays.asList(new Group("g1"), new Group("g2"))}};
+        List<Group> groups = Arrays.asList(TestFixtures.group(), TestFixtures.group());
+        return new Object[][] { { groups } };
     }
 
     @DataProvider
     public Object[][] provideTreeModelWithSectionsAndBranches() {
-        Jcommune jcommune = new Jcommune();
-        PoulpeSection sectionA = new PoulpeSection("SectionA");
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchA"));
-        sectionA.addOrUpdateBranch(new PoulpeBranch("BranchB"));
-        jcommune.addSection(sectionA);
-        PoulpeSection sectionB = new PoulpeSection("SectionB");
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchD"));
-        sectionB.addOrUpdateBranch(new PoulpeBranch("BranchE"));
-        jcommune.addSection(sectionB);
-        return new Object[][]{{new ZkTreeModel<ForumStructureItem>(buildForumStructure(jcommune))}};
+        return new Object[][] { { buildTreeModel() } };
+    }
+
+    private static ZkTreeModel<ForumStructureItem> buildTreeModel() {
+        Jcommune jcommune = TestFixtures.jcommuneWithSections();
+        ZkTreeNode<ForumStructureItem> forumStructure = buildForumStructure(jcommune);
+        return new ZkTreeModel<ForumStructureItem>(forumStructure);
     }
 }

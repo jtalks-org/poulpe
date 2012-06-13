@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -34,140 +35,132 @@ import java.util.List;
  */
 public class UserBanningVm {
 
-    private static final String NOT_SELECTED_ERROR = "To provide save action for user, user must be already selected";
+	// Injected
+	private final UserService userService;
+	private final GroupService groupService;
 
-    // Injected
-    private final UserService userService;
-    private final GroupService groupService;
+	// Max count to combobox of users with filter
+	private final static int MAX_COUNT = 10;
 
-    // Max count to combobox of users with filter
-    private final static int MAX_COUNT = 10;
+	public final String AVAILABLE_USERS_PROP = "availableUsers",
+			BANNED_USERS_PROP = "bannedUsers",
+			ADD_BAN_FOR_PROP = "addBanFor";
 
+	/**
+	 * User selected in list of banned, also this instance used by window for editing ban properties.
+	 */
+	private PoulpeUser selectedUser;
 
-    public final String AVAILABLE_USERS_PROP = "availableUsers", BANNED_USERS_PROP = "bannedUsers", ADD_BAN_FOR_PROP = "addBanFor";
+	/**
+	 * User selected in list of available users to add ban for.
+	 */
+	private PoulpeUser addBanFor;
 
+	/**
+	 * Text to filter users by username in available list.
+	 */
+	private String availableFilterText = "";
 
-    /**
-     * User selected in list of banned, also this instance used by window for editing ban properties.
-     */
-    private PoulpeUser selectedUser;
+	/**
+	 * Constructs VM.
+	 *
+	 * @param userService  used to obtain data related to users for VM
+	 * @param groupService used to obtain data related to groups for VM
+	 */
+	public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
+		this.groupService = groupService;
+		this.userService = userService;
+	}
 
-    /**
-     * User selected in list of available users to add ban for.
-     */
-    private PoulpeUser addBanFor;
+	/**
+	 * Gets list of user which hasn't banned state.
+	 *
+	 * @return list of users, list instance is UNMODIFIABLE
+	 */
+	@Nonnull
+	public List<PoulpeUser> getAvailableUsers() {
+		List<Group> bannedGroups = groupService.getBannedUsersGroups();
+		return userService.getNonBannedByUsername(availableFilterText, bannedGroups, MAX_COUNT);
+	}
 
+	/**
+	 * Gets list of user which already has banned state.
+	 *
+	 * @return list of users, list instance is UNMODIFIABLE
+	 */
+	@Nonnull
+	public List<PoulpeUser> getBannedUsers() {
+		return groupService.getBannedUsers().getUsers();
+	}
 
-    /**
-     * Text to filter users by username in available list.
-     */
-    private String availableFilterText = "";
+	/**
+	 * Gets currently selected user. This user instance used by window to edit ban properties.
+	 *
+	 * @return currently selected user, can be {@code null}
+	 */
+	@Nullable
+	public PoulpeUser getSelectedUser() {
+		return selectedUser;
+	}
 
+	/**
+	 * Sets selected banned user
+	 *
+	 * @param selectedUser the banned user currently selected
+	 */
+	public void setSelectedUser(PoulpeUser selectedUser) {
+		this.selectedUser = selectedUser;
+	}
 
-    /**
-     * Constructs VM.
-     *
-     * @param userService  used to obtain data related to users for VM
-     * @param groupService used to obtain data related to groups for VM
-     */
-    public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
-        this.groupService = groupService;
-        this.userService = userService;
-    }
+	/**
+	 * Gets user selected to ban.
+	 *
+	 * @return the user currently selected to add ban state
+	 */
+	@Nullable
+	public PoulpeUser getAddBanFor() {
+		return addBanFor;
+	}
 
-    /**
-     * Gets list of user which hasn't banned state.
-     *
-     * @return list of users, list instance is UNMODIFIABLE
-     */
-    @Nonnull
-    public List<PoulpeUser> getAvailableUsers() {
-        return userService.getNonBannedByUsername(availableFilterText, MAX_COUNT);
-    }
+	/**
+	 * Sets user selected to ban.
+	 *
+	 * @param addBanFor the user which be used to add ban state
+	 */
+	public void setAddBanFor(@Nonnull PoulpeUser addBanFor) {
+		this.addBanFor = addBanFor;
+	}
 
+	/**
+	 * Sets new value to filter text for users in available list. This value later will be used to filter users by
+	 * username in list of available users.
+	 *
+	 * @param filterText the text to filter by
+	 */
+	@Command
+	@NotifyChange({AVAILABLE_USERS_PROP})
+	public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
+		this.availableFilterText = filterText;
+	}
 
-    /**
-     * Gets list of user which already has banned state.
-     *
-     * @return list of users, list instance is UNMODIFIABLE
-     */
-    @Nonnull
+	/**
+	 * Add user to Banned Users group
+	 */
+	@Command
+	@NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
+	public void addUserToBannedGroup() {
+		groupService.banUsers(addBanFor);
+		addBanFor = null;
+	}
 
-    public List<PoulpeUser> getBannedUsers() {
-        return groupService.getBannedUsers().getUsers();
-    }
-
-    /**
-     * Gets currently selected user. This user instance used by window to edit ban properties.
-     *
-     * @return currently selected user, can be {@code null}
-     */
-    @Nullable
-    public PoulpeUser getSelectedUser() {
-        return selectedUser;
-    }
-
-    /**
-     * Sets selected banned user
-     *
-     * @param selectedUser the banned user currently selected
-     */
-    public void setSelectedUser(PoulpeUser selectedUser) {
-        this.selectedUser = selectedUser;
-    }
-
-    /**
-     * Gets user selected to ban.
-     *
-     * @return the user currently selected to add ban state
-     */
-    @Nullable
-    public PoulpeUser getAddBanFor() {
-        return addBanFor;
-    }
-
-    /**
-     * Sets user selected to ban.
-     *
-     * @param addBanFor the user which be used to add ban state
-     */
-    public void setAddBanFor(@Nonnull PoulpeUser addBanFor) {
-        this.addBanFor = addBanFor;
-    }
-
-
-    /**
-     * Sets new value to filter text for users in available list. This value later will be used to filter users by
-     * username in list of available users.
-     *
-     * @param filterText the text to filter by
-     */
-    @Command
-    @NotifyChange({AVAILABLE_USERS_PROP})
-    public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
-        this.availableFilterText = filterText;
-    }
-
-
-    /**
-     * Add user to Banned Users group
-     */
-    @Command
-    @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
-    public void addUserToBannedGroup() {
-        groupService.banUsers(addBanFor);
-        addBanFor = null;
-    }
-
-    /**
-     * Revoke user ban
-     */
-    @Command
-    @NotifyChange({AVAILABLE_USERS_PROP, BANNED_USERS_PROP})
-    public void revokeBan() {
-        groupService.revokeBan(selectedUser);
-        selectedUser = null;
-    }
-
+	/**
+	 * Revoke user ban
+	 */
+	@Command
+	@NotifyChange({AVAILABLE_USERS_PROP, BANNED_USERS_PROP})
+	public void revokeBan() {
+		groupService.revokeBan(selectedUser);
+		selectedUser = null;
+	}
 
 }

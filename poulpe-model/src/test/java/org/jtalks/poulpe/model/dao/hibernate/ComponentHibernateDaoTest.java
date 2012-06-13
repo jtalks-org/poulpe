@@ -14,12 +14,18 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -28,30 +34,17 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
- *
+ * 
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  * @author Guram Savinov
  */
-@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
+@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
-    private final String JCOMMUNE = "jcommune";
-    private String name="name";
-    private String caption="caption";
-    private String postPreviewSize="postPreviewSize";
-    private String sessionTimeout="sessionTimeout";
 
     @Autowired
     private SessionFactory sessionFactory;
@@ -70,10 +63,13 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         forum = createForum();
     }
 
+    private static Jcommune createForum() {
+        return TestFixtures.jcommuneWithSections(10);
+    }
+
     @Test
     public void testSave() {
         dao.saveOrUpdate(forum);
-        assertNotSame(forum.getId(), 0, "Id not created");
         Component actual = ObjectRetriever.retrieveUpdated(forum, session);
         assertReflectionEquals(forum, actual);
     }
@@ -93,8 +89,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         forum.setName(newName);
         dao.saveOrUpdate(forum);
 
-        String actual = ObjectRetriever.retrieveUpdated(forum, session)
-                .getName();
+        String actual = ObjectRetriever.retrieveUpdated(forum, session).getName();
         assertEquals(actual, newName);
     }
 
@@ -121,12 +116,8 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         session.save(createArticle());
     }
 
-    private Jcommune createForum() {
-        return ObjectsFactory.createJcommune(10);
-    }
-
     private Component createArticle() {
-        return ObjectsFactory.createComponent(ComponentType.ARTICLE);
+        return TestFixtures.component(ComponentType.ARTICLE);
     }
 
     @Test
@@ -145,25 +136,25 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testGetAvailableTypesAfterInsert() {
         givenForum();
-
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
-
         assertForumUnavailable(availableTypes);
+    }
+    
+    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
+        assertFalse(availableTypes.contains(forum.getComponentType()));
     }
 
     @Test
     public void testSectionPositions() {
-        for (int i = 0; i < 5; i++) {
-            List<PoulpeSection> expected = forum.getSections();
-            Collections.shuffle(expected);
+        List<PoulpeSection> expected = forum.getSections();
+        Collections.shuffle(expected);
 
-            dao.saveOrUpdate(forum);
+        dao.saveOrUpdate(forum);
 
-            forum = ObjectRetriever.retrieveUpdated(forum, session);
-            List<PoulpeSection> actual = forum.getSections();
+        forum = ObjectRetriever.retrieveUpdated(forum, session);
+        List<PoulpeSection> actual = forum.getSections();
 
-            assertEquals(actual, expected);
-        }
+        assertEquals(actual, expected);
     }
 
     @Test
@@ -175,28 +166,26 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @Test
     public void deleteForum() {
-        forum.setName("ForumName");
-        forum.setDescription("ForumDescription");
-
-        forum.setProperty(JCOMMUNE + ".name",name);
-        forum.setProperty(JCOMMUNE + ".caption",caption);
-        forum.setProperty(JCOMMUNE + ".postPreviewSize", postPreviewSize);
-        forum.setProperty(JCOMMUNE + ".session_timeout", sessionTimeout);
-
-        dao.saveOrUpdate(forum);
+        givenForum();
         dao.delete(forum);
-
-        session.flush();
         assertForumDeleted(dao.getAvailableTypes());
     }
 
     private void assertForumDeleted(Set<ComponentType> availableTypes) {
         assertTrue(availableTypes.contains(forum.getComponentType()));
     }
-
-    private void assertForumUnavailable(Set<ComponentType> availableTypes) {
-        assertFalse(availableTypes.contains(forum.getComponentType()));
+    
+    @Test
+    public void getBaseComponent() {
+        ComponentBase expected = givenBaseComponent();
+        ComponentBase actual = dao.getBaseComponent(ComponentType.FORUM);
+        assertReflectionEquals(expected, actual);
     }
 
+    private ComponentBase givenBaseComponent() {
+        ComponentBase baseComponent = new ComponentBase(ComponentType.FORUM);
+        session.save(baseComponent);
+        return baseComponent;
+    }
 
 }

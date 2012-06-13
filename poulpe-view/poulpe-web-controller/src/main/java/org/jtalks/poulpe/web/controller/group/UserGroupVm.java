@@ -14,16 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
-
-import javax.annotation.Nonnull;
 
 /**
  * View-model for 'User Groups' Is used to order to work with page that allows admin to manage groups(add, edit,
@@ -174,7 +173,6 @@ public class UserGroupVm {
      *
      * @return Groups currently displayed at UI.
      */
-    @SuppressWarnings("unused")
     public ListModelList<Group> getGroups() {
         updateView();
         return groups;
@@ -185,7 +183,6 @@ public class UserGroupVm {
      *
      * @return Group selected at UI.
      */
-    @SuppressWarnings("unused")
     public Group getSelectedGroup() {
         return selectedGroup;
     }

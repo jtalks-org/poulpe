@@ -14,8 +14,9 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import java.util.List;
+
+import org.jtalks.common.model.entity.Property;
 
 /**
  * Poulpe entity which represents Administrator Panel as itself.
@@ -25,10 +26,23 @@ import org.jtalks.common.model.entity.ComponentType;
 public class Poulpe extends Component {
 
     /**
-     * Creates Component with {@link ComponentType#ADMIN_PANEL}.
+     * Creates Component with {@link ComponentType#ADMIN_PANEL}. Visible for hibernate
      */
-    public Poulpe() {
-        setComponentType(ComponentType.ADMIN_PANEL);
+    protected Poulpe() {
+        super(ComponentType.ADMIN_PANEL);
+    }
+
+    /**
+     * Creates Poulpe component with ComponentType.ADMIN_PANEL type, given name, description and the list of properties.
+     * Instances should be created using {@link ComponentBase#newComponent(String, String)} with ADMIN_PANEL
+     * ComponentBase
+     * 
+     * @param name of the component
+     * @param description its descriptions
+     * @param properties of the component
+     */
+    Poulpe(String name, String description, List<Property> properties) {
+        super(name, description, ComponentType.ADMIN_PANEL, properties);
     }
 
 }

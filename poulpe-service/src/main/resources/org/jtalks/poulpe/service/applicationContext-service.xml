@@ -48,7 +48,6 @@
     <constructor-arg index="0" ref="componentDao" />
     <constructor-arg index="1" ref="branchPermissionManager" />
     <constructor-arg index="2" ref="entityValidator" />
-    <property name="propertyLoader" ref="propertyLoader" />
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao" />
@@ -79,9 +78,6 @@
     <constructor-arg index="1" ref="groupDao" />
   </bean>
     
-    <bean id="propertyLoader" class="org.jtalks.poulpe.service.PropertyLoader">
-        <property name="pathToProperties" value="org/jtalks/poulpe/service/config/" />
-    </bean>
   <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">
     <constructor-arg ref="groupDao" />
   </bean>

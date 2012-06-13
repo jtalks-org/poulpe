@@ -14,15 +14,14 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Property;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The central JCommune entity that contains all the configuration for respective component.
- *
+ * 
  * @author Guram Savinov
  * @author Vahluev Vyacheslav
  */
@@ -31,58 +30,33 @@ public class Jcommune extends Component {
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
-     * Creates Component with {@link ComponentType#FORUM} and empty section list
+     * Creates Component with {@link ComponentType#FORUM} and empty section list. Visible for hibernate.
      */
-    public Jcommune() {
-        setComponentType(ComponentType.FORUM);
+    protected Jcommune() {
+        super(ComponentType.FORUM);
     }
 
     /**
-     * Converts given {@link Component} to {@link Jcommune}, keeping the identity of the first (i.e. id and uuid are
-     * copied as well)
-     *
-     * @param component to be converted
-     * @return converted {@link Jcommune}
-     * @throws IllegalArgumentException when passed component is not Forum (its componentType != {@link
-     *                                  ComponentType#FORUM})
+     * Creates JCommune component with ComponentType.FORUM type, given name, description and the list of properties.
+     * Instances should be created using {@link ComponentBase#newComponent(String, String)} with FORUM ComponentBase
+     * 
+     * @param name of the component
+     * @param description its descriptions
+     * @param defaultProperties of the component
      */
-    public static Jcommune fromComponent(Component component) {
-        checkComponentType(component.getComponentType());
-
-        Jcommune jcommune = new Jcommune();
-        jcommune.setId(component.getId());
-        jcommune.setUuid(component.getUuid());
-        jcommune.setName(component.getName());
-        jcommune.setDescription(component.getDescription());
-        jcommune.setProperties(component.getProperties());
-
-        return jcommune;
+    Jcommune(String name, String description, List<Property> defaultProperties) {
+        super(name, description, ComponentType.FORUM, defaultProperties);
     }
 
     /**
-     * @param componentType to be checked
-     * @throws IllegalArgumentException if componentType is not {@link ComponentType#FORUM}
-     */
-    private static void checkComponentType(ComponentType componentType) {
-        if (componentType != ComponentType.FORUM) {
-            throw new IllegalArgumentException("Can't convert component to Forum because componentType == FORUM " +
-                    "is expected, got " + componentType);
-        }
-    }
-
-    /**
-     * Gets the sections.
-     *
-     * @return the sections
+     * @return component's sections
      */
     public List<PoulpeSection> getSections() {
         return sections;
     }
 
     /**
-     * Sets the sections.
-     *
-     * @param sections the sections to set
+     * @param sections new list of sections
      */
     public void setSections(List<PoulpeSection> sections) {
         this.sections = sections;
@@ -90,7 +64,7 @@ public class Jcommune extends Component {
 
     /**
      * Removes the specified section from jcommune instance if it's there, does nothing if it's not there.
-     *
+     * 
      * @param section the section to remove it from the list
      * @return {@code true} if the specified section wasn't in the list
      */
@@ -100,7 +74,7 @@ public class Jcommune extends Component {
 
     /**
      * Adds a section to the list.
-     *
+     * 
      * @param section the section to add
      */
     public void addSection(PoulpeSection section) {

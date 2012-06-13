@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
@@ -23,8 +21,10 @@ import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.PropertyLoader;
 
 import java.util.List;
 import java.util.Set;
@@ -40,7 +40,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         implements ComponentService {
     private final PermissionManager permissionManager;
     private final EntityValidator validator;
-    private PropertyLoader propertyLoader;
 
     /**
      * Creates new instance of the service
@@ -56,17 +55,13 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         this.validator = validator;
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public List<Component> getAll() {
         return dao.getAll();
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public void deleteComponent(Component component) {
         dao.delete(component);
@@ -76,39 +71,21 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
-
-        if (component.getId() == 0) {
-            propertyLoader.loadDefaults(component);
-        }
         dao.saveOrUpdate(component);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    /** {@inheritDoc} */
     @Override
     public Set<ComponentType> getAvailableTypes() {
         return dao.getAvailableTypes();
     }
 
-    /**
-     * Sets property loader. See {@link PropertyLoader}
-     * 
-     * @param propertyLoader property loader to set
-     */
-    public void setPropertyLoader(PropertyLoader propertyLoader) {
-        this.propertyLoader = propertyLoader;
+    /** {@inheritDoc} */
+    @Override
+    public ComponentBase baseComponentFor(ComponentType componentType) {
+        return dao.getBaseComponent(componentType);
     }
-
-    /**
-     * Gets currently used property loader. See {@link PropertyLoader}
-     * 
-     * @return property loader
-     */
-    public PropertyLoader getPropertyLoader() {
-        return propertyLoader;
-    }
-
+    
     /** {@inheritDoc} */
     @Override
     public Component getByType(ComponentType type) {

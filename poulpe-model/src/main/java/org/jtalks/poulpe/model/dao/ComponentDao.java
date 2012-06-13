@@ -15,8 +15,9 @@
 package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.List;
 import java.util.Set;
@@ -34,9 +35,10 @@ public interface ComponentDao extends ParentRepository<Component> {
      * @return components list
      */
     List<Component> getAll();
-    
+
     /**
      * Get the set of unoccupied ComponentType.
+     * 
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
@@ -44,8 +46,14 @@ public interface ComponentDao extends ParentRepository<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param the component's type 
+     * @param componentType the component's type
      * @return the component
      */
-    Component getByType(ComponentType type);
+    Component getByType(ComponentType componentType);
+
+    /**
+     * @param componentType for base component
+     * @return base component for the given type
+     */
+    ComponentBase getBaseComponent(ComponentType componentType);
 }

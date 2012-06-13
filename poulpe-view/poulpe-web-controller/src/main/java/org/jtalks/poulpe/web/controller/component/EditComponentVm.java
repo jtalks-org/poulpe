@@ -14,81 +14,35 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
+import static org.apache.commons.lang3.Validate.notNull;
+
+import javax.annotation.Nonnull;
+
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 
 /**
  * ViewModel class for EditComponent View
- *
+ * 
  * @author Vahluev Vyacheslav
  * @author Kazancev Leonid
+ * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    public static final String EMPTY_TITLE = "component.error.title_shouldnt_be_empty",
-            EMPTY_NAME = "component.error.name_shouldnt_be_empty", ITEM_ALREADY_EXISTS = "item.already.exist";
+    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul",
+            COMPONENTS_WINDOW = "components.zul";
 
-    private static final String EDIT_COMPONENT_LOCATION = "components/edit_comp.zul",
-            COMPONENTS_WINDOW = "components.zul", COMPONENT_NAME_PROP = "componentName", NAME_PROP = "name",
-            CAPTION_PROP = "caption", DESCRIPTION_PROP = "description", POST_PREVIEW_SIZE_PROP = "postPreviewSize",
-            SESSION_TIMEOUT_PROP = "sessionTimeout", IS_JCOMMUNE = "jcommune";
+    private final ComponentService componentService;
+    private final Component component;
 
-    private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
-    /**
-     * Current component we are working with
-     */
-    private Component currentComponent;
-
-    private SelectedEntity<Component> selectedEntity;
-
-    /**
-     * The name of the component
-     */
-    private String name;
-
-    /**
-     * The description of the component
-     */
-    private String description;
-
-    /**
-     * The name of the component
-     */
-    private String componentName;
-
-    /**
-     * Type of the component
-     */
-    private String componentType;
-    /**
-     * The caption of the forum
-     */
-    private String caption;
-    /**
-     * The post preview size of the forum
-     */
-    private Integer postPreviewSize;
-
-    private Integer sessionTimeout;
-
-    private boolean jcommune;
-
-    private ComponentService componentService;
     private WindowManager windowManager;
 
     /**
      * Opens window for editing component.
-     *
+     * 
      * @param windowManager The object which is responsible for creation and closing application windows
      */
     public static void openWindowForEdit(WindowManager windowManager) {
@@ -96,276 +50,33 @@ public class EditComponentVm {
     }
 
     /**
-     * Sets the service instance which is used for manipulating with stored components.
-     *
-     * @param componentService the new value of the service instance
+     * Creates edit dialog for editing currently selected component
+     * 
+     * @param componentService service for saving component
+     * @param selectedComponent currently selected component
      */
-    public final void setComponentService(ComponentService componentService) {
+    public EditComponentVm(@Nonnull ComponentService componentService,
+            @Nonnull SelectedEntity<Component> selectedComponent) {
         this.componentService = componentService;
+        this.component = notNull(selectedComponent.getEntity());
     }
 
     /**
-     * Sets window manager.
-     *
-     * @param windowManager the new window manager
+     * Saves a component
      */
-    public void setWindowManager(WindowManager windowManager) {
-        this.windowManager = windowManager;
-    }
-
-    // constructor
-
-    /**
-     * Default constructor. Inits the data on the form.
-     *
-     * @param componentService service we use to access components
-     */
-    public EditComponentVm(@Nonnull ComponentService componentService) {
-        this.setComponentService(componentService);
-    }
-
-    /**
-     * Inits the data on the form.
-     */
-    @NotifyChange
-            ({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
-                    POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP, IS_JCOMMUNE})
-    @Init
-    public void initData() {
-        currentComponent = selectedEntity.getEntity();
-        if (isForum()) {
-            componentType = IS_JCOMMUNE;
-            readForumProperties();
-        } else {
-            componentType = currentComponent.getComponentType().toString();
-            setDefaultProperties();
-        }
-        readBasicFields();
-    }
-
-    // service functions
-
-    /**
-     * Returns all components.
-     *
-     * @return the list of the components
-     */
-    public List<Component> getComponents() {
-        return componentService.getAll();
-    }
-
-    /**
-     * Returns current value of jcommune.
-     *
-     * @return return true if component has jcommune type.
-     */
-    public boolean isJcommune() {
-        return jcommune;
-    }
-
-    // commands
-
-    /**
-     * Saves a component.
-     */
-    @Command()
-    @NotifyChange({COMPONENT_NAME_PROP, NAME_PROP, DESCRIPTION_PROP, CAPTION_PROP,
-            POST_PREVIEW_SIZE_PROP, SESSION_TIMEOUT_PROP})
+    @Command
     public void save() {
-        setBasicFields();
-        if(jcommune){
-            setForumProperties();
-        }
-        componentService.saveComponent(currentComponent);
+        componentService.saveComponent(component);
         switchToComponentsWindow();
     }
 
     /**
      * Cancels all the actions
      */
-    @Command()
+    @Command
     public void cancel() {
         switchToComponentsWindow();
     }
-
-    // helpers
-
-    /**
-     * Returns string value of the field or empty string if string is null
-     *
-     * @param value value of the string
-     * @return string value of the field or empty string if string is null
-     */
-    private String valueOf(String value) {
-        return (value == null) ? "" : value;
-    }
-
-    // getters & setters for web-form
-
-    /**
-     * Returns the title for current component
-     *
-     * @return name value from web-form
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * Sets the title for the current component
-     *
-     * @param name value to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Returns the description for the current component
-     *
-     * @return description value from web-form
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Sets the description for the current component
-     *
-     * @param description to set on web-form
-     */
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    /**
-     * Returns the name of the current component
-     *
-     * @return component name value from web-form
-     */
-    public String getComponentName() {
-        return componentName;
-    }
-
-    /**
-     * Sets the name for current component
-     *
-     * @param componentName new component name value on web-form
-     */
-    public void setComponentName(String componentName) {
-        this.componentName = componentName;
-    }
-
-    // getter and setter for current component we edit
-
-    /**
-     * Gets the current component we edit
-     *
-     * @return current component
-     */
-    public Component getCurrentComponent() {
-        return currentComponent;
-    }
-
-    /**
-     * Sets the current component we edit
-     *
-     * @param currentComponent - to set
-     */
-    public void setCurrentComponent(Component currentComponent) {
-        this.currentComponent = currentComponent;
-    }
-
-    /**
-     * Returns caption from the web-form
-     *
-     * @return caption
-     */
-    public String getCaption() {
-        return caption;
-    }
-
-    /**
-     * Sets the current caption
-     *
-     * @param caption - to set on web-form
-     */
-    public void setCaption(String caption) {
-        this.caption = caption;
-    }
-
-    /**
-     * Returns post preview size from the web-form
-     *
-     * @return post preview size
-     */
-    public Integer getPostPreviewSize() {
-        return postPreviewSize;
-    }
-
-    /**
-     * Sets the current component we edit
-     *
-     * @param postPreviewSize - to set on web-form
-     */
-    public void setPostPreviewSize(Integer postPreviewSize) {
-        this.postPreviewSize = postPreviewSize;
-    }
-
-    /**
-     * Returns session timeout value from the web-form
-     *
-     * @return session timeout
-     */
-    @NotEmpty
-    public Integer getSessionTimeout() {
-        return sessionTimeout;
-    }
-
-    /**
-     * Sets session timeout
-     *
-     * @param sessionTimeout - to set on web-form
-     */
-    public void setSessionTimeout(Integer sessionTimeout) {
-        this.sessionTimeout = sessionTimeout;
-    }
-
-    /**
-     * Sets selected entity.
-     *
-     * @param selectedEntity to set entity for edit
-     */
-    public void setSelectedEntity(SelectedEntity<Component> selectedEntity) {
-        this.selectedEntity = selectedEntity;
-    }
-
-
-    /**
-     * Sets default values for variables witch are editable only if component type are jcommune,
-     * this values don't saves and uses just for verification.
-     */
-    private void setDefaultProperties() {
-        name = NAME_PROP;
-        caption = CAPTION_PROP;
-        postPreviewSize = 10;
-        sessionTimeout = 10;
-    }
-
-    /**
-     * Read forum properties to class variables.
-     */
-    private void readForumProperties() {
-        name = valueOf(currentComponent.getProperty(componentType + ".name"));
-        caption = valueOf(currentComponent.getProperty(componentType + ".caption"));
-        if (currentComponent.getProperty(componentType + ".postPreviewSize") != null) {
-            postPreviewSize = Integer.valueOf(currentComponent.getProperty(componentType + ".postPreviewSize"));
-        }
-        if (currentComponent.getProperty(currentComponent.getProperty(componentType + ".session_timeout")) != null) {
-            sessionTimeout = Integer.valueOf(currentComponent.getProperty(componentType + ".session_timeout"));
-        }
-    }
-
 
     /**
      * Opens component view window.
@@ -375,38 +86,16 @@ public class EditComponentVm {
     }
 
     /**
-     * Sets properties of the forum.
+     * @return component being edited
      */
-    private void setForumProperties() {
-        currentComponent.setProperty(componentType + ".name", name);
-        currentComponent.setProperty(componentType + ".caption", caption);
-        currentComponent.setProperty(componentType + ".postPreviewSize", postPreviewSize.toString());
-        currentComponent.setProperty(componentType + ".session_timeout", sessionTimeout.toString());
+    public Component getComponent() {
+        return component;
     }
 
     /**
-     * Sets the basic params common for all components.
+     * @param windowManager manager responsible for creation and closing application windows
      */
-    private void setBasicFields() {
-        currentComponent.setName(componentName);
-        currentComponent.setDescription(description);
+    public void setWindowManager(WindowManager windowManager) {
+        this.windowManager = windowManager;
     }
-
-    /**
-     * Read basic params from component to class variables.
-     */
-    private void readBasicFields() {
-        componentName = valueOf(currentComponent.getName());
-        description = valueOf(currentComponent.getDescription());
-    }
-
-    /**
-     * @return true if component type are forum.
-     */
-    private boolean isForum() {
-        jcommune = currentComponent.getComponentType().equals(ComponentType.FORUM);
-        return jcommune;
-    }
-
-
 }

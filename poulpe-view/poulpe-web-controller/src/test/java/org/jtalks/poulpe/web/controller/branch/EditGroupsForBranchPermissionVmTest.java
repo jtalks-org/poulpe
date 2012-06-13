@@ -32,6 +32,7 @@ import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;
@@ -56,12 +57,9 @@ public class EditGroupsForBranchPermissionVmTest {
     // SUT
     private EditGroupsForBranchPermissionVm viewModel;
 
-    @Mock
-    private BranchService branchService;
-    @Mock
-    private GroupService groupService;
-    @Mock
-    private WindowManager windowManager;
+    @Mock BranchService branchService;
+    @Mock GroupService groupService;
+    @Mock WindowManager windowManager;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -111,12 +109,13 @@ public class EditGroupsForBranchPermissionVmTest {
 
     @DataProvider
     public Object[][] dataProvider() {
+        // TODO: probably copy-paste
         List<PermissionForEntity> permissionsForEntity = Lists.newArrayList();
         PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>(
                 BranchPermission.getAllAsList());
 
         // target entity (PoulpeBranch)
-        PoulpeBranch target = ObjectsFactory.fakeBranch();
+        PoulpeBranch target = TestFixtures.branch();
         // permissions to work with
         BranchPermission[] branchPermissions = BranchPermission.values();
 
@@ -127,7 +126,7 @@ public class EditGroupsForBranchPermissionVmTest {
             permissionsForEntity.add(new PermissionForEntity(target, false, branchPermissions[i]));
 
             for (int j = 0, countj = RandomUtils.nextInt(4) + 2; j < countj; j++) {
-                permissionsMap.add(branchPermissions[i], ObjectsFactory.fakeGroup(), ObjectsFactory.fakeGroup());
+                permissionsMap.add(branchPermissions[i], TestFixtures.group(), TestFixtures.group());
             }
         }
 

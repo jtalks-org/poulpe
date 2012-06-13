@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,8 @@ public interface ComponentService extends EntityService<Component> {
      * Saves new component or updates existent
      * 
      * @param component to save
-     * @exception ValidationException when entity being saved violates validation constraints
+     * @exception org.jtalks.common.validation.ValidationException when entity being saved violates validation
+     * constraints
      */
     void saveComponent(Component component);
 
@@ -65,7 +67,7 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Gets component by it's type.
      * 
-     * @param the component's type
+     * @param type the component's type
      * @return the component
      */
     Component getByType(ComponentType type);
@@ -94,5 +96,13 @@ public interface ComponentService extends EntityService<Component> {
      * @param changes the {@link PermissionChanges} which needs to be applied
      */
     void changeRestrictions(Component component, PermissionChanges changes);
+
+    /**
+     * By given type retrieves {@link ComponentBase}
+     * 
+     * @param componentType of the component
+     * @return base component of needed type
+     */
+    ComponentBase baseComponentFor(ComponentType componentType);
 
 }

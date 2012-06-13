@@ -42,7 +42,7 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      * @param validator entity validator
      */
     public TransactionalTopicTypeService(TopicTypeDao topicDao, EntityValidator validator) {
-        dao = topicDao;
+        this.dao = topicDao;
         this.validator = validator;
     }
 

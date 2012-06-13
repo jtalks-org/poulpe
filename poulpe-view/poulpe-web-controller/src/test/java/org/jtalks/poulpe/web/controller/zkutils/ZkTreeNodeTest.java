@@ -14,18 +14,16 @@
  */
 package org.jtalks.poulpe.web.controller.zkutils;
 
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-import org.zkoss.zul.DefaultTreeModel;
-import org.zkoss.zul.DefaultTreeNode;
-import org.zkoss.zul.TreeNode;
-
-import javax.print.DocFlavor;
-import java.util.ArrayList;
-
 import static java.util.Arrays.asList;
 import static org.testng.Assert.assertNotSame;
 import static org.testng.Assert.assertSame;
+
+import java.util.ArrayList;
+
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+import org.zkoss.zul.DefaultTreeNode;
+import org.zkoss.zul.TreeNode;
 
 /**
  * @author stanislav bashkirtsev
@@ -41,6 +39,7 @@ public class ZkTreeNodeTest {
     }
 
     @Test
+    @SuppressWarnings ("unchecked")
     public void testMoveNode() throws Exception {
         TreeNode<String> moveFrom = new ZkTreeNode<String>("b", sut);
         TreeNode<String> destination = new DefaultTreeNode<String>("c", new ArrayList<TreeNode<String>>());
@@ -59,6 +58,7 @@ public class ZkTreeNodeTest {
     }
 
     @Test
+    @SuppressWarnings ("unchecked")
     public void testMoveNodeToTheSameParent() throws Exception {
         TreeNode<String> moveFrom = new DefaultTreeNode<String>("d", asList(sut));
 

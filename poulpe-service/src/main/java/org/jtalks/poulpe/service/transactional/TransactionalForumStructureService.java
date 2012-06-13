@@ -14,17 +14,16 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.entity.ComponentType;
+import java.util.List;
+
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
-import org.jtalks.poulpe.service.PropertyLoader;
-
-import java.util.List;
 
 /**
  * @author stanislav bashkirtsev
@@ -34,7 +33,6 @@ public class TransactionalForumStructureService implements ForumStructureService
     private SectionDao sectionDao;
     private BranchDao branchDao;
     private final ComponentDao componentDao;
-    private PropertyLoader propertyLoader = new PropertyLoader();
 
     public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao) {
         this.sectionDao = sectionDao;
@@ -47,9 +45,6 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public void saveJcommune(Jcommune jcommune) {
-        if (jcommune.getId() == 0) {
-            propertyLoader.loadDefaults(jcommune);
-        }
         componentDao.saveOrUpdate(jcommune);
     }
 

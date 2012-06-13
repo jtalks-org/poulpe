@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright (C) 2011  JTalks.org Team
+    This library is free software; you can redistribute it and/or
+    modify it under the terms of the GNU Lesser General Public
+    License as published by the Free Software Foundation; either
+    version 2.1 of the License, or (at your option) any later version.
+    This library is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    Lesser General Public License for more details.
+    You should have received a copy of the GNU Lesser General Public
+    License along with this library; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+-->
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<hibernate-mapping>
+
+  <class name="org.jtalks.poulpe.model.entity.ComponentBase" table="BASE_COMPONENTS">
+  
+    <cache usage="read-only" />
+    
+    <id column="COMPONENT_TYPE" name="componentType">
+      <type name="org.hibernate.type.EnumType">
+        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <!-- 12 means 'VARCHAR', see java.sql.Types.VARCHAR -->
+        <param name="type">12</param>
+      </type>
+    </id>
+    
+    <set name="defaultProperties" cascade="all" inverse="false" lazy="false">
+      <cache usage="read-only" />
+      <key column="BASE_COMPONENT_TYPE" foreign-key="COMPONENT_TYPE" />
+      <one-to-many class="org.jtalks.common.model.entity.Property" entity-name="DefaultProperty" />
+    </set>
+
+  </class>
+  
+  <query name="findBaseComponentByComponentType">
+    <![CDATA[from ComponentBase where componentType = :componentType]]>
+  </query>
+  
+</hibernate-mapping>

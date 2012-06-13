@@ -14,20 +14,15 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertTrue;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -36,190 +31,202 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Sets;
+import java.util.List;
+import java.util.Set;
+
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotSame;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
-    static final String NO_FILTER = "";
-    
-    // SUT
-    @Autowired
-    private UserDao dao;
+	static final String NO_FILTER = "";
 
-    @Autowired
-    private SessionFactory sessionFactory;
+	// SUT
+	@Autowired
+	private UserDao dao;
 
-    private Session session;
+	@Autowired
+	private SessionFactory sessionFactory;
 
-    @BeforeMethod
-    public void setUp() throws Exception {
-        session = sessionFactory.getCurrentSession();
-    }
+	private Session session;
 
-    @Test
-    public void testSave() {
-        PoulpeUser user = ObjectsFactory.createUser();
+	@BeforeMethod
+	public void setUp() throws Exception {
+		session = sessionFactory.getCurrentSession();
+	}
 
-        saveAndEvict(user);
-        PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
+	@Test
+	public void testSave() {
+		PoulpeUser user = TestFixtures.user();
 
-        assertReflectionEquals(user, savedUser);
-    }
+		saveAndEvict(user);
+		PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
 
-    @Test
-    public void testSaveIdGeneration() {
-        PoulpeUser user = ObjectsFactory.createUser();
-        long initialId = 0;
-        user.setId(initialId);
+		assertReflectionEquals(user, savedUser);
+	}
 
-        saveAndEvict(user);
+	@Test
+	public void testSaveIdGeneration() {
+		PoulpeUser user = TestFixtures.user();
+		long initialId = 0;
+		user.setId(initialId);
 
-        assertNotSame(user.getId(), initialId, "ID is not created");
-    }
+		saveAndEvict(user);
 
-    @Test
-    public void testGetByUsername() {
-        PoulpeUser user = ObjectsFactory.createUser();
-        saveAndEvict(user);
-        
-        User actual = dao.getByUsername(user.getUsername());
-        assertReflectionEquals(actual, user);
-    }
+		assertNotSame(user.getId(), initialId, "ID is not created");
+	}
 
-    @Test
-    public void findPoulpeUsersPaginated_withPagination() {
-        String startsWith = "SomeString";
-        givenMoreThanOnePage(startsWith);
-        
-        int limit = 10;
-        List<PoulpeUser> users = dao.findPoulpeUsersPaginated(startsWith, Pages.paginate(1, limit));
+	@Test
+	public void testGetByUsername() {
+		PoulpeUser user = TestFixtures.user();
+		saveAndEvict(user);
 
-        assertEquals(users.size(), limit);
-    }
+		User actual = dao.getByUsername(user.getUsername());
+		assertReflectionEquals(actual, user);
+	}
 
-    private void givenMoreThanOnePage(String startsWith) {
-        int n = 20;
-        
-        while (n > 0) {
-            PoulpeUser user = ObjectsFactory.createUser(startsWith + n);
-            saveAndEvict(user);
-            n--;
-        }
-    }
+	@Test
+	public void findPoulpeUsersPaginated_withPagination() {
+		String startsWith = "SomeString";
+		givenMoreThanOnePage(startsWith);
 
-    @Test
-    public void findPoulpeUsersPaginated_noFilterAndNoPagination() {
-        List<PoulpeUser> users = ObjectsFactory.usersListOf(3);
-        saveAndEvict(users);
-        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+		int limit = 10;
+		List<PoulpeUser> users = dao.findPoulpeUsersPaginated(startsWith, Pages.paginate(1, limit));
 
-        assertContainsSameElements(actual, users);
-    }
-    
-    @Test
-    public void findPoulpeUsersPaginated_noFilterAndAllOnFirstPage() {
-        List<PoulpeUser> users = ObjectsFactory.usersListOf(3);
-        saveAndEvict(users);
-        
-        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
+		assertEquals(users.size(), limit);
+	}
 
-        assertContainsSameElements(actual, users);
-    }
-    
-    @Test
-    public void findPoulpeUsersPaginated_noFilterAndMoreThanOnePage() {
-        List<PoulpeUser> users = ObjectsFactory.usersListOf(13);
-        saveAndEvict(users);
-        
-        int limit = 10;
-        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, limit));
-        
-        assertEquals(actual.size(), limit);
-    }
+	private void givenMoreThanOnePage(String startsWith) {
+		int n = 20;
 
-    @Test
-    public void getAllUsersCount() {
-        int count = 13;
-        List<PoulpeUser> users = ObjectsFactory.usersListOf(count);
-        saveAndEvict(users);
-        
-        int actual = dao.countUsernameMatches(NO_FILTER);
-        assertEquals(actual, count);
-    }
-    
-    @Test
-    public void testGetAllBannedUsers() {
-        List<PoulpeUser> bannedUsers = ObjectsFactory.bannedUsersListOf(3);
+		while (n > 0) {
+			PoulpeUser user = TestFixtures.user(startsWith + n);
+			saveAndEvict(user);
+			n--;
+		}
+	}
 
-        saveAndEvict(bannedUsers);
-        List<PoulpeUser> actual = dao.getAllBannedUsers();
+	@Test
+	public void findPoulpeUsersPaginated_noFilterAndNoPagination() {
+		List<PoulpeUser> users = TestFixtures.usersListOf(3);
+		saveAndEvict(users);
+		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
 
-        assertContainsSameElements(actual, bannedUsers);
-    }
+		assertContainsSameElements(actual, users);
+	}
 
-    @Test
-    public void getNonBannedByUsername_withOnlyBannedUsers() {
-        List<PoulpeUser> banned = ObjectsFactory.bannedUsersListOf(3);
-        saveAndEvict(banned);
-        
-        List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, 1000);
+	@Test
+	public void findPoulpeUsersPaginated_noFilterAndAllOnFirstPage() {
+		List<PoulpeUser> users = TestFixtures.usersListOf(3);
+		saveAndEvict(users);
 
-        assertTrue(actual.isEmpty());
-    }
+		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
 
-    @Test
-    public void getNonBannedByUsername_withBothKindsOfUsers() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(3);
-        List<PoulpeUser> banned = ObjectsFactory.bannedUsersListOf(3);
-        
-        saveAndEvict(Iterables.concat(banned, nonBanned));
-        
-        List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, 1000);
-        assertContainsSameElements(actual, nonBanned);
-    }
+		assertContainsSameElements(actual, users);
+	}
 
-    @Test
-    public void getNonBannedByUsername_withBannedUsers() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(3);
-        saveAndEvict(nonBanned);
-        
-        List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, 1000);
+	@Test
+	public void findPoulpeUsersPaginated_noFilterAndMoreThanOnePage() {
+		List<PoulpeUser> users = TestFixtures.usersListOf(13);
+		saveAndEvict(users);
 
-        assertContainsSameElements(actual, nonBanned);
-    }
+		int limit = 10;
+		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, limit));
 
-    @Test
-    public void getNonBannedByUsername_withLimit() {
-        List<PoulpeUser> nonBanned = ObjectsFactory.usersListOf(10);
-        saveAndEvict(nonBanned);
-        
-        int limit = 2;
-        List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, limit);
-        assertEquals(actual.size(), limit);
-    }
+		assertEquals(actual.size(), limit);
+	}
 
-    private void saveAndEvict(PoulpeUser user) {
-        dao.saveOrUpdate(user);
-        session.evict(user);
-    }
+	@Test
+	public void getAllUsersCount() {
+		int count = 13;
+		List<PoulpeUser> users = TestFixtures.usersListOf(count);
+		saveAndEvict(users);
 
-    private void saveAndEvict(Iterable<PoulpeUser> users) {
-        for (PoulpeUser user : users) {
-            saveAndEvict(user);
-        }
-    }
+		int actual = dao.countUsernameMatches(NO_FILTER);
+		assertEquals(actual, count);
+	}
 
-    // TODO: move away from here
-    public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
-        Set<T> set1 = Sets.newLinkedHashSet(first);
-        Set<T> set2 = Sets.newLinkedHashSet(second);
-        assertEquals(set1, set2);
-    }
+//	@Test
+//	public void testGetAllBannedUsers() {
+//		List<Group> bannedGroups = TestFixtures.bannedGroups();
+//
+//		List<PoulpeUser> bannedUsers = TestFixtures.bannedUsersListOf(3, bannedGroups);
+//
+//		saveAndEvict(bannedUsers);
+//		List<PoulpeUser> actual = dao.getAllBannedUsers();
+//
+//		assertContainsSameElements(actual, bannedUsers);
+//	}
+//
+//
+//	@Test
+//	public void getNonBannedByUsername_withOnlyBannedUsers() {
+//		List<Group> bannedGroups = TestFixtures.bannedGroups();
+//		List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3, bannedGroups);
+//
+//		saveAndEvict(banned);
+//
+//		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
+//
+//		assertTrue(actual.isEmpty());
+//	}
+
+//	@Test
+//	public void getNonBannedByUsername_withBothKindsOfUsers() {
+//		List<Group> bannedGroups = TestFixtures.bannedGroups();
+//		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
+//		List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3, bannedGroups);
+//
+//		saveAndEvict(Iterables.concat(banned, nonBanned));
+//
+//		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
+//		assertContainsSameElements(actual, nonBanned);
+//	}
+
+	@Test
+	public void getNonBannedByUsername_withBannedUsers() {
+		List<Group> bannedGroups = TestFixtures.bannedGroups();
+		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
+		saveAndEvict(nonBanned);
+
+		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
+
+		assertContainsSameElements(actual, nonBanned);
+	}
+
+	@Test
+	public void getNonBannedByUsername_withLimit() {
+		List<Group> bannedGroups = TestFixtures.bannedGroups();
+		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(10);
+		saveAndEvict(nonBanned);
+
+		int limit = 2;
+		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, limit);
+		assertEquals(actual.size(), limit);
+	}
+
+	private void saveAndEvict(PoulpeUser user) {
+		dao.saveOrUpdate(user);
+		session.evict(user);
+	}
+
+	private void saveAndEvict(Iterable<PoulpeUser> users) {
+		for (PoulpeUser user : users) {
+			saveAndEvict(user);
+		}
+	}
+
+	// TODO: move away from here
+	public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
+		Set<T> set1 = Sets.newLinkedHashSet(first);
+		Set<T> set2 = Sets.newLinkedHashSet(second);
+		assertEquals(set1, set2);
+	}
 }

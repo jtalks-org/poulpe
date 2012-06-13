@@ -35,7 +35,7 @@ public class TreeNodeFactory {
      * @param jcommune the forum structure container to get sections and branches of it
      * @return the whole tree of sections and branches built
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static ZkTreeNode<ForumStructureItem> buildForumStructure(@Nonnull Jcommune jcommune) {
         List<ZkTreeNode> sectionNodes = wrapInTreeNodes(jcommune.getSections());
         return new ZkTreeNode(jcommune, sectionNodes);
@@ -48,6 +48,7 @@ public class TreeNodeFactory {
      * @param entity section or branch instance
      * @return node
      */
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static <T extends Entity> ZkTreeNode getTreeNode(T entity) {
         if (entity instanceof PoulpeSection) {
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
@@ -57,7 +58,7 @@ public class TreeNodeFactory {
         }
     }
 
-
+    @SuppressWarnings({ "rawtypes" })
     private static <T extends Entity> List<ZkTreeNode> wrapInTreeNodes(List<T> entities) {
         List<ZkTreeNode> list = new ArrayList<ZkTreeNode>();
         for (T entity : entities) {

@@ -269,6 +269,8 @@ public class ForumStructureVm {
         if (targetItem.isSection()) {
             if (draggedSection.equals(targetItem.getSectionItem())) {
                 return true;
+            } else {
+                return false;
             }
         }
 
