@@ -16,7 +16,6 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.mockito.Mock;
@@ -96,7 +95,7 @@ public class UserGroupVmTest {
     @Test
     public void testShowNewGroupDialog() {
         viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowNewDialog());
+        assertTrue(viewModel.isShowGroupDialog());
     }
 
     @Test
@@ -106,26 +105,29 @@ public class UserGroupVmTest {
         viewModel.saveGroup();
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();
-        assertFalse(viewModel.isShowNewDialog());
-        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowGroupDialog());
         assertFalse(viewModel.isShowDeleteDialog());
+    }
+
+    @Test
+    public void testOpenDialog() {
+        viewModel.showNewGroupDialog();
+        assertTrue(viewModel.isShowGroupDialog());
     }
 
     @Test
     public void testCloseDialog() {
         viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowNewDialog());
         viewModel.closeDialog();
-        assertFalse(viewModel.isShowNewDialog());
-        assertFalse(viewModel.isShowEditDialog());
+        assertFalse(viewModel.isShowGroupDialog());
         assertFalse(viewModel.isShowDeleteDialog());
     }
 
     @Test
     public void testIsShowNewDialog() {
         viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowNewDialog());
-        assertFalse(viewModel.isShowNewDialog());
+        assertTrue(viewModel.isShowGroupDialog());
+        assertFalse(viewModel.isShowGroupDialog());
     }
 
     @Test
@@ -135,9 +137,9 @@ public class UserGroupVmTest {
     }
 
     @Test
-    public void testShowEditDialog(){
+    public void testShowEditDialog() {
         viewModel.showEditDialog();
-        assertTrue(viewModel.isShowEditDialog());
+        assertTrue(viewModel.isShowGroupDialog());
     }
 
 
