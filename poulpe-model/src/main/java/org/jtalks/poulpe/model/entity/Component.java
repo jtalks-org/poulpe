@@ -32,8 +32,10 @@ import org.jtalks.common.model.entity.Property;
  */
 public class Component extends Entity {
     private static final String COMPONENT_NAME_ILLEGAL_LENGTH = "{component.name.length_constraint_violation}";
-    private static final String COMPONENT_DESCRIPTION_ILLEGAL_LENGTH = "{component.description.length_constraint_violation}";
-    private static final String COMPONENT_EMPTY_COMPONENT_TYPE = "{component.componentType.emptiness_constraint_violation}";
+    private static final String COMPONENT_DESCRIPTION_ILLEGAL_LENGTH = 
+            "{component.description.length_constraint_violation}";
+    private static final String COMPONENT_EMPTY_COMPONENT_TYPE = 
+            "{component.componentType.emptiness_constraint_violation}";
     private static final String COMPONENT_CANT_BE_VOID = "{component.name.emptiness_constraint_violation}";
 
     public static final int COMPONENT_NAME_MAX_LENGTH = 100;

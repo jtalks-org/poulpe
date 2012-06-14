@@ -46,6 +46,12 @@ public class ComponentsVm {
 
     private Component selected;
 
+    /**
+     * @param componentService service for loading and saving component
+     * @param dialogManager shows confirmation dialog for deletion
+     * @param windowManager object for opening and closing application windows
+     * @param selectedEntity desktop-scoped bean to which selected entities passed, used for editing components
+     */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
             SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
@@ -63,6 +69,7 @@ public class ComponentsVm {
 
     /**
      * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
+     * 
      * @exception IllegalStateException if no component selected
      */
     @Command
@@ -104,8 +111,7 @@ public class ComponentsVm {
      * @return {@code true} only if new component can be created, {@code false} otherwise.
      */
     public boolean isAbleToCreateNewComponent() {
-        boolean noAvailableTypes = componentService.getAvailableTypes().isEmpty();
-        return !noAvailableTypes;
+        return !componentService.getAvailableTypes().isEmpty();
     }
 
     /**
@@ -115,6 +121,9 @@ public class ComponentsVm {
         this.selected = selected;
     }
 
+    /**
+     * @param bindWrapper instance of bindWrapper
+     */
     public void setBindWrapper(BindUtilsWrapper bindWrapper) {
         this.bindWrapper = bindWrapper;
     }

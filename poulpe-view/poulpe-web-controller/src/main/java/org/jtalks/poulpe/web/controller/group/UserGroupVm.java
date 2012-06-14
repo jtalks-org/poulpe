@@ -31,8 +31,8 @@ import org.zkoss.zul.ListModelList;
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_EDIT_DIALOG = "showEditDialog",
-            SHOW_NEW_DIALOG = "showNewDialog", SELECTED_GROUP = "selectedGroup";
+    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_GROUP_DIALOG = "showGroupDialog",
+            SELECTED_GROUP = "selectedGroup";
 
     //Injected
     private GroupService groupService;
@@ -43,9 +43,8 @@ public class UserGroupVm {
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
-    private boolean showNewDialog;
     private boolean showDeleteDialog;
-    private boolean showEditDialog;
+    private boolean showGroupDialog;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -106,19 +105,19 @@ public class UserGroupVm {
      * Opens group adding dialog.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_NEW_DIALOG})
+    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG})
     public void showNewGroupDialog() {
         selectedGroup = new Group();
-        showNewDialog = true;
+        showGroupDialog = true;
     }
 
     /**
      * Opens group edit dialog.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_EDIT_DIALOG})
+    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG})
     public void showEditDialog() {
-         showEditDialog = true;
+         showGroupDialog = true;
     }
 
     /**
@@ -127,7 +126,7 @@ public class UserGroupVm {
      */
 
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG, SHOW_EDIT_DIALOG})
+    @NotifyChange({SHOW_GROUP_DIALOG})
     public void saveGroup() {
         groupService.saveGroup(selectedGroup);
         closeDialog();
@@ -138,11 +137,11 @@ public class UserGroupVm {
      * Close all dialogs by set visibility to false.
      */
     @Command
-    @NotifyChange({SHOW_NEW_DIALOG, SHOW_DELETE_DIALOG, SHOW_EDIT_DIALOG})
+    @NotifyChange({SHOW_GROUP_DIALOG, SHOW_DELETE_DIALOG})
     public void closeDialog() {
-        showNewDialog = false;
+
         showDeleteDialog = false;
-        showEditDialog = false;
+        showGroupDialog = false;
     }
 
     // -- Getters/Setters --------------------
@@ -157,24 +156,15 @@ public class UserGroupVm {
     }
 
     /**
-     * Gets visibility status of Edit dialog window.
+     * Gets visibility status of group(edit/create) dialog window, boolean show added as fix for onClose action,
+     * which don't send anything to the server when closing window because of event.stopPropagation, so during next
+     * change notification ZK will think that we need to show that dialog again which is wrong.
      *
      * @return true if dialog is visible false if dialog is invisible
      */
-    public boolean isShowEditDialog() {
-        return showEditDialog;
-    }
-
-    /**
-     * Gets visibility status of New group dialog window, boolean show added as fix for onClose action, which don't send
-     * anything to the server when closing window because of event.stopPropagation, so during next change notification
-     * ZK will think that we need to show that dialog again which is wrong.
-     *
-     * @return true if dialog is visible false if dialog is invisible
-     */
-    public boolean isShowNewDialog() {
-        boolean show = showNewDialog;
-        showNewDialog = false;
+    public boolean isShowGroupDialog() {
+        boolean show = showGroupDialog;
+        showGroupDialog = false;
         return show;
     }
 

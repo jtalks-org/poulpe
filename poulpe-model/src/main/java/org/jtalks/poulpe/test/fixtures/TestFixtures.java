@@ -14,174 +14,239 @@
  */
 package org.jtalks.poulpe.test.fixtures;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import com.google.common.collect.Lists;
 
 /**
  * Provides unified way for creating text fixtures.<br>
  * <br>
- * <p/>
  * This class is not under test source folder because it should be accessible for all components.
- *
+ * 
  * @author Kirill Afonin
  * @author Alexey Grigorev
  */
 public final class TestFixtures {
 
-	private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
-	public static PoulpeBranch branch() {
-		PoulpeBranch newBranch = new PoulpeBranch(random(), random());
-		newBranch.setSection(section());
-		newBranch.setModeratorsGroup(group());
-		return newBranch;
-	}
+    /**
+     * @return branch with random name and description beloning to random section with moderators group
+     */
+    public static PoulpeBranch branch() {
+        PoulpeBranch newBranch = new PoulpeBranch(random(), random());
+        newBranch.setSection(section());
+        newBranch.setModeratorsGroup(group());
+        return newBranch;
+    }
 
-	public static TopicType topicType() {
-		return new TopicType(random(), random());
-	}
+    /**
+     * @return topic type with random name and description
+     */
+    public static TopicType topicType() {
+        return new TopicType(random(), random());
+    }
 
-	public static Component component(ComponentType type) {
-		ComponentBase base = new ComponentBase(type);
-		return base.newComponent(random(), random());
-	}
+    /**
+     * @param type of the component
+     * @return component with random name and description and with given type
+     */
+    public static Component component(ComponentType type) {
+        ComponentBase base = new ComponentBase(type);
+        return base.newComponent(random(), random());
+    }
 
-	public static List<Component> allComponents() {
-		List<Component> result = Lists.newArrayList();
+    /**
+     * @return list of components of all {@link ComponentType} values
+     */
+    public static List<Component> allComponents() {
+        List<Component> result = Lists.newArrayList();
 
-		for (ComponentType componentType : ComponentType.values()) {
-			result.add(component(componentType));
-		}
+        for (ComponentType componentType : ComponentType.values()) {
+            result.add(component(componentType));
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public static Jcommune jcommune() {
-		return (Jcommune) component(ComponentType.FORUM);
-	}
+    /**
+     * @return component with {@link ComponentType} = {@link ComponentType#FORUM}
+     */
+    public static Jcommune jcommune() {
+        return (Jcommune) component(ComponentType.FORUM);
+    }
 
-	public static Jcommune jcommuneWithSections(int sectionsAmount) {
-		Jcommune jcommune = jcommune();
+    /**
+     * @param sectionsAmount amount of sections to be add to result
+     * @return component with {@link ComponentType} = {@link ComponentType#FORUM} and with sections and branches
+     */
+    public static Jcommune jcommuneWithSections(int sectionsAmount) {
+        Jcommune jcommune = jcommune();
 
-		for (int i = 0; i < sectionsAmount; i++) {
-			PoulpeSection section = sectionWithBranches();
-			jcommune.addSection(section);
-		}
+        for (int i = 0; i < sectionsAmount; i++) {
+            PoulpeSection section = sectionWithBranches();
+            jcommune.addSection(section);
+        }
 
-		return jcommune;
-	}
+        return jcommune;
+    }
 
-	public static Jcommune jcommuneWithSections() {
-		return jcommuneWithSections(10);
-	}
+    /**
+     * @return jcommune component with 10 sections
+     */
+    public static Jcommune jcommuneWithSections() {
+        return jcommuneWithSections(10);
+    }
 
-	public static Component randomComponent() {
-		return component(randomComponentType());
-	}
+    /**
+     * @return section with random amount of branches (from 5 to 15)
+     */
+    public static PoulpeSection sectionWithBranches() {
+        return sectionWithBranches(5 + randomInt(10));
+    }
 
-	public static ComponentType randomComponentType() {
-		ComponentType[] types = ComponentType.values();
-		return types[randomInt(types.length)];
-	}
+    /**
+     * @param branchesAmount amount of branches in section
+     * @return section with random name and given amount of branches
+     */
+    public static PoulpeSection sectionWithBranches(int branchesAmount) {
+        PoulpeSection section = new PoulpeSection(random());
 
-	public static ComponentBase baseComponent() {
-		return new ComponentBase(randomComponentType());
-	}
+        for (int i = 0; i < branchesAmount; i++) {
+            PoulpeBranch branch = branch();
+            branch.setSection(section);
+            section.addOrUpdateBranch(branch);
+        }
 
-	public static PoulpeSection sectionWithBranches() {
-		return sectionWithBranches(5 + randomInt(10));
-	}
+        return section;
+    }
 
-	public static Property property() {
-		Property property = new Property(random(), random());
-		property.setValidationRule(random());
-		return property;
-	}
+    /**
+     * @return component of random {@link ComponentType}
+     */
+    public static Component randomComponent() {
+        return component(randomComponentType());
+    }
 
-	public static PoulpeSection sectionWithBranches(int branchesAmount) {
-		PoulpeSection section = new PoulpeSection(random());
+    /**
+     * @return random {@link ComponentType} value
+     */
+    public static ComponentType randomComponentType() {
+        ComponentType[] types = ComponentType.values();
+        return types[randomInt(types.length)];
+    }
 
-		for (int i = 0; i < branchesAmount; i++) {
-			PoulpeBranch branch = branch();
-			branch.setSection(section);
-			section.addOrUpdateBranch(branch);
-		}
+    /**
+     * @return {@link ComponentBase} with random {@link ComponentType}
+     */
+    public static ComponentBase baseComponent() {
+        return new ComponentBase(randomComponentType());
+    }
 
-		return section;
-	}
+    /**
+     * @return property with random name, description and validation rule
+     */
+    public static Property property() {
+        Property property = new Property(random(), random());
+        property.setValidationRule(random());
+        return property;
+    }
 
-	public static PoulpeSection section() {
-		return new PoulpeSection(random());
-	}
+    /** 
+     * @return section with random name
+     */
+    public static PoulpeSection section() {
+        return new PoulpeSection(random());
+    }
 
-	public static PoulpeUser user(String username) {
-		String email = username + "@" + random() + ".com";
-		return new PoulpeUser(username, email, random(), "");
-	}
+    /**
+     * @param username of the user
+     * @return user with the given username, generated email and empty salt 
+     */
+    public static PoulpeUser user(String username) {
+        String email = username + "@" + random() + ".com";
+        return new PoulpeUser(username, email, random(), "");
+    }
 
-	public static PoulpeUser user() {
-		return user(random());
-	}
+    /**
+     * @return user with random name, email, password and empty salt
+     */
+    public static PoulpeUser user() {
+        return user(random());
+    }
 
-	public static List<PoulpeUser> bannedUsersListOf(int n, List<Group> groupsOfBan) {
-		List<PoulpeUser> users = usersListOf(n);
+    /**
+     * @param n amount of users
+     * @param groupsOfBan ban group for users
+     * @return list of banned users
+     */
+    public static List<PoulpeUser> bannedUsersListOf(int n, List<Group> groupsOfBan) {
+        List<PoulpeUser> users = usersListOf(n);
 
-		for (PoulpeUser user : users) {
-			user.setGroups(groupsOfBan);
-		}
+        for (PoulpeUser user : users) {
+            user.setGroups(groupsOfBan);
+        }
 
-		return users;
-	}
+        return users;
+    }
 
-	public static List<PoulpeUser> usersListOf(int n) {
-		List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
+    /**
+     * @param n amount of users 
+     * @return list of users
+     */
+    public static List<PoulpeUser> usersListOf(int n) {
+        List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
 
-		while (n > 0) {
-			result.add(user());
-			n--;
-		}
+        while (n > 0) {
+            result.add(user());
+            n--;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	public static Group group() {
-		return new Group(random(), random());
-	}
+    /**
+     * @return group with random name and description
+     */
+    public static Group group() {
+        return new Group(random(), random());
+    }
 
-	public static List<Group> bannedGroups() {
-		Group group = new Group("Banned Users");
+    /**
+     * @return list with one group of banned users
+     */
+    public static List<Group> bannedGroups() {
+        return Collections.singletonList(group());
+    }
 
-		ArrayList groupsOfBan = new ArrayList();
-		groupsOfBan.add(group);
+    /**
+     * @return rank with random name and post limit
+     */
+    public static Rank rank() {
+        return new Rank(random(), randomInt(1000));
+    }
 
-		return groupsOfBan;
-	}
+    /**
+     * @return random string of 10 symbols
+     */
+    private static String random() {
+        return RandomStringUtils.randomAlphanumeric(10);
+    }
 
-	public static Rank rank() {
-		return new Rank(random(), randomInt(1000));
-	}
-
-	private static String random() {
-		return RandomStringUtils.randomAlphanumeric(10);
-	}
-
-	private static int randomInt(int max) {
-		return RANDOM.nextInt(max);
-	}
+    /**
+     * @param max upper bound
+     * @return random int with upper bound
+     */
+    private static int randomInt(int max) {
+        return RANDOM.nextInt(max);
+    }
 
 }
