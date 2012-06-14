@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class TreeNodeFactory {
     /**
-     * Creates the whole tree of sections and branches without root element (root is {@code null}).
+     * Creates the whole tree of sections and branches with {@code Jcommune} as root element.
      *
      * @param jcommune the forum structure container to get sections and branches of it
      * @return the whole tree of sections and branches built
