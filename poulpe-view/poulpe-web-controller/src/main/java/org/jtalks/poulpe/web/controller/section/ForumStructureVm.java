@@ -94,8 +94,12 @@ public class ForumStructureVm {
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
-    public void removeBranchFromTree(PoulpeBranch branch){
+    public void removeBranchFromTree(PoulpeBranch branch) {
         treeModel.removeBranch(branch);
+    }
+
+    public void removeSectionFromTree(PoulpeSection section) {
+        treeModel.removeSection(section);
     }
 
     public void updateBranchInTree(PoulpeBranch branch) {
@@ -103,7 +107,7 @@ public class ForumStructureVm {
         selectedItemInTree = new ForumStructureItem(branch);
     }
 
-    public void updateSectionInTree(PoulpeSection section){
+    public void updateSectionInTree(PoulpeSection section) {
         treeModel.addIfAbsent(section);
         selectedItemInTree = new ForumStructureItem(section);
     }

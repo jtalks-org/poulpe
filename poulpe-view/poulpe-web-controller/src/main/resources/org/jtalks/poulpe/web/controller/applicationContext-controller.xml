@@ -42,12 +42,16 @@
     <constructor-arg index="1" ref="windowManager"/>
     <constructor-arg index="2" ref="selectedEntity"/>
     <constructor-arg index="3">
-      <bean class="org.jtalks.poulpe.web.controller.section.ForumStructureData">
-      </bean>
+      <bean class="org.jtalks.poulpe.web.controller.section.ForumStructureData"/>
     </constructor-arg>
   </bean>
   <bean id="deleteBranchDialogVm"  scope="desktop"
         class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteBranchDialogVm">
+    <constructor-arg index="0" ref="forumStructureVm"/>
+    <constructor-arg index="1" ref="forumStructureService"/>
+  </bean>
+  <bean id="deleteSectionDialogVm"  scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteSectionDialogVm">
     <constructor-arg index="0" ref="forumStructureVm"/>
     <constructor-arg index="1" ref="forumStructureService"/>
   </bean>

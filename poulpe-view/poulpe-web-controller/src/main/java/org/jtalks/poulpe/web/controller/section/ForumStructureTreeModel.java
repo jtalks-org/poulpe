@@ -87,6 +87,13 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return nodeToRemove;
     }
 
+    public ZkTreeNode<ForumStructureItem> removeSection(PoulpeSection branch) {
+        ForumStructureItem nodeData = new ForumStructureItem(branch);
+        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
+        nodeToRemove.removeFromParent();
+        return nodeToRemove;
+    }
+
     private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
