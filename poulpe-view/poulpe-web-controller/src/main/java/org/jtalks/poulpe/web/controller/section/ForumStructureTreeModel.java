@@ -59,7 +59,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     public ForumStructureTreeModel moveBranchIfSectionChanged(PoulpeBranch branch) {
         ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch));
         ZkTreeNode<ForumStructureItem> sectionNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch.getSection()));
-        if(branchNode == null){
+        if (branchNode == null) {
             branchNode = new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
         }
         branchNode.moveTo(sectionNode);
@@ -68,19 +68,26 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return this;
     }
 
-    public void addIfAbsent(PoulpeSection section){
+    public void addIfAbsent(PoulpeSection section) {
         TreeNode<ForumStructureItem> sectionNode = find(new ForumStructureItem(section));
-        if(sectionNode == null){
+        if (sectionNode == null) {
             sectionNode = createSectionNode(section);
             getRoot().add(sectionNode);
         }
     }
 
-    public ForumStructureItem getSelectedSection(){
+    public ForumStructureItem getSelectedSection() {
         return getSelectedData(0);
     }
 
-    private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section){
+    public ZkTreeNode<ForumStructureItem> removeBranch(PoulpeBranch branch) {
+        ForumStructureItem nodeData = new ForumStructureItem(branch);
+        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
+        nodeToRemove.removeFromParent();
+        return nodeToRemove;
+    }
+
+    private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
     }

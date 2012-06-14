@@ -27,8 +27,4 @@
     <name>org.zkoss.web.preferred.locale</name>
     <value>en</value>
   </library-property>
-    <session-config>
-        <session-timeout>10800</session-timeout>
-        <timer-keep-alive>true</timer-keep-alive>
-    </session-config>
 </zk>

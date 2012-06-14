@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.entity.BaseComponent;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -27,43 +27,45 @@ import org.zkoss.bind.annotation.Command;
 import com.google.common.collect.Lists;
 
 /**
+ * View-Model for adding a component. Shown from {@link ComponentsVm}.
  * 
  * @author Alexey Grigorev
  */
 public class AddComponentVm {
     static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul",
             COMPONENTS_WINDOW = "components.zul";
-    
+
     private final ComponentService componentService;
     private final WindowManager windowManager;
-    
+
     public AddComponentVm(ComponentService componentService, WindowManager windowManager) {
         this.componentService = componentService;
         this.windowManager = windowManager;
     }
-    
+
     @Command
     public void createComponent(@BindingParam(value = "title") String title,
             @BindingParam(value = "description") String description,
             @BindingParam(value = "componentType") ComponentType componentType) {
 
-        // TODO: move to service? 
-        BaseComponent baseComponent = componentService.baseComponentFor(componentType);
+        // TODO: move to service? looks like logic
+        // but then in service it would be 3 params
+        ComponentBase baseComponent = componentService.baseComponentFor(componentType);
         Component component = baseComponent.newComponent(title, description);
         componentService.saveComponent(component);
-        
+
         switchToComponentsWindow();
     }
-    
+
     @Command
     public void cancelEdit() {
         switchToComponentsWindow();
     }
-    
+
     public List<ComponentType> getAvailableComponentTypes() {
         return Lists.newArrayList(componentService.getAvailableTypes());
     }
-    
+
     private void switchToComponentsWindow() {
         windowManager.open(COMPONENTS_WINDOW);
     }
@@ -72,5 +74,5 @@ public class AddComponentVm {
     public static void openWindowForAdding(WindowManager windowManager) {
         windowManager.open(ADD_COMPONENT_LOCATION);
     }
-    
+
 }

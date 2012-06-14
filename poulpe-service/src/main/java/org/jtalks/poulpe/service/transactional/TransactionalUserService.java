@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
@@ -28,74 +29,74 @@ import java.util.List;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalUserService implements UserService {
-    private static final String NO_FILTER = "";
+	private static final String NO_FILTER = "";
 
-    private final UserDao userDao;
+	private final UserDao userDao;
 
-    /**
-     * Create an instance of user entity based service.
-     *
-     * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
-     *                entities
-     */
-    public TransactionalUserService(UserDao userDao) {
-        this.userDao = userDao;
-    }
+	/**
+	 * Create an instance of user entity based service.
+	 *
+	 * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
+	 *                entities
+	 */
+	public TransactionalUserService(UserDao userDao) {
+		this.userDao = userDao;
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<PoulpeUser> getAll() {
-        return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<PoulpeUser> getAll() {
+		return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+	}
 
-    @Override
-    public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
-        return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
-    }
+	@Override
+	public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
+		return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
+	}
 
-    @Override
-    public int countUsernameMatches(String searchString) {
-        return userDao.countUsernameMatches(searchString);
-    }
+	@Override
+	public int countUsernameMatches(String searchString) {
+		return userDao.countUsernameMatches(searchString);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<PoulpeUser> withUsernamesMatching(String searchString) {
-        return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<PoulpeUser> withUsernamesMatching(String searchString) {
+		return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void updateUser(PoulpeUser user) {
-        userDao.update(user);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updateUser(PoulpeUser user) {
+		userDao.update(user);
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public PoulpeUser get(long id) {
-        return userDao.get(id);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public PoulpeUser get(long id) {
+		return userDao.get(id);
+	}
 
-    @Override
-    public List<PoulpeUser> getAllBannedUsers() {
-        return userDao.getAllBannedUsers();
-    }
+	@Override
+	public List<PoulpeUser> getAllBannedUsers() {
+		return userDao.getAllBannedUsers();
+	}
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public List<PoulpeUser> getNonBannedByUsername(String searchString, int limit) {
-        return userDao.getNonBannedByUsername(searchString, limit);
-    }
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public List<PoulpeUser> getNonBannedByUsername(String searchString, List<Group> groups, int limit) {
+		return userDao.getNonBannedByUsername(searchString, groups, limit);
+	}
 
 
 }

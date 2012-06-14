@@ -19,8 +19,13 @@ import java.util.List;
 import org.jtalks.common.model.entity.Property;
 
 /**
- * Type of the {@link Component}
- *
+ * Type of the {@link Component}. It is used as a primary key in {@link ComponentBase} and as a discriminator in
+ * {@link Component}.<br>
+ * <br>
+ * 
+ * If adding a new value to {@link ComponentType} enum, make sure that corresponding {@link ComponentBase} entity is
+ * created.
+ * 
  * @author Pavel Vervenko
  * @see Component
  */
@@ -33,8 +38,8 @@ public enum ComponentType {
         public Component newComponent(String name, String description, List<Property> properties) {
             return new Jcommune(name, description, properties);
         }
-    }, 
-    
+    },
+
     /**
      * Specifies that the component is Article
      */
@@ -54,16 +59,15 @@ public enum ComponentType {
             return new Poulpe(name, description, properties);
         }
     };
-    
+
     /**
+     * Creates a component of needed {@link ComponentType}. Should be used from {@link ComponentBase}
      * 
-     * Should be used from {@link BaseComponent}
-     * 
-     * @param name
-     * @param description
-     * @param properties
-     * @return
+     * @param name of the component
+     * @param description its description
+     * @param properties of the component
+     * @return {@link Component} ready for using
      */
     abstract Component newComponent(String name, String description, List<Property> properties);
-    
+
 }

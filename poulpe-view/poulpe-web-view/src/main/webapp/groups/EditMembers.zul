@@ -8,6 +8,7 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')">
       <caption label="@load(editGroupMembersVm.groupToEdit.name)" />
+  <paging id="paging" pageSize="@load(editGroupMembersVm.itemsPerPage)" totalSize="@bind(editGroupMembersVm.totalSize)" activePage="@bind(editGroupMembersVm.activePage)" />
     <vbox>
       <hbox>
         <vbox>

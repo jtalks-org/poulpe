@@ -46,6 +46,11 @@
       </bean>
     </constructor-arg>
   </bean>
+  <bean id="deleteBranchDialogVm"  scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteBranchDialogVm">
+    <constructor-arg index="0" ref="forumStructureVm"/>
+    <constructor-arg index="1" ref="forumStructureService"/>
+  </bean>
   <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
     <constructor-arg index="0" ref="openSessions"/>
     <property name="windowManager" ref="windowManager"/>

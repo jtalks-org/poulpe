@@ -177,13 +177,13 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     
     @Test
     public void getBaseComponent() {
-        BaseComponent expected = givenBaseComponent();
-        BaseComponent actual = dao.getBaseComponent(ComponentType.FORUM);
+        ComponentBase expected = givenBaseComponent();
+        ComponentBase actual = dao.getBaseComponent(ComponentType.FORUM);
         assertReflectionEquals(expected, actual);
     }
 
-    private BaseComponent givenBaseComponent() {
-        BaseComponent baseComponent = new BaseComponent(ComponentType.FORUM);
+    private ComponentBase givenBaseComponent() {
+        ComponentBase baseComponent = new ComponentBase(ComponentType.FORUM);
         session.save(baseComponent);
         return baseComponent;
     }

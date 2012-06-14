@@ -19,7 +19,6 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog;
-import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmBranchDeletionDialogVm;
 import org.jtalks.poulpe.web.controller.section.dialogs.ConfirmSectionDeletionDialogVm;
 import org.zkoss.zul.TreeNode;
 
@@ -37,7 +36,6 @@ public class ForumStructureData {
      * The level of the section in the tree, e.g. branch is the next level = 1.
      */
     private final BranchEditingDialog branchDialog = new BranchEditingDialog(null, null, null);
-    private final ConfirmBranchDeletionDialogVm confirmBranchDeletionDialogVm = new ConfirmBranchDeletionDialogVm();
     private final ConfirmSectionDeletionDialogVm confirmSectionDeletionDialogVm = new ConfirmSectionDeletionDialogVm();
     private ForumStructureItem selectedItem = new ForumStructureItem(null);
     private ForumStructureTreeModel structureTree;
@@ -132,15 +130,6 @@ public class ForumStructureData {
      */
     public ConfirmSectionDeletionDialogVm getConfirmSectionDeletionDialogVm() {
         return confirmSectionDeletionDialogVm;
-    }
-
-    /**
-     * Gets the VM that is responsible for showing the branch deletion confirmation.
-     *
-     * @return the VM that is responsible for showing the branch deletion confirmation
-     */
-    public ConfirmBranchDeletionDialogVm getConfirmBranchDeletionDialogVm() {
-        return confirmBranchDeletionDialogVm;
     }
 
     /**

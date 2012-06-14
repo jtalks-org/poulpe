@@ -14,80 +14,80 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.List;
-
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 
+import java.util.List;
+
 /**
  * Service interface for operations with {@code User} persistent entity.
- * 
+ *
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
  */
 public interface UserService {
 
-    /**
-     * Gets all Users from the database
-     * 
-     * @return list of all users
-     */
-    List<PoulpeUser> getAll();
+	/**
+	 * Gets all Users from the database
+	 *
+	 * @return list of all users
+	 */
+	List<PoulpeUser> getAll();
 
-    /**
-     * 
-     * @param searchString string for searching users, if empty - all users will be returned
-     * @param page page number for retrieving
-     * @param itemsPerPage limit of items per page
-     * @return users matched given search string paginated 
-     */
-    List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
-    
-    /**
-     * 
-     * @param searchString string for searching users, if empty - all users will be returned
-     * @return amount of users matched the given string
-     */
-    int countUsernameMatches(String searchString);
-    
-    /**
-     * Gets Users with corresponding word in user name
-     * 
-     * @param usernamePart to look up
-     * @return list of users with the word in the name
-     */
-    List<PoulpeUser> withUsernamesMatching(String usernamePart);
+	/**
+	 * @param searchString string for searching users, if empty - all users will be returned
+	 * @param page         page number for retrieving
+	 * @param itemsPerPage limit of items per page
+	 * @return users matched given search string paginated
+	 */
+	List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
-    /**
-     * Updates the user
-     * 
-     * @param user entity to be updated
-     */
-    void updateUser(PoulpeUser user);
+	/**
+	 * @param searchString string for searching users, if empty - all users will be returned
+	 * @return amount of users matched the given string
+	 */
+	int countUsernameMatches(String searchString);
 
-    /**
-     * Retrieves user by its id
-     * 
-     * @param id to look up
-     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
-     * @throws NotFoundException when user can't be found
-     */
-    PoulpeUser get(long id) throws NotFoundException;
+	/**
+	 * Gets Users with corresponding word in user name
+	 *
+	 * @param usernamePart to look up
+	 * @return list of users with the word in the name
+	 */
+	List<PoulpeUser> withUsernamesMatching(String usernamePart);
 
-    /**
-     * Gets all banned users from the database
-     * 
-     * @return list of all users
-     */
-    List<PoulpeUser> getAllBannedUsers();
+	/**
+	 * Updates the user
+	 *
+	 * @param user entity to be updated
+	 */
+	void updateUser(PoulpeUser user);
 
-    /**
-     * Gets all non banned users with username like in parameter.
-     * 
-     * @param word some word which must be like username
-     * @param maxCount max count of returned results
-     * @return list of non banned users with username like in parameter
-     */
-    List<PoulpeUser> getNonBannedByUsername(String word, int maxCount);
+	/**
+	 * Retrieves user by its id
+	 *
+	 * @param id to look up
+	 * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
+	 * @throws NotFoundException when user can't be found
+	 */
+	PoulpeUser get(long id) throws NotFoundException;
+
+	/**
+	 * Gets all banned users from the database
+	 *
+	 * @return list of all users
+	 */
+	List<PoulpeUser> getAllBannedUsers();
+
+	/**
+	 * Gets all non banned users with username like in parameter.
+	 *
+	 * @param word     some word which must be like username
+	 * @param maxCount max count of returned results
+	 * @param groups   List of banned groups
+	 * @return list of non banned users with username like in parameter
+	 */
+	List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxCount);
 
 }

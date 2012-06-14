@@ -59,8 +59,9 @@ public class Component extends Entity {
     }
     
     /**
-     * For subclasses
-     * @param componentType
+     * Initializes component with given component type. For using is subclasses.
+     * 
+     * @param componentType type of the component
      */
     protected Component(ComponentType componentType) {
         this.componentType = componentType;
@@ -68,7 +69,7 @@ public class Component extends Entity {
 
     /**
      * Constructor with all parameters.
-     * Instances should be created using {@link BaseComponent#newComponent(String, String)}.
+     * Instances should be created using {@link ComponentBase#newComponent(String, String)}.
      *
      * @param name name of the component
      * @param description description of the component
@@ -90,9 +91,10 @@ public class Component extends Entity {
     }
 
     /**
+     * Visible for Hibernate
      * @param properties the component properties
      */
-    public void setProperties(List<Property> properties) {
+    protected void setProperties(List<Property> properties) {
         this.properties = properties;
     }
 
@@ -143,7 +145,10 @@ public class Component extends Entity {
      *
      * @param name is the name of the property
      * @param value is the value of the property
+     * 
+     * @deprecated looks like no one uses it, thus it should be deleted
      */
+    @Deprecated
     public void addProperty(String name, String value) {
         properties.add(new Property(name, value));
     }
@@ -154,7 +159,10 @@ public class Component extends Entity {
      *
      * @param name is the name of the property
      * @param value is the value of the property
+     * 
+     * @deprecated looks like no one uses it, thus it should be deleted
      */
+    @Deprecated
     public void setProperty(String name, String value) {
         for (Property p : properties) {
             if (p.getName().equals(name)) {
@@ -171,7 +179,10 @@ public class Component extends Entity {
      * if none was found
      * @param name is the name of the property
      * @return property value or null if not found
+     * 
+     * @deprecated looks like no one uses it, thus it should be deleted
      */
+    @Deprecated
     public String getProperty(String name) {
         for (Property p : properties) {
             if (p.getName().equals(name)) {

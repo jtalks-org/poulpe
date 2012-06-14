@@ -1,21 +1,23 @@
-<window id="deleteBranchConfirmationDialog"
-        title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" closable="true" mode="modal"
-        border="normal"
-        onClose="self.visible=false;event.stopPropagation();"
-        onCancel="self.visible=false"
-        forward="onOK=confirmBranchDeletionButton.onClick"
-        visible="@load(vm.viewData.confirmBranchDeletionDialogVm.showDialog)" height="150px" width="270px">
-  <vlayout
-          form="@id('fx') @save(vm.viewData.confirmBranchDeletionDialogVm, before='confirmBranchDeletion') @load(vm.viewData.confirmBranchDeletionDialogVm)">
-    <label value="${labels.forum_structure.delete_branch_confirmation_dialog.text}"/>
-    <separator/>
-    <separator bar="true"/>
-    <separator/>
-    <separator/>
-    <hbox align="end" pack="center" hflex="1">
-      <button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"
-              onClick="@command('confirmBranchDeletion')"/>
-      <button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>
-    </hbox>
-  </vlayout>
-</window>
+<?page id="forumStructurePage" title="Forum Structure" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="deleteBranchConfirmationDialog" viewModel="@id('deleteBranchDialogVm') @init(deleteBranchDialogVm)"
+          title="${labels.forum_structure.delete_branch_confirmation_dialog.title}" apply="org.zkoss.bind.BindComposer"
+          border="normal" onCancel="self.visible=false" onClose="self.visible=false;event.stopPropagation();"
+          forward="onOK=confirmBranchDeletionButton.onClick" closable="true" mode="modal"
+          visible="@load(deleteBranchDialogVm.showDialog)" height="150px" width="270px">
+    <vlayout>
+      <label value="${labels.forum_structure.delete_branch_confirmation_dialog.text}"/>
+      <separator/>
+      <separator bar="true"/>
+      <separator/>
+      <separator/>
+      <hbox align="end" pack="center" hflex="1">
+        <button id="confirmBranchDeletionButton" label="${labels.dialogs.delete_button}"
+                onClick="@command('confirmDeleteBranchWithContent') @global-command('refreshTree')"/>
+        <button label="${labels.dialogs.cancel_button}" onClick="deleteBranchConfirmationDialog.visible=false;"/>
+      </hbox>
+    </vlayout>
+  </window>
+</zk>

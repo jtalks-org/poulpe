@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.model.entity;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,20 +29,14 @@ import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-public class BaseComponentTest {
+/**
+ * @author Alexey Grigorev
+ */
+public class ComponentBaseTest {
 
-    /*
-     * 
-        Property prop1 = TestFixtures.property(),
-                prop2 = TestFixtures.property();
-        Collection<Property> defaultProperties = Arrays.asList(prop1, prop2);
-        baseComponent.setDefaultProperties(defaultProperties);
-        
-     */
-    
     @Test(dataProvider = "componentTypes")
     public void newComponent_ofProperType(ComponentType componentType) {
-        BaseComponent baseComponent = new BaseComponent(componentType);
+        ComponentBase baseComponent = new ComponentBase(componentType);
         Component component = baseComponent.newComponent(random(), random());
         assertEquals(component.getComponentType(), baseComponent.getComponentType());
     }
@@ -40,7 +48,7 @@ public class BaseComponentTest {
     
     @Test
     public void newComponent_nameAndDescription() {
-        BaseComponent baseComponent = TestFixtures.baseComponent();
+        ComponentBase baseComponent = TestFixtures.baseComponent();
         String name = random(), description = random();
         
         Component component = baseComponent.newComponent(name, description);
@@ -51,13 +59,13 @@ public class BaseComponentTest {
     
     @Test(expectedExceptions = IllegalStateException.class)
     public void newComponent_componentTypeNotSet() {
-        BaseComponent baseComponent = new BaseComponent();
+        ComponentBase baseComponent = new ComponentBase();
         baseComponent.newComponent(random(), random());
     }
     
     @Test
     public void newComponent_defaultPropertyCopied() {
-        BaseComponent baseComponent = TestFixtures.baseComponent();
+        ComponentBase baseComponent = TestFixtures.baseComponent();
         Property property = givenDefaultProperty(baseComponent);
         
         Component component = baseComponent.newComponent(random(), random());
@@ -65,20 +73,20 @@ public class BaseComponentTest {
         assertContainsProperty(component, property);
     }
 
-    private static void assertContainsProperty(Component component, Property property) {
-        String actual = component.getProperty(property.getName());
-        assertEquals(actual, property.getValue());
-    }
-
-    private Property givenDefaultProperty(BaseComponent baseComponent) {
+    private Property givenDefaultProperty(ComponentBase baseComponent) {
         Property property = TestFixtures.property();
         baseComponent.setDefaultProperties(Collections.singleton(property));
         return property;
     }
     
+    private static void assertContainsProperty(Component component, Property property) {
+        String actual = component.getProperty(property.getName());
+        assertEquals(actual, property.getValue());
+    }
+    
     @Test
     public void newComponent_containsAllDefaultProperties() {
-        BaseComponent baseComponent = TestFixtures.baseComponent();
+        ComponentBase baseComponent = TestFixtures.baseComponent();
         
         List<Property> properties = Arrays.asList(TestFixtures.property(), TestFixtures.property(), TestFixtures.property());
         baseComponent.setDefaultProperties(properties);
@@ -90,7 +98,7 @@ public class BaseComponentTest {
     
     @Test
     public void newComponent_propertiesAreNotTheSameEntities() {
-        BaseComponent baseComponent = TestFixtures.baseComponent();
+        ComponentBase baseComponent = TestFixtures.baseComponent();
         Property property = givenDefaultProperty(baseComponent);
         
         Component component = baseComponent.newComponent(random(), random());

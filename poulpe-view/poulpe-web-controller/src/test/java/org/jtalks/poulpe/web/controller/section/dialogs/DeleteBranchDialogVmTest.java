@@ -14,12 +14,25 @@
  */
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
+import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
+
 /**
- * This VM is responsible for deleting the branch: whether to move the content of the branch to the other branch or
- * should the branch be deleted with whole its content.
- *
  * @author stanislav bashkirtsev
  */
-public class ConfirmBranchDeletionDialogVm extends AbstractDialogVm {
+public class DeleteBranchDialogVmTest {
+    DeleteBranchDialogVm sut = new DeleteBranchDialogVm(mock(ForumStructureVm.class), mock(ForumStructureService.class));
 
+    @Test
+    public void testIsShowDialog() throws Exception {
+        sut.showDialog();
+        assertTrue(sut.isShowDialog());
+        assertFalse(sut.isShowDialog());
+    }
 }

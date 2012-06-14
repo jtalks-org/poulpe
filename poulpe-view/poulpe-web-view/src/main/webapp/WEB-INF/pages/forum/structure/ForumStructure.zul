@@ -17,21 +17,20 @@
       <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
                 onClick="@global-command('showEditSectionDialog')" visible="@load(vm.selectedItemInTree.section)"/>
 
-      <menuitem label="${labels.forum_structure.branch_permissions_button}" image="/resources/img/permissions16.png"
-                onClick="@command('openBranchPermissions')" visible="@load(vm.selectedItemInTree.branch)"/>
-
-      <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
-                onClick="@command('deleteBranch')" visible="@load(vm.selectedItemInTree.branch)"/>
-
-
       <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
                 onClick="@global-command('showBranchDialog')" visible="@load(vm.selectedItemInTree.branch)"/>
 
       <menuitem label="${labels.forum_structure.create_branch_button}" image="/resources/img/add16.png"
                 onClick="@global-command('showCreateBranchDialog')" visible="@load(vm.selectedItemInTree.section)"/>
 
+      <menuitem label="${labels.forum_structure.branch_permissions_button}" image="/resources/img/permissions16.png"
+                onClick="@command('openBranchPermissions')" visible="@load(vm.selectedItemInTree.branch)"/>
+
       <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
-                onClick="@command('deleteSection')" visible="@load(vm.selectedItemInTree.section)"/>
+                onClick="@global-command('deleteBranch')" visible="@load(vm.selectedItemInTree.branch)"/>
+
+      <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
+                onClick="@global-command('deleteSection')" visible="@load(vm.selectedItemInTree.section)"/>
     </menupopup>
 
     <include src="/WEB-INF/pages/forum/structure/SectionEditingDialog.zul"/>

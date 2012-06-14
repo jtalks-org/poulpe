@@ -22,6 +22,7 @@ import org.zkoss.bind.BindUtils;
  * needs to testing, it can be easy mocked with mockito or other mock frameworks.
  * 
  * @author Vermut
+ * @author Alexey Grigorev
  */
 public class BindUtilsWrapper {
 
@@ -42,13 +43,15 @@ public class BindUtilsWrapper {
     }
 
     /**
+     * Notifies about changes of passed property names to vm component
      * 
-     * @param bean
-     * @param properties
+     * @param vm zk view-model object
+     * @param properties needed to be notified
+     * @see #postNotifyChange(Object, String)
      */
-    public void postNotifyChange(Object bean, String... properties) {
+    public void postNotifyChange(Object vm, String... properties) {
         for (String property : properties) {
-            postNotifyChange(bean, property);
+            postNotifyChange(vm, property);
         }
     }
 
