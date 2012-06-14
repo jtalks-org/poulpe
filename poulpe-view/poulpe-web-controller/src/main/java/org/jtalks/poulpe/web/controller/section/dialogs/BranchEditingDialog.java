@@ -22,6 +22,7 @@ import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
+import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -56,8 +57,8 @@ public class BranchEditingDialog {
 
     @GlobalCommand
     @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
-    public void showBranchDialog() {
-        showDialog(forumStructureVm.getSelectedItemInTree().getBranchItem());
+    public void showBranchDialog(@BindingParam("selectedBranch") PoulpeBranch selectedBranch) {
+        showDialog(selectedBranch);
     }
 
     @GlobalCommand
@@ -142,10 +143,6 @@ public class BranchEditingDialog {
         return editedBranch;
     }
 
-    public void setEditedBranch(PoulpeBranch editedBranch) {
-        this.editedBranch = editedBranch;
-    }
-
     PoulpeBranch storeSelectedBranch() {
         PoulpeSection section = sectionList.getSelection().iterator().next();
         return forumStructureService.saveBranch(section, editedBranch);
@@ -174,10 +171,5 @@ public class BranchEditingDialog {
 
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.setModeratorsGroup(moderatingGroup);
-    }
-    public void setGroupToCreate(String groupNameToCreate) {
-        if (!groupNameToCreate.isEmpty()) {
-            setModeratingGroup(new Group(groupNameToCreate));
-        }
     }
 }

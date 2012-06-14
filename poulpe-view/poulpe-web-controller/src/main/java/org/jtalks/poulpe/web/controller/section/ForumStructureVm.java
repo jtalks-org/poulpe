@@ -35,8 +35,7 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
  * removing, editing, etc.). Note, that this class is responsible for back-end of the operations (presenter,
- * controller), so it stores all the changes to the database using {@link ComponentService}. In order to control the
- * view and what it should show/change, it uses {@link ForumStructureData}.
+ * controller), so it stores all the changes to the database using {@link ComponentService}.
  *
  * @author stanislav bashkirtsev
  * @author Guram Savinov
@@ -47,16 +46,13 @@ public class ForumStructureVm {
     private final WindowManager windowManager;
     private ForumStructureItem selectedItemInTree = new ForumStructureItem(null);
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
-    private ForumStructureData viewData;
     private ForumStructureTreeModel treeModel;
 
     public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
-                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions,
-                            ForumStructureData viewData) {
+                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions) {
         this.forumStructureService = forumStructureService;
         this.windowManager = windowManager;
         this.selectedBranchForPermissions = selectedBranchForPermissions;
-        this.viewData = viewData;
     }
 
     /**
@@ -66,17 +62,6 @@ public class ForumStructureVm {
     @Init
     public void init() {
         treeModel = new ForumStructureTreeModel(buildForumStructure(loadJcommune()));
-    }
-
-    /**
-     * Shows the dialog either for creating or for editing existing section.
-     *
-     * @param createNew whether or not it's a creating of new section or just editing existing one
-     */
-    @Command
-    @NotifyChange({SELECTED_ITEM_PROP})
-    public void showNewSectionDialog(@BindingParam("createNew") boolean createNew) {
-        viewData.showSectionDialog(createNew);
     }
 
     @GlobalCommand
@@ -158,10 +143,12 @@ public class ForumStructureVm {
             }
             if (targetItem.isBranch()) {
                 forumStructureService.moveBranch(draggedBranch, targetItem.getBranchItem());
-                viewData.dropBeforeAndSelect(draggedNode, targetNode);
+                treeModel.dropNodeBefore(draggedNode, targetNode);
+                treeModel.setSelectedNode(draggedNode);
             } else {
                 forumStructureService.moveBranch(draggedBranch, targetItem.getSectionItem());
-                viewData.dropInAndSelect(draggedNode, targetNode);
+                treeModel.dropNodeIn(draggedNode, targetNode);
+                treeModel.setSelectedNode(draggedNode);
             }
         }
     }
@@ -202,7 +189,4 @@ public class ForumStructureVm {
         return treeModel;
     }
 
-    public ForumStructureData getViewData() {
-        return viewData;
-    }
 }

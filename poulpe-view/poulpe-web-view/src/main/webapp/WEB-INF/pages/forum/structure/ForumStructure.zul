@@ -18,7 +18,7 @@
                 onClick="@global-command('showEditSectionDialog')" visible="@load(vm.selectedItemInTree.section)"/>
 
       <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
-                onClick="@global-command('showBranchDialog')" visible="@load(vm.selectedItemInTree.branch)"/>
+                onClick="@global-command('showBranchDialog', selectedBranch=vm.selectedItemInTree.item)" visible="@load(vm.selectedItemInTree.branch)"/>
 
       <menuitem label="${labels.forum_structure.create_branch_button}" image="/resources/img/add16.png"
                 onClick="@global-command('showCreateBranchDialog')" visible="@load(vm.selectedItemInTree.section)"/>
