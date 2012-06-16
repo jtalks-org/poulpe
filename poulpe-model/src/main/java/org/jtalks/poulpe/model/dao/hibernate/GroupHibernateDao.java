@@ -30,38 +30,38 @@ import java.util.List;
  */
 public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	@SuppressWarnings("unchecked")
-	public List<Group> getAll() {
-		return getSession().createQuery("from Group").list();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    @SuppressWarnings("unchecked")
+    public List<Group> getAll() {
+        return getSession().createQuery("from Group").list();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@SuppressWarnings("unchecked")
-	@Override
-	public List<Group> getByName(String name) {
-		Assert.throwIfNull(name, "name");
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<Group> getByName(String name) {
+        Assert.throwIfNull(name, "name");
 
-		Query query = getSession().createQuery("from Group g where g.name = ?");
-		query.setString(0, name);
+        Query query = getSession().createQuery("from Group g where g.name = ?");
+        query.setString(0, name);
 
-		return query.list();
-	}
+        return query.list();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void delete(Group group) {
-		getSession().update(group);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void delete(Group group) {
+        getSession().update(group);
 
-		group.getUsers().clear();
-		saveOrUpdate(group);
-		super.delete(group);
-	}
+        group.getUsers().clear();
+        saveOrUpdate(group);
+        super.delete(group);
+    }
 }

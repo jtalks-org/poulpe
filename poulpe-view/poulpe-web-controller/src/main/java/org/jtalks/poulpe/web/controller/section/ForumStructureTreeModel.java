@@ -57,8 +57,10 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     public ForumStructureTreeModel moveBranchIfSectionChanged(PoulpeBranch branch) {
-        ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch));
-        ZkTreeNode<ForumStructureItem> sectionNode = (ZkTreeNode<ForumStructureItem>) find(new ForumStructureItem(branch.getSection()));
+        ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(
+                new ForumStructureItem(branch));
+        ZkTreeNode<ForumStructureItem> sectionNode = (ZkTreeNode<ForumStructureItem>) find(
+                new ForumStructureItem(branch.getSection()));
         if (branchNode == null) {
             branchNode = new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
         }

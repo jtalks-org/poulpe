@@ -12,33 +12,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.model.dao;
-
-import org.jtalks.common.model.dao.ParentRepository;
-import org.jtalks.common.model.entity.Group;
-
-import java.util.List;
 
 /**
- * Dao interface for accessing {@link Group} objects
- *
- * @author Konstantin Akimov
+ * Logical package for Poulpe
  */
-public interface GroupDao extends ParentRepository<Group> {
-
-    /**
-     * Get the list of all groups.
-     *
-     * @return list of groups
-     */
-    List<Group> getAll();
-
-    /**
-     * Get the list of all groups which the specified name
-     *
-     * @param name
-     * @return list of groups
-     * @throws IllegalArgumentException if name is null
-     */
-    List<Group> getByName(String name);
-}
+package org.jtalks.poulpe.model.logic;

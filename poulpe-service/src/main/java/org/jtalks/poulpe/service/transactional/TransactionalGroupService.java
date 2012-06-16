@@ -29,64 +29,64 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
-		implements GroupService {
-	private final EntityValidator validator;
-	private final UserBanner userBanner;
+        implements GroupService {
+    private final EntityValidator validator;
+    private final UserBanner userBanner;
 
-	/**
-	 * Create an instance of entity based service
-	 *
-	 * @param groupDao  - data access object, which should be able do all CRUD
-	 *                  operations.
-	 * @param validator - an entity validator
-	 */
-	public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
-		this.dao = groupDao;
-		this.userBanner = userBanner;
-		this.validator = validator;
-	}
+    /**
+     * Create an instance of entity based service
+     *
+     * @param groupDao  - data access object, which should be able do all CRUD
+     *                  operations.
+     * @param validator - an entity validator
+     */
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
+        this.dao = groupDao;
+        this.userBanner = userBanner;
+        this.validator = validator;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Group> getAll() {
-		return dao.getAll();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Group> getAll() {
+        return dao.getAll();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Group> getByName(String name) {
-		return dao.getByName(name);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Group> getByName(String name) {
+        return dao.getByName(name);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void deleteGroup(Group group) {
-		Assert.throwIfNull(group, "group");
-		dao.delete(group);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void deleteGroup(Group group) {
+        Assert.throwIfNull(group, "group");
+        dao.delete(group);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void saveGroup(Group group) {
-		Assert.throwIfNull(group, "group");
-		validator.throwOnValidationFailure(group);
-		dao.saveOrUpdate(group);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void saveGroup(Group group) {
+        Assert.throwIfNull(group, "group");
+        validator.throwOnValidationFailure(group);
+        dao.saveOrUpdate(group);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<Group> getBannedUsersGroups() {
-		return userBanner.getBannedUsersGroups();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<Group> getBannedUsersGroups() {
+        return userBanner.getBannedUsersGroups();
+    }
 
 }

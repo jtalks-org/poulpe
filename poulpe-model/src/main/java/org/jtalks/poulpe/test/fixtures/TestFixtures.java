@@ -43,212 +43,212 @@ import java.util.Random;
  */
 public final class TestFixtures {
 
-	private static final Random RANDOM = new Random();
+    private static final Random RANDOM = new Random();
 
-	/**
-	 * @return branch with random name and description beloning to random section with moderators group
-	 */
-	public static PoulpeBranch branch() {
-		PoulpeBranch newBranch = new PoulpeBranch(random(), random());
-		newBranch.setSection(section());
-		newBranch.setModeratorsGroup(group());
-		return newBranch;
-	}
+    /**
+     * @return branch with random name and description beloning to random section with moderators group
+     */
+    public static PoulpeBranch branch() {
+        PoulpeBranch newBranch = new PoulpeBranch(random(), random());
+        newBranch.setSection(section());
+        newBranch.setModeratorsGroup(group());
+        return newBranch;
+    }
 
-	/**
-	 * @return topic type with random name and description
-	 */
-	public static TopicType topicType() {
-		return new TopicType(random(), random());
-	}
+    /**
+     * @return topic type with random name and description
+     */
+    public static TopicType topicType() {
+        return new TopicType(random(), random());
+    }
 
-	/**
-	 * @param type of the component
-	 * @return component with random name and description and with given type
-	 */
-	public static Component component(ComponentType type) {
-		ComponentBase base = new ComponentBase(type);
-		return base.newComponent(random(), random());
-	}
+    /**
+     * @param type of the component
+     * @return component with random name and description and with given type
+     */
+    public static Component component(ComponentType type) {
+        ComponentBase base = new ComponentBase(type);
+        return base.newComponent(random(), random());
+    }
 
-	/**
-	 * @return list of components of all {@link ComponentType} values
-	 */
-	public static List<Component> allComponents() {
-		List<Component> result = Lists.newArrayList();
+    /**
+     * @return list of components of all {@link ComponentType} values
+     */
+    public static List<Component> allComponents() {
+        List<Component> result = Lists.newArrayList();
 
-		for (ComponentType componentType : ComponentType.values()) {
-			result.add(component(componentType));
-		}
+        for (ComponentType componentType : ComponentType.values()) {
+            result.add(component(componentType));
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * @return component with {@link ComponentType} = {@link ComponentType#FORUM}
-	 */
-	public static Jcommune jcommune() {
-		return (Jcommune) component(ComponentType.FORUM);
-	}
+    /**
+     * @return component with {@link ComponentType} = {@link ComponentType#FORUM}
+     */
+    public static Jcommune jcommune() {
+        return (Jcommune) component(ComponentType.FORUM);
+    }
 
-	/**
-	 * @param sectionsAmount amount of sections to be add to result
-	 * @return component with {@link ComponentType} = {@link ComponentType#FORUM} and with sections and branches
-	 */
-	public static Jcommune jcommuneWithSections(int sectionsAmount) {
-		Jcommune jcommune = jcommune();
+    /**
+     * @param sectionsAmount amount of sections to be add to result
+     * @return component with {@link ComponentType} = {@link ComponentType#FORUM} and with sections and branches
+     */
+    public static Jcommune jcommuneWithSections(int sectionsAmount) {
+        Jcommune jcommune = jcommune();
 
-		for (int i = 0; i < sectionsAmount; i++) {
-			PoulpeSection section = sectionWithBranches();
-			jcommune.addSection(section);
-		}
+        for (int i = 0; i < sectionsAmount; i++) {
+            PoulpeSection section = sectionWithBranches();
+            jcommune.addSection(section);
+        }
 
-		return jcommune;
-	}
+        return jcommune;
+    }
 
-	/**
-	 * @return jcommune component with 10 sections
-	 */
-	public static Jcommune jcommuneWithSections() {
-		return jcommuneWithSections(10);
-	}
+    /**
+     * @return jcommune component with 10 sections
+     */
+    public static Jcommune jcommuneWithSections() {
+        return jcommuneWithSections(10);
+    }
 
-	/**
-	 * @return section with random amount of branches (from 5 to 15)
-	 */
-	public static PoulpeSection sectionWithBranches() {
-		return sectionWithBranches(5 + randomInt(10));
-	}
+    /**
+     * @return section with random amount of branches (from 5 to 15)
+     */
+    public static PoulpeSection sectionWithBranches() {
+        return sectionWithBranches(5 + randomInt(10));
+    }
 
-	/**
-	 * @param branchesAmount amount of branches in section
-	 * @return section with random name and given amount of branches
-	 */
-	public static PoulpeSection sectionWithBranches(int branchesAmount) {
-		PoulpeSection section = new PoulpeSection(random());
+    /**
+     * @param branchesAmount amount of branches in section
+     * @return section with random name and given amount of branches
+     */
+    public static PoulpeSection sectionWithBranches(int branchesAmount) {
+        PoulpeSection section = new PoulpeSection(random());
 
-		for (int i = 0; i < branchesAmount; i++) {
-			PoulpeBranch branch = branch();
-			branch.setSection(section);
-			section.addOrUpdateBranch(branch);
-		}
+        for (int i = 0; i < branchesAmount; i++) {
+            PoulpeBranch branch = branch();
+            branch.setSection(section);
+            section.addOrUpdateBranch(branch);
+        }
 
-		return section;
-	}
+        return section;
+    }
 
-	/**
-	 * @return component of random {@link ComponentType}
-	 */
-	public static Component randomComponent() {
-		return component(randomComponentType());
-	}
+    /**
+     * @return component of random {@link ComponentType}
+     */
+    public static Component randomComponent() {
+        return component(randomComponentType());
+    }
 
-	/**
-	 * @return random {@link ComponentType} value
-	 */
-	public static ComponentType randomComponentType() {
-		ComponentType[] types = ComponentType.values();
-		return types[randomInt(types.length)];
-	}
+    /**
+     * @return random {@link ComponentType} value
+     */
+    public static ComponentType randomComponentType() {
+        ComponentType[] types = ComponentType.values();
+        return types[randomInt(types.length)];
+    }
 
-	/**
-	 * @return {@link ComponentBase} with random {@link ComponentType}
-	 */
-	public static ComponentBase baseComponent() {
-		return new ComponentBase(randomComponentType());
-	}
+    /**
+     * @return {@link ComponentBase} with random {@link ComponentType}
+     */
+    public static ComponentBase baseComponent() {
+        return new ComponentBase(randomComponentType());
+    }
 
-	/**
-	 * @return property with random name, description and validation rule
-	 */
-	public static Property property() {
-		Property property = new Property(random(), random());
-		property.setValidationRule(random());
-		return property;
-	}
+    /**
+     * @return property with random name, description and validation rule
+     */
+    public static Property property() {
+        Property property = new Property(random(), random());
+        property.setValidationRule(random());
+        return property;
+    }
 
-	/**
-	 * @return section with random name
-	 */
-	public static PoulpeSection section() {
-		return new PoulpeSection(random());
-	}
+    /**
+     * @return section with random name
+     */
+    public static PoulpeSection section() {
+        return new PoulpeSection(random());
+    }
 
-	/**
-	 * @param username of the user
-	 * @return user with the given username, generated email and empty salt
-	 */
-	public static PoulpeUser user(String username) {
-		String email = username + "@" + random() + ".com";
-		return new PoulpeUser(username, email, random(), "");
-	}
+    /**
+     * @param username of the user
+     * @return user with the given username, generated email and empty salt
+     */
+    public static PoulpeUser user(String username) {
+        String email = username + "@" + random() + ".com";
+        return new PoulpeUser(username, email, random(), "");
+    }
 
-	/**
-	 * @return user with random name, email, password and empty salt
-	 */
-	public static PoulpeUser user() {
-		return user(random());
-	}
+    /**
+     * @return user with random name, email, password and empty salt
+     */
+    public static PoulpeUser user() {
+        return user(random());
+    }
 
-	/**
-	 * @return group with randoms users
-	 */
-	public static Group groupWithUsers() {
-		List<PoulpeUser> users = usersListOf(5);
-		Group group = group();
-		group.setUsers((List<User>) (Object) users);
-		return group;
-	}
+    /**
+     * @return group with randoms users
+     */
+    public static Group groupWithUsers() {
+        List<PoulpeUser> users = usersListOf(5);
+        Group group = group();
+        group.setUsers((List<User>) (Object) users);
+        return group;
+    }
 
-	/**
-	 * @param n amount of users
-	 * @return list of users
-	 */
-	public static List<PoulpeUser> usersListOf(int n) {
-		List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
+    /**
+     * @param n amount of users
+     * @return list of users
+     */
+    public static List<PoulpeUser> usersListOf(int n) {
+        List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
 
-		while (n > 0) {
-			result.add(user());
-			n--;
-		}
+        while (n > 0) {
+            result.add(user());
+            n--;
+        }
 
-		return result;
-	}
+        return result;
+    }
 
-	/**
-	 * @return group with random name and description
-	 */
-	public static Group group() {
-		return new Group(random(), random());
-	}
+    /**
+     * @return group with random name and description
+     */
+    public static Group group() {
+        return new Group(random(), random());
+    }
 
-	/**
-	 * @return list with one group of banned users
-	 */
-	public static List<Group> bannedGroups() {
-		return Collections.singletonList(group());
-	}
+    /**
+     * @return list with one group of banned users
+     */
+    public static List<Group> bannedGroups() {
+        return Collections.singletonList(group());
+    }
 
-	/**
-	 * @return rank with random name and post limit
-	 */
-	public static Rank rank() {
-		return new Rank(random(), randomInt(1000));
-	}
+    /**
+     * @return rank with random name and post limit
+     */
+    public static Rank rank() {
+        return new Rank(random(), randomInt(1000));
+    }
 
-	/**
-	 * @return random string of 10 symbols
-	 */
-	private static String random() {
-		return RandomStringUtils.randomAlphanumeric(10);
-	}
+    /**
+     * @return random string of 10 symbols
+     */
+    private static String random() {
+        return RandomStringUtils.randomAlphanumeric(10);
+    }
 
-	/**
-	 * @param max upper bound
-	 * @return random int with upper bound
-	 */
-	private static int randomInt(int max) {
-		return RANDOM.nextInt(max);
-	}
+    /**
+     * @param max upper bound
+     * @return random int with upper bound
+     */
+    private static int randomInt(int max) {
+        return RANDOM.nextInt(max);
+    }
 
 }

@@ -26,37 +26,37 @@ import java.util.List;
  */
 public interface GroupService extends EntityService<Group> {
 
-	/**
-	 * @return list of all {@link Group} objects
-	 */
-	List<Group> getAll();
+    /**
+     * @return list of all {@link Group} objects
+     */
+    List<Group> getAll();
 
-	/**
-	 * @param name to look up
-	 * @return list of groups that names match the given name
-	 */
-	List<Group> getByName(String name);
+    /**
+     * @param name to look up
+     * @return list of groups that names match the given name
+     */
+    List<Group> getByName(String name);
 
-	/**
-	 * Delete group
-	 *
-	 * @param group to be delete
-	 * @throws IllegalArgumentException if group is null
-	 */
-	void deleteGroup(Group group);
+    /**
+     * Delete group
+     *
+     * @param group to be delete
+     * @throws IllegalArgumentException if group is null
+     */
+    void deleteGroup(Group group);
 
-	/**
-	 * Save or update group.
-	 *
-	 * @param selectedGroup instance to save
-	 * @throws IllegalArgumentException if group is null
-	 */
-	void saveGroup(Group selectedGroup);
+    /**
+     * Save or update group.
+     *
+     * @param selectedGroup instance to save
+     * @throws IllegalArgumentException if group is null
+     */
+    void saveGroup(Group selectedGroup);
 
-	/**
-	 * Return list of banned groups
-	 *
-	 * @return List of Group
-	 */
-	List<Group> getBannedUsersGroups();
+    /**
+     * Return list of banned groups
+     *
+     * @return List of Group
+     */
+    List<Group> getBannedUsersGroups();
 }

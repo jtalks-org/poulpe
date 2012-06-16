@@ -29,78 +29,78 @@ import java.util.List;
  */
 public interface UserService {
 
-	/**
-	 * Gets all Users from the database
-	 *
-	 * @return list of all users
-	 */
-	List<PoulpeUser> getAll();
+    /**
+     * Gets all Users from the database
+     *
+     * @return list of all users
+     */
+    List<PoulpeUser> getAll();
 
-	/**
-	 * @param searchString string for searching users, if empty - all users will be returned
-	 * @param page         page number for retrieving
-	 * @param itemsPerPage limit of items per page
-	 * @return users matched given search string paginated
-	 */
-	List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
+    /**
+     * @param searchString string for searching users, if empty - all users will be returned
+     * @param page         page number for retrieving
+     * @param itemsPerPage limit of items per page
+     * @return users matched given search string paginated
+     */
+    List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
-	/**
-	 * @param searchString string for searching users, if empty - all users will be returned
-	 * @return amount of users matched the given string
-	 */
-	int countUsernameMatches(String searchString);
+    /**
+     * @param searchString string for searching users, if empty - all users will be returned
+     * @return amount of users matched the given string
+     */
+    int countUsernameMatches(String searchString);
 
-	/**
-	 * Gets Users with corresponding word in user name
-	 *
-	 * @param usernamePart to look up
-	 * @return list of users with the word in the name
-	 */
-	List<PoulpeUser> withUsernamesMatching(String usernamePart);
+    /**
+     * Gets Users with corresponding word in user name
+     *
+     * @param usernamePart to look up
+     * @return list of users with the word in the name
+     */
+    List<PoulpeUser> withUsernamesMatching(String usernamePart);
 
-	/**
-	 * Updates the user
-	 *
-	 * @param user entity to be updated
-	 */
-	void updateUser(PoulpeUser user);
+    /**
+     * Updates the user
+     *
+     * @param user entity to be updated
+     */
+    void updateUser(PoulpeUser user);
 
-	/**
-	 * Retrieves user by its id
-	 *
-	 * @param id to look up
-	 * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
-	 * @throws NotFoundException when user can't be found
-	 */
-	PoulpeUser get(long id) throws NotFoundException;
+    /**
+     * Retrieves user by its id
+     *
+     * @param id to look up
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
+     * @throws NotFoundException when user can't be found
+     */
+    PoulpeUser get(long id) throws NotFoundException;
 
-	/**
-	 * Gets all banned users from the database
-	 *
-	 * @return list of all users
-	 */
-	List<PoulpeUser> getAllBannedUsers();
+    /**
+     * Gets all banned users from the database
+     *
+     * @return list of all users
+     */
+    List<PoulpeUser> getAllBannedUsers();
 
-	/**
-	 * Adds users to banned users group
-	 *
-	 * @param usersToBan users to add to banned users group
-	 */
-	void banUsers(PoulpeUser... usersToBan);
+    /**
+     * Adds users to banned users group
+     *
+     * @param usersToBan users to add to banned users group
+     */
+    void banUsers(PoulpeUser... usersToBan);
 
-	/**
-	 * Revokes ban state from users, deleting them from banned users group
-	 *
-	 * @param bannedUsersToRevoke users to remove from banned users group
-	 */
-	void revokeBan(PoulpeUser... bannedUsersToRevoke);
+    /**
+     * Revokes ban state from users, deleting them from banned users group
+     *
+     * @param bannedUsersToRevoke users to remove from banned users group
+     */
+    void revokeBan(PoulpeUser... bannedUsersToRevoke);
 
-	/**
-	 * Get firsts (count) of non banned users with filter by username
-	 *
-	 * @param availableFilterText Filter value to username (like '%availableFilterText%')
-	 * @param pagination          Params to limit
-	 * @return List of {@PoulpeUser}
-	 */
-	List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
+    /**
+     * Get firsts (count) of non banned users with filter by username
+     *
+     * @param availableFilterText Filter value to username (like '%availableFilterText%')
+     * @param pagination          Params to limit
+     * @return List of {@PoulpeUser}
+     */
+    List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
 }

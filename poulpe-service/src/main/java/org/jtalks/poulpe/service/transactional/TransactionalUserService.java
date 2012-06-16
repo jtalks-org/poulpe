@@ -32,99 +32,99 @@ import java.util.List;
  * @author maxim reshetov
  */
 public class TransactionalUserService implements UserService {
-	private static final String NO_FILTER = "";
+    private static final String NO_FILTER = "";
 
-	private final UserDao userDao;
-	private final UserBanner userBanner;
+    private final UserDao userDao;
+    private final UserBanner userBanner;
 
-	/**
-	 * Create an instance of user entity based service.
-	 *
-	 * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
-	 *                entities
-	 */
-	public TransactionalUserService(UserDao userDao, UserBanner userBanner) {
-		this.userDao = userDao;
-		this.userBanner = userBanner;
-	}
+    /**
+     * Create an instance of user entity based service.
+     *
+     * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
+     *                entities
+     */
+    public TransactionalUserService(UserDao userDao, UserBanner userBanner) {
+        this.userDao = userDao;
+        this.userBanner = userBanner;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> getAll() {
-		return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> getAll() {
+        return userDao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
-		return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.paginate(page, itemsPerPage));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int countUsernameMatches(String searchString) {
-		return userDao.countUsernameMatches(searchString);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int countUsernameMatches(String searchString) {
+        return userDao.countUsernameMatches(searchString);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> withUsernamesMatching(String searchString) {
-		return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> withUsernamesMatching(String searchString) {
+        return userDao.findPoulpeUsersPaginated(searchString, Pages.NONE);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void updateUser(PoulpeUser user) {
-		userDao.update(user);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateUser(PoulpeUser user) {
+        userDao.update(user);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public PoulpeUser get(long id) {
-		return userDao.get(id);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser get(long id) {
+        return userDao.get(id);
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> getAllBannedUsers() {
-		return userBanner.getAllBannedUsers();
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> getAllBannedUsers() {
+        return userBanner.getAllBannedUsers();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void banUsers(PoulpeUser... usersToBan) {
-		userBanner.banUsers(new UserList(usersToBan));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void banUsers(PoulpeUser... usersToBan) {
+        userBanner.banUsers(new UserList(usersToBan));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
-		userBanner.revokeBan(new UserList(bannedUsersToRevoke));
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
+        userBanner.revokeBan(new UserList(bannedUsersToRevoke));
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
-		return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
-	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
+        return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
+    }
 }

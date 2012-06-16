@@ -49,7 +49,8 @@ public class BranchEditingDialog {
     private PoulpeBranch editedBranch = new PoulpeBranch();
     private boolean showDialog;
 
-    public BranchEditingDialog(GroupService groupService, ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
+    public BranchEditingDialog(GroupService groupService, ForumStructureVm forumStructureVm,
+                               ForumStructureService forumStructureService) {
         this.groupService = groupService;
         this.forumStructureVm = forumStructureVm;
         this.forumStructureService = forumStructureService;

@@ -33,7 +33,9 @@ import org.zkoss.bind.annotation.NotifyChange;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.*;
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.text.StringContains.containsString;
 
 /**
@@ -121,7 +123,8 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
                 componentService.changeGrants(component, accessChanges);
-            } else {
+            }
+            else {
                 componentService.changeRestrictions(component, accessChanges);
             }
         }
