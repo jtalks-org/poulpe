@@ -14,13 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-
-import java.util.Arrays;
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -32,120 +25,133 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 
+import java.util.Arrays;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertSame;
+import static org.testng.Assert.assertTrue;
+
 /**
  * @author Leonid Kazancev
  */
 public class UserGroupVmTest {
 
-    private static final String SEARCH_STRING = "searchString";
+	private static final String SEARCH_STRING = "searchString";
 
-    @Mock
-    private GroupService groupService;
-    @Mock
-    private WindowManager windowManager;
+	@Mock
+	private GroupService groupService;
+	@Mock
+	private WindowManager windowManager;
 
-    private UserGroupVm viewModel;
-    private SelectedEntity<Group> selectedEntity;
-    private Group selectedGroup;
-    private ListModelList<Group> groups;
+	private UserGroupVm viewModel;
+	private SelectedEntity<Group> selectedEntity;
+	private Group selectedGroup;
+	private ListModelList<Group> groups;
 
-    @BeforeMethod
-    public void beforeMethod() {
-        MockitoAnnotations.initMocks(this);
-        viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager));
-        selectedEntity = new SelectedEntity<Group>();
-        selectedGroup = new Group();
-        groups = new ListModelList<Group>();
-        viewModel.setGroups(groups);
-        viewModel.setSelectedGroup(selectedGroup);
-    }
+	@BeforeMethod
+	public void beforeMethod() {
+		MockitoAnnotations.initMocks(this);
+		viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager));
+		selectedEntity = new SelectedEntity<Group>();
+		selectedGroup = new Group();
+		groups = new ListModelList<Group>();
+		viewModel.setGroups(groups);
+		viewModel.setSelectedGroup(selectedGroup);
+	}
 
-    @Test(dataProvider = "provideRandomGroupsList")
-    public void testUpdateView(List<Group> groupList) {
-        groups.add(new Group("1"));
-        doReturn(groupList).when(groupService).getAll();
+	@Test(dataProvider = "provideRandomGroupsList")
+	public void testUpdateView(List<Group> groupList) {
+		groups.add(new Group("1"));
+		doReturn(groupList).when(groupService).getAll();
 
-        viewModel.updateView();
-        assertEquals(groups.size(), 2);
-        assertSame(groups.get(0), groupList.get(0));
-        assertSame(groups.get(1), groupList.get(1));
-    }
+		viewModel.updateView();
+		assertEquals(groups.size(), 2);
+		assertSame(groups.get(0), groupList.get(0));
+		assertSame(groups.get(1), groupList.get(1));
+	}
 
-    @Test
-    public void testSearchGroup() {
-        viewModel.setSearchString(SEARCH_STRING);
-        viewModel.searchGroup();
-        verify(groupService).getAllMatchedByName(SEARCH_STRING);
-    }
+	@Test
+	public void testSearchGroup() {
+		viewModel.setSearchString(SEARCH_STRING);
+		viewModel.searchGroup();
+		verify(groupService).getByName(SEARCH_STRING);
+	}
 
-    @Test
-    public void testShowGroupMemberEditWindow() {
-        viewModel.showGroupMemberEditWindow();
-        verify(windowManager).open(EditGroupMembersVm.EDIT_GROUP_MEMBERS_URL);
-    }
+	@Test
+	public void testShowGroupMemberEditWindow() {
+		viewModel.showGroupMemberEditWindow();
+		verify(windowManager).open(EditGroupMembersVm.EDIT_GROUP_MEMBERS_URL);
+	}
 
-    @Test
-    public void testDeleteGroup() {
-        doNothing().when(groupService).deleteGroup(any(Group.class));
-        viewModel.deleteGroup();
-        verify(groupService).deleteGroup(selectedGroup);
-        verify(viewModel).updateView();
-    }
+	@Test
+	public void testDeleteGroup() {
+		doNothing().when(groupService).deleteGroup(any(Group.class));
+		viewModel.deleteGroup();
+		verify(groupService).deleteGroup(selectedGroup);
+		verify(viewModel).updateView();
+	}
 
-    @Test
-    public void testShowNewGroupDialog() {
-        viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowGroupDialog());
-    }
+	@Test
+	public void testShowNewGroupDialog() {
+		viewModel.showNewGroupDialog();
+		assertTrue(viewModel.isShowGroupDialog());
+	}
 
-    @Test
-    public void testSaveGroup() throws Exception {
-        Group group = new Group();
-        viewModel.setSelectedGroup(group);
-        viewModel.saveGroup();
-        verify(groupService).saveGroup(group);
-        verify(viewModel).updateView();
-        assertFalse(viewModel.isShowGroupDialog());
-        assertFalse(viewModel.isShowDeleteDialog());
-    }
+	@Test
+	public void testSaveGroup() throws Exception {
+		Group group = new Group();
+		viewModel.setSelectedGroup(group);
+		viewModel.saveGroup();
+		verify(groupService).saveGroup(group);
+		verify(viewModel).updateView();
+		assertFalse(viewModel.isShowGroupDialog());
+		assertFalse(viewModel.isShowDeleteDialog());
+	}
 
-    @Test
-    public void testOpenDialog() {
-        viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowGroupDialog());
-    }
+	@Test
+	public void testOpenDialog() {
+		viewModel.showNewGroupDialog();
+		assertTrue(viewModel.isShowGroupDialog());
+	}
 
-    @Test
-    public void testCloseDialog() {
-        viewModel.showNewGroupDialog();
-        viewModel.closeDialog();
-        assertFalse(viewModel.isShowGroupDialog());
-        assertFalse(viewModel.isShowDeleteDialog());
-    }
+	@Test
+	public void testCloseDialog() {
+		viewModel.showNewGroupDialog();
+		viewModel.closeDialog();
+		assertFalse(viewModel.isShowGroupDialog());
+		assertFalse(viewModel.isShowDeleteDialog());
+	}
 
-    @Test
-    public void testIsShowNewDialog() {
-        viewModel.showNewGroupDialog();
-        assertTrue(viewModel.isShowGroupDialog());
-        assertFalse(viewModel.isShowGroupDialog());
-    }
+	@Test
+	public void testIsShowNewDialog() {
+		viewModel.showNewGroupDialog();
+		assertTrue(viewModel.isShowGroupDialog());
+		assertFalse(viewModel.isShowGroupDialog());
+	}
 
-    @Test
-    public void testGetGroups() {
-        assertEquals(viewModel.getGroups(), groups);
-        verify(viewModel).updateView();
-    }
+	@Test
+	public void testGetGroups() {
+		assertEquals(viewModel.getGroups(), groups);
+		verify(viewModel).updateView();
+	}
 
-    @Test
-    public void testShowEditDialog() {
-        viewModel.showEditDialog();
-        assertTrue(viewModel.isShowGroupDialog());
-    }
+	@Test
+	public void testShowEditDialog() {
+		viewModel.showEditDialog();
+		assertTrue(viewModel.isShowGroupDialog());
+	}
 
 
-    @DataProvider
-    public Object[][] provideRandomGroupsList() {
-        return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
-    }
+	@DataProvider
+	public Object[][] provideRandomGroupsList() {
+		return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
+	}
 
 }

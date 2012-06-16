@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 
@@ -25,6 +24,7 @@ import java.util.List;
  *
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
+ * @author maxim reshetov
  */
 public interface UserService {
 
@@ -81,13 +81,26 @@ public interface UserService {
 	List<PoulpeUser> getAllBannedUsers();
 
 	/**
-	 * Gets all non banned users with username like in parameter.
+	 * Adds users to banned users group
 	 *
-	 * @param word     some word which must be like username
-	 * @param maxCount max count of returned results
-	 * @param groups   List of banned groups
-	 * @return list of non banned users with username like in parameter
+	 * @param usersToBan users to add to banned users group
 	 */
-	List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxCount);
+	void banUsers(PoulpeUser... usersToBan);
 
+	/**
+	 * Revokes ban state from users, deleting them from banned users group
+	 *
+	 * @param bannedUsersToRevoke users to remove from banned users group
+	 */
+	void revokeBan(PoulpeUser... bannedUsersToRevoke);
+
+	/**
+	 * Get firsts (count) of non banned users with filter by username
+	 *
+	 * @param availableFilterText Filter value to username (like '%availableFilterText%')
+	 * @param page                Number of page
+	 * @param itemsPerPage        Count of items on page
+	 * @return List of {@PoulpeUser}
+	 */
+	List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, int page, int itemsPerPage);
 }

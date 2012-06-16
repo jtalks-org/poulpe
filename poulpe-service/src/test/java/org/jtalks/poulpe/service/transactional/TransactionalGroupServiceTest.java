@@ -30,81 +30,65 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 
 /**
  * Test for {@link TransactionalGroupService}
  */
 public class TransactionalGroupServiceTest {
-    private TransactionalGroupService service;
+	private TransactionalGroupService service;
 
-    @Mock
-    GroupDao dao;
-    @Mock
-    EntityValidator entityValidator;
+	@Mock
+	GroupDao dao;
+	@Mock
+	EntityValidator entityValidator;
 
-    private Group group = new Group("new group");
+	private Group group = new Group("new group");
 
-    @BeforeMethod
-    public void beforeMethod() {
-        MockitoAnnotations.initMocks(this);
-        service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class));
-    }
+	@BeforeMethod
+	public void beforeMethod() {
+		MockitoAnnotations.initMocks(this);
+		service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class));
+	}
 
-    @Test
-    public void deleteGroup() {
-        service.deleteGroup(group);
-        verify(dao).delete(group);
-    }
+	@Test
+	public void deleteGroup() {
+		service.deleteGroup(group);
+		verify(dao).delete(group);
+	}
 
-    @Test
-    public void getAll() {
-        service.getAll();
-        verify(dao).getAll();
-    }
+	@Test
+	public void getAll() {
+		service.getAll();
+		verify(dao).getAll();
+	}
 
-    @Test
-    public void testGetBannedUsersGroup() throws Exception {
+	@Test
+	public void getByName() {
+		service.getByName("name");
+		verify(dao).getByName("name");
+	}
 
-//        Group expectedGroup = new Group();
-//        doReturn(Arrays.asList(expectedGroup)).when(dao).getMatchedByName("Banned Users");
-//        Group bannedUsersGroup = service.getBannedUsers();
-//        assertSame(bannedUsersGroup, expectedGroup);
-    }
+	@Test
+	public void saveGroup() {
+		service.saveGroup(group);
+		verifyEntityValidated();
+	}
 
-    @Test
-    public void testGetBannedUsersGroup_withEmpty() throws Exception {
+	private void verifyEntityValidated() {
+		verify(entityValidator).throwOnValidationFailure(group);
+	}
 
-//        doReturn(new ArrayList()).when(dao).getMatchedByName("Banned Users");
-//        Group bannedUsersGroup=service.getBannedUsers();
-//        verify(dao).saveOrUpdate(any(Group.class));
-//        assertEquals(bannedUsersGroup.getName(),"Banned Users");
-    }
+	@Test(expectedExceptions = ValidationException.class)
+	public void saveNotValidGroup() {
+		givenConstraintsViolations();
+		service.saveGroup(group);
+	}
 
-    @Test
-    public void getAllMatchedByName() {
-        service.getAllMatchedByName("name");
-        verify(dao).getMatchedByName("name");
-    }
-
-    @Test
-    public void saveGroup() {
-        service.saveGroup(group);
-        verifyEntityValidated();
-    }
-
-    private void verifyEntityValidated() {
-        verify(entityValidator).throwOnValidationFailure(group);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void saveNotValidGroup() {
-        givenConstraintsViolations();
-        service.saveGroup(group);
-    }
-
-    private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
-    }
+	private void givenConstraintsViolations() {
+		Set<ValidationError> dontCare = Collections.emptySet();
+		doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
+	}
 }

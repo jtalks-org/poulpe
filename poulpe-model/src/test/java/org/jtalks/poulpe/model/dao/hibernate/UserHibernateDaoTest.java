@@ -31,16 +31,19 @@ import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotSame;
+import static org.testng.Assert.assertTrue;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
+ * @author maxim reshetov
  */
 @ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -153,63 +156,56 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 		assertEquals(actual, count);
 	}
 
-//	@Test
-//	public void testGetAllBannedUsers() {
-//		List<Group> bannedGroups = TestFixtures.bannedGroups();
-//
-//		List<PoulpeUser> bannedUsers = TestFixtures.bannedUsersListOf(3, bannedGroups);
-//
-//		saveAndEvict(bannedUsers);
-//		List<PoulpeUser> actual = dao.getAllBannedUsers();
-//
-//		assertContainsSameElements(actual, bannedUsers);
-//	}
-//
-//
-//	@Test
-//	public void getNonBannedByUsername_withOnlyBannedUsers() {
-//		List<Group> bannedGroups = TestFixtures.bannedGroups();
-//		List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3, bannedGroups);
-//
-//		saveAndEvict(banned);
-//
-//		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
-//
-//		assertTrue(actual.isEmpty());
-//	}
+	@Test
+	public void testGetAllUsersIncludesInGroups() {
+		Group group = TestFixtures.groupWithUsers();
+		saveAndEvict(group);
+		List<PoulpeUser> actual = dao.getUsersInGroups(Arrays.asList(group));
+		assertEquals(actual, group.getUsers());
+	}
 
-//	@Test
-//	public void getNonBannedByUsername_withBothKindsOfUsers() {
-//		List<Group> bannedGroups = TestFixtures.bannedGroups();
-//		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
-//		List<PoulpeUser> banned = TestFixtures.bannedUsersListOf(3, bannedGroups);
-//
-//		saveAndEvict(Iterables.concat(banned, nonBanned));
-//
-//		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
-//		assertContainsSameElements(actual, nonBanned);
-//	}
 
 	@Test
-	public void getNonBannedByUsername_withBannedUsers() {
-		List<Group> bannedGroups = TestFixtures.bannedGroups();
-		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(3);
-		saveAndEvict(nonBanned);
-
-		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, 1000);
-
-		assertContainsSameElements(actual, nonBanned);
+	public void testFindUsersNotInGroups_withoutFilterUsername() {
+		Group firstGroup = TestFixtures.groupWithUsers();
+		Group secondGroup = TestFixtures.groupWithUsers();
+		saveAndEvict(firstGroup);
+		saveAndEvict(secondGroup);
+		List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
+		assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
 	}
 
 	@Test
-	public void getNonBannedByUsername_withLimit() {
-		List<Group> bannedGroups = TestFixtures.bannedGroups();
-		List<PoulpeUser> nonBanned = TestFixtures.usersListOf(10);
-		saveAndEvict(nonBanned);
+	public void testFindUsersNotInGroups_withFilterUsername() {
+		Group firstGroup = TestFixtures.groupWithUsers();
+		Group secondGroup = TestFixtures.groupWithUsers();
+		saveAndEvict(firstGroup);
+		saveAndEvict(secondGroup);
+		String filter = secondGroup.getUsers().get(0).getUsername();
+		List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(filter, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
+		for (PoulpeUser poulpeUser : usersNotInFirstGroup) {
+			assertTrue(poulpeUser.getUsername().contains(filter));
+		}
+		assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
+	}
 
+
+	@Test
+	public void testFindUsersNotInGroups_withLimit() {
+		Group firstGroup = TestFixtures.groupWithUsers();
+		Group secondGroup = TestFixtures.groupWithUsers();
+		saveAndEvict(firstGroup);
+		saveAndEvict(secondGroup);
 		int limit = 2;
-		List<PoulpeUser> actual = dao.getNonBannedByUsername(NO_FILTER, bannedGroups, limit);
+		List<PoulpeUser> actual = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, limit));
 		assertEquals(actual.size(), limit);
+	}
+
+	private void saveAndEvict(Group group) {
+		saveAndEvict((Iterable<PoulpeUser>) (Object) group.getUsers());
+		session.save(group);
+		session.flush();
+		session.clear();
 	}
 
 	private void saveAndEvict(PoulpeUser user) {

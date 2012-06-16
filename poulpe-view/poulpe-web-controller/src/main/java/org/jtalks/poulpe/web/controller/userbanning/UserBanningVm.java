@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.userbanning;
 
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
@@ -32,6 +31,7 @@ import java.util.List;
  * @author Tatiana Birina
  * @author Vyacheslav Zhivaev
  * @author alexandr afanasev
+ * @author maxim reshetov
  */
 public class UserBanningVm {
 
@@ -79,8 +79,7 @@ public class UserBanningVm {
 	 */
 	@Nonnull
 	public List<PoulpeUser> getAvailableUsers() {
-		List<Group> bannedGroups = groupService.getBannedUsersGroups();
-		return userService.getNonBannedByUsername(availableFilterText, bannedGroups, MAX_COUNT);
+		return userService.getNonBannedUsersByUsername(availableFilterText, 0, MAX_COUNT);
 	}
 
 	/**
@@ -90,7 +89,7 @@ public class UserBanningVm {
 	 */
 	@Nonnull
 	public List<PoulpeUser> getBannedUsers() {
-		return groupService.getBannedUsers().getUsers();
+		return userService.getAllBannedUsers();
 	}
 
 	/**
@@ -149,7 +148,7 @@ public class UserBanningVm {
 	@Command
 	@NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
 	public void addUserToBannedGroup() {
-		groupService.banUsers(addBanFor);
+		userService.banUsers(addBanFor);
 		addBanFor = null;
 	}
 
@@ -159,7 +158,7 @@ public class UserBanningVm {
 	@Command
 	@NotifyChange({AVAILABLE_USERS_PROP, BANNED_USERS_PROP})
 	public void revokeBan() {
-		groupService.revokeBan(selectedUser);
+		userService.revokeBan(selectedUser);
 		selectedUser = null;
 	}
 

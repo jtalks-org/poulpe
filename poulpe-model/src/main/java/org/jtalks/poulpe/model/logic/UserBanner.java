@@ -2,38 +2,51 @@ package org.jtalks.poulpe.model.logic;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pages;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Class for working with users banning
  *
  * @author stanislav bashkirtsev
+ * @author maxim reshetov
  */
 public class UserBanner {
 	public static final String BANNED_USERS_GROUP_NAME = "Banned Users";
 	private final GroupDao groupDao;
+	private final UserDao userDao;
 
-	public UserBanner(GroupDao groupDao) {
+	public UserBanner(GroupDao groupDao, UserDao userDao) {
 		this.groupDao = groupDao;
+		this.userDao = userDao;
 	}
 
 	/**
-	 * Gets a {@link UserList} of banned users from banned users group. If group wasn't found in database, then
-	 * creates new one.Note, that
-	 * creating of this group is a temporal solution until we implement Permission Schemas.
+	 * Gets a {@link UserList} of banned users from banned users group.
 	 *
-	 * @return the {@link UserList} with banned users.
+	 * @return the List of {@link PoulpeUser} with banned users.
 	 */
-	public UserList getBannedUsers() {
-		List<Group> bannedUserGroups = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME);
-		if (bannedUserGroups.isEmpty()) {
-			return UserList.ofCommonUsers(createBannedUserGroup().getUsers());
-		}
-		else {
-			return UserList.ofCommonUsers(bannedUserGroups.get(0).getUsers());
-		}
+	public List<PoulpeUser> getAllBannedUsers() {
+		List<Group> bannedUserGroups = getBannedUsersGroups();
+		return userDao.getUsersInGroups(bannedUserGroups);
+	}
+
+	/**
+	 * Gets List of {@PoulpeUser} unbanned users
+	 *
+	 * @param availableFilterText Filter (like '%%') to username
+	 * @param page                Number of page
+	 * @param itemsPerPage        Count items on page
+	 * @return List of {@PoulpeUser}
+	 *         //
+	 */
+	//TODO Page in param
+	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, int page, int itemsPerPage) {
+		List<Group> bannedUserGroups = getBannedUsersGroups();
+		return userDao.findUsersNotInGroups(availableFilterText, bannedUserGroups, Pages.paginate(page, itemsPerPage));
 	}
 
 	/**
@@ -42,7 +55,7 @@ public class UserBanner {
 	 * @param usersToBan {@link UserList} with users to ban
 	 */
 	public void banUsers(UserList usersToBan) {
-		Group bannedUserGroup = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME).get(0);
+		Group bannedUserGroup = getBannedUsersGroups().get(0);
 		bannedUserGroup.getUsers().addAll(usersToBan.getUsers());
 		groupDao.saveOrUpdate(bannedUserGroup);
 	}
@@ -53,27 +66,35 @@ public class UserBanner {
 	 * @param usersToRevoke {@link UserList} with users to revoke ban.
 	 */
 	public void revokeBan(UserList usersToRevoke) {
-		Group bannedUserGroup = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME).get(0);
+		Group bannedUserGroup = getBannedUsersGroups().get(0);
 		bannedUserGroup.getUsers().removeAll(usersToRevoke.getUsers());
 		groupDao.saveOrUpdate(bannedUserGroup);
 	}
 
+
+	/**
+	 * Create group to ban
+	 *
+	 * @return {@Group} of ban
+	 */
 	private Group createBannedUserGroup() {
-		Group bannedUsersGroup = new Group(BANNED_USERS_GROUP_NAME, "Group for banned users");
+		Group bannedUsersGroup = new Group(BANNED_USERS_GROUP_NAME, "Banned Users");
 		groupDao.saveOrUpdate(bannedUsersGroup);
 		return bannedUsersGroup;
 	}
 
 	/**
-	 * Search and return list of banned groups
+	 * Search and return list of banned groups.  If groups wasn't found in database, then creates new one.Note, that
+	 * creating of this group is a temporal solution until we implement Permission Schemas.
 	 *
 	 * @return List of banned groups
 	 */
 	public List<Group> getBannedUsersGroups() {
-		Group bannedUserGroup = groupDao.getMatchedByName(BANNED_USERS_GROUP_NAME).get(0);
-		ArrayList<Group> bannedGroups = new ArrayList();
-		bannedGroups.add(bannedUserGroup);
+		List<Group> bannedUserGroups = groupDao.getByName(BANNED_USERS_GROUP_NAME);
+		if (bannedUserGroups.isEmpty()) {
+			bannedUserGroups.add(createBannedUserGroup());
+		}
 
-		return bannedGroups;
+		return bannedUserGroups;
 	}
 }

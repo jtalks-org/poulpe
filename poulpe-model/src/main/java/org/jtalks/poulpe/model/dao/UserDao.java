@@ -27,6 +27,7 @@ import java.util.List;
  *
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
+ * @author maxim reshetov
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
@@ -48,20 +49,21 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
 	int countUsernameMatches(String searchString);
 
 	/**
-	 * Get {@link List} with all banned Users.
+	 * Get {@link List} users which includes in groups.
 	 *
+	 * @param groups List of groups
 	 * @return {@code List<User>}
 	 */
-	List<PoulpeUser> getAllBannedUsers();
+	List<PoulpeUser> getUsersInGroups(List<Group> groups);
 
 	/**
-	 * Gets all non banned users with username like in parameter.
+	 * Gets all users which excludes in groups with username like in parameter.
 	 *
-	 * @param word     some word which must be like username
-	 * @param maxCount max count of returned results
-	 * @param groups   List of banned groups
-	 * @return list of non banned users with username like in parameter
+	 * @param availableFilterText some word which must be like username
+	 * @param paginate            max count of returned results
+	 * @param groups              List of groups
+	 * @return list of users with username like in parameter
 	 */
-	List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxCount);
+	List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate);
 
 }

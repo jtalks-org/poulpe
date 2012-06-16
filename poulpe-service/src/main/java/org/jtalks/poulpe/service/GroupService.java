@@ -16,8 +16,6 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.logic.UserList;
 
 import java.util.List;
 
@@ -37,7 +35,7 @@ public interface GroupService extends EntityService<Group> {
 	 * @param name to look up
 	 * @return list of groups that names match the given name
 	 */
-	List<Group> getAllMatchedByName(String name);
+	List<Group> getByName(String name);
 
 	/**
 	 * Delete group
@@ -54,28 +52,6 @@ public interface GroupService extends EntityService<Group> {
 	 * @throws IllegalArgumentException if group is null
 	 */
 	void saveGroup(Group selectedGroup);
-
-	/**
-	 * Gets a list of users that are banned and are not allowed to do restricted actions on Forum for instance.
-	 *
-	 * @return a list of users that are banned
-	 */
-	UserList getBannedUsers();
-
-	/**
-	 * Adds users to banned users group
-	 *
-	 * @param usersToBan users to add to banned users group
-	 */
-	void banUsers(PoulpeUser... usersToBan);
-
-	/**
-	 * Revokes ban state from users, deleting them from banned users group
-	 *
-	 * @param bannedUsersToRevoke users to remove from banned users group
-	 */
-	void revokeBan(PoulpeUser... bannedUsersToRevoke);
-
 
 	/**
 	 * Return list of banned groups

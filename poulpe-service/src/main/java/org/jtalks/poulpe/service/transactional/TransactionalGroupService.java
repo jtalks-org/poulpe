@@ -18,9 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
-import org.jtalks.poulpe.model.logic.UserList;
 import org.jtalks.poulpe.service.GroupService;
 import ru.javatalks.utils.general.Assert;
 
@@ -60,8 +58,8 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<Group> getAllMatchedByName(String name) {
-		return dao.getMatchedByName(name);
+	public List<Group> getByName(String name) {
+		return dao.getByName(name);
 	}
 
 	/**
@@ -81,30 +79,6 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
 		Assert.throwIfNull(group, "group");
 		validator.throwOnValidationFailure(group);
 		dao.saveOrUpdate(group);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public UserList getBannedUsers() {
-		return userBanner.getBannedUsers();
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void banUsers(PoulpeUser... usersToBan) {
-		userBanner.banUsers(new UserList(usersToBan));
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
-		userBanner.revokeBan(new UserList(bannedUsersToRevoke));
 	}
 
 	/**

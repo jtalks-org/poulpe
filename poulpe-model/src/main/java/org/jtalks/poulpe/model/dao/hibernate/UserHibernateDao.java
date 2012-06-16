@@ -14,9 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
@@ -80,12 +78,17 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PoulpeUser> getAllBannedUsers() {
-		Criteria criteria = getSession().createCriteria(PoulpeUser.class);
-		criteria.add(Restrictions.isNotNull("banReason"));
+	public List<PoulpeUser> getUsersInGroups(List<Group> groups) {
+		Query query = getSession().getNamedQuery("findBannedUsers");
+
+		ArrayList groupsIds = new ArrayList();
+		for (Group group : groups) {
+			groupsIds.add(new BigInteger(group.getId() + ""));
+		}
+		query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
 
 		@SuppressWarnings("unchecked")
-		List<PoulpeUser> result = criteria.list();
+		List<PoulpeUser> result = query.list();
 		return result;
 	}
 
@@ -93,17 +96,17 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxResults) {
+	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate) {
 		Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
-		query.setString("username", MessageFormat.format("%{0}%", word));
+		query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
 
 		ArrayList groupsIds = new ArrayList();
 		for (Group group : groups) {
 			groupsIds.add(new BigInteger(group.getId() + ""));
 		}
 
-		query.setParameterList("bannedGroup", groupsIds, StandardBasicTypes.BIG_INTEGER);
-		query.setMaxResults(maxResults);
+		query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
+		paginate.addPagination(query);
 
 		@SuppressWarnings("unchecked")
 		List<PoulpeUser> result = query.list();
