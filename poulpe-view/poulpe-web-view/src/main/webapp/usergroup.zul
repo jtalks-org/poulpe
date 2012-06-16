@@ -131,10 +131,10 @@
         <!-- SHOW MODERATION BRANCHES -->
         <window id="moderationBranchesDialog" title="${labels.groups.branchDialog.title}"
                 closable="true" border="normal" width="20%" mode="modal"
-                onClose="self.visible=false;event.stopPropagation();"
-                onCancel="self.visible=false"
-                onOK="@command('deleteGroup')"
-                visible="@bind(vm.showModeratingBranches)" >
+                visible="@bind(vm.showModeratingBranches)"
+                onClose="@command('closeDialog')"
+                onCancel="@command('closeDialog')"
+                onOK="@command('deleteGroup')" >
 
             <label value="${labels.groups.branchDialog.message}"/>
             <listbox id="moderatingBranchesListbox" model="@load(vm.moderatingBranches)" vflex="true"
@@ -164,7 +164,7 @@
                 <button image="/resources/img/accept16.png" id="editButton" label="${labels.groups.button.delete}"
                         onClick="@command('deleteGroup')" sclass="edit.group.confirmButton"/>
                 <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
-                        onClick="moderationBranchesDialog.visible=false" sclass="edit.group.rejectButton"/>
+                        onClick="@command('closeDialog')" sclass="edit.group.rejectButton"/>
             </hbox>
         </window>
 
