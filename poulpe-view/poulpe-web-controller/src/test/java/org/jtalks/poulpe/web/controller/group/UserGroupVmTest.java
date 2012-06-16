@@ -23,7 +23,6 @@ import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
-import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -31,12 +30,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 
-import java.lang.reflect.Field;
-import java.net.InterfaceAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
@@ -95,7 +91,7 @@ public class UserGroupVmTest {
     public void testSearchGroup() {
         viewModel.setSearchString(SEARCH_STRING);
         viewModel.searchGroup();
-        verify(groupService).getAllMatchedByName(SEARCH_STRING);
+        verify(groupService).getByName(SEARCH_STRING);
     }
 
     @Test
@@ -204,17 +200,17 @@ public class UserGroupVmTest {
         return group;
     }
 
-    private Session preparedSession(){
+    private Session preparedSession() {
         session = mock(org.hibernate.classic.Session.class);
         doReturn(preparedQuery()).when(session).createQuery(QUERY + MODERAING_GROUP_ID);
         return session;
     }
 
-    private Query preparedQuery(){
+    private Query preparedQuery() {
         query = mock(Query.class);
         doReturn(query).when(query).setParameter(MODERAING_GROUP_ID, selectedGroup.getId());
         doReturn(new ArrayList()).when(query).list();
         return query;
     }
- 
+
 }

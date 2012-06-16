@@ -25,7 +25,6 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zul.Combobox;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
@@ -92,7 +91,7 @@ public class UserGroupVm {
     @Command
     public void searchGroup() {
         groups.clear();
-        groups.addAll(groupService.getAllMatchedByName(searchString));
+        groups.addAll(groupService.getByName(searchString));
     }
 
     /**
@@ -173,11 +172,11 @@ public class UserGroupVm {
             return query.list();
         } else return null;
     }
-     
+
     /**
      * @return current Session instance
      */
-    private Session getSession(){
+    private Session getSession() {
         return sessionFactory.getCurrentSession();
     }
 
