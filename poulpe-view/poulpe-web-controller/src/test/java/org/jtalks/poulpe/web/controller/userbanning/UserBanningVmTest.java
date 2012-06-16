@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.userbanning;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserList;
+import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;
@@ -45,7 +46,7 @@ public class UserBanningVmTest {
 	@Test
 	public void testGetAvailableUsers() throws Exception {
 		sut.getAvailableUsers();
-		verify(userService, times(1)).getNonBannedUsersByUsername("", 0, 10);
+		verify(userService, times(1)).getNonBannedUsersByUsername("", Pages.paginate(0, 10));
 	}
 
 	@Test

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.userbanning;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.annotation.BindingParam;
@@ -79,7 +80,7 @@ public class UserBanningVm {
 	 */
 	@Nonnull
 	public List<PoulpeUser> getAvailableUsers() {
-		return userService.getNonBannedUsersByUsername(availableFilterText, 0, MAX_COUNT);
+		return userService.getNonBannedUsersByUsername(availableFilterText, Pages.paginate(0, MAX_COUNT));
 	}
 
 	/**

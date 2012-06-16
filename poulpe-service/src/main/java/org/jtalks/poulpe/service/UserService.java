@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.Pagination;
 
 import java.util.List;
 
@@ -98,9 +99,8 @@ public interface UserService {
 	 * Get firsts (count) of non banned users with filter by username
 	 *
 	 * @param availableFilterText Filter value to username (like '%availableFilterText%')
-	 * @param page                Number of page
-	 * @param itemsPerPage        Count of items on page
+	 * @param pagination          Params to limit
 	 * @return List of {@PoulpeUser}
 	 */
-	List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, int page, int itemsPerPage);
+	List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
 }

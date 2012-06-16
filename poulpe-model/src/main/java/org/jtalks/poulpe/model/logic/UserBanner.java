@@ -4,7 +4,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.pages.Pagination;
 
 import java.util.List;
 
@@ -38,15 +38,13 @@ public class UserBanner {
 	 * Gets List of {@PoulpeUser} unbanned users
 	 *
 	 * @param availableFilterText Filter (like '%%') to username
-	 * @param page                Number of page
-	 * @param itemsPerPage        Count items on page
+	 * @param pagination          Params to limit
 	 * @return List of {@PoulpeUser}
 	 *         //
 	 */
-	//TODO Page in param
-	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, int page, int itemsPerPage) {
+	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
 		List<Group> bannedUserGroups = getBannedUsersGroups();
-		return userDao.findUsersNotInGroups(availableFilterText, bannedUserGroups, Pages.paginate(page, itemsPerPage));
+		return userDao.findUsersNotInGroups(availableFilterText, bannedUserGroups, pagination);
 	}
 
 	/**

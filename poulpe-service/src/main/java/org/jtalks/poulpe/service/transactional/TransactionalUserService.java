@@ -19,6 +19,7 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
 import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.List;
@@ -123,7 +124,7 @@ public class TransactionalUserService implements UserService {
 	 * {@inheritDoc}
 	 */
 	@Override
-	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, int page, int itemsPerPage) {
-		return userBanner.getNonBannedUsersByUsername(availableFilterText, page, itemsPerPage);
+	public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
+		return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
 	}
 }
