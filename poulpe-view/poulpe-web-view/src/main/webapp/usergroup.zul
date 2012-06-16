@@ -18,110 +18,156 @@
 <?page title="UserGroup" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.title}" border="normal" width="100%" height="100%"
-         apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.title}" border="normal"
+            width="100%" height="100%"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
 
-    <hbox>
-      <label value="${labels.groups.filter}" />
-      <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false" maxlength="20" onOK="@command('searchGroup')" />
-      <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')" />
-      <button label="${labels.groups.button.add}" onClick="@command('showNewGroupDialog')" />
-    </hbox>
-    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
-           mold="paging" pageSize="50" pagingPosition="both" height="500px">
-      <listhead>
-        <listheader align="left" label="${labels.groups.name}" sort="auto(name)" sclass="boldstyle" />
-        <listheader align="left" label="${labels.groups.memberCount}" />
-      </listhead>
-      <template name="model" var="group">
-        <listitem  id="@load(String.valueOf(group.getId()))" context="editPopupMenu">
-          <listcell label="@load(group.getName())" />
-          <listcell label="@load(group.getUsers().size())" />
-        </listitem>
-      </template>
-      <zscript><![CDATA[groupsListbox.pagingChild.mold="os";
+        <hbox>
+            <label value="${labels.groups.filter}"/>
+            <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false"
+                     maxlength="20" onOK="@command('searchGroup')"/>
+            <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')"/>
+            <button label="${labels.groups.button.add}" onClick="@command('showNewGroupDialog')"/>
+        </hbox>
+        <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@save(vm.selectedGroup)"
+                 mold="paging" pageSize="50" pagingPosition="both" height="500px">
+            <listhead>
+                <listheader align="left" label="${labels.groups.name}" sort="auto(name)" sclass="boldstyle"/>
+                <listheader align="left" label="${labels.groups.memberCount}"/>
+            </listhead>
+            <template name="model" var="group">
+                <listitem id="@load(String.valueOf(group.getId()))" context="editPopupMenu">
+                    <listcell label="@load(group.getName())"/>
+                    <listcell label="@load(group.getUsers().size())"/>
+                </listitem>
+            </template>
+            <zscript><![CDATA[groupsListbox.pagingChild.mold="os";
                      groupsListbox.paginal.pageIncrement=10;]]>
-      </zscript>
-    </listbox>
+            </zscript>
+        </listbox>
 
-    <!--CONTEXT MENU-->
-    <menupopup id="editPopupMenu">
-      <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
-                onClick="@command('showEditDialog')" />
-      <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
-                onClick="@command('showGroupMemberEditWindow')" />
-      <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
-                onClick="deleteConfirmDialog.visible=true" />
-    </menupopup>
+        <!--CONTEXT MENU-->
+        <menupopup id="editPopupMenu">
+            <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
+                      onClick="@command('showEditDialog')"/>
+            <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
+                      onClick="@command('showGroupMemberEditWindow')"/>
+            <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
+                      onClick="deleteConfirmDialog.visible=true"/>
+        </menupopup>
 
-    <!-- NEW/EDIT GROUP DIALOG-->
-     <window id="groupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.newgroupdialog.title}"
-             closable="true" border="normal" width="300px" mode="modal"
-             onClose="self.visible=false; event.stopPropagation();"
-             onCancel="@command('closeDialog')"
-             onOK="@command('saveGroup', group=vm.selectedGroup)"
-             visible="@bind(vm.showGroupDialog)">
-       <grid>
-         <columns>
-           <column label="${labels.field.description}" hflex="min" />
-           <column label="${labels.field.input}" />
-         </columns>
-         <rows>
-           <row>
-             <label value="${labels.groups.editdialog.name}" />
-             <textbox id="newGroupNameBox" value="@load(vm.selectedGroup.name)
+        <!-- NEW/EDIT GROUP DIALOG-->
+        <window id="groupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.newgroupdialog.title}"
+                closable="true" border="normal" width="20%" mode="modal"
+                onClose="self.visible=false; event.stopPropagation();"
+                onCancel="@command('closeDialog')"
+                onOK="@command('saveGroup', group=vm.selectedGroup)"
+                visible="@bind(vm.showGroupDialog)">
+
+            <grid>
+                <columns>
+                    <column label="${labels.field.description}" hflex="min"/>
+                    <column label="${labels.field.input}"/>
+                </columns>
+                <rows>
+                    <row>
+                        <label value="${labels.groups.editdialog.name}"/>
+                        <textbox id="newGroupNameBox" value="@load(vm.selectedGroup.name)
                                                   @save(vm.selectedGroup.name, before='saveGroup')
                                                   @validator('beanValidator')" width="100%" focus="true"
-                      constraint="no empty" />
-           </row>
-           <row>
-             <label value="${labels.groups.editdialog.description}" />
-             <textbox id="newGroupDescriptionBox" value="@load(vm.selectedGroup.description)
+                                 constraint="no empty"/>
+                    </row>
+                    <row>
+                        <label value="${labels.groups.editdialog.description}"/>
+                        <textbox id="newGroupDescriptionBox" value="@load(vm.selectedGroup.description)
                                                          @save(vm.selectedGroup.description, before='saveGroup')
                                                          @validator('beanValidator')" width="100%"
-                      errorMessage="@load(vmsgs[groupDescriptionBox])" />
-           </row>
-         </rows>
-         </grid>
-           <hbox align="end">
-             <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
-                     onClick="@command('saveGroup')" sclass="edit.group.confirmButton" />
-             <button image="/resources/img/deny16.png" label="${labels.window.cancel}"
-                     onClick="@command('closeDialog')" sclass="edit.group.rejectButton" />
-           </hbox>
-     </window>
+                                 errorMessage="@load(vmsgs[groupDescriptionBox])"/>
+                    </row>
+                </rows>
+            </grid>
+            <hbox align="end">
+                <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
+                        onClick="@command('saveGroup')" sclass="edit.group.confirmButton"/>
+                <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
+                        onClick="@command('closeDialog')" sclass="edit.group.rejectButton"/>
+            </hbox>
+        </window>
 
 
-    <!--DELETE CONFIRM DIALOG-->
-      <window id="deleteConfirmDialog"
-             title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-             visible="@bind(vm.showDeleteDialog)"
-             onClose="self.visible=false;event.stopPropagation();"
-             onCancel="self.visible=false"
-             onOK="@command('deleteGroup')"
-             width="300px" >
-        <grid>
-          <columns>
-             <column label="${labels.field.description}" hflex="min" />
-             <column label="${labels.field.input}" />
-          </columns>
-          <rows>
-            <row>
-              <label value="${labels.groups.editdialog.name}" />
-              <label value="@load(vm.selectedGroup.name)" />
-            </row>
-            <row>
-              <label value="${labels.groups.editdialog.description}" />
-              <label value="@load(vm.selectedGroup.description)" />
-            </row>
-          </rows>
-        </grid>
-        <hbox align="end">
-          <button id="deleteButton" image="/resources/img/accept16.png" label="${labels.groups.button.delete}" onClick="@command('deleteGroup')" />
-          <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}" onClick="deleteConfirmDialog.visible=false" />
-        </hbox>
-      </window>
+        <!--DELETE CONFIRM DIALOG-->
+        <window id="deleteConfirmDialog"
+                title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
+                visible="@bind(vm.showDeleteDialog)"
+                onClose="self.visible=false;event.stopPropagation();"
+                onCancel="self.visible=false"
+                onOK="@command('deleteGroup')"
+                width="20%">
+            <grid>
+                <columns>
+                    <column label="${labels.field.description}" hflex="min"/>
+                    <column label="${labels.field.input}"/>
+                </columns>
+                <rows>
+                    <row>
+                        <label value="${labels.groups.editdialog.name}"/>
+                        <label value="@load(vm.selectedGroup.name)"/>
+                    </row>
+                    <row>
+                        <label value="${labels.groups.editdialog.description}"/>
+                        <label value="@load(vm.selectedGroup.description)"/>
+                    </row>
+                </rows>
+            </grid>
+            <hbox align="end">
+                <button id="deleteButton" image="/resources/img/accept16.png" label="${labels.groups.button.delete}"
+                        onClick="@command('deleteGroup')"/>
+                <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
+                        onClick="deleteConfirmDialog.visible=false"/>
+            </hbox>
+        </window>
 
- </window>
+        <!-- SHOW MODERATION BRANCHES -->
+        <window id="moderationBranchesDialog" title="${labels.groups.branchDialog.title}"
+                closable="true" border="normal" width="20%" mode="modal"
+                onClose="self.visible=false;event.stopPropagation();"
+                onCancel="self.visible=false"
+                onOK="@command('deleteGroup')"
+                visible="@bind(vm.showModeratingBranches)" >
+
+            <label value="${labels.groups.branchDialog.message}"/>
+            <listbox id="moderatingBranchesListbox" model="@load(vm.moderatingBranches)" vflex="true"
+                     mold="paging" pageSize="10" pagingPosition="both" height="50%">
+                <listhead>
+                    <listheader align="left" label="${labels.groups.branchName}" sort="auto(name)" sclass="boldstyle"/>
+                    <listheader align="left" label="${labels.groups.moderatingGroup}" sort="auto(name)"
+                                sclass="boldstyle"/>
+                </listhead>
+                <template name="model" var="poulpeBranch">
+                    <listitem id="@load(String.valueOf(poulpeBranch.getId()))">
+                        <listcell label="@load(poulpeBranch.getName())"/>
+                        <listcell>
+                            <combobox model="@load(vm.groupService.all)" autocomplete="true"
+                                      selectedItem="@load(poulpeBranch.moderatorsGroup) @save(poulpeBranch.moderatorsGroup, before='deleteGroup')"
+                                      readonly="true">
+                                <template name="model" var="group">
+                                    <comboitem id="@load(String.valueOf(group.getId()))"
+                                               label="@load(group.getName())"/>
+                                </template>
+                            </combobox>
+                        </listcell>
+                    </listitem>
+                </template>
+            </listbox>
+            <hbox align="end">
+                <button image="/resources/img/accept16.png" id="editButton" label="${labels.groups.button.delete}"
+                        onClick="@command('deleteGroup')" sclass="edit.group.confirmButton"/>
+                <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
+                        onClick="moderationBranchesDialog.visible=false" sclass="edit.group.rejectButton"/>
+            </hbox>
+        </window>
+
+
+    </window>
 </zk>
