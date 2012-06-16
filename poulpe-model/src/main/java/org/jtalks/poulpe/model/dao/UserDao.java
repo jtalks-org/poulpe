@@ -27,41 +27,43 @@ import java.util.List;
  *
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
+ * @author maxim reshetov
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
-	/**
-	 * Looks for users whose nicknames matches the given string
-	 *
-	 * @param searchString string to search
-	 * @param pagination   setting for pagination
-	 * @return paginated result list
-	 */
-	List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination pagination);
+    /**
+     * Looks for users whose nicknames matches the given string
+     *
+     * @param searchString string to search
+     * @param pagination   setting for pagination
+     * @return paginated result list
+     */
+    List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination pagination);
 
-	/**
-	 * Counts how many usernames matches the given string
-	 *
-	 * @param searchString for matching with usernames
-	 * @return amount of matches
-	 */
-	int countUsernameMatches(String searchString);
+    /**
+     * Counts how many usernames matches the given string
+     *
+     * @param searchString for matching with usernames
+     * @return amount of matches
+     */
+    int countUsernameMatches(String searchString);
 
-	/**
-	 * Get {@link List} with all banned Users.
-	 *
-	 * @return {@code List<User>}
-	 */
-	List<PoulpeUser> getAllBannedUsers();
+    /**
+     * Get {@link List} users which includes in groups.
+     *
+     * @param groups List of groups
+     * @return {@code List<User>}
+     */
+    List<PoulpeUser> getUsersInGroups(List<Group> groups);
 
-	/**
-	 * Gets all non banned users with username like in parameter.
-	 *
-	 * @param word     some word which must be like username
-	 * @param maxCount max count of returned results
-	 * @param groups   List of banned groups
-	 * @return list of non banned users with username like in parameter
-	 */
-	List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxCount);
+    /**
+     * Gets all users which excludes in groups with username like in parameter.
+     *
+     * @param availableFilterText some word which must be like username
+     * @param paginate            max count of returned results
+     * @param groups              List of groups
+     * @return list of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate);
 
 }

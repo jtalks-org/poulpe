@@ -99,7 +99,8 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
                 branchService.changeGrants(branch, accessChanges);
-            } else {
+            }
+            else {
                 branchService.changeRestrictions(branch, accessChanges);
             }
         }

@@ -14,9 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
@@ -38,76 +36,81 @@ import java.util.List;
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
-		Query query = getSession().getNamedQuery("findUsersByLikeUsername");
-		query.setString("username", MessageFormat.format("%{0}%", searchString));
-		paginate.addPagination(query);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
+        Query query = getSession().getNamedQuery("findUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
+        paginate.addPagination(query);
 
-		@SuppressWarnings("unchecked")
-		List<PoulpeUser> result = query.list();
-		return result;
-	}
+        @SuppressWarnings("unchecked")
+        List<PoulpeUser> result = query.list();
+        return result;
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int countUsernameMatches(String searchString) {
-		Query query = getSession().getNamedQuery("countUsersByLikeUsername");
-		query.setString("username", MessageFormat.format("%{0}%", searchString));
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public int countUsernameMatches(String searchString) {
+        Query query = getSession().getNamedQuery("countUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
 
-		Number result = (Number) query.uniqueResult();
-		return result.intValue();
-	}
+        Number result = (Number) query.uniqueResult();
+        return result.intValue();
+    }
 
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public PoulpeUser getByUsername(String username) {
-		Query query = getSession().getNamedQuery("findUsersByUsername");
-		query.setString("username", username);
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser getByUsername(String username) {
+        Query query = getSession().getNamedQuery("findUsersByUsername");
+        query.setString("username", username);
 
-		return (PoulpeUser) query.uniqueResult();
-	}
+        return (PoulpeUser) query.uniqueResult();
+    }
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> getAllBannedUsers() {
-		Criteria criteria = getSession().createCriteria(PoulpeUser.class);
-		criteria.add(Restrictions.isNotNull("banReason"));
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> getUsersInGroups(List<Group> groups) {
+        Query query = getSession().getNamedQuery("findBannedUsers");
 
-		@SuppressWarnings("unchecked")
-		List<PoulpeUser> result = criteria.list();
-		return result;
-	}
+        ArrayList groupsIds = new ArrayList();
+        for (Group group : groups) {
+            groupsIds.add(new BigInteger(group.getId() + ""));
+        }
+        query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
 
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public List<PoulpeUser> getNonBannedByUsername(String word, List<Group> groups, int maxResults) {
-		Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
-		query.setString("username", MessageFormat.format("%{0}%", word));
+        @SuppressWarnings("unchecked")
+        List<PoulpeUser> result = query.list();
+        return result;
+    }
 
-		ArrayList groupsIds = new ArrayList();
-		for (Group group : groups) {
-			groupsIds.add(new BigInteger(group.getId() + ""));
-		}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate) {
+        Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
+        query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
 
-		query.setParameterList("bannedGroup", groupsIds, StandardBasicTypes.BIG_INTEGER);
-		query.setMaxResults(maxResults);
+        ArrayList groupsIds = new ArrayList();
+        for (Group group : groups) {
+            groupsIds.add(new BigInteger(group.getId() + ""));
+        }
 
-		@SuppressWarnings("unchecked")
-		List<PoulpeUser> result = query.list();
-		return result;
-	}
+        query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
+        paginate.addPagination(query);
+
+        @SuppressWarnings("unchecked")
+        List<PoulpeUser> result = query.list();
+        return result;
+    }
 
 }

@@ -14,31 +14,31 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import java.util.List;
-
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
 
+import java.util.List;
+
 /**
  * Dao interface for accessing {@link Group} objects
- * 
+ *
  * @author Konstantin Akimov
  */
 public interface GroupDao extends ParentRepository<Group> {
 
     /**
      * Get the list of all groups.
-     * 
+     *
      * @return list of groups
      */
     List<Group> getAll();
 
     /**
-     * Get the list of all groups which match to the specified name
-     * 
+     * Get the list of all groups which the specified name
+     *
      * @param name
      * @return list of groups
-     * @exception IllegalArgumentException if name is null
+     * @throws IllegalArgumentException if name is null
      */
-    List<Group> getMatchedByName(String name);
+    List<Group> getByName(String name);
 }

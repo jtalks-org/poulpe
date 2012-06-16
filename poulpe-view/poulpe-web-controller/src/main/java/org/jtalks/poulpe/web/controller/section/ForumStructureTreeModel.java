@@ -14,11 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
+import java.util.ArrayList;
 
 /**
  * A tree model specifically dedicated to work with forum structure.
@@ -27,6 +30,7 @@ import javax.annotation.Nonnull;
  */
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     private static final long serialVersionUID = 20110138264143L;
+
     public ForumStructureTreeModel(@Nonnull ZkTreeNode<ForumStructureItem> root) {
         super(root);
     }
@@ -50,5 +54,50 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         addToSelection(branchNodeToPut);
         addOpenObject(destinationSectionNode);
         return this;
+    }
+
+    public ForumStructureTreeModel moveBranchIfSectionChanged(PoulpeBranch branch) {
+        ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(
+                new ForumStructureItem(branch));
+        ZkTreeNode<ForumStructureItem> sectionNode = (ZkTreeNode<ForumStructureItem>) find(
+                new ForumStructureItem(branch.getSection()));
+        if (branchNode == null) {
+            branchNode = new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
+        }
+        branchNode.moveTo(sectionNode);
+        setSelectedNode(branchNode);
+        addOpenObject(sectionNode);
+        return this;
+    }
+
+    public void addIfAbsent(PoulpeSection section) {
+        TreeNode<ForumStructureItem> sectionNode = find(new ForumStructureItem(section));
+        if (sectionNode == null) {
+            sectionNode = createSectionNode(section);
+            getRoot().add(sectionNode);
+        }
+    }
+
+    public ForumStructureItem getSelectedSection() {
+        return getSelectedData(0);
+    }
+
+    public ZkTreeNode<ForumStructureItem> removeBranch(PoulpeBranch branch) {
+        ForumStructureItem nodeData = new ForumStructureItem(branch);
+        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
+        nodeToRemove.removeFromParent();
+        return nodeToRemove;
+    }
+
+    public ZkTreeNode<ForumStructureItem> removeSection(PoulpeSection branch) {
+        ForumStructureItem nodeData = new ForumStructureItem(branch);
+        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
+        nodeToRemove.removeFromParent();
+        return nodeToRemove;
+    }
+
+    private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
+        ForumStructureItem sectionItem = new ForumStructureItem(section);
+        return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
     }
 }

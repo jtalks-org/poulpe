@@ -14,23 +14,30 @@
  */
 package org.jtalks.poulpe.test.fixtures;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.common.model.entity.User;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.entity.TopicType;
 
-import com.google.common.collect.Lists;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Provides unified way for creating text fixtures.<br>
  * <br>
  * This class is not under test source folder because it should be accessible for all components.
- * 
+ *
  * @author Kirill Afonin
  * @author Alexey Grigorev
  */
@@ -160,7 +167,7 @@ public final class TestFixtures {
         return property;
     }
 
-    /** 
+    /**
      * @return section with random name
      */
     public static PoulpeSection section() {
@@ -169,7 +176,7 @@ public final class TestFixtures {
 
     /**
      * @param username of the user
-     * @return user with the given username, generated email and empty salt 
+     * @return user with the given username, generated email and empty salt
      */
     public static PoulpeUser user(String username) {
         String email = username + "@" + random() + ".com";
@@ -184,22 +191,17 @@ public final class TestFixtures {
     }
 
     /**
-     * @param n amount of users
-     * @param groupsOfBan ban group for users
-     * @return list of banned users
+     * @return group with randoms users
      */
-    public static List<PoulpeUser> bannedUsersListOf(int n, List<Group> groupsOfBan) {
-        List<PoulpeUser> users = usersListOf(n);
-
-        for (PoulpeUser user : users) {
-            user.setGroups(groupsOfBan);
-        }
-
-        return users;
+    public static Group groupWithUsers() {
+        List<PoulpeUser> users = usersListOf(5);
+        Group group = group();
+        group.setUsers((List<User>) (Object) users);
+        return group;
     }
 
     /**
-     * @param n amount of users 
+     * @param n amount of users
      * @return list of users
      */
     public static List<PoulpeUser> usersListOf(int n) {

@@ -32,31 +32,42 @@
     </property>
   </bean>
 
-  <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop" />
-  <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton" />
+  <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop"/>
+  <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton"/>
 
-  <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity" />
-  
+  <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity"/>
+
   <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.ForumStructureVm" scope="desktop">
     <constructor-arg index="0" ref="forumStructureService"/>
     <constructor-arg index="1" ref="windowManager"/>
     <constructor-arg index="2" ref="selectedEntity"/>
-    <constructor-arg index="3">
-      <bean class="org.jtalks.poulpe.web.controller.section.ForumStructureData">
-        <constructor-arg>
-          <bean class="org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog">
-            <constructor-arg index="0" ref="groupDao"/>
-          </bean>
-        </constructor-arg>
-      </bean>
-    </constructor-arg>
   </bean>
-  
+  <bean id="deleteBranchDialogVm"  scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteBranchDialogVm">
+    <constructor-arg index="0" ref="forumStructureVm"/>
+    <constructor-arg index="1" ref="forumStructureService"/>
+  </bean>
+  <bean id="deleteSectionDialogVm"  scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteSectionDialogVm">
+    <constructor-arg index="0" ref="forumStructureVm"/>
+    <constructor-arg index="1" ref="forumStructureService"/>
+  </bean>
   <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
     <constructor-arg index="0" ref="openSessions"/>
     <property name="windowManager" ref="windowManager"/>
   </bean>
-  
+
+  <bean id="forumStructureBranchDialogVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog">
+    <constructor-arg index="0" ref="groupService"/>
+    <constructor-arg index="1" ref="forumStructureVm"/>
+    <constructor-arg index="2" ref="forumStructureService"/>
+  </bean>
+  <bean id="forumStructureSectionDialogVm" scope="desktop"
+        class="org.jtalks.poulpe.web.controller.section.dialogs.SectionEditingDialog">
+    <constructor-arg index="0" ref="forumStructureVm"/>
+    <constructor-arg index="1" ref="forumStructureService"/>
+  </bean>
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
     <constructor-arg ref="windowManager"/>
@@ -79,7 +90,6 @@
     <constructor-arg ref="groupService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>
-
   <bean id="usersVm" scope="desktop" class="org.jtalks.poulpe.web.controller.users.UsersVm">
     <constructor-arg index="0" ref="userService"/>
   </bean>
@@ -115,7 +125,7 @@
 
   <bean id="userBanningVm" scope="desktop" class="org.jtalks.poulpe.web.controller.userbanning.UserBanningVm">
     <constructor-arg index="0" ref="userService"/>
-      <constructor-arg index="1" ref="groupService" />
+    <constructor-arg index="1" ref="groupService"/>
   </bean>
 
   <bean id="componentsVm" class="org.jtalks.poulpe.web.controller.component.ComponentsVm" scope="prototype">

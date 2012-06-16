@@ -27,51 +27,46 @@ import static org.testng.Assert.*;
  * @author stanislav bashkirtsev
  */
 public class ForumStructureItemTest {
-    private ForumStructureItem item;
-
-    @BeforeMethod
-    public void setUp() throws Exception {
-        item = new ForumStructureItem();
-    }
 
     @Test
     public void testIsSection() throws Exception {
-        item.setItem(new PoulpeSection());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
         assertTrue(item.isSection());
     }
 
     @Test
     public void testIsSection_whenNull() throws Exception {
-        assertFalse(item.isSection());
+        assertFalse(new ForumStructureItem(null).isSection());
     }
 
     @Test
     public void testGetItemAsBranch() throws Exception {
         PoulpeBranch branch = new PoulpeBranch();
-        item.setItem(branch);
+        ForumStructureItem item = new ForumStructureItem(branch);
         assertSame(item.getBranchItem(), branch);
     }
 
     @Test(expectedExceptions = ClassCastException.class)
     public void testGetItemAsBranch_isNotBranch() throws Exception {
-        item.setItem(new PoulpeSection());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
         item.getBranchItem();
     }
 
     @Test
     public void testGetItemAsBranch_isNull() throws Exception {
-        assertNull(item.getBranchItem());
+        assertNull(new ForumStructureItem(null).getBranchItem());
     }
 
     @Test
     public void testGetItemAsSection() throws Exception {
         PoulpeSection branch = new PoulpeSection();
-        item.setItem(branch);
+        ForumStructureItem item = new ForumStructureItem(branch);
         assertSame(item.getSectionItem(), branch);
     }
 
     @Test
     public void testPrepareBranchItemForEditing_whenCreatingNew() throws Exception {
+        ForumStructureItem item = new ForumStructureItem(null);
         ForumStructureItem preparedItem = item.prepareBranchItemForEditing(true);
         assertNotSame(preparedItem, item);
         assertThat(preparedItem.getItem(), instanceOf(PoulpeBranch.class));
@@ -79,12 +74,14 @@ public class ForumStructureItemTest {
 
     @Test
     public void testPrepareBranchItemForEditing_whenEditingExisting() throws Exception {
+        ForumStructureItem item = new ForumStructureItem();
         ForumStructureItem preparedItem = item.prepareBranchItemForEditing(false);
         assertSame(preparedItem, item);
     }
 
     @Test
     public void testPrepareSectionItemForEditing_whenCreatingNew() throws Exception {
+        ForumStructureItem item = new ForumStructureItem(null);
         ForumStructureItem preparedItem = item.prepareBranchItemForEditing(true);
         assertNotSame(preparedItem, item);
         assertThat(preparedItem.getItem(), instanceOf(PoulpeBranch.class));
@@ -92,90 +89,81 @@ public class ForumStructureItemTest {
 
     @Test
     public void testPrepareSectionItemForEditing_whenEditingExisting() throws Exception {
+        ForumStructureItem item = new ForumStructureItem(null);
         ForumStructureItem preparedItem = item.prepareBranchItemForEditing(false);
         assertSame(preparedItem, item);
     }
 
     @Test(expectedExceptions = ClassCastException.class)
     public void testGetItemAsSection_isNotSection() throws Exception {
-        item.setItem(new PoulpeBranch());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         item.getSectionItem();
     }
 
     @Test
     public void testGetItemAsSection_isNull() throws Exception {
-        assertNull(item.getSectionItem());
+        assertNull(new ForumStructureItem().getSectionItem());
     }
 
     @Test
     public void testIsSection_whenBranch() throws Exception {
-        item.setItem(new PoulpeBranch());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         assertFalse(item.isSection());
     }
 
     @Test
     public void testIsBranch() throws Exception {
-        item.setItem(new PoulpeBranch());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         assertTrue(item.isBranch());
     }
 
     @Test
     public void testIsBranch_whenNull() throws Exception {
-        assertFalse(item.isBranch());
+        assertFalse(new ForumStructureItem(null).isBranch());
     }
 
     @Test
     public void testIsBranch_whenSectionIsInside() throws Exception {
-        item.setItem(new PoulpeSection());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeSection());
         assertFalse(item.isBranch());
     }
 
     @Test
     public void testIsPersisted_withNotPersisted() throws Exception {
-        item.setItem(new PoulpeBranch());
+        ForumStructureItem item = new ForumStructureItem(new PoulpeBranch());
         assertFalse(item.isPersisted());
     }
 
     @Test
     public void testIsPersisted_withNull() throws Exception {
-        assertFalse(item.isPersisted());
+        assertFalse(new ForumStructureItem(null).isPersisted());
     }
 
     @Test
     public void testIsPersisted_withPersisted() throws Exception {
         PoulpeBranch branch = new PoulpeBranch();
         branch.setId(1L);
-        item.setItem(branch);
+        ForumStructureItem item = new ForumStructureItem(branch);
         assertTrue(item.isPersisted());
     }
 
     @Test
     public void testGetItem_withNull() throws Exception {
-        assertNull(item.getItem(PoulpeBranch.class));
+        assertNull(new ForumStructureItem().getItem(PoulpeBranch.class));
     }
 
     @Test
     public void testGetItem() throws Exception {
         PoulpeSection section = new PoulpeSection();
-        item.setItem(section);
+        ForumStructureItem item = new ForumStructureItem(section);
         assertSame(item.getItem(PoulpeSection.class), section);
     }
 
     @Test(expectedExceptions = ClassCastException.class)
     public void testGetItem_withWrongClass() throws Exception {
         PoulpeSection section = new PoulpeSection();
-        item.setItem(section);
+        ForumStructureItem item = new ForumStructureItem(section);
         assertSame(item.getItem(PoulpeBranch.class), section);
     }
 
-    @Test
-    public void testClearState() throws Exception {
-        item.setItem(new PoulpeSection());
-        assertNull(item.clearState().getItem());
-    }
-
-    @Test
-    public void testClearState_withOriginallyNull() throws Exception {
-        assertNull(item.clearState().getItem());
-    }
 }

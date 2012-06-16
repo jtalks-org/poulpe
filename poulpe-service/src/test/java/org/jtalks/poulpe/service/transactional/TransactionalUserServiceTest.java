@@ -15,9 +15,9 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.pages.Pages;
 import org.jtalks.poulpe.service.GroupService;
 import org.mockito.Mock;
@@ -25,16 +25,19 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.testng.Assert.assertEquals;
 
 /**
  * Class for testing {@code TransactionalUserService} functionality.
  *
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
+ * @author maxim reshetov
  */
 public class TransactionalUserServiceTest {
 
@@ -53,7 +56,7 @@ public class TransactionalUserServiceTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		userDao = mock(UserDao.class);
-		userService = new TransactionalUserService(userDao);
+		userService = new TransactionalUserService(userDao, mock(UserBanner.class));
 	}
 
 	@Test
@@ -91,16 +94,14 @@ public class TransactionalUserServiceTest {
 
 	@Test
 	public void testGetAllBannedUsers() {
-		userService.getAllBannedUsers();
-		verify(userDao).getAllBannedUsers();
+		List<PoulpeUser> bannedUsers = userService.getAllBannedUsers();
+		assertEquals(bannedUsers, new ArrayList<PoulpeUser>());
 	}
 
 	@Test
 	public void testGetNonBannedByUsername() {
-		int maxCount = 1000;
-		List<Group> bannedGroups = groupService.getBannedUsersGroups();
-		userService.getNonBannedByUsername(searchString, bannedGroups, maxCount);
-		verify(userDao).getNonBannedByUsername(searchString, bannedGroups, maxCount);
+		List<PoulpeUser> nonBannedUsers = userService.getNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
+		assertEquals(nonBannedUsers, new ArrayList<PoulpeUser>());
 	}
 
 	private static PoulpeUser user() {

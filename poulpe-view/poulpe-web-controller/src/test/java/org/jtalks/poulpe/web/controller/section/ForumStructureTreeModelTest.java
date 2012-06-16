@@ -14,7 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -43,7 +46,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testPutBranch() throws Exception {
+    public void putBranchShouldMoveIt() throws Exception {
         ForumStructureItem branchToPut = sut.getChild(1, 0).getData();
         ForumStructureItem destinationSection = sut.getChild(0).getData();
         sut.putBranch(branchToPut, destinationSection);
@@ -60,10 +63,13 @@ public class ForumStructureTreeModelTest {
     }
 
     private ZkTreeNode<ForumStructureItem> createBranchNode() {
-        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem());
+        PoulpeBranch branch = new PoulpeBranch(RandomStringUtils.random(10));
+        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
     }
 
     private ZkTreeNode<ForumStructureItem> createSectionNode() {
-        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(), new ArrayList<TreeNode<ForumStructureItem>>());
+        PoulpeSection section = new PoulpeSection(RandomStringUtils.random(10));
+        return new ZkTreeNode<ForumStructureItem>(
+                new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
     }
 }

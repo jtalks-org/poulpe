@@ -14,21 +14,20 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.List;
-
-import org.jtalks.poulpe.model.entity.ComponentBase;
+import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 
-import com.google.common.collect.Lists;
+import java.util.List;
 
 /**
  * View-Model for adding a component. Shown from {@link ComponentsVm}.
- * 
+ *
  * @author Alexey Grigorev
  */
 public class AddComponentVm {
@@ -41,9 +40,9 @@ public class AddComponentVm {
     /**
      * Constructs new dialog for creating components. It should be used as a prototype, new object for every new
      * component.
-     * 
+     *
      * @param componentService service for saving component
-     * @param windowManager object for opening and closing application windows
+     * @param windowManager    object for opening and closing application windows
      */
     public AddComponentVm(ComponentService componentService, WindowManager windowManager) {
         this.componentService = componentService;
@@ -52,15 +51,15 @@ public class AddComponentVm {
 
     /**
      * Creates and saves component.
-     * 
-     * @param title of the component
-     * @param description its description
+     *
+     * @param title         of the component
+     * @param description   its description
      * @param componentType its component type
      */
     @Command
     public void createComponent(@BindingParam(value = "title") String title,
-            @BindingParam(value = "description") String description,
-            @BindingParam(value = "componentType") ComponentType componentType) {
+                                @BindingParam(value = "description") String description,
+                                @BindingParam(value = "componentType") ComponentType componentType) {
 
         // TODO: move to service? looks like logic
         // but then in service it would be 3 params
@@ -95,7 +94,7 @@ public class AddComponentVm {
 
     /**
      * With given window manager, opens this dialog from {@link ComponentsVm}
-     * 
+     *
      * @param windowManager to be used for opening the dialog
      */
     public static void openWindowForAdding(WindowManager windowManager) {

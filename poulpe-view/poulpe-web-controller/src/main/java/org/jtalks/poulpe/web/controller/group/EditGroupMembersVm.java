@@ -32,7 +32,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.*;
+import static ch.lambdaj.Lambda.filter;
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
 import static org.hamcrest.text.StringContains.containsString;
 
 /**
@@ -205,7 +207,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      *
      * @param activePage current page of pagination
      */
-    @NotifyChange({ USERS })
+    @NotifyChange({USERS})
     public void setActivePage(int activePage) {
         this.activePage = activePage;
         this.users = usersOf(activePage);

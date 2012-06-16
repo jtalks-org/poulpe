@@ -30,13 +30,10 @@ import javax.annotation.Nullable;
  * @author stanislav bashkirtsev
  */
 public class ForumStructureItem {
-    private Entity item;
+    private final Entity item;
 
-    /**
-     * Creates an empty item which represents a null item, but in the same time can provide useful methods without
-     * throwing NPE. See Null Object design pattern for more information.
-     */
     public ForumStructureItem() {
+        this(null);
     }
 
     /**
@@ -49,23 +46,12 @@ public class ForumStructureItem {
     }
 
     /**
-     * Gets the wrapped item inside. May be {@code null} if nothing was set through {@link #setItem(Entity)}.
+     * Gets the wrapped item inside. May be {@code null} if null was set via constructor.
      *
      * @return the wrapped item inside
      */
     public Entity getItem() {
         return item;
-    }
-
-    /**
-     * Sets the item that will reside inside util another items is set or {@link #clearState()} wasn't triggered.
-     *
-     * @param item the item to be wrapped
-     * @return this
-     */
-    public ForumStructureItem setItem(Entity item) {
-        this.item = item;
-        return this;
     }
 
     /**
@@ -166,17 +152,6 @@ public class ForumStructureItem {
     }
 
     /**
-     * Sets the wrapped item to {@code null} which effectively means that the item is null (or empty), but still can
-     * provide useful methods without throwing NPE.
-     *
-     * @return this
-     */
-    public ForumStructureItem clearState() {
-        item = null;
-        return this;
-    }
-
-    /**
      * {@inheritDoc}
      */
     @Override
@@ -186,7 +161,7 @@ public class ForumStructureItem {
 
     /**
      * Gets the list of draggable identifiers for the current item
-     * 
+     *
      * @return comma separated list of draggable identifiers
      */
     public String getDraggableId() {
@@ -201,7 +176,7 @@ public class ForumStructureItem {
 
     /**
      * Gets the list of droppable identifiers for the current item
-     * 
+     *
      * @return comma separated list of droppable identifiers
      */
     public String getDroppableId() {
@@ -212,5 +187,22 @@ public class ForumStructureItem {
         } else {
             return "false";
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ForumStructureItem that = (ForumStructureItem) o;
+
+        if (item != null ? !item.equals(that.item) : that.item != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return item != null ? item.hashCode() : 0;
     }
 }

@@ -1,0 +1,19 @@
+<window id="deleteSectionConfirmationDialog" use="org.zkoss.zul.impl.MessageboxDlg"
+        title="${labels.forum_structure.delete_section_confirmation_dialog.title}" closable="true" mode="modal"
+        border="normal" onClose="self.visible=false;event.stopPropagation();" onCancel="self.visible=false"
+        forward="onOK=confirmSectionDeletionButton.onClick" apply="org.zkoss.bind.BindComposer"
+        viewModel="@id('deleteSectionDialogVm') @init(deleteSectionDialogVm)"
+        visible="@load(deleteSectionDialogVm.showDialog)" height="150px" width="270px">
+  <vlayout>
+    <label value="${labels.forum_structure.delete_section_confirmation_dialog.text}" vflex="2"/>
+    <separator/>
+    <separator bar="true"/>
+    <separator/>
+    <separator/>
+    <hbox align="end" pack="center" hflex="1">
+      <button id="confirmSectionDeletionButton" label="${labels.dialogs.delete_button}"
+              onClick="@command('confirmDeleteSectionWithContent') @global-command('refreshTree')"/>
+      <button label="${labels.dialogs.cancel_button}" onClick="deleteSectionConfirmationDialog.visible=false;"/>
+    </hbox>
+  </vlayout>
+</window>

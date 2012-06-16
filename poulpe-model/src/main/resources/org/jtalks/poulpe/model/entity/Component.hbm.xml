@@ -60,7 +60,8 @@
     
     <!-- discriminator - ComponentType.ADMIN_PANEL -->
     <subclass name="org.jtalks.poulpe.model.entity.Poulpe" discriminator-value="ADMIN_PANEL" />
-
+    
+    <subclass name="org.jtalks.poulpe.model.entity.Component" entity-name="Antarticle" discriminator-value="ARTICLE" />
   </class>
   
   <query name="allComponents">

@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.util.List;
-
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
@@ -25,9 +23,11 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 
+import java.util.List;
+
 /**
  * The class which manages actions and represents information about components displayed in administrator panel.
- * 
+ *
  * @author Vermut
  * @author Alexey Grigorev
  */
@@ -48,12 +48,12 @@ public class ComponentsVm {
 
     /**
      * @param componentService service for loading and saving component
-     * @param dialogManager shows confirmation dialog for deletion
-     * @param windowManager object for opening and closing application windows
-     * @param selectedEntity desktop-scoped bean to which selected entities passed, used for editing components
+     * @param dialogManager    shows confirmation dialog for deletion
+     * @param windowManager    object for opening and closing application windows
+     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
      */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
-            SelectedEntity<Component> selectedEntity) {
+                        SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
@@ -69,8 +69,8 @@ public class ComponentsVm {
 
     /**
      * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
-     * 
-     * @exception IllegalStateException if no component selected
+     *
+     * @throws IllegalStateException if no component selected
      */
     @Command
     public void deleteComponent() {

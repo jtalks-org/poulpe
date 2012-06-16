@@ -19,7 +19,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.ZkHelper;
-import org.zkoss.bind.annotation.*;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.ContextParam;
+import org.zkoss.bind.annotation.ContextType;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Textbox;
 
@@ -39,7 +44,7 @@ public class UsersVm {
             ACTIVE_PAGE = "activePage",
             USERS = "users",
             TOTAL_SIZE = "totalSize";
-    
+
     static final String NO_FILTER_SEARCH_STRING = "";
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
     static final String EDIT_USER_DIALOG = "#editUserDialog";
@@ -112,7 +117,7 @@ public class UsersVm {
      *
      * @param activePage current page of pagination
      */
-    @NotifyChange({ USERS })
+    @NotifyChange({USERS})
     public void setActivePage(int activePage) {
         this.activePage = activePage;
         this.users = usersOf(activePage);
@@ -170,27 +175,27 @@ public class UsersVm {
      * @param user editing user
      */
     @Command
-    @NotifyChange({ VIEW_DATA_PROP, SELECTED_ITEM_PROP })
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void saveUser(@BindingParam(value = "user") PoulpeUser user) {
         userService.updateUser(user);
         closeEditDialog();
     }
 
     @Command
-    @NotifyChange({ VIEW_DATA_PROP, SELECTED_ITEM_PROP })
+    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void cancelEdit() {
         closeEditDialog();
     }
-    
+
     @Command
     public void newPassword(String newPassword) {
-        System.out.println(newPassword);
+
     }
-    
+
     public void setNewPassword(String newPassword) {
-        System.out.println(newPassword);
+
     }
-    
+
 
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();

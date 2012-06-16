@@ -15,10 +15,17 @@
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
 import org.zkoss.zul.TreeNode;
 
@@ -32,35 +39,56 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class BranchEditingDialog {
-    private final GroupDao groupDao;
-    private final ListModelList<ForumStructureItem> sectionList = new ListModelList<ForumStructureItem>();
+    private static final String SHOW_DIALOG = "showDialog", EDITED_BRANCH = "editedBranch",
+            MODERATING_GROUP = "moderatingGroup", CANDIDATES_TO_MODERATE = "candidatesToModerate";
+    private final GroupService groupService;
+    private final ListModelList<PoulpeSection> sectionList = new ListModelList<PoulpeSection>();
     private final GroupList groupList = new GroupList();
-    private ForumStructureItem editedBranch = new ForumStructureItem(new PoulpeBranch());
+    private final ForumStructureVm forumStructureVm;
+    private final ForumStructureService forumStructureService;
+    private PoulpeBranch editedBranch = new PoulpeBranch();
     private boolean showDialog;
 
-    public BranchEditingDialog(GroupDao groupDao) {
-        this.groupDao = groupDao;
+    public BranchEditingDialog(GroupService groupService, ForumStructureVm forumStructureVm,
+                               ForumStructureService forumStructureService) {
+        this.groupService = groupService;
+        this.forumStructureVm = forumStructureVm;
+        this.forumStructureService = forumStructureService;
+    }
+
+    @GlobalCommand
+    @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
+    public void showBranchDialog(@BindingParam("selectedBranch") PoulpeBranch selectedBranch) {
+        showDialog(selectedBranch);
+    }
+
+    @GlobalCommand
+    @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
+    public void showCreateBranchDialog() {
+        showDialog(new PoulpeBranch());
+    }
+
+    @Command
+    @NotifyChange(SHOW_DIALOG)
+    public void saveBranch() {
+        PoulpeBranch updatedBranch = storeSelectedBranch();
+        forumStructureVm.updateBranchInTree(updatedBranch);
+        closeDialog();
     }
 
     /**
      * Closes the dialog without removing any underlying state.
-     *
-     * @return this
      */
-    public BranchEditingDialog closeDialog() {
+    public void closeDialog() {
         showDialog = false;
-        return this;
     }
 
-    /**
-     * Sets the showDialog flag to true so that next time {@link #isShowDialog()} will return true.
-     *
-     * @return decides to show the dialog
-     */
-    public BranchEditingDialog showDialog() {
-        groupList.setGroups(groupDao.getAll());
+    private void showDialog(PoulpeBranch editedBranch) {
+        groupList.setGroups(groupService.getAll());
+        this.editedBranch = editedBranch;
+        renewSectionsFromTree(forumStructureVm.getTreeModel());
+        selectSection(forumStructureVm.getTreeModel().getSelectedSection().getSectionItem());
         showDialog = true;
-        return this;
     }
 
     /**
@@ -74,15 +102,8 @@ public class BranchEditingDialog {
         return result;
     }
 
-    /**
-     * Sets the specified section as the one that is selected in dropdown list.
-     *
-     * @param sectionItem an item to be selected in the dropdown at branch editing dialog
-     * @return this
-     */
-    public BranchEditingDialog selectSection(@Nonnull ForumStructureItem sectionItem) {
-        sectionList.addToSelection(sectionItem);
-        return this;
+    public void selectSection(PoulpeSection section) {
+        sectionList.addToSelection(section);
     }
 
     /**
@@ -90,7 +111,7 @@ public class BranchEditingDialog {
      *
      * @return the list of available sections so that it's possible to place the branch to some other section
      */
-    public ListModelList<ForumStructureItem> getSectionList() {
+    public ListModelList<PoulpeSection> getSectionList() {
         return sectionList;
     }
 
@@ -98,13 +119,11 @@ public class BranchEditingDialog {
      * Clears the previous sections and gets the new ones from the specified tree.
      *
      * @param sectionTree a forum structure tree to get sections from it
-     * @return this
      */
-    public BranchEditingDialog renewSectionsFromTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
+    void renewSectionsFromTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
         this.sectionList.clear();
-        List<ForumStructureItem> sections = unwrapSections(sectionTree.getRoot().getChildren());
+        List<PoulpeSection> sections = unwrapSections(sectionTree.getRoot().getChildren());
         this.sectionList.addAll(sections);
-        return this;
     }
 
     /**
@@ -113,31 +132,21 @@ public class BranchEditingDialog {
      * @param sectionNodes to be converted to the {@link ForumStructureItem}
      * @return a list of {@link ForumStructureItem} unwrapped from specified nodes
      */
-    private List<ForumStructureItem> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<ForumStructureItem> sections = new ArrayList<ForumStructureItem>();
+    private List<PoulpeSection> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
+        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData());
+            sections.add(sectionNode.getData().getSectionItem());
         }
         return sections;
     }
 
-    /**
-     * Gets the section that was chosen in the list of available sections while moving the branch to another section (or
-     * creating new).
-     *
-     * @return the section that was chosen in the list of available sections
-     */
-    public ForumStructureItem getSectionSelectedInDropdown() {
-        return sectionList.getSelection().iterator().next();
-    }
-
-    public ForumStructureItem getEditedBranch() {
+    public PoulpeBranch getEditedBranch() {
         return editedBranch;
     }
 
-    public BranchEditingDialog setEditedBranch(ForumStructureItem editedBranch) {
-        this.editedBranch = editedBranch;
-        return this;
+    PoulpeBranch storeSelectedBranch() {
+        PoulpeSection section = sectionList.getSelection().iterator().next();
+        return forumStructureService.saveBranch(section, editedBranch);
     }
 
     public List<Group> getCandidatesToModerate() {
@@ -157,23 +166,11 @@ public class BranchEditingDialog {
      * @return the group that is equal to the one that is currently moderating the selected branch
      */
     public Group getModeratingGroup() {
-        Group currentModeratorsGroup = editedBranch.getBranchItem().getModeratorsGroup();
+        Group currentModeratorsGroup = editedBranch.getModeratorsGroup();
         return groupList.getEqual(currentModeratorsGroup);
     }
 
     public void setModeratingGroup(Group moderatingGroup) {
-        editedBranch.getBranchItem().setModeratorsGroup(moderatingGroup);
-    }
-
-    /**
-     * Used by ZK in order to set the field from the form if we want to create a moderating group along with the branch
-     * instead of using some existing group. Does nothing if the specified name is empty.
-     *
-     * @param groupNameToCreate
-     */
-    public void setGroupToCreate(String groupNameToCreate) {
-        if (!groupNameToCreate.isEmpty()) {
-            setModeratingGroup(new Group(groupNameToCreate));
-        }
+        editedBranch.setModeratorsGroup(moderatingGroup);
     }
 }

@@ -64,8 +64,6 @@ public interface ForumStructureService {
 
     PoulpeBranch saveBranch(PoulpeSection inSection, PoulpeBranch notYetSavedBranch);
 
-    void deleteBranch(PoulpeBranch branch);
-
     /**
      * Moves the branch to the target branch place. Shifts the target branch and any subsequent branches to the right. 
      * 

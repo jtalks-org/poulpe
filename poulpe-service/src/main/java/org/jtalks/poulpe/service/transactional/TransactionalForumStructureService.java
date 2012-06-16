@@ -110,13 +110,6 @@ public class TransactionalForumStructureService implements ForumStructureService
         return notYetSavedBranch;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void deleteBranch(PoulpeBranch branch) {
-        branchDao.delete(branch);
-    }
 
     /**
      * {@inheritDoc}

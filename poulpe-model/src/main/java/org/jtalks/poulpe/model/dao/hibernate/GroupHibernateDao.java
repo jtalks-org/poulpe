@@ -14,18 +14,17 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.List;
-
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
-
 import ru.javatalks.utils.general.Assert;
+
+import java.util.List;
 
 /**
  * Hibernate implementation of {@link GroupDao}
- * 
+ *
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
@@ -45,11 +44,11 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Group> getMatchedByName(String name) {
+    public List<Group> getByName(String name) {
         Assert.throwIfNull(name, "name");
 
-        Query query = getSession().createQuery("from Group g where g.name like ?");
-        query.setString(0, "%" + name + "%");
+        Query query = getSession().createQuery("from Group g where g.name = ?");
+        query.setString(0, name);
 
         return query.list();
     }

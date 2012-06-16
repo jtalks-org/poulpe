@@ -24,6 +24,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zk.ui.event.DropEvent;
@@ -38,108 +39,39 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
  * removing, editing, etc.). Note, that this class is responsible for back-end of the operations (presenter,
- * controller), so it stores all the changes to the database using {@link ComponentService}. In order to control the
- * view and what it should show/change, it uses {@link ForumStructureData}.
+ * controller), so it stores all the changes to the database using {@link ComponentService}.
  *
  * @author stanislav bashkirtsev
  * @author Guram Savinov
  */
 public class ForumStructureVm {
-    private static final String SELECTED_ITEM_PROP = "selectedItem", VIEW_DATA_PROP = "viewData";
+    private static final String SELECTED_ITEM_PROP = "selectedItemInTree", VIEW_DATA_PROP = "viewData",
+            TREE_MODEL = "treeModel";
     private final ForumStructureService forumStructureService;
     private final WindowManager windowManager;
+    private ForumStructureItem selectedItemInTree = new ForumStructureItem(null);
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
-    private ForumStructureData viewData;
+    private ForumStructureTreeModel treeModel;
 
     public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
-                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions,
-                            ForumStructureData viewData) {
+                            @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions) {
         this.forumStructureService = forumStructureService;
         this.windowManager = windowManager;
         this.selectedBranchForPermissions = selectedBranchForPermissions;
-        this.viewData = viewData;
     }
 
     /**
-     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is opening.
+     * Creates the whole sections and branches structure. Always hits database. Is executed each time a page is
+     * opening.
      */
     @Init
     public void init() {
-        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(loadJcommune())));
+        treeModel = new ForumStructureTreeModel(buildForumStructure(loadJcommune()));
     }
 
-    /**
-     * Shows the dialog either for creating or for editing existing section.
-     *
-     * @param createNew whether or not it's a creating of new section or just editing existing one
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void showNewSectionDialog(@BindingParam("createNew") boolean createNew) {
-        viewData.showSectionDialog(createNew);
-    }
-
-    /**
-     * Shows the dialog for creating or editing the branch. Whether it's a creating or editing is decided by the
-     * specified parameter.
-     *
-     * @param createNew pass {@code true} if this is a window for creating a new branch
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void showNewBranchDialog(@BindingParam("createNew") boolean createNew) {
-        viewData.showBranchDialog(createNew);
-    }
-
-    /**
-     * Shows the confirmation message before deleting the branch.
-     *
-     * @see ForumStructureData#getSelectedItem()
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP})
-    public void deleteSelected() {
-        if (viewData.getSelectedItem().isBranch()) {
-            viewData.getConfirmBranchDeletionDialogVm().showDialog();
-        } else {
-            viewData.getConfirmSectionDeletionDialogVm().showDialog();
-        }
-    }
-
-    /**
-     * Deletes the selected branch. It does both: back-end removal from DB and ask the {@link ForumStructureData}
-     * to remove the item from the tree.
-     *
-     * @see ForumStructureData#getSelectedItem()
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void confirmBranchDeletion() {
-        ForumStructureItem selectedItem = viewData.removeSelectedItem();
-        deleteSelectedBranch(selectedItem.getBranchItem());
-    }
-
-    /**
-     * Deletes the selected section. It does both: back-end removal from DB and ask the {@link ForumStructureData} to
-     * remove the item from the tree.
-     *
-     * @see ForumStructureData#getSelectedItem()
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void confirmSectionDeletion() {
-        ForumStructureItem selectedItem = viewData.removeSelectedItem();
-        deleteSelectedSection(selectedItem.getSectionItem());
-
-    }
-
-    void deleteSelectedSection(PoulpeSection selectedSection) {
-        Jcommune jcommune = forumStructureService.deleteSectionWithBranches(selectedSection);
-        viewData.setStructureTree(new ForumStructureTreeModel(buildForumStructure(jcommune)));
-    }
-
-    void deleteSelectedBranch(PoulpeBranch branchItem) {
-        forumStructureService.removeBranch(branchItem);
+    @GlobalCommand
+    @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
+    public void refreshTree() {
     }
 
     /**
@@ -148,62 +80,30 @@ public class ForumStructureVm {
      */
     @Command
     public void openBranchPermissions() {
-        selectedBranchForPermissions.setEntity(getSelectedItem().getBranchItem());
+        selectedBranchForPermissions.setEntity(getSelectedItemInTree().getBranchItem());
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
-    /**
-     * Saves the {@link #getSelectedItem} to the database, adds it as the last one to the list of sections and cleans
-     * the selected section. Also makes the create section dialog to be closed.
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP})
-    public void saveSection() {
-        viewData.addSelectedSectionToTreeIfNew();
-        storeNewSection(viewData.getSelectedEntity(PoulpeSection.class));
-        viewData.closeDialog();
+    public void removeBranchFromTree(PoulpeBranch branch) {
+        treeModel.removeBranch(branch);
     }
 
-    void storeNewSection(PoulpeSection section) {
-        Jcommune jcommune = viewData.getRootAsJcommune();
-        jcommune.addSection(section);
-        forumStructureService.saveJcommune(jcommune);
+    public void removeSectionFromTree(PoulpeSection section) {
+        treeModel.removeSection(section);
     }
 
-    /**
-     * Processes onOK of the Branch Dialog in order to save the branch being edited. Also saves a new branch.
-     */
-    @Command
-    @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
-    public void saveBranch() {
-        viewData.putSelectedBranchToSectionInDropdown();
-        PoulpeBranch createdBranch = storeSelectedBranch();
-        viewData.getSelectedItem().setItem(createdBranch);
+    public void updateBranchInTree(PoulpeBranch branch) {
+        treeModel.moveBranchIfSectionChanged(branch);
+        selectedItemInTree = new ForumStructureItem(branch);
     }
 
-    /**
-     * Stores the branch that is selected in the {@link #viewData} to the database. Adds it to the list of branches
-     * of the section selected in {@link ForumStructureData#getSelectedEntity(Class)} if the branch is new or was moved
-     * to another section.
-     *
-     * @return the stored branch with id being set
-     */
-    PoulpeBranch storeSelectedBranch() {
-        PoulpeBranch selectedBranch = viewData.getSelectedEntity(PoulpeBranch.class);
-        PoulpeSection section = viewData.getSectionSelectedInDropdown().getSectionItem();
-        return forumStructureService.saveBranch(section, selectedBranch);
+    public void updateSectionInTree(PoulpeSection section) {
+        treeModel.addIfAbsent(section);
+        selectedItemInTree = new ForumStructureItem(section);
     }
 
-    public ForumStructureData getViewData() {
-        return viewData;
-    }
-
-    public ForumStructureItem getSelectedItem() {
-        return viewData.getSelectedItem();
-    }
-
-    public void setSelectedItem(ForumStructureItem selectedItem) {
-        this.viewData.setSelectedItem(selectedItem);
+    public ForumStructureItem getSelectedItemInTree() {
+        return selectedItemInTree;
     }
 
     /**
@@ -213,7 +113,7 @@ public class ForumStructureVm {
      */
     @NotifyChange(SELECTED_ITEM_PROP)
     public void setSelectedNode(DefaultTreeNode<ForumStructureItem> selectedNode) {
-        this.viewData.setSelectedItem(selectedNode.getData());
+        this.selectedItemInTree = selectedNode.getData();
     }
 
     /**
@@ -243,17 +143,26 @@ public class ForumStructureVm {
         ForumStructureItem targetItem = targetNode.getData();
         if (draggedItem.isBranch()) {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            if (noEffectAfterDrop(draggedBranch, targetItem)) {
+            if (noEffectAfterDropBranch(draggedBranch, targetItem)) {
                 return;
             }
             if (targetItem.isBranch()) {
                 forumStructureService.moveBranch(draggedBranch, targetItem.getBranchItem());
-                viewData.dropBeforeAndSelect(draggedNode, targetNode);
-            } else {
+                treeModel.dropNodeBefore(draggedNode, targetNode);
+                treeModel.setSelectedNode(draggedNode);
+            }
+            else {
                 forumStructureService.moveBranch(draggedBranch, targetItem.getSectionItem());
-                viewData.dropInAndSelect(draggedNode, targetNode);
+                treeModel.dropNodeIn(draggedNode, targetNode);
+                treeModel.setSelectedNode(draggedNode);
             }
         }
+
+        if (noEffectAfterDropSection(draggedItem, targetItem)) {
+            return;
+        }
+
+        treeModel.dropNodeBefore(draggedNode, targetNode);
     }
 
     /**
@@ -263,13 +172,14 @@ public class ForumStructureVm {
      * @param targetItem    the target item, may be branch as well as section
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
-    private boolean noEffectAfterDrop(PoulpeBranch draggedBranch,
-                                      ForumStructureItem targetItem) {
+    private boolean noEffectAfterDropBranch(PoulpeBranch draggedBranch,
+                                            ForumStructureItem targetItem) {
         PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
         if (targetItem.isSection()) {
             if (draggedSection.equals(targetItem.getSectionItem())) {
                 return true;
-            } else {
+            }
+            else {
                 return false;
             }
         }
@@ -286,5 +196,39 @@ public class ForumStructureVm {
         }
 
         return false;
+    }
+
+    /**
+     * Checks that dropping section haven't effect.
+     *
+     * @param draggedItem the section item to move
+     * @param targetItem  the target section item
+     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     */
+    private boolean noEffectAfterDropSection(ForumStructureItem draggedItem,
+                                             ForumStructureItem targetItem) {
+        PoulpeSection draggedSection = draggedItem.getSectionItem();
+        List<PoulpeSection> sections = getRootAsJcommune().getSections();
+        int draggedIndex = sections.indexOf(draggedSection);
+        int targetIndex = sections.indexOf(targetItem.getSectionItem());
+        if (targetIndex - 1 == draggedIndex) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public ForumStructureTreeModel getTreeModel() {
+        return treeModel;
+    }
+
+    /**
+     * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
+     * the tree and return it.
+     *
+     * @return the {@link Jcommune} object that is the root of the Forum Structure tree
+     */
+    public Jcommune getRootAsJcommune() {
+        return (Jcommune) (Object) treeModel.getRoot().getData();
     }
 }

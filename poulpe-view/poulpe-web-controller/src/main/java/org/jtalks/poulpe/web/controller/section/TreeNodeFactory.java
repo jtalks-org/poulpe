@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class TreeNodeFactory {
     /**
-     * Creates the whole tree of sections and branches without root element (root is {@code null}).
+     * Creates the whole tree of sections and branches with {@code Jcommune} as root element.
      *
      * @param jcommune the forum structure container to get sections and branches of it
      * @return the whole tree of sections and branches built
@@ -52,9 +52,9 @@ public class TreeNodeFactory {
     public static <T extends Entity> ZkTreeNode getTreeNode(T entity) {
         if (entity instanceof PoulpeSection) {
             List<T> branches = (List<T>) ((PoulpeSection) entity).getBranches();
-            return new ZkTreeNode(new ForumStructureItem().setItem(entity), wrapInTreeNodes(branches));
+            return new ZkTreeNode(new ForumStructureItem(entity), wrapInTreeNodes(branches));
         } else {
-            return new ZkTreeNode(new ForumStructureItem().setItem(entity));
+            return new ZkTreeNode(new ForumStructureItem(entity));
         }
     }
 
