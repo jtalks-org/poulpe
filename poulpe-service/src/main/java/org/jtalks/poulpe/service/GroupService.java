@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
 
@@ -59,4 +60,13 @@ public interface GroupService extends EntityService<Group> {
      * @return List of Group
      */
     List<Group> getBannedUsersGroups();
+
+    /**
+     * Get the list of branches moderated by group with specified ID.
+     *
+     * @param group {@link Group} object
+     * @return list of branches moderated by selected group
+     */
+    List<PoulpeBranch> getModeratedBranches(Group group);
+
 }

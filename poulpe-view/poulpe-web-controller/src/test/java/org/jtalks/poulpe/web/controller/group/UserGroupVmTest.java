@@ -14,11 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.hibernate.Query;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -30,7 +26,6 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.ListModelList;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,21 +38,15 @@ import static org.testng.Assert.*;
  */
 public class UserGroupVmTest {
     @SuppressWarnings("JpaQlInspection")
-    private static final String SEARCH_STRING = "searchString", MODERAING_GROUP_ID = "moderating_group_id",
-            QUERY = "from PoulpeBranch where MODERATORS_GROUP_ID=:", MODERATING_BRANCHES = "moderatingBranches";
+    private static final String SEARCH_STRING = "searchString", SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog",
+            SELECTED_GROUP = "selectedGroup", MODERATING_BRANCHES = "moderatedBranches";
 
     @Mock
     private GroupService groupService;
     @Mock
     private WindowManager windowManager;
     @Mock
-    private SessionFactory sessionFactory;
-    @Mock
     private BindUtilsWrapper bindWrapper;
-
-
-    private Session session;
-    private Query query;
 
     private UserGroupVm viewModel;
     private SelectedEntity<Group> selectedEntity;
@@ -67,7 +56,7 @@ public class UserGroupVmTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager, sessionFactory));
+        viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager));
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
         groups = new ListModelList<Group>();
@@ -103,43 +92,48 @@ public class UserGroupVmTest {
     @Test
     public void testDeleteNotModeratorGroup() {
         doNothing().when(groupService).deleteGroup(any(Group.class));
-        doReturn(new ArrayList(0)).when(viewModel).getModeratingBranches();
+        doNothing().when(bindWrapper).postNotifyChange(any(), eq(SELECTED_GROUP), eq(SHOW_DELETE_CONFIRM_DIALOG));
         viewModel.deleteGroup();
         verify(groupService).deleteGroup(selectedGroup);
         verify(viewModel).updateView();
+        verify(viewModel).closeDialog();
+        verify(bindWrapper).postNotifyChange(any(), eq(SELECTED_GROUP), eq(SHOW_DELETE_CONFIRM_DIALOG));
     }
 
     @Test(dataProvider = "provideRandomGroupsList")
     public void testDeleteModeratorGroup(List notEmptyList) {
-        doReturn(notEmptyList).when(viewModel).getModeratingBranches();
-        doNothing().when(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
+        doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
         viewModel.deleteGroup();
-        assertTrue(viewModel.isShowModeratingBranches());
-        verify(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
-
+        verify(groupService, times(0)).deleteGroup(selectedGroup);
     }
 
     @Test
-    public void getModeratingBranchesWithNullGroup() {
+    public void testShowDeleteDialogWithNotModeratorGroup() {
         viewModel.setSelectedGroup(null);
-        assertTrue(viewModel.getModeratingBranches() == null);
+        viewModel.showGroupDeleteConfirmDialog();
+        assertTrue(viewModel.getModeratedBranches() == null);
+        assertFalse(viewModel.isShowDeleteModeratorGroupDialog());
     }
 
-    @Test
-    public void getModeratingBranchesWithNotNullGroup() throws Exception {
-        viewModel.setSelectedGroup(moderatorGroup());
-        doReturn(preparedSession()).when(sessionFactory).getCurrentSession();
-        viewModel.getModeratingBranches();
-        verify(session).flush();
-        verify(session).createQuery(QUERY + MODERAING_GROUP_ID);
-        verify(query).setParameter(MODERAING_GROUP_ID, selectedGroup.getId());
-        verify(query).list();
+    @Test(dataProvider = "provideRandomGroupsList")
+    public void testShowDeleteDialogWithModeratorGroup(List notEmptyList) {
+        doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
+        doNothing().when(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
+        viewModel.showGroupDeleteConfirmDialog();
+        assertTrue(viewModel.isShowDeleteModeratorGroupDialog());
+        verify(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
     }
 
     @Test
     public void testShowNewGroupDialog() {
         viewModel.showNewGroupDialog();
         assertTrue(viewModel.isShowGroupDialog());
+    }
+
+    @Test
+    public void testShowDeleteConfirmDialog() {
+        viewModel.showGroupDeleteConfirmDialog();
+        assertTrue(viewModel.isShowDeleteConfirmDialog());
     }
 
     @Test
@@ -150,7 +144,7 @@ public class UserGroupVmTest {
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();
         assertFalse(viewModel.isShowGroupDialog());
-        assertFalse(viewModel.isShowDeleteDialog());
+        assertFalse(viewModel.isShowDeleteConfirmDialog());
     }
 
     @Test
@@ -164,7 +158,7 @@ public class UserGroupVmTest {
         viewModel.showNewGroupDialog();
         viewModel.closeDialog();
         assertFalse(viewModel.isShowGroupDialog());
-        assertFalse(viewModel.isShowDeleteDialog());
+        assertFalse(viewModel.isShowDeleteConfirmDialog());
     }
 
     @Test
@@ -190,27 +184,6 @@ public class UserGroupVmTest {
     @DataProvider
     public Object[][] provideRandomGroupsList() {
         return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
-    }
-
-    private Group moderatorGroup() {
-        Group group = new Group("name", "description");
-        PoulpeBranch poulpeBranch = new PoulpeBranch("name", "description");
-        poulpeBranch.setModeratorsGroup(group);
-
-        return group;
-    }
-
-    private Session preparedSession() {
-        session = mock(org.hibernate.classic.Session.class);
-        doReturn(preparedQuery()).when(session).createQuery(QUERY + MODERAING_GROUP_ID);
-        return session;
-    }
-
-    private Query preparedQuery() {
-        query = mock(Query.class);
-        doReturn(query).when(query).setParameter(MODERAING_GROUP_ID, selectedGroup.getId());
-        doReturn(new ArrayList()).when(query).list();
-        return query;
     }
 
 }

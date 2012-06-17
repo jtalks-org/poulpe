@@ -19,7 +19,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.title}" border="normal"
+    <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.mainTitle}" border="normal"
             width="100%" height="100%"
             apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
 
@@ -54,7 +54,7 @@
             <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                       onClick="@command('showGroupMemberEditWindow')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
-                      onClick="deleteConfirmDialog.visible=true"/>
+                      onClick="@command('showGroupDeleteConfirmDialog')"/>
         </menupopup>
 
         <!-- NEW/EDIT GROUP DIALOG-->
@@ -63,8 +63,9 @@
                 onClose="self.visible=false; event.stopPropagation();"
                 onCancel="@command('closeDialog')"
                 onOK="@command('saveGroup', group=vm.selectedGroup)"
-                visible="@bind(vm.showGroupDialog)">
-
+                visible="@bind(vm.showGroupDialog)"
+                style="position:absolute; top:10%; left:50%; margin-left:-175px;" >
+            <label value="${labels.groups.title.properties}"  />
             <grid>
                 <columns>
                     <column label="${labels.field.description}" hflex="min"/>
@@ -96,14 +97,15 @@
         </window>
 
 
-        <!--DELETE CONFIRM DIALOG-->
-        <window id="deleteConfirmDialog"
-                title="${labels.groups.delete_confirm_dialog.title}" closable="true" mode="modal" border="normal"
-                visible="@bind(vm.showDeleteDialog)"
-                onClose="self.visible=false;event.stopPropagation();"
-                onCancel="self.visible=false"
+        <!-- DELETE GROUP DIALOG -->
+        <window id="deleteConfirmDialog" title="${labels.groups.delete_confirm_dialog.title}"
+                closable="true" border="normal" width="20%" mode="modal"
+                visible="@bind(vm.showDeleteConfirmDialog)"
+                onClose="self.visible=false; event.stopPropagation();"
+                onCancel="@command('closeDialog')"
                 onOK="@command('deleteGroup')"
-                width="20%">
+                style="position:absolute; top:10%; left:50%; margin-left:-175px;" >
+            <label value="${labels.groups.title.properties}" visible="@load(vm.showDeleteModeratorGroupDialog)" />
             <grid>
                 <columns>
                     <column label="${labels.field.description}" hflex="min"/>
@@ -120,25 +122,9 @@
                     </row>
                 </rows>
             </grid>
-            <hbox align="end">
-                <button id="deleteButton" image="/resources/img/accept16.png" label="${labels.groups.button.delete}"
-                        onClick="@command('deleteGroup')"/>
-                <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
-                        onClick="deleteConfirmDialog.visible=false"/>
-            </hbox>
-        </window>
-
-        <!-- SHOW MODERATION BRANCHES -->
-        <window id="moderationBranchesDialog" title="${labels.groups.branchDialog.title}"
-                closable="true" border="normal" width="20%" mode="modal"
-                visible="@bind(vm.showModeratingBranches)"
-                onClose="@command('closeDialog')"
-                onCancel="@command('closeDialog')"
-                onOK="@command('deleteGroup')" >
-
-            <label value="${labels.groups.branchDialog.message}"/>
-            <listbox id="moderatingBranchesListbox" model="@load(vm.moderatingBranches)" vflex="true"
-                     mold="paging" pageSize="10" pagingPosition="both" height="50%">
+            <html visible="@load(vm.showDeleteModeratorGroupDialog)"><![CDATA[ <br> ]]></html>
+            <label value="${labels.groups.branchDialog.messageTableTitle}" visible="@load(vm.showDeleteModeratorGroupDialog)" />
+            <listbox id="moderatingBranchesListbox" model="@load(vm.moderatedBranches)" visible="@load(vm.showDeleteModeratorGroupDialog)">
                 <listhead>
                     <listheader align="left" label="${labels.groups.branchName}" sort="auto(name)" sclass="boldstyle"/>
                     <listheader align="left" label="${labels.groups.moderatingGroup}" sort="auto(name)"

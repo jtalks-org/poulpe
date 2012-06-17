@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
@@ -48,7 +47,7 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
 
     @GlobalCommand
     @NotifyChange(SHOW_DIALOG)
-    public void deleteSection(){
+    public void deleteSection() {
         showDialog();
     }
 }

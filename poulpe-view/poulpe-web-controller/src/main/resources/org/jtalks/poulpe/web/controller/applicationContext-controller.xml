@@ -97,7 +97,6 @@
     <constructor-arg index="0" ref="groupService"/>
     <constructor-arg index="1" ref="selectedEntity"/>
     <constructor-arg index="2" ref="windowManager"/>
-    <constructor-arg index="3" ref="sessionFactory"/>
   </bean>
 
   <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">

@@ -16,11 +16,12 @@ package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
 
 /**
- * Dao interface for accessing {@link Group} objects
+ * Dao interface for accessing {@link Group} objects.
  *
  * @author Konstantin Akimov
  */
@@ -34,11 +35,20 @@ public interface GroupDao extends ParentRepository<Group> {
     List<Group> getAll();
 
     /**
-     * Get the list of all groups which the specified name
+     * Get the list of all groups which the specified name.
      *
-     * @param name
+     * @param name group name
      * @return list of groups
      * @throws IllegalArgumentException if name is null
      */
     List<Group> getByName(String name);
+
+
+    /**
+     * Get the list of branches moderated by specified group.
+     *
+     * @param group {@link Group} object
+     * @return list of branches moderated by selected group
+     */
+    List<PoulpeBranch> getModeratingBranches(Group group);
 }

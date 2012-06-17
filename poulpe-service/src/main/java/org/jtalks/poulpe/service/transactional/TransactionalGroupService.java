@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.service.GroupService;
 import ru.javatalks.utils.general.Assert;
@@ -39,6 +40,8 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * @param groupDao  - data access object, which should be able do all CRUD
      *                  operations.
      * @param validator - an entity validator
+     *
+     * @param userBanner - class for working with banning users instance
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
         this.dao = groupDao;
@@ -88,5 +91,14 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     public List<Group> getBannedUsersGroups() {
         return userBanner.getBannedUsersGroups();
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeBranch> getModeratedBranches(Group group){
+        return dao.getModeratingBranches(group);
+    }
+
 
 }

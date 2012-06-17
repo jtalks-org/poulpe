@@ -14,9 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.hibernate.Query;
-import org.hibernate.SessionFactory;
-import org.hibernate.classic.Session;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
@@ -38,16 +35,14 @@ import java.util.List;
  */
 public class UserGroupVm {
     @SuppressWarnings("JpaQlInspection")
-    private static final String SHOW_DELETE_DIALOG = "showDeleteDialog", SHOW_GROUP_DIALOG = "showGroupDialog",
-            SELECTED_GROUP = "selectedGroup", MODERAING_GROUP_ID = "moderating_group_id",
-            QUERY = "from PoulpeBranch where MODERATORS_GROUP_ID=:", SHOW_MODERATING_BRANCHES = "showModeratingBranches",
-            MODERATING_BRANCHES = "moderatingBranches";
-
+    private static final String SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog",
+            SHOW_GROUP_DIALOG = "showGroupDialog", SELECTED_GROUP = "selectedGroup",
+            SHOW_MODERATOR_GROUP_SELECTION_PART = "showDeleteModeratorGroupDialog",
+            MODERATING_BRANCHES = "moderatedBranches";
 
     //Injected
     private GroupService groupService;
     private final WindowManager windowManager;
-    private final SessionFactory sessionFactory;
 
     private ListModelList<Group> groups;
     private Group selectedGroup;
@@ -55,7 +50,7 @@ public class UserGroupVm {
     private String searchString = "";
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
-    private boolean showDeleteDialog, showGroupDialog, showModeratingBranches;
+    private boolean showDeleteConfirmDialog, showGroupDialog, showDeleteModeratorGroupDialog;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -63,14 +58,12 @@ public class UserGroupVm {
      * @param groupService   the group service instance
      * @param selectedEntity the selected entity instance
      * @param windowManager  the window manager instance
-     * @param sessionFactory the session factory instance
      */
     public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity,
-                       @Nonnull WindowManager windowManager, @Nonnull SessionFactory sessionFactory) {
+                       @Nonnull WindowManager windowManager) {
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
-        this.sessionFactory = sessionFactory;
 
         this.groups = new ListModelList<Group>(groupService.getAll(), true);
     }
@@ -104,18 +97,31 @@ public class UserGroupVm {
     }
 
     /**
-     * Deletes selected group. Opens branch dialog if group to delete moderating some branches.
+     * Opens delete group dialog. Dialog style depends on kind of group.
+     * If moderator group then shows addition part of delete group dialog.
+     * BindWrapper used to prevent extra database hit if not moderator group.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_DELETE_DIALOG, SHOW_MODERATING_BRANCHES})
-    public void deleteGroup() {
-        if (hasModeratingGroup()) {
-            showModeratingBranches = true;
+    @NotifyChange({SHOW_DELETE_CONFIRM_DIALOG, SHOW_MODERATOR_GROUP_SELECTION_PART})
+    public void showGroupDeleteConfirmDialog() {
+        showDeleteConfirmDialog = true;
+        if (isModeratingGroup()) {
+            showDeleteModeratorGroupDialog = true;
             bindWrapper.postNotifyChange(UserGroupVm.this, MODERATING_BRANCHES);
-        } else {
+        }
+    }
+
+
+    /**
+     * Deletes selected group if it hasn't moderated branches.
+     */
+    @Command
+    public void deleteGroup() {
+        if (!isModeratingGroup()) {
             groupService.deleteGroup(selectedGroup);
             updateView();
             closeDialog();
+            bindWrapper.postNotifyChange(UserGroupVm.this, SELECTED_GROUP, SHOW_DELETE_CONFIRM_DIALOG);
         }
     }
 
@@ -153,49 +159,40 @@ public class UserGroupVm {
      * Close all dialogs by set visibility to false.
      */
     @Command
-    @NotifyChange({SHOW_GROUP_DIALOG, SHOW_DELETE_DIALOG, SHOW_MODERATING_BRANCHES})
+    @NotifyChange({SHOW_GROUP_DIALOG, SHOW_DELETE_CONFIRM_DIALOG, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void closeDialog() {
-        showDeleteDialog = false;
+        showDeleteConfirmDialog = false;
         showGroupDialog = false;
-        showModeratingBranches = false;
+        showDeleteModeratorGroupDialog = false;
     }
 
     /**
-     * @return list of branches moderated by selected group
+     * @return list of {@link PoulpeBranch} moderated by selected group
      */
-    @SuppressWarnings("unchecked")
-    public List<PoulpeBranch> getModeratingBranches() {
-        if (selectedGroup != null) {
-            getSession().flush();
-            Query query = getSession().createQuery(QUERY + MODERAING_GROUP_ID);
-            query.setParameter(MODERAING_GROUP_ID, selectedGroup.getId());
-            return query.list();
-        } else return null;
+    public List<PoulpeBranch> getModeratedBranches() {
+        return selectedGroup == null ? null : groupService.getModeratedBranches(selectedGroup);
     }
 
     /**
-     * @return current Session instance
+     * @return true if group are moderating some {@link PoulpeBranch}
      */
-    private Session getSession() {
-        return sessionFactory.getCurrentSession();
-    }
-
-    /**
-     * @return true if group are moderating some branches
-     */
-    private boolean hasModeratingGroup() {
-        return getModeratingBranches().size() != 0;
+    private boolean isModeratingGroup() {
+        return selectedGroup != null && groupService.getModeratedBranches(selectedGroup).size() != 0;
     }
 
     // -- Getters/Setters --------------------
 
     /**
-     * Gets visibility status of Delete dialog window.
+     * Gets visibility status of delete group dialog window, boolean show added as fix for onClose action,
+     * which don't send anything to the server when closing window because of event.stopPropagation, so during next
+     * change notification ZK will think that we need to show that dialog again which is wrong.
      *
      * @return true if dialog is visible
      */
-    public boolean isShowDeleteDialog() {
-        return showDeleteDialog;
+    public boolean isShowDeleteConfirmDialog() {
+        boolean show = showDeleteConfirmDialog;
+        showDeleteConfirmDialog = false;
+        return show;
     }
 
     /**
@@ -214,8 +211,8 @@ public class UserGroupVm {
     /**
      * @return true if show branches dialog is visible
      */
-    public boolean isShowModeratingBranches() {
-        return showModeratingBranches;
+    public boolean isShowDeleteModeratorGroupDialog() {
+        return showDeleteModeratorGroupDialog;
     }
 
     /**

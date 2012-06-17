@@ -18,6 +18,7 @@ import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import ru.javatalks.utils.general.Assert;
 
 import java.util.List;
@@ -29,6 +30,7 @@ import java.util.List;
  * @author Pavel Vervenko
  */
 public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
+    private final static String MODERAING_GROUP_ID = "moderating_group_id";
 
     /**
      * {@inheritDoc}
@@ -64,4 +66,17 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
         saveOrUpdate(group);
         super.delete(group);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<PoulpeBranch> getModeratingBranches(Group group) {
+        getSession().flush();
+        Query query = getSession().createQuery("from PoulpeBranch where MODERATORS_GROUP_ID=:" + MODERAING_GROUP_ID);
+        query.setParameter(MODERAING_GROUP_ID, group.getId());
+        return query.list();
+    }
+
 }

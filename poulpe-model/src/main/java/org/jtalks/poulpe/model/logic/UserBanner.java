@@ -49,11 +49,11 @@ public class UserBanner {
     }
 
     /**
-     * Gets List of {@PoulpeUser} unbanned users
+     * Gets List of {@link PoulpeUser} unbanned users
      *
      * @param availableFilterText Filter (like '%%') to username
      * @param pagination          Params to limit
-     * @return List of {@PoulpeUser}
+     * @return List of {@link PoulpeUser}
      *         //
      */
     public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
@@ -87,7 +87,7 @@ public class UserBanner {
     /**
      * Create group to ban
      *
-     * @return {@Group} of ban
+     * @return {@link Group} of ban
      */
     private Group createBannedUserGroup() {
         Group bannedUsersGroup = new Group(BANNED_USERS_GROUP_NAME, "Banned Users");
