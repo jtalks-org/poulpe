@@ -123,6 +123,9 @@ public class UserGroupVm {
             closeDialog();
             bindWrapper.postNotifyChange(UserGroupVm.this, SELECTED_GROUP, SHOW_DELETE_CONFIRM_DIALOG);
         }
+        else {
+            bindWrapper.postNotifyChange(UserGroupVm.this, MODERATING_BRANCHES);
+        }
     }
 
     /**

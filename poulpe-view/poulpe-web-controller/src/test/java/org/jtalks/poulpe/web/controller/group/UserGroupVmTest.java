@@ -105,6 +105,7 @@ public class UserGroupVmTest {
         doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
         viewModel.deleteGroup();
         verify(groupService, times(0)).deleteGroup(selectedGroup);
+        verify(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
     }
 
     @Test
@@ -126,8 +127,10 @@ public class UserGroupVmTest {
 
     @Test
     public void testShowNewGroupDialog() {
+        viewModel.setSelectedGroup(null);
         viewModel.showNewGroupDialog();
         assertTrue(viewModel.isShowGroupDialog());
+        assertNotNull(viewModel.getSelectedGroup());
     }
 
     @Test
@@ -162,7 +165,7 @@ public class UserGroupVmTest {
     }
 
     @Test
-    public void testIsShowNewDialog() {
+    public void testIsShowGroupDialog() {
         viewModel.showNewGroupDialog();
         assertTrue(viewModel.isShowGroupDialog());
         assertFalse(viewModel.isShowGroupDialog());
