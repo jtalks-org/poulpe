@@ -65,6 +65,31 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     }
 
     @Test
+    public void testGetById() {
+        Group group = TestFixtures.group();
+
+        saveAndEvict(group);
+
+        Group actual = dao.get(group.getId());
+        assertReflectionEquals(actual, group);
+    }
+
+
+    @Test
+    public void testGetAll() {
+        Group group0 = TestFixtures.group();
+        saveAndEvict(group0);
+
+        Group group1 = TestFixtures.group();
+        saveAndEvict(group1);
+
+        List<Group> actual = dao.getAll();
+        assertTrue(actual.size()==2);
+        assertReflectionEquals(actual.get(0), group0);
+        assertReflectionEquals(actual.get(1), group1);
+    }
+
+    @Test
     public void testGetByName() {
         Group group = TestFixtures.group();
 
@@ -121,6 +146,16 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
 
         List<PoulpeBranch> actual = dao.getModeratingBranches(group);
         assertEquals(actual.size(), 0);
+    }
+    
+    @Test
+    public void testDeleteGroup(){
+        Group group = TestFixtures.group();
+        saveAndEvict(group);
+
+        dao.delete(group);
+        Group actual = dao.get(group.getId());
+        assertNull(actual);
     }
 
 
