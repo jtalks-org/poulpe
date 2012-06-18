@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
@@ -48,11 +49,12 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @Override
     public List<Group> getByName(String name) {
         Assert.throwIfNull(name, "name");
-
-        Query query = getSession().createQuery("from Group g where g.name = ?");
-        query.setString(0, name);
-
-        return query.list();
+        if (StringUtils.isNotBlank(name)) {
+	        Query query = getSession().createQuery("from Group g where g.name = ?");
+	        query.setString(0, name);
+	        return query.list();
+        }
+        return this.getAll();
     }
 
     /**
