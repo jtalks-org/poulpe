@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import org.apache.commons.lang.StringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
@@ -85,11 +84,7 @@ public class UserGroupVm {
     @Command
     public void searchGroup() {
         groups.clear();
-        if ( StringUtils.isNotBlank(this.searchString)) {
-        	groups.addAll(groupService.getByName(searchString));
-        } else {
-        	groups.addAll(groupService.getAll());
-        }
+        groups.addAll(groupService.getByName(searchString));
     }
 
     /**
