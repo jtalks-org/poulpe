@@ -60,7 +60,7 @@ public class SectionEditingDialog {
 
     void storeNewSection(PoulpeSection section) {
         Jcommune jcommune = (Jcommune) (Object) forumStructureVm.getTreeModel().getRoot().getData();
-        jcommune.addSection(section);
+        jcommune.addOrUpdateSection(section);
         forumStructureService.saveJcommune(jcommune);
     }
 

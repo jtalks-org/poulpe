@@ -73,11 +73,11 @@ public class Jcommune extends Component {
     }
 
     /**
-     * Adds a section to the list.
+     * Adds a section to the list if it doesn't exist or update it.
      * 
-     * @param section the section to add
+     * @param section the section to add or update
      */
-    public void addSection(PoulpeSection section) {
+    public void addOrUpdateSection(PoulpeSection section) {
         int position = sections.indexOf(section);
         if (position >= 0) {
             sections.set(position, section);

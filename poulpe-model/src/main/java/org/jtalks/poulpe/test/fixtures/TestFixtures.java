@@ -100,7 +100,7 @@ public final class TestFixtures {
 
         for (int i = 0; i < sectionsAmount; i++) {
             PoulpeSection section = sectionWithBranches();
-            jcommune.addSection(section);
+            jcommune.addOrUpdateSection(section);
         }
 
         return jcommune;

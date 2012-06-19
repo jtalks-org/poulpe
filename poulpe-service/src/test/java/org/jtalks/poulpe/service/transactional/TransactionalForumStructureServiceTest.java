@@ -113,12 +113,12 @@ public class TransactionalForumStructureServiceTest {
         for (int i = 0; i < 5; i++) {
             sectionA.addOrUpdateBranch(createBranch(sectionA, "Branch" + i));
         }
-        jcommune.addSection(sectionA);
+        jcommune.addOrUpdateSection(sectionA);
         PoulpeSection sectionB = new PoulpeSection("SectionB");
         for (int i = 5; i < 10; i++) {
             sectionB.addOrUpdateBranch(createBranch(sectionB, "Branch" + i));
         }
-        jcommune.addSection(sectionB);
+        jcommune.addOrUpdateSection(sectionB);
         return new Object[][]{{jcommune}};
     }
 

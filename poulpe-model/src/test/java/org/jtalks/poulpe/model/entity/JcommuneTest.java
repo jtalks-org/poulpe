@@ -35,6 +35,17 @@ public class JcommuneTest {
         assertEquals(sections.get(3), target);
     }
 
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testAddOrUpdateSection(Jcommune jcommune) {
+        List<PoulpeSection> sections = jcommune.getSections();
+        PoulpeSection exist = sections.get(1);
+        exist.setName("exist");
+        jcommune.addOrUpdateSection(exist);
+        assertEquals(sections.get(1), exist);
+        PoulpeSection notExist = new PoulpeSection("not exist");
+        jcommune.addOrUpdateSection(notExist);
+        assertEquals(sections.get(sections.size() - 1), notExist);
+    }
 
     @DataProvider
     public Object[][] provideFilledJcommune() {
@@ -44,7 +55,7 @@ public class JcommuneTest {
             section.getBranches().add(new PoulpeBranch("branch-name" + i * 3));
             section.getBranches().add(new PoulpeBranch("branch-name" + i * 3 + 1));
             section.getBranches().add(new PoulpeBranch("branch-name" + i * 3 + 2));
-            jcommune.addSection(section);
+            jcommune.getSections().add(section);
         }
         return new Object[][]{{jcommune}};
     }
