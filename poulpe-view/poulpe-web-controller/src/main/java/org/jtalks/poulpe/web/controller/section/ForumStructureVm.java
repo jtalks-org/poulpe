@@ -261,4 +261,8 @@ public class ForumStructureVm {
     public Jcommune getRootAsJcommune() {
         return (Jcommune) (Object) treeModel.getRoot().getData();
     }
+
+    public void setTreeModel(ForumStructureTreeModel treeModel) {
+        this.treeModel = treeModel;
+    }
 }
