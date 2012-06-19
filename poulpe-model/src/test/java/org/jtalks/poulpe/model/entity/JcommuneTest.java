@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.model.entity;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 import java.util.List;
 
@@ -45,6 +46,14 @@ public class JcommuneTest {
         PoulpeSection notExist = new PoulpeSection("not exist");
         jcommune.addOrUpdateSection(notExist);
         assertEquals(sections.get(sections.size() - 1), notExist);
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testRemoveSection(Jcommune jcommune) {
+        List<PoulpeSection> sections = jcommune.getSections();
+        PoulpeSection removed = sections.get(1);
+        jcommune.removeSection(removed);
+        assertFalse(sections.contains(removed));
     }
 
     @DataProvider
