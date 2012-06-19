@@ -35,6 +35,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class TransactionalForumStructureServiceTest {
     TransactionalForumStructureService sut;
@@ -100,6 +101,29 @@ public class TransactionalForumStructureServiceTest {
         sut.moveBranch(branch, target);
         assertEquals(section1.getBranches(), expectedBranchesInSection1);
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testGetJcommune(Jcommune jcommune) {
+        doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
+        Jcommune jcommuneFromService = sut.getJcommune();
+        assertEquals(jcommuneFromService, jcommune);
+        verify(componentDao).getByType(ComponentType.FORUM);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testSaveJcommune(Jcommune jcommune) {
+        sut.saveJcommune(jcommune);
+        verify(componentDao).saveOrUpdate(jcommune);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testRemoveBranch(Jcommune jcommune) {
+        PoulpeSection section = jcommune.getSections().get(0);
+        PoulpeBranch branchToremove = section.getBranch(0);
+        sut.removeBranch(branchToremove);
+        assertFalse(section.getBranches().contains(branchToremove));
+        verify(sectionDao).saveOrUpdate(section);
     }
 
     @DataProvider
