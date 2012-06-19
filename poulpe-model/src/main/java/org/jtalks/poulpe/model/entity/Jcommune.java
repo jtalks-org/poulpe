@@ -85,4 +85,17 @@ public class Jcommune extends Component {
             sections.add(section);
         }
     }
+
+    /**
+     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right. 
+     * 
+     * @param section a section to move
+     * @param target a target section that will be shifted
+     */
+    public void moveSection(PoulpeSection section, PoulpeSection target) {
+    	sections.remove(section);
+        int position = sections.indexOf(target);
+        sections.set(position, section);
+        sections.add(position + 1, target);
+    }
 }

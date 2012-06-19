@@ -162,7 +162,12 @@ public class ForumStructureVm {
             return;
         }
 
+        PoulpeSection draggedSection = draggedItem.getSectionItem();
+        PoulpeSection targetSection = targetItem.getSectionItem();
+        getRootAsJcommune().moveSection(draggedSection, targetSection);
+        forumStructureService.saveJcommune(getRootAsJcommune());
         treeModel.dropNodeBefore(draggedNode, targetNode);
+        treeModel.setSelectedNode(draggedNode);
     }
 
     /**
