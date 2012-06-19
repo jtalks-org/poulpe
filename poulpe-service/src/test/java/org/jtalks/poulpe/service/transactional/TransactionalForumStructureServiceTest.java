@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -40,16 +39,14 @@ import org.testng.annotations.Test;
 public class TransactionalForumStructureServiceTest {
     TransactionalForumStructureService sut;
     private SectionDao sectionDao;
-    private BranchDao branchDao;
     private ComponentDao componentDao;
 
 
     @BeforeMethod
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
-        branchDao = mock(BranchDao.class);
         sectionDao = mock(SectionDao.class);
-        sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao);
+        sut = new TransactionalForumStructureService(sectionDao, componentDao);
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
