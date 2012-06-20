@@ -23,7 +23,6 @@ import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -157,60 +156,4 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
-
-    // -- Applying pagination ------------------------
-
-    private static final int ITEMS_PER_PAGE = 50;
-    private static final String TOTAL_SIZE = "totalSize";
-    static final String NO_FILTER_SEARCH_STRING = "",
-            ACTIVE_PAGE = "activePage",
-            USERS = "users";
-
-    private String searchString = NO_FILTER_SEARCH_STRING;
-    private int activePage = 0;
-    private List<PoulpeUser> users;
-
-    public int getItemsPerPage() {
-        return ITEMS_PER_PAGE;
-    }
-
-    /**
-     * @return total amount of users matched the searchString
-     */
-    public int getTotalSize() {
-        return userService.countUsernameMatches(searchString);
-    }
-
-    private void displayFirstPage(String searchString) {
-        this.searchString = searchString;
-        setActivePage(0);
-    }
-
-    private List<PoulpeUser> usersOf(int page) {
-        return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
-    }
-
-    /**
-     * Filters all the users using the given string.
-     *
-     * @param searchString string for filtering
-     */
-    @Command
-    @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE})
-    public void searchUsers(@BindingParam(value = "searchString") String searchString) {
-        displayFirstPage(searchString);
-    }
-
-    /**
-     * Updates the active page value with the current page of pagination.
-     * Updates the list of users so it displays the needed page.
-     *
-     * @param activePage current page of pagination
-     */
-    @NotifyChange({USERS})
-    public void setActivePage(int activePage) {
-        this.activePage = activePage;
-        this.users = usersOf(activePage);
-    }
-
 }
