@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service.transactional;
 
 import java.util.List;
 
+import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -29,11 +30,13 @@ import org.jtalks.poulpe.service.ForumStructureService;
  * @author Guram Savinov
  */
 public class TransactionalForumStructureService implements ForumStructureService {
-    private SectionDao sectionDao;
+    private final SectionDao sectionDao;
+    private final BranchDao branchDao;
     private final ComponentDao componentDao;
 
-    public TransactionalForumStructureService(SectionDao sectionDao, ComponentDao componentDao) {
+    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao) {
         this.sectionDao = sectionDao;
+        this.branchDao = branchDao;
         this.componentDao = componentDao;
     }
 
@@ -61,6 +64,7 @@ public class TransactionalForumStructureService implements ForumStructureService
         PoulpeSection section = (PoulpeSection) branch.getSection();
         section.deleteBranch(branch);
         sectionDao.saveOrUpdate(section);
+        branchDao.delete(branch);
     }
 
     /**
