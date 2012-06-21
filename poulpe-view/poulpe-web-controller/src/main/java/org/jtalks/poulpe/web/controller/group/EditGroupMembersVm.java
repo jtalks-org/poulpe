@@ -26,6 +26,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -156,4 +157,58 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
+
+        // -- Applying pagination ------------------------
+
+        private static final int ITEMS_PER_PAGE = 50;
+        private static final String TOTAL_SIZE = "totalSize";
+        static final String NO_FILTER_SEARCH_STRING = "",
+                ACTIVE_PAGE = "activePage";
+
+        private int activePage = 0;
+        /**
+        * @return amount of users visible on the page
+        */
+        public int getItemsPerPage() {
+            return ITEMS_PER_PAGE;
+        }
+
+        /**
+         * @return total amount of users existed in group
+         */
+        public int getTotalSize() {
+            filterExist();
+            return getExist().size();
+//        return userService.countUsernameMatches(getExistFilterTxt());
+        }
+
+    /**
+         * @return currently active page
+         */
+        public int getActivePage() {
+            return activePage;
+        }
+
+        /**
+         * Updates the active page value with the current page of pagination.
+         * Updates the list of users so it displays the needed page.
+         *
+         * @param activePage current page of pagination
+         */
+        @NotifyChange({EXIST_PROPERTY, ACTIVE_PAGE})
+        public void setActivePage(int activePage) {
+            this.activePage = activePage;
+            setExist(usersOfExist(activePage));
+        }
+
+        private ListModelList<PoulpeUser> usersOfExist(int page) {
+            ListModelList<PoulpeUser> usersOf = (ListModelList)userService.findUsersPaginated(getExistFilterTxt(), page, ITEMS_PER_PAGE);
+            usersOf.retainAll(getExist());
+            return usersOf;
+
+//        List<PoulpeUser> allExistUsers = getExist();
+//        List<PoulpeUser> onPageExistUsers = allExistUsers.subList(((page+1) * ITEMS_PER_PAGE) - ITEMS_PER_PAGE, (page+1) * ITEMS_PER_PAGE);
+//        return onPageExistUsers;
+        }
+
 }
