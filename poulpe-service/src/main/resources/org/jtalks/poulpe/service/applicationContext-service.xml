@@ -41,7 +41,8 @@
     </bean>
     <bean id="forumStructureService" class="org.jtalks.poulpe.service.transactional.TransactionalForumStructureService">
         <constructor-arg index="0" ref="sectionDao"/>
-        <constructor-arg index="1" ref="componentDao"/>
+        <constructor-arg index="1" ref="branchDao"/>
+        <constructor-arg index="2" ref="componentDao"/>
     </bean>
     <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
         <constructor-arg index="0" ref="componentDao"/>

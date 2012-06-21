@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -38,8 +39,9 @@ import org.testng.annotations.Test;
  * @author Guram Savinov
  */
 public class TransactionalForumStructureServiceTest {
-    TransactionalForumStructureService sut;
+    private TransactionalForumStructureService sut;
     private SectionDao sectionDao;
+    private BranchDao branchDao;
     private ComponentDao componentDao;
 
 
@@ -47,7 +49,8 @@ public class TransactionalForumStructureServiceTest {
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
         sectionDao = mock(SectionDao.class);
-        sut = new TransactionalForumStructureService(sectionDao, componentDao);
+        branchDao = mock(BranchDao.class);
+        sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao);
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
@@ -118,11 +121,19 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void testRemoveBranch(Jcommune jcommune) {
+    public void removeBranchShouldRemoveFromDb(Jcommune jcommune) {
         PoulpeSection section = jcommune.getSections().get(0);
-        PoulpeBranch branchToremove = section.getBranch(0);
-        sut.removeBranch(branchToremove);
-        assertFalse(section.getBranches().contains(branchToremove));
+        PoulpeBranch branchToRemove = section.getBranch(0);
+        sut.removeBranch(branchToRemove);
+        verify(branchDao).delete(branchToRemove);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void removeBranchShouldRemoveFromSection(Jcommune jcommune) {
+        PoulpeSection section = jcommune.getSections().get(0);
+        PoulpeBranch branchToRemove = section.getBranch(0);
+        sut.removeBranch(branchToRemove);
+        assertFalse(section.getBranches().contains(branchToRemove));
         verify(sectionDao).saveOrUpdate(section);
     }
 
