@@ -17,81 +17,107 @@
 -->
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
-    <!-- Adding user to ban state: user selection -->
-    <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
-      <bandbox id="usersPopupToBan" autodrop="true"  buttonVisible="false"
-               onChanging="@command('setAvailableFilter', filterText=event.value)"
-               onOpen="popupWithUsersToBanOpen()"
-              >
-          <zscript>
-              void popupWithUsersToBanOpen()
-              {
-                 usersListBoxToBan.focus();
-                 addUserToBannedGroupButton.setDisabled(true);
-              }
-          </zscript>
-          <bandpopup>
-              <vbox>
-                  <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
-                           onClick="selectUserToBan()" onKey="selectUserToBan()"
-                           selectedItem="@save(userBanningVm.addBanFor)">
-                      <zscript>
-                          void selectUserToBan()
-                          {
-                           usersPopupToBan.setValue(usersListBoxToBan.getSelectedItem().getLabel());
-                           usersPopupToBan.close();
-                           addUserToBannedGroupButton.setDisabled(false);
-                          }
-                      </zscript>
-                      <template name="model" var="user">
-                          <listitem value="component" context="popupMenu">
-                              <listcell label="@load(user.username)"/>
-                          </listitem>
-                      </template>
-                  </listbox>
-              </vbox>
-          </bandpopup>
-      </bandbox>
+        <!-- Adding user to ban state: user selection -->
+        <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
+            <bandbox id="usersPopupToBan" autodrop="true" buttonVisible="false"
+                     onChanging="@command('setAvailableFilter', filterText=event.value)"
+                     onOpen="popupWithUsersToBanOpen()"
+                    >
+                <zscript>
+                    void popupWithUsersToBanOpen()
+                    {
+                    usersListBoxToBan.focus();
+                    addUserToBannedGroupButton.setDisabled(true);
+                    }
+                </zscript>
+                <bandpopup>
+                    <vbox>
+                        <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
+                                 onClick="selectUserToBan()" onKey="selectUserToBan()"
+                                 selectedItem="@save(userBanningVm.addBanFor)">
+                            <zscript>
+                                void selectUserToBan()
+                                {
+                                usersPopupToBan.setValue(usersListBoxToBan.getSelectedItem().getLabel());
+                                usersPopupToBan.close();
+                                usersPopupToBan.focus();
+                                addUserToBannedGroupButton.setDisabled(false);
+                                }
+                            </zscript>
+                            <template name="model" var="user">
+                                <listitem value="component" context="popupMenu" class="filter-list">
+                                    <listcell label="@load(user.username)"/>
+                                </listitem>
+                            </template>
+                        </listbox>
+                    </vbox>
+                </bandpopup>
+            </bandbox>
 
-      <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
-              onClick="@command('addUserToBannedGroup')"
-        disabled="@load(null eq userBanningVm.addBanFor)" />
-    </hbox>
+            <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
+                    onClick="@command('addUserToBannedGroup')"
+                    disabled="@load(null eq userBanningVm.addBanFor)"/>
+        </hbox>
 
-    <!-- Banned users list -->
+        <!-- Banned users list -->
 
-      <listbox id="userList"  model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"  mold="paging" pageSize="50" pagingPosition="both"   vflex="true"
+        <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"
+                 mold="paging" pageSize="50" pagingPosition="both" vflex="true"
                  context="contextMenu_user">
-      <listhead>
-          <listheader label="${labels.users.username}"  />
-          <listheader label="${labels.users.firstname}"  />
-          <listheader label="${labels.users.lastname}"/>
-          <listheader label="${labels.users.email}"  />
-      </listhead>
-      <template name="model" var="user">
+            <listhead>
+                <listheader label="${labels.users.username}"/>
+                <listheader label="${labels.users.firstname}"/>
+                <listheader label="${labels.users.lastname}"/>
+                <listheader label="${labels.users.email}"/>
+            </listhead>
+            <template name="model" var="user">
 
-          <listitem >
-              <listcell label="@load(user.username)" />
-              <listcell label="@load(user.firstName)"/>
-              <listcell label="@load(user.lastName)" />
-              <listcell label="@load(user.email)" />
+                <listitem>
+                    <listcell label="@load(user.username)"/>
+                    <listcell label="@load(user.firstName)"/>
+                    <listcell label="@load(user.lastName)"/>
+                    <listcell label="@load(user.email)"/>
 
-          </listitem>
-      </template>
+                </listitem>
+            </template>
 
-      </listbox>
+        </listbox>
 
-      <!-- Context menu -->
-      <menupopup id="contextMenu_user">
-          <menuitem label="${labels.userbanning.revoke}"
-                    image="/resources/img/unblock16.png" onClick="@command('revokeBan')" />
-      </menupopup>
+        <!-- Context menu -->
+        <menupopup id="contextMenu_user">
+            <menuitem label="${labels.userbanning.revoke}"
+                      image="/resources/img/unblock16.png" onClick="@command('revokeBan')"/>
+        </menupopup>
 
-  </window>
+    </window>
+    <script>
+        var focusEvents = function(){
+        $('.z-bandbox-inp').keydown(function (e) {
+        $('.z-listitem-seld').removeClass('z-listbox-odd');
+        $('.z-listitem-seld').removeClass('z-listitem-seld');
+        $('.z-listitem-focus').removeClass('z-listitem-focus');
+        if(e.which == 40 || e.which == 38){
+        $('tr.filter-list').first().addClass('z-listitem-seld z-listbox-odd');
+        $('tr.filter-list').first().find('td').addClass('z-listitem-focus');
+        $('tr.filter-list').first().attr('tabindex',-1).focus();
+        }
+        });
+
+        $('.z-bandpopup').keydown(function (e) {
+        if(e.which >= 9 &amp;&amp; e.which &lt;= 111 &amp;&amp; e.which != 13 &amp;&amp; e.which != 38
+        &amp;&amp; e.which != 40){
+        $('.z-bandbox-inp').focus();
+        }
+        });
+        }
+        setTimeout("focusEvents()",500)
+    </script>
 
 
 </zk>
+
+
