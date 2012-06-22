@@ -59,7 +59,7 @@
                     sclass="edit.members.searchExistButton" />
               </hbox>
               <paging id="paging" pageSize="@load(editGroupMembersVm.itemsPerPage)"
-                      totalSize="@load(editGroupMembersVm.totalSize)" activePage="@bind(editGroupMembersVm.activePage" />
+                      totalSize="@load(editGroupMembersVm.totalSize)" activePage="@bind(editGroupMembersVm.activePage)" />
               <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
                   multiple="true" checkmark="true" width="515px" height="350px">
                 <listhead>
