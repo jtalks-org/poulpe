@@ -23,15 +23,42 @@
 
     <!-- Adding user to ban state: user selection -->
     <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
-      <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@save(userBanningVm.addBanFor)" width="300px"
-        autodrop="true" autocomplete="true" buttonVisible="false"
-        onChanging="@command('setAvailableFilter', filterText=event.value)">
-        <template name="model" var="user">
-          <comboitem label="@load(user.username)" />
-        </template>
-      </combobox>
+      <bandbox id="usersPopupToBan" autodrop="true"  buttonVisible="false"
+               onChanging="@command('setAvailableFilter', filterText=event.value)"
+               onOpen="popupWithUsersToBanOpen()"
+              >
+          <zscript>
+              void popupWithUsersToBanOpen()
+              {
+                 usersListBoxToBan.focus();
+                 addUserToBannedGroupButton.setDisabled(true);
+              }
+          </zscript>
+          <bandpopup>
+              <vbox>
+                  <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
+                           onClick="selectUserToBan()" onKey="selectUserToBan()"
+                           selectedItem="@save(userBanningVm.addBanFor)">
+                      <zscript>
+                          void selectUserToBan()
+                          {
+                           usersPopupToBan.setValue(usersListBoxToBan.getSelectedItem().getLabel());
+                           usersPopupToBan.close();
+                           addUserToBannedGroupButton.setDisabled(false);
+                          }
+                      </zscript>
+                      <template name="model" var="user">
+                          <listitem value="component" context="popupMenu">
+                              <listcell label="@load(user.username)"/>
+                          </listitem>
+                      </template>
+                  </listbox>
+              </vbox>
+          </bandpopup>
+      </bandbox>
 
-      <button label="${labels.userbanning.add}" onClick="@command('addUserToBannedGroup')"
+      <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
+              onClick="@command('addUserToBannedGroup')"
         disabled="@load(null eq userBanningVm.addBanFor)" />
     </hbox>
 
