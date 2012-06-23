@@ -20,7 +20,7 @@
         </row>
         <row>
           ${labels.component.description}
-          <textbox id="descriptionTextBox" width="300px" constraint="no empty" value="@validator('beanValidator')" />
+          <textbox id="descriptionTextBox" width="300px" value="@validator('beanValidator')" />
         </row>
         <row>
           ${labels.component.type}
