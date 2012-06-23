@@ -41,7 +41,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @Override
     @SuppressWarnings("unchecked")
     public List<Group> getAll() {
-        return getSession().createQuery(FIND_ALL_GROUPS).list();
+        return getSession().getNamedQuery(FIND_ALL_GROUPS).list();
     }
 
     /**
