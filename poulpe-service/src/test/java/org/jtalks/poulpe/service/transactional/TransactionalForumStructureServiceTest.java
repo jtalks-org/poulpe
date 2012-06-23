@@ -36,9 +36,10 @@ import org.testng.annotations.Test;
 
 /**
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class TransactionalForumStructureServiceTest {
-    TransactionalForumStructureService sut;
+    private TransactionalForumStructureService sut;
     private SectionDao sectionDao;
     private BranchDao branchDao;
     private ComponentDao componentDao;
@@ -47,8 +48,8 @@ public class TransactionalForumStructureServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         componentDao = mock(ComponentDao.class);
-        branchDao = mock(BranchDao.class);
         sectionDao = mock(SectionDao.class);
+        branchDao = mock(BranchDao.class);
         sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao);
     }
 
@@ -105,6 +106,37 @@ public class TransactionalForumStructureServiceTest {
         assertEquals(section2.getBranches(), expectedBranchesInSection2);
     }
 
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testGetJcommune(Jcommune jcommune) {
+        doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
+        Jcommune jcommuneFromService = sut.getJcommune();
+        assertEquals(jcommuneFromService, jcommune);
+        verify(componentDao).getByType(ComponentType.FORUM);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void testSaveJcommune(Jcommune jcommune) {
+        sut.saveJcommune(jcommune);
+        verify(componentDao).saveOrUpdate(jcommune);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void removeBranchShouldRemoveFromDb(Jcommune jcommune) {
+        PoulpeSection section = jcommune.getSections().get(0);
+        PoulpeBranch branchToRemove = section.getBranch(0);
+        sut.removeBranch(branchToRemove);
+        verify(branchDao).delete(branchToRemove);
+    }
+
+    @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
+    public void removeBranchShouldRemoveFromSection(Jcommune jcommune) {
+        PoulpeSection section = jcommune.getSections().get(0);
+        PoulpeBranch branchToRemove = section.getBranch(0);
+        sut.removeBranch(branchToRemove);
+        assertFalse(section.getBranches().contains(branchToRemove));
+        verify(sectionDao).saveOrUpdate(section);
+    }
+
     @DataProvider
     private Object[][] provideJcommuneWithSectionsAndBranches() {
         Jcommune jcommune = TestFixtures.jcommune();
@@ -113,12 +145,12 @@ public class TransactionalForumStructureServiceTest {
         for (int i = 0; i < 5; i++) {
             sectionA.addOrUpdateBranch(createBranch(sectionA, "Branch" + i));
         }
-        jcommune.addSection(sectionA);
+        jcommune.addOrUpdateSection(sectionA);
         PoulpeSection sectionB = new PoulpeSection("SectionB");
         for (int i = 5; i < 10; i++) {
             sectionB.addOrUpdateBranch(createBranch(sectionB, "Branch" + i));
         }
-        jcommune.addSection(sectionB);
+        jcommune.addOrUpdateSection(sectionB);
         return new Object[][]{{jcommune}};
     }
 

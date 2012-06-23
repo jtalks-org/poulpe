@@ -3,50 +3,55 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  
+
   <window mode="modal" border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init(editComponentVm)" closable="true" width="35%" onClose="@command('cancel')" onOK="@command('save')"
     onCancel="@command('cancel')">
-    
-    <grid>
-      <columns>
-        <column width="25%" />
-        <column width="75%" />
-      </columns>
-      <rows>
-        <row>
-          ${labels.component.title}
-          <textbox width="40%" value="@load(vm.component.name) @save(vm.component.name, before='save') @validator('beanValidator')" />
-        </row>
-        <row>
-          ${labels.component.description}
-          <textbox width="95%" value="@load(vm.component.description) @save(vm.component.description, before='save') @validator('beanValidator')" />
-        </row>
-      </rows>
-    </grid>
 
-    <grid model="@load(vm.component.properties)">
-      <columns>
-        <column width="25%" />
-        <column width="75%" />
-      </columns>
-      <template name="model" var="property">
-        <row>
-          <!-- TODO: it may be better to move somewhere out this 'component.property' prefix -->
-          ${c:l('component.property.'.concat(property.name))}
-          <textbox width="95%" value="@load(property.value) @save(property.value, before='save') " 
-            constraint="${property.validationRule}: ${c:l('component.property.error.'.concat(property.name))}" />
-         
-        </row>
-      </template>
-    </grid>
-   
-    <hlayout>
-      <button image="/resources/img/accept16.png" label="${labels.componentedit.save}" onClick="@command('save')"
-        sclass="edit.comp.saveButton" />
-      <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}" onClick="@command('cancel')"
-        sclass="edit.comp.cancelButton" />
-    </hlayout>
+    <groupbox form="@id('component') @load(vm.component) @save(vm.component, before='save')">
+      <grid>
+        <columns>
+          <column width="25%" />
+          <column width="75%" />
+        </columns>
+        <rows>
+          <row>
+            ${labels.component.title}
+            <textbox width="40%"
+              value="@bind(component.name) @validator('beanValidator')" />
+          </row>
+          <row>
+            ${labels.component.description}
+            <textbox width="95%"
+              value="@bind(component.description) @validator('beanValidator')" />
+          </row>
+        </rows>
+      </grid>
+
+      <grid model="@load(component.properties)">
+        <columns>
+          <column width="25%" />
+          <column width="75%" />
+        </columns>
+        <template name="model" var="property">
+          <row>
+            <!-- TODO: it may be better to move somewhere out this 'component.property' prefix -->
+            ${c:l('component.property.'.concat(property.name))}
+            <textbox width="95%" value="@bind(property.value)"
+              constraint="${property.validationRule}: ${c:l('component.property.error.'.concat(property.name))}" />
+
+          </row>
+        </template>
+      </grid>
+
+      <hlayout>
+        <button image="/resources/img/accept16.png" label="${labels.componentedit.save}" onClick="@command('save')"
+          sclass="edit.comp.saveButton" />
+        <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}" onClick="@command('cancel')"
+          sclass="edit.comp.cancelButton" />
+      </hlayout>
+
+    </groupbox>
 
   </window>
 

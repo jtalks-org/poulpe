@@ -100,11 +100,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
         assertReflectionEquals(actual.get(0), group);
     }
 
-    /**
-     * BUG: Method getByName return empty group list if search string are empty, so no way to see all groups
-     * without reload page if you did search.
-     */
-    @Test(enabled = false)
+    @Test
     public void testGetByEmptyName() {
         Group group = TestFixtures.group();
         saveAndEvict(group);

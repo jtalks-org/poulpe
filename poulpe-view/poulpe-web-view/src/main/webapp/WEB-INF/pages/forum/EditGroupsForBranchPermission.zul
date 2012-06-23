@@ -15,7 +15,7 @@
                 <panel title="Available" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.avail)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true">
+                                 multiple="true" checkmark="true" vflex="true">
                             <listhead>
                                 <listheader label="Group" sclass="boldstyle"/>
                             </listhead>
@@ -38,7 +38,7 @@
                 <panel title="Already added" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.exist)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true">
+                                 multiple="true" checkmark="true" vflex="true">
                             <listhead>
                                 <listheader label="Group" sclass="boldstyle"/>
                             </listhead>

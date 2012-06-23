@@ -8,7 +8,6 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')">
       <caption label="@load(editGroupMembersVm.groupToEdit.name)" />
-  <paging id="paging" pageSize="@load(editGroupMembersVm.itemsPerPage)" totalSize="@bind(editGroupMembersVm.totalSize)" activePage="@bind(editGroupMembersVm.activePage)" />
     <vbox>
       <hbox>
         <vbox>
@@ -20,7 +19,7 @@
                     sclass="edit.members.searchAvailButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px">
+                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
@@ -59,7 +58,7 @@
                     sclass="edit.members.searchExistButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px">
+                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />

@@ -38,19 +38,4 @@
       </many-to-many>
     </bag>
   </class>
-
-    <query name="findBranchesModeratedByGroup">
-        <![CDATA[from PoulpeBranch where MODERATORS_GROUP_ID= ?]]>
-    </query>
-
-    <query name="findGroupByName">
-        <![CDATA[from Group g where g.name = ?]]>
-    </query>
-
-    <query name="findAllGroups">
-        <![CDATA[from Group]]>
-    </query>
-
-
-
 </hibernate-mapping>

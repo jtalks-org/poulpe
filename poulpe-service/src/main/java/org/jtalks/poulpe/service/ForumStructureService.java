@@ -25,12 +25,18 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
  * @author Guram Savinov
  */
 public interface ForumStructureService {
+
+    /**
+     * Saves the {@code Jcommune} instance.
+     * 
+     * @param jcommune the Jcommune instance to save
+     */
     void saveJcommune(Jcommune jcommune);
 
     /**
-     * Returns a JCommune instance by the specified ID (there can be several such instances).
+     * Returns a {code JCommune} instance.
      *
-     * @return the instance of JCommune or {@code null} if no JCommune instance is in database
+     * @return the instance of Jcommune or {@code null} if no JCommune instance is in database
      */
     Jcommune getJcommune();
 

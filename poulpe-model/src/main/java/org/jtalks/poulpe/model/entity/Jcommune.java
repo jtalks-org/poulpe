@@ -73,16 +73,29 @@ public class Jcommune extends Component {
     }
 
     /**
-     * Adds a section to the list.
+     * Adds a section to the list if it doesn't exist or update it.
      * 
-     * @param section the section to add
+     * @param section the section to add or update
      */
-    public void addSection(PoulpeSection section) {
+    public void addOrUpdateSection(PoulpeSection section) {
         int position = sections.indexOf(section);
         if (position >= 0) {
             sections.set(position, section);
         } else {
             sections.add(section);
         }
+    }
+
+    /**
+     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right. 
+     * 
+     * @param section a section to move
+     * @param target a target section that will be shifted
+     */
+    public void moveSection(PoulpeSection section, PoulpeSection target) {
+    	sections.remove(section);
+        int position = sections.indexOf(target);
+        sections.set(position, section);
+        sections.add(position + 1, target);
     }
 }

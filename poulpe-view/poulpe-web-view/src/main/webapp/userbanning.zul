@@ -17,54 +17,66 @@
 -->
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
-    <!-- Adding user to ban state: user selection -->
-    <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
-      <combobox model="@load(userBanningVm.availableUsers)" selectedItem="@save(userBanningVm.addBanFor)" width="300px"
-        autodrop="true" autocomplete="true" buttonVisible="false"
-        onChanging="@command('setAvailableFilter', filterText=event.value)">
-        <template name="model" var="user">
-          <comboitem label="@load(user.username)" />
-        </template>
-      </combobox>
+        <zscript src="js/userbanning.zs"/>
 
-      <button label="${labels.userbanning.add}" onClick="@command('addUserToBannedGroup')"
-        disabled="@load(null eq userBanningVm.addBanFor)" />
-    </hbox>
+        <!-- Adding user to ban state: user selection -->
+        <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
+            <bandbox id="usersPopupToBan" autodrop="true" buttonVisible="false"
+                     onChanging="@command('setAvailableFilter', filterText=event.value)"
+                     onOpen="popupWithUsersToBanOpen()">
+                <bandpopup>
+                    <vbox>
+                        <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
+                                 onClick="selectUserToBan()" onKey="selectUserToBan()"
+                                 selectedItem="@save(userBanningVm.addBanFor)">
+                            <template name="model" var="user">
+                                <listitem value="component" context="popupMenu" class="filter-list">
+                                    <listcell label="@load(user.username)"/>
+                                </listitem>
+                            </template>
+                        </listbox>
+                    </vbox>
+                </bandpopup>
+            </bandbox>
 
-    <!-- Banned users list -->
+            <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
+                    onClick="@command('addUserToBannedGroup')"
+                    disabled="@load(null eq userBanningVm.addBanFor)"/>
+        </hbox>
 
-      <listbox id="userList"  model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"  mold="paging" pageSize="50" pagingPosition="both"   vflex="true"
+        <!-- Banned users list -->
+
+        <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"
+                 mold="paging" pageSize="50" pagingPosition="both" vflex="true"
                  context="contextMenu_user">
-      <listhead>
-          <listheader label="${labels.users.username}"  />
-          <listheader label="${labels.users.firstname}"  />
-          <listheader label="${labels.users.lastname}"/>
-          <listheader label="${labels.users.email}"  />
-      </listhead>
-      <template name="model" var="user">
+            <listhead>
+                <listheader label="${labels.users.username}"/>
+                <listheader label="${labels.users.firstname}"/>
+                <listheader label="${labels.users.lastname}"/>
+                <listheader label="${labels.users.email}"/>
+            </listhead>
+            <template name="model" var="user">
+                <listitem>
+                    <listcell label="@load(user.username)"/>
+                    <listcell label="@load(user.firstName)"/>
+                    <listcell label="@load(user.lastName)"/>
+                    <listcell label="@load(user.email)"/>
+                </listitem>
+            </template>
+        </listbox>
 
-          <listitem >
-              <listcell label="@load(user.username)" />
-              <listcell label="@load(user.firstName)"/>
-              <listcell label="@load(user.lastName)" />
-              <listcell label="@load(user.email)" />
+        <!-- Context menu -->
+        <menupopup id="contextMenu_user">
+            <menuitem label="${labels.userbanning.revoke}"
+                      image="/resources/img/unblock16.png" onClick="@command('revokeBan')"/>
+        </menupopup>
+    </window>
 
-          </listitem>
-      </template>
-
-      </listbox>
-
-      <!-- Context menu -->
-      <menupopup id="contextMenu_user">
-          <menuitem label="${labels.userbanning.revoke}"
-                    image="/resources/img/unblock16.png" onClick="@command('revokeBan')" />
-      </menupopup>
-
-  </window>
-
-
+    <script src="js/userbanning.js"/>
 </zk>
+
+

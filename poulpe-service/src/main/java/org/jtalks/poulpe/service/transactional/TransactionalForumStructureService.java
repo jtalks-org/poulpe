@@ -30,8 +30,8 @@ import org.jtalks.poulpe.service.ForumStructureService;
  * @author Guram Savinov
  */
 public class TransactionalForumStructureService implements ForumStructureService {
-    private SectionDao sectionDao;
-    private BranchDao branchDao;
+    private final SectionDao sectionDao;
+    private final BranchDao branchDao;
     private final ComponentDao componentDao;
 
     public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao) {
@@ -64,6 +64,7 @@ public class TransactionalForumStructureService implements ForumStructureService
         PoulpeSection section = (PoulpeSection) branch.getSection();
         section.deleteBranch(branch);
         sectionDao.saveOrUpdate(section);
+        branchDao.delete(branch);
     }
 
     /**
