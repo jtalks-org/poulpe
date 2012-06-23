@@ -48,6 +48,7 @@ public class UserGroupVmTest {
     @Mock
     private List<PoulpeBranch> branches;
 
+
     private UserGroupVm viewModel;
     private SelectedEntity<Group> selectedEntity;
     private Group selectedGroup;
@@ -61,7 +62,7 @@ public class UserGroupVmTest {
         viewModel = spy(new UserGroupVm(groupService, selectedEntity, windowManager));
         selectedEntity = new SelectedEntity<Group>();
         selectedGroup = new Group();
-        groups = new ListModelList<Group>();
+        groups = spy(new ListModelList<Group>());
         viewModel.setGroups(groups);
         viewModel.setSelectedGroup(selectedGroup);
         viewModel.setBranches(branches);
@@ -95,9 +96,9 @@ public class UserGroupVmTest {
     @Test
     public void testDeleteNotModeratorGroup() {
         doNothing().when(groupService).deleteGroup(any(Group.class));
-        doNothing().when(bindWrapper).postNotifyChange(any(UserGroupVm.class),eq(SHOW_DELETE_CONFIRM_DIALOG));
+        doNothing().when(bindWrapper).postNotifyChange(any(UserGroupVm.class), eq(SHOW_DELETE_CONFIRM_DIALOG));
         viewModel.deleteGroup();
-        verify(bindWrapper).postNotifyChange(any(UserGroupVm.class),eq(SHOW_DELETE_CONFIRM_DIALOG));
+        verify(bindWrapper).postNotifyChange(any(UserGroupVm.class), eq(SHOW_DELETE_CONFIRM_DIALOG));
         verify(groupService).deleteGroup(selectedGroup);
         assertTrue(viewModel.getSelectedGroup() == null);
         verify(viewModel).updateView();
@@ -133,6 +134,7 @@ public class UserGroupVmTest {
     public void testShowNewGroupDialog() {
         viewModel.setSelectedGroup(null);
         viewModel.showNewGroupDialog();
+        verify(groups).clearSelection();
         assertTrue(viewModel.isShowGroupDialog());
         assertNotNull(viewModel.getSelectedGroup());
     }

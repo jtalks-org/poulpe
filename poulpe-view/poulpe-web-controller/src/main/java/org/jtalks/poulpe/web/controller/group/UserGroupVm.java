@@ -110,7 +110,7 @@ public class UserGroupVm {
      */
     @Command
     @NotifyChange({SHOW_DELETE_CONFIRM_DIALOG, SHOW_MODERATOR_GROUP_SELECTION_PART,
-            SELECTED_MODERATOR_GROUP, GROUP_SERVICE})
+            SELECTED_MODERATOR_GROUP, GROUP_SERVICE, SELECTED_GROUP})
     public void showGroupDeleteConfirmDialog() {
         showDeleteConfirmDialog = true;
         if (isModeratingGroup()) {
@@ -142,6 +142,7 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG})
     public void showNewGroupDialog() {
+        groups.clearSelection();
         selectedGroup = new Group();
         showGroupDialog = true;
     }
