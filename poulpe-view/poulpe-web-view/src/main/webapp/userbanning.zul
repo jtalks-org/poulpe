@@ -92,32 +92,9 @@
             <menuitem label="${labels.userbanning.revoke}"
                       image="/resources/img/unblock16.png" onClick="@command('revokeBan')"/>
         </menupopup>
-
     </window>
-    <script>
-        var focusEvents = function(){
-        $('.z-bandbox-inp').keydown(function (e) {
-        $('.z-listitem-seld').removeClass('z-listbox-odd');
-        $('.z-listitem-seld').removeClass('z-listitem-seld');
-        $('.z-listitem-focus').removeClass('z-listitem-focus');
-        if(e.which == 40 || e.which == 38){
-        $('tr.filter-list').first().addClass('z-listitem-seld z-listbox-odd');
-        $('tr.filter-list').first().find('td').addClass('z-listitem-focus');
-        $('tr.filter-list').first().attr('tabindex',-1).focus();
-        }
-        });
 
-        $('.z-bandpopup').keydown(function (e) {
-        if(e.which >= 9 &amp;&amp; e.which &lt;= 111 &amp;&amp; e.which != 13 &amp;&amp; e.which != 38
-        &amp;&amp; e.which != 40){
-        $('.z-bandbox-inp').focus();
-        }
-        });
-        }
-        setTimeout("focusEvents()",500)
-    </script>
-
-
+    <script src="js/userbanning.js"/>
 </zk>
 
 
