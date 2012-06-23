@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -38,20 +39,21 @@ import static org.testng.Assert.*;
  */
 public class UserGroupVmTest {
     @SuppressWarnings("JpaQlInspection")
-    private static final String SEARCH_STRING = "searchString", SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog",
-            SELECTED_GROUP = "selectedGroup", MODERATING_BRANCHES = "moderatedBranches";
+    private static final String SEARCH_STRING = "searchString", SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog";
 
     @Mock
     private GroupService groupService;
     @Mock
     private WindowManager windowManager;
     @Mock
-    private BindUtilsWrapper bindWrapper;
+    private List<PoulpeBranch> branches;
 
     private UserGroupVm viewModel;
     private SelectedEntity<Group> selectedEntity;
     private Group selectedGroup;
     private ListModelList<Group> groups;
+    private BindUtilsWrapper bindWrapper = spy(new BindUtilsWrapper());
+
 
     @BeforeMethod
     public void beforeMethod() {
@@ -62,6 +64,7 @@ public class UserGroupVmTest {
         groups = new ListModelList<Group>();
         viewModel.setGroups(groups);
         viewModel.setSelectedGroup(selectedGroup);
+        viewModel.setBranches(branches);
         viewModel.setBindWrapper(bindWrapper);
     }
 
@@ -92,12 +95,14 @@ public class UserGroupVmTest {
     @Test
     public void testDeleteNotModeratorGroup() {
         doNothing().when(groupService).deleteGroup(any(Group.class));
-        doNothing().when(bindWrapper).postNotifyChange(any(), eq(SELECTED_GROUP), eq(SHOW_DELETE_CONFIRM_DIALOG));
+        doNothing().when(bindWrapper).postNotifyChange(any(UserGroupVm.class),eq(SHOW_DELETE_CONFIRM_DIALOG));
         viewModel.deleteGroup();
+        verify(bindWrapper).postNotifyChange(any(UserGroupVm.class),eq(SHOW_DELETE_CONFIRM_DIALOG));
         verify(groupService).deleteGroup(selectedGroup);
+        assertTrue(viewModel.getSelectedGroup() == null);
         verify(viewModel).updateView();
         verify(viewModel).closeDialog();
-        verify(bindWrapper).postNotifyChange(any(), eq(SELECTED_GROUP), eq(SHOW_DELETE_CONFIRM_DIALOG));
+
     }
 
     @Test(dataProvider = "provideRandomGroupsList")
@@ -105,7 +110,6 @@ public class UserGroupVmTest {
         doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
         viewModel.deleteGroup();
         verify(groupService, times(0)).deleteGroup(selectedGroup);
-        verify(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
     }
 
     @Test
@@ -119,10 +123,10 @@ public class UserGroupVmTest {
     @Test(dataProvider = "provideRandomGroupsList")
     public void testShowDeleteDialogWithModeratorGroup(List notEmptyList) {
         doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
-        doNothing().when(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
         viewModel.showGroupDeleteConfirmDialog();
+        assertEquals(viewModel.getBranches(), notEmptyList);
+        assertEquals(viewModel.getSelectedModeratorGroup(), selectedGroup);
         assertTrue(viewModel.isShowDeleteModeratorGroupDialog());
-        verify(bindWrapper).postNotifyChange(any(), eq(MODERATING_BRANCHES));
     }
 
     @Test
@@ -137,6 +141,55 @@ public class UserGroupVmTest {
     public void testShowDeleteConfirmDialog() {
         viewModel.showGroupDeleteConfirmDialog();
         assertTrue(viewModel.isShowDeleteConfirmDialog());
+    }
+
+    @Test(dataProvider = "provideRandomBranchesList")
+    public void testSaveModeratorForBranchesWithoutChanges(List BranchesList) {
+        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
+        viewModel.setBranches(viewModel.getModeratedBranches());
+        viewModel.setSelectedModeratorGroup(selectedGroup);
+        viewModel.saveModeratorForBranches();
+        for (PoulpeBranch branch : viewModel.getBranches()) {
+            verify(branch, times(0)).setModeratorsGroup(any(Group.class));
+        }
+    }
+
+    @Test(dataProvider = "provideRandomBranchesList")
+    public void testSaveModeratorForBranchesWithChanges(List BranchesList) {
+        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
+        Group moderatorGroup = new Group("moderator");
+        viewModel.setBranches(viewModel.getModeratedBranches());
+        viewModel.setSelectedModeratorGroup(moderatorGroup);
+        viewModel.saveModeratorForBranches();
+        for (PoulpeBranch branch : viewModel.getBranches()) {
+            verify(branch).setModeratorsGroup(moderatorGroup);
+        }
+    }
+
+    @Test
+    public void testAddToMap() {
+        PoulpeBranch keyBranch = someBranch();
+        Group valueGroup = someGroup();
+        viewModel.addToMap(keyBranch, valueGroup);
+        assertEquals(viewModel.getBranchesMap().get(keyBranch), valueGroup);
+        assertTrue(viewModel.getBranchesMap().size() == 1);
+    }
+
+    @Test(dataProvider = "provideRandomBranchesList")
+    public void testSaveModeratorForCurrentBranch(List BranchesList) {
+        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
+        Group oldModeratorGroup = someGroup();
+        Group wantBecameModeratorGroup = someGroup();
+        viewModel.setSelectedGroup(oldModeratorGroup);
+        PoulpeBranch keyBranch = someBranch();
+        keyBranch.setModeratorsGroup(oldModeratorGroup);
+        viewModel.addToMap(keyBranch, wantBecameModeratorGroup);
+        viewModel.saveModeratorForCurrentBranch(keyBranch);
+
+        verify(keyBranch).setModeratorsGroup(wantBecameModeratorGroup);
+        verify(viewModel.getBranches()).remove(keyBranch);
+        assertFalse(viewModel.isShowDeleteModeratorGroupDialog());
+        assertTrue(viewModel.getBranchesMap().size() == 0);
     }
 
     @Test
@@ -188,5 +241,19 @@ public class UserGroupVmTest {
     public Object[][] provideRandomGroupsList() {
         return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
     }
+
+    @DataProvider
+    public Object[][] provideRandomBranchesList() {
+        return new Object[][]{{Arrays.asList(spy(new PoulpeBranch("2")), spy(new PoulpeBranch("3")))}};
+    }
+
+    private Group someGroup() {
+        return new Group("someGroup");
+    }
+
+    private PoulpeBranch someBranch() {
+        return spy(new PoulpeBranch("someBranch"));
+    }
+
 
 }

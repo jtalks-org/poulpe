@@ -22,6 +22,13 @@
     background: rgb(204, 204, 204);
 }
 
+.dialog-window-position {
+    position:absolute;
+    top:10%;
+    left:50%;
+    margin-left:-175px;
+}
+
 .simple-grid {
     padding: 8px;
 }
