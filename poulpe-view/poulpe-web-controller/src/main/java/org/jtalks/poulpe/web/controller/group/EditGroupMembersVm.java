@@ -148,4 +148,13 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
         windowManager.open("usergroup.zul");
     }
+
+    /**
+     * Opens edit group members dialog window.
+     *
+     * @param windowManager the window manager instance
+     */
+    public static void showDialog(WindowManager windowManager) {
+        windowManager.open(EDIT_GROUP_MEMBERS_URL);
+    }
 }
