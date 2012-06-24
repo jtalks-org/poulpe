@@ -81,6 +81,20 @@
 
   <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
     <constructor-arg ref="aclService"/>
+    <property name="aclUtil">
+      <bean class="org.jtalks.common.security.acl.AclUtil">
+        <constructor-arg ref="aclService"/>
+        <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
+      </bean>
+    </property>
+  </bean>
+  <bean id="typeConvertingObjectIdentityGenerator" factory-method="createDefaultGenerator"
+        class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">
+    <property name="additionalConversionRules">
+      <map>
+        <entry key="org.jtalks.poulpe.model.entity.Component" value="COMPONENT"/>
+      </map>
+    </property>
   </bean>
   <bean id="securityService" class="org.jtalks.common.security.SecurityService">
     <constructor-arg index="0" ref="userDao"/>
