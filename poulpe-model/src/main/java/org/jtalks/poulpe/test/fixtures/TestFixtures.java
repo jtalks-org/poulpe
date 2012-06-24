@@ -54,7 +54,13 @@ public final class TestFixtures {
         newBranch.setModeratorsGroup(group());
         return newBranch;
     }
-
+    public static PoulpeBranch branchWithId() {
+        PoulpeBranch newBranch = new PoulpeBranch(random(), random());
+        newBranch.setSection(section());
+        newBranch.setModeratorsGroup(group());
+        newBranch.setId(1L);
+        return newBranch;
+    }
     /**
      * @return topic type with random name and description
      */
@@ -141,6 +147,12 @@ public final class TestFixtures {
      */
     public static Component randomComponent() {
         return component(randomComponentType());
+    }
+
+    public static Component randomComponentWithId() {
+        Component component = component(randomComponentType());
+        component.setId(1L);
+        return component;
     }
 
     /**

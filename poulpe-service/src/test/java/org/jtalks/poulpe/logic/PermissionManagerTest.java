@@ -70,11 +70,6 @@ import com.google.common.collect.Lists;
 public class PermissionManagerTest {
 
     @Deprecated
-    public static PoulpeBranch randomBranch() {
-        return new PoulpeBranch(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
-    }
-
-    @Deprecated
     public static Group randomGroup(long id) {
         Group group = new Group(RandomStringUtils.randomAlphanumeric(15), RandomStringUtils.randomAlphanumeric(20));
         group.setId(id);
@@ -140,7 +135,7 @@ public class PermissionManagerTest {
 
     @Test(dataProvider = "accessChanges")
     public void testChangeGrants(PermissionChanges changes) throws Exception {
-        PoulpeBranch branch = randomBranch();
+        PoulpeBranch branch = TestFixtures.branch();
 
         manager.changeGrants(branch, changes);
 
@@ -150,7 +145,7 @@ public class PermissionManagerTest {
 
     @Test(dataProvider = "accessChanges")
     public void testChangeRestriction(PermissionChanges changes) throws Exception {
-        PoulpeBranch branch = randomBranch();
+        PoulpeBranch branch = TestFixtures.branch();
 
         manager.changeRestrictions(branch, changes);
 
@@ -160,16 +155,12 @@ public class PermissionManagerTest {
 
     @Test
     public void testGetPermissionsMapForBranch() throws Exception {
-        PoulpeBranch branch = randomBranch();
-
+        PoulpeBranch branch = TestFixtures.branchWithId();
         givenPermissions(branch, BranchPermission.values());
 
         PermissionsMap<BranchPermission> permissionsMap = manager.getPermissionsMapFor(branch);
-
         verify(aclManager).getGroupPermissionsOn(eq(branch));
-
         assertTrue(permissionsMap.getPermissions().containsAll(permissions));
-
         for (GroupAce groupAce : groupAces) {
             List<Group> groups = permissionsMap.get(groupAce.getBranchPermission(), groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
@@ -178,16 +169,12 @@ public class PermissionManagerTest {
 
     @Test
     public void testGetPermissionsMapForComponent() throws Exception {
-        Component component = TestFixtures.randomComponent();
-
+        Component component = TestFixtures.randomComponentWithId();
         givenPermissions(component, GeneralPermission.values());
 
         PermissionsMap<GeneralPermission> permissionsMap = manager.getPermissionsMapFor(component);
-
         verify(aclManager).getGroupPermissionsOn(eq(component));
-
         assertTrue(permissionsMap.getPermissions().containsAll(permissions));
-
         for (GroupAce groupAce : groupAces) {
             List<Group> groups = permissionsMap.get(GeneralPermission.findByMask(groupAce.getBranchPermissionMask()),
                     groupAce.isGranting());
@@ -205,7 +192,7 @@ public class PermissionManagerTest {
 
     @DataProvider
     public Object[][] branches() {
-        return new Object[][] { { randomBranch() } };
+        return new Object[][] { { TestFixtures.branch() } };
     }
 
     private List<UserGroupSid> getNewlyAddedSids(PermissionChanges accessChanges) {
@@ -235,7 +222,7 @@ public class PermissionManagerTest {
         AuditLogger auditLogger = new ConsoleAuditLogger();
         AclAuthorizationStrategy aclAuthorizationStrategy = new AclAuthorizationStrategyImpl(new GrantedAuthorityImpl(
                 "some_role"));
-        ObjectIdentity entityIdentity = AclUtil.createObjectIdentityUtils().createIdentity(entityId,
+        ObjectIdentity entityIdentity = new AclUtil(null).createIdentity(entityId,
                 entity.getClass().getSimpleName());
 
         Acl acl = new AclImpl(entityIdentity, entityId + 1, aclAuthorizationStrategy, auditLogger);
