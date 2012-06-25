@@ -140,9 +140,11 @@ public class UserGroupVm {
      * Opens group adding dialog.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG})
+    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG, SHOW_DELETE_CONFIRM_DIALOG})
     public void showNewGroupDialog() {
         groups.clearSelection();
+        showDeleteConfirmDialog=false;
+        showDeleteModeratorGroupDialog = false;
         selectedGroup = new Group();
         showGroupDialog = true;
     }
