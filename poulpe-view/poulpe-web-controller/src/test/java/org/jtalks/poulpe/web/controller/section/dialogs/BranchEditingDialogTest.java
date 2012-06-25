@@ -21,8 +21,8 @@ import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.section.ForumStructureTreeModel;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
@@ -52,7 +52,7 @@ public class BranchEditingDialogTest {
     }
 
     @Test(dataProvider = "provideTreeModelWithSectionsAndBranches")
-    public void testRenewSectionsFromTree(ZkTreeModel<ForumStructureItem> treeModel) throws Exception {
+    public void testRenewSectionsFromTree(ForumStructureTreeModel treeModel) throws Exception {
         sut.renewSectionsFromTree(treeModel);
         assertEquals(sut.getSectionList().size(), treeModel.getRoot().getChildCount());
     }
@@ -98,9 +98,9 @@ public class BranchEditingDialogTest {
         return new Object[][]{{buildTreeModel()}};
     }
 
-    private static ZkTreeModel<ForumStructureItem> buildTreeModel() {
+    private static ForumStructureTreeModel buildTreeModel() {
         Jcommune jcommune = TestFixtures.jcommuneWithSections();
         ZkTreeNode<ForumStructureItem> forumStructure = buildForumStructure(jcommune);
-        return new ZkTreeModel<ForumStructureItem>(forumStructure);
+        return new ForumStructureTreeModel(forumStructure);
     }
 }

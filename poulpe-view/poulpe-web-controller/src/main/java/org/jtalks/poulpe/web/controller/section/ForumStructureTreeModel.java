@@ -22,6 +22,7 @@ import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A tree model specifically dedicated to work with forum structure.
@@ -94,6 +95,15 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
         nodeToRemove.removeFromParent();
         return nodeToRemove;
+    }
+
+    public List<PoulpeSection> getSections() {
+        List<TreeNode<ForumStructureItem>> sectionNodes = getRoot().getChildren();
+        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
+        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
+            sections.add(sectionNode.getData().getSectionItem());
+        }
+        return sections;
     }
 
     private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
