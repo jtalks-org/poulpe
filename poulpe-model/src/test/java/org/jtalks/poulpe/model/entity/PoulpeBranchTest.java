@@ -50,6 +50,19 @@ public class PoulpeBranchTest {
         assertTrue(addTo.containsBranch(branch));
     }
 
+    @Test(dataProvider = "provideBranchWithSection")
+    public void testRemoveFromSection(PoulpeBranch branch) throws Exception {
+        PoulpeSection section = branch.removeFromSection();
+        assertNull(branch.getSection());
+        assertFalse(section.containsBranch(branch));
+    }
+
+    @Test
+    public void removeFromSection_withNoSection_shouldDoNothing() throws Exception {
+        PoulpeBranch branch = new PoulpeBranch();
+        assertNull(branch.removeFromSection());
+    }
+
     @DataProvider
     public Object[][] provideBranchWithSection() {
         PoulpeBranch branch = new PoulpeBranch("test-branch", "test-description");
