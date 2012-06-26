@@ -7,24 +7,21 @@
           onClose="self.visible=false;event.stopPropagation();" onCancel="self.visible=false"
           forward="onOK=saveBranchButton.onClick" visible="@load(branchVm.showDialog)" height="320px" width="300px"
           apply="org.zkoss.bind.BindComposer">
-    <vlayout form="@id('fx') @load(branchVm) @save(branchVm, before='saveBranch')">
+    <vlayout form="@id('fx') @load(branchVm.editedBranch) @save(branchVm.editedBranch, before='saveBranch')">
       ${labels.forum_structure.branch_dialog.section}
       <combobox readonly="true" model="@load(branchVm.sectionList)" hflex="1"/>
       ${labels.forum_structure.branch_dialog.branch_name}
-      <textbox id="branchNameBox" value="@bind(branchVm.editedBranch.name) @validator('beanValidator')" hflex="1"
-               errorMessage="@load(branchMsgs[branchNameBox])"/>
+      <textbox id="branchNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1" errorMessage="@load(branchMsgs[branchNameBox])"/>
       <label value="Moderating Group:"/>
-      <combobox id="moderatingGroupsCombo" model="@load(branchVm.candidatesToModerate)" hflex="1"
-                selectedItem="@load(branchVm.moderatingGroup) @save(branchVm.moderatingGroup, before='saveBranch') @validator('beanValidator')"
-                errorMessage="@load(branchMsgs[moderatingGroupsCombo])">
+      <combobox id="moderatingGroupsCombo" model="@load(branchVm.candidatesToModerate)" hflex="1" readonly="true"
+                selectedItem="@load(branchVm.moderatingGroup) @save(branchVm.moderatingGroup, before='saveBranch') @validator('beanValidator')">
         <template name="model">
           <comboitem label="@load(each.name)"/>
         </template>
       </combobox>
       ${labels.forum_structure.branch_dialog.branch_description}
-      <textbox rows="5" id="branchDescriptionBox"
-               value="@bind(branchVm.editedBranch.description) @validator('beanValidator')"
-               errorMessage="@load(vmsgs[branchDescriptionText])" hflex="1"/>
+      <textbox rows="5" id="branchDescriptionBox" value="@bind(fx.description) @validator('beanValidator')"
+               errorMessage="@load(branchMsgs[branchDescriptionBox])" hflex="1"/>
       <cell>
         <button id="saveBranchButton" label="${labels.dialogs.save_button}"
                 onClick="@command('saveBranch') @global-command('refreshTree')"/>
