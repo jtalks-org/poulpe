@@ -20,7 +20,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
-            viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal">
+            viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
         <label value="${labels.branches.label.branch}" sclass="caption-label"/>
         <label value="@bind(branchPermissionManagementVm.branch.name)" sclass="caption-label"/>
         <style src="/resources/css/all.css"/>
