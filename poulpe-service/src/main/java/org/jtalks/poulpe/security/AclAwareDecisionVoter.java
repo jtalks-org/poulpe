@@ -29,7 +29,7 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_SE
  *         6/26/12 10:28 PM
  */
 public class AclAwareDecisionVoter implements AccessDecisionVoter {
-    public static final String AUTHORIZED = "authorizedPoulpeUser";
+    static final String AUTHORIZED = "authorizedPoulpeUser";
     private AccessDecisionVoter baseVoter;
     private AclManager aclManager;
     private ComponentDao componentDao;
