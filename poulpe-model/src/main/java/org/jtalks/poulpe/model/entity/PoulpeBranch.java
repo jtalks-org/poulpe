@@ -15,8 +15,10 @@
 package org.jtalks.poulpe.model.entity;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Group;
 
 import javax.annotation.Nonnull;
+import javax.validation.constraints.NotNull;
 
 
 /**
@@ -25,7 +27,6 @@ import javax.annotation.Nonnull;
  * @author Pavel Vervenko
  */
 public class PoulpeBranch extends Branch {
-
     /**
      * Creates an empty branch, all fields are set to null,
      */
@@ -39,6 +40,10 @@ public class PoulpeBranch extends Branch {
      */
     public PoulpeBranch(String name) {
         super(name, "");
+    }
+
+    public PoulpeBranch(String name, String description) {
+        super(name, description);
     }
 
     /**
@@ -59,13 +64,12 @@ public class PoulpeBranch extends Branch {
     }
 
     /**
-     * Create PoulpeBranch with name and description
-     *
-     * @param name        - name for new PoulpeBranch
-     * @param description - description for new PoulpeBranch
+     * {@inheritDoc}<br/> Overriden in Poulpe in order to put Bean Validation annotation onto field.
      */
-    public PoulpeBranch(String name, String description) {
-        super(name, description);
+    @NotNull(message = "{sections.moderating_group.not_null_constraint}")
+    @Override
+    public Group getModeratorsGroup() {
+        return super.getModeratorsGroup();
     }
 
     /**
@@ -86,5 +90,20 @@ public class PoulpeBranch extends Branch {
     @Override
     public String toString() {
         return getName();
+    }
+
+    /**
+     * Removes the branch from its current section and sets the current section to null. Does nothing if there is no
+     * section associated with the branch.
+     *
+     * @return the section branch was in or null if there was no section
+     */
+    public PoulpeSection removeFromSection() {
+        PoulpeSection section = getPoulpeSection();
+        if (section != null) {
+            section.deleteBranch(this);
+            setSection(null);
+        }
+        return section;
     }
 }

@@ -1,4 +1,4 @@
-<window id="deleteSectionConfirmationDialog" use="org.zkoss.zul.impl.MessageboxDlg"
+<window id="deleteSectionConfirmationDialog"
         title="${labels.forum_structure.delete_section_confirmation_dialog.title}" closable="true" mode="modal"
         border="normal" onClose="self.visible=false;event.stopPropagation();" onCancel="self.visible=false"
         forward="onOK=confirmSectionDeletionButton.onClick" apply="org.zkoss.bind.BindComposer"

@@ -118,10 +118,11 @@ public class TransactionalForumStructureService implements ForumStructureService
     @Override
     public void moveBranch(PoulpeBranch branch, PoulpeBranch target) {
         PoulpeSection targetSection = target.getPoulpeSection();
-        List<PoulpeBranch> branches = targetSection.getPoulpeBranches();
-        int index = branches.indexOf(target);
-        removeBranch(branch);
+        List<PoulpeBranch> branchesOfTargetSection = targetSection.getPoulpeBranches();
+        int index = branchesOfTargetSection.indexOf(target);
+        PoulpeSection sectionBranchWasRemovedFrom = branch.removeFromSection();
         targetSection.addBranchIfAbsentTo(index, branch);
         sectionDao.update(targetSection);
+        sectionDao.update(sectionBranchWasRemovedFrom);
     }
 }

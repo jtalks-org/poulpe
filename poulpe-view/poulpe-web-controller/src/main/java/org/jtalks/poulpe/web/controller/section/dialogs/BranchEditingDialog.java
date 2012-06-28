@@ -19,18 +19,16 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
+import org.jtalks.poulpe.web.controller.section.ForumStructureTreeModel;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
-import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
-import java.util.ArrayList;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -118,26 +116,11 @@ public class BranchEditingDialog {
     /**
      * Clears the previous sections and gets the new ones from the specified tree.
      *
-     * @param sectionTree a forum structure tree to get sections from it
+     * @param forumTree a forum structure tree to get sections from it
      */
-    void renewSectionsFromTree(@Nonnull ZkTreeModel<ForumStructureItem> sectionTree) {
+    void renewSectionsFromTree(@Nonnull ForumStructureTreeModel forumTree) {
         this.sectionList.clear();
-        List<PoulpeSection> sections = unwrapSections(sectionTree.getRoot().getChildren());
-        this.sectionList.addAll(sections);
-    }
-
-    /**
-     * Gets the {@link ForumStructureItem}s from the {@link TreeNode}s.
-     *
-     * @param sectionNodes to be converted to the {@link ForumStructureItem}
-     * @return a list of {@link ForumStructureItem} unwrapped from specified nodes
-     */
-    private List<PoulpeSection> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
-        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData().getSectionItem());
-        }
-        return sections;
+        this.sectionList.addAll(forumTree.getSections());
     }
 
     public PoulpeBranch getEditedBranch() {
@@ -165,6 +148,7 @@ public class BranchEditingDialog {
      *
      * @return the group that is equal to the one that is currently moderating the selected branch
      */
+    @NotNull(message = "{sections.moderating_group.not_null_constraint}")
     public Group getModeratingGroup() {
         Group currentModeratorsGroup = editedBranch.getModeratorsGroup();
         return groupList.getEqual(currentModeratorsGroup);
