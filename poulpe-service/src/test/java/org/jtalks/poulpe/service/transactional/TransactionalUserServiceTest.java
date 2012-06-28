@@ -15,22 +15,31 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.security.acl.AclManager;
+import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.pages.Pages;
-import org.jtalks.poulpe.service.GroupService;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Class for testing {@code TransactionalUserService} functionality.
@@ -40,10 +49,6 @@ import static org.testng.Assert.assertEquals;
  * @author maxim reshetov
  */
 public class TransactionalUserServiceTest {
-
-	@Mock
-	GroupService groupService;
-
 	// sut
 	private TransactionalUserService userService;
 
@@ -51,12 +56,16 @@ public class TransactionalUserServiceTest {
 	private UserDao userDao;
 
 	final String searchString = "searchString";
+    private ComponentDao componentDaoMock;
+    private AclManager aclManagerMock;
 
-	@BeforeMethod
+    @BeforeMethod
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		userDao = mock(UserDao.class);
-		userService = new TransactionalUserService(userDao, mock(UserBanner.class));
+        componentDaoMock = mock(ComponentDao.class);
+        aclManagerMock = mock(AclManager.class);
+        userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock);
 	}
 
 	@Test
@@ -103,6 +112,96 @@ public class TransactionalUserServiceTest {
 		List<PoulpeUser> nonBannedUsers = userService.getNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
 		assertEquals(nonBannedUsers, new ArrayList<PoulpeUser>());
 	}
+
+    @Test
+    public void accessNotAllowedBecauseNoComponentTypeRegistered(){
+        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+        ComponentType componentType = mock(ComponentType.class);
+
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(null);
+
+        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+    }
+
+    @Test
+    public void accessNotAllowedBecauseNoGroupPermissionsAssociatedWithComponent(){
+        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+        ComponentType componentType = mock(ComponentType.class);
+        Component component = mock(Component.class);
+
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
+        when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
+
+        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+    }
+
+    @Test
+    public void accessNotAllowedBecausePermissionNotFound(){
+        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+        PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
+        ComponentType componentType = mock(ComponentType.class);
+        Component component = mock(Component.class);
+
+        String username = "username";
+
+        when(poulpeUser.getUsername()).thenReturn(username);
+        when(userDao.getByUsername(eq(username))).thenReturn(inSessionPoulpeUser);
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
+        when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
+
+        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+    }
+
+    @Test
+    public void accessNotAllowedBecausePermissionIsNotGranting(){
+        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+        PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
+        ComponentType componentType = mock(ComponentType.class);
+        Component component = mock(Component.class);
+        GroupAce groupAce = mock(GroupAce.class);
+        Group group = mock(Group.class);
+        long groupId = 42L;
+
+        String username = "username";
+
+        when(groupAce.getGroupId()).thenReturn(groupId);
+        when(group.getId()).thenReturn(groupId);
+
+        when(poulpeUser.getUsername()).thenReturn(username);
+        when(userDao.getByUsername(eq(username))).thenReturn(inSessionPoulpeUser);
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
+        when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.singletonList(groupAce));
+        when(inSessionPoulpeUser.getGroups()).thenReturn(Collections.singletonList(group));
+        when(groupAce.isGranting()).thenReturn(false);
+
+        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+    }
+
+    @Test
+    public void accessAllowed(){
+        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+        PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
+        ComponentType componentType = mock(ComponentType.class);
+        Component component = mock(Component.class);
+        GroupAce groupAce = mock(GroupAce.class);
+        Group group = mock(Group.class);
+        long groupId = 42L;
+
+        String username = "username";
+
+        when(groupAce.getGroupId()).thenReturn(groupId);
+        when(group.getId()).thenReturn(groupId);
+
+        when(poulpeUser.getUsername()).thenReturn(username);
+        when(userDao.getByUsername(eq(username))).thenReturn(inSessionPoulpeUser);
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
+        when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.singletonList(groupAce));
+        when(inSessionPoulpeUser.getGroups()).thenReturn(Collections.singletonList(group));
+        when(groupAce.isGranting()).thenReturn(true);
+
+        assertTrue(userService.accessAllowedToComponentType(poulpeUser, componentType));
+    }
+
 
 	private static PoulpeUser user() {
 		return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");

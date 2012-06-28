@@ -1,26 +1,17 @@
 package org.jtalks.poulpe.security;
 
-import org.hibernate.Hibernate;
-import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.GroupAce;
-import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.service.UserService;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.TransactionCallback;
-import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.Collection;
-import java.util.List;
 
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
 
@@ -31,11 +22,8 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_SE
 public class AclAwareDecisionVoter implements AccessDecisionVoter {
     static final String AUTHORIZED = "authorizedPoulpeUser";
     private AccessDecisionVoter baseVoter;
-    private AclManager aclManager;
-    private ComponentDao componentDao;
-    private UserDao userDao;
-    private TransactionTemplate transactionTemplate;
     private RequestAttributes requestAttributes;
+    private UserService userService;
 
     public RequestAttributes getRequestAttributes() {
         if (requestAttributes == null) {
@@ -57,8 +45,8 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
     private int tryToAuthorize(Authentication authentication) {
         if (notAuthorized()) {
             if (authentication.getPrincipal() instanceof PoulpeUser) {
-                PoulpeUser user = loadInitializedUser(authentication);
-                int permissionCheckResult = checkPermissions(user);
+                boolean assessAllowed = userService.accessAllowedToComponentType((PoulpeUser) authentication.getPrincipal(), ComponentType.ADMIN_PANEL);
+                int permissionCheckResult = assessAllowed ? ACCESS_GRANTED : ACCESS_DENIED;
                 getRequestAttributes().setAttribute(AUTHORIZED, permissionCheckResult == ACCESS_GRANTED, ServletRequestAttributes.SCOPE_SESSION);
                 return permissionCheckResult;
             } else {
@@ -78,32 +66,6 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         return authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails;
     }
 
-    private PoulpeUser loadInitializedUser(final Authentication authentication) {
-        return transactionTemplate.execute(new TransactionCallback<PoulpeUser>() {
-            @Override
-            public PoulpeUser doInTransaction(TransactionStatus status) {
-                PoulpeUser userWithInitializedGroups = userDao.getByUsername(((PoulpeUser) authentication.getPrincipal()).getUsername());
-                Hibernate.initialize(userWithInitializedGroups.getGroups());
-                return userWithInitializedGroups;
-            }
-        });
-    }
-
-    private int checkPermissions(PoulpeUser user) {
-        List<GroupAce> permissions = aclManager.getGroupPermissionsOn(componentDao.getByType(ComponentType.ADMIN_PANEL));
-        for (GroupAce permission : permissions) {
-            if (!permission.isGranting()) {
-                continue;
-            }
-            for (Group userGroup : user.getGroups()) {
-                if (permission.getGroupId() == userGroup.getId()) {
-                    return ACCESS_GRANTED;
-                }
-            }
-        }
-        return ACCESS_DENIED;
-    }
-
     @Override
     public boolean supports(ConfigAttribute attribute) {
         return baseVoter.supports(attribute);
@@ -118,20 +80,8 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         this.baseVoter = baseVoter;
     }
 
-    public void setAclManager(AclManager aclManager) {
-        this.aclManager = aclManager;
-    }
-
-    public void setComponentDao(ComponentDao componentDao) {
-        this.componentDao = componentDao;
-    }
-
-    public void setUserDao(UserDao userDao) {
-        this.userDao = userDao;
-    }
-
-    public void setTransactionTemplate(TransactionTemplate transactionTemplate) {
-        this.transactionTemplate = transactionTemplate;
+    public void setUserService(UserService userService) {
+        this.userService = userService;
     }
 
     void setRequestAttributes(RequestAttributes requestAttributes) {

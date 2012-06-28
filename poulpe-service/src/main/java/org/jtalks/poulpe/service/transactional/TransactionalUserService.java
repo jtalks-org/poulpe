@@ -14,7 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.security.acl.AclManager;
+import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
@@ -36,6 +42,9 @@ public class TransactionalUserService implements UserService {
 
     private final UserDao userDao;
     private final UserBanner userBanner;
+    private final AclManager aclManager;
+    private final ComponentDao componentDao;
+
 
     /**
      * Create an instance of user entity based service.
@@ -43,9 +52,11 @@ public class TransactionalUserService implements UserService {
      * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
      *                entities
      */
-    public TransactionalUserService(UserDao userDao, UserBanner userBanner) {
+    public TransactionalUserService(UserDao userDao, UserBanner userBanner, AclManager aclManager, ComponentDao componentDao) {
         this.userDao = userDao;
         this.userBanner = userBanner;
+        this.aclManager = aclManager;
+        this.componentDao = componentDao;
     }
 
     /**
@@ -126,5 +137,30 @@ public class TransactionalUserService implements UserService {
     @Override
     public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
         return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
+    }
+
+    @Override
+    public boolean accessAllowedToComponentType(PoulpeUser user, ComponentType componentType) {
+        PoulpeUser inSessionUser = userDao.getByUsername(user.getUsername());
+        Component component = componentDao.getByType(componentType);
+        if (component == null) {
+            return false;
+        }
+        List<GroupAce> permissions = aclManager.getGroupPermissionsOn(component);
+        for (GroupAce permission : permissions) {
+            if (permissionFound(inSessionUser, permission)) {
+                return permission.isGranting();
+            }
+        }
+        return false;
+    }
+
+    private boolean permissionFound(PoulpeUser user, GroupAce permission) {
+        for (Group userGroup : user.getGroups()) {
+            if (permission.getGroupId() == userGroup.getId()) {
+                return true;
+            }
+        }
+        return false;
     }
 }

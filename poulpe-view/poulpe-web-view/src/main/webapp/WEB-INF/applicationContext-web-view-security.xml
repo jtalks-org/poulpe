@@ -30,7 +30,12 @@
     <intercept-url pattern="/favicon.ico" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <form-login login-page="/login.zul" default-target-url="/" authentication-failure-url="/login.zul?login_error=1" />
+    <access-denied-handler ref="redirectingAccessDeniedExceptionHandler"/>
   </http>
+
+    <beans:bean id="redirectingAccessDeniedExceptionHandler" class="org.jtalks.poulpe.web.osod.AuthenticationCleaningAccessDeniedExceptionHandler">
+        <beans:property name="errorPage" value="/login.zul?access_denied=1"/>
+    </beans:bean>
 
     <beans:bean id="affirmativeBasedDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:property name="decisionVoters">
@@ -39,10 +44,7 @@
                     <beans:property name="baseVoter">
                         <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/>
                     </beans:property>
-                    <beans:property name="componentDao" ref="componentDao"/>
-                    <beans:property name="userDao" ref="userDao"/>
-                    <beans:property name="aclManager" ref="aclManager"/>
-                    <beans:property name="transactionTemplate" ref="transactionTemplate"/>
+                    <beans:property name="userService" ref="userService" />
                 </beans:bean>
             </beans:list>
         </beans:property>
