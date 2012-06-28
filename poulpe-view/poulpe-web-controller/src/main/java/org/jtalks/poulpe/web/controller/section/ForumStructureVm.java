@@ -202,16 +202,10 @@ public class ForumStructureVm {
      * @param targetItem    the target item, may be branch as well as section
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
-    private boolean noEffectAfterDropBranch(PoulpeBranch draggedBranch,
-                                            ForumStructureItem targetItem) {
+    private boolean noEffectAfterDropBranch(PoulpeBranch draggedBranch, ForumStructureItem targetItem) {
         PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
         if (targetItem.isSection()) {
-            if (draggedSection.equals(targetItem.getSectionItem())) {
-                return true;
-            }
-            else {
-                return false;
-            }
+            return draggedSection.equals(targetItem.getSectionItem());
         }
 
         PoulpeBranch targetBranch = targetItem.getBranchItem();
@@ -235,17 +229,12 @@ public class ForumStructureVm {
      * @param targetItem  the target section item
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
-    private boolean noEffectAfterDropSection(ForumStructureItem draggedItem,
-                                             ForumStructureItem targetItem) {
+    private boolean noEffectAfterDropSection(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
         PoulpeSection draggedSection = draggedItem.getSectionItem();
         List<PoulpeSection> sections = getRootAsJcommune().getSections();
         int draggedIndex = sections.indexOf(draggedSection);
         int targetIndex = sections.indexOf(targetItem.getSectionItem());
-        if (targetIndex - 1 == draggedIndex) {
-            return true;
-        }
-
-        return false;
+        return targetIndex - 1 == draggedIndex;
     }
 
     public ForumStructureTreeModel getTreeModel() {

@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
@@ -25,8 +24,7 @@ import org.zkoss.zul.TreeNode;
 
 import java.util.ArrayList;
 
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertSame;
+import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
@@ -39,7 +37,7 @@ public class ForumStructureTreeModelTest {
         sut = new ForumStructureTreeModel(createSectionNode());
         sut.getRoot().add(createSectionNode());
         sut.getRoot().add(createSectionNode());
-        sut.getRoot().add(createBranchNode());
+        sut.getRoot().add(createSectionNode());
         sut.getRoot().getChildAt(1).add(createBranchNode());
         sut.getRoot().getChildAt(1).add(createBranchNode());
         sut.getRoot().getChildAt(1).add(createBranchNode());
@@ -60,6 +58,45 @@ public class ForumStructureTreeModelTest {
         ForumStructureItem destinationSection = sut.getChild(0).getData();
         sut.putBranch(branchToPut, destinationSection);
         assertSame(sut.getChild(0, 0).getData(), branchToPut);
+    }
+
+    @Test
+    public void getSectionsShouldReturnAllOfThem() throws Exception {
+        assertEquals(sut.getSections().size(), sut.getRoot().getChildren().size());
+    }
+
+    @Test
+    public void getSectionsWithNoSectionsShouldReturnAllEmptyList() throws Exception {
+        sut = new ForumStructureTreeModel(createBranchNode());//actually any node will be good for the root
+        assertTrue(sut.getSections().isEmpty());
+    }
+
+    @Test
+    public void testRemoveSection() throws Exception {
+        PoulpeSection sectionToRemove = sut.getSections().get(0);
+        assertSame(sut.removeSection(sectionToRemove).getData().getSectionItem(), sectionToRemove);
+        assertNull(sut.find(new ForumStructureItem(sectionToRemove)));
+    }
+
+    @Test
+    public void removeSectionShouldDoNothingIfSectionNotFound() throws Exception {
+        int sizeBeforeRemoval = sut.getSections().size();
+        assertNull(sut.removeSection(new PoulpeSection("to-remove")));
+        assertEquals(sut.getSections().size(), sizeBeforeRemoval);
+    }
+
+    @Test
+    public void removeSectionShouldDoNothingIfNullPassed(){
+        int sizeBeforeRemoval = sut.getSections().size();
+        assertNull(sut.removeSection(null));
+        assertEquals(sut.getSections().size(), sizeBeforeRemoval);
+    }
+
+    @Test
+    public void testRemoveBranch() throws Exception {
+        PoulpeBranch branchToRemove = sut.getChild(1, 0).getData().getBranchItem();
+        assertSame(sut.removeBranch(branchToRemove).getData().getBranchItem(), branchToRemove);
+        assertNull(sut.find(new ForumStructureItem(branchToRemove)));
     }
 
     private ZkTreeNode<ForumStructureItem> createBranchNode() {

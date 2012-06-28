@@ -57,7 +57,7 @@ public class BranchEditingDialogTest {
         assertEquals(sut.getSectionList().size(), treeModel.getRoot().getChildCount());
     }
 
-    @Test(dataProvider = "provideGroups", enabled = false)
+    @Test(dataProvider = "provideGroups")
     public void testGetCandidatesToModerate(List<Group> givenGroups) throws Exception {
         doReturn(givenGroups).when(groupService).getAll();
 

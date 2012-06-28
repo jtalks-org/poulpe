@@ -21,6 +21,7 @@ import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -83,23 +84,45 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return getSelectedData(0);
     }
 
-    public ZkTreeNode<ForumStructureItem> removeBranch(PoulpeBranch branch) {
-        ForumStructureItem nodeData = new ForumStructureItem(branch);
-        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
-        nodeToRemove.removeFromParent();
+    /**
+     * Removes a branch from the tree or does nothing if the branch wasn't found.
+     *
+     * @param branch a branch to remove from the tree
+     * @return a node that was containing that branch or null if no such node found and thus branch wasn't removed
+     */
+    public ZkTreeNode<ForumStructureItem> removeBranch(@Nullable PoulpeBranch branch) {
+        ForumStructureItem itemToRemove = new ForumStructureItem(branch);
+        return removeItem(itemToRemove);
+    }
+
+    /**
+     * Deletes a section from the tree or does nothing if the section can't be found.
+     *
+     * @param section a section to be removed from the tree
+     * @return the removed node or null if no section was found and thus nothing was removed
+     */
+    public ZkTreeNode<ForumStructureItem> removeSection(@Nullable PoulpeSection section) {
+        ForumStructureItem nodeData = new ForumStructureItem(section);
+        return removeItem(nodeData);
+    }
+
+    private ZkTreeNode<ForumStructureItem> removeItem(ForumStructureItem itemToRemove) {
+        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(itemToRemove);
+        if (nodeToRemove != null) {
+            nodeToRemove.removeFromParent();
+        }
         return nodeToRemove;
     }
 
-    public ZkTreeNode<ForumStructureItem> removeSection(PoulpeSection branch) {
-        ForumStructureItem nodeData = new ForumStructureItem(branch);
-        ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(nodeData);
-        nodeToRemove.removeFromParent();
-        return nodeToRemove;
-    }
-
+    /**
+     * @return a list of sections or empty list if there are no sections in forum structure
+     */
     public List<PoulpeSection> getSections() {
-        List<TreeNode<ForumStructureItem>> sectionNodes = getRoot().getChildren();
         List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
+        List<TreeNode<ForumStructureItem>> sectionNodes = getRoot().getChildren();
+        if (sectionNodes == null) {
+            return sections;
+        }
         for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
             sections.add(sectionNode.getData().getSectionItem());
         }

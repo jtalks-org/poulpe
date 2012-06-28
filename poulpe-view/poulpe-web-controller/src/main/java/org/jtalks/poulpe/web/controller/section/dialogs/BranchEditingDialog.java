@@ -123,22 +123,7 @@ public class BranchEditingDialog {
      */
     void renewSectionsFromTree(@Nonnull ForumStructureTreeModel forumTree) {
         this.sectionList.clear();
-        List<PoulpeSection> sections = forumTree.getSections();
-        this.sectionList.addAll(sections);
-    }
-
-    /**
-     * Gets the {@link ForumStructureItem}s from the {@link TreeNode}s.
-     *
-     * @param sectionNodes to be converted to the {@link ForumStructureItem}
-     * @return a list of {@link ForumStructureItem} unwrapped from specified nodes
-     */
-    private List<PoulpeSection> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
-        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData().getSectionItem());
-        }
-        return sections;
+        this.sectionList.addAll(forumTree.getSections());
     }
 
     public PoulpeBranch getEditedBranch() {
@@ -174,5 +159,19 @@ public class BranchEditingDialog {
 
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.setModeratorsGroup(moderatingGroup);
+    }
+
+    /**
+     * Gets the {@link ForumStructureItem}s from the {@link TreeNode}s.
+     *
+     * @param sectionNodes to be converted to the {@link ForumStructureItem}
+     * @return a list of {@link ForumStructureItem} unwrapped from specified nodes
+     */
+    private List<PoulpeSection> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
+        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
+        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
+            sections.add(sectionNode.getData().getSectionItem());
+        }
+        return sections;
     }
 }
