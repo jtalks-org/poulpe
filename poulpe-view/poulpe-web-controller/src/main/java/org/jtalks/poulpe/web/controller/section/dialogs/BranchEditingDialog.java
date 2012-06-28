@@ -19,7 +19,6 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.section.ForumStructureTreeModel;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.BindingParam;
@@ -27,11 +26,9 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.TreeNode;
 
 import javax.annotation.Nonnull;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -159,19 +156,5 @@ public class BranchEditingDialog {
 
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.setModeratorsGroup(moderatingGroup);
-    }
-
-    /**
-     * Gets the {@link ForumStructureItem}s from the {@link TreeNode}s.
-     *
-     * @param sectionNodes to be converted to the {@link ForumStructureItem}
-     * @return a list of {@link ForumStructureItem} unwrapped from specified nodes
-     */
-    private List<PoulpeSection> unwrapSections(List<TreeNode<ForumStructureItem>> sectionNodes) {
-        List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
-        for (TreeNode<ForumStructureItem> sectionNode : sectionNodes) {
-            sections.add(sectionNode.getData().getSectionItem());
-        }
-        return sections;
     }
 }
