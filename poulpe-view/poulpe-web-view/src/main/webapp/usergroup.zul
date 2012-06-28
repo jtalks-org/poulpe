@@ -19,6 +19,7 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
     <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.mainTitle}" border="normal"
             width="100%" height="100%"
             apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
@@ -26,13 +27,13 @@
             <label value="${labels.groups.filter}"/>
             <textbox value="@save(vm.searchString) @validator('beanValidator')" width="150px" multiline="false"
                      maxlength="20" onOK="@command('searchGroup')"/>
-            <button label="${labels.groups.search}" sclass="groups.searchButton" onClick="@command('searchGroup')"/>
+            <button label="${labels.groups.search}" onClick="@command('searchGroup')"/>
             <button label="${labels.groups.button.add}" onClick="@command('showNewGroupDialog')"/>
         </hbox>
         <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@save(vm.selectedGroup)"
                  mold="paging" pageSize="50" pagingPosition="both" height="500px">
             <listhead>
-                <listheader align="left" label="${labels.groups.name}" sort="auto(name)" sclass="boldstyle"/>
+                <listheader align="left" label="${labels.groups.name}" sort="auto(name)"/>
                 <listheader align="left" label="${labels.groups.memberCount}"/>
             </listhead>
             <template name="model" var="group">
@@ -58,12 +59,11 @@
 
         <!-- NEW/EDIT GROUP DIALOG-->
         <window id="groupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.newgroupdialog.title}"
-                closable="true" border="normal" width="450px" mode="modal"
+                closable="true" border="normal" width="430px" mode="modal"
                 onClose="self.visible=false; event.stopPropagation();"
                 onCancel="self.visible=false; event.stopPropagation();"
                 onOK="@command('saveGroup', group=vm.selectedGroup)"
-                visible="@bind(vm.showGroupDialog)"
-                sclass="dialog-window-position">
+                visible="@load(vm.showGroupDialog)">
             <label value="${labels.groups.title.properties}"/>
             <grid>
                 <columns>
@@ -89,9 +89,9 @@
             </grid>
             <hbox align="end">
                 <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
-                        onClick="@command('saveGroup')" sclass="edit.group.confirmButton"/>
+                        onClick="@command('saveGroup')"/>
                 <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
-                        onClick="@command('closeDialog')" sclass="edit.group.rejectButton"/>
+                        onClick="@command('closeDialog')"/>
             </hbox>
         </window>
 
@@ -99,11 +99,10 @@
         <!-- DELETE GROUP DIALOG -->
         <window id="deleteConfirmDialog" title="${labels.groups.delete_confirm_dialog.title}"
                 closable="true" border="normal" width="430px" mode="modal"
-                visible="@bind(vm.showDeleteConfirmDialog)"
+                visible="@load(vm.showDeleteConfirmDialog)"
                 onClose="vm.showDeleteModeratorGroupDialog=false; self.visible=false; event.stopPropagation();"
                 onCancel="vm.showDeleteModeratorGroupDialog=false; self.visible=false; event.stopPropagation();"
-                onOK="@command('deleteGroup')"
-                sclass="dialog-window-position">
+                onOK="@command('deleteGroup')">
             <label value="${labels.groups.title.properties}"/>
             <grid>
                 <columns>
@@ -123,26 +122,25 @@
             </grid>
             <hbox align="end">
                 <button image="/resources/img/accept16.png" label="${labels.groups.button.delete}"
-                        onClick="@command('deleteGroup')" sclass="edit.group.confirmButton"
+                        onClick="@command('deleteGroup')"
                         disabled="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after='saveModeratorForBranches')"/>
                 <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
-                        onClick="@command('closeDialog')" sclass="edit.group.rejectButton"/>
+                        onClick="@command('closeDialog')"/>
             </hbox>
-
+            <!-- moderator assign part -->
             <vlayout
-                    visible="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after='saveModeratorForBranches')"
-                    action="show: slideDown;hide: slideUp">
-                <separator bar="true"/>
+                    visible="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after='saveModeratorForBranches')">
+                               <separator bar="true"/>
                 <label value="${labels.groups.branchDialog.message}"/>
                 <separator/>
                 <label value="${labels.groups.branchDialog.messageTableTitle}"/>
                 <hbox align="end">
-                    <space width="30px"/>
-                <label value="${labels.groups.branchName}"/>
-                    <space width="50px"/>
-                <label value="${labels.groups.moderatingGroup}"/>
-                    <space width="70px"/>
-                <label value="${labels.groups.action}"/>
+                    <space width="10px"/>
+                    <label sclass="halfbold-table-title" value="${labels.groups.branchName}"/>
+                    <space width="45px"/>
+                    <label sclass="halfbold-table-title" value="${labels.groups.moderatingGroup}"/>
+                    <space width="75px"/>
+                    <label sclass="halfbold-table-title" value="${labels.groups.action}"/>
                 </hbox>
                 <listbox>
                     <listhead>
@@ -150,10 +148,9 @@
                         <listheader width="42%"/>
                         <listheader width="26%"/>
                     </listhead>
-                       <listitem>
+                    <listitem>
                         <listcell label="${labels.groups.allBranches}">
-
-                        </listcell>
+                                       </listcell>
                         <listcell>
                             <vlayout>
                                 <combobox model="@load(vm.groupService.all)" autocomplete="true"
@@ -169,27 +166,22 @@
                         <listcell>
                             <vlayout>
                                 <button image="/resources/img/saveall16.png" label="${labels.groups.button.saveAll}"
-                                        onClick="@command('saveModeratorForBranches')"
-                                        sclass="edit.group.confirmButton"/>
+                                        onClick="@command('saveModeratorForBranches')"/>
                             </vlayout>
                         </listcell>
                     </listitem>
-              </listbox>
-
-
+                </listbox>
                 <listbox id="moderatingBranchesListbox" model="@bind(vm.branches)">
                     <listhead>
                         <listheader width="32%"/>
                         <listheader width="42%"/>
                         <listheader width="26%"/>
                     </listhead>
-
-
-                      <template name="model" var="poulpeBranch">
+                    <template name="model" var="poulpeBranch">
                         <listitem>
-                            <listcell   label="@load(poulpeBranch.name)"/>
-                            <listcell >
-                                <combobox model="@load(vm.groupService.all)" autocomplete="true"
+                            <listcell label="@load(poulpeBranch.name)"/>
+                            <listcell>
+                                <combobox model="@load(vm.groupService.all)"
                                           selectedItem="@load(vm.selectedModeratorGroup)"
                                           onSelect="@command('addToMap', branch=poulpeBranch, group=self.selectedItem.value)"
                                           readonly="true">
@@ -199,10 +191,9 @@
                                     </template>
                                 </combobox>
                             </listcell>
-                            <listcell >
+                            <listcell>
                                 <button image="/resources/img/save16.png" label="${labels.groups.button.save}"
-                                        onClick="@command('saveModeratorForCurrentBranch', branch=poulpeBranch)"
-                                        sclass="edit.group.confirmButton"/>
+                                        onClick="@command('saveModeratorForCurrentBranch', branch=poulpeBranch)"/>
                             </listcell>
                         </listitem>
                     </template>

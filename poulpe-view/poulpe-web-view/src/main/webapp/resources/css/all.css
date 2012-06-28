@@ -59,6 +59,11 @@
     float: right
 }
 
+.halfbold-table-title {
+    font-weight: 600;
+    font-size: 9pt;
+}
+
 .boldstyle {
     font-weight: bold;
     font-size: 14pt;

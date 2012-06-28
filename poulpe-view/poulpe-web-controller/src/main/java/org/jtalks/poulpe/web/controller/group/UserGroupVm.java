@@ -41,7 +41,8 @@ public class UserGroupVm {
             SHOW_GROUP_DIALOG = "showGroupDialog", SELECTED_GROUP = "selectedGroup",
             SHOW_MODERATOR_GROUP_SELECTION_PART = "showDeleteModeratorGroupDialog",
             MODERATING_BRANCHES = "branches", SELECTED_MODERATOR_GROUP = "selectedModeratorGroup",
-            SELECTED_BRANCH = "selectedBranch", GROUP_SERVICE="groupService";
+            SELECTED_BRANCH = "selectedBranch", GROUP_SERVICE="groupServiceб",
+            SAVE_MODERATOR_FOR_BRANCH="saveModeratorForBranch";
 
     //Injected
     private GroupService groupService;
@@ -142,9 +143,6 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG, SHOW_DELETE_CONFIRM_DIALOG})
     public void showNewGroupDialog() {
-        groups.clearSelection();
-        showDeleteConfirmDialog=false;
-        showDeleteModeratorGroupDialog = false;
         selectedGroup = new Group();
         showGroupDialog = true;
     }
@@ -211,7 +209,7 @@ public class UserGroupVm {
      * @param branch {@link PoulpeBranch} key field for map
      */
     @Command
-    @NotifyChange({SHOW_MODERATOR_GROUP_SELECTION_PART, MODERATING_BRANCHES, "saveModeratorForBranch"})
+    @NotifyChange({SHOW_MODERATOR_GROUP_SELECTION_PART, MODERATING_BRANCHES, SAVE_MODERATOR_FOR_BRANCH})
     public void saveModeratorForCurrentBranch(@BindingParam("branch") PoulpeBranch branch) {
         if ((branchesMap.containsKey(branch)) && (!branch.getModeratorsGroup().equals(branchesMap.get(branch)))) {
             branch.setModeratorsGroup(branchesMap.get(branch));
