@@ -6,7 +6,7 @@
 
   <window mode="modal" border="normal" title="${labels.componentedit.title}" apply="org.zkoss.bind.BindComposer"
     viewModel="@id('vm') @init(addComponentVm)" width="430px" closable="true" onClose="@command('cancelEdit')"
-    onCancel="@command('cancelEdit')" onOK="@command('createComponent')">
+    onCancel="@command('cancelEdit')" onOK="@command('createComponent', title=titleTextBox.value, description=descriptionTextBox.value, componentType=componentTypeCombobox.selectedItem.value)">
     
     <grid>
       <columns>
