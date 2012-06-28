@@ -134,7 +134,6 @@ public class UserGroupVmTest {
     public void testShowNewGroupDialog() {
         viewModel.setSelectedGroup(null);
         viewModel.showNewGroupDialog();
-        verify(groups).clearSelection();
         assertTrue(viewModel.isShowGroupDialog());
         assertNotNull(viewModel.getSelectedGroup());
     }
