@@ -80,8 +80,12 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         }
     }
 
-    public ForumStructureItem getSelectedSection() {
-        return getSelectedData(0);
+    public PoulpeSection getSelectedSection() {
+        ForumStructureItem selectedData = getSelectedData(0);
+        if (selectedData != null) {
+            return selectedData.getSectionItem();
+        }
+        return null;
     }
 
     /**
