@@ -40,11 +40,8 @@
     <beans:bean id="affirmativeBasedDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
         <beans:property name="decisionVoters">
             <beans:list>
-                <beans:bean id="accessDecisionVoter" class="org.jtalks.poulpe.security.AclAwareDecisionVoter" scope="prototype">
-                    <beans:property name="baseVoter">
-                        <beans:bean class="org.springframework.security.web.access.expression.WebExpressionVoter"/>
-                    </beans:property>
-                    <beans:property name="userService" ref="userService" />
+                <beans:bean id="accessDecisionVoter" class="org.jtalks.poulpe.security.AclAwareDecisionVoter">
+                    <beans:constructor-arg index="0" ref="userService"/>
                 </beans:bean>
             </beans:list>
         </beans:property>

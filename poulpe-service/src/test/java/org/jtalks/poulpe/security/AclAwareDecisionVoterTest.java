@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
-import static org.jtalks.poulpe.security.AclAwareDecisionVoter.AUTHORIZED;
 import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -30,6 +29,8 @@ import static org.testng.Assert.assertEquals;
  *         6/27/12 1:32 AM
  */
 public class AclAwareDecisionVoterTest {
+    private static final String username = "username";
+    private static final String AUTHORIZED = "authorizedPoulpeUser";
     private static final List<ConfigAttribute> ATTRIBUTES = Collections.emptyList();
     private AclAwareDecisionVoter voter;
     private AccessDecisionVoter baseVoter;
@@ -41,14 +42,18 @@ public class AclAwareDecisionVoterTest {
 
     @BeforeMethod
     public void setUp() {
-        voter = new AclAwareDecisionVoter();
-        baseVoter = mock(AccessDecisionVoter.class);
-        voter.setBaseVoter(baseVoter);
-        userService = mock(UserService.class);
-        voter.setUserService(userService);
         requestAttributes = mock(RequestAttributes.class);
-        voter.setRequestAttributes(requestAttributes);
+        baseVoter = mock(AccessDecisionVoter.class);
+        userService = mock(UserService.class);
+
+        voter = new AclAwareDecisionVoter(baseVoter, userService){
+            @Override
+            public RequestAttributes getRequestAttributes() {
+                return requestAttributes;
+            }
+        };
         poulpeUser = mock(PoulpeUser.class);
+        when(poulpeUser.getUsername()).thenReturn(username);
 
         authentication = mock(Authentication.class);
     }
@@ -82,12 +87,12 @@ public class AclAwareDecisionVoterTest {
 
     private void unsuccessfulAuthorizationFlow() {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
-        when(userService.accessAllowedToComponentType(eq(poulpeUser), eq(ComponentType.ADMIN_PANEL))).thenReturn(false);
+        when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(false);
     }
 
     private void successfulAuthorizationFlow() {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
-        when(userService.accessAllowedToComponentType(eq(poulpeUser), eq(ComponentType.ADMIN_PANEL))).thenReturn(true);
+        when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(true);
     }
 
     private void userHaveNotBeenAuthorizedYet() {

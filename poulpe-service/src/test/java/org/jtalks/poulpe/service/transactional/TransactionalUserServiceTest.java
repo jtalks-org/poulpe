@@ -34,12 +34,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 /**
  * Class for testing {@code TransactionalUserService} functionality.
@@ -49,94 +45,92 @@ import static org.testng.Assert.assertTrue;
  * @author maxim reshetov
  */
 public class TransactionalUserServiceTest {
-	// sut
-	private TransactionalUserService userService;
+    // sut
+    private TransactionalUserService userService;
 
-	// dependencies
-	private UserDao userDao;
+    // dependencies
+    private UserDao userDao;
 
-	final String searchString = "searchString";
+    final String searchString = "searchString";
     private ComponentDao componentDaoMock;
     private AclManager aclManagerMock;
 
     @BeforeMethod
-	public void setUp() {
-		MockitoAnnotations.initMocks(this);
-		userDao = mock(UserDao.class);
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+        userDao = mock(UserDao.class);
         componentDaoMock = mock(ComponentDao.class);
         aclManagerMock = mock(AclManager.class);
         userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock);
-	}
-
-	@Test
-	public void getAll() {
-		String NO_FILTER = "";
-		userService.getAll();
-		verify(userDao).findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
-	}
-
-	@Test
-	public void countUsernameMatches() {
-		userService.countUsernameMatches(searchString);
-		verify(userDao).countUsernameMatches(searchString);
-	}
-
-	@Test
-	public void findUsersPaginated() {
-		int page = 1, limit = 10;
-		userService.findUsersPaginated(searchString, page, limit);
-		verify(userDao).findPoulpeUsersPaginated(searchString, Pages.paginate(page, limit));
-	}
-
-	@Test
-	public void testGetUsersByUsernameWord() {
-		userService.withUsernamesMatching(searchString);
-		verify(userDao).findPoulpeUsersPaginated(searchString, Pages.NONE);
-	}
-
-	@Test
-	public void testUpdateUser() {
-		PoulpeUser user = user();
-		userService.updateUser(user);
-		verify(userDao).update(user);
-	}
-
-	@Test
-	public void testGetAllBannedUsers() {
-		List<PoulpeUser> bannedUsers = userService.getAllBannedUsers();
-		assertEquals(bannedUsers, new ArrayList<PoulpeUser>());
-	}
-
-	@Test
-	public void testGetNonBannedByUsername() {
-		List<PoulpeUser> nonBannedUsers = userService.getNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
-		assertEquals(nonBannedUsers, new ArrayList<PoulpeUser>());
-	}
+    }
 
     @Test
-    public void accessNotAllowedBecauseNoComponentTypeRegistered(){
-        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+    public void getAll() {
+        String NO_FILTER = "";
+        userService.getAll();
+        verify(userDao).findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+    }
+
+    @Test
+    public void countUsernameMatches() {
+        userService.countUsernameMatches(searchString);
+        verify(userDao).countUsernameMatches(searchString);
+    }
+
+    @Test
+    public void findUsersPaginated() {
+        int page = 1, limit = 10;
+        userService.findUsersPaginated(searchString, page, limit);
+        verify(userDao).findPoulpeUsersPaginated(searchString, Pages.paginate(page, limit));
+    }
+
+    @Test
+    public void testGetUsersByUsernameWord() {
+        userService.withUsernamesMatching(searchString);
+        verify(userDao).findPoulpeUsersPaginated(searchString, Pages.NONE);
+    }
+
+    @Test
+    public void testUpdateUser() {
+        PoulpeUser user = user();
+        userService.updateUser(user);
+        verify(userDao).update(user);
+    }
+
+    @Test
+    public void testGetAllBannedUsers() {
+        List<PoulpeUser> bannedUsers = userService.getAllBannedUsers();
+        assertEquals(bannedUsers, new ArrayList<PoulpeUser>());
+    }
+
+    @Test
+    public void testGetNonBannedByUsername() {
+        List<PoulpeUser> nonBannedUsers = userService.getNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
+        assertEquals(nonBannedUsers, new ArrayList<PoulpeUser>());
+    }
+
+    @Test
+    public void accessNotAllowedBecauseNoComponentTypeRegistered() {
         ComponentType componentType = mock(ComponentType.class);
 
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(null);
 
-        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+        assertFalse(userService.accessAllowedToComponentType("username", componentType));
     }
 
     @Test
-    public void accessNotAllowedBecauseNoGroupPermissionsAssociatedWithComponent(){
-        PoulpeUser poulpeUser = mock(PoulpeUser.class);
+    public void accessNotAllowedBecauseNoGroupPermissionsAssociatedWithComponent() {
         ComponentType componentType = mock(ComponentType.class);
         Component component = mock(Component.class);
 
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
 
-        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+        assertFalse(userService.accessAllowedToComponentType("username", componentType));
     }
 
     @Test
-    public void accessNotAllowedBecausePermissionNotFound(){
+    public void accessNotAllowedBecausePermissionNotFound() {
         PoulpeUser poulpeUser = mock(PoulpeUser.class);
         PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
         ComponentType componentType = mock(ComponentType.class);
@@ -149,11 +143,11 @@ public class TransactionalUserServiceTest {
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
 
-        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+        assertFalse(userService.accessAllowedToComponentType(username, componentType));
     }
 
     @Test
-    public void accessNotAllowedBecausePermissionIsNotGranting(){
+    public void accessNotAllowedBecausePermissionIsNotGranting() {
         PoulpeUser poulpeUser = mock(PoulpeUser.class);
         PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
         ComponentType componentType = mock(ComponentType.class);
@@ -174,11 +168,11 @@ public class TransactionalUserServiceTest {
         when(inSessionPoulpeUser.getGroups()).thenReturn(Collections.singletonList(group));
         when(groupAce.isGranting()).thenReturn(false);
 
-        assertFalse(userService.accessAllowedToComponentType(poulpeUser, componentType));
+        assertFalse(userService.accessAllowedToComponentType(username, componentType));
     }
 
     @Test
-    public void accessAllowed(){
+    public void accessAllowed() {
         PoulpeUser poulpeUser = mock(PoulpeUser.class);
         PoulpeUser inSessionPoulpeUser = mock(PoulpeUser.class);
         ComponentType componentType = mock(ComponentType.class);
@@ -199,12 +193,12 @@ public class TransactionalUserServiceTest {
         when(inSessionPoulpeUser.getGroups()).thenReturn(Collections.singletonList(group));
         when(groupAce.isGranting()).thenReturn(true);
 
-        assertTrue(userService.accessAllowedToComponentType(poulpeUser, componentType));
+        assertTrue(userService.accessAllowedToComponentType(username, componentType));
     }
 
 
-	private static PoulpeUser user() {
-		return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
-	}
+    private static PoulpeUser user() {
+        return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
+    }
 
 }

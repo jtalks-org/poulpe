@@ -140,8 +140,8 @@ public class TransactionalUserService implements UserService {
     }
 
     @Override
-    public boolean accessAllowedToComponentType(PoulpeUser user, ComponentType componentType) {
-        PoulpeUser inSessionUser = userDao.getByUsername(user.getUsername());
+    public boolean accessAllowedToComponentType(String username, ComponentType componentType) {
+        PoulpeUser inSessionUser = userDao.getByUsername(username);
         Component component = componentDao.getByType(componentType);
         if (component == null) {
             return false;

@@ -1,12 +1,12 @@
 package org.jtalks.poulpe.security;
 
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.access.expression.WebExpressionVoter;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,16 +20,21 @@ import static org.springframework.web.context.request.RequestAttributes.SCOPE_SE
  *         6/26/12 10:28 PM
  */
 public class AclAwareDecisionVoter implements AccessDecisionVoter {
-    static final String AUTHORIZED = "authorizedPoulpeUser";
-    private AccessDecisionVoter baseVoter;
-    private RequestAttributes requestAttributes;
-    private UserService userService;
+    private static final String AUTHORIZED = "authorizedPoulpeUser";
+    private final AccessDecisionVoter baseVoter;
+    private final UserService userService;
+
+    public AclAwareDecisionVoter(UserService userService) {
+        this(new WebExpressionVoter(), userService);
+    }
+
+    AclAwareDecisionVoter(AccessDecisionVoter baseVoter, UserService userService) {
+        this.baseVoter = baseVoter;
+        this.userService = userService;
+    }
 
     public RequestAttributes getRequestAttributes() {
-        if (requestAttributes == null) {
-            requestAttributes = RequestContextHolder.currentRequestAttributes();
-        }
-        return requestAttributes;
+        return RequestContextHolder.currentRequestAttributes();
     }
 
     @Override
@@ -44,8 +49,8 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
 
     private int tryToAuthorize(Authentication authentication) {
         if (notAuthorized()) {
-            if (authentication.getPrincipal() instanceof PoulpeUser) {
-                boolean assessAllowed = userService.accessAllowedToComponentType((PoulpeUser) authentication.getPrincipal(), ComponentType.ADMIN_PANEL);
+            if (authentication.getPrincipal() instanceof UserDetails) {
+                boolean assessAllowed = userService.accessAllowedToComponentType(((UserDetails) authentication.getPrincipal()).getUsername(), ComponentType.ADMIN_PANEL);
                 int permissionCheckResult = assessAllowed ? ACCESS_GRANTED : ACCESS_DENIED;
                 getRequestAttributes().setAttribute(AUTHORIZED, permissionCheckResult == ACCESS_GRANTED, ServletRequestAttributes.SCOPE_SESSION);
                 return permissionCheckResult;
@@ -74,17 +79,5 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
     @Override
     public boolean supports(Class<?> clazz) {
         return baseVoter.supports(clazz);
-    }
-
-    public void setBaseVoter(AccessDecisionVoter baseVoter) {
-        this.baseVoter = baseVoter;
-    }
-
-    public void setUserService(UserService userService) {
-        this.userService = userService;
-    }
-
-    void setRequestAttributes(RequestAttributes requestAttributes) {
-        this.requestAttributes = requestAttributes;
     }
 }

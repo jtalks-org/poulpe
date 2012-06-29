@@ -106,10 +106,10 @@ public interface UserService {
     List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
 
     /**
-     * Check, whether user have rights to accept component of specified type
-     * @param user poulpe user, for whom access should be checked
+     * Check, whether user with specified name have rights to accept component of specified type
+     * @param username poulpe user, for whom access should be checked
      * @param componentType component type, that should be checked
      * @return true if success, false if not
      */
-    boolean accessAllowedToComponentType(PoulpeUser user, ComponentType componentType);
+    boolean accessAllowedToComponentType(String username, ComponentType componentType);
 }
