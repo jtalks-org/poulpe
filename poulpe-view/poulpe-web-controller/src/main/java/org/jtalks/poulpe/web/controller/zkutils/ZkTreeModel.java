@@ -21,6 +21,7 @@ import javax.annotation.Nonnegative;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Set;
 
 /**
  * Since default ZK implementation of {@link org.zkoss.zul.TreeModel} doesn't provide handy methods e.g. for searching
@@ -195,9 +196,12 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
      * @param target the target, it will be placed with all next nodes after dropped
      */
     public void dropNodeBefore(TreeNode<E> node, TreeNode<E> target) {
+        Set<TreeNode<E>> openedNodes = getOpenObjects();
+        clearOpen();
         removeChild(getPath(node));
         TreeNode<E> targetParent = target.getParent();
         targetParent.insert(node, targetParent.getIndex(target));
+        setOpenObjects(openedNodes);
     }
 
     /**
