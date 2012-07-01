@@ -17,12 +17,11 @@
 -- it and permissions (because user without permissions can't be logged into admin panel).
 
 INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE,UUID,NAME,DESCRIPTION)
-  VALUES('POULPE', '7241a11-5620-87a0-a810-ed26496z92m7','Admin panel','JTalks Admin panel');
+  select 'POULPE', '7241a11-5620-87a0-a810-ed26496z92m7','Admin panel','JTalks Admin panel' where not exists (select * from CCMP_TYPE;
 
-INSERT IGNORE INTO GROUPS (UUID,NAME,DESCRIPTION)
+INSERT INTO GROUPS (UUID,NAME,DESCRIPTION)
   SELECT '7141a12-5620-87h0-a210-ed26491k82m7','Administrators', 'Administrators group.' FROM GROUPS
-    WHERE NOT EXISTS (SELECT * FROM GROUPS
-                  WHERE NAME='Administrators');
+    WHERE NOT EXISTS (SELECT * FROM GROUPS WHERE NAME='Administrators');
 
 INSERT IGNORE INTO USERS (UUID,FIRST_NAME,LAST_NAME,USERNAME,ENCODED_USERNAME,EMAIL,PASSWORD,ROLE,SALT,REGISTRATION_DATE)
   VALUES('7241p12-2720-99h0-r210-ed26491k86j7','Admin','Admin','Admin','Admin','admin@jtalks.org','e3afed0047b08059d0fada10f400c1e5','ADMIN_ROLE','',NOW());
@@ -30,34 +29,33 @@ INSERT IGNORE INTO USERS (UUID,FIRST_NAME,LAST_NAME,USERNAME,ENCODED_USERNAME,EM
 -- Adding created Admin to Administrators group(created at this migration or common migration) ).
 INSERT IGNORE INTO GROUP_USER_REF(USER_ID,GROUP_ID)
   SELECT u.ID, g.GROUP_ID FROM USERS u, GROUPS g
-    WHERE u.USERNAME = 'Admin'
-          AND g.NAME = 'Administrators';
+    WHERE u.USERNAME = 'Admin' AND g.NAME = 'Administrators';
 
 
 -- Adding record with added component class.
 INSERT IGNORE INTO acl_class (CLASS) VALUE('COMPONENT');
 
 -- Adding record to acl_sid table, this record wires sid and group id.
+SET @acl_sid_id := 0;
 INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
-  SELECT 0,GROUP_CONCAT('usergroup:',CONVERT(GROUP_ID,char(19)))
-    FROM GROUPS
-      WHERE NAME= 'Administrators';
+  SELECT 0, GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19)))
+    FROM GROUPS WHERE NAME= 'Administrators';
+
+update acl_sid set name='Administrators', id = (SELECT @acl_sid_id := id) where name='Administrators';
 
 
 INSERT IGNORE INTO acl_object_identity (object_id_class,object_id_identity,owner_sid,entries_inheriting)
-  SELECT class.id, gr.group_id, sid.id, 1
-    FROM acl_class class, GROUPS gr, acl_sid sid
-      WHERE gr.name = 'Administrators'
+  SELECT class.id, component.CMP_ID, @acl_sid_id, 1
+    FROM acl_class class, GROUPS gr, COMPONENTS component
+      WHERE component.NAME = 'Admin panel'
             AND class.class='COMPONENT'
-      GROUP BY sid.sid
-        HAVING sid.sid=(GROUP_CONCAT('usergroup:',CONVERT(gr.group_id,char(19))));
+            AND gr.NAME='Administrators';
 
 INSERT IGNORE INTO acl_entry (acl_object_identity,sid,mask,granting,audit_success,audit_failure, ace_order)
-  SELECT identity.id, sid.id, 16, 1, 0 , 0, 0
-    FROM acl_class class, GROUPS gr, acl_sid sid, acl_object_identity identity
+  SELECT oid.id, @acl_sid_id, 16, 1, 0 , 0, 0
+    FROM acl_class class, GROUPS gr, COMPONENTS component, acl_object_identity oid
       WHERE gr.name = 'Administrators'
             AND class.class='COMPONENT'
-            AND gr.group_id = identity.object_id_identity
-      GROUP BY sid.sid
-        HAVING sid.sid=(GROUP_CONCAT('usergroup:',CONVERT(gr.group_id,char(19))));
+            AND oid.object_id_identity = component.CMP_ID
+            AND component.NAME = 'Admin panel';
 
