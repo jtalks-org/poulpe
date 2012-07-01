@@ -33,12 +33,9 @@ public class AclAwareDecisionVoterTest {
     private static final String AUTHORIZED = "authorizedPoulpeUser";
     private static final List<ConfigAttribute> ATTRIBUTES = Collections.emptyList();
     private AclAwareDecisionVoter voter;
+    private RequestAttributes requestAttributes;
     private AccessDecisionVoter baseVoter;
     private UserService userService;
-    private RequestAttributes requestAttributes;
-    private Authentication authentication;
-    private PoulpeUser poulpeUser;
-
 
     @BeforeMethod
     public void setUp() {
@@ -52,15 +49,12 @@ public class AclAwareDecisionVoterTest {
                 return requestAttributes;
             }
         };
-        poulpeUser = mock(PoulpeUser.class);
-        when(poulpeUser.getUsername()).thenReturn(username);
-
-        authentication = mock(Authentication.class);
     }
 
     @Test
     public void notAuthorized() {
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+        authenticatedSuccessfully(authentication);
         when(authentication.getPrincipal()).thenReturn("anonymous");
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
@@ -68,7 +62,8 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void notPoulpeUserShouldFail(){
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+        authenticatedSuccessfully(authentication);
         when(authentication.getPrincipal()).thenReturn(new User("user", "user@mail.com", "pass", "salt"));
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_DENIED);
@@ -76,21 +71,29 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void firstUnsuccessfulAttempt() {
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+
+        authenticatedSuccessfully(authentication);
         userHaveNotBeenAuthorizedYet();
-        unsuccessfulAuthorizationFlow();
+        unsuccessfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_DENIED);
 
         verify(requestAttributes).setAttribute(eq(AUTHORIZED), eq(false), eq(SCOPE_SESSION));
     }
 
-    private void unsuccessfulAuthorizationFlow() {
+    private PoulpeUser createPoulpeUserWithPredefinedName() {
+        PoulpeUser user = new PoulpeUser();
+        user.setUsername(username);
+        return user;
+    }
+
+    private void unsuccessfulAuthorizationFlow(Authentication authentication, PoulpeUser poulpeUser) {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
         when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(false);
     }
 
-    private void successfulAuthorizationFlow() {
+    private void successfulAuthorizationFlow(Authentication authentication, PoulpeUser poulpeUser) {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
         when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(true);
     }
@@ -101,9 +104,11 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void negativeResultOfAuthorizationAfterNegativeAuthorizationResultRememberedInSession() {
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+
+        authenticatedSuccessfully(authentication);
         previousAttemptToAuthorizeFailed();
-        unsuccessfulAuthorizationFlow();
+        unsuccessfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_DENIED);
 
@@ -112,9 +117,11 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void positiveResultOfAuthorizationAfterNegativeAuthorizationResultRememberedInSession() {
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+
+        authenticatedSuccessfully(authentication);
         previousAttemptToAuthorizeFailed();
-        successfulAuthorizationFlow();
+        successfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
 
@@ -127,9 +134,11 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void successfulAuthorizationShouldBeRememberedInSession() {
-        authenticatedSuccessfully();
+        Authentication authentication = mock(Authentication.class);
+
+        authenticatedSuccessfully(authentication);
         userHaveNotBeenAuthorizedYet();
-        successfulAuthorizationFlow();
+        successfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
 
@@ -138,9 +147,10 @@ public class AclAwareDecisionVoterTest {
 
     @Test
     public void successfulAuthorizationResultShouldBeRememberedInSession() {
-        PoulpeUser poulpeUser = mock(PoulpeUser.class);
-        authenticatedSuccessfully();
-        when(authentication.getPrincipal()).thenReturn(poulpeUser);
+        Authentication authentication = mock(Authentication.class);
+
+        authenticatedSuccessfully(authentication);
+        when(authentication.getPrincipal()).thenReturn(createPoulpeUserWithPredefinedName());
         userWasAuthorizedSuccessfully();
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
@@ -166,7 +176,7 @@ public class AclAwareDecisionVoterTest {
         when(requestAttributes.getAttribute(eq(AUTHORIZED), eq(SCOPE_SESSION))).thenReturn(true);
     }
 
-    private void authenticatedSuccessfully() {
+    private void authenticatedSuccessfully(Authentication authentication) {
         when(baseVoter.vote(eq(authentication), anyObject(), Matchers.<Collection<ConfigAttribute>>any())).thenReturn(ACCESS_GRANTED);
         when(authentication.isAuthenticated()).thenReturn(true);
     }

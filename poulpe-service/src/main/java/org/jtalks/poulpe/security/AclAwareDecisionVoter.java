@@ -39,11 +39,11 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
 
     @Override
     public int vote(final Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
-        int vote = baseVoter.vote(authentication, object, attributes);
-        if (vote == ACCESS_GRANTED && authorizationNeeded(authentication)) {
+        int baseVoterVoteResult = baseVoter.vote(authentication, object, attributes);
+        if (baseVoterVoteResult == ACCESS_GRANTED && authenticatedAsUser(authentication)) {
             return tryToAuthorize(authentication);
         } else {
-            return vote;
+            return baseVoterVoteResult;
         }
     }
 
@@ -67,7 +67,7 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         return authorized == null || !authorized;
     }
 
-    private boolean authorizationNeeded(Authentication authentication) {
+    private boolean authenticatedAsUser(Authentication authentication) {
         return authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails;
     }
 
