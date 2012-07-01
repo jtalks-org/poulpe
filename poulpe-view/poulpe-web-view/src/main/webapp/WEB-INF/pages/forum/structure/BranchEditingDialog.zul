@@ -14,7 +14,8 @@
       <textbox id="branchNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1" errorMessage="@load(branchMsgs[branchNameBox])"/>
       <label value="Moderating Group:"/>
       <combobox id="moderatingGroupsCombo" model="@load(branchVm.candidatesToModerate)" hflex="1" readonly="true"
-                selectedItem="@load(branchVm.moderatingGroup) @save(branchVm.moderatingGroup, before='saveBranch') @validator('beanValidator')">
+                selectedItem="@load(branchVm.moderatingGroup) @save(branchVm.moderatingGroup, before='saveBranch') @validator('beanValidator')"
+                errorMessage="@load(branchMsgs[moderatingGroupsCombo])">
         <template name="model">
           <comboitem label="@load(each.name)"/>
         </template>

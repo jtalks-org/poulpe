@@ -84,8 +84,9 @@ public class BranchEditingDialog {
     private void showDialog(PoulpeBranch editedBranch) {
         groupList.setGroups(groupService.getAll());
         this.editedBranch = editedBranch;
-        renewSectionsFromTree(forumStructureVm.getTreeModel());
-        selectSection(forumStructureVm.getTreeModel().getSelectedSection().getSectionItem());
+        ForumStructureTreeModel treeModel = forumStructureVm.getTreeModel();
+        renewSectionsFromTree(treeModel);
+        selectSection(treeModel.getSelectedSection());
         showDialog = true;
     }
 
@@ -148,7 +149,7 @@ public class BranchEditingDialog {
      *
      * @return the group that is equal to the one that is currently moderating the selected branch
      */
-    @NotNull(message = "{sections.moderating_group.not_null_constraint}")
+    @NotNull(message = "{branch.moderating_group.not_null_constraint}")
     public Group getModeratingGroup() {
         Group currentModeratorsGroup = editedBranch.getModeratorsGroup();
         return groupList.getEqual(currentModeratorsGroup);

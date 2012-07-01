@@ -45,8 +45,7 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
  * @author Guram Savinov
  */
 public class ForumStructureVm {
-    private static final String SELECTED_ITEM_PROP = "selectedItemInTree", VIEW_DATA_PROP = "viewData",
-            TREE_MODEL = "treeModel";
+    private static final String SELECTED_ITEM_PROP = "selectedItemInTree", TREE_MODEL = "treeModel";
     private final ForumStructureService forumStructureService;
     private final WindowManager windowManager;
     private ForumStructureItem selectedItemInTree = new ForumStructureItem(null);
@@ -135,7 +134,7 @@ public class ForumStructureVm {
      * @param event contains all needed info about event
      */
     @Command
-    @NotifyChange(VIEW_DATA_PROP)
+    @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void onDropItem(@BindingParam("event") DropEvent event) {
         TreeNode<ForumStructureItem> draggedNode = ((Treeitem) event.getDragged()).getValue();
         TreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
