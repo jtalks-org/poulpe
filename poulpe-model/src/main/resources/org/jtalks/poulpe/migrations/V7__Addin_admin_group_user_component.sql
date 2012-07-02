@@ -43,12 +43,12 @@ INSERT IGNORE INTO GROUP_USER_REF(USER_ID,GROUP_ID)
 -- Adding record with added component class.
 INSERT IGNORE INTO acl_class (CLASS) VALUE('COMPONENT');
 
--- Adding record to acl_sid table, this record wires sid and group id.
+
 SET @acl_sid := (SELECT GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19))) FROM GROUPS WHERE NAME= 'Administrators');
 
 SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WHERE component.NAME = 'Admin panel');
 
-
+-- Adding record to acl_sid table, this record wires sid and group id.
 INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
   VALUES(0,@acl_sid);
 
@@ -63,6 +63,6 @@ INSERT IGNORE INTO acl_object_identity (object_id_class,object_id_identity,owner
 SET @acl_object_identity_id := (SELECT aoi.ID FROM acl_object_identity aoi WHERE object_id_class=@acl_class_id AND object_id_identity = @object_id_identity AND owner_sid = @acl_sid_id);
 
 INSERT IGNORE INTO acl_entry (acl_object_identity,sid,mask,granting,audit_success,audit_failure, ace_order)
- VALUES(@acl_object_identity_id, @acl_sid_id, 16, 1, 0 , 0, 0);
+  VALUES(@acl_object_identity_id, @acl_sid_id, 16, 1, 0 , 0, 0);
 
 
