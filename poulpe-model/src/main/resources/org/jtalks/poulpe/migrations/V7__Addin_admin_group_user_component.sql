@@ -20,39 +20,46 @@
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
+
+SET @adminUserName := 'Admin';
+SET @passwordHash := 'e3afed0047b08059d0fada10f400c1e5';
+SET @adminGroupName := 'Administrators';
+SET @poulpeComponentName := 'Admin panel';
+SET @poulpeComponentType := 'ADMIN_PANEL';
+SET @aclClass :='COMPONENT';
+
 INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE,UUID,NAME,DESCRIPTION)
-  SELECT 'ADMIN_PANEL', '7241a11-5620-87a0-a810-ed26496z92m7','Admin panel','JTalks Admin panel' FROM dual
-    WHERE NOT EXISTS (SELECT * FROM COMPONENTS WHERE COMPONENT_TYPE='POULPE');
+  SELECT @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
+    WHERE NOT EXISTS (SELECT * FROM COMPONENTS WHERE COMPONENT_TYPE=@poulpeComponentType);
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
 INSERT INTO GROUPS (UUID,NAME,DESCRIPTION)
-  SELECT '7141a12-5620-87h0-a210-ed26491k82m7','Administrators', 'Administrators group.' FROM dual
-    WHERE NOT EXISTS (SELECT gr.GROUP_ID FROM GROUPS gr WHERE gr.NAME='Administrators');
+  SELECT '7141a12-5620-87h0-a210-ed26491k82m7',@adminGroupName, 'Administrators group.' FROM dual
+    WHERE NOT EXISTS (SELECT gr.GROUP_ID FROM GROUPS gr WHERE gr.NAME=@adminGroupName);
 
 -- IGNORE can be used here because USERNAME is unique column, so if table contain user with username='Admin', record
 --  will not be added.
 INSERT IGNORE INTO USERS (UUID,FIRST_NAME,LAST_NAME,USERNAME,ENCODED_USERNAME,EMAIL,PASSWORD,ROLE,SALT,REGISTRATION_DATE)
-  VALUES('7241p12-2720-99h0-r210-ed26491k86j7','Admin','Admin','Admin','Admin','admin@jtalks.org','e3afed0047b08059d0fada10f400c1e5','ADMIN_ROLE','',NOW());
+  VALUES('7241p12-2720-99h0-r210-ed26491k86j7',@adminUserName,@adminUserName,@adminUserName,@adminUserName,'admin@jtalks.org',@passwordHash,'ADMIN_ROLE','',NOW());
 
 -- Adding created Admin to Administrators group(created at this migration or common migration) ).
 INSERT IGNORE INTO GROUP_USER_REF(USER_ID,GROUP_ID)
   SELECT u.ID, g.GROUP_ID FROM USERS u, GROUPS g
-    WHERE u.USERNAME = 'Admin' AND g.NAME = 'Administrators'
+    WHERE u.USERNAME = @adminUserName AND g.NAME = @adminGroupName
           AND NOT EXISTS
             (SELECT gur.USER_ID, gur.GROUP_ID, u.ID, g.GROUP_ID FROM GROUP_USER_REF gur, USERS u, GROUPS g
                WHERE u.ID=gur.USER_ID
                      AND g.GROUP_ID=gur.GROUP_ID
-                     AND u.USERNAME='Admin'
-                     AND g.NAME='Administrators');
+                     AND u.USERNAME=@adminUserName
+                     AND g.NAME=@adminGroupName);
 
 -- Adding record with added component class.
-INSERT IGNORE INTO acl_class (CLASS) VALUE('COMPONENT');
+INSERT IGNORE INTO acl_class (CLASS) VALUE(@aclClass);
 
+SET @acl_sid := (SELECT GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19))) FROM GROUPS WHERE NAME= @adminGroupName);
 
-SET @acl_sid := (SELECT GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19))) FROM GROUPS WHERE NAME= 'Administrators');
-
-SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WHERE component.NAME = 'Admin panel');
+SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WHERE component.NAME = @poulpeComponentName);
 
 -- Adding record to acl_sid table, this record wires sid and group id.
 INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
@@ -60,8 +67,7 @@ INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
 
 SET @acl_sid_id := (SELECT sid.ID FROM acl_sid sid WHERE sid.sid = @acl_sid);
 
-SET @acl_class_id :=(SELECT class.ID FROM acl_class class WHERE class.class = 'COMPONENT');
-
+SET @acl_class_id :=(SELECT class.ID FROM acl_class class WHERE class.class = @aclClass);
 
 INSERT IGNORE INTO acl_object_identity (object_id_class,object_id_identity,owner_sid,entries_inheriting)
   VALUES(@acl_class_id, @object_id_identity, @acl_sid_id, 1);
