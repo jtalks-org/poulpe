@@ -21,7 +21,7 @@
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
 INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE,UUID,NAME,DESCRIPTION)
-  SELECT 'POULPE', '7241a11-5620-87a0-a810-ed26496z92m7','Admin panel','JTalks Admin panel' FROM dual
+  SELECT 'ADMIN_PANEL', '7241a11-5620-87a0-a810-ed26496z92m7','Admin panel','JTalks Admin panel' FROM dual
     WHERE NOT EXISTS (SELECT * FROM COMPONENTS WHERE COMPONENT_TYPE='POULPE');
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
@@ -38,7 +38,13 @@ INSERT IGNORE INTO USERS (UUID,FIRST_NAME,LAST_NAME,USERNAME,ENCODED_USERNAME,EM
 -- Adding created Admin to Administrators group(created at this migration or common migration) ).
 INSERT IGNORE INTO GROUP_USER_REF(USER_ID,GROUP_ID)
   SELECT u.ID, g.GROUP_ID FROM USERS u, GROUPS g
-    WHERE u.USERNAME = 'Admin' AND g.NAME = 'Administrators';
+    WHERE u.USERNAME = 'Admin' AND g.NAME = 'Administrators'
+          AND NOT EXISTS
+            (SELECT gur.USER_ID, gur.GROUP_ID, u.ID, g.GROUP_ID FROM GROUP_USER_REF gur, USERS u, GROUPS g
+               WHERE u.ID=gur.USER_ID
+                     AND g.GROUP_ID=gur.GROUP_ID
+                     AND u.USERNAME='Admin'
+                     AND g.NAME='Administrators');
 
 -- Adding record with added component class.
 INSERT IGNORE INTO acl_class (CLASS) VALUE('COMPONENT');
