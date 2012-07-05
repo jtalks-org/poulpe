@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
@@ -158,6 +159,31 @@ public class TransactionalUserServiceTest {
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(singletonList(groupAce));
         when(groupAce.isGranting()).thenReturn(false);
+
+        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+    }
+
+    @Test
+    public void accessNotAllowedBecauseAtLeastOneOfTheGroupsIsRestrictiong(){
+        long groupId = 42L;
+        long groupId2 = 666L;
+
+        ComponentType componentType = mock(ComponentType.class);
+        Component component = mock(Component.class);
+        GroupAce groupAce = mock(GroupAce.class);
+        GroupAce groupAce2 = mock(GroupAce.class);
+
+        Group group = createGroupWithId(groupId);
+        Group group2 = createGroupWithId(groupId2);
+
+        when(groupAce.getGroupId()).thenReturn(groupId);
+        when(groupAce2.getGroupId()).thenReturn(groupId2);
+
+        when(userDao.getByUsername(eq(username))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(asList(group, group2)));
+        when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
+        when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(asList(groupAce, groupAce2));
+        when(groupAce.isGranting()).thenReturn(true);
+        when(groupAce2.isGranting()).thenReturn(false);
 
         assertFalse(userService.accessAllowedToComponentType(username, componentType));
     }

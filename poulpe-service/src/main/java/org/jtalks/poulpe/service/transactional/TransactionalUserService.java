@@ -147,12 +147,17 @@ public class TransactionalUserService implements UserService {
             return false;
         }
         List<GroupAce> permissions = aclManager.getGroupPermissionsOn(component);
+        Boolean result = null;
         for (GroupAce permission : permissions) {
             if (permissionFound(inSessionUser, permission)) {
-                return permission.isGranting();
+                if (result == null) {
+                    result = permission.isGranting();
+                } else {
+                    result &= permission.isGranting();
+                }
             }
         }
-        return false;
+        return result == null ? false : result;
     }
 
     private boolean permissionFound(PoulpeUser user, GroupAce permission) {

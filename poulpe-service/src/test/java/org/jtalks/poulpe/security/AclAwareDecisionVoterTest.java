@@ -29,26 +29,19 @@ import static org.testng.Assert.assertEquals;
  *         6/27/12 1:32 AM
  */
 public class AclAwareDecisionVoterTest {
-    private static final String username = "username";
+    private static final String USERNAME = "USERNAME";
     private static final String AUTHORIZED = "authorizedPoulpeUser";
     private static final List<ConfigAttribute> ATTRIBUTES = Collections.emptyList();
     private AclAwareDecisionVoter voter;
-    private RequestAttributes requestAttributes;
     private AccessDecisionVoter baseVoter;
     private UserService userService;
 
     @BeforeMethod
     public void setUp() {
-        requestAttributes = mock(RequestAttributes.class);
         baseVoter = mock(AccessDecisionVoter.class);
         userService = mock(UserService.class);
 
-        voter = new AclAwareDecisionVoter(baseVoter, userService){
-            @Override
-            public RequestAttributes getRequestAttributes() {
-                return requestAttributes;
-            }
-        };
+        voter = spy(new AclAwareDecisionVoter(baseVoter, userService));
     }
 
     @Test
@@ -63,6 +56,10 @@ public class AclAwareDecisionVoterTest {
     @Test
     public void notPoulpeUserShouldFail(){
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
+
         authenticatedSuccessfully(authentication);
         when(authentication.getPrincipal()).thenReturn(new User("user", "user@mail.com", "pass", "salt"));
 
@@ -72,9 +69,12 @@ public class AclAwareDecisionVoterTest {
     @Test
     public void firstUnsuccessfulAttempt() {
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
 
         authenticatedSuccessfully(authentication);
-        userHaveNotBeenAuthorizedYet();
+        userHaveNotBeenAuthorizedYet(requestAttributes);
         unsuccessfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_DENIED);
@@ -84,30 +84,33 @@ public class AclAwareDecisionVoterTest {
 
     private PoulpeUser createPoulpeUserWithPredefinedName() {
         PoulpeUser user = new PoulpeUser();
-        user.setUsername(username);
+        user.setUsername(USERNAME);
         return user;
     }
 
     private void unsuccessfulAuthorizationFlow(Authentication authentication, PoulpeUser poulpeUser) {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
-        when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(false);
+        when(userService.accessAllowedToComponentType(eq(USERNAME), eq(ComponentType.ADMIN_PANEL))).thenReturn(false);
     }
 
     private void successfulAuthorizationFlow(Authentication authentication, PoulpeUser poulpeUser) {
         when(authentication.getPrincipal()).thenReturn(poulpeUser);
-        when(userService.accessAllowedToComponentType(eq(username), eq(ComponentType.ADMIN_PANEL))).thenReturn(true);
+        when(userService.accessAllowedToComponentType(eq(USERNAME), eq(ComponentType.ADMIN_PANEL))).thenReturn(true);
     }
 
-    private void userHaveNotBeenAuthorizedYet() {
+    private void userHaveNotBeenAuthorizedYet(RequestAttributes requestAttributes) {
         when(requestAttributes.getAttribute(eq(AUTHORIZED), eq(SCOPE_SESSION))).thenReturn(null);
     }
 
     @Test
     public void negativeResultOfAuthorizationAfterNegativeAuthorizationResultRememberedInSession() {
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
 
         authenticatedSuccessfully(authentication);
-        previousAttemptToAuthorizeFailed();
+        previousAttemptToAuthorizeFailed(requestAttributes);
         unsuccessfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_DENIED);
@@ -118,9 +121,12 @@ public class AclAwareDecisionVoterTest {
     @Test
     public void positiveResultOfAuthorizationAfterNegativeAuthorizationResultRememberedInSession() {
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
 
         authenticatedSuccessfully(authentication);
-        previousAttemptToAuthorizeFailed();
+        previousAttemptToAuthorizeFailed(requestAttributes);
         successfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
@@ -128,16 +134,19 @@ public class AclAwareDecisionVoterTest {
         verify(requestAttributes).setAttribute(eq(AUTHORIZED), eq(true), eq(SCOPE_SESSION));
     }
 
-    private void previousAttemptToAuthorizeFailed() {
+    private void previousAttemptToAuthorizeFailed(RequestAttributes requestAttributes) {
         when(requestAttributes.getAttribute(eq(AUTHORIZED), eq(SCOPE_SESSION))).thenReturn(false);
     }
 
     @Test
     public void successfulAuthorizationShouldBeRememberedInSession() {
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
 
         authenticatedSuccessfully(authentication);
-        userHaveNotBeenAuthorizedYet();
+        userHaveNotBeenAuthorizedYet(requestAttributes);
         successfulAuthorizationFlow(authentication, createPoulpeUserWithPredefinedName());
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
@@ -148,10 +157,13 @@ public class AclAwareDecisionVoterTest {
     @Test
     public void successfulAuthorizationResultShouldBeRememberedInSession() {
         Authentication authentication = mock(Authentication.class);
+        RequestAttributes requestAttributes = mock(RequestAttributes.class);
+
+        doReturn(requestAttributes).when(voter).getRequestAttributes();
 
         authenticatedSuccessfully(authentication);
         when(authentication.getPrincipal()).thenReturn(createPoulpeUserWithPredefinedName());
-        userWasAuthorizedSuccessfully();
+        userWasAuthorizedSuccessfully(requestAttributes);
 
         assertEquals(voter.vote(authentication, new Object(), ATTRIBUTES), ACCESS_GRANTED);
     }
@@ -172,7 +184,7 @@ public class AclAwareDecisionVoterTest {
         verify(baseVoter).supports(eq(clazz));
     }
 
-    private void userWasAuthorizedSuccessfully() {
+    private void userWasAuthorizedSuccessfully(RequestAttributes requestAttributes) {
         when(requestAttributes.getAttribute(eq(AUTHORIZED), eq(SCOPE_SESSION))).thenReturn(true);
     }
 

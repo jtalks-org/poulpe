@@ -16,6 +16,8 @@ import java.util.Collection;
 import static org.springframework.web.context.request.RequestAttributes.SCOPE_SESSION;
 
 /**
+ * This class is needed to check, whether user has enough rights to the Admin Panel component.
+ *
  * @author dionis
  *         6/26/12 10:28 PM
  */
