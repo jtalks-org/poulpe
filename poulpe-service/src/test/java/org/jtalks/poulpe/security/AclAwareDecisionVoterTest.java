@@ -26,7 +26,6 @@ import static org.testng.Assert.assertEquals;
 
 /**
  * @author dionis
- *         6/27/12 1:32 AM
  */
 public class AclAwareDecisionVoterTest {
     private static final String USERNAME = "USERNAME";
@@ -54,7 +53,7 @@ public class AclAwareDecisionVoterTest {
     }
 
     @Test
-    public void notPoulpeUserShouldFail(){
+    public void notPoulpeUserShouldFail() {
         Authentication authentication = mock(Authentication.class);
         RequestAttributes requestAttributes = mock(RequestAttributes.class);
 
@@ -169,7 +168,7 @@ public class AclAwareDecisionVoterTest {
     }
 
     @Test
-    public void supportsAttributeShouldBeDelegatedToBaseVoter(){
+    public void supportsAttributeShouldBeDelegatedToBaseVoter() {
         ConfigAttribute configAttribute = mock(ConfigAttribute.class);
         voter.supports(configAttribute);
 
@@ -177,7 +176,7 @@ public class AclAwareDecisionVoterTest {
     }
 
     @Test
-    public void supportsClassShouldBeDelegatedToBaseVoter(){
+    public void supportsClassShouldBeDelegatedToBaseVoter() {
         Class<?> clazz = Object.class;
         voter.supports(clazz);
 
