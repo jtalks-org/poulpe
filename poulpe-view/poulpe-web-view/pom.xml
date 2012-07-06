@@ -18,6 +18,10 @@
     web related resources, like web.xml.
   </description>
 
+    <properties>
+        <jetty-version>8.1.0.v20120127</jetty-version>
+    </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.jtalks.poulpe</groupId>
@@ -62,6 +66,29 @@
       <groupId>org.jtalks.common</groupId>
       <artifactId>jtalks-common-security</artifactId>
     </dependency>
+
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-api</artifactId>
+          <version>1.6.4</version>
+      </dependency>
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-log4j12</artifactId>
+          <version>1.6.3</version>
+      </dependency>
+      <dependency>
+          <groupId>log4j</groupId>
+          <artifactId>log4j</artifactId>
+          <version>1.2.16</version>
+      </dependency>
+
+      <!-- Launcher -->
+      <dependency>
+          <groupId>org.eclipse.jetty</groupId>
+          <artifactId>jetty-webapp</artifactId>
+          <version>${jetty-version}</version>
+      </dependency>
   </dependencies>
 
   <build>
