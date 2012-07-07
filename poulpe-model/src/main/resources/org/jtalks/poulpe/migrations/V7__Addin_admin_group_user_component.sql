@@ -15,14 +15,14 @@
 -- While Poulpe first starts, it starts with empty database and there is no possibility to log into it.
 -- This migration creates default user for this. In order to have a user, we need a migration that inserts
 -- it and permissions (because user without permissions can't be logged into admin panel).
--- Default username: Admin
--- Default password: Admin
+-- Default username: admin
+-- Default password: admin
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
 
-SET @adminUserName := 'Admin';
-SET @passwordHash := 'e3afed0047b08059d0fada10f400c1e5';
+SET @adminUserName := 'admin';
+SET @passwordHash := '21232f297a57a5a743894a0e4a801fc3';
 SET @adminGroupName := 'Administrators';
 SET @poulpeComponentName := 'Admin panel';
 SET @poulpeComponentType := 'ADMIN_PANEL';
@@ -30,7 +30,7 @@ SET @aclClass :='COMPONENT';
 
 INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE,UUID,NAME,DESCRIPTION)
   SELECT @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
-    WHERE NOT EXISTS (SELECT * FROM COMPONENTS WHERE COMPONENT_TYPE=@poulpeComponentType);
+    WHERE NOT EXISTS (SELECT * FROM COMPONENTS components WHERE components.COMPONENT_TYPE=@poulpeComponentType);
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
@@ -57,24 +57,37 @@ INSERT IGNORE INTO GROUP_USER_REF(USER_ID,GROUP_ID)
 -- Adding record with added component class.
 INSERT IGNORE INTO acl_class (CLASS) VALUE(@aclClass);
 
-SET @acl_sid := (SELECT GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19))) FROM GROUPS WHERE NAME= @adminGroupName);
+SET @acl_sid_group := (SELECT GROUP_CONCAT('usergroup:', CONVERT(GROUP_ID,char(19))) FROM GROUPS g WHERE g.NAME= @adminGroupName);
+SET @acl_sid_user := (SELECT GROUP_CONCAT('user:', CONVERT(ID,char(19))) FROM USERS u WHERE u.USERNAME= @adminUserName);
+SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WHERE component.COMPONENT_TYPE = @poulpeComponentType);
 
-SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WHERE component.NAME = @poulpeComponentName);
+
+-- Adding record to acl_sid table, this record wires sid and user id.
+INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
+  VALUES(1,@acl_sid_user);
+
+SET @acl_sid_id_user := (SELECT sid.ID FROM acl_sid sid WHERE sid.sid = @acl_sid_user);
 
 -- Adding record to acl_sid table, this record wires sid and group id.
 INSERT IGNORE INTO acl_sid (PRINCIPAL,SID)
-  VALUES(0,@acl_sid);
+  VALUES(0,@acl_sid_group);
 
-SET @acl_sid_id := (SELECT sid.ID FROM acl_sid sid WHERE sid.sid = @acl_sid);
+SET @acl_sid_id_group := (SELECT sid.ID FROM acl_sid sid WHERE sid.sid = @acl_sid_group);
 
 SET @acl_class_id :=(SELECT class.ID FROM acl_class class WHERE class.class = @aclClass);
 
 INSERT IGNORE INTO acl_object_identity (object_id_class,object_id_identity,owner_sid,entries_inheriting)
-  VALUES(@acl_class_id, @object_id_identity, @acl_sid_id, 1);
+  SELECT @acl_class_id, @object_id_identity, @acl_sid_id_user, 1 FROM dual
+    WHERE NOT EXISTS
+      (SELECT aoi.object_id_class, aoi.object_id_identity, aoi.owner_sid  FROM acl_object_identity aoi
+         WHERE aoi.object_id_class = @acl_class_id AND aoi.object_id_identity = @object_id_identity AND aoi.owner_sid = @acl_sid_id_user);
 
-SET @acl_object_identity_id := (SELECT aoi.ID FROM acl_object_identity aoi WHERE object_id_class=@acl_class_id AND object_id_identity = @object_id_identity AND owner_sid = @acl_sid_id);
+SET @acl_object_identity_id := (SELECT aoi.ID FROM acl_object_identity aoi WHERE aoi.object_id_class=@acl_class_id AND aoi.object_id_identity = @object_id_identity AND aoi.owner_sid = @acl_sid_id_user);
 
-INSERT IGNORE INTO acl_entry (acl_object_identity,sid,mask,granting,audit_success,audit_failure, ace_order)
-  VALUES(@acl_object_identity_id, @acl_sid_id, 16, 1, 0 , 0, 0);
+INSERT IGNORE INTO acl_entry (id, acl_object_identity,sid,mask,granting,audit_success,audit_failure)
+  SELECT  @acl_sid_id_group, @acl_object_identity_id, @acl_sid_id_group, 16, 1, 0 , 0 FROM dual
+    WHERE NOT EXISTS
+       (SELECT ae.acl_object_identity, ae.sid FROM acl_entry ae
+         WHERE ae.acl_object_identity = @acl_object_identity_id AND ae.sid = @acl_sid_id_group);
 
 
