@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.entity.Group;
+import com.google.common.collect.Lists;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -29,6 +29,12 @@ import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.List;
+
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.select;
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.base.Predicates.in;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -141,31 +147,21 @@ public class TransactionalUserService implements UserService {
 
     @Override
     public boolean accessAllowedToComponentType(String username, ComponentType componentType) {
-        PoulpeUser inSessionUser = userDao.getByUsername(username);
+        PoulpeUser user = userDao.getByUsername(username);
         Component component = componentDao.getByType(componentType);
         if (component == null) {
             return false;
         }
         List<GroupAce> permissions = aclManager.getGroupPermissionsOn(component);
-        Boolean result = null;
+        boolean granting = false;
         for (GroupAce permission : permissions) {
-            if (permissionFound(inSessionUser, permission)) {
-                if (result == null) {
-                    result = permission.isGranting();
-                } else {
-                    result &= permission.isGranting();
+            if (user.isInGroupWithId(permission.getGroupId())) {
+                if (!permission.isGranting()) {
+                    return false;
                 }
+                granting = true;
             }
         }
-        return result == null ? false : result;
-    }
-
-    private boolean permissionFound(PoulpeUser user, GroupAce permission) {
-        for (Group userGroup : user.getGroups()) {
-            if (permission.getGroupId() == userGroup.getId()) {
-                return true;
-            }
-        }
-        return false;
+        return granting;
     }
 }
