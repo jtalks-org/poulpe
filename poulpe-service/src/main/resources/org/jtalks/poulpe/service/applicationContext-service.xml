@@ -60,6 +60,8 @@
     <bean id="userService" class="org.jtalks.poulpe.service.transactional.TransactionalUserService">
         <constructor-arg index="0" ref="userDao"/>
         <constructor-arg index="1" ref="userBanner"/>
+        <constructor-arg index="2" ref="aclManager"/>
+        <constructor-arg index="3" ref="componentDao"/>
     </bean>
     <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
         <constructor-arg index="0" ref="groupDao"/>

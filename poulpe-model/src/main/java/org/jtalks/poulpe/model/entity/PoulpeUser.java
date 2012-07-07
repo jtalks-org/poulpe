@@ -14,21 +14,15 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.jtalks.common.model.entity.Group;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jtalks.common.model.entity.Group;
-
 /**
  * Stores information about the user.
- * 
- * @author Vyacheslav Zhivaev
- * 
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
-
-    private static final long serialVersionUID = -6429539956660665057L;
-
     private List<Group> groups = new ArrayList<Group>();
 
     /**
@@ -40,11 +34,11 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
 
     /**
      * Create instance with requiered fields.
-     * 
+     *
      * @param username username
-     * @param email email
+     * @param email    email
      * @param password password
-     * @param salt salt
+     * @param salt     salt
      */
     public PoulpeUser(String username, String email, String password, String salt) {
         super(username, email, password, salt);
@@ -52,7 +46,7 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
 
     /**
      * Gets list of groups assigned to user.
-     * 
+     *
      * @return the list of groups assigned to user
      */
     public List<Group> getGroups() {
@@ -60,10 +54,26 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
     }
 
     /**
+     * Defines whether user resides in a group with the specified ID.
+     *
+     * @param groupId an ID of the group to find from the list of group user is in
+     * @return true if user is a member of the group with specified id
+     */
+    public boolean isInGroupWithId(long groupId) {
+        for (Group userGroup : getGroups()) {
+            if (userGroup.getId() == groupId) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Sets list of groups assigned to user.
-     * 
+     *
      * @param groups the new list of groups to set
      */
+
     public void setGroups(List<Group> groups) {
         this.groups = groups;
     }
