@@ -85,15 +85,14 @@ INSERT IGNORE INTO acl_object_identity (object_id_class, object_id_identity, own
            AND aoi.owner_sid = @acl_sid_id_user);
 
 SET @acl_object_identity_id := (SELECT aoi.id FROM acl_object_identity aoi
-                                  WHERE aoi.object_id_class=@acl_class_id
-                                    AND aoi.object_id_identity = @object_id_identity
-                                    AND aoi.owner_sid = @acl_sid_id_user);
+                                  WHERE aoi.object_id_class = @acl_class_id
+                                    AND aoi.object_id_identity = @object_id_identity);
 
 SET @ace_order_max := (SELECT MAX(ae.ace_order) FROM acl_entry ae);
 SET @ace_order := (CASE WHEN  @ace_order_max is null THEN 0 ELSE @ace_order_max+1 END);
 
 INSERT IGNORE INTO acl_entry (id, acl_object_identity, sid, ace_order, mask, granting, audit_success, audit_failure)
-  SELECT  @acl_sid_id_group, @acl_object_identity_id, @acl_sid_id_group,@ace_order, 16, 1, 0 , 0 FROM dual
+  SELECT  @acl_sid_id_group, @acl_object_identity_id, @acl_sid_id_group, @ace_order, 16, 1, 0 , 0 FROM dual
     WHERE NOT EXISTS
        (SELECT ae.acl_object_identity, ae.sid FROM acl_entry ae
          WHERE ae.acl_object_identity = @acl_object_identity_id
