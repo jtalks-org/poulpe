@@ -101,7 +101,7 @@
   </bean>
 
   <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-    <property name="location" value="classpath:/org/jtalks/poulpe/model/datasource.properties"/>
+    <property name="location" value="classpath:/datasource.properties"/>
   </bean>
 
   <!-- Migrations, todo: 4 beans - that's weird, Ticket has been left for common to move init to one method -->

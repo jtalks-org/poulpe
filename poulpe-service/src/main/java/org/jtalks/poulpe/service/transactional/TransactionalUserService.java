@@ -14,7 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import com.google.common.collect.Lists;
+import org.jtalks.common.security.acl.AclManager;
+import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
@@ -23,6 +29,12 @@ import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.List;
+
+import static ch.lambdaj.Lambda.having;
+import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.select;
+import static com.google.common.base.Predicates.equalTo;
+import static com.google.common.base.Predicates.in;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -36,6 +48,9 @@ public class TransactionalUserService implements UserService {
 
     private final UserDao userDao;
     private final UserBanner userBanner;
+    private final AclManager aclManager;
+    private final ComponentDao componentDao;
+
 
     /**
      * Create an instance of user entity based service.
@@ -43,9 +58,11 @@ public class TransactionalUserService implements UserService {
      * @param userDao a DAO providing persistence operations over {@link org.jtalks.poulpe.model.entity.PoulpeUser}
      *                entities
      */
-    public TransactionalUserService(UserDao userDao, UserBanner userBanner) {
+    public TransactionalUserService(UserDao userDao, UserBanner userBanner, AclManager aclManager, ComponentDao componentDao) {
         this.userDao = userDao;
         this.userBanner = userBanner;
+        this.aclManager = aclManager;
+        this.componentDao = componentDao;
     }
 
     /**
@@ -126,5 +143,25 @@ public class TransactionalUserService implements UserService {
     @Override
     public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
         return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
+    }
+
+    @Override
+    public boolean accessAllowedToComponentType(String username, ComponentType componentType) {
+        PoulpeUser user = userDao.getByUsername(username);
+        Component component = componentDao.getByType(componentType);
+        if (component == null) {
+            return false;
+        }
+        List<GroupAce> permissions = aclManager.getGroupPermissionsOn(component);
+        boolean granting = false;
+        for (GroupAce permission : permissions) {
+            if (user.isInGroupWithId(permission.getGroupId())) {
+                if (!permission.isGranting()) {
+                    return false;
+                }
+                granting = true;
+            }
+        }
+        return granting;
     }
 }

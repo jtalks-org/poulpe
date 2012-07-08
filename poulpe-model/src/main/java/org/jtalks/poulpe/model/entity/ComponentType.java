@@ -68,6 +68,6 @@ public enum ComponentType {
      * @param properties of the component
      * @return {@link Component} ready for using
      */
-    abstract Component newComponent(String name, String description, List<Property> properties);
+    public abstract Component newComponent(String name, String description, List<Property> properties);
 
 }

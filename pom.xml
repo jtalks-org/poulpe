@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
-  <version>0.17-SNAPSHOT</version>
+  <version>0.18-SNAPSHOT</version>
 
   <name>${project.artifactId}</name>
 
@@ -84,18 +85,6 @@
         <artifactId>ehcache-jgroupsreplication</artifactId>
         <version>1.5</version>
       </dependency>
-      <!--<dependency>-->
-      <!--<groupId>org.terracotta</groupId>-->
-      <!--<artifactId>ehcache-probe</artifactId>-->
-      <!--<version>1.0.2</version>-->
-      <!--<exclusions>-->
-      <!--<exclusion>-->
-      <!--<groupId>org.slf4j</groupId>-->
-      <!--<artifactId>slf4j-jdk14</artifactId>-->
-      <!--</exclusion>-->
-      <!--</exclusions>-->
-      <!--</dependency>-->
-
       <!-- JDBC -->
       <dependency>
         <groupId>mysql</groupId>
@@ -381,6 +370,16 @@
   <build>
     <finalName>${project.name}</finalName>
 
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*.xml</include>
+          <include>**/*.properties</include>
+        </includes>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -405,36 +404,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>cobertura-maven-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <instrumentation>
-            <excludes>
-              <!-- We exclude all classes related with view and implementation view -->
-              <!-- TODO: view can be covered with tests, although not fully, so one day it
-                  should be removed -->
-              <exclude>org/jtalks/poulpe/web/controller/DialogManagerImpl*.class</exclude>
-              <exclude>org/jtalks/poulpe/web/controller/WindowManagerImpl.class</exclude>
-              <exclude>org/jtalks/poulpe/web/controller/HighConcurrencyEditListener.class</exclude>
-              <exclude>org/jtalks/poulpe/web/controller/AdminWindow.class</exclude>
-              <exclude>org/jtalks/poulpe/web/controller/section/SectionTreeComponentImpl*.class</exclude>
-              <exclude>**/*View*</exclude>
-              <!-- We exclude all classes related exeption -->
-              <exclude>**/*Exception*</exclude>
-            </excludes>
-          </instrumentation>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>clean</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
@@ -453,10 +422,16 @@
           <strictCheck>true</strictCheck>
           <excludes>
             <exclude>target/**</exclude>
+            <exclude>**/test/**/*Test.java</exclude>
             <exclude>**/.idea/**</exclude>
             <exclude>license.txt</exclude>
             <exclude>.clover/**</exclude>
-
+            <exclude>**/*.xml</exclude>
+            <exclude>**/*.properties</exclude>
+            <exclude>**/*.zul</exclude>
+            <exclude>**/*.zs</exclude>
+            <exclude>**/*.js</exclude>
+            <exclude>**/*.log</exclude>
           </excludes>
           <useDefaultExcludes>true</useDefaultExcludes>
           <mapping>
@@ -464,7 +439,7 @@
           </mapping>
         </configuration>
       </plugin>
-      
+
     </plugins>
   </build>
 
@@ -473,7 +448,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.20</common.version>
+    <common.version>0.21</common.version>
   </properties>
 
   <distributionManagement>
