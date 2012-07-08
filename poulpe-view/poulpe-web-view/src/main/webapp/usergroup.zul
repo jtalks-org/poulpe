@@ -20,7 +20,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
-    <window id="userGroupWindow" validationMessages="@id('vmsgs')" title="${labels.groups.mainTitle}" border="normal"
+    <window id="userGroupWindow"  validationMessages="@id('vmsgs')" title="${labels.groups.mainTitle}" border="normal"
             width="100%" height="100%"
             apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(userGroupVm)">
         <hbox>
@@ -123,13 +123,13 @@
             <hbox align="end">
                 <button image="/resources/img/accept16.png" label="${labels.groups.button.delete}"
                         onClick="@command('deleteGroup')"
-                        disabled="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after='saveModeratorForBranches')"/>
+                        disabled="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after={'saveModeratorForBranches','saveModeratorForCurrentBranch'})"/>
                 <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
                         onClick="@command('closeDialog')"/>
             </hbox>
             <!-- moderator assign part -->
             <vlayout
-                    visible="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after='saveModeratorForBranches')">
+                    visible="@load(vm.showDeleteModeratorGroupDialog, before={'deleteGroup','showGroupDeleteConfirmDialog'}, after={'saveModeratorForBranches','saveModeratorForCurrentBranch'})">
                                <separator bar="true"/>
                 <label value="${labels.groups.branchDialog.message}"/>
                 <separator/>
@@ -153,8 +153,8 @@
                                        </listcell>
                         <listcell>
                             <vlayout>
-                                <combobox model="@load(vm.groupService.all)" autocomplete="true"
-                                          selectedItem="@load(vm.selectedGroup) @save(vm.selectedModeratorGroup)"
+                                <combobox model="@load(vm.branches.allAvailableGroups)"
+                                          selectedItem="@load(vm.selectedGroup) @save(vm.selectedModeratorGroupForAllBranches)"
                                           readonly="true">
                                     <template name="model" var="group">
                                         <comboitem id="@load(String.valueOf(group.id))"
@@ -171,19 +171,18 @@
                         </listcell>
                     </listitem>
                 </listbox>
-                <listbox id="moderatingBranchesListbox" model="@bind(vm.branches)">
+                <listbox id="moderatingBranchesListbox" model="@bind(vm.branches.branchesCollection)">
                     <listhead>
                         <listheader width="32%"/>
                         <listheader width="42%"/>
                         <listheader width="26%"/>
                     </listhead>
-                    <template name="model" var="poulpeBranch">
+                    <template name="model" var="comboboxController">
                         <listitem>
-                            <listcell label="@load(poulpeBranch.name)"/>
+                            <listcell label="@load(comboboxController.currentBranch.name)"/>
                             <listcell>
-                                <combobox model="@load(vm.groupService.all)"
-                                          selectedItem="@load(vm.selectedModeratorGroup)"
-                                          onSelect="@command('addToMap', branch=poulpeBranch, group=self.selectedItem.value)"
+                                <combobox model="@load(vm.branches.allAvailableGroups)"
+                                          selectedItem="@bind(comboboxController.selectedGroup)"
                                           readonly="true">
                                     <template name="model" var="group">
                                         <comboitem id="@load(String.valueOf(group.id))"
@@ -193,7 +192,7 @@
                             </listcell>
                             <listcell>
                                 <button image="/resources/img/save16.png" label="${labels.groups.button.save}"
-                                        onClick="@command('saveModeratorForCurrentBranch', branch=poulpeBranch)"/>
+                                        onClick="@command('saveModeratorForCurrentBranch', branch=comboboxController.currentBranch)"/>
                             </listcell>
                         </listitem>
                     </template>

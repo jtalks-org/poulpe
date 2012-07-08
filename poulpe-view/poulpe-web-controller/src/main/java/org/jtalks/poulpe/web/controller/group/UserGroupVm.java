@@ -22,11 +22,12 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
-import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -36,23 +37,20 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class UserGroupVm {
-    @SuppressWarnings("JpaQlInspection")
     private static final String SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog",
             SHOW_GROUP_DIALOG = "showGroupDialog", SELECTED_GROUP = "selectedGroup",
             SHOW_MODERATOR_GROUP_SELECTION_PART = "showDeleteModeratorGroupDialog",
-            MODERATING_BRANCHES = "branches", SELECTED_MODERATOR_GROUP = "selectedModeratorGroup",
-            SELECTED_BRANCH = "selectedBranch", GROUP_SERVICE="groupServiceб",
-            SAVE_MODERATOR_FOR_BRANCH="saveModeratorForBranch";
+            MODERATING_BRANCHES = "branches", SELECTED_MODERATOR_GROUP = "selectedModeratorGroupForAllBranches",
+            SELECTED_BRANCH = "selectedBranch", GROUP_SERVICE = "groupService";
 
     //Injected
-    private GroupService groupService;
+    private final GroupService groupService;
     private final WindowManager windowManager;
 
     private ListModelList<Group> groups;
-    private List<PoulpeBranch> branches;
-    private HashMap<PoulpeBranch, Group> branchesMap;
+    private BranchGroupMap branches;
     private Group selectedGroup;
-    private Group selectedModeratorGroup;
+    private Group selectedModeratorGroupForAllBranches;
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
@@ -71,9 +69,15 @@ public class UserGroupVm {
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
+    }
 
-        this.groups = new ListModelList<Group>(groupService.getAll(), true);
-        this.branchesMap = new HashMap<PoulpeBranch, Group>(20);
+    /**
+     * Loads groups listbox structure. Always hits database. Is executed each time a page is
+     * opening.
+     */
+    @Init
+    public void init() {
+        groups = new ListModelList<Group>(groupService.getAll(), true);
     }
 
     /**
@@ -115,8 +119,8 @@ public class UserGroupVm {
     public void showGroupDeleteConfirmDialog() {
         showDeleteConfirmDialog = true;
         if (isModeratingGroup()) {
-            branches = getModeratedBranches();
-            selectedModeratorGroup = selectedGroup;
+            branches = new BranchGroupMap(getModeratedBranches(), groupService.getAll());
+            setSelectedModeratorGroupForAllBranches(selectedGroup);
             showDeleteModeratorGroupDialog = true;
         }
     }
@@ -184,24 +188,10 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SELECTED_BRANCH, MODERATING_BRANCHES, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void saveModeratorForBranches() {
-        if (!selectedModeratorGroup.equals(selectedGroup)) {
-            for (PoulpeBranch branch : branches) {
-                branch.setModeratorsGroup(selectedModeratorGroup);
-            }
-            closeDeleteModeratorGroupDialog();
-        }
+         branches.setModeratingGroupForAllBranches(selectedGroup);
+        closeDeleteModeratorGroupDialog();
     }
 
-    /**
-     * Adds {@link org.zkoss.zul.Combobox} selected value to map, witch holds changes as pair branch plus his moderator group.
-     *
-     * @param branch {@link PoulpeBranch} key field for map
-     * @param group  {@link Group} value field for map
-     */
-    @Command
-    public void addToMap(@BindingParam("branch") PoulpeBranch branch, @BindingParam("group") Group group) {
-        branchesMap.put(branch, group);
-    }
 
     /**
      * If moderator group were changed for branch, given as parameter, saves moderator group for this branch.
@@ -209,13 +199,10 @@ public class UserGroupVm {
      * @param branch {@link PoulpeBranch} key field for map
      */
     @Command
-    @NotifyChange({SHOW_MODERATOR_GROUP_SELECTION_PART, MODERATING_BRANCHES, SAVE_MODERATOR_FOR_BRANCH})
+    @NotifyChange({SELECTED_BRANCH, MODERATING_BRANCHES, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void saveModeratorForCurrentBranch(@BindingParam("branch") PoulpeBranch branch) {
-        if ((branchesMap.containsKey(branch)) && (!branch.getModeratorsGroup().equals(branchesMap.get(branch)))) {
-            branch.setModeratorsGroup(branchesMap.get(branch));
-            branches.remove(branch);
-            closeDeleteModeratorGroupDialog();
-        }
+        branches.setModeratingGroupForCurrentBranch(selectedGroup, branch);
+        closeDeleteModeratorGroupDialog();
     }
 
     /**
@@ -225,7 +212,6 @@ public class UserGroupVm {
     private void closeDeleteModeratorGroupDialog() {
         if (!isModeratingGroup()) {
             showDeleteModeratorGroupDialog = false;
-            branchesMap.clear();
         }
     }
 
@@ -343,44 +329,21 @@ public class UserGroupVm {
     /**
      * @return currently selected moderator {@link Group} for {@link PoulpeBranch}es shown at delete dialog
      */
-    public Group getSelectedModeratorGroup() {
-        return selectedModeratorGroup;
+    public Group getSelectedModeratorGroupForAllBranches() {
+        return selectedModeratorGroupForAllBranches;
     }
 
     /**
-     * @param selectedModeratorGroup {@link Group} currently selected moderator group
+     * @param selectedModeratorGroupForAllBranches
+     *         {@link Group} currently selected moderator group
      */
-    public void setSelectedModeratorGroup(Group selectedModeratorGroup) {
-        this.selectedModeratorGroup = selectedModeratorGroup;
+    @NotifyChange({SELECTED_MODERATOR_GROUP, "branches"})
+    public void setSelectedModeratorGroupForAllBranches(Group selectedModeratorGroupForAllBranches) {
+        branches.setSelectedGroupForAllBranches(selectedModeratorGroupForAllBranches);
+        this.selectedModeratorGroupForAllBranches = selectedModeratorGroupForAllBranches;
     }
 
-    /**
-     * @return list of branches moderated by group to delete, used as model for {@link org.zkoss.zul.Listbox}
-     *         at delete group dialog
-     */
-    public List<PoulpeBranch> getBranches() {
+    public BranchGroupMap getBranches() {
         return branches;
-    }
-
-    /**
-     * @param branches {@link PoulpeBranch} list of branches, moderated by {@link Group} to delete
-     */
-    public void setBranches(List<PoulpeBranch> branches) {
-        this.branches = branches;
-    }
-
-    /**
-     * @return map of current pairs branch - moderator group, selected by user at delete moderator group
-     *         dialog
-     */
-    public HashMap<PoulpeBranch, Group> getBranchesMap() {
-        return branchesMap;
-    }
-
-    /**
-     * @param bindWrapper instance of bindWrapper
-     */
-    public void setBindWrapper(BindUtilsWrapper bindWrapper) {
-        this.bindWrapper = bindWrapper;
     }
 }
