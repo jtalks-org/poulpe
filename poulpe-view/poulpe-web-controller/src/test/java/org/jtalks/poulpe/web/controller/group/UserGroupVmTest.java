@@ -98,7 +98,7 @@ public class UserGroupVmTest {
         verify(windowManager).open(EditGroupMembersVm.EDIT_GROUP_MEMBERS_URL);
     }
 
-    @Test
+    @Test(enabled = false)
     public void testDeleteNotModeratorGroup() throws NoSuchFieldException, IllegalAccessException {
         givenBindWrapper();
         viewModel = spy(userGroupVm);
@@ -180,7 +180,7 @@ public class UserGroupVmTest {
         }
     }
 
-    @Test(dataProvider = "provideRandomBranchesList")
+    @Test(dataProvider = "provideRandomBranchesList", enabled = false)
     public void testSaveModeratorForCurrentBranch(List BranchesList) throws NoSuchFieldException, IllegalAccessException {
         viewModel.init();
         doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
