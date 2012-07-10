@@ -15,9 +15,9 @@
                 <panel title="Available" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.avail)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" vflex="true" forward="onOK=savePermissionsButton.onClick" onCancel="@command('cancel')">
+                                 multiple="true" checkmark="true" vflex="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick">
                             <listhead>
-                                <listheader label="Group" sclass="boldstyle"/>
+                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
                             </listhead>
                             <template name="model" var="group">
                                 <listitem label="@load(group.name)"/>
@@ -38,9 +38,9 @@
                 <panel title="Already added" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.exist)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" vflex="true"  forward="onOK=savePermissionsButton.onClick" onCancel="@command('cancel')">
+                                 multiple="true" checkmark="true" vflex="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick">
                             <listhead>
-                                <listheader label="Group" sclass="boldstyle"/>
+                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
                             </listhead>
                             <template name="model" var="group">
                                 <listitem label="@load(group.name)"/>
