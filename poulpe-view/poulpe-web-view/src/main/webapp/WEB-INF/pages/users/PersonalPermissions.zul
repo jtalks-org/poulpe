@@ -1,0 +1,11 @@
+<!--Shows the personal permissions like Sending Private Messages or Editing Profile and allows to specify user groups
+that are allowed to do that action or restrict.-->
+<?page title="Edit User" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window viewModel="@id('vm') @init(userPersonalPermissionsVm)" validationMessages="@id('vmsgs')" apply="org.zkoss.bind.BindComposer">
+
+  </window>
+</zk>

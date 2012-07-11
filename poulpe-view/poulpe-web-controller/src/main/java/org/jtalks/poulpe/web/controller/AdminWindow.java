@@ -157,6 +157,11 @@ public class AdminWindow {
         windowManager.open("groups/GroupsPermissions.zul");
     }
 
+    @Command
+    public void onShowPersonalPermissions(){
+        windowManager.open("WEB-INF/pages/users/PersonalPermissions.zul");
+    }
+
     /**
      * Show blank page.
      */

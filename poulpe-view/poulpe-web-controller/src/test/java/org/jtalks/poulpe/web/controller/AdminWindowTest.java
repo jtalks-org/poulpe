@@ -95,6 +95,12 @@ public class AdminWindowTest {
     }
 
     @Test
+    public void testOnPersonalPermissions() {
+        adminWindow.onShowForumStructure();
+        testOnShow("WEB-INF/pages/users/PersonalPermissions.zul");
+    }
+
+    @Test
     public void testOnShowUserBanning() {
         adminWindow.onShowUserBanning();
         testOnShow("userbanning.zul");
