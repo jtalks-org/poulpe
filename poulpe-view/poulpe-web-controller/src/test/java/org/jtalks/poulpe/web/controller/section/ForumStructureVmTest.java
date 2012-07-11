@@ -53,16 +53,6 @@ public class ForumStructureVmTest {
         viewModel = new ForumStructureVm(forumStructureService, windowManager, selectedBranchForPermissions);
     }
 
-    @Test(dataProvider = "provideRandomJcommuneWithSections")
-    public void testGetRootAsJcommune(Jcommune jcommune) {
-        TreeNode<Jcommune> node = new DefaultTreeNode<Jcommune>(jcommune);
-        doReturn(node).when(treeModel).getRoot();
-        viewModel.setTreeModel(treeModel);
-        Jcommune rootAsJcommune = viewModel.getRootAsJcommune();
-        assertEquals(rootAsJcommune, jcommune);
-        verify(treeModel).getRoot();
-    }
-
     @DataProvider
     public Object[][] provideRandomJcommuneWithSections() {
         Jcommune jcommune = TestFixtures.jcommuneWithSections();

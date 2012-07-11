@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
@@ -137,4 +138,57 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
     }
+
+    /**
+     * Checks that dropping branch haven't effect.
+     *
+     * @param draggedBranch the branch to move
+     * @param targetItem    the target item, may be branch as well as section
+     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     */
+    public boolean noEffectAfterDropBranch(PoulpeBranch draggedBranch, ForumStructureItem targetItem) {
+        PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
+        if (targetItem.isSection()) {
+            return draggedSection.equals(targetItem.getSectionItem());
+        }
+
+        PoulpeBranch targetBranch = targetItem.getBranchItem();
+        PoulpeSection targetSection = targetBranch.getPoulpeSection();
+        if (draggedSection.equals(targetSection)) {
+            List<PoulpeBranch> branches = draggedSection.getPoulpeBranches();
+            int draggedIndex = branches.indexOf(draggedBranch);
+            int targetIndex = branches.indexOf(targetBranch);
+            if (targetIndex - 1 == draggedIndex) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks that dropping section haven't effect.
+     *
+     * @param draggedItem the section item to move
+     * @param targetItem  the target section item
+     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     */
+    public boolean noEffectAfterDropSection(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
+        PoulpeSection draggedSection = draggedItem.getSectionItem();
+        List<PoulpeSection> sections = getRootAsJcommune().getSections();
+        int draggedIndex = sections.indexOf(draggedSection);
+        int targetIndex = sections.indexOf(targetItem.getSectionItem());
+        return targetIndex - 1 == draggedIndex;
+    }
+
+    /**
+     * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
+     * the tree and return it.
+     *
+     * @return the {@link Jcommune} object that is the root of the Forum Structure tree
+     */
+    public Jcommune getRootAsJcommune() {
+        return (Jcommune) (Object) getRoot().getData();
+    }
+
 }
