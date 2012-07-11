@@ -33,23 +33,13 @@
   <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
     <constructor-arg ref="dataSource"/>
     <constructor-arg ref="aclCache"/>
-    <constructor-arg ref="aclAuthorizationStrategy"/>
+    <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
     <constructor-arg>
       <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
     </constructor-arg>
     <property name="permissionFactory" ref="permissionFactory"/>
   </bean>
-  <!-- Authorization for ACLs administration setup -->
-  <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
-    <constructor-arg index="0">
-      <list>
-        <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
-          <constructor-arg value="ROLE_ADMIN"/>
-        </bean>
-      </list>
-    </constructor-arg>
-    <property name="sidFactory" ref="jtalksSidFactory"/>
-  </bean>
+
   <bean id="jtalksSidFactory" class="org.jtalks.common.security.acl.sids.JtalksSidFactory"/>
   <!-- ACL permission factory -->
   <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory"/>
@@ -58,7 +48,7 @@
   <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
     <constructor-arg ref="dataSource"/>
     <constructor-arg ref="aclCache"/>
-    <constructor-arg ref="aclAuthorizationStrategy"/>
+    <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
     <constructor-arg>
       <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
     </constructor-arg>
@@ -78,6 +68,8 @@
       </bean>
     </constructor-arg>
   </bean>
+
+  <bean id="jtalksAclAuthorizationStrategy" class="org.jtalks.poulpe.security.AclAuthorizationStrategyImpl"/>
 
   <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
     <constructor-arg ref="aclService"/>
