@@ -30,6 +30,7 @@ import java.util.List;
  * A tree model specifically dedicated to work with forum structure.
  *
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     private static final long serialVersionUID = 20110138264143L;
@@ -137,6 +138,42 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
+    }
+
+    /**
+     * Handler of event when branch node dragged and dropped to another node.
+     * 
+     * @param draggedNode the node represents dragged branch item
+     * @param targetNode the node represents target item (it can be branch or section item)
+     */
+    public void onDropBranch(TreeNode<ForumStructureItem> draggedNode,
+            TreeNode<ForumStructureItem> targetNode) {
+        ForumStructureItem targetItem = targetNode.getData();
+        if (targetItem.isBranch()) {
+            dropNodeBefore(draggedNode, targetNode);
+        }
+        else {
+            dropNodeIn(draggedNode, targetNode);
+        }
+        setSelectedNode(draggedNode);
+    }
+
+    /**
+     * Handler of event when section node dragged and dropped to another section node.
+     * 
+     * @param draggedNode the node represents dragged section item
+     * @param targetNode the node represents target section item
+     */
+    public void onDropSection(TreeNode<ForumStructureItem> draggedNode,
+            TreeNode<ForumStructureItem> targetNode) {
+        ForumStructureItem draggedItem = draggedNode.getData();
+        ForumStructureItem targetItem = targetNode.getData();
+        PoulpeSection draggedSection = draggedItem.getSectionItem();
+        PoulpeSection targetSection = targetItem.getSectionItem();
+        Jcommune jcommune = getRootAsJcommune();
+        jcommune.moveSection(draggedSection, targetSection);
+        dropNodeBefore(draggedNode, targetNode);
+        setSelectedNode(draggedNode);
     }
 
     /**
