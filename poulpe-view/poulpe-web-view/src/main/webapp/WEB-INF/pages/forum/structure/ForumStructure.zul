@@ -9,7 +9,7 @@
     <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
       <template name="model">
         <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)" label="@load(each)"
-                  onDrop="@command('onDropItem', event=event)"/>
+                  onDrop="@command('dropEventHandler', event=event)"/>
       </template>
     </tree>
 
