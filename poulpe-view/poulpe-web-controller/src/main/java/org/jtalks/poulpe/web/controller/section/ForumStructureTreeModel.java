@@ -177,6 +177,24 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
+     * Checks that dropping item haven't effect.
+     *
+     * @param draggedItem the item to move
+     * @param targetItem the target item
+     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     */
+    public boolean noEffectAfterDropItem(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
+        if (draggedItem.isBranch()) {
+            PoulpeBranch draggedBranch = draggedItem.getBranchItem();
+            return noEffectAfterDropBranch(draggedBranch, targetItem);
+        } else if (draggedItem.isSection()) {
+            return noEffectAfterDropSection(draggedItem, targetItem);
+        }
+
+       return false;
+    }
+
+    /**
      * Checks that dropping branch haven't effect.
      *
      * @param draggedBranch the branch to move

@@ -139,11 +139,11 @@ public class ForumStructureVm {
         TreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
+        if (treeModel.noEffectAfterDropItem(draggedItem, targetItem)) {
+            return;
+        }
         if (draggedItem.isBranch()) {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            if (treeModel.noEffectAfterDropBranch(draggedBranch, targetItem)) {
-                return;
-            }
             treeModel.onDropBranch(draggedNode, targetNode);
             if (targetItem.isBranch()) {
                 PoulpeBranch targetBranch = targetItem.getBranchItem();
@@ -153,11 +153,12 @@ public class ForumStructureVm {
                 forumStructureService.moveBranch(draggedBranch, targetSection);
             }
         } else if (draggedItem.isSection()) {
-            if (treeModel.noEffectAfterDropSection(draggedItem, targetItem)) {
-                return;
-            }
             treeModel.onDropSection(draggedNode, targetNode);
-            forumStructureService.saveJcommune(treeModel.getRootAsJcommune());
+            PoulpeSection draggedSection = draggedItem.getSectionItem();
+            PoulpeSection targetSection = targetItem.getSectionItem();
+            Jcommune jcommune = treeModel.getRootAsJcommune();
+            jcommune.moveSection(draggedSection, targetSection);
+            forumStructureService.saveJcommune(jcommune);
         }
     }
 
