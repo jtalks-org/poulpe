@@ -154,7 +154,7 @@
                         <listcell>
                             <vlayout>
                                 <combobox model="@load(vm.branches.allAvailableGroups)"
-                                          selectedItem="@load(vm.selectedGroup) @save(vm.selectedModeratorGroupForAllBranches)"
+                                          selectedItem="@load(vm.selectedGroup, before='showGroupDeleteConfirmDialog') @save(vm.selectedModeratorGroupForAllBranches)"
                                           readonly="true">
                                     <template name="model" var="group">
                                         <comboitem id="@load(String.valueOf(group.id))"
