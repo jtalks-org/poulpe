@@ -14,11 +14,13 @@
         <rows>
           <row>
             <label value="${labels.users.label.firstname}" />
-            <textbox value="@bind(fx.firstName) @validator('beanValidator')" width="100%" focus="true" />
+            <textbox id="firstnameBox" value="@bind(fx.firstName) @validator('beanValidator')" width="100%" focus="true"
+              errorMessage="@load(usersMsgs[firstnameBox])" />
           </row>
           <row>
             <label value="${labels.users.label.lastname}" />
-            <textbox value="@bind(fx.lastName) @validator('beanValidator')" width="100%" />
+            <textbox id="lastnameBox" value="@bind(fx.lastName) @validator('beanValidator')" width="100%"
+              errorMessage="@load(usersMsgs[lastnameBox])" />
           </row>
           <row>
             <label value="${labels.users.label.email}" />
