@@ -79,6 +79,7 @@
     <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
         <constructor-arg index="0" ref="aclManager"/>
         <constructor-arg index="1" ref="groupDao"/>
+        <constructor-arg index="2" ref="aclUtil"/>
     </bean>
 
     <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">

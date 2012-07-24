@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.branch;
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.logic.AnonymousGroup;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
@@ -121,7 +122,9 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         getExist().addAll(getStateAfterEdit());
 
         getAvail().clear();
-        getAvail().addAll(ListUtils.subtract(groupService.getAll(), getStateAfterEdit()));
+        List<Group> groups = groupService.getAll();
+        groups.add(AnonymousGroup.ANONYMOUS_GROUP);
+        getAvail().addAll(ListUtils.subtract(groups, getStateAfterEdit()));
     }
 
     /**
