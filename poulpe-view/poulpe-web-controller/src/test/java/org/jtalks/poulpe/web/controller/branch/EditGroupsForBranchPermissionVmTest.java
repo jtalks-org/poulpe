@@ -29,6 +29,7 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -69,9 +70,7 @@ public class EditGroupsForBranchPermissionVmTest {
     @Test(dataProvider = "dataProvider")
     public void cancel(PermissionForEntity permissionForEntity, PermissionsMap<BranchPermission> permissionsMap) {
         initTest(permissionForEntity, permissionsMap);
-
         viewModel.cancel();
-
         vefiryNothingChanges();
     }
 
@@ -90,7 +89,7 @@ public class EditGroupsForBranchPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<BranchPermission> permissionsMap) {
+                                       PermissionsMap<BranchPermission> permissionsMap) {
         initTest(permissionForEntity, permissionsMap);
 
         viewModel.save();
@@ -99,6 +98,7 @@ public class EditGroupsForBranchPermissionVmTest {
     }
 
     public void initTest(PermissionForEntity permissionForEntity, PermissionsMap<BranchPermission> permissionsMap) {
+        when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
         when(branchService.getPermissionsFor(any(PoulpeBranch.class))).thenReturn(permissionsMap);
 
         viewModel = new EditGroupsForBranchPermissionVm(windowManager, branchService, groupService,
