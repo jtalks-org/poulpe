@@ -63,8 +63,8 @@
                 onClose="self.visible=false; event.stopPropagation();"
                 onCancel="self.visible=false; event.stopPropagation();"
                 onOK="@command('saveGroup', group=vm.selectedGroup)"
-                visible="@load(vm.showGroupDialog)">
-            <label value="${labels.groups.title.properties}"/>
+                visible="@load(vm.showGroupDialog)"> 
+          <label value="${labels.groups.title.properties}"/>
             <grid>
                 <columns>
                     <column label="${labels.field.description}" hflex="min"/>
@@ -74,9 +74,9 @@
                     <row>
                         <label value="${labels.groups.editdialog.name}"/>
                         <textbox id="newGroupNameBox" value="@load(vm.selectedGroup.name)
-                                                  @save(vm.selectedGroup.name, before='saveGroup')
+                                                  @save(vm.selectedGroup.name, before='saveGroup') 
                                                   @validator('beanValidator')" width="100%" focus="true"
-                                 constraint="no empty"/>
+                                  				  constraint="no empty"/>
                     </row>
                     <row>
                         <label value="${labels.groups.editdialog.description}"/>
@@ -87,11 +87,14 @@
                     </row>
                 </rows>
             </grid>
+            <zscript><![CDATA[
+            	Constraint tempConstraint = newGroupNameBox.constraint;]]>
+            </zscript>
             <hbox align="end">
                 <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
                         onClick="@command('saveGroup')"/>
-                <button image="/resources/img/deny16.png" label="${labels.groups.button.cancel}"
-                        onClick="@command('closeDialog')"/>
+                <button image="/resources/img/deny16.png" id="cancelButton" label="${labels.groups.button.cancel}"
+                        onClick="@command('closeDialog')" onMouseOver="newGroupNameBox.constraint=null;" onMouseOut="newGroupNameBox.constraint=tempConstraint;"/>
             </hbox>
         </window>
 
