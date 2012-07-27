@@ -112,5 +112,10 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         List<PoulpeUser> result = query.list();
         return result;
     }
+	
+	//Escape character % for LIKE in SQL query
+	private String prepareString4Sql(String s){
+		return s.replace("%", "\\%");
+	}
 
 }
