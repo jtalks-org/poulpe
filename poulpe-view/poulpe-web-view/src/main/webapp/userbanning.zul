@@ -43,7 +43,8 @@
         </bandpopup>
       </bandbox>
 
-      <button id="banUserButton" label="${labels.userbanning.add}" onClick="@command('banUser')"
+      <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
+              onClick="@command('banUser')"
               disabled="@load(null eq userBanningVm.addBanFor)"/>
     </hbox>
 
@@ -75,7 +76,7 @@
     </menupopup>
   </window>
 
-  <script src="js/userbanning.js" type="text/javascript"/>
+  <script src="js/userbanning.js"/>
 </zk>
 
 
