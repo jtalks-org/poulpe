@@ -19,6 +19,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.dao.utils.SqlAdapter;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 
@@ -41,8 +42,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
+        searchString = SqlAdapter.escapeCtrlCharacters(searchString);
         Query query = getSession().getNamedQuery("findUsersByLikeUsername");
-         query.setString("username", MessageFormat.format("%{0}%", prepareString4Sql(searchString)));
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
         paginate.addPagination(query);
 
         @SuppressWarnings("unchecked")
@@ -55,8 +57,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public int countUsernameMatches(String searchString) {
+        searchString = SqlAdapter.escapeCtrlCharacters(searchString);
         Query query = getSession().getNamedQuery("countUsersByLikeUsername");
-         query.setString("username", MessageFormat.format("%{0}%", prepareString4Sql(searchString)));
+        query.setString("username", MessageFormat.format("%{0}%", searchString));
 
         Number result = (Number) query.uniqueResult();
         return result.intValue();
@@ -112,10 +115,6 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         List<PoulpeUser> result = query.list();
         return result;
     }
-	
-	//Escape character % for LIKE in SQL query
-	private String prepareString4Sql(String s){
-		return s.replace("%", "\\%");
-	}
+
 
 }
