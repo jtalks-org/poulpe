@@ -10,6 +10,7 @@
       <north>
         <groupbox>
           <label style="font-size=30px" value="${labels.admin.title}" />
+          <a href="/logout" label="Log Out" />
           <a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
             sclass="language-button" />
           <a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
