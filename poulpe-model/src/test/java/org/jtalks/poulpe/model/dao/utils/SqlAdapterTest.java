@@ -14,7 +14,11 @@
  */
 package org.jtalks.poulpe.model.dao.utils;
 
+import org.testng.AssertJUnit;
 import org.testng.annotations.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created with IntelliJ IDEA.
@@ -25,20 +29,42 @@ import org.testng.annotations.*;
  */
 public class SqlAdapterTest  {
 
-
-    @BeforeTest
-    public void setUp() throws Exception {
-
-    }
-
-
     @Test
-    public void testEscapeCtrlCharacters() throws Exception {
-
+    public void test1EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\%", SqlAdapter.escapeCtrlCharacters("%"));
     }
 
     @Test
-    public void testSetCtrlSymbols2Escape() throws Exception {
+    public void test2EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\_", SqlAdapter.escapeCtrlCharacters("_"));
+    }
+    @Test
+    public void test3EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\!", SqlAdapter.escapeCtrlCharacters("!"));
+    }
+    @Test
+    public void test4EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\^", SqlAdapter.escapeCtrlCharacters("^"));
+    }
+    @Test
+    public void test5EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\[", SqlAdapter.escapeCtrlCharacters("["));
+    }
+    @Test
+    public void test6EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\]", SqlAdapter.escapeCtrlCharacters("]"));
+    }
+    @Test
+    public void test7EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "abc", SqlAdapter.escapeCtrlCharacters("abc"));
+    }
+    @Test
+    public void test8EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "\\^\\%\\!\\_\\[\\]abc\\^\\%\\!\\_\\[\\]", SqlAdapter.escapeCtrlCharacters("^%!_[]abc^%!_[]"));
+    }
 
+    @Test
+    public void test9EscapeCtrlCharacters() throws Exception {
+            AssertJUnit.assertEquals("Query is Ok", "abc\\^\\%\\!\\_\\[\\]abc", SqlAdapter.escapeCtrlCharacters("abc^%!_[]abc"));
     }
 }
