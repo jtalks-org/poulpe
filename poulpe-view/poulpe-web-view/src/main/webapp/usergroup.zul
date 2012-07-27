@@ -76,7 +76,7 @@
                         <textbox id="newGroupNameBox" value="@load(vm.selectedGroup.name)
                                                   @save(vm.selectedGroup.name, before='saveGroup') 
                                                   @validator('beanValidator')" width="100%" focus="true"
-                                  				  constraint="no empty"/>
+                                  				errorMessage="@load(vmsgs[newGroupNameBox])"/>
                     </row>
                     <row>
                         <label value="${labels.groups.editdialog.description}"/>
@@ -87,14 +87,11 @@
                     </row>
                 </rows>
             </grid>
-            <zscript><![CDATA[
-            	Constraint tempConstraint = newGroupNameBox.constraint;]]>
-            </zscript>
             <hbox align="end">
                 <button image="/resources/img/accept16.png" id="editButton" label="${labels.item.save}"
                         onClick="@command('saveGroup')"/>
                 <button image="/resources/img/deny16.png" id="cancelButton" label="${labels.groups.button.cancel}"
-                        onClick="@command('closeDialog')" onMouseOver="newGroupNameBox.constraint=null;" onMouseOut="newGroupNameBox.constraint=tempConstraint;"/>
+                        onClick="@command('closeDialog')"/>
             </hbox>
         </window>
 
