@@ -96,6 +96,24 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 	}
 
 	@Test
+	public void testGetByUsernameIsPercent() {
+		PoulpeUser user = TestFixtures.user("%", "testmail@mail.com");
+		saveAndEvict(user);
+
+		User actual = dao.getByUsername(user.getUsername());
+		assertReflectionEquals(actual, user);
+	}
+
+	@Test
+	public void testGetByUsernameContainsPercent() {
+		PoulpeUser user = TestFixtures.user("ab%c", "testmail@mail.com");
+		saveAndEvict(user);
+
+		User actual = dao.getByUsername(user.getUsername());
+		assertReflectionEquals(actual, user);
+	}
+
+	@Test
 	public void findPoulpeUsersPaginated_withPagination() {
 		String startsWith = "SomeString";
 		givenMoreThanOnePage(startsWith);
