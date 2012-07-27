@@ -323,22 +323,22 @@
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-model</artifactId>
-        <version>${common.version}</version>
+        <version>${commonVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-service</artifactId>
-        <version>${common.version}</version>
+        <version>${commonVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-web-controller</artifactId>
-        <version>${common.version}</version>
+        <version>${commonVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.jtalks.common</groupId>
         <artifactId>jtalks-common-security</artifactId>
-        <version>${common.version}</version>
+        <version>${commonVersion}</version>
       </dependency>
       <dependency>
         <groupId>ru.javatalks.utils</groupId>
@@ -448,7 +448,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <common.version>0.25</common.version>
+    <commonVersion>0.27</commonVersion>
   </properties>
 
   <distributionManagement>

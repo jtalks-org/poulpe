@@ -24,8 +24,8 @@
           </row>
           <row>
             <label value="${labels.users.label.email}" />
-            <textbox value="@bind(fx.email) @validator('beanValidator')" width="100%"
-              constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
+            <textbox id="emailBox" value="@bind(fx.email) @validator('beanValidator')" width="100%"
+              errorMessage="@load(usersMsgs[emailBox])" />
           </row>
           <!--<row>-->
             <!--<cell colspan="2">-->

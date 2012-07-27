@@ -14,16 +14,7 @@
  */
 package org.jtalks.poulpe.logic;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Entity;
@@ -33,6 +24,7 @@ import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.AclUtil;
+import org.jtalks.common.security.acl.ExtendedMutableAcl;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
@@ -45,23 +37,24 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.security.acls.domain.AccessControlEntryImpl;
-import org.springframework.security.acls.domain.AclAuthorizationStrategy;
-import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
-import org.springframework.security.acls.domain.AclImpl;
-import org.springframework.security.acls.domain.AuditLogger;
-import org.springframework.security.acls.domain.ConsoleAuditLogger;
-import org.springframework.security.acls.model.AccessControlEntry;
-import org.springframework.security.acls.model.Acl;
-import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
+import org.springframework.security.acls.domain.*;
+import org.springframework.security.acls.model.*;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.mockito.Matchers.anyListOf;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author stanislav bashkirtsev
@@ -88,9 +81,8 @@ public class PermissionManagerTest {
 
     /**
      * Mockito answer for {@link GroupDao#get(Long)} which return group from defined group list.
-     * 
+     *
      * @author Vyacheslav Zhivaev
-     * 
      */
     class GroupDaoAnswer implements Answer<Group> {
 
@@ -115,12 +107,18 @@ public class PermissionManagerTest {
     GroupDao groupDao;
     @Mock
     AclManager aclManager;
+    @Mock
+    AclUtil aclUtil;
 
     PermissionManager manager;
 
     List<Group> groups;
     List<GroupAce> groupAces;
     List<JtalksPermission> permissions;
+
+    private Long targetId = 1L;
+    private String targetType = "BRANCH";
+    private ObjectIdentityImpl objectIdentity;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -130,7 +128,14 @@ public class PermissionManagerTest {
         permissions = Lists.newArrayList();
         groupAces = Lists.newArrayList();
 
-        manager = new PermissionManager(aclManager, groupDao);
+        objectIdentity = new ObjectIdentityImpl(targetType, targetId);
+        when(aclUtil.createIdentityFor(any(Entity.class))).thenReturn(objectIdentity);
+        ExtendedMutableAcl mutableAcl = mock(ExtendedMutableAcl.class);
+        List<AccessControlEntry> controlEntries = new ArrayList<AccessControlEntry>();
+        when(mutableAcl.getEntries()).thenReturn(controlEntries);
+        when(aclUtil.getAclFor(objectIdentity)).thenReturn(mutableAcl);
+
+        manager = new PermissionManager(aclManager, groupDao, aclUtil);
     }
 
     @Test(dataProvider = "accessChanges")
@@ -139,8 +144,11 @@ public class PermissionManagerTest {
 
         manager.changeGrants(branch, changes);
 
-        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
-        verify(aclManager).grant(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager, times(changes.getRemovedGroups().size())).
+                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
+
+        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
+                grant(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
     }
 
     @Test(dataProvider = "accessChanges")
@@ -149,8 +157,11 @@ public class PermissionManagerTest {
 
         manager.changeRestrictions(branch, changes);
 
-        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
-        verify(aclManager).restrict(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager, times(changes.getRemovedGroups().size())).
+                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
+
+        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
+                restrict(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
     }
 
     @Test
@@ -187,12 +198,12 @@ public class PermissionManagerTest {
         PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CREATE_TOPICS);
         accessChanges.addNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
         accessChanges.addRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
-        return new Object[][] { { accessChanges } };
+        return new Object[][]{{accessChanges}};
     }
 
     @DataProvider
     public Object[][] branches() {
-        return new Object[][] { { TestFixtures.branch() } };
+        return new Object[][]{{TestFixtures.branch()}};
     }
 
     private List<UserGroupSid> getNewlyAddedSids(PermissionChanges accessChanges) {

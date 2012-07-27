@@ -73,12 +73,11 @@
 
   <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
     <constructor-arg ref="aclService"/>
-    <property name="aclUtil">
-      <bean class="org.jtalks.common.security.acl.AclUtil">
-        <constructor-arg ref="aclService"/>
-        <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
-      </bean>
-    </property>
+    <property name="aclUtil" ref="aclUtil"/>
+  </bean>
+  <bean  name="aclUtil" class="org.jtalks.common.security.acl.AclUtil">
+      <constructor-arg ref="aclService"/>
+      <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
   </bean>
   <bean id="typeConvertingObjectIdentityGenerator" factory-method="createDefaultGenerator"
         class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">
@@ -92,5 +91,5 @@
     <constructor-arg index="0" ref="userDao"/>
     <constructor-arg index="1" ref="aclManager"/>
   </bean>
-  
+
 </beans>
