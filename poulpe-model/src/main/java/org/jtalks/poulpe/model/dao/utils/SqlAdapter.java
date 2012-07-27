@@ -8,7 +8,7 @@ import java.util.List;
  * User: Anton
  * Date: 27.07.12
  * Time: 3:58
- * To change this template use File | Settings | File Templates.
+ * @author Anton Kolyaev
  */
 public class SqlAdapter {
     private static List<Character> ctrlSymbols = new ArrayList<Character>();
@@ -23,6 +23,11 @@ public class SqlAdapter {
 
     }
 
+    /**
+     * Escapes control characters for SQL query
+     * @param s  String to be prepared
+     * @return  String with escaped control characters
+     */
     public static String escapeCtrlCharacters(String s) {
         s=s.trim();
         StringBuffer sbuf = new StringBuffer( );
@@ -40,8 +45,8 @@ public class SqlAdapter {
     }
 
     /**
-     *
-     * @param newSymbols
+     * Sets new {@link List} of characters to be escaped
+     * @param newSymbols characters to escape
      *
      */
     public static void setCtrlSymbols2Escape(List<Character> newSymbols) {
