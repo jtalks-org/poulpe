@@ -11,25 +11,40 @@ import java.util.List;
  * To change this template use File | Settings | File Templates.
  */
 public class SqlAdapter {
-    private static List<String> ctrlSymbols = new ArrayList<String>();
+    private static List<Character> ctrlSymbols = new ArrayList<Character>();
 
-    public SqlAdapter(){
-        ctrlSymbols.add("%");//anything
-        ctrlSymbols.add("_");//anyone
-        ctrlSymbols.add("!");//not
-        ctrlSymbols.add("^");//not
-        ctrlSymbols.add("[");//array_start
-        ctrlSymbols.add("]");//array_finish
+    static {
+        ctrlSymbols.add('%');//anything
+        ctrlSymbols.add('_');//anyone
+        ctrlSymbols.add('!');//not
+        ctrlSymbols.add('^');//not
+        ctrlSymbols.add('[');//array_start
+        ctrlSymbols.add(']');//array_finish
+
     }
 
     public static String escapeCtrlCharacters(String s) {
-        for (String c : ctrlSymbols) {
-            s.replace(c, "\\" + c);
+        s=s.trim();
+        StringBuffer sbuf = new StringBuffer( );
+        int i=0;
+            while (i<s.length()){
+                for (Character c : ctrlSymbols) {
+                if (s.charAt(i)==c){
+                    sbuf.append("\\");
+                }
+            }
+               sbuf.append(s.charAt(i));
+               i++;
         }
-        return s;
+        return sbuf.toString();
     }
 
-    public static void setCtrlSymbols2Escape(List<String> newSymbols) {
+    /**
+     *
+     * @param newSymbols
+     *
+     */
+    public static void setCtrlSymbols2Escape(List<Character> newSymbols) {
         ctrlSymbols = newSymbols;
     }
 }
