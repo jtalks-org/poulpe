@@ -31,40 +31,40 @@ public class SqlAdapterTest  {
 
     @Test
     public void test1EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\%", SqlAdapter.escapeCtrlCharacters("%"));
+            AssertJUnit.assertEquals("\\%", SqlAdapter.escapeCtrlCharacters("%"));
     }
 
     @Test
     public void test2EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\_", SqlAdapter.escapeCtrlCharacters("_"));
+            AssertJUnit.assertEquals("\\_", SqlAdapter.escapeCtrlCharacters("_"));
     }
     @Test
     public void test3EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\!", SqlAdapter.escapeCtrlCharacters("!"));
+            AssertJUnit.assertEquals("\\!", SqlAdapter.escapeCtrlCharacters("!"));
     }
     @Test
     public void test4EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\^", SqlAdapter.escapeCtrlCharacters("^"));
+            AssertJUnit.assertEquals("\\^", SqlAdapter.escapeCtrlCharacters("^"));
     }
     @Test
     public void test5EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\[", SqlAdapter.escapeCtrlCharacters("["));
+            AssertJUnit.assertEquals("\\[", SqlAdapter.escapeCtrlCharacters("["));
     }
     @Test
     public void test6EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\]", SqlAdapter.escapeCtrlCharacters("]"));
+            AssertJUnit.assertEquals("\\]", SqlAdapter.escapeCtrlCharacters("]"));
     }
     @Test
     public void test7EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "abc", SqlAdapter.escapeCtrlCharacters("abc"));
+            AssertJUnit.assertEquals("abc", SqlAdapter.escapeCtrlCharacters("abc"));
     }
     @Test
     public void test8EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "\\^\\%\\!\\_\\[\\]abc\\^\\%\\!\\_\\[\\]", SqlAdapter.escapeCtrlCharacters("^%!_[]abc^%!_[]"));
+            AssertJUnit.assertEquals("\\^\\%\\!\\_\\[\\]abc\\^\\%\\!\\_\\[\\]", SqlAdapter.escapeCtrlCharacters("^%!_[]abc^%!_[]"));
     }
 
     @Test
     public void test9EscapeCtrlCharacters() throws Exception {
-            AssertJUnit.assertEquals("Query is Ok", "abc\\^\\%\\!\\_\\[\\]abc", SqlAdapter.escapeCtrlCharacters("abc^%!_[]abc"));
+            AssertJUnit.assertEquals("abc\\^\\%\\!\\_\\[\\]abc", SqlAdapter.escapeCtrlCharacters("abc^%!_[]abc"));
     }
 }
