@@ -4,7 +4,7 @@ void selectUserToBan()
     usersPopupToBan.setValue(usersListBoxToBan.getSelectedItem().getLabel());
     usersPopupToBan.close();
     usersPopupToBan.focus();
-    addUserToBannedGroupButton.setDisabled(false);
+    banUserButton.setDisabled(false);
 }
 
 //method runs after listbox is open

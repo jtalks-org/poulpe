@@ -33,7 +33,7 @@ public class UserBanningVmTest {
 		groupService = mock(GroupService.class);
 		userService = mock(UserService.class);
 		banned = mock(UserList.class);
-		sut = new UserBanningVm(userService, groupService);
+		sut = new UserBanningVm(userService);
 		availableUsers = Arrays.asList(new PoulpeUser("a", "a", "a", "a"),
 				new PoulpeUser("b", "b", "b", "b"),
 				new PoulpeUser("c", "c", "c", "c"),
@@ -64,7 +64,7 @@ public class UserBanningVmTest {
 	@Test
 	public void testAddUserToBannedGroup() throws Exception {
 		sut.setAddBanFor(user);
-		sut.addUserToBannedGroup();
+		sut.banUser();
 		verify(userService, times(1)).banUsers(user);
 		assertEquals(sut.getAddBanFor(), null);
 	}
