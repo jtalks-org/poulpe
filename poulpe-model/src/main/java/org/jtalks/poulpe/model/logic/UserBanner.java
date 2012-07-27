@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.logic;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.dao.utils.SqlAdapter;
+import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 
@@ -58,7 +58,6 @@ public class UserBanner {
      *         //
      */
     public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
-        availableFilterText = SqlAdapter.escapeCtrlCharacters(availableFilterText);
         List<Group> bannedUserGroups = getBannedUsersGroups();
         return userDao.findUsersNotInGroups(availableFilterText, bannedUserGroups, pagination);
     }

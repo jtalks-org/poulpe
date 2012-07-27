@@ -19,7 +19,7 @@ import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.dao.utils.SqlAdapter;
+import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 
@@ -42,7 +42,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
-        searchString = SqlAdapter.escapeCtrlCharacters(searchString);
+        searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
         Query query = getSession().getNamedQuery("findUsersByLikeUsername");
         query.setString("username", MessageFormat.format("%{0}%", searchString));
         paginate.addPagination(query);
@@ -57,7 +57,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public int countUsernameMatches(String searchString) {
-        searchString = SqlAdapter.escapeCtrlCharacters(searchString);
+        searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
         Query query = getSession().getNamedQuery("countUsersByLikeUsername");
         query.setString("username", MessageFormat.format("%{0}%", searchString));
 
@@ -89,10 +89,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
             groupsIds.add(new BigInteger(group.getId() + ""));
         }
         query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
-
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> result = query.list();
-        return result;
+        //noinspection unchecked
+        return query.list();
     }
 
     /**
@@ -100,6 +98,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate) {
+        availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
         Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
         query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
 
@@ -110,10 +109,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
 
         query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
         paginate.addPagination(query);
-
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> result = query.list();
-        return result;
+        //noinspection unchecked
+        return query.list();
     }
 
 
