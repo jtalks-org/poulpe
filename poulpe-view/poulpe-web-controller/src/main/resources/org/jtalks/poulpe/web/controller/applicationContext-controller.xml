@@ -42,10 +42,7 @@
     <constructor-arg index="1" ref="windowManager"/>
     <constructor-arg index="2" ref="selectedEntity"/>
   </bean>
-  <bean id="userPersonalPermissionsVm" class="org.jtalks.poulpe.web.controller.users.UserPersonalPermissionsVm">
-
-  </bean>
-
+  <bean id="userPersonalPermissionsVm" class="org.jtalks.poulpe.web.controller.users.UserPersonalPermissionsVm" scope="desktop"/>
 
   <bean id="deleteBranchDialogVm"  scope="desktop"
         class="org.jtalks.poulpe.web.controller.section.dialogs.DeleteBranchDialogVm">
