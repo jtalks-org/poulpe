@@ -42,7 +42,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
         Query query = getSession().getNamedQuery("findUsersByLikeUsername");
-        query.setString("username", MessageFormat.format("%{0}%", searchString));
+         query.setString("username", MessageFormat.format("%{0}%", prepareString4Sql(searchString)));
         paginate.addPagination(query);
 
         @SuppressWarnings("unchecked")
@@ -56,7 +56,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public int countUsernameMatches(String searchString) {
         Query query = getSession().getNamedQuery("countUsersByLikeUsername");
-        query.setString("username", MessageFormat.format("%{0}%", searchString));
+         query.setString("username", MessageFormat.format("%{0}%", prepareString4Sql(searchString)));
 
         Number result = (Number) query.uniqueResult();
         return result.intValue();
