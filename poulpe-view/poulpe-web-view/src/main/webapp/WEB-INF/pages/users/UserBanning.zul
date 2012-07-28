@@ -21,12 +21,13 @@
   <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
           apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
 
-    <zscript src="js/userbanning.zs"/>
+    <zscript src="/js/UserBanning.zs"/>
 
     <!-- Adding user to ban state: user selection -->
-    <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
-      <bandbox id="usersPopupToBan" autodrop="true" buttonVisible="false"
-               onChanging="@command('setAvailableFilter', filterText=event.value)"
+    <hbox style="simple-grid" vflex="min" width="100%">
+      <!--impossible to have just @bind because it happens only on onChange, but doesn't happen onChanging-->
+      <bandbox id="usersPopupToBan" autodrop="true" onChanging="@command('setAvailableFilter', filterText=event.value)"
+               value="@load(userBanningVm.availableFilter)"
                onOpen="popupWithUsersToBanOpen()">
         <bandpopup>
           <vbox>
@@ -44,8 +45,7 @@
       </bandbox>
 
       <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
-              onClick="@command('banUser')"
-              disabled="@load(null eq userBanningVm.addBanFor)"/>
+              onClick="@command('banUser')" disabled="@load(null eq userBanningVm.addBanFor)"/>
     </hbox>
 
     <!-- Banned users list -->
@@ -76,7 +76,7 @@
     </menupopup>
   </window>
 
-  <script src="js/userbanning.js"/>
+  <script src="/js/UserBanning.js"/>
 </zk>
 
 
