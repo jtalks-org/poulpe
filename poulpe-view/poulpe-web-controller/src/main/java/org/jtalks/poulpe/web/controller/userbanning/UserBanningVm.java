@@ -26,15 +26,17 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * View-Model for banning of users purposes.
+ * Can search users by username, ban and revoke banning from users.
  *
  * @author maxim reshetov
  */
 public class UserBanningVm {
     private final UserService userService;
-    /** Max count to combobox of users with filter **/
+    /**
+     * Max count to combobox of users with filter *
+     */
     private final static int MAX_COMBOBOX_SIZE = 10;
-    private static final String AVAILABLE_USERS_PROP = "availableUsers", AVAILABLE_FILTER_TEXT = "availableFilterText",
+    private static final String AVAILABLE_USERS_PROP = "availableUsers", AVAILABLE_FILTER_TEXT = "availableFilter",
             BANNED_USERS_PROP = "bannedUsers", ADD_BAN_FOR_PROP = "addBanFor";
 
     /**
@@ -50,7 +52,7 @@ public class UserBanningVm {
     /**
      * Text to filter users by username in available list.
      */
-    private String availableFilterText = "";
+    private String availableFilter = "";
 
     /**
      * @param userService used to obtain data related to users for VM
@@ -66,7 +68,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<PoulpeUser> getAvailableUsers() {
-        return userService.getNonBannedUsersByUsername(availableFilterText, Pages.paginate(0, MAX_COMBOBOX_SIZE));
+        return userService.getNonBannedUsersByUsername(availableFilter, Pages.paginate(0, MAX_COMBOBOX_SIZE));
     }
 
     /**
@@ -118,25 +120,13 @@ public class UserBanningVm {
     }
 
     /**
-     * Sets new value to filter text for users in available list. This value later will be used to filter users by
-     * username in list of available users.
-     *
-     * @param filterText the text to filter by
-     */
-    @Command
-    @NotifyChange({AVAILABLE_USERS_PROP})
-    public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
-        this.availableFilterText = filterText;
-    }
-
-    /**
      * Add user to Banned Users group
      */
     @Command
     @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP, AVAILABLE_FILTER_TEXT})
     public void banUser() {
         userService.banUsers(addBanFor);
-        availableFilterText = "";
+        availableFilter = "";
         addBanFor = null;
     }
 
@@ -150,4 +140,19 @@ public class UserBanningVm {
         selectedUser = null;
     }
 
+    /**
+     * Sets new value to filter text for users in available list. This value later will be used to filter users by
+     * username in list of available users.
+     *
+     * @param filterText the text to filter by
+     */
+    @Command
+    @NotifyChange({AVAILABLE_USERS_PROP})
+    public void setAvailableFilter(@BindingParam("filterText")String filterText) {
+        this.availableFilter = filterText;
+    }
+
+    public String getAvailableFilter() {
+        return availableFilter;
+    }
 }

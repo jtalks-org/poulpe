@@ -103,7 +103,7 @@ public class AdminWindowTest {
     @Test
     public void testOnShowUserBanning() {
         adminWindow.onShowUserBanning();
-        testOnShow("userbanning.zul");
+        testOnShow("WEB-INF/pages/users/UserBanning.zul");
     }
 
     @Test

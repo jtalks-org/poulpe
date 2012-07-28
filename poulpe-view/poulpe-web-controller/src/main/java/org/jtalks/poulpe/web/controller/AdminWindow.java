@@ -122,7 +122,7 @@ public class AdminWindow {
      */
     @Command
     public void onShowUserBanning() {
-        windowManager.open("userbanning.zul");
+        windowManager.open("WEB-INF/pages/users/UserBanning.zul");
     }
 
     /**

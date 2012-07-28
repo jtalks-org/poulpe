@@ -35,9 +35,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotSame;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
@@ -105,12 +103,12 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 	}
 
 	@Test
-	public void testGetByUsernameContainsPercent() {
-		PoulpeUser user = TestFixtures.user("ab%c", "testmail@mail.com");
+	public void getByUsernameShouldEscapeControlSymbols() {
+		PoulpeUser user = TestFixtures.user("abc", "testmail@mail.com");
 		saveAndEvict(user);
 
-		User actual = dao.getByUsername(user.getUsername());
-		assertReflectionEquals(actual, user);
+		User actual = dao.getByUsername("%");// should be escaped, there are no users with % in name
+		assertNull(actual);
 	}
 
 	@Test
