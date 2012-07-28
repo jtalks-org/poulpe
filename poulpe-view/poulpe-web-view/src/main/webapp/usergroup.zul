@@ -65,6 +65,7 @@
                 onOK="@command('saveGroup', group=vm.selectedGroup)"
                 visible="@load(vm.showGroupDialog)"> 
           <label value="${labels.groups.title.properties}"/>
+            <vlayout form="@id('fx') @load(vm.selectedGroup) @save(vm.selectedGroup, before='saveGroup')">
             <grid>
                 <columns>
                     <column label="${labels.field.description}" hflex="min"/>
@@ -73,8 +74,7 @@
                 <rows>
                     <row>
                         <label value="${labels.groups.editdialog.name}"/>
-                        <textbox id="newGroupNameBox" value="@load(vm.selectedGroup.name)
-                                                  @save(vm.selectedGroup.name, before='saveGroup') 
+                        <textbox id="newGroupNameBox" value="@bind(fx.name) 
                                                   @validator('beanValidator')" width="100%" focus="true"
                                   				errorMessage="@load(vmsgs[newGroupNameBox])"/>
                     </row>
@@ -93,6 +93,7 @@
                 <button image="/resources/img/deny16.png" id="cancelButton" label="${labels.groups.button.cancel}"
                         onClick="@command('closeDialog')"/>
             </hbox>
+            </vlayout>
         </window>
 
 
