@@ -55,8 +55,9 @@
     border-radius: 3px;
 }
 
-.language-button {
-    float: right
+.top-right-system-menu {
+    float: right;
+    padding: 5px
 }
 
 .halfbold-table-title {
