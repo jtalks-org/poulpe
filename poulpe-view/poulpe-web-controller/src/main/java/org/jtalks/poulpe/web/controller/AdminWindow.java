@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -90,7 +91,7 @@ public class AdminWindow {
      */
     @Command
     public void onShowComponents() {
-        windowManager.open("components.zul");
+        ComponentsVm.show(windowManager);
     }
 
     /**
