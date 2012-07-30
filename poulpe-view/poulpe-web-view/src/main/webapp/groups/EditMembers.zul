@@ -18,8 +18,9 @@
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>
-              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
+              <paging id="paging" pageSize="@bind(editGroupMembersVm.itemsPerPage)" totalSize="@load(editGroupMembersVm.availTotalSize)" activePage="@bind(editGroupMembersVm.activePage)" />
+              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')" 
+                  multiple="true" checkmark="true" width="515px" height="350px">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
