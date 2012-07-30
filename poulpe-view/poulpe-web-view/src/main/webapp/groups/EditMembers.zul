@@ -18,7 +18,7 @@
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>
-              <paging id="paging" pageSize="@bind(editGroupMembersVm.itemsPerPage)" totalSize="@load(editGroupMembersVm.availTotalSize)" activePage="@bind(editGroupMembersVm.activePage)" />
+              <paging id="paging" pageSize="@bind(editGroupMembersVm.itemsAvailPerPage)" totalSize="@bind(editGroupMembersVm.availTotalSize)" activePage="@bind(editGroupMembersVm.activeAvailPage)" />
               <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')" 
                   multiple="true" checkmark="true" width="515px" height="350px">
                 <listhead>

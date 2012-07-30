@@ -45,12 +45,15 @@ import static org.hamcrest.text.StringContains.containsString;
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+	
+	public static final String AVAIAL_TOTAL_SIZE="availTotalSize";
+	
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
     
-    private int activePage = 0;
-    private int itemsPerPage = 50;
+    private int activeAvailPage = 0;
+    private int itemsAvailPerPage = 50;
 
 	/**
      * Group to be edited
@@ -99,9 +102,10 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-        List<PoulpeUser> users = userService.findUsersPaginated(getAvailFilterTxt(), getActivePage(), getItemsPerPage());
-       // List<PoulpeUser> users = Lists.newLinkedList(userService.withUsernamesMatching(getAvailFilterTxt()));
-        users.removeAll(getStateAfterEdit());
+    	List<Group> list= new ArrayList<Group>();
+    	list.add(groupToEdit);
+    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
+    	
         getAvail().clear();
         getAvail().addAll(users);
     }
@@ -155,29 +159,42 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         windowManager.open("usergroup.zul");
     }
     
-    public int getActivePage() {
-  		return activePage;
+    /**
+     * @return number of active page elements available
+     */
+    public int getActiveAvailPage() {
+  		return activeAvailPage;
   	}
 
+    /**
+     * @param activePage number of active page elements available
+     */
     @NotifyChange({AVAIL_PROPERTY})
-  	public void setActivePage(int activePage) {
-  		this.activePage = activePage;
+  	public void setActiveAvailPage(int activePage) {
+  		this.activeAvailPage = activePage;
   		updateVm();
   	}
     
     /**
      * @return total amount of users matched the searchString
      */
+    @NotifyChange({AVAIAL_TOTAL_SIZE})
     public int getAvailTotalSize() {
-        return userService.countUsernameMatches(getAvailFilterTxt());
+        return userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
     }
     
-    public int getItemsPerPage() {
-		return itemsPerPage;
+    /**
+     * @return number of available items per page
+     */
+    public int getItemsAvailPerPage() {
+		return itemsAvailPerPage;
 	}
 
-	public void setItemsPerPage(int itemsPerPage) {
-		this.itemsPerPage = itemsPerPage;
+    /**
+     * @param itemsPerPage number of available items per page
+     */
+	public void setItemsAvailPerPage(int itemsPerPage) {
+		this.itemsAvailPerPage = itemsPerPage;
 	}
 
 	/**
