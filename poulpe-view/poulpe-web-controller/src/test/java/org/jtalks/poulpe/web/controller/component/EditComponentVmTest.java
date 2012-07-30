@@ -61,7 +61,7 @@ public class EditComponentVmTest {
     @Test
     public void save_editWindowClosed() {
         editComponentVm.save();
-        verify(windowManager).open(EditComponentVm.COMPONENTS_WINDOW);
+        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
     
     @Test
@@ -73,7 +73,7 @@ public class EditComponentVmTest {
     @Test
     public void cancel_editWindowClosed() {
         editComponentVm.cancel();
-        verify(windowManager).open(EditComponentVm.COMPONENTS_WINDOW);
+        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
     
     @Test

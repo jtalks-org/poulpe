@@ -73,7 +73,7 @@ public class AdminWindowTest {
     @Test
     public void testOnShowComponents() {
         adminWindow.onShowComponents();
-        testOnShow("components.zul");
+        testOnShow("/WEB-INF/pages/component/components.zul");
     }
 
     @Test
