@@ -46,7 +46,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 	
-	public static final String AVAIAL_TOTAL_SIZE="availTotalSize";
+	public static final String AVAIL_TOTAL_SIZE="availTotalSize";
 	
     private final GroupService groupService;
     private final UserService userService;
@@ -100,7 +100,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
     	List<Group> list= new ArrayList<Group>();
     	list.add(groupToEdit);
@@ -178,7 +178,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     /**
      * @return total amount of users matched the searchString
      */
-    @NotifyChange({AVAIAL_TOTAL_SIZE})
+    @NotifyChange({AVAIL_TOTAL_SIZE})
     public int getAvailTotalSize() {
         return userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
     }
