@@ -181,7 +181,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @NotifyChange({AVAIL_TOTAL_SIZE})
     public int getAvailTotalSize() {
-        return userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
+    	int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size(); 
+        if(result<0)return 0;
+    	return result; 
     }
     
     /**
