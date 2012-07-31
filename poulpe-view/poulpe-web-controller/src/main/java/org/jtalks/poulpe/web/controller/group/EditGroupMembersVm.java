@@ -46,7 +46,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 	
-	public static final String AVAIL_TOTAL_SIZE="availTotalSize";
+	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage";
 	
     private final GroupService groupService;
     private final UserService userService;
@@ -100,14 +100,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-    	List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
-    	
-        getAvail().clear();
-        getAvail().addAll(users);
+    	setActiveAvailPage(0);
     }
 
     /**
@@ -169,10 +164,16 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     /**
      * @param activePage number of active page elements available
      */
-    @NotifyChange({AVAIL_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-  		updateVm();
+  		
+  		List<Group> list= new ArrayList<Group>();
+    	list.add(groupToEdit);
+    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
+    	
+        getAvail().clear();
+        getAvail().addAll(users);
   	}
     
     /**
@@ -204,6 +205,32 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
+    }
+    
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void add() {
+    	super.add();
+    }
+    
+    @Override
+    @Command
+    @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void addAll() {
+    	super.addAll();
+    }
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void remove() {
+    	super.remove();
+    }
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void removeAll() {
+    	super.removeAll();
     }
     
     
