@@ -111,6 +111,13 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
+	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
+		return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
+	}
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void updateUser(PoulpeUser user) {
         userDao.update(user);
     }
@@ -174,4 +181,6 @@ public class TransactionalUserService implements UserService {
         }
         return granting;
     }
+
+	
 }

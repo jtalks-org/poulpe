@@ -218,7 +218,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-    	List<PoulpeUser> users=userService.withUsernamesMatching("");
+    	List<Group> list= new ArrayList<Group>();
+    	list.add(groupToEdit);
+    	List<PoulpeUser> users=userService.findUsersNotInGroups("", list);
     	getAvail().clear();
         getAvail().addAll(users);
     	super.addAll();
