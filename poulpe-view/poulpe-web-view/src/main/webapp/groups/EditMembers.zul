@@ -14,7 +14,7 @@
           <panel title="${labels.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVm.availFilterTxt)" />
+                <textbox value="@load(editGroupMembersVm.availFilterTxt)@save(editGroupMembersVm.availFilterTxt, before='filterAvail')" />
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>

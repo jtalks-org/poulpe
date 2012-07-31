@@ -151,7 +151,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
-        windowManager.open("usergroup.zul");
+    	windowManager.open("usergroup.zul");
     }
     
     /**
@@ -218,6 +218,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
+    	List<PoulpeUser> users=userService.withUsernamesMatching("");
+    	getAvail().clear();
+        getAvail().addAll(users);
     	super.addAll();
     }
     @Override
