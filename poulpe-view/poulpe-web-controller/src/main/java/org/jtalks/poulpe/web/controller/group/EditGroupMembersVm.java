@@ -41,6 +41,7 @@ import static org.hamcrest.text.StringContains.containsString;
  * View-Model for 'Edit Members of group'.
  *
  * @author Vyacheslav Zhivaev
+ * @author Mikhail Zaitsev;
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
@@ -167,7 +168,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-  		
+  		//TODO
   		List<Group> list= new ArrayList<Group>();
     	list.add(groupToEdit);
     	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());

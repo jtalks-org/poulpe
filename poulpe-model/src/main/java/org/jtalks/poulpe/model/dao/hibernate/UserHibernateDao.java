@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigInteger;
 import java.text.MessageFormat;
@@ -110,6 +111,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
         paginate.addPagination(query);
         //noinspection unchecked
+
         return query.list();
     }
 
