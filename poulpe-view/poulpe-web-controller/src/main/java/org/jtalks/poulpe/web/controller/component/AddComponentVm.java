@@ -31,7 +31,8 @@ import java.util.List;
  * @author Alexey Grigorev
  */
 public class AddComponentVm {
-    static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
+    static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul",
+            COMPONENTS_WINDOW = "components.zul";
 
     private final ComponentService componentService;
     private final WindowManager windowManager;
@@ -88,7 +89,7 @@ public class AddComponentVm {
      * Opens components view, closing it
      */
     private void switchToComponentsWindow() {
-        ComponentsVm.show(windowManager);
+        windowManager.open(COMPONENTS_WINDOW);
     }
 
     /**

@@ -110,7 +110,7 @@ public class ComponentsVmTest {
     public void deleteComponent_notifyChange() {
         givenUserConfirmedDeletion();
         verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
-                ComponentsVm.CAN_CREATE_NEW_COMPONENT);
+                ComponentsVm.CAN_CREATE_NEW_COMPPONENT);
     }
     
     @Test(expectedExceptions = IllegalStateException.class)

@@ -14,9 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
@@ -27,7 +25,6 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -58,6 +55,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     private int activeAvailPage = 0;
     private int itemsAvailPerPage = 50;
 
+
+    private int existAvailPage = 0;
+    private int itemsExistPerPage = 50;
 
 	/**
      * Group to be edited
@@ -212,9 +212,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
@@ -222,9 +219,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     	super.add();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
@@ -234,21 +228,14 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         getAvail().addAll(users);
     	super.addAll();
     }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
         getStateAfterEdit().removeAll(getExistSelected());
     	getAvail().addAll(getExistSelected());
+    	//super.remove();
     }
-
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})

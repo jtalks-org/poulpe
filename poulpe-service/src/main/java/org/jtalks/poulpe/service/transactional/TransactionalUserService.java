@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
+
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -199,6 +200,4 @@ public class TransactionalUserService implements UserService {
         }
         return granting;
     }
-
-	
 }
