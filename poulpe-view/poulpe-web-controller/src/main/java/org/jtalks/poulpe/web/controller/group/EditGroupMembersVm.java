@@ -45,16 +45,16 @@ import static org.hamcrest.text.StringContains.containsString;
  * @author Mikhail Zaitsev;
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
-	
+
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
-	
+
 	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage",
                                EXIST_TOTAL_SIZE="existTotalSize", EXIST_ACTIVE_PAGE="activeExistPage";
-	
+
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
-    
+
     private int activeAvailPage = 0;
     private int itemsAvailPerPage = 50;
 
@@ -174,21 +174,21 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
   		this.activeAvailPage = activePage;
 
     	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit(),getActiveAvailPage(), getItemsAvailPerPage());
-    	
+
         getAvail().clear();
         getAvail().addAll(users);
   	}
-    
+
     /**
      * @return total amount of users matched the searchString
      */
     @NotifyChange({AVAIL_TOTAL_SIZE})
     public int getAvailTotalSize() {
-    	int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size(); 
+    	int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
         if(result<0)return 0;
-    	return result; 
+    	return result;
     }
-    
+
     /**
      * @return number of available items per page
      */
@@ -244,7 +244,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public void remove() {
         getStateAfterEdit().removeAll(getExistSelected());
     	getAvail().addAll(getExistSelected());
-    	filterExist();
     }
 
     /**
@@ -256,6 +255,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public void removeAll() {
     	super.removeAll();
     }
-    
-    
+
+
 }
