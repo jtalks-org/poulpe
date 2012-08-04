@@ -29,13 +29,12 @@ public class BranchGroupMap {
         for (PoulpeBranch branch : branches) {
             branchesCollection.add(new ModeratingGroupComboboxRow(branch));
         }
-        iterator = branchesCollection.iterator();
     }
 
     /**
      * Sets group as selected for all branches at holded List 'branchesCollection', so all comboboxes will select
      * this group.
-     * @param group {@link Group} to set  
+     * @param group {@link Group} to set
      */
     public void setSelectedGroupForAllBranches(Group group) {
         for (ModeratingGroupComboboxRow controller : branchesCollection) {
@@ -57,14 +56,12 @@ public class BranchGroupMap {
      * shown
      */
     public void setModeratingGroupForAllBranches(Group oldModeratorGroup) {
-        if (iterator.hasNext()) {
+        iterator = branchesCollection.iterator();
+        while (iterator.hasNext()) {
             ModeratingGroupComboboxRow controller = iterator.next();
             if (controller.hasChanges(oldModeratorGroup)) {
-                while (iterator.hasNext()) {
-                    controller.setModeratorsGroup();
-                    iterator.remove();
-                    controller = iterator.next();
-                }
+                controller.setModeratorsGroup();
+                iterator.remove();
             }
         }
     }
@@ -72,14 +69,15 @@ public class BranchGroupMap {
 
     /**
      * Saves moderator group for single branch if group were changed.
-     * @param selectedGroup instance of {@link Group} witch were moderator for 'branch' before method called
+     * @param oldModeratorGroup instance of {@link Group} witch were moderator for 'branch' before method called
      * @param branch instance of {@link PoulpeBranch} to set moderated by {@link Group} seleted at
      * {@link ModeratingGroupComboboxRow}
      */
-    public void setModeratingGroupForCurrentBranch(Group selectedGroup, PoulpeBranch branch) {
+    public void setModeratingGroupForCurrentBranch(Group oldModeratorGroup, PoulpeBranch branch) {
+        iterator = branchesCollection.iterator();
         while (iterator.hasNext()) {
             ModeratingGroupComboboxRow controller = iterator.next();
-            if (controller.currentBrunchHasChanges(selectedGroup, branch)) {
+            if (controller.currentBrunchHasChanges(oldModeratorGroup, branch)) {
                 controller.setModeratorsGroup();
                 iterator.remove();
             }

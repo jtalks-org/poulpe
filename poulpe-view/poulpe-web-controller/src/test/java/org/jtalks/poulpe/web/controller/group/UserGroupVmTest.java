@@ -196,13 +196,13 @@ public class UserGroupVmTest {
 
         PoulpeBranch keyBranch = branchesList.get(0);
         keyBranch.setModeratorsGroup(oldModeratorGroup);
-        viewModel.setSelectedGroup(wantBecameModeratorGroup);
+        viewModel.setSelectedGroup(oldModeratorGroup);
         viewModel.getBranches().setSelectedGroupForAllBranches(wantBecameModeratorGroup);
 
         viewModel.saveModeratorForCurrentBranch(keyBranch);
 
         verify(keyBranch).setModeratorsGroup(wantBecameModeratorGroup);
-        verify(branches).setModeratingGroupForCurrentBranch(wantBecameModeratorGroup, keyBranch);
+        verify(branches).setModeratingGroupForCurrentBranch(oldModeratorGroup, keyBranch);
         assertFalse(viewModel.isShowDeleteModeratorGroupDialog());
     }
 
