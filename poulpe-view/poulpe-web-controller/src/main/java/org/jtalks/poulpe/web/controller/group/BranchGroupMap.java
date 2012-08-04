@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.web.controller.group;
 
 import com.google.common.collect.ImmutableList;
@@ -7,6 +21,7 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
 /**
  * Logic controller actions performed at delete moderator group dialog. Holds collection of
  * {@link ModeratingGroupComboboxRow} and list of groups available to set as moderator. This class was created to
@@ -16,16 +31,19 @@ import java.util.List;
  */
 public class BranchGroupMap {
     private List<Group> allAvailableGroups;
-    private List<ModeratingGroupComboboxRow> branchesCollection = new ArrayList<ModeratingGroupComboboxRow>(20);
+    private List<ModeratingGroupComboboxRow> branchesCollection;
     private Iterator<ModeratingGroupComboboxRow> iterator;
 
-    /** Construct branchCollection by creating list record for every branch, so every branch will had his own combobox,
-     *  to select moderator group.
-     *  @param branches list of {@link PoulpeBranch} moderated by currently selected at {@link UserGroupVm} group
-     *  @param groups list of {@link Group} available for selection
+    /**
+     * Construct branchCollection by creating list record for every branch, so every branch will had his own combobox,
+     * to select moderator group.
+     *
+     * @param branches list of {@link PoulpeBranch} moderated by currently selected at {@link UserGroupVm} group
+     * @param groups   list of {@link Group} available for selection
      */
     public BranchGroupMap(List<PoulpeBranch> branches, List<Group> groups) {
         allAvailableGroups = ImmutableList.copyOf(groups);
+        branchesCollection = new ArrayList<ModeratingGroupComboboxRow>(branches.size());
         for (PoulpeBranch branch : branches) {
             branchesCollection.add(new ModeratingGroupComboboxRow(branch));
         }
@@ -34,6 +52,7 @@ public class BranchGroupMap {
     /**
      * Sets group as selected for all branches at holded List 'branchesCollection', so all comboboxes will select
      * this group.
+     *
      * @param group {@link Group} to set
      */
     public void setSelectedGroupForAllBranches(Group group) {
@@ -52,8 +71,9 @@ public class BranchGroupMap {
     /**
      * Saves moderator group for all branches at 'branchCollection' if oldModeratorsGroup were changed, nothing to
      * save otherwise.
+     *
      * @param oldModeratorGroup instance of {@link Group} witch were moderator for all branches before dialog were
-     * shown
+     *                          shown
      */
     public void setModeratingGroupForAllBranches(Group oldModeratorGroup) {
         iterator = branchesCollection.iterator();
@@ -69,9 +89,10 @@ public class BranchGroupMap {
 
     /**
      * Saves moderator group for single branch if group were changed.
+     *
      * @param oldModeratorGroup instance of {@link Group} witch were moderator for 'branch' before method called
-     * @param branch instance of {@link PoulpeBranch} to set moderated by {@link Group} seleted at
-     * {@link ModeratingGroupComboboxRow}
+     * @param branch            instance of {@link PoulpeBranch} to set moderated by {@link Group} seleted at
+     *                          {@link ModeratingGroupComboboxRow}
      */
     public void setModeratingGroupForCurrentBranch(Group oldModeratorGroup, PoulpeBranch branch) {
         iterator = branchesCollection.iterator();

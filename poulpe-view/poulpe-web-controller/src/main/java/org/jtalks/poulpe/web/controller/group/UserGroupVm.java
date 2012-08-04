@@ -27,7 +27,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
 import java.util.List;
 
 /**
