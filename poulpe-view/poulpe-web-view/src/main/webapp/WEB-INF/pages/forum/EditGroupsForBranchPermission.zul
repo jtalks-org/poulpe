@@ -4,20 +4,20 @@
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <window title="Change Groups for Branch Permission" closable="true" border="normal" mode="modal"
+    <window title="Change Groups for Branch Permission" closable="true" border="normal" mode="modal" width="70%" height="60%"
             onClose="@command('cancel')"
             onCancel="@command('cancel')"
-            forward="onOK=savePermissionsButton.onClick"
+            onOK="@command('save')"
             apply="org.zkoss.bind.BindComposer"
             viewModel="@id('editGroupsForBranchPermissionVm') @init(editGroupsForBranchPermissionVm)">
-        <vbox>
-            <hbox>
-                <panel title="Available" border="normal" width="300px">
+        <vbox hflex="1" vflex="1">
+            <hbox hflex="1" vflex="1">
+                <panel title="Available" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.avail)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick" height="250px">
+                                 multiple="true" checkmark="true" vflex="true" onCancel="@command('cancel')" onOK="@command('save')">
                             <listhead>
-                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
+                                <listheader label="Group" sclass="boldstyle"/>
                             </listhead>
                             <template name="model" var="group">
                                 <listitem label="@load(group.name)"/>
@@ -25,7 +25,7 @@
                         </listbox>
                     </panelchildren>
                 </panel>
-                <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" align="center">
+                <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
                     <image onClick="@command('add')" disabled="@load(empty editGroupsForBranchPermissionVm.availSelected)"
                            src="/resources/img/rightarrow.png"/>
                     <image onClick="@command('addAll')" disabled="@load(empty editGroupsForBranchPermissionVm.avail)"
@@ -35,12 +35,12 @@
                     <image onClick="@command('removeAll')" disabled="@load(empty editGroupsForBranchPermissionVm.exist)"
                            src="/resources/img/leftleftarrow.png"/>
                 </vbox>
-                <panel title="Already added" border="normal" width="300px">
+                <panel title="Already added" border="normal" vflex="1" hflex="1">
                     <panelchildren>
                         <listbox model="@bind(editGroupsForBranchPermissionVm.exist)" onSelect="@command('listSelected')"
-                                 multiple="true" checkmark="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick" height="250px">
+                                 multiple="true" checkmark="true" vflex="true"  onCancel="@command('cancel')" onOK="@command('save')">
                             <listhead>
-                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
+                                <listheader label="Group" sclass="boldstyle"/>
                             </listhead>
                             <template name="model" var="group">
                                 <listitem label="@load(group.name)"/>
@@ -49,9 +49,9 @@
                     </panelchildren>
                 </panel>
             </hbox>
-            <hbox align="center" pack="center" width="100%">
-                <button id="savePermissionsButton" label="${labels.window.save}" onClick="@command('save')" sclass="manage.groups.saveButton" width="100px"/>
-                <button id="cancelPermissionsButton" label="${labels.window.cancel}" onClick="@command('cancel')" width="100px"/>
+            <hbox align="center" pack="center" height="30px">
+                <button id="savePermissionsButton" label="${labels.window.save}" onClick="@command('save')" sclass="manage.groups.saveButton"/>
+                <button id="cancelPermissionsButton" label="${labels.window.cancel}" onClick="@command('cancel')"/>
             </hbox>
         </vbox>
     </window>

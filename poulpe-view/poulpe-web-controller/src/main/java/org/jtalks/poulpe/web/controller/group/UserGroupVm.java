@@ -125,7 +125,6 @@ public class UserGroupVm {
         }
     }
 
-
     /**
      * Deletes selected group if it hasn't moderated comboboxList.
      */
@@ -188,7 +187,7 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SELECTED_BRANCH, MODERATING_BRANCHES, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void saveModeratorForBranches() {
-         branches.setModeratingGroupForAllBranches(selectedGroup);
+        branches.setModeratingGroupForAllBranches(selectedGroup);
         closeDeleteModeratorGroupDialog();
     }
 
@@ -343,6 +342,9 @@ public class UserGroupVm {
         this.selectedModeratorGroupForAllBranches = selectedModeratorGroupForAllBranches;
     }
 
+    /**
+     * @return {@link BranchGroupMap}
+     */
     public BranchGroupMap getBranches() {
         return branches;
     }

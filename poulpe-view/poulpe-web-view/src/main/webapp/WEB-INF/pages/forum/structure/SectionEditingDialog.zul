@@ -6,7 +6,7 @@
           title="${labels.forum_structure.create_section_dialog.title}"
           onClose="self.visible=false;event.stopPropagation();"
           onCancel="self.visible=false" forward="onOK=saveSectionButton.onClick"
-          visible="@load(sectionVm.showDialog)" height="250px" width="300px">
+          visible="@load(sectionVm.showDialog)" height="230px" width="300px">
     <vlayout form="@id('fx') @load(sectionVm.editedSection) @save(sectionVm.editedSection, before='save') ">
       ${labels.forum_structure.section_dialog.section_name}
       <textbox id="sectionNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1"

@@ -11,9 +11,9 @@
         <groupbox>
           <label style="font-size=30px" value="${labels.admin.title}" />
           <a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
-            sclass="top-right-system-menu" />
+            sclass="language-button" />
           <a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
-            sclass="top-right-system-menu" />
+            sclass="language-button" />
         </groupbox>
       </north>
       <center>

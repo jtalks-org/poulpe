@@ -14,6 +14,10 @@
  */
 package org.jtalks.poulpe.logic;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
@@ -21,87 +25,66 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
-import org.jtalks.common.security.acl.AclUtil;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.builders.AclBuilders;
-import org.jtalks.common.security.acl.sids.UserSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.dto.AnonymousGroup;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
-import org.springframework.security.acls.model.AccessControlEntry;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
- *
+ * 
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
 public class PermissionManager {
     private final AclManager aclManager;
-    private final AclUtil aclUtil;
     private final GroupDao groupDao;
 
     /**
      * Constructs {@link PermissionManager} with given {@link AclManager} and {@link GroupDao}
-     *
+     * 
      * @param aclManager manager instance
-     * @param groupDao   group dao instance
+     * @param groupDao group dao instance
      */
-    public PermissionManager(@Nonnull AclManager aclManager, @Nonnull GroupDao groupDao,
-                             @Nonnull AclUtil aclUtil) {
+    public PermissionManager(@Nonnull AclManager aclManager, @Nonnull GroupDao groupDao) {
         this.aclManager = aclManager;
         this.groupDao = groupDao;
-        this.aclUtil = aclUtil;
     }
 
     /**
      * Changes the granted permissions according to the specified changes.
-     *
-     * @param entity  the entity to change permissions to
+     * 
+     * @param entity the entity to change permissions to
      * @param changes contains a permission itself, a list of groups to be granted to the permission and the list of
-     *                groups to remove their granted privileges
+     * groups to remove their granted privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeGrants(Entity entity, PermissionChanges changes) {
-        boolean deletePermission;
-        for (Group group : changes.getNewlyAddedGroupsAsArray()) {
-            deletePermission = false;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, true, deletePermission);
-        }
-        for (Group group : changes.getRemovedGroupsAsArray()) {
-            deletePermission = true;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, true, deletePermission);
-        }
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager).grant(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
+                .on(entity).flush();
+        builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
+                .on(entity).flush();
     }
 
     /**
      * Changes the restricting permissions according to the specified changes.
-     *
-     * @param entity  the entity to change permissions to
+     * 
+     * @param entity the entity to change permissions to
      * @param changes contains a permission itself, a list of groups to be restricted from the permission and the list
-     *                of groups to remove their restricting privileges
+     * of groups to remove their restricting privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeRestrictions(Entity entity, PermissionChanges changes) {
-        boolean deletePermission;
-        for (Group group : changes.getNewlyAddedGroupsAsArray()) {
-            deletePermission = false;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, false, deletePermission);
-        }
-        for (Group group : changes.getRemovedGroupsAsArray()) {
-            deletePermission = true;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, false, deletePermission);
-        }
+        AclBuilders builders = new AclBuilders();
+        builders.newBuilder(aclManager).restrict(changes.getPermission()).to(changes.getNewlyAddedGroupsAsArray())
+                .on(entity).flush();
+        builders.newBuilder(aclManager).delete(changes.getPermission()).from(changes.getRemovedGroupsAsArray())
+                .on(entity).flush();
     }
 
     /**
@@ -114,7 +97,7 @@ public class PermissionManager {
 
     /**
      * Gets {@link PermissionsMap} for provided {@link Component}.
-     *
+     * 
      * @param component the component to obtain PermissionsMap for
      * @return {@link PermissionsMap} for {@link Component}
      */
@@ -124,9 +107,9 @@ public class PermissionManager {
 
     /**
      * Gets {@link PermissionsMap} for provided {@link Entity}.
-     *
+     * 
      * @param permissions the list of permissions to get
-     * @param entity      the entity to get for
+     * @param entity the entity to get for
      * @return {@link PermissionsMap} for provided {@link Entity}
      */
     public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
@@ -136,12 +119,6 @@ public class PermissionManager {
             for (GroupAce groupAce : groupAces) {
                 if (groupAce.getBranchPermissionMask() == permission.getMask()) {
                     permissionsMap.add(permission, getGroup(groupAce), groupAce.isGranting());
-                }
-            }
-            for (AccessControlEntry controlEntry : aclUtil.getAclFor(aclUtil.createIdentityFor(entity)).getEntries()) {
-                if (controlEntry.getPermission().equals(permission)
-                        && controlEntry.getSid().getSidId().equals(UserSid.createAnonymous().getSidId())) {
-                    permissionsMap.add(permission, AnonymousGroup.ANONYMOUS_GROUP, controlEntry.isGranting());
                 }
             }
         }
@@ -154,43 +131,5 @@ public class PermissionManager {
      */
     private Group getGroup(GroupAce groupAce) {
         return groupDao.get(groupAce.getGroupId());
-    }
-
-    /**
-     * Changes the granted permission for group.
-     *
-     * @param group      user group
-     * @param permission permission
-     * @param entity     the entity to change permissions to
-     * @param granted    permission is granted or restricted
-     * @param delete     needs delete permission
-     */
-    private void changeGrantsOfGroup(Group group,
-                                     JtalksPermission permission,
-                                     Entity entity,
-                                     boolean granted,
-                                     boolean delete) {
-        AclBuilders builders = new AclBuilders();
-        if (group.getName().equals(AnonymousGroup.ANONYMOUS_GROUP.getName())) {
-            List<Permission> jtalksPermissions = new ArrayList<Permission>();
-            jtalksPermissions.add(permission);
-            List<Sid> sids = new ArrayList<Sid>();
-            sids.add(UserSid.createAnonymous());
-            if (delete) {
-                aclManager.delete(sids, jtalksPermissions, entity);
-            } else if (granted) {
-                aclManager.grant(sids, jtalksPermissions, entity);
-            } else {
-                aclManager.restrict(sids, jtalksPermissions, entity);
-            }
-        } else {
-            if (delete) {
-                builders.newBuilder(aclManager).delete(permission).from(group).on(entity).flush();
-            } else if (granted) {
-                builders.newBuilder(aclManager).grant(permission).to(group).on(entity).flush();
-            } else {
-                builders.newBuilder(aclManager).restrict(permission).to(group).on(entity).flush();
-            }
-        }
     }
 }

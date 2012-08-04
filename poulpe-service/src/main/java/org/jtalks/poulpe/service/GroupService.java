@@ -16,7 +16,6 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
@@ -32,8 +31,6 @@ public interface GroupService extends EntityService<Group> {
      * @return list of all {@link Group} objects
      */
     List<Group> getAll();
-
-    SecurityGroupList getSecurityGroups();
 
     /**
      * @param name to look up

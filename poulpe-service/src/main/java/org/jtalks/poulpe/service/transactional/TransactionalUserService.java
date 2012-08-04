@@ -15,8 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import com.google.common.collect.Lists;
-
-import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -103,21 +101,6 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage){
-    	return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.paginate(page, itemsPerPage));
-    }
-    
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
-		return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
-	}
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public void updateUser(PoulpeUser user) {
         userDao.update(user);
     }
@@ -181,6 +164,4 @@ public class TransactionalUserService implements UserService {
         }
         return granting;
     }
-
-	
 }

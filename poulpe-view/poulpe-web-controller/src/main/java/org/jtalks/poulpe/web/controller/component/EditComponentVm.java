@@ -32,7 +32,8 @@ import org.zkoss.bind.annotation.Command;
  * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
+    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul",
+            COMPONENTS_WINDOW = "components.zul";
 
     private final ComponentService componentService;
     private final Component component;
@@ -81,7 +82,7 @@ public class EditComponentVm {
      * Opens component view window.
      */
     private void switchToComponentsWindow() {
-        ComponentsVm.show(windowManager);
+        windowManager.open(COMPONENTS_WINDOW);
     }
 
     /**

@@ -14,13 +14,12 @@
           <panel title="${labels.groups.edit_members.available}" border="normal">
             <panelchildren>
               <hbox align="center" style="margin: 10px">
-                <textbox value="@load(editGroupMembersVm.availFilterTxt)@save(editGroupMembersVm.availFilterTxt, before='filterAvail')" />
+                <textbox value="@bind(editGroupMembersVm.availFilterTxt)" />
                 <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
                     sclass="edit.members.searchAvailButton" />
               </hbox>
-              <paging id="paging" pageSize="@bind(editGroupMembersVm.itemsAvailPerPage)" totalSize="@bind(editGroupMembersVm.availTotalSize)" activePage="@bind(editGroupMembersVm.activeAvailPage)" />
-              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')" 
-                  multiple="true" checkmark="true" width="515px" height="350px">
+              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
+                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
