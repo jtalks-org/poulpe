@@ -332,8 +332,7 @@ public class UserGroupVm {
     }
 
     /**
-     * @param selectedModeratorGroupForAllBranches
-     *         {@link Group} currently selected moderator group
+     * @param selectedModeratorGroupForAllBranches {@link Group} currently selected moderator group
      */
     @NotifyChange({SELECTED_MODERATOR_GROUP, "branches"})
     public void setSelectedModeratorGroupForAllBranches(Group selectedModeratorGroupForAllBranches) {

@@ -80,7 +80,7 @@ public class ModeratingGroupComboboxRow {
     }
 
     /**
-     * Checking for changes of moderator group for branch, also verifies correctness of this comparation
+     * Checking for changes of moderator group for branch, also verifies correctness of this comparison.
      *
      * @param group {@link Group} to compare
      * @param branch {@link PoulpeBranch} to compare with 'currentBranch'
@@ -91,7 +91,7 @@ public class ModeratingGroupComboboxRow {
     }
 
     /**
-     * Compares {@link Group} taken as arg with {@link Group} currently selected as moderator for current branch
+     * Compares {@link Group} taken as arg with {@link Group} currently selected as moderator for current branch.
      *
      * @param group {@link Group} to compare
      * @return true if moderators group are not same, and should be changed, false otherwise
@@ -101,7 +101,7 @@ public class ModeratingGroupComboboxRow {
     }
 
     /**
-     * Sets moderators {@link Group} for 'currentBranch'
+     * Sets moderators {@link Group} for 'currentBranch'.
      */
     public void setModeratorsGroup() {
         currentBranch.setModeratorsGroup(selectedGroup);
