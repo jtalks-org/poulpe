@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.group;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
@@ -47,7 +48,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 	
-	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage";
+	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage",
+                               EXIST_TOTAL_SIZE="existTotalSize", EXIST_ACTIVE_PAGE="activeExistPage";
 	
     private final GroupService groupService;
     private final UserService userService;
@@ -55,6 +57,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     
     private int activeAvailPage = 0;
     private int itemsAvailPerPage = 50;
+
 
 	/**
      * Group to be edited
@@ -79,7 +82,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         this.groupService = groupService;
         this.userService = userService;
 
-        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>) groupToEdit.getUsers();
+        List<PoulpeUser> users  = new ArrayList<PoulpeUser> ();
+        users.addAll((List<PoulpeUser>) (List<?>) groupToEdit.getUsers());
         setStateAfterEdit(users);
     }
 
@@ -154,7 +158,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
     	windowManager.open("usergroup.zul");
     }
-    
+
     /**
      * @return number of active page elements available
      */
@@ -168,10 +172,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-  		//TODO
-  		List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
+
+    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit(),getActiveAvailPage(), getItemsAvailPerPage());
     	
         getAvail().clear();
         getAvail().addAll(users);
@@ -209,31 +211,45 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void add() {
     	super.add();
     }
-    
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-    	List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups("", list);
+    	List<PoulpeUser> users=userService.findUsersNotInList("", getStateAfterEdit());
     	getAvail().clear();
         getAvail().addAll(users);
     	super.addAll();
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
-    	super.remove();
+        getStateAfterEdit().removeAll(getExistSelected());
+    	getAvail().addAll(getExistSelected());
+    	filterExist();
     }
+
+    /**
+     * {@inheritDoc}
+     */
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})

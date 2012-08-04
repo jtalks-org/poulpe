@@ -130,7 +130,7 @@ public class EditGroupMembersVmTest {
 
     @Test
     public void testSave() {
-        viewModel.save();
+       viewModel.save();
 
         verify(groupService).saveGroup(groupToEdit);
     }

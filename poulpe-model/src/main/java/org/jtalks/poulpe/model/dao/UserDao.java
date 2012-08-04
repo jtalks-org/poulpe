@@ -16,6 +16,7 @@ package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 
@@ -65,5 +66,16 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate);
+
+    /**
+     * Gets all users which excludes in {@code listUsers} with username like in parameter.
+     *
+     * @param availableFilterText some word which must be like username
+     * @param listUsers list of users
+     * @param paginate max count of returned results
+     * @return list of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate);
+
 
 }
