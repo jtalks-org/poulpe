@@ -12,6 +12,11 @@
 -- License along with this library; if not, write to the Free Software
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 --
+-- While Poulpe first starts, it starts with empty database and there is no possibility to log into it.
+-- This migration creates default user for this. In order to have a user, we need a migration that inserts
+-- it and permissions (because user without permissions can't be logged into admin panel).
+-- Default username: admin
+-- Default password: admin
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.

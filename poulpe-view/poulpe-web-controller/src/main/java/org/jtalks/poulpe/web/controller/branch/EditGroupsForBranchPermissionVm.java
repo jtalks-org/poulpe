@@ -42,6 +42,7 @@ import java.util.List;
  * @see BranchPermissionManagementVm
  */
 public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
+    public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "WEB-INF/pages/forum/BranchPermissionManagement.zul";
     private final WindowManager windowManager;
     private final BranchService branchService;
     private final GroupService groupService;
@@ -98,12 +99,16 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
                 branchService.changeGrants(branch, accessChanges);
-            } else {
+            }
+            else {
                 branchService.changeRestrictions(branch, accessChanges);
             }
         }
+
         openBranchPermissionsWindow();
     }
+
+    // -- Utility methods ------------------------
 
     /**
      * {@inheritDoc}
@@ -116,12 +121,11 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         getExist().addAll(getStateAfterEdit());
 
         getAvail().clear();
-        List<Group> groups = groupService.getSecurityGroups().getAllGroups();
-        getAvail().addAll(ListUtils.subtract(groups, getStateAfterEdit()));
+        getAvail().addAll(ListUtils.subtract(groupService.getAll(), getStateAfterEdit()));
     }
 
     /**
-     * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
+     * Gets list of groups which already added in persistence for current {@link PoulpeBranch} with {@link AclMode}.
      *
      * @param branch  the branch to get for
      * @param allowed the permission mode (allowed or restricted)

@@ -51,7 +51,7 @@ public class AddComponentVmTest {
     @Test
     public void cancelEdit() {
         addComponentVm.cancelEdit();
-        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
+        verify(windowManager).open(AddComponentVm.COMPONENTS_WINDOW);
     }
 
     @Test
@@ -80,7 +80,7 @@ public class AddComponentVmTest {
         Component expected = TestFixtures.randomComponent();
         addComponentVm.createComponent(expected.getName(), expected.getDescription(), expected.getComponentType());
         
-        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
+        verify(windowManager).open(AddComponentVm.COMPONENTS_WINDOW);
     }
 
     @Test

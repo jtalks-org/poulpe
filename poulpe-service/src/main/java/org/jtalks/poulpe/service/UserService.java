@@ -14,8 +14,11 @@
  */
 package org.jtalks.poulpe.service;
 
+<<<<<<< HEAD
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
+=======
+>>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -48,6 +51,7 @@ public interface UserService {
     List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
     /**
+<<<<<<< HEAD
      * Gets all users which excludes in groups with username like in parameter.
      *
      * @param availableFilterText some word which must be like username
@@ -85,6 +89,8 @@ public interface UserService {
     List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers);
 
     /**
+=======
+>>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
      * @param searchString string for searching users, if empty - all users will be returned
      * @return amount of users matched the given string
      */

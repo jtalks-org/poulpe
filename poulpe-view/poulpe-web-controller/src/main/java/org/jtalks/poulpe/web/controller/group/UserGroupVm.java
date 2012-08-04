@@ -27,7 +27,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -125,7 +124,6 @@ public class UserGroupVm {
         }
     }
 
-
     /**
      * Deletes selected group if it hasn't moderated comboboxList.
      */
@@ -188,7 +186,7 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SELECTED_BRANCH, MODERATING_BRANCHES, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void saveModeratorForBranches() {
-         branches.setModeratingGroupForAllBranches(selectedGroup);
+        branches.setModeratingGroupForAllBranches(selectedGroup);
         closeDeleteModeratorGroupDialog();
     }
 
@@ -334,8 +332,7 @@ public class UserGroupVm {
     }
 
     /**
-     * @param selectedModeratorGroupForAllBranches
-     *         {@link Group} currently selected moderator group
+     * @param selectedModeratorGroupForAllBranches {@link Group} currently selected moderator group
      */
     @NotifyChange({SELECTED_MODERATOR_GROUP, "branches"})
     public void setSelectedModeratorGroupForAllBranches(Group selectedModeratorGroupForAllBranches) {
@@ -343,6 +340,9 @@ public class UserGroupVm {
         this.selectedModeratorGroupForAllBranches = selectedModeratorGroupForAllBranches;
     }
 
+    /**
+     * @return {@link BranchGroupMap}
+     */
     public BranchGroupMap getBranches() {
         return branches;
     }

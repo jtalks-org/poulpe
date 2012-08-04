@@ -42,9 +42,9 @@ import static org.hamcrest.text.StringContains.containsString;
  * View-Model for 'Edit Members of group'.
  *
  * @author Vyacheslav Zhivaev
- * @author Mikhail Zaitsev;
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
+<<<<<<< HEAD
 	
 	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
 	
@@ -60,6 +60,13 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
 
 	/**
+=======
+    public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+    private final GroupService groupService;
+    private final UserService userService;
+    private final WindowManager windowManager;
+    /**
+>>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
      * Group to be edited
      */
     private final Group groupToEdit;
@@ -105,9 +112,12 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-    	setActiveAvailPage(0);
+        List<PoulpeUser> users = Lists.newLinkedList(userService.withUsernamesMatching(getAvailFilterTxt()));
+        users.removeAll(getStateAfterEdit());
+        getAvail().clear();
+        getAvail().addAll(users);
     }
 
     /**
@@ -147,7 +157,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @Init
     public void updateVm() {
-    	filterAvail();
+        filterAvail();
         filterExist();
     }
 
@@ -156,6 +166,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
+<<<<<<< HEAD
     	windowManager.open("usergroup.zul");
     }
 
@@ -187,23 +198,12 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     	int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size(); 
         if(result<0)return 0;
     	return result; 
+=======
+        windowManager.open("usergroup.zul");
+>>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
     }
-    
-    /**
-     * @return number of available items per page
-     */
-    public int getItemsAvailPerPage() {
-		return itemsAvailPerPage;
-	}
 
     /**
-     * @param itemsPerPage number of available items per page
-     */
-	public void setItemsAvailPerPage(int itemsPerPage) {
-		this.itemsAvailPerPage = itemsPerPage;
-	}
-
-	/**
      * Opens edit group members dialog window.
      *
      * @param windowManager the window manager instance
@@ -211,6 +211,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
+<<<<<<< HEAD
 
     /**
      * {@inheritDoc}
@@ -258,4 +259,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     }
     
     
+=======
+>>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
 }
