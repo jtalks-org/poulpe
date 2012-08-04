@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  
+  Copyright (C) 2011  JTalks.org Team
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+  
+-->
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window id="userBanningWindow" title="${labels.userbanning.title}" border="normal" width="100%" height="100%"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('userBanningVm') @init(userBanningVm)">
+
+        <zscript src="js/userbanning.zs"/>
+
+        <!-- Adding user to ban state: user selection -->
+        <hbox style="/resources/css/all.css.simple-grid" vflex="min" width="100%">
+            <bandbox id="usersPopupToBan" autodrop="true" buttonVisible="false"
+                     onChanging="@command('setAvailableFilter', filterText=event.value)"
+                     onOpen="popupWithUsersToBanOpen()">
+                <bandpopup>
+                    <vbox>
+                        <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
+                                 onClick="selectUserToBan()" onKey="selectUserToBan()"
+                                 selectedItem="@save(userBanningVm.addBanFor)">
+                            <template name="model" var="user">
+                                <listitem value="component" context="popupMenu" class="filter-list">
+                                    <listcell label="@load(user.username)"/>
+                                </listitem>
+                            </template>
+                        </listbox>
+                    </vbox>
+                </bandpopup>
+            </bandbox>
+
+            <button id="addUserToBannedGroupButton" label="${labels.userbanning.add}"
+                    onClick="@command('addUserToBannedGroup')"
+                    disabled="@load(null eq userBanningVm.addBanFor)"/>
+        </hbox>
+
+        <!-- Banned users list -->
+
+        <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"
+                 mold="paging" pageSize="50" pagingPosition="both" vflex="true"
+                 context="contextMenu_user">
+            <listhead>
+                <listheader label="${labels.users.username}"/>
+                <listheader label="${labels.users.firstname}"/>
+                <listheader label="${labels.users.lastname}"/>
+                <listheader label="${labels.users.email}"/>
+            </listhead>
+            <template name="model" var="user">
+                <listitem>
+                    <listcell label="@load(user.username)"/>
+                    <listcell label="@load(user.firstName)"/>
+                    <listcell label="@load(user.lastName)"/>
+                    <listcell label="@load(user.email)"/>
+                </listitem>
+            </template>
+        </listbox>
+
+        <!-- Context menu -->
+        <menupopup id="contextMenu_user">
+            <menuitem label="${labels.userbanning.revoke}"
+                      image="/resources/img/unblock16.png" onClick="@command('revokeBan')"/>
+        </menupopup>
+    </window>
+
+    <script src="js/userbanning.js"/>
+</zk>
+
+
