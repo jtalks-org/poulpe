@@ -47,23 +47,50 @@ public interface UserService {
     List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
     /**
+     * <<<<<<< HEAD
      * Gets all users which excludes in groups with username like in parameter.
      *
      * @param availableFilterText some word which must be like username
      * @param groups              List of groups
-     * @param page         page number for retrieving
-     * @param itemsPerPage limit of items per page
+     * @param page                page number for retrieving
+     * @param itemsPerPage        limit of items per page
      * @return list of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage);
-   /**
-    * Gets all users which excludes in groups with username like in parameter
-    * @param availableFilterText some word which must be like username
-    * @param groups List of groups
-    * @return list of users with username like in parameter
-    */
-    List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups);
+
     /**
+     * Gets all users which excludes in groups with username like in parameter
+     *
+     * @param availableFilterText some word which must be like username
+     * @param groups              List of groups
+     * @return list of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups);
+
+    /**
+     * Gets all users which excludes in {@code listUsers} with username like in parameter
+     *
+     * @param availableFilterText some word which must be like username
+     * @param listUsers           list of users
+     * @param page                page number for retrieving
+     * @param itemsPerPage        limit of items per page
+     * @return ist of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, int page, int itemsPerPage);
+
+    /**
+     * Gets all users which excludes in {@code listUsers} with username like in parameter
+     *
+     * @param availableFilterText some word which must be like username
+     * @param listUsers           list of users
+     * @return ist of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers);
+
+    /**
+     * =======
+     * >>>>>>> db5f24edd5f2d79509d8490c51c89017c092f692
+     *
      * @param searchString string for searching users, if empty - all users will be returned
      * @return amount of users matched the given string
      */

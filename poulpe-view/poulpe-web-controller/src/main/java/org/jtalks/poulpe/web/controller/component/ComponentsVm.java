@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
@@ -27,14 +26,16 @@ import org.zkoss.bind.annotation.Command;
 import java.util.List;
 
 /**
- * Adding, removing, editing and configuring of components.
+ * The class which manages actions and represents information about components displayed in administrator panel.
  *
+ * @author Vermut
  * @author Alexey Grigorev
  */
 public class ComponentsVm {
-    public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
-            COMPONENTS = "components";
-    public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
+
+    public static final String EDIT_WINDOW_VISIBLE = "addNewComponentWindowVisible",
+            AVAILABLE_COMPONENT_TYPES = "availableComponentTypes", SELECTED_COMPONENT_TYPE = "selectedComponentType",
+            SELECTED = "selected", CAN_CREATE_NEW_COMPPONENT = "ableToCreateNewComponent", COMPONENTS = "components";
 
     private final ComponentService componentService;
     private final DialogManager dialogManager;
@@ -81,7 +82,7 @@ public class ComponentsVm {
                 componentService.deleteComponent(selected);
                 selected = null;
                 // Because confirmation needed, we have to send notification event programmatically
-                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPPONENT);
             }
         };
 
@@ -97,8 +98,8 @@ public class ComponentsVm {
     }
 
     /**
-     * Shows a component edit window for currently selected element. Selected component is set using {@link
-     * #setSelected(Component)}.
+     * Shows a component edit window for currently selected element. Selected component is set using
+     * {@link #setSelected(Component)}.
      */
     @Command
     public void configureComponent() {
@@ -120,13 +121,11 @@ public class ComponentsVm {
         this.selected = selected;
     }
 
-    @VisibleForTesting
-    void setBindWrapper(BindUtilsWrapper bindWrapper) {
+    /**
+     * @param bindWrapper instance of bindWrapper
+     */
+    public void setBindWrapper(BindUtilsWrapper bindWrapper) {
         this.bindWrapper = bindWrapper;
-    }
-
-    public static void show(WindowManager windowManager){
-        windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
 
 }

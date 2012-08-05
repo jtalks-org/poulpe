@@ -16,20 +16,21 @@
 
 -->
 
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
-  <class name="org.jtalks.common.model.entity.Property" table="PROPERTIES">
-    <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
+    <class name="org.jtalks.common.model.entity.Property" table="PROPERTIES">
+        <cache usage="nonstrict-read-write"/>
 
-    <id column="PROPERTY_ID" name="id" unsaved-value="0">
-      <generator class="native" />
-    </id>
+        <id column="PROPERTY_ID" name="id" unsaved-value="0">
+            <generator class="native"/>
+        </id>
 
-    <property column="UUID" name="uuid" not-null="true" unique="true" />
-    <property column="NAME" name="name" not-null="true" unique="false" />
-    <property column="VALUE" name="value" not-null="false" unique="false" />
-    <property column="VALIDATION_RULE" name="validationRule" not-null="false" unique="false" />
+        <property column="UUID" name="uuid" not-null="true" unique="true"/>
+        <property column="NAME" name="name" not-null="true" unique="false"/>
+        <property column="VALUE" name="value" not-null="false" unique="false"/>
+        <property column="VALIDATION_RULE" name="validationRule" not-null="false" unique="false"/>
 
-  </class>
+    </class>
 </hibernate-mapping>
 

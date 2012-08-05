@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import com.google.common.collect.Lists;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
@@ -31,12 +29,6 @@ import org.jtalks.poulpe.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.List;
-
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
-import static ch.lambdaj.Lambda.select;
-import static com.google.common.base.Predicates.equalTo;
-import static com.google.common.base.Predicates.in;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -103,17 +95,34 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage){
-    	return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.paginate(page, itemsPerPage));
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage) {
+        return userDao.findUsersNotInGroups(availableFilterText, groups, Pages.paginate(page, itemsPerPage));
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
-		return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
-	}
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
+        return userDao.findUsersNotInGroups(availableFilterText, groups, Pages.NONE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, int page, int itemsPerPage) {
+        return userDao.findUsersNotInList(availableFilterText, listUsers, Pages.paginate(page, itemsPerPage));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers) {
+        return userDao.findUsersNotInList(availableFilterText, listUsers, Pages.NONE);
+    }
+
     /**
      * {@inheritDoc}
      */
@@ -181,6 +190,4 @@ public class TransactionalUserService implements UserService {
         }
         return granting;
     }
-
-	
 }

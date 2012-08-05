@@ -2,40 +2,46 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"
-          apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}" width="100%" height="100%">
-    <button label="${labels.forum_structure.create_section_button}" onClick="@global-command('showNewSectionDialog')"/>
+    <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"
+            apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}">
+        <button label="${labels.forum_structure.create_section_button}"
+                onClick="@global-command('showNewSectionDialog')"/>
 
-    <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">
-      <template name="model">
-        <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)" label="@load(each)"
-                  onDrop="@command('dropEventHandler', event=event)"/>
-      </template>
-    </tree>
+        <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)">
+            <template name="model">
+                <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)"
+                          label="@load(each)"
+                          onDrop="@command('onDropItem', event=event)"/>
+            </template>
+        </tree>
 
-    <menupopup id="treeContextMenu">
-      <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
-                onClick="@global-command('showEditSectionDialog')" visible="@load(vm.selectedItemInTree.section)"/>
+        <menupopup id="treeContextMenu">
+            <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
+                      onClick="@global-command('showEditSectionDialog')"
+                      visible="@load(vm.selectedItemInTree.section)"/>
 
-      <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
-                onClick="@global-command('showBranchDialog', selectedBranch=vm.selectedItemInTree.item)" visible="@load(vm.selectedItemInTree.branch)"/>
+            <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
+                      onClick="@global-command('showBranchDialog', selectedBranch=vm.selectedItemInTree.item)"
+                      visible="@load(vm.selectedItemInTree.branch)"/>
 
-      <menuitem label="${labels.forum_structure.create_branch_button}" image="/resources/img/add16.png"
-                onClick="@global-command('showCreateBranchDialog')" visible="@load(vm.selectedItemInTree.section)"/>
+            <menuitem label="${labels.forum_structure.create_branch_button}" image="/resources/img/add16.png"
+                      onClick="@global-command('showCreateBranchDialog')"
+                      visible="@load(vm.selectedItemInTree.section)"/>
 
-      <menuitem label="${labels.forum_structure.branch_permissions_button}" image="/resources/img/permissions16.png"
-                onClick="@command('openBranchPermissions')" visible="@load(vm.selectedItemInTree.branch)"/>
+            <menuitem label="${labels.forum_structure.branch_permissions_button}"
+                      image="/resources/img/permissions16.png"
+                      onClick="@command('openBranchPermissions')" visible="@load(vm.selectedItemInTree.branch)"/>
 
-      <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
-                onClick="@global-command('deleteBranch')" visible="@load(vm.selectedItemInTree.branch)"/>
+            <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
+                      onClick="@global-command('deleteBranch')" visible="@load(vm.selectedItemInTree.branch)"/>
 
-      <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
-                onClick="@global-command('deleteSection')" visible="@load(vm.selectedItemInTree.section)"/>
-    </menupopup>
+            <menuitem label="${labels.forum_structure.delete_item}" image="/resources/img/remove16.png"
+                      onClick="@global-command('deleteSection')" visible="@load(vm.selectedItemInTree.section)"/>
+        </menupopup>
 
-    <include src="/WEB-INF/pages/forum/structure/SectionEditingDialog.zul"/>
-    <include src="/WEB-INF/pages/forum/structure/BranchEditingDialog.zul"/>
-    <include src="/WEB-INF/pages/forum/structure/DeleteBranchConfirmationDialog.zul"/>
-    <include src="/WEB-INF/pages/forum/structure/DeleteSectionConfirmationDialog.zul"/>
-  </window>
+        <include src="/WEB-INF/pages/forum/structure/SectionEditingDialog.zul"/>
+        <include src="/WEB-INF/pages/forum/structure/BranchEditingDialog.zul"/>
+        <include src="/WEB-INF/pages/forum/structure/DeleteBranchConfirmationDialog.zul"/>
+        <include src="/WEB-INF/pages/forum/structure/DeleteSectionConfirmationDialog.zul"/>
+    </window>
 </zk>

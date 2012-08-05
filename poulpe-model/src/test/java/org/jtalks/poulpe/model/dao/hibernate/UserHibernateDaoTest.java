@@ -47,198 +47,180 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
-	static final String NO_FILTER = "";
+    static final String NO_FILTER = "";
 
-	// SUT
-	@Autowired
-	private UserDao dao;
+    // SUT
+    @Autowired
+    private UserDao dao;
 
-	@Autowired
-	private SessionFactory sessionFactory;
+    @Autowired
+    private SessionFactory sessionFactory;
 
-	private Session session;
+    private Session session;
 
-	@BeforeMethod
-	public void setUp() throws Exception {
-		session = sessionFactory.getCurrentSession();
-	}
+    @BeforeMethod
+    public void setUp() throws Exception {
+        session = sessionFactory.getCurrentSession();
+    }
 
-	@Test
-	public void testSave() {
-		PoulpeUser user = TestFixtures.user();
+    @Test
+    public void testSave() {
+        PoulpeUser user = TestFixtures.user();
 
-		saveAndEvict(user);
-		PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
+        saveAndEvict(user);
+        PoulpeUser savedUser = (PoulpeUser) session.get(PoulpeUser.class, user.getId());
 
-		assertReflectionEquals(user, savedUser);
-	}
+        assertReflectionEquals(user, savedUser);
+    }
 
-	@Test
-	public void testSaveIdGeneration() {
-		PoulpeUser user = TestFixtures.user();
-		long initialId = 0;
-		user.setId(initialId);
+    @Test
+    public void testSaveIdGeneration() {
+        PoulpeUser user = TestFixtures.user();
+        long initialId = 0;
+        user.setId(initialId);
 
-		saveAndEvict(user);
+        saveAndEvict(user);
 
-		assertNotSame(user.getId(), initialId, "ID is not created");
-	}
+        assertNotSame(user.getId(), initialId, "ID is not created");
+    }
 
-	@Test
-	public void testGetByUsername() {
-		PoulpeUser user = TestFixtures.user();
-		saveAndEvict(user);
+    @Test
+    public void testGetByUsername() {
+        PoulpeUser user = TestFixtures.user();
+        saveAndEvict(user);
 
-		User actual = dao.getByUsername(user.getUsername());
-		assertReflectionEquals(actual, user);
-	}
+        User actual = dao.getByUsername(user.getUsername());
+        assertReflectionEquals(actual, user);
+    }
 
-	@Test
-	public void testGetByUsernameIsPercent() {
-		PoulpeUser user = TestFixtures.user("%", "testmail@mail.com");
-		saveAndEvict(user);
+    @Test
+    public void findPoulpeUsersPaginated_withPagination() {
+        String startsWith = "SomeString";
+        givenMoreThanOnePage(startsWith);
 
-		User actual = dao.getByUsername(user.getUsername());
-		assertReflectionEquals(actual, user);
-	}
+        int limit = 10;
+        List<PoulpeUser> users = dao.findPoulpeUsersPaginated(startsWith, Pages.paginate(1, limit));
 
-	@Test
-	public void getByUsernameShouldEscapeControlSymbols() {
-		PoulpeUser user = TestFixtures.user("abc", "testmail@mail.com");
-		saveAndEvict(user);
+        assertEquals(users.size(), limit);
+    }
 
-		User actual = dao.getByUsername("%");// should be escaped, there are no users with % in name
-		assertNull(actual);
-	}
+    private void givenMoreThanOnePage(String startsWith) {
+        int n = 20;
 
-	@Test
-	public void findPoulpeUsersPaginated_withPagination() {
-		String startsWith = "SomeString";
-		givenMoreThanOnePage(startsWith);
+        while (n > 0) {
+            PoulpeUser user = TestFixtures.user(startsWith + n);
+            saveAndEvict(user);
+            n--;
+        }
+    }
 
-		int limit = 10;
-		List<PoulpeUser> users = dao.findPoulpeUsersPaginated(startsWith, Pages.paginate(1, limit));
+    @Test
+    public void findPoulpeUsersPaginated_noFilterAndNoPagination() {
+        List<PoulpeUser> users = TestFixtures.usersListOf(3);
+        saveAndEvict(users);
+        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
 
-		assertEquals(users.size(), limit);
-	}
+        assertContainsSameElements(actual, users);
+    }
 
-	private void givenMoreThanOnePage(String startsWith) {
-		int n = 20;
+    @Test
+    public void findPoulpeUsersPaginated_noFilterAndAllOnFirstPage() {
+        List<PoulpeUser> users = TestFixtures.usersListOf(3);
+        saveAndEvict(users);
 
-		while (n > 0) {
-			PoulpeUser user = TestFixtures.user(startsWith + n);
-			saveAndEvict(user);
-			n--;
-		}
-	}
+        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
 
-	@Test
-	public void findPoulpeUsersPaginated_noFilterAndNoPagination() {
-		List<PoulpeUser> users = TestFixtures.usersListOf(3);
-		saveAndEvict(users);
-		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.NONE);
+        assertContainsSameElements(actual, users);
+    }
 
-		assertContainsSameElements(actual, users);
-	}
+    @Test
+    public void findPoulpeUsersPaginated_noFilterAndMoreThanOnePage() {
+        List<PoulpeUser> users = TestFixtures.usersListOf(13);
+        saveAndEvict(users);
 
-	@Test
-	public void findPoulpeUsersPaginated_noFilterAndAllOnFirstPage() {
-		List<PoulpeUser> users = TestFixtures.usersListOf(3);
-		saveAndEvict(users);
+        int limit = 10;
+        List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, limit));
 
-		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, 10));
+        assertEquals(actual.size(), limit);
+    }
 
-		assertContainsSameElements(actual, users);
-	}
+    @Test
+    public void getAllUsersCount() {
+        int count = 13;
+        List<PoulpeUser> users = TestFixtures.usersListOf(count);
+        saveAndEvict(users);
 
-	@Test
-	public void findPoulpeUsersPaginated_noFilterAndMoreThanOnePage() {
-		List<PoulpeUser> users = TestFixtures.usersListOf(13);
-		saveAndEvict(users);
+        int actual = dao.countUsernameMatches(NO_FILTER);
+        assertEquals(actual, count);
+    }
 
-		int limit = 10;
-		List<PoulpeUser> actual = dao.findPoulpeUsersPaginated(NO_FILTER, Pages.paginate(0, limit));
-
-		assertEquals(actual.size(), limit);
-	}
-
-	@Test
-	public void getAllUsersCount() {
-		int count = 13;
-		List<PoulpeUser> users = TestFixtures.usersListOf(count);
-		saveAndEvict(users);
-
-		int actual = dao.countUsernameMatches(NO_FILTER);
-		assertEquals(actual, count);
-	}
-
-	@Test
-	public void testGetAllUsersIncludesInGroups() {
-		Group group = TestFixtures.groupWithUsers();
-		saveAndEvict(group);
-		List<PoulpeUser> actual = dao.getUsersInGroups(Arrays.asList(group));
-		assertEquals(actual, group.getUsers());
-	}
+    @Test
+    public void testGetAllUsersIncludesInGroups() {
+        Group group = TestFixtures.groupWithUsers();
+        saveAndEvict(group);
+        List<PoulpeUser> actual = dao.getUsersInGroups(Arrays.asList(group));
+        assertEquals(actual, group.getUsers());
+    }
 
 
-	@Test
-	public void testFindUsersNotInGroups_withoutFilterUsername() {
-		Group firstGroup = TestFixtures.groupWithUsers();
-		Group secondGroup = TestFixtures.groupWithUsers();
-		saveAndEvict(firstGroup);
-		saveAndEvict(secondGroup);
-		List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
-		assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
-	}
+    @Test
+    public void testFindUsersNotInGroups_withoutFilterUsername() {
+        Group firstGroup = TestFixtures.groupWithUsers();
+        Group secondGroup = TestFixtures.groupWithUsers();
+        saveAndEvict(firstGroup);
+        saveAndEvict(secondGroup);
+        List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
+        assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
+    }
 
-	@Test
-	public void testFindUsersNotInGroups_withFilterUsername() {
-		Group firstGroup = TestFixtures.groupWithUsers();
-		Group secondGroup = TestFixtures.groupWithUsers();
-		saveAndEvict(firstGroup);
-		saveAndEvict(secondGroup);
-		String filter = secondGroup.getUsers().get(0).getUsername();
-		List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(filter, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
-		for (PoulpeUser poulpeUser : usersNotInFirstGroup) {
-			assertTrue(poulpeUser.getUsername().contains(filter));
-		}
-		assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
-	}
+    @Test
+    public void testFindUsersNotInGroups_withFilterUsername() {
+        Group firstGroup = TestFixtures.groupWithUsers();
+        Group secondGroup = TestFixtures.groupWithUsers();
+        saveAndEvict(firstGroup);
+        saveAndEvict(secondGroup);
+        String filter = secondGroup.getUsers().get(0).getUsername();
+        List<PoulpeUser> usersNotInFirstGroup = dao.findUsersNotInGroups(filter, Arrays.asList(firstGroup), Pages.paginate(0, 1000));
+        for (PoulpeUser poulpeUser : usersNotInFirstGroup) {
+            assertTrue(poulpeUser.getUsername().contains(filter));
+        }
+        assertTrue(secondGroup.getUsers().containsAll(usersNotInFirstGroup));
+    }
 
 
-	@Test
-	public void testFindUsersNotInGroups_withLimit() {
-		Group firstGroup = TestFixtures.groupWithUsers();
-		Group secondGroup = TestFixtures.groupWithUsers();
-		saveAndEvict(firstGroup);
-		saveAndEvict(secondGroup);
-		int limit = 2;
-		List<PoulpeUser> actual = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, limit));
-		assertEquals(actual.size(), limit);
-	}
+    @Test
+    public void testFindUsersNotInGroups_withLimit() {
+        Group firstGroup = TestFixtures.groupWithUsers();
+        Group secondGroup = TestFixtures.groupWithUsers();
+        saveAndEvict(firstGroup);
+        saveAndEvict(secondGroup);
+        int limit = 2;
+        List<PoulpeUser> actual = dao.findUsersNotInGroups(NO_FILTER, Arrays.asList(firstGroup), Pages.paginate(0, limit));
+        assertEquals(actual.size(), limit);
+    }
 
-	private void saveAndEvict(Group group) {
-		saveAndEvict((Iterable<PoulpeUser>) (Object) group.getUsers());
-		session.save(group);
-		session.flush();
-		session.clear();
-	}
+    private void saveAndEvict(Group group) {
+        saveAndEvict((Iterable<PoulpeUser>) (Object) group.getUsers());
+        session.save(group);
+        session.flush();
+        session.clear();
+    }
 
-	private void saveAndEvict(PoulpeUser user) {
-		dao.saveOrUpdate(user);
-		session.evict(user);
-	}
+    private void saveAndEvict(PoulpeUser user) {
+        dao.saveOrUpdate(user);
+        session.evict(user);
+    }
 
-	private void saveAndEvict(Iterable<PoulpeUser> users) {
-		for (PoulpeUser user : users) {
-			saveAndEvict(user);
-		}
-	}
+    private void saveAndEvict(Iterable<PoulpeUser> users) {
+        for (PoulpeUser user : users) {
+            saveAndEvict(user);
+        }
+    }
 
-	// TODO: move away from here
-	public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
-		Set<T> set1 = Sets.newLinkedHashSet(first);
-		Set<T> set2 = Sets.newLinkedHashSet(second);
-		assertEquals(set1, set2);
-	}
+    // TODO: move away from here
+    public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
+        Set<T> set1 = Sets.newLinkedHashSet(first);
+        Set<T> set2 = Sets.newLinkedHashSet(second);
+        assertEquals(set1, set2);
+    }
 }

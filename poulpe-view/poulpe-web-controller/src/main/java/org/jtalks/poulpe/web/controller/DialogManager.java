@@ -19,7 +19,8 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import java.util.List;
 
 /**
- * The interface represents the manager for showing different types of dialog messages.
+ * The interface represents the manager for showing different types of dialog
+ * messages.
  *
  * @author Dmitriy Sukharev
  */
@@ -36,7 +37,8 @@ public interface DialogManager {
      * Asks user if they want to delete item.
      *
      * @param victim      the item to be deleted
-     * @param performable the action to be performed when user confirms item deletion
+     * @param performable the action to be performed when user confirms item
+     *                    deletion
      */
     void confirmDeletion(String victim, Performable performable);
 
@@ -44,7 +46,8 @@ public interface DialogManager {
      * Asks user if they want to create item
      *
      * @param target      the item to be created
-     * @param performable the action to be performed when user confirms item deletion
+     * @param performable the action to be performed when user confirms item
+     *                    deletion
      */
     void confirmCreation(String target, Performable performable);
 
@@ -52,7 +55,8 @@ public interface DialogManager {
      * Asks user if they want to edit item
      *
      * @param target      the item to be edit
-     * @param performable the action to be performed when user confirms item deletion
+     * @param performable the action to be performed when user confirms item
+     *                    deletion
      */
     void confirmEdition(String target, Performable performable);
 
@@ -60,7 +64,8 @@ public interface DialogManager {
      * Asks user if they want to delete list items.
      *
      * @param victimList  the list items to be deleted
-     * @param performable the action to be performed when user confirms item deletion
+     * @param performable the action to be performed when user confirms item
+     *                    deletion
      */
     void confirmDeletion(List<String> victimList, Performable performable);
 
@@ -74,13 +79,15 @@ public interface DialogManager {
     void confirmBan(List<PoulpeUser> usersToBan, String reason, Performable performable);
 
     /**
-     * The interface for storing some actions that ought to be performed when user confirms them.
+     * The interface for storing some actions that ought to be performed when
+     * user confirms them.
      *
      * @author Dmitriy Sukharev
      */
     interface Performable {
         /**
-         * The actions to be executed after the user confirms that he/she wants them to be executed.
+         * The actions to be executed after the user confirms that he/she wants
+         * them to be executed.
          */
         void execute();
     }

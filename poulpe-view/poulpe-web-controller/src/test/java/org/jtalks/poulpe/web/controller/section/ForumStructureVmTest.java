@@ -14,11 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.testng.Assert.assertEquals;
-
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.ForumStructureService;
@@ -30,6 +25,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeNode;
+
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 /**
  * @author stanislav bashkirtsev
@@ -51,6 +49,16 @@ public class ForumStructureVmTest {
         windowManager = mock(WindowManager.class);
         selectedBranchForPermissions = mock(SelectedEntity.class);
         viewModel = new ForumStructureVm(forumStructureService, windowManager, selectedBranchForPermissions);
+    }
+
+    @Test(dataProvider = "provideRandomJcommuneWithSections")
+    public void testGetRootAsJcommune(Jcommune jcommune) {
+        TreeNode<Jcommune> node = new DefaultTreeNode<Jcommune>(jcommune);
+        doReturn(node).when(treeModel).getRoot();
+        viewModel.setTreeModel(treeModel);
+        Jcommune rootAsJcommune = viewModel.getRootAsJcommune();
+        assertEquals(rootAsJcommune, jcommune);
+        verify(treeModel).getRoot();
     }
 
     @DataProvider

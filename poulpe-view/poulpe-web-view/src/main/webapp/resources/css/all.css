@@ -23,10 +23,10 @@
 }
 
 .dialog-window-position {
-    position:absolute;
-    top:10%;
-    left:50%;
-    margin-left:-175px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -175px;
 }
 
 .simple-grid {
@@ -55,9 +55,8 @@
     border-radius: 3px;
 }
 
-.top-right-system-menu {
-    float: right;
-    padding: 5px
+.language-button {
+    float: right
 }
 
 .halfbold-table-title {
