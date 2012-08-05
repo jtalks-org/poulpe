@@ -93,7 +93,4 @@
         <![CDATA[from PoulpeUser u where u.username like :username and not exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
     </query>
 
-    <query name="findUsersByLikeUsernameNotInList">
-        <![CDATA[from PoulpeUser u where  u.username like :username and not u.id in (:listUsers)]]>
-    </query>
 </hibernate-mapping>

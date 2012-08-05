@@ -16,34 +16,32 @@
 -->
 <ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="http://ehcache.sf.net/ehcache.xsd">
-    <diskStore path="java.io.tmpdir"/>
-    <cacheManagerPeerProviderFactory
-            class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory" propertySeparator="::"
-            properties="connect=UDP(mcast_addr=235.0.0.1;mcast_port=45567;):PING:
+  <diskStore path="java.io.tmpdir"/>
+  <cacheManagerPeerProviderFactory
+          class="net.sf.ehcache.distribution.jgroups.JGroupsCacheManagerPeerProviderFactory" propertySeparator="::"
+          properties="connect=UDP(mcast_addr=235.0.0.1;mcast_port=45567;):PING:
                     MERGE2:FD_SOCK:VERIFY_SUSPECT:pbcast.NAKACK:UNICAST:pbcast.STABLE:
                     FRAG:pbcast.GMS"/>
-    <defaultCache maxElementsInMemory="1000" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="300"
-                  overflowToDisk="false" diskPersistent="false" memoryStoreEvictionPolicy="LRU">
-    </defaultCache>
-    <cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="1000" eternal="false"
-           timeToLiveSeconds="3600" overflowToDisk="false">
-    </cache>
-    <cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="5000" eternal="true"
-           overflowToDisk="false">
-    </cache>
-    <cache name="org.jtalks.common.model.entity.Section.branches" maxElementsInMemory="200"
-           eternal="true" overflowToDisk="false" statistics="true">
-        <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
-                                   properties="replicateAsynchronously=true, replicatePuts=false,
+  <defaultCache maxElementsInMemory="500" eternal="false" timeToIdleSeconds="120" timeToLiveSeconds="300"
+                overflowToDisk="false" diskPersistent="false" memoryStoreEvictionPolicy="LRU">
+  </defaultCache>
+  <cache name="org.hibernate.cache.StandardQueryCache" maxElementsInMemory="1000" eternal="false"
+         timeToLiveSeconds="3600" overflowToDisk="false">
+  </cache>
+  <cache name="org.hibernate.cache.UpdateTimestampsCache" maxElementsInMemory="1000" eternal="true"
+         overflowToDisk="false">
+  </cache>
+  <cache name="org.jtalks.common.model.entity.Section.branches" maxElementsInMemory="100"
+         eternal="true" overflowToDisk="false" statistics="true">
+    <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                               properties="replicateAsynchronously=true, replicatePuts=false,
                         replicateUpdates=true, replicateUpdatesViaCopy=false,
                         replicateRemovals=true"/>
-    </cache>
-    <cache name="org.jtalks.EHCOMMON" maxElementsInMemory="5000" eternal="true" overflowToDisk="false"
-           statistics="true">
-        <cacheEventListenerFactory
-                class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
-                properties="replicateAsynchronously=true, replicatePuts=false,
+  </cache>
+  <cache name="org.jtalks.EHCOMMON" maxElementsInMemory="1000" eternal="true" overflowToDisk="false" statistics="true">
+    <cacheEventListenerFactory class="net.sf.ehcache.distribution.jgroups.JGroupsCacheReplicatorFactory"
+                               properties="replicateAsynchronously=true, replicatePuts=false,
                         replicateUpdates=true, replicateUpdatesViaCopy=false,
                         replicateRemovals=true"/>
-    </cache>
+  </cache>
 </ehcache>

@@ -2,52 +2,48 @@
 <?page title="${labels.admin.title}" contentType="text/html; charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <style src="/resources/css/all.css"/>
-    <window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)" apply="org.zkoss.bind.BindComposer" width="100%"
-            height="100%">
-        <borderlayout>
-            <north>
-                <groupbox>
-                    <label style="font-size=30px" value="${labels.admin.title}"/>
-                    <a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
-                       sclass="language-button"/>
-                    <a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
-                       sclass="language-button"/>
-                </groupbox>
-            </north>
-            <center>
-                <!-- margin-left must be -(width/2) to center window -->
-                <window title="${labels.login.title}" mode="embedded" border="normal" width="350px"
-                        style="position:absolute; top:10%; left:50%; margin-left:-175px;">
-                    <!-- this form is also used as the form-error-page to ask for a login again -->
-                    <div if="${not empty param.login_error}">
-                        <label class="redAlert" value="${labels.login.error.user_password_incorrect}"/>
-                        <html><![CDATA[<br /><br />]]></html>
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <style src="/resources/css/all.css" />
+  <window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)" apply="org.zkoss.bind.BindComposer" width="100%"
+    height="100%">
+    <borderlayout>
+      <north>
+        <groupbox>
+          <label style="font-size=30px" value="${labels.admin.title}" />
+          <a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"
+            sclass="top-right-system-menu" />
+          <a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"
+            sclass="top-right-system-menu" />
+        </groupbox>
+      </north>
+      <center>
+        <!-- margin-left must be -(width/2) to center window -->
+        <window title="${labels.login.title}" mode="embedded" border="normal" width="350px"
+          style="position:absolute; top:10%; left:50%; margin-left:-175px;">
+          <!-- this form is also used as the form-error-page to ask for a login again -->
+          <div  if="${not empty param.login_error}">
+            <label class="redAlert" value="${labels.login.error.user_password_incorrect}"  />
+            <html><![CDATA[<br /><br />]]></html>
+          </div>
+          <div  if="${not empty param.access_denied}">
+                      <label class="redAlert" value="${labels.login.error.access_denied}"  />
+                      <html><![CDATA[<br /><br />]]></html>
                     </div>
-                    <div if="${not empty param.access_denied}">
-                        <label class="redAlert" value="${labels.login.error.access_denied}"/>
-                        <html><![CDATA[<br /><br />]]></html>
-                    </div>
-                    <groupbox>
-                        <h:form id="f" name="f" action="j_spring_security_check" method="POST" xmlns:h="native">
-                            <grid style="border:none">
-                                <rows>
-                                    <row>${labels.login.username}:
-                                        <textbox id="u" name="j_username" focus="true"/>
-                                    </row>
-                                    <row>${labels.login.password}:
-                                        <textbox id="p" type="password" name="j_password"/>
-                                    </row>
-                                </rows>
-                            </grid>
-                            <div align="center" style="margin-top:10px; margin-bottom:10px">
-                                <h:input type="submit" value="${labels.login.button.submit}"/>
-                            </div>
-                        </h:form>
-                    </groupbox>
-                </window>
-            </center>
-        </borderlayout>
-    </window>
+          <groupbox>
+            <h:form id="f" name="f" action="j_spring_security_check" method="POST" xmlns:h="native">
+              <grid style="border:none">
+                <rows>
+                  <row>${labels.login.username}: <textbox id="u" name="j_username" focus="true" /></row>
+                  <row>${labels.login.password}: <textbox id="p" type="password" name="j_password" /></row>
+                </rows>
+              </grid>
+              <div align="center" style="margin-top:10px; margin-bottom:10px">
+                <h:input type="submit" value="${labels.login.button.submit}" />
+              </div>
+            </h:form>
+          </groupbox>
+        </window>
+      </center>
+    </borderlayout>
+  </window>
 </zk>

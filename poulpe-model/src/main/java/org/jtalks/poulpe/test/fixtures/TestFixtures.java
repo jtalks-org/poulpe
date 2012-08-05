@@ -20,7 +20,14 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.entity.TopicType;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +54,6 @@ public final class TestFixtures {
         newBranch.setModeratorsGroup(group());
         return newBranch;
     }
-
     public static PoulpeBranch branchWithId() {
         PoulpeBranch newBranch = new PoulpeBranch(random(), random());
         newBranch.setSection(section());
@@ -55,7 +61,6 @@ public final class TestFixtures {
         newBranch.setId(1L);
         return newBranch;
     }
-
     /**
      * @return topic type with random name and description
      */
@@ -187,6 +192,16 @@ public final class TestFixtures {
      */
     public static PoulpeUser user(String username) {
         String email = username + "@" + random() + ".com";
+        return new PoulpeUser(username, email, random(), "");
+    }
+
+    /**
+     *
+     * @param username user's name
+     * @param email user's email
+     * @return  user with the given username, email and generated empty salt
+     */
+    public static PoulpeUser user(String username, String email) {
         return new PoulpeUser(username, email, random(), "");
     }
 

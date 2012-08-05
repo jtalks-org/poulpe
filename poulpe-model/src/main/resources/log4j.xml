@@ -17,41 +17,41 @@
 -->
 <!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
 <log4j:configuration debug="false" xmlns:log4j="http://jakarta.apache.org/log4j/">
-    <!-- Appenders -->
-    <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
-        <param name="Encoding" value="Cp866"/>
-        <layout class="org.apache.log4j.PatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%36.60c] - %m%n"/>
-        </layout>
-    </appender>
+  <!-- Appenders -->
+  <appender name="consoleAppender" class="org.apache.log4j.ConsoleAppender">
+    <param name="Encoding" value="Cp866"/>
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%36.60c] - %m%n"/>
+    </layout>
+  </appender>
 
-    <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="../logs/poulpe.log"/>
-        <param name="MaxFileSize" value="20MB"/>
-        <param name="MaxBackupIndex" value="2"/>
-        <param name="Append" value="true"/>
-        <param name="Encoding" value="UTF-8"/>
-        <layout class="org.apache.log4j.EnhancedPatternLayout">
-            <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%36c] - %m%n"/>
-        </layout>
-    </appender>
-    <logger name="org.hibernate" additivity="false">
-        <level value="INFO"/>
-        <appender-ref ref="consoleAppender"/>
-        <appender-ref ref="fileAppender"/>
-    </logger>
-    <logger name="net.sf.ehcache.distribution">
-        <level value="DEBUG"/>
-    </logger>
-    <logger name="com.googlecode.flyway.core.migration" additivity="false">
-        <level value="DEBUG"/>
-        <appender-ref ref="fileAppender"/>
-        <appender-ref ref="consoleAppender"/>
-    </logger>
-    <root>
-        <priority value="INFO"/>
-        <appender-ref ref="consoleAppender"/>
-        <appender-ref ref="fileAppender"/>
-    </root>
+  <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="../logs/poulpe.log"/>
+    <param name="MaxFileSize" value="5MB"/>
+    <param name="MaxBackupIndex" value="2"/>
+    <param name="Append" value="true"/>
+    <param name="Encoding" value="UTF-8"/>
+    <layout class="org.apache.log4j.EnhancedPatternLayout">
+      <param name="ConversionPattern" value="%d{ISO8601} [%-5p][%-16.16t][%36c] - %m%n"/>
+    </layout>
+  </appender>
+  <logger name="org.hibernate" additivity="false">
+    <level value="INFO"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </logger>
+  <logger name="net.sf.ehcache.distribution">
+    <level value="DEBUG"/>
+  </logger>
+  <logger name="com.googlecode.flyway.core.migration" additivity="false">
+    <level value="DEBUG"/>
+    <appender-ref ref="fileAppender"/>
+    <appender-ref ref="consoleAppender"/>
+  </logger>
+  <root>
+    <priority value="INFO"/>
+    <appender-ref ref="consoleAppender"/>
+    <appender-ref ref="fileAppender"/>
+  </root>
 
 </log4j:configuration>

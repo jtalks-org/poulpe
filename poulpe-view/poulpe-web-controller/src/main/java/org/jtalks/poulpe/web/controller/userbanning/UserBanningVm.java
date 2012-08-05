@@ -16,7 +16,6 @@ package org.jtalks.poulpe.web.controller.userbanning;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pages;
-import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -27,25 +26,18 @@ import javax.annotation.Nullable;
 import java.util.List;
 
 /**
- * View-Model for banning of users purposes.
+ * Can search users by username, ban and revoke banning from users.
  *
- * @author Tatiana Birina
- * @author Vyacheslav Zhivaev
- * @author alexandr afanasev
  * @author maxim reshetov
  */
 public class UserBanningVm {
-
-    // Injected
     private final UserService userService;
-    private final GroupService groupService;
-
-    // Max count to combobox of users with filter
-    private final static int MAX_COUNT = 10;
-
-    private static final String AVAILABLE_USERS_PROP = "availableUsers",
-            BANNED_USERS_PROP = "bannedUsers",
-            ADD_BAN_FOR_PROP = "addBanFor";
+    /**
+     * Max count to combobox of users with filter *
+     */
+    private final static int MAX_COMBOBOX_SIZE = 10;
+    private static final String AVAILABLE_USERS_PROP = "availableUsers", AVAILABLE_FILTER_TEXT = "availableFilter",
+            BANNED_USERS_PROP = "bannedUsers", ADD_BAN_FOR_PROP = "addBanFor";
 
     /**
      * User selected in list of banned, also this instance used by window for editing ban properties.
@@ -60,16 +52,12 @@ public class UserBanningVm {
     /**
      * Text to filter users by username in available list.
      */
-    private String availableFilterText = "";
+    private String availableFilter = "";
 
     /**
-     * Constructs VM.
-     *
-     * @param userService  used to obtain data related to users for VM
-     * @param groupService used to obtain data related to groups for VM
+     * @param userService used to obtain data related to users for VM
      */
-    public UserBanningVm(@Nonnull UserService userService, @Nonnull GroupService groupService) {
-        this.groupService = groupService;
+    public UserBanningVm(@Nonnull UserService userService) {
         this.userService = userService;
     }
 
@@ -80,7 +68,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<PoulpeUser> getAvailableUsers() {
-        return userService.getNonBannedUsersByUsername(availableFilterText, Pages.paginate(0, MAX_COUNT));
+        return userService.getNonBannedUsersByUsername(availableFilter, Pages.paginate(0, MAX_COMBOBOX_SIZE));
     }
 
     /**
@@ -132,24 +120,13 @@ public class UserBanningVm {
     }
 
     /**
-     * Sets new value to filter text for users in available list. This value later will be used to filter users by
-     * username in list of available users.
-     *
-     * @param filterText the text to filter by
-     */
-    @Command
-    @NotifyChange({AVAILABLE_USERS_PROP})
-    public void setAvailableFilter(@Nonnull @BindingParam("filterText") String filterText) {
-        this.availableFilterText = filterText;
-    }
-
-    /**
      * Add user to Banned Users group
      */
     @Command
-    @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP})
-    public void addUserToBannedGroup() {
+    @NotifyChange({ADD_BAN_FOR_PROP, BANNED_USERS_PROP, AVAILABLE_FILTER_TEXT})
+    public void banUser() {
         userService.banUsers(addBanFor);
+        availableFilter = "";
         addBanFor = null;
     }
 
@@ -163,4 +140,19 @@ public class UserBanningVm {
         selectedUser = null;
     }
 
+    /**
+     * Sets new value to filter text for users in available list. This value later will be used to filter users by
+     * username in list of available users.
+     *
+     * @param filterText the text to filter by
+     */
+    @Command
+    @NotifyChange({AVAILABLE_USERS_PROP})
+    public void setAvailableFilter(@BindingParam("filterText")String filterText) {
+        this.availableFilter = filterText;
+    }
+
+    public String getAvailableFilter() {
+        return availableFilter;
+    }
 }

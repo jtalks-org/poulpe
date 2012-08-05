@@ -14,26 +14,25 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import static org.apache.commons.lang3.Validate.notNull;
+
+import javax.annotation.Nonnull;
+
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 
-import javax.annotation.Nonnull;
-
-import static org.apache.commons.lang3.Validate.notNull;
-
 /**
  * ViewModel class for EditComponent View
- *
+ * 
  * @author Vahluev Vyacheslav
  * @author Kazancev Leonid
  * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul",
-            COMPONENTS_WINDOW = "components.zul";
+    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
 
     private final ComponentService componentService;
     private final Component component;
@@ -42,7 +41,7 @@ public class EditComponentVm {
 
     /**
      * Opens window for editing component.
-     *
+     * 
      * @param windowManager The object which is responsible for creation and closing application windows
      */
     public static void openWindowForEdit(WindowManager windowManager) {
@@ -51,12 +50,12 @@ public class EditComponentVm {
 
     /**
      * Creates edit dialog for editing currently selected component
-     *
-     * @param componentService  service for saving component
+     * 
+     * @param componentService service for saving component
      * @param selectedComponent currently selected component
      */
     public EditComponentVm(@Nonnull ComponentService componentService,
-                           @Nonnull SelectedEntity<Component> selectedComponent) {
+            @Nonnull SelectedEntity<Component> selectedComponent) {
         this.componentService = componentService;
         this.component = notNull(selectedComponent.getEntity());
     }
@@ -82,7 +81,7 @@ public class EditComponentVm {
      * Opens component view window.
      */
     private void switchToComponentsWindow() {
-        windowManager.open(COMPONENTS_WINDOW);
+        ComponentsVm.show(windowManager);
     }
 
     /**

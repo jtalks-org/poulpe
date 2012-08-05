@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.service.GroupService;
@@ -37,9 +38,10 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     /**
      * Create an instance of entity based service
      *
-     * @param groupDao   - data access object, which should be able do all CRUD
-     *                   operations.
-     * @param validator  - an entity validator
+     * @param groupDao  - data access object, which should be able do all CRUD
+     *                  operations.
+     * @param validator - an entity validator
+     *
      * @param userBanner - class for working with banning users instance
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
@@ -54,6 +56,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public List<Group> getAll() {
         return dao.getAll();
+    }
+
+    @Override
+    public SecurityGroupList getSecurityGroups() {
+        return new SecurityGroupList(dao.getAll()).withAnonymousGroup();
     }
 
     /**
@@ -95,7 +102,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeBranch> getModeratedBranches(Group group) {
+    public List<PoulpeBranch> getModeratedBranches(Group group){
         return dao.getModeratingBranches(group);
     }
 

@@ -24,6 +24,7 @@ import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.AclUtil;
+import org.jtalks.common.security.acl.ExtendedMutableAcl;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
@@ -43,13 +44,15 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.google.common.collect.Lists.newArrayList;
+import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertNotNull;
 import static org.testng.Assert.assertTrue;
 
@@ -104,12 +107,18 @@ public class PermissionManagerTest {
     GroupDao groupDao;
     @Mock
     AclManager aclManager;
+    @Mock
+    AclUtil aclUtil;
 
     PermissionManager manager;
 
     List<Group> groups;
     List<GroupAce> groupAces;
     List<JtalksPermission> permissions;
+
+    private Long targetId = 1L;
+    private String targetType = "BRANCH";
+    private ObjectIdentityImpl objectIdentity;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -119,7 +128,14 @@ public class PermissionManagerTest {
         permissions = Lists.newArrayList();
         groupAces = Lists.newArrayList();
 
-        manager = new PermissionManager(aclManager, groupDao);
+        objectIdentity = new ObjectIdentityImpl(targetType, targetId);
+        when(aclUtil.createIdentityFor(any(Entity.class))).thenReturn(objectIdentity);
+        ExtendedMutableAcl mutableAcl = mock(ExtendedMutableAcl.class);
+        List<AccessControlEntry> controlEntries = new ArrayList<AccessControlEntry>();
+        when(mutableAcl.getEntries()).thenReturn(controlEntries);
+        when(aclUtil.getAclFor(objectIdentity)).thenReturn(mutableAcl);
+
+        manager = new PermissionManager(aclManager, groupDao, aclUtil);
     }
 
     @Test(dataProvider = "accessChanges")
@@ -128,8 +144,11 @@ public class PermissionManagerTest {
 
         manager.changeGrants(branch, changes);
 
-        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
-        verify(aclManager).grant(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager, times(changes.getRemovedGroups().size())).
+                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
+
+        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
+                grant(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
     }
 
     @Test(dataProvider = "accessChanges")
@@ -138,8 +157,11 @@ public class PermissionManagerTest {
 
         manager.changeRestrictions(branch, changes);
 
-        verify(aclManager).delete(getRemovedSids(changes), listFromArray(changes.getPermission()), branch);
-        verify(aclManager).restrict(getNewlyAddedSids(changes), listFromArray(changes.getPermission()), branch);
+        verify(aclManager, times(changes.getRemovedGroups().size())).
+                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
+
+        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
+                restrict(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
     }
 
     @Test

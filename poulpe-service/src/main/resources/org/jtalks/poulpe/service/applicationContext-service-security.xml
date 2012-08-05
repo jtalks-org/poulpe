@@ -19,86 +19,77 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <!-- Retrieves, modifies and strores access control lists -->
-    <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
-        <constructor-arg ref="dataSource"/>
-        <constructor-arg ref="lookupStrategy"/>
-        <constructor-arg ref="aclCache"/>
-        <property name="classIdentityQuery" value="SELECT @@IDENTITY"/>
-        <property name="sidIdentityQuery" value="SELECT @@IDENTITY"/>
-        <property name="sidFactory" ref="jtalksSidFactory"/>
-    </bean>
-    <bean id="dtoMapper" class="org.jtalks.common.service.security.DtoMapper"/>
+  <!-- Retrieves, modifies and strores access control lists -->
+  <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+    <constructor-arg ref="dataSource"/>
+    <constructor-arg ref="lookupStrategy"/>
+    <constructor-arg ref="aclCache"/>
+    <property name="classIdentityQuery" value="SELECT @@IDENTITY"/>
+    <property name="sidIdentityQuery" value="SELECT @@IDENTITY"/>
+    <property name="sidFactory" ref="jtalksSidFactory"/>
+  </bean>
+  <bean id="dtoMapper" class="org.jtalks.common.service.security.DtoMapper"/>
 
-    <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
-        <constructor-arg ref="dataSource"/>
-        <constructor-arg ref="aclCache"/>
-        <constructor-arg ref="aclAuthorizationStrategy"/>
-        <constructor-arg>
-            <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
-        </constructor-arg>
-        <property name="permissionFactory" ref="permissionFactory"/>
-    </bean>
-    <!-- Authorization for ACLs administration setup -->
-    <bean id="aclAuthorizationStrategy" class="org.springframework.security.acls.domain.AclAuthorizationStrategyImpl">
-        <constructor-arg index="0">
-            <list>
-                <bean class="org.springframework.security.core.authority.GrantedAuthorityImpl">
-                    <constructor-arg value="ROLE_ADMIN"/>
-                </bean>
-            </list>
-        </constructor-arg>
-        <property name="sidFactory" ref="jtalksSidFactory"/>
-    </bean>
-    <bean id="jtalksSidFactory" class="org.jtalks.common.security.acl.sids.JtalksSidFactory"/>
-    <!-- ACL permission factory -->
-    <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory"/>
-    <!-- Responsible for efficient retrieval of ACLs from database -->
-    <!-- Responsible for efficient retrieval of ACLs from database -->
-    <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
-        <constructor-arg ref="dataSource"/>
-        <constructor-arg ref="aclCache"/>
-        <constructor-arg ref="aclAuthorizationStrategy"/>
-        <constructor-arg>
-            <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
-        </constructor-arg>
-        <property name="permissionFactory">
-            <bean class="org.jtalks.common.security.acl.JtalksPermissionFactory" init-method="init"/>
-        </property>
-        <property name="sidFactory" ref="jtalksSidFactory"/>
-    </bean>
+  <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+    <constructor-arg ref="dataSource"/>
+    <constructor-arg ref="aclCache"/>
+    <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
+    <constructor-arg>
+      <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+    </constructor-arg>
+    <property name="permissionFactory" ref="permissionFactory"/>
+  </bean>
 
-    <!-- Caching support for ACLs -->
-    <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
-        <constructor-arg>
-            <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-                <property name="cacheManager">
-                    <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
-                </property>
-            </bean>
-        </constructor-arg>
-    </bean>
+  <bean id="jtalksSidFactory" class="org.jtalks.common.security.acl.sids.JtalksSidFactory"/>
+  <!-- ACL permission factory -->
+  <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory"/>
+  <!-- Responsible for efficient retrieval of ACLs from database -->
+  <!-- Responsible for efficient retrieval of ACLs from database -->
+  <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+    <constructor-arg ref="dataSource"/>
+    <constructor-arg ref="aclCache"/>
+    <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
+    <constructor-arg>
+      <bean class="org.springframework.security.acls.domain.ConsoleAuditLogger"/>
+    </constructor-arg>
+    <property name="permissionFactory">
+      <bean class="org.jtalks.common.security.acl.JtalksPermissionFactory" init-method="init"/>
+    </property>
+    <property name="sidFactory" ref="jtalksSidFactory"/>
+  </bean>
 
-    <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
-        <constructor-arg ref="aclService"/>
-        <property name="aclUtil">
-            <bean class="org.jtalks.common.security.acl.AclUtil">
-                <constructor-arg ref="aclService"/>
-                <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
-            </bean>
+  <!-- Caching support for ACLs -->
+  <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
+    <constructor-arg>
+      <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
+        <property name="cacheManager">
+          <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
         </property>
-    </bean>
-    <bean id="typeConvertingObjectIdentityGenerator" factory-method="createDefaultGenerator"
-          class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">
-        <property name="additionalConversionRules">
-            <map>
-                <entry key="org.jtalks.poulpe.model.entity.Component" value="COMPONENT"/>
-            </map>
-        </property>
-    </bean>
-    <bean id="securityService" class="org.jtalks.common.security.SecurityService">
-        <constructor-arg index="0" ref="userDao"/>
-        <constructor-arg index="1" ref="aclManager"/>
-    </bean>
+      </bean>
+    </constructor-arg>
+  </bean>
+
+  <bean id="jtalksAclAuthorizationStrategy" class="org.jtalks.poulpe.security.AclAuthorizationStrategyImpl"/>
+
+  <bean id="aclManager" class="org.jtalks.common.security.acl.AclManager">
+    <constructor-arg ref="aclService"/>
+    <property name="aclUtil" ref="aclUtil"/>
+  </bean>
+  <bean  name="aclUtil" class="org.jtalks.common.security.acl.AclUtil">
+      <constructor-arg ref="aclService"/>
+      <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
+  </bean>
+  <bean id="typeConvertingObjectIdentityGenerator" factory-method="createDefaultGenerator"
+        class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">
+    <property name="additionalConversionRules">
+      <map>
+        <entry key="org.jtalks.poulpe.model.entity.Component" value="COMPONENT"/>
+      </map>
+    </property>
+  </bean>
+  <bean id="securityService" class="org.jtalks.common.security.SecurityService">
+    <constructor-arg index="0" ref="userDao"/>
+    <constructor-arg index="1" ref="aclManager"/>
+  </bean>
 
 </beans>
