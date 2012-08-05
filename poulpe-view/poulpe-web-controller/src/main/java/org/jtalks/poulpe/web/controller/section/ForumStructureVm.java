@@ -22,11 +22,7 @@ import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
@@ -149,12 +145,12 @@ public class ForumStructureVm {
 
     /**
      * Handler of event when branch node was dragged and dropped to another node.
-     * 
+     *
      * @param draggedNode the node represents dragged branch item
-     * @param targetNode the node represents target item (it can be branch or section item)
+     * @param targetNode  the node represents target item (it can be branch or section item)
      */
     private void onDropBranch(TreeNode<ForumStructureItem> draggedNode,
-            TreeNode<ForumStructureItem> targetNode) {
+                              TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem targetItem = targetNode.getData();
         PoulpeBranch draggedBranch = draggedNode.getData().getBranchItem();
         if (noEffectAfterDropBranch(draggedBranch, targetItem)) {
@@ -164,8 +160,7 @@ public class ForumStructureVm {
             forumStructureService.moveBranch(draggedBranch, targetItem.getBranchItem());
             treeModel.dropNodeBefore(draggedNode, targetNode);
             treeModel.setSelectedNode(draggedNode);
-        }
-        else {
+        } else {
             forumStructureService.moveBranch(draggedBranch, targetItem.getSectionItem());
             treeModel.dropNodeIn(draggedNode, targetNode);
             treeModel.setSelectedNode(draggedNode);
@@ -174,18 +169,18 @@ public class ForumStructureVm {
 
     /**
      * Handler of event when section node was dragged and dropped to another section node.
-     * 
+     *
      * @param draggedNode the node represents dragged section item
-     * @param targetNode the node represents target section item
+     * @param targetNode  the node represents target section item
      */
     private void onDropSection(TreeNode<ForumStructureItem> draggedNode,
-            TreeNode<ForumStructureItem> targetNode) {
+                               TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
         if (noEffectAfterDropSection(draggedItem, targetItem)) {
             return;
         }
-        
+
         PoulpeSection draggedSection = draggedItem.getSectionItem();
         PoulpeSection targetSection = targetItem.getSectionItem();
         getRootAsJcommune().moveSection(draggedSection, targetSection);

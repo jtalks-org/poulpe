@@ -14,15 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
-
-import java.util.Collections;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
@@ -39,7 +31,14 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Sets;
+import java.util.Collections;
+import java.util.Set;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.*;
 
 /**
  * @author Vermut
@@ -49,15 +48,20 @@ public class ComponentsVmTest {
 
     // sut
     ComponentsVm componentsVm;
-    
+
     // dependencies
-    @Mock WindowManager windowManager;
-    @Mock ComponentService componentService;
-    @Mock DialogManager dialogManager;
-    @Mock BindUtilsWrapper bindWrapper;
+    @Mock
+    WindowManager windowManager;
+    @Mock
+    ComponentService componentService;
+    @Mock
+    DialogManager dialogManager;
+    @Mock
+    BindUtilsWrapper bindWrapper;
     SelectedEntity<Component> selectedEntity;
-    
-    @Captor ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
+
+    @Captor
+    ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
 
     @BeforeMethod
     public void beforeTest() {
@@ -66,13 +70,13 @@ public class ComponentsVmTest {
         componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
         componentsVm.setBindWrapper(bindWrapper);
     }
-    
+
     @Test
     public void getComponents() {
         componentsVm.getComponents();
         verify(componentService).getAll();
     }
-    
+
     @Test
     public void deleteComponent() {
         Component selected = givenSelectedComponent();
@@ -85,7 +89,7 @@ public class ComponentsVmTest {
         componentsVm.setSelected(selected);
         return selected;
     }
-    
+
     @Test
     public void deleteComponent_componentDeletedAfterConfirmation() {
         Component selected = givenUserConfirmedDeletion();
@@ -94,10 +98,10 @@ public class ComponentsVmTest {
 
     private Component givenUserConfirmedDeletion() {
         Component selected = givenSelectedComponent();
-        
+
         componentsVm.deleteComponent();
         captureDeletePerfomable(selected).execute();
-        
+
         return selected;
     }
 
@@ -105,38 +109,38 @@ public class ComponentsVmTest {
         verify(dialogManager).confirmDeletion(eq(selected.getName()), deleteCallbackCaptor.capture());
         return deleteCallbackCaptor.getValue();
     }
-    
+
     @Test
     public void deleteComponent_notifyChange() {
         givenUserConfirmedDeletion();
         verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
                 ComponentsVm.CAN_CREATE_NEW_COMPPONENT);
     }
-    
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void deleteComponent_componentMustBeSelected() {
         componentsVm.deleteComponent();
     }
-    
+
     @Test
     public void addNewComponent() {
         componentsVm.addNewComponent();
         verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
     }
-    
+
     @Test
     public void configureComponent() {
         componentsVm.configureComponent();
         verify(windowManager).open(EditComponentVm.EDIT_COMPONENT_LOCATION);
     }
-    
+
     @Test
     public void configureComponent_selectedComponentSet() {
         Component selected = givenSelectedComponent();
         componentsVm.configureComponent();
         assertEquals(selectedEntity.getEntity(), selected);
     }
-    
+
     @Test
     public void isAbleToCreateNewComponent_able() {
         givenAvailableTypes();
@@ -148,14 +152,14 @@ public class ComponentsVmTest {
         Set<ComponentType> all = Sets.newHashSet(ComponentType.values());
         when(componentService.getAvailableTypes()).thenReturn(all);
     }
-    
+
     @Test
     public void isAbleToCreateNewComponent_notAble() {
         givenNoAvailableTypes();
         boolean actual = componentsVm.isAbleToCreateNewComponent();
         assertFalse(actual);
     }
-    
+
     private void givenNoAvailableTypes() {
         Set<ComponentType> empty = Collections.emptySet();
         when(componentService.getAvailableTypes()).thenReturn(empty);

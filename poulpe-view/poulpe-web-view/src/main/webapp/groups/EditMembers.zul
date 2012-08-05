@@ -3,86 +3,96 @@
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <!-- works with ZK 6 and later only -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.group_caption}"
-      apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
-      onClose="@command('cancel')">
-      <caption label="@load(editGroupMembersVm.groupToEdit.name)" />
-    <vbox>
-      <hbox>
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.group_caption}"
+            apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
+            onClose="@command('cancel')">
+        <caption label="@load(editGroupMembersVm.groupToEdit.name)"/>
         <vbox>
-          <panel title="${labels.groups.edit_members.available}" border="normal">
-            <panelchildren>
-              <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVm.availFilterTxt)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
-                    sclass="edit.members.searchAvailButton" />
-              </hbox>
-              <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
-                <listhead>
-                  <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
-                  <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
-                  <listheader width="230px" label="${labels.groups.edit_members.email}" />
-                </listhead>
-                <template name="model" var="user">
-                  <listitem>
-                    <listcell label="@load(user.username)" />
-                    <listcell>
-                      <label value="@load(user.firstName)" />
-                      <label value="@load(user.lastName)" />
-                    </listcell>
-                    <listcell label="@load(user.email)" />
-                  </listitem>
-                </template>
-              </listbox>
-            </panelchildren>
-          </panel>
+            <hbox>
+                <vbox>
+                    <panel title="${labels.groups.edit_members.available}" border="normal">
+                        <panelchildren>
+                            <hbox align="center" style="margin: 10px">
+                                <textbox value="@bind(editGroupMembersVm.availFilterTxt)"/>
+                                <button label="${labels.groups.edit_members.search}" onClick="@command('filterAvail')"
+                                        sclass="edit.members.searchAvailButton"/>
+                            </hbox>
+                            <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')"
+                                     multiple="true" checkmark="true" width="515px" height="350px" mold="paging"
+                                     pageSize="50" pagingPosition="top">
+                                <listhead>
+                                    <listheader width="150px" label="${labels.groups.edit_members.username}"
+                                                sclass="boldstyle"/>
+                                    <listheader width="120px" label="${labels.groups.edit_members.full_name}"/>
+                                    <listheader width="230px" label="${labels.groups.edit_members.email}"/>
+                                </listhead>
+                                <template name="model" var="user">
+                                    <listitem>
+                                        <listcell label="@load(user.username)"/>
+                                        <listcell>
+                                            <label value="@load(user.firstName)"/>
+                                            <label value="@load(user.lastName)"/>
+                                        </listcell>
+                                        <listcell label="@load(user.email)"/>
+                                    </listitem>
+                                </template>
+                            </listbox>
+                        </panelchildren>
+                    </panel>
+                </vbox>
+                <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px"
+                      align="center">
+                    <image style="cursor:pointer" onClick="@command('add')"
+                           disabled="@load(empty editGroupMembersVm.availSelected)"
+                           src="/resources/img/rightarrow.png" sclass="edit.members.addButton"/>
+                    <image style="cursor:pointer" onClick="@command('addAll')"
+                           disabled="@load(empty editGroupMembersVm.avail)"
+                           src="/resources/img/rightrightarrow.png" sclass="edit.members.addAllButton"/>
+                    <image style="cursor:pointer" onClick="@command('remove')"
+                           disabled="@load(empty editGroupMembersVm.existSelected)"
+                           src="/resources/img/leftarrow.png" sclass="edit.members.removeButton"/>
+                    <image style="cursor:pointer" onClick="@command('removeAll')"
+                           disabled="@load(empty editGroupMembersVm.exist)"
+                           src="/resources/img/leftleftarrow.png" sclass="edit.members.removeAllButton"/>
+                </vbox>
+                <vbox>
+                    <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
+                        <panelchildren>
+                            <hbox align="center" style="margin: 10px">
+                                <textbox value="@bind(editGroupMembersVm.existFilterTxt)"/>
+                                <button label="${labels.groups.edit_members.search}" onClick="@command('filterExist')"
+                                        sclass="edit.members.searchExistButton"/>
+                            </hbox>
+                            <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
+                                     multiple="true" checkmark="true" width="515px" height="350px" mold="paging"
+                                     pageSize="50" pagingPosition="top">
+                                <listhead>
+                                    <listheader width="150px" label="${labels.groups.edit_members.username}"
+                                                sclass="boldstyle"/>
+                                    <listheader width="120px" label="${labels.groups.edit_members.full_name}"/>
+                                    <listheader width="230px" label="${labels.groups.edit_members.email}"/>
+                                </listhead>
+                                <template name="model" var="user">
+                                    <listitem>
+                                        <listcell label="@load(user.username)"/>
+                                        <listcell>
+                                            <label value="@load(user.firstName)"/>
+                                            <label value="@load(user.lastName)"/>
+                                        </listcell>
+                                        <listcell label="@load(user.email)"/>
+                                    </listitem>
+                                </template>
+                            </listbox>
+                        </panelchildren>
+                    </panel>
+                </vbox>
+            </hbox>
+            <hbox align="center" pack="center" height="30px">
+                <button label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton"/>
+                <button label="${labels.window.cancel}" onClick="@command('cancel')"
+                        sclass="edit.members.cancelButton"/>
+            </hbox>
         </vbox>
-        <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
-          <image style="cursor:pointer" onClick="@command('add')" disabled="@load(empty editGroupMembersVm.availSelected)"
-              src="/resources/img/rightarrow.png" sclass="edit.members.addButton" />
-          <image style="cursor:pointer" onClick="@command('addAll')" disabled="@load(empty editGroupMembersVm.avail)"
-              src="/resources/img/rightrightarrow.png" sclass="edit.members.addAllButton" />
-          <image style="cursor:pointer" onClick="@command('remove')" disabled="@load(empty editGroupMembersVm.existSelected)"
-              src="/resources/img/leftarrow.png" sclass="edit.members.removeButton" />
-          <image style="cursor:pointer" onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVm.exist)"
-              src="/resources/img/leftleftarrow.png" sclass="edit.members.removeAllButton" />
-        </vbox>
-        <vbox>
-          <panel title="${labels.groups.edit_members.already_in_group}" border="normal">
-            <panelchildren>
-              <hbox align="center" style="margin: 10px">
-                <textbox value="@bind(editGroupMembersVm.existFilterTxt)" />
-                <button label="${labels.groups.edit_members.search}" onClick="@command('filterExist')"
-                    sclass="edit.members.searchExistButton" />
-              </hbox>
-              <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
-                <listhead>
-                  <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
-                  <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
-                  <listheader width="230px" label="${labels.groups.edit_members.email}" />
-                </listhead>
-                <template name="model" var="user">
-                  <listitem>
-                    <listcell label="@load(user.username)" />
-                    <listcell>
-                      <label value="@load(user.firstName)" />
-                      <label value="@load(user.lastName)" />
-                    </listcell>
-                    <listcell label="@load(user.email)" />
-                  </listitem>
-                </template>
-              </listbox>
-            </panelchildren>
-          </panel>
-        </vbox>
-      </hbox>
-      <hbox align="center" pack="center" height="30px">
-        <button label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton" />
-        <button label="${labels.window.cancel}" onClick="@command('cancel')" sclass="edit.members.cancelButton" />
-      </hbox>
-    </vbox>
-  </window>
+    </window>
 </zk>

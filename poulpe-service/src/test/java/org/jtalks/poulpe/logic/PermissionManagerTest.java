@@ -14,16 +14,7 @@
  */
 package org.jtalks.poulpe.logic;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.anyLong;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Entity;
@@ -45,23 +36,22 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.springframework.security.acls.domain.AccessControlEntryImpl;
-import org.springframework.security.acls.domain.AclAuthorizationStrategy;
-import org.springframework.security.acls.domain.AclAuthorizationStrategyImpl;
-import org.springframework.security.acls.domain.AclImpl;
-import org.springframework.security.acls.domain.AuditLogger;
-import org.springframework.security.acls.domain.ConsoleAuditLogger;
-import org.springframework.security.acls.model.AccessControlEntry;
-import org.springframework.security.acls.model.Acl;
-import org.springframework.security.acls.model.ObjectIdentity;
-import org.springframework.security.acls.model.Permission;
-import org.springframework.security.acls.model.Sid;
+import org.springframework.security.acls.domain.*;
+import org.springframework.security.acls.model.*;
 import org.springframework.security.core.authority.GrantedAuthorityImpl;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static com.google.common.collect.Lists.newArrayList;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertNotNull;
+import static org.testng.Assert.assertTrue;
 
 /**
  * @author stanislav bashkirtsev
@@ -88,9 +78,8 @@ public class PermissionManagerTest {
 
     /**
      * Mockito answer for {@link GroupDao#get(Long)} which return group from defined group list.
-     * 
+     *
      * @author Vyacheslav Zhivaev
-     * 
      */
     class GroupDaoAnswer implements Answer<Group> {
 
@@ -187,12 +176,12 @@ public class PermissionManagerTest {
         PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CREATE_TOPICS);
         accessChanges.addNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
         accessChanges.addRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
-        return new Object[][] { { accessChanges } };
+        return new Object[][]{{accessChanges}};
     }
 
     @DataProvider
     public Object[][] branches() {
-        return new Object[][] { { TestFixtures.branch() } };
+        return new Object[][]{{TestFixtures.branch()}};
     }
 
     private List<UserGroupSid> getNewlyAddedSids(PermissionChanges accessChanges) {

@@ -14,10 +14,6 @@
  */
 package org.jtalks.poulpe.logic;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
@@ -32,9 +28,12 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
 
+import javax.annotation.Nonnull;
+import java.util.List;
+
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
- * 
+ *
  * @author stanislav bashkirtsev
  * @author Vyacheslav Zhivaev
  */
@@ -44,9 +43,9 @@ public class PermissionManager {
 
     /**
      * Constructs {@link PermissionManager} with given {@link AclManager} and {@link GroupDao}
-     * 
+     *
      * @param aclManager manager instance
-     * @param groupDao group dao instance
+     * @param groupDao   group dao instance
      */
     public PermissionManager(@Nonnull AclManager aclManager, @Nonnull GroupDao groupDao) {
         this.aclManager = aclManager;
@@ -55,10 +54,10 @@ public class PermissionManager {
 
     /**
      * Changes the granted permissions according to the specified changes.
-     * 
-     * @param entity the entity to change permissions to
+     *
+     * @param entity  the entity to change permissions to
      * @param changes contains a permission itself, a list of groups to be granted to the permission and the list of
-     * groups to remove their granted privileges
+     *                groups to remove their granted privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
@@ -72,10 +71,10 @@ public class PermissionManager {
 
     /**
      * Changes the restricting permissions according to the specified changes.
-     * 
-     * @param entity the entity to change permissions to
+     *
+     * @param entity  the entity to change permissions to
      * @param changes contains a permission itself, a list of groups to be restricted from the permission and the list
-     * of groups to remove their restricting privileges
+     *                of groups to remove their restricting privileges
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getNewlyAddedGroupsAsArray()
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
@@ -97,7 +96,7 @@ public class PermissionManager {
 
     /**
      * Gets {@link PermissionsMap} for provided {@link Component}.
-     * 
+     *
      * @param component the component to obtain PermissionsMap for
      * @return {@link PermissionsMap} for {@link Component}
      */
@@ -107,9 +106,9 @@ public class PermissionManager {
 
     /**
      * Gets {@link PermissionsMap} for provided {@link Entity}.
-     * 
+     *
      * @param permissions the list of permissions to get
-     * @param entity the entity to get for
+     * @param entity      the entity to get for
      * @return {@link PermissionsMap} for provided {@link Entity}
      */
     public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {

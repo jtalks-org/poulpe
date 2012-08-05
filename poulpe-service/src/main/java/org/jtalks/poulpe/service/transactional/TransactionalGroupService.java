@@ -37,10 +37,9 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     /**
      * Create an instance of entity based service
      *
-     * @param groupDao  - data access object, which should be able do all CRUD
-     *                  operations.
-     * @param validator - an entity validator
-     *
+     * @param groupDao   - data access object, which should be able do all CRUD
+     *                   operations.
+     * @param validator  - an entity validator
      * @param userBanner - class for working with banning users instance
      */
     public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
@@ -96,7 +95,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeBranch> getModeratedBranches(Group group){
+    public List<PoulpeBranch> getModeratedBranches(Group group) {
         return dao.getModeratingBranches(group);
     }
 

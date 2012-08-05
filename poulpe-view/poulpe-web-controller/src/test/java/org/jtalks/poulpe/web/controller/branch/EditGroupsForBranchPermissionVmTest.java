@@ -14,15 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -41,13 +33,17 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link EditGroupsForBranchPermissionVm}.
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
  */
 public class EditGroupsForBranchPermissionVmTest {
 
@@ -57,9 +53,12 @@ public class EditGroupsForBranchPermissionVmTest {
     // SUT
     private EditGroupsForBranchPermissionVm viewModel;
 
-    @Mock BranchService branchService;
-    @Mock GroupService groupService;
-    @Mock WindowManager windowManager;
+    @Mock
+    BranchService branchService;
+    @Mock
+    GroupService groupService;
+    @Mock
+    WindowManager windowManager;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -77,7 +76,7 @@ public class EditGroupsForBranchPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<BranchPermission> permissionsMap) {
+                                    PermissionsMap<BranchPermission> permissionsMap) {
         initTest(permissionForEntity, permissionsMap);
 
         viewModel.removeAll();

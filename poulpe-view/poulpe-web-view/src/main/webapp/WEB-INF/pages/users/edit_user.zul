@@ -3,46 +3,46 @@
 <?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <window id="editUserDialog" title="${labels.users.edituserdialog.title}" closable="true" border="normal"
-    width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
-    <groupbox form="@id('fx') @load(vm.selectedUser) @save(vm.selectedUser, before='saveUser')">
-      <grid>
-        <columns>
-          <column label="${labels.field.description}" hflex="min" />
-          <column label="${labels.field.input}" />
-        </columns>
-        <rows>
-          <row>
-            <label value="${labels.users.label.firstname}" />
-            <textbox value="@bind(fx.firstName) @validator('beanValidator')" width="100%" focus="true" />
-          </row>
-          <row>
-            <label value="${labels.users.label.lastname}" />
-            <textbox value="@bind(fx.lastName) @validator('beanValidator')" width="100%" />
-          </row>
-          <row>
-            <label value="${labels.users.label.email}" />
-            <textbox value="@bind(fx.email) @validator('beanValidator')" width="100%"
-              constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}" />
-          </row>
-          <!--<row>-->
-            <!--<cell colspan="2">-->
-              <!--<checkbox id="newPasswordCheckbox" label="Set new password" onCheck="newPassword.disabled = !self.checked" />-->
-            <!--</cell>-->
-          <!--</row>-->
-          <!--<row>-->
-            <!--<label value="${labels.users.label.new_password}" />-->
-            <!--<textbox id="newPassword" value="@save(fx.newPassword, after='saveUser')" width="100%" type="password"-->
-               <!--disabled="true" />-->
-             <!-- constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" -->
-          <!--</row>-->
-        </rows>
-      </grid>
-    </groupbox>
-    <hbox align="end">
-      <button id="editButton" label="${labels.item.save}" onClick="@command('saveUser', user=vm.selectedUser))" 
-      	sclass="edit.user.saveButton" />
-      <button label="${labels.window.cancel}" onClick="@command('cancelEdit')" sclass="edit.user.cancelButton" />
-    </hbox>
-  </window>
+    <window id="editUserDialog" title="${labels.users.edituserdialog.title}" closable="true" border="normal"
+            width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')">
+        <groupbox form="@id('fx') @load(vm.selectedUser) @save(vm.selectedUser, before='saveUser')">
+            <grid>
+                <columns>
+                    <column label="${labels.field.description}" hflex="min"/>
+                    <column label="${labels.field.input}"/>
+                </columns>
+                <rows>
+                    <row>
+                        <label value="${labels.users.label.firstname}"/>
+                        <textbox value="@bind(fx.firstName) @validator('beanValidator')" width="100%" focus="true"/>
+                    </row>
+                    <row>
+                        <label value="${labels.users.label.lastname}"/>
+                        <textbox value="@bind(fx.lastName) @validator('beanValidator')" width="100%"/>
+                    </row>
+                    <row>
+                        <label value="${labels.users.label.email}"/>
+                        <textbox value="@bind(fx.email) @validator('beanValidator')" width="100%"
+                                 constraint="/[_A-Za-z0-9-]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})/: ${c:l('err.users.edit.email')}"/>
+                    </row>
+                    <!--<row>-->
+                    <!--<cell colspan="2">-->
+                    <!--<checkbox id="newPasswordCheckbox" label="Set new password" onCheck="newPassword.disabled = !self.checked" />-->
+                    <!--</cell>-->
+                    <!--</row>-->
+                    <!--<row>-->
+                    <!--<label value="${labels.users.label.new_password}" />-->
+                    <!--<textbox id="newPassword" value="@save(fx.newPassword, after='saveUser')" width="100%" type="password"-->
+                    <!--disabled="true" />-->
+                    <!-- constraint="/.{4,20}/: ${c:l('err.users.edit.password')}" -->
+                    <!--</row>-->
+                </rows>
+            </grid>
+        </groupbox>
+        <hbox align="end">
+            <button id="editButton" label="${labels.item.save}" onClick="@command('saveUser', user=vm.selectedUser))"
+                    sclass="edit.user.saveButton"/>
+            <button label="${labels.window.cancel}" onClick="@command('cancelEdit')" sclass="edit.user.cancelButton"/>
+        </hbox>
+    </window>
 </zk>

@@ -82,7 +82,7 @@ public class ModeratingGroupComboboxRow {
     /**
      * Checking for changes of moderator group for branch, also verifies correctness of this comparison.
      *
-     * @param group {@link Group} to compare
+     * @param group  {@link Group} to compare
      * @param branch {@link PoulpeBranch} to compare with 'currentBranch'
      * @return true if branch are target branch and moderator group is not same as arg group, false otherwise
      */

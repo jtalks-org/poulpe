@@ -14,14 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -35,11 +28,19 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Sets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyLong;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 /**
  * Tests for {@link EditGroupMembersVm}
- * 
+ *
  * @author Vyacheslav Zhivaev
  */
 public class EditGroupMembersVmTest {
@@ -47,10 +48,13 @@ public class EditGroupMembersVmTest {
     // SUT
     private EditGroupMembersVm viewModel;
 
-    @Mock GroupService groupService;
-    @Mock UserService userService;
-    @Mock WindowManager windowManager;
-    
+    @Mock
+    GroupService groupService;
+    @Mock
+    UserService userService;
+    @Mock
+    WindowManager windowManager;
+
     private Group groupToEdit;
     private List<PoulpeUser> usersAll;
     private Set<PoulpeUser> usersSelectedInAvailable;

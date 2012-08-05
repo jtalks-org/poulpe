@@ -118,15 +118,15 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate){
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate) {
         ArrayList<Long> ids = new ArrayList<Long>();
-        for(User b: listUsers)
+        for (User b : listUsers)
             ids.add(b.getId());
 
-        Query query=null;
-        if(ids.size()==0){
+        Query query = null;
+        if (ids.size() == 0) {
             query = getSession().getNamedQuery("findUsersByLikeUsername");
-        }else{
+        } else {
             query = getSession().getNamedQuery("findUsersByLikeUsernameNotInList");
             query.setParameterList("listUsers", ids);
         }

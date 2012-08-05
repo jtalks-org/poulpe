@@ -23,10 +23,10 @@
 }
 
 .dialog-window-position {
-    position:absolute;
-    top:10%;
-    left:50%;
-    margin-left:-175px;
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    margin-left: -175px;
 }
 
 .simple-grid {
