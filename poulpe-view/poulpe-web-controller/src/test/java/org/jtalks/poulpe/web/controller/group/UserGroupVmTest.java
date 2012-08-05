@@ -1,17 +1,17 @@
 /**
-* Copyright (C) 2011  JTalks.org Team
-* This library is free software; you can redistribute it and/or
-* modify it under the terms of the GNU Lesser General Public
-* License as published by the Free Software Foundation; either
-* version 2.1 of the License, or (at your option) any later version.
-* This library is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-* Lesser General Public License for more details.
-* You should have received a copy of the GNU Lesser General Public
-* License along with this library; if not, write to the Free Software
-* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
-*/
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
@@ -25,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+import org.testng.collections.Lists;
 import org.zkoss.zul.ListModelList;
 
 import java.lang.reflect.Field;
@@ -33,12 +34,11 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.spy;
 import static org.testng.Assert.*;
 
 /**
-* @author Leonid Kazancev
-*/
+ * @author Leonid Kazancev
+ */
 public class UserGroupVmTest {
     private static final String SEARCH_STRING = "searchString", SHOW_DELETE_CONFIRM_DIALOG = "showDeleteConfirmDialog";
 
@@ -46,12 +46,12 @@ public class UserGroupVmTest {
     private GroupService groupService;
     @Mock
     private WindowManager windowManager;
-    @Mock
-    private BranchGroupMap branches;
+
+
     @Mock
     private BindUtilsWrapper bindUtilsWrapper;
 
-
+    private BranchGroupMap branches;
     private UserGroupVm viewModel;
     private UserGroupVm userGroupVm;
     private SelectedEntity<Group> selectedEntity;
@@ -71,7 +71,6 @@ public class UserGroupVmTest {
         userGroupVm.setSelectedGroup(selectedGroup);
         viewModel = spy(userGroupVm);
     }
-
 
 
     @Test(dataProvider = "provideRandomGroupsList")
@@ -98,7 +97,7 @@ public class UserGroupVmTest {
         verify(windowManager).open(EditGroupMembersVm.EDIT_GROUP_MEMBERS_URL);
     }
 
-    @Test(enabled = false)
+    @Test
     public void testDeleteNotModeratorGroup() throws NoSuchFieldException, IllegalAccessException {
         givenBindWrapper();
         viewModel = spy(userGroupVm);
@@ -131,11 +130,11 @@ public class UserGroupVmTest {
     public void testShowDeleteDialogWithModeratorGroup(List notEmptyList) throws NoSuchFieldException, IllegalAccessException {
         doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
         givenBranches();
-        viewModel  = spy(userGroupVm);
+        viewModel = spy(userGroupVm);
         viewModel.showGroupDeleteConfirmDialog();
 
         verify(viewModel).setSelectedModeratorGroupForAllBranches(selectedGroup);
-         assertEquals(viewModel.getSelectedModeratorGroupForAllBranches(), selectedGroup);
+        assertEquals(viewModel.getSelectedModeratorGroupForAllBranches(), selectedGroup);
         assertTrue(viewModel.isShowDeleteModeratorGroupDialog());
     }
 
@@ -153,53 +152,56 @@ public class UserGroupVmTest {
         assertTrue(viewModel.isShowDeleteConfirmDialog());
     }
 
-    @Test(dataProvider = "provideRandomBranchesList")
-    public void testSaveModeratorForBranchesWithoutChanges(List BranchesList) throws NoSuchFieldException, IllegalAccessException {
-        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
+    @Test(dataProvider = "provideRandomBranchesAndGroupsList")
+    public void testSetSelectedGroupForAllBranches(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
+        branches = spy(new BranchGroupMap(branchesList, groupsList));
         givenBranches();
+
         viewModel = spy(userGroupVm);
 
         viewModel.setSelectedModeratorGroupForAllBranches(selectedGroup);
         viewModel.saveModeratorForBranches();
-        for (ModeratingGroupComboboxRow controller : branches.getBranchesCollection()) {
-            verify(controller.getCurrentBranch(), times(0)).setModeratorsGroup(any(Group.class));
-        }
+        verify(branches).setSelectedGroupForAllBranches(selectedGroup);
+        assertEquals(viewModel.getSelectedModeratorGroupForAllBranches(), selectedGroup);
     }
 
-    @Test(dataProvider = "provideRandomBranchesList")
-    public void testSaveModeratorForBranchesWithChanges(List BranchesList) throws NoSuchFieldException, IllegalAccessException {
-        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
+    @Test(dataProvider = "provideRandomBranchesAndGroupsList")
+    public void testSaveModeratorForBranches(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
+        doReturn(branchesList).when(groupService).getModeratedBranches(selectedGroup);
+        branches = spy(new BranchGroupMap(branchesList, groupsList));
         Group moderatorGroup = new Group("moderator");
         givenBranches();
+        givenBranchesCollection();
         viewModel = spy(userGroupVm);
-
-        viewModel.setSelectedModeratorGroupForAllBranches(moderatorGroup);
+        viewModel.init();
+        viewModel.setSelectedGroup(moderatorGroup);
         viewModel.saveModeratorForBranches();
-        for (ModeratingGroupComboboxRow controller : branches.getBranchesCollection()) {
-            verify(controller.getCurrentBranch()).setModeratorsGroup(moderatorGroup);
-        }
+
+        verify(branches).setModeratingGroupForAllBranches(moderatorGroup);
+        assertFalse(viewModel.isShowDeleteModeratorGroupDialog());
     }
 
-    @Test(dataProvider = "provideRandomBranchesList", enabled = false)
-    public void testSaveModeratorForCurrentBranch(List BranchesList) throws NoSuchFieldException, IllegalAccessException {
-        viewModel.init();
-        doReturn(BranchesList).when(groupService).getModeratedBranches(selectedGroup);
-
+    @Test(dataProvider = "provideRandomBranchesAndGroupsList")
+    public void testSaveModeratorForCurrentBranch(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
+        branches = spy(new BranchGroupMap(branchesList, groupsList));
         givenBranches();
+        givenBranchesCollection();
         viewModel = spy(userGroupVm);
-        Group oldModeratorGroup = someGroup();
-        Group wantBecameModeratorGroup = someGroup();
-        viewModel.setSelectedGroup(oldModeratorGroup);
-        PoulpeBranch keyBranch = someBranch();
+        viewModel.init();
+
+        Group oldModeratorGroup = groupsList.get(0);
+        Group wantBecameModeratorGroup = groupsList.get(1);
+
+        PoulpeBranch keyBranch = branchesList.get(0);
         keyBranch.setModeratorsGroup(oldModeratorGroup);
+        viewModel.setSelectedGroup(oldModeratorGroup);
         viewModel.getBranches().setSelectedGroupForAllBranches(wantBecameModeratorGroup);
 
         viewModel.saveModeratorForCurrentBranch(keyBranch);
 
         verify(keyBranch).setModeratorsGroup(wantBecameModeratorGroup);
-        verify(viewModel.getBranches().getBranchesCollection()).remove(keyBranch);
+        verify(branches).setModeratingGroupForCurrentBranch(oldModeratorGroup, keyBranch);
         assertFalse(viewModel.isShowDeleteModeratorGroupDialog());
-        assertTrue(viewModel.getBranches().getBranchesCollection().isEmpty());
     }
 
     @Test
@@ -246,17 +248,6 @@ public class UserGroupVmTest {
         assertTrue(viewModel.isShowGroupDialog());
     }
 
-    @Test
-    public void testAddToMap() {
-//        viewModel.init();
-//        PoulpeBranch keyBranch = someBranch();
-//        Group valueGroup = someGroup();
-//        viewModel.addToMap(keyBranch, valueGroup);
-//        assertEquals(viewModel.getBranchesMap().get(keyBranch), valueGroup);
-//        assertTrue(viewModel.getBranchesMap().size() == 1);
-    }
-
-
     @DataProvider
     public Object[][] provideRandomGroupsList() {
         return new Object[][]{{Arrays.asList(new Group("2"), new Group("3"))}};
@@ -268,18 +259,40 @@ public class UserGroupVmTest {
     }
 
 
-    public void  givenBindWrapper() throws NoSuchFieldException, IllegalAccessException {
-        Class vm =  userGroupVm.getClass();
+    @DataProvider
+    public Object[][] provideRandomBranchesAndGroupsList() {
+        List<PoulpeBranch> branchesList = Lists.newArrayList();
+        branchesList.addAll(Arrays.asList(spy(new PoulpeBranch("2")), spy(new PoulpeBranch("3"))));
+
+        List<Group> groupsList = Lists.newArrayList();
+        groupsList.addAll(Arrays.asList(new Group("2"), new Group("3")));
+
+        Object[][] branchGroup = {{branchesList, groupsList}};
+
+        return (branchGroup);
+    }
+
+
+    public void givenBindWrapper() throws NoSuchFieldException, IllegalAccessException {
+        Class vm = userGroupVm.getClass();
         Field bindWrapperField = vm.getDeclaredField("bindWrapper");
         bindWrapperField.setAccessible(true);
         bindWrapperField.set(userGroupVm, bindUtilsWrapper);
     }
-    
-    public void givenBranches()  throws NoSuchFieldException, IllegalAccessException {
-        Class vm =  userGroupVm.getClass();
+
+    public void givenBranches() throws NoSuchFieldException, IllegalAccessException {
+        Class vm = userGroupVm.getClass();
         Field bindWrapperField = vm.getDeclaredField("branches");
         bindWrapperField.setAccessible(true);
         bindWrapperField.set(userGroupVm, branches);
+    }
+
+    public void givenBranchesCollection() throws NoSuchFieldException, IllegalAccessException {
+        Class vm = BranchGroupMap.class;
+        Field bindWrapperField = vm.getDeclaredField("branchesCollection");
+        bindWrapperField.setAccessible(true);
+        List<ModeratingGroupComboboxRow> branchesCollection = spy((List<ModeratingGroupComboboxRow>) bindWrapperField.get(branches));
+        bindWrapperField.set(branches, branchesCollection);
     }
 
     private Group someGroup() {
@@ -289,7 +302,6 @@ public class UserGroupVmTest {
     private PoulpeBranch someBranch() {
         return spy(new PoulpeBranch("someBranch"));
     }
-    
 
 
 }
