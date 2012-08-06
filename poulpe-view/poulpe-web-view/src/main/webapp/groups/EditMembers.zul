@@ -20,7 +20,7 @@
               </hbox>
               <paging id="paging" pageSize="@bind(editGroupMembersVm.itemsAvailPerPage)" totalSize="@bind(editGroupMembersVm.availTotalSize)" activePage="@bind(editGroupMembersVm.activeAvailPage)" />
               <listbox model="@bind(editGroupMembersVm.avail)" onSelect="@command('listSelected')" 
-                  multiple="true" checkmark="true" width="515px" height="350px">
+                  multiple="true" checkmark="true" width="515px" height="320px">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />
@@ -59,7 +59,7 @@
                     sclass="edit.members.searchExistButton" />
               </hbox>
               <listbox model="@bind(editGroupMembersVm.exist)" onSelect="@command('listSelected')"
-                  multiple="true" checkmark="true" width="515px" height="350px"  mold="paging" pageSize="50" pagingPosition="top">
+                  multiple="true" checkmark="true" width="515px" height="355px"  mold="paging" pageSize="50" pagingPosition="top">
                 <listhead>
                   <listheader width="150px" label="${labels.groups.edit_members.username}" sclass="boldstyle" />
                   <listheader width="120px" label="${labels.groups.edit_members.full_name}" />

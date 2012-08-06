@@ -44,6 +44,7 @@ import static com.google.common.base.Predicates.in;
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
  * @author maxim reshetov
+ * @author Mikhail Zaitsev
  */
 public class TransactionalUserService implements UserService {
     private static final String NO_FILTER = "";

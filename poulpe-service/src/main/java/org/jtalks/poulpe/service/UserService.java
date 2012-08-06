@@ -28,6 +28,7 @@ import java.util.List;
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
  * @author maxim reshetov
+ * @author Mikhail Zaitsev
  */
 public interface UserService {
 

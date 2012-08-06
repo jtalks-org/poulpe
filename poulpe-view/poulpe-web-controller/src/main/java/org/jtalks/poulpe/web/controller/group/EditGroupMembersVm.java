@@ -42,6 +42,7 @@ import static org.hamcrest.text.StringContains.containsString;
  * View-Model for 'Edit Members of group'.
  *
  * @author Vyacheslav Zhivaev
+ * @author Mikhail Zaitsev
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
@@ -203,12 +204,16 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 		this.itemsAvailPerPage = itemsPerPage;
 	}
 
-    //TODO add docs
+    /**
+     * @return common buffer users
+     */
     public List<PoulpeUser> getCommonBufferUsers() {
         return commonBufferUsers;
     }
 
-    //TODO add docs
+    /**
+     * @param commonBufferUsers common buffer users
+     */
     public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
         this.commonBufferUsers = commonBufferUsers;
     }

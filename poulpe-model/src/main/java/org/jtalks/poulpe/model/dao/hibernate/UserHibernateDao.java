@@ -33,6 +33,7 @@ import java.util.List;
  *
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
+ * @author Mikhail Zaitsev
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 

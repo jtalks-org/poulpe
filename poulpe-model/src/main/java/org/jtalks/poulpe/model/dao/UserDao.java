@@ -28,6 +28,7 @@ import java.util.List;
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
  * @author maxim reshetov
+ * @author Mikhail Zaitsev
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
