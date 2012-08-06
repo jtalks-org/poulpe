@@ -114,6 +114,23 @@ public class TransactionalUserService implements UserService {
 	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
 		return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
 	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, int page, int itemsPerPage) {
+        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.paginate(page, itemsPerPage));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers) {
+        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.NONE);
+    }
+
     /**
      * {@inheritDoc}
      */
