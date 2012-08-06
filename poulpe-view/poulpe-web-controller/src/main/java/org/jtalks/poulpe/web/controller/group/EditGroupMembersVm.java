@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import com.google.common.collect.Lists;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
