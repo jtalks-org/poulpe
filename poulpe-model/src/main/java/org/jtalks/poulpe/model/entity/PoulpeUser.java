@@ -23,6 +23,12 @@ import java.util.List;
  * Stores information about the user.
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
+
+    public static final int EMAIL_MAX_LENGTH = 255;
+
+    @org.hibernate.validator.constraints.Length(max = EMAIL_MAX_LENGTH, message = "{user.email.length_constraint_violation}")
+    private java.lang.String email;
+
     private List<Group> groups = new ArrayList<Group>();
 
     /**
