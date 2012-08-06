@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import com.google.common.collect.Lists;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -56,6 +57,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     private int activeAvailPage = 0;
     private int itemsAvailPerPage = 50;
 
+    private List<PoulpeUser> commonBufferUsers;
+
 	/**
      * Group to be edited
      */
@@ -82,6 +85,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         List<PoulpeUser> users = new LinkedList<PoulpeUser>();
         users.addAll((List<PoulpeUser>) (List<?>) groupToEdit.getUsers());
         setStateAfterEdit(users);
+
+        commonBufferUsers =new ArrayList<PoulpeUser>();
+
     }
 
     // -- Accessors ------------------------------
@@ -169,9 +175,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-
     	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
-    	
         getAvail().clear();
         getAvail().addAll(users);
   	}
@@ -200,6 +204,16 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 		this.itemsAvailPerPage = itemsPerPage;
 	}
 
+    //TODO add docs
+    public List<PoulpeUser> getCommonBufferUsers() {
+        return commonBufferUsers;
+    }
+
+    //TODO add docs
+    public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
+        this.commonBufferUsers = commonBufferUsers;
+    }
+
 	/**
      * Opens edit group members dialog window.
      *
@@ -220,22 +234,33 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
+        if(commonBufferUsers.size()==0){
+            commonBufferUsers=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
+            commonBufferUsers.addAll(getStateAfterEdit());
+        }
+        getStateAfterEdit().clear();
+        getStateAfterEdit().addAll(commonBufferUsers);
     	getAvail().clear();
-        getAvail().addAll(users);
-    	super.addAll();
+        this.activeAvailPage = 0;
+        filterExist();
     }
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
-    	super.remove();
+        getStateAfterEdit().removeAll(getExistSelected());
+        getAvail().addAll(getExistSelected());
+        this.activeAvailPage=0;
+        filterExist();
     }
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void removeAll() {
-    	super.removeAll();
+        getStateAfterEdit().removeAll(getExist());
+        getAvail().addAll(getExist());
+        this.activeAvailPage=0;
+        filterExist();
     }
     
     
