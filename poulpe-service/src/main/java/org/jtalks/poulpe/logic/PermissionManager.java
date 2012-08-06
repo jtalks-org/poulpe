@@ -157,7 +157,8 @@ public class PermissionManager {
     }
 
     /**
-     * Changes the granted permission for group.
+     * Changes the granted permission for group. If group is AnonymousGroup method changes permissions
+     * for Anonymous Sid.
      *
      * @param group      user group
      * @param permission permission
@@ -171,7 +172,7 @@ public class PermissionManager {
                                      boolean granted,
                                      boolean delete) {
         AclBuilders builders = new AclBuilders();
-        if (group.getName().equals(AnonymousGroup.ANONYMOUS_GROUP.getName())) {
+        if (group instanceof AnonymousGroup) {
             List<Permission> jtalksPermissions = new ArrayList<Permission>();
             jtalksPermissions.add(permission);
             List<Sid> sids = new ArrayList<Sid>();
