@@ -23,6 +23,9 @@ import org.jtalks.common.model.entity.Group;
 public final class AnonymousGroup extends Group {
     public static final Group ANONYMOUS_GROUP = new AnonymousGroup("Anonymous Users");
 
+    /**
+     * @param name group name
+     */
     private AnonymousGroup(String name) {
         super(name);
     }
