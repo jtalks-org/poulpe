@@ -167,10 +167,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-  		
-  		List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
+
+    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit(),getActiveAvailPage(), getItemsAvailPerPage());
     	
         getAvail().clear();
         getAvail().addAll(users);
@@ -220,9 +218,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-    	List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups("", list);
+    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
     	getAvail().clear();
         getAvail().addAll(users);
     	super.addAll();
