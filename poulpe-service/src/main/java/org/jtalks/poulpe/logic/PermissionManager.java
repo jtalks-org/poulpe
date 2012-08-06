@@ -157,7 +157,8 @@ public class PermissionManager {
     }
 
     /**
-     * Changes the granted permission for group.
+     * Changes the granted permission for group. If group is AnonymousGroup method changes permissions
+     * for Anonymous Sid.
      *
      * @param group      user group
      * @param permission permission
