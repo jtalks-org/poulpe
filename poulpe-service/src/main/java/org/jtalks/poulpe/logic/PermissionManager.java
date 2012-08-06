@@ -171,7 +171,7 @@ public class PermissionManager {
                                      boolean granted,
                                      boolean delete) {
         AclBuilders builders = new AclBuilders();
-        if (group.getName().equals(AnonymousGroup.ANONYMOUS_GROUP.getName())) {
+        if (group instanceof AnonymousGroup) {
             List<Permission> jtalksPermissions = new ArrayList<Permission>();
             jtalksPermissions.add(permission);
             List<Sid> sids = new ArrayList<Sid>();
