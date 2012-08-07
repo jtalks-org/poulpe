@@ -36,7 +36,6 @@ public class UiPagination {
     public void setActivePage(int activePage) {
         this.activePage = activePage;
         if(this.activePage<0)this.activePage=0;
-        if(this.activePage>this.itemsPerPage)this.activePage=this.itemsPerPage;
     }
 
     /**

@@ -91,12 +91,81 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
     /**
      * Gets group to be edited.
-     *
      * @return the {@link Group} instance
      */
     public Group getGroupToEdit() {
         return groupToEdit;
     }
+    /**
+     * @return number of active page elements available
+     */
+    public int getActiveAvailPage() {
+        return availPagination.getActivePage();
+    }
+
+    /**
+     * @return avail pagination
+     */
+    public UiPagination getAvailPagination() {
+        return availPagination;
+    }
+
+    /**
+     * @param availPagination avail pagination
+     */
+    public void setAvailPagination(UiPagination availPagination) {
+        this.availPagination = availPagination;
+    }
+
+    /**
+     * @param activePage number of active page elements available
+     */
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
+    public void setActiveAvailPage(int activePage) {
+        availPagination.setActivePage(activePage);
+        List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
+        getAvail().clear();
+        getAvail().addAll(users);
+    }
+
+    /**
+     * @return total amount of users matched the searchString
+     */
+    @NotifyChange({AVAIL_TOTAL_SIZE})
+    public int getAvailTotalSize() {
+        int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
+        if(result<0)return 0;
+        return result;
+    }
+
+    /**
+     * @return number of available items per page
+     */
+    public int getItemsAvailPerPage() {
+        return availPagination.getItemsPerPage();
+    }
+
+    /**
+     * @param itemsPerPage number of available items per page
+     */
+    public void setItemsAvailPerPage(int itemsPerPage) {
+        availPagination.setItemsPerPage(itemsPerPage);
+    }
+
+    /**
+     * @return common buffer users
+     */
+    public List<PoulpeUser> getCommonBufferUsers() {
+        return commonBufferUsers;
+    }
+
+    /**
+     * @param commonBufferUsers common buffer users
+     */
+    public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
+        this.commonBufferUsers = commonBufferUsers;
+    }
+
 
     // -- ZK Command bindings --------------------
 
@@ -158,62 +227,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
     	windowManager.open("usergroup.zul");
     }
-    
-    /**
-     * @return number of active page elements available
-     */
-    public int getActiveAvailPage() {
-  		return availPagination.getActivePage();
-  	}
-
-    /**
-     * @param activePage number of active page elements available
-     */
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
-  	public void setActiveAvailPage(int activePage) {
-        availPagination.setActivePage(activePage);
-    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
-        getAvail().clear();
-        getAvail().addAll(users);
-  	}
-    
-    /**
-     * @return total amount of users matched the searchString
-     */
-    @NotifyChange({AVAIL_TOTAL_SIZE})
-    public int getAvailTotalSize() {
-    	int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size(); 
-        if(result<0)return 0;
-    	return result; 
-    }
-    
-    /**
-     * @return number of available items per page
-     */
-    public int getItemsAvailPerPage() {
-		return availPagination.getItemsPerPage();
-	}
-
-    /**
-     * @param itemsPerPage number of available items per page
-     */
-	public void setItemsAvailPerPage(int itemsPerPage) {
-		availPagination.setItemsPerPage(itemsPerPage);
-	}
-
-    /**
-     * @return common buffer users
-     */
-    public List<PoulpeUser> getCommonBufferUsers() {
-        return commonBufferUsers;
-    }
-
-    /**
-     * @param commonBufferUsers common buffer users
-     */
-    public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
-        this.commonBufferUsers = commonBufferUsers;
-    }
 
 	/**
      * Opens edit group members dialog window.
@@ -234,7 +247,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-        if(commonBufferUsers.size()==0){
+        if(commonBufferUsers.size()<userService.countUsernameMatches("")){
             commonBufferUsers=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
             commonBufferUsers.addAll(getStateAfterEdit());
         }
@@ -263,19 +276,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         filterExist();
     }
 
-    /**
-     * @return avail pagination
-     */
-    public UiPagination getAvailPagination() {
-        return availPagination;
-    }
 
-    /**
-    * @param availPagination avail pagination
-    */
-    public void setAvailPagination(UiPagination availPagination) {
-        this.availPagination = availPagination;
-    }
     
     
 }
