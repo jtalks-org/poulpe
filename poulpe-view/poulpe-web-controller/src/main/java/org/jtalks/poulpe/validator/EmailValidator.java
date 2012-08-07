@@ -51,8 +51,8 @@ public class EmailValidator extends AbstractValidator {
 
         //validate by pattern and length
         Set<ConstraintViolation<PoulpeUser>> set = validator.validateProperty(user, "email");
-        for (ConstraintViolation<PoulpeUser> violation : set) {
-            addInvalidMessage(validationContext, violation.getMessage());
+        if (!set.isEmpty()) {
+            addInvalidMessage(validationContext, set.iterator().next().getMessage());
             return;
         }
 
