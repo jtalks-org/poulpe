@@ -132,7 +132,7 @@ public class PermissionManager {
                     permissionsMap.add(permission, getGroup(groupAce), groupAce.isGranting());
                 }
             }
-            for (AccessControlEntry controlEntry : aclUtil.getAclFor(aclUtil.createIdentityFor(entity)).getEntries()) {
+            for (AccessControlEntry controlEntry : aclUtil.getAclFor(entity).getEntries()) {
                 if (controlEntry.getPermission().equals(permission)
                         && controlEntry.getSid().getSidId().equals(UserSid.createAnonymous().getSidId())) {
                     permissionsMap.add(permission, AnonymousGroup.ANONYMOUS_GROUP, controlEntry.isGranting());
