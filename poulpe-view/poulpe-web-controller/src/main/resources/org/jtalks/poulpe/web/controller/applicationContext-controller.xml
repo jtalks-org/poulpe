@@ -104,17 +104,12 @@
   <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
     <constructor-arg index="0" ref="rankService"/>
   </bean>
-  <bean id="availPagination" scope="prototype" class="org.jtalks.poulpe.pages.UiPagination" >
-     <property name="activePage" value="0" />
-     <property name="itemsPerPage" value="50" />
-  </bean>
 
   <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
      <constructor-arg ref="windowManager"/>
      <constructor-arg ref="groupService"/>
      <constructor-arg ref="userService"/>
      <constructor-arg ref="selectedEntity"/>
-     <property name="availPagination" ref="availPagination" />
   </bean>
 
   <bean id="groupsPermissionsVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">

@@ -53,7 +53,14 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     private final UserService userService;
     private final WindowManager windowManager;
 
+    /**
+     *  Avail pagination
+     */
     private UiPagination availPagination;
+
+    /**
+     *  Common buffer users
+     */
     private List<PoulpeUser> commonBufferUsers;
 
 	/**
@@ -84,6 +91,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         setStateAfterEdit(users);
 
         commonBufferUsers =new ArrayList<PoulpeUser>();
+
+        availPagination = new UiPagination();
 
     }
 
