@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.Component;
@@ -146,6 +147,31 @@ public class TransactionalUserService implements UserService {
     @Override
     public PoulpeUser get(long id) {
         return userDao.get(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser getByEmail(String email) throws NotFoundException {
+        PoulpeUser user = userDao.getByEmail(email);
+        if (user == null) {
+            throw new NotFoundException("User with " + email + " was not found");
+        }
+        return user;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean isEmailAlreadyUsed(String email) {
+        try {
+            PoulpeUser user = getByEmail(email);
+        } catch (NotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     /**

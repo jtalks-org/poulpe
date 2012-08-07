@@ -58,6 +58,13 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> getUsersInGroups(List<Group> groups);
 
     /**
+     * Retrieves user by its email
+     * @param email to look up
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
+     */
+    public PoulpeUser getByEmail(String email);
+
+    /**
      * Gets all users which excludes in groups with username like in parameter.
      *
      * @param availableFilterText some word which must be like username

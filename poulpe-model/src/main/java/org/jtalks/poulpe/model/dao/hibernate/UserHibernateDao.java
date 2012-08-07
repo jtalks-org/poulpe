@@ -66,7 +66,6 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         return result.intValue();
     }
 
-
     /**
      * {@inheritDoc}
      */
@@ -74,6 +73,17 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     public PoulpeUser getByUsername(String username) {
         Query query = getSession().getNamedQuery("findUsersByUsername");
         query.setString("username", username);
+
+        return (PoulpeUser) query.uniqueResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser getByEmail(String email) {
+        Query query = getSession().getNamedQuery("findUsersByEmail");
+        query.setString("email", email);
 
         return (PoulpeUser) query.uniqueResult();
     }

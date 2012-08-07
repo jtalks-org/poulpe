@@ -93,6 +93,15 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 		assertReflectionEquals(actual, user);
 	}
 
+    @Test
+    public void testGetByEmail() {
+        PoulpeUser user = TestFixtures.user();
+        saveAndEvict(user);
+
+        User actual = dao.getByEmail(user.getEmail());
+        assertReflectionEquals(actual, user);
+    }
+
 	@Test
 	public void testGetByUsernameIsPercent() {
 		PoulpeUser user = TestFixtures.user("%", "testmail@mail.com");
