@@ -72,14 +72,11 @@ public class PermissionManager {
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeGrants(Entity entity, PermissionChanges changes) {
-        boolean deletePermission;
         for (Group group : changes.getNewlyAddedGroupsAsArray()) {
-            deletePermission = false;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, true, deletePermission);
+            changeGrantsOfGroup(group, changes.getPermission(), entity, true);
         }
         for (Group group : changes.getRemovedGroupsAsArray()) {
-            deletePermission = true;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, true, deletePermission);
+            deleteGrantsOfGroup(group, changes.getPermission(), entity);
         }
     }
 
@@ -93,20 +90,17 @@ public class PermissionManager {
      * @see org.jtalks.poulpe.model.dto.PermissionChanges#getRemovedGroups()
      */
     public void changeRestrictions(Entity entity, PermissionChanges changes) {
-        boolean deletePermission;
         for (Group group : changes.getNewlyAddedGroupsAsArray()) {
-            deletePermission = false;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, false, deletePermission);
+            changeGrantsOfGroup(group, changes.getPermission(), entity, false);
         }
         for (Group group : changes.getRemovedGroupsAsArray()) {
-            deletePermission = true;
-            changeGrantsOfGroup(group, changes.getPermission(), entity, false, deletePermission);
+            deleteGrantsOfGroup(group, changes.getPermission(), entity);
         }
     }
 
     /**
      * @param branch object identity
-     * @return {@link BranchPermissions} for given branch
+     * @return {@link PermissionsMap<BranchPermission>} for given branch
      */
     public PermissionsMap<BranchPermission> getPermissionsMapFor(Branch branch) {
         return getPermissionsMapFor(BranchPermission.getAllAsList(), branch);
@@ -157,40 +151,82 @@ public class PermissionManager {
     }
 
     /**
-     * Changes the granted permission for group.
+     * Changes the granted permission for group. If group is AnonymousGroup method changes permissions
+     * for Anonymous Sid.
      *
      * @param group      user group
      * @param permission permission
      * @param entity     the entity to change permissions to
      * @param granted    permission is granted or restricted
-     * @param delete     needs delete permission
      */
     private void changeGrantsOfGroup(Group group,
                                      JtalksPermission permission,
                                      Entity entity,
-                                     boolean granted,
-                                     boolean delete) {
-        AclBuilders builders = new AclBuilders();
-        if (group.getName().equals(AnonymousGroup.ANONYMOUS_GROUP.getName())) {
-            List<Permission> jtalksPermissions = new ArrayList<Permission>();
-            jtalksPermissions.add(permission);
-            List<Sid> sids = new ArrayList<Sid>();
-            sids.add(UserSid.createAnonymous());
-            if (delete) {
-                aclManager.delete(sids, jtalksPermissions, entity);
-            } else if (granted) {
-                aclManager.grant(sids, jtalksPermissions, entity);
-            } else {
-                aclManager.restrict(sids, jtalksPermissions, entity);
-            }
+                                     boolean granted) {
+        if (group instanceof AnonymousGroup) {
+            changeGrantsOfAnonymousGroup(permission, entity, granted);
         } else {
-            if (delete) {
-                builders.newBuilder(aclManager).delete(permission).from(group).on(entity).flush();
-            } else if (granted) {
+            AclBuilders builders = new AclBuilders();
+            if (granted) {
                 builders.newBuilder(aclManager).grant(permission).to(group).on(entity).flush();
             } else {
                 builders.newBuilder(aclManager).restrict(permission).to(group).on(entity).flush();
             }
         }
+    }
+
+    /**
+     * Changes permissions for Anonymous Sid.
+     *
+     * @param permission permission
+     * @param entity     the entity to change permissions to
+     * @param granted    permission is granted or restricted
+     */
+    private void changeGrantsOfAnonymousGroup(JtalksPermission permission,
+                                              Entity entity,
+                                              boolean granted) {
+        List<Permission> jtalksPermissions = new ArrayList<Permission>();
+        jtalksPermissions.add(permission);
+        List<Sid> sids = new ArrayList<Sid>();
+        sids.add(UserSid.createAnonymous());
+        if (granted) {
+            aclManager.grant(sids, jtalksPermissions, entity);
+        } else {
+            aclManager.restrict(sids, jtalksPermissions, entity);
+        }
+    }
+
+    /**
+     * Deletes the granted permission for group. If group is AnonymousGroup method deletes permissions
+     * for Anonymous Sid.
+     *
+     * @param group      user group
+     * @param permission permission
+     * @param entity     the entity to change permissions to
+     */
+    private void deleteGrantsOfGroup(Group group,
+                                     JtalksPermission permission,
+                                     Entity entity) {
+        if (group instanceof AnonymousGroup) {
+            deleteGrantsOfAnonymousGroup(permission, entity);
+        } else {
+            AclBuilders builders = new AclBuilders();
+            builders.newBuilder(aclManager).delete(permission).from(group).on(entity).flush();
+        }
+    }
+
+    /**
+     * Deletes permissions for Anonymous Sid.
+     *
+     * @param permission permission
+     * @param entity     the entity to change permissions to
+     */
+    private void deleteGrantsOfAnonymousGroup(JtalksPermission permission,
+                                              Entity entity) {
+        List<Permission> jtalksPermissions = new ArrayList<Permission>();
+        jtalksPermissions.add(permission);
+        List<Sid> sids = new ArrayList<Sid>();
+        sids.add(UserSid.createAnonymous());
+        aclManager.delete(sids, jtalksPermissions, entity);
     }
 }

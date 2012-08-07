@@ -16,7 +16,17 @@ package org.jtalks.poulpe.model.dto;
 
 import org.jtalks.common.model.entity.Group;
 
-public class AnonymousGroup {
-    // todo create enum or other solution for Anonymous Users group
-    public static final Group ANONYMOUS_GROUP = new Group("Anonymous Users");
+/**
+ * Represents Anonymous Group for permissions granting by UI. This class contains only {@code ANONYMOUS_GROUP} field.
+ * Application doesn't store {@code ANONYMOUS_GROUP} in data base.
+ */
+public final class AnonymousGroup extends Group {
+    public static final Group ANONYMOUS_GROUP = new AnonymousGroup("Anonymous Users");
+
+    /**
+     * @param name group name
+     */
+    private AnonymousGroup(String name) {
+        super(name);
+    }
 }

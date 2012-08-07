@@ -33,6 +33,7 @@ import java.util.List;
  *
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
+ * @author Mikhail Zaitsev
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
@@ -110,6 +111,30 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         query.setParameterList("bannedGroups", groupsIds, StandardBasicTypes.BIG_INTEGER);
         paginate.addPagination(query);
         //noinspection unchecked
+        return query.list();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate){
+        availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
+        ArrayList<Long> ids = new ArrayList<Long>();
+        for(PoulpeUser b: listUsers)
+            ids.add(b.getId());
+
+        Query query=null;
+        if(ids.size()==0){
+            query = getSession().getNamedQuery("findUsersByLikeUsername");
+        }else{
+            query = getSession().getNamedQuery("findUsersByLikeUsernameNotInList");
+            query.setParameterList("listUsers", ids);
+        }
+
+        query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
+        paginate.addPagination(query);
+
         return query.list();
     }
 

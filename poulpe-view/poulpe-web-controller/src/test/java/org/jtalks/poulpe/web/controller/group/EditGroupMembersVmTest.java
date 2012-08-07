@@ -110,12 +110,12 @@ public class EditGroupMembersVmTest {
 
     @Test
     public void testRemove() {
-//        givenUsersSelectedInView();
-//
-//        viewModel.remove();
-//
-//        assertFalse(viewModel.getExist().containsAll(usersSelectedInExist));
-//        assertTrue(viewModel.getAvail().containsAll(usersSelectedInExist));
+       givenUsersSelectedInView();
+
+       viewModel.remove();
+
+        assertFalse(viewModel.getExist().containsAll(usersSelectedInExist));
+        assertTrue(viewModel.getAvail().containsAll(usersSelectedInExist));
     }
 
     @Test

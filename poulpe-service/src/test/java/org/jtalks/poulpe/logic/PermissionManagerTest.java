@@ -61,6 +61,18 @@ import static org.testng.Assert.assertTrue;
  * @author Vyacheslav Zhivaev
  */
 public class PermissionManagerTest {
+    @Mock
+    GroupDao groupDao;
+    @Mock
+    AclManager aclManager;
+    @Mock
+    AclUtil aclUtil;
+
+    PermissionManager manager;
+
+    List<Group> groups;
+    List<GroupAce> groupAces;
+    List<JtalksPermission> permissions;
 
     @Deprecated
     public static Group randomGroup(long id) {
@@ -103,23 +115,6 @@ public class PermissionManagerTest {
 
     }
 
-    @Mock
-    GroupDao groupDao;
-    @Mock
-    AclManager aclManager;
-    @Mock
-    AclUtil aclUtil;
-
-    PermissionManager manager;
-
-    List<Group> groups;
-    List<GroupAce> groupAces;
-    List<JtalksPermission> permissions;
-
-    private Long targetId = 1L;
-    private String targetType = "BRANCH";
-    private ObjectIdentityImpl objectIdentity;
-
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
@@ -128,7 +123,9 @@ public class PermissionManagerTest {
         permissions = Lists.newArrayList();
         groupAces = Lists.newArrayList();
 
-        objectIdentity = new ObjectIdentityImpl(targetType, targetId);
+        Long targetId = 1L;
+        String targetType = "BRANCH";
+        ObjectIdentityImpl objectIdentity = new ObjectIdentityImpl(targetType, targetId);
         when(aclUtil.createIdentityFor(any(Entity.class))).thenReturn(objectIdentity);
         ExtendedMutableAcl mutableAcl = mock(ExtendedMutableAcl.class);
         List<AccessControlEntry> controlEntries = new ArrayList<AccessControlEntry>();

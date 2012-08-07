@@ -30,6 +30,7 @@ import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.filter;
@@ -41,6 +42,7 @@ import static org.hamcrest.text.StringContains.containsString;
  * View-Model for 'Edit Members of group'.
  *
  * @author Vyacheslav Zhivaev
+ * @author Mikhail Zaitsev
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 	
@@ -54,6 +56,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     
     private int activeAvailPage = 0;
     private int itemsAvailPerPage = 50;
+
+    private List<PoulpeUser> commonBufferUsers;
 
 	/**
      * Group to be edited
@@ -78,8 +82,12 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         this.groupService = groupService;
         this.userService = userService;
 
-        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>) groupToEdit.getUsers();
+        List<PoulpeUser> users = new LinkedList<PoulpeUser>();
+        users.addAll((List<PoulpeUser>) (List<?>) groupToEdit.getUsers());
         setStateAfterEdit(users);
+
+        commonBufferUsers =new ArrayList<PoulpeUser>();
+
     }
 
     // -- Accessors ------------------------------
@@ -167,11 +175,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
   		this.activeAvailPage = activePage;
-  		
-  		List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups(getAvailFilterTxt(),list,getActiveAvailPage(), getItemsAvailPerPage());
-    	
+    	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
         getAvail().clear();
         getAvail().addAll(users);
   	}
@@ -200,6 +204,20 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 		this.itemsAvailPerPage = itemsPerPage;
 	}
 
+    /**
+     * @return common buffer users
+     */
+    public List<PoulpeUser> getCommonBufferUsers() {
+        return commonBufferUsers;
+    }
+
+    /**
+     * @param commonBufferUsers common buffer users
+     */
+    public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
+        this.commonBufferUsers = commonBufferUsers;
+    }
+
 	/**
      * Opens edit group members dialog window.
      *
@@ -220,24 +238,33 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @Command
     @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-    	List<Group> list= new ArrayList<Group>();
-    	list.add(groupToEdit);
-    	List<PoulpeUser> users=userService.findUsersNotInGroups("", list);
+        if(commonBufferUsers.size()==0){
+            commonBufferUsers=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
+            commonBufferUsers.addAll(getStateAfterEdit());
+        }
+        getStateAfterEdit().clear();
+        getStateAfterEdit().addAll(commonBufferUsers);
     	getAvail().clear();
-        getAvail().addAll(users);
-    	super.addAll();
+        this.activeAvailPage = 0;
+        filterExist();
     }
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
-    	super.remove();
+        getStateAfterEdit().removeAll(getExistSelected());
+        getAvail().addAll(getExistSelected());
+        this.activeAvailPage=0;
+        filterExist();
     }
     @Override
     @Command
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void removeAll() {
-    	super.removeAll();
+        getStateAfterEdit().removeAll(getExist());
+        getAvail().addAll(getExist());
+        this.activeAvailPage=0;
+        filterExist();
     }
     
     
