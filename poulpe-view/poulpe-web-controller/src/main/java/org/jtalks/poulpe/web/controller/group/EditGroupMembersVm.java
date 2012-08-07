@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.UiPagination;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -26,7 +26,6 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -53,9 +52,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
-    
-    private int activeAvailPage = 0;
-    private int itemsAvailPerPage = 50;
+
+    private UiPagination availPagination;
 
     private List<PoulpeUser> commonBufferUsers;
 
@@ -166,7 +164,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * @return number of active page elements available
      */
     public int getActiveAvailPage() {
-  		return activeAvailPage;
+  		return availPagination.getActivePage();
   	}
 
     /**
@@ -174,7 +172,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
   	public void setActiveAvailPage(int activePage) {
-  		this.activeAvailPage = activePage;
+        availPagination.setActivePage(activePage);
     	List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
         getAvail().clear();
         getAvail().addAll(users);
@@ -194,14 +192,14 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * @return number of available items per page
      */
     public int getItemsAvailPerPage() {
-		return itemsAvailPerPage;
+		return availPagination.getItemsPerPage();
 	}
 
     /**
      * @param itemsPerPage number of available items per page
      */
 	public void setItemsAvailPerPage(int itemsPerPage) {
-		this.itemsAvailPerPage = itemsPerPage;
+		availPagination.setItemsPerPage(itemsPerPage);
 	}
 
     /**
@@ -245,7 +243,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         getStateAfterEdit().clear();
         getStateAfterEdit().addAll(commonBufferUsers);
     	getAvail().clear();
-        this.activeAvailPage = 0;
+        availPagination.setActivePage(0);
         filterExist();
     }
     @Override
@@ -254,7 +252,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public void remove() {
         getStateAfterEdit().removeAll(getExistSelected());
         getAvail().addAll(getExistSelected());
-        this.activeAvailPage=0;
+        availPagination.setActivePage(0);
         filterExist();
     }
     @Override
@@ -263,8 +261,16 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     public void removeAll() {
         getStateAfterEdit().removeAll(getExist());
         getAvail().addAll(getExist());
-        this.activeAvailPage=0;
+        availPagination.setActivePage(0);
         filterExist();
+    }
+
+    public UiPagination getAvailPagination() {
+        return availPagination;
+    }
+
+    public void setAvailPagination(UiPagination availPagination) {
+        this.availPagination = availPagination;
     }
     
     
