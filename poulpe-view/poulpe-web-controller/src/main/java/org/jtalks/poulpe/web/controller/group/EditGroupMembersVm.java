@@ -54,7 +54,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     private final WindowManager windowManager;
 
     private UiPagination availPagination;
-
     private List<PoulpeUser> commonBufferUsers;
 
 	/**
@@ -218,7 +217,6 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
 	/**
      * Opens edit group members dialog window.
-     *
      * @param windowManager the window manager instance
      */
     public static void showDialog(WindowManager windowManager) {
@@ -265,10 +263,16 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         filterExist();
     }
 
+    /**
+     * @return avail pagination
+     */
     public UiPagination getAvailPagination() {
         return availPagination;
     }
 
+    /**
+    * @param availPagination avail pagination
+    */
     public void setAvailPagination(UiPagination availPagination) {
         this.availPagination = availPagination;
     }

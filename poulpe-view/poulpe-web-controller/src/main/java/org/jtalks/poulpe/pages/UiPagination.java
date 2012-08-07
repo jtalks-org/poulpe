@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.pages;
 
 /**
+ * Provides transition between pages numbered.
  * @author Mikhail Zaitsev.
  */
 public class UiPagination {
@@ -22,25 +23,42 @@ public class UiPagination {
     private int activePage = 0;
     private int itemsPerPage = 50;
 
+    /**
+     * @return number of active pages
+     */
     public int getActivePage() {
         return activePage;
     }
 
+    /**
+     * @param activePage number of active pages
+     */
     public void setActivePage(int activePage) {
         this.activePage = activePage;
         if(this.activePage<0)this.activePage=0;
         if(this.activePage>this.itemsPerPage)this.activePage=this.itemsPerPage;
     }
 
+    /**
+     * @return the number of items per page
+     */
     public int getItemsPerPage() {
         return itemsPerPage;
     }
 
+    /**
+     * @param itemsPerPage the number of items per page
+     */
     public void setItemsPerPage(int itemsPerPage) {
         this.itemsPerPage = itemsPerPage;
         if(this.itemsPerPage<0)this.itemsPerPage = 0;
     }
 
+    /**
+     * Returns the total amount of pages
+     * @param nItems number of total users
+     * @return the total amount of pages
+     */
     public int getTotalAmountOfPages(int nItems) {
         if(itemsPerPage<=0)return 0;
         if((itemsPerPage%2)>0){
