@@ -95,7 +95,7 @@ public class BranchGroupMapTest {
         }
     }
 
-    @Test(enabled = false)
+    @Test
     public void setModeratingGroupForAllBranchesTest() throws NoSuchFieldException, IllegalAccessException {
         branchGroupMap.setSelectedGroupForAllBranches(groupToSet);
         PoulpeBranch firstBranch = branchesCollection.get(0).getCurrentBranch();
