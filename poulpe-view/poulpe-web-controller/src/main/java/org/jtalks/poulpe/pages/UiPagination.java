@@ -60,7 +60,7 @@ public class UiPagination {
      */
     public int getTotalAmountOfPages(int nItems) {
         if(itemsPerPage<=0)return 0;
-        if((itemsPerPage%2)>0){
+        if((nItems%2)>0){
             return (nItems/itemsPerPage)+1;
         }else{
             return (nItems/itemsPerPage);
