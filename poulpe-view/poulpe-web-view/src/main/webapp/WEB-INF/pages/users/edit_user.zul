@@ -24,7 +24,7 @@
           </row>
           <row>
             <label value="${labels.users.label.email}" />
-            <textbox id="emailBox" value="@bind(fx.email) @validator(vm.emailValidator)"
+            <textbox id="emailBox" value="@bind(fx.email) @validator(vm.emailValidator, user=vm.selectedUser)"
               width="100%" errorMessage="@load(usersMsgs[emailBox])" />
           </row>
           <!--<row>-->

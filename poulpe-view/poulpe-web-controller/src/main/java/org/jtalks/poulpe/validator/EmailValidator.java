@@ -40,14 +40,17 @@ public class EmailValidator extends AbstractValidator {
     private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
     private final Validator validator = factory.getValidator();
 
+    /**
+     * @param userService to check by validator: is email already used?
+     */
     public EmailValidator(UserService userService) {
         this.userService = userService;
     }
 
     @Override
-    public void validate(ValidationContext validationContext) throws WrongValueException {
+    public void validate(ValidationContext validationContext) {
         String email = (String) validationContext.getProperty().getValue();
-        PoulpeUser user = new PoulpeUser();
+        PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
         user.setEmail(email);
 
         //validate by pattern and length
@@ -58,16 +61,14 @@ public class EmailValidator extends AbstractValidator {
         }
 
         //uniqueness validation
-        if (userService.isEmailAlreadyUsed(email)) {
-            try {
-                if (!userService.getByEmail(email).equals(user)) {
-                    //this "if" is in case user email was A, than in edit_user it was changed to B and than to A again
-                    addInvalidMessage(validationContext, Labels.getLabel("err.users.edit.dublicate_email"));
-                }
-            } catch (NotFoundException e) {
-                //it should not happend. Because email already used(see root if).
-                e.printStackTrace();
+        try {
+            if (userService.isEmailAlreadyUsed(email) && !(userService.getByEmail(email).getId() == user.getId()) ) {
+                //this "if" is in case user email was A, than in edit_user it was changed to B and than to A again
+                addInvalidMessage(validationContext, Labels.getLabel("err.users.edit.dublicate_email"));
             }
+        } catch (NotFoundException e) {
+            //it should not happend. Because email already used(see root if).
+            //but if it happend - then user with such email does not exist, so validation will successfully ended
         }
     }
 
