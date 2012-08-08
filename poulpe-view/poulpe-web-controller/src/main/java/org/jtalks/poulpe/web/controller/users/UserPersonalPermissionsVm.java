@@ -4,14 +4,12 @@ import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.ProfilePermission;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.web.controller.zkmacro.EntityPermissionsBlock;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -32,10 +30,10 @@ public class UserPersonalPermissionsVm {
         blocks.clear();
         List<PermissionManagementBlock> blocksIn = Lists.newArrayList();
         List<ProfilePermission> permissions = ProfilePermission.getAllAsList();
-        PermissionsMap<ProfilePermission> permissionsMap = new PermissionsMap<ProfilePermission>(permissions);
+        GroupsPermissions<ProfilePermission> groupsPermissions = new GroupsPermissions<ProfilePermission>(permissions);
 
         for (ProfilePermission permission : permissions) {
-            blocksIn.add(new PermissionManagementBlock(permission, permissionsMap, Labels
+            blocksIn.add(new PermissionManagementBlock(permission, groupsPermissions, Labels
                     .getLabel("permissions.allow_label"), Labels.getLabel("permissions.restrict_label")));
         }
 

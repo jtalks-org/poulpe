@@ -18,7 +18,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 
 /**
  * The page of editing branch permission consists of several blocks, each block represents a single permission and the
@@ -81,20 +81,20 @@ public final class PermissionManagementBlock {
     }
 
     /**
-     * Creates a block with permission and restricted/allowed groups which gets from specified {@link PermissionsMap}.
+     * Creates a block with permission and restricted/allowed groups which gets from specified {@link org.jtalks.poulpe.model.dto.GroupsPermissions}.
      * Rows of restricted/allowed groups will be constructed automatically with defined {@code allowedRowLabel} and
      * {@code restrictedRowLabel}.
      * 
      * @param permission the permission which this block represents
-     * @param permissionsMap the permissions map for building internal state
+     * @param groupsPermissions the permissions map for building internal state
      * @param allowedRowLabel the label for Allow row
      * @param restrictedRowLabel the label for Restrict row
      */
     public <T extends JtalksPermission> PermissionManagementBlock(T permission,
-            @Nonnull PermissionsMap<T> permissionsMap, String allowedRowLabel, String restrictedRowLabel) {
+            @Nonnull GroupsPermissions<T> groupsPermissions, String allowedRowLabel, String restrictedRowLabel) {
         this.permission = permission;
-        this.allowRow = new PermissionRow(allowedRowLabel, permissionsMap.getAllowed(permission));
-        this.restrictRow = new PermissionRow(restrictedRowLabel, permissionsMap.getRestricted(permission));
+        this.allowRow = new PermissionRow(allowedRowLabel, groupsPermissions.getAllowed(permission));
+        this.restrictRow = new PermissionRow(restrictedRowLabel, groupsPermissions.getRestricted(permission));
     }
 
     /**

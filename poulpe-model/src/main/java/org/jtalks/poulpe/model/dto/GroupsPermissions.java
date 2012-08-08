@@ -30,34 +30,34 @@ import java.util.concurrent.ConcurrentSkipListMap;
  *
  * @author Vyacheslav Zhivaev
  */
-public class PermissionsMap<T extends JtalksPermission> {
+public class GroupsPermissions<T extends JtalksPermission> {
 
     private final ConcurrentMap<T, GroupAccessList> accessListMap = new ConcurrentSkipListMap<T, GroupAccessList>();
 
     /**
-     * Constructs {@link PermissionsMap} with empty internal state. Use add* methods to fill this map.
+     * Constructs {@link GroupsPermissions} with empty internal state. Use add* methods to fill this map.
      */
-    public PermissionsMap() {
+    public GroupsPermissions() {
         // NOOP
     }
 
     /**
-     * Constructs {@link PermissionsMap} with given list of permissions and empty restrict\allow data.
+     * Constructs {@link GroupsPermissions} with given list of permissions and empty restrict\allow data.
      *
      * @param permissions to be added to the access lists
      */
-    public PermissionsMap(List<T> permissions) {
+    public GroupsPermissions(List<T> permissions) {
         for (T permission : permissions) {
             accessListMap.put(permission, new GroupAccessList());
         }
     }
 
     /**
-     * Constructs {@link PermissionsMap} with predefined values to be added to the access lists.
+     * Constructs {@link GroupsPermissions} with predefined values to be added to the access lists.
      *
      * @param accessLists values to initialize this container
      */
-    public PermissionsMap(Map<T, GroupAccessList> accessLists) {
+    public GroupsPermissions(Map<T, GroupAccessList> accessLists) {
         accessListMap.putAll(accessLists);
     }
 
@@ -69,7 +69,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param toRestrict group to restrict
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> add(T permission, Group toAllow, Group toRestrict) {
+    public GroupsPermissions<T> add(T permission, Group toAllow, Group toRestrict) {
         accessListMap.putIfAbsent(permission, new GroupAccessList());
         accessListMap.get(permission).addAllowed(toAllow).addRestricted(toRestrict);
         return this;
@@ -82,7 +82,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param group      the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> addAllowed(T permission, Group group) {
+    public GroupsPermissions<T> addAllowed(T permission, Group group) {
         return add(permission, group, null);
     }
 
@@ -93,7 +93,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param group      the group for which permission added
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> addRestricted(T permission, Group group) {
+    public GroupsPermissions<T> addRestricted(T permission, Group group) {
         return add(permission, null, group);
     }
 
@@ -105,7 +105,7 @@ public class PermissionsMap<T extends JtalksPermission> {
      * @param allow      {@code true} if allowance is needed, {@code false} otherwise
      * @return {@code this} instance for providing fluent interface
      */
-    public PermissionsMap<T> add(T permission, Group group, boolean allow) {
+    public GroupsPermissions<T> add(T permission, Group group, boolean allow) {
         return (allow) ? addAllowed(permission, group) : addRestricted(permission, group);
     }
 

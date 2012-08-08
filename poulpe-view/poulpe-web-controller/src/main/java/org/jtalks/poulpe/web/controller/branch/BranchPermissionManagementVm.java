@@ -18,8 +18,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -124,9 +124,9 @@ public class BranchPermissionManagementVm {
     public void initDataForView() {
         blocks.clear();
         this.branch = (PoulpeBranch) selectedEntity.getEntity();
-        PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
-        for (BranchPermission permission : permissionsMap.getPermissions()) {
-            blocks.add(new PermissionManagementBlock(permission, permissionsMap,
+        GroupsPermissions<BranchPermission> groupsPermissions = branchService.getPermissionsFor(branch);
+        for (BranchPermission permission : groupsPermissions.getPermissions()) {
+            blocks.add(new PermissionManagementBlock(permission, groupsPermissions,
                     zkHelper.getLabel("permissions.allow_label"), zkHelper.getLabel("permissions.restrict_label")));
         }
     }

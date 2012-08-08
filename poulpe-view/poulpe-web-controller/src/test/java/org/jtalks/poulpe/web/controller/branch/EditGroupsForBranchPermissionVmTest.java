@@ -28,7 +28,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
@@ -68,16 +68,16 @@ public class EditGroupsForBranchPermissionVmTest {
     }
 
     @Test(dataProvider = "dataProvider")
-    public void cancel(PermissionForEntity permissionForEntity, PermissionsMap<BranchPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+    public void cancel(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
         viewModel.cancel();
         vefiryNothingChanges();
     }
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<BranchPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+            GroupsPermissions<BranchPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.removeAll();
         viewModel.save();
@@ -89,17 +89,17 @@ public class EditGroupsForBranchPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-                                       PermissionsMap<BranchPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+                                       GroupsPermissions<BranchPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.save();
 
         vefiryNothingChanges();
     }
 
-    public void initTest(PermissionForEntity permissionForEntity, PermissionsMap<BranchPermission> permissionsMap) {
+    public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
         when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
-        when(branchService.getPermissionsFor(any(PoulpeBranch.class))).thenReturn(permissionsMap);
+        when(branchService.getPermissionsFor(any(PoulpeBranch.class))).thenReturn(groupsPermissions);
 
         viewModel = new EditGroupsForBranchPermissionVm(windowManager, branchService, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
@@ -111,7 +111,7 @@ public class EditGroupsForBranchPermissionVmTest {
     public Object[][] dataProvider() {
         // TODO: probably copy-paste
         List<PermissionForEntity> permissionsForEntity = Lists.newArrayList();
-        PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>(
+        GroupsPermissions<BranchPermission> groupsPermissions = new GroupsPermissions<BranchPermission>(
                 BranchPermission.getAllAsList());
 
         // target entity (PoulpeBranch)
@@ -126,7 +126,7 @@ public class EditGroupsForBranchPermissionVmTest {
             permissionsForEntity.add(new PermissionForEntity(target, false, branchPermissions[i]));
 
             for (int j = 0, countj = RandomUtils.nextInt(4) + 2; j < countj; j++) {
-                permissionsMap.add(branchPermissions[i], TestFixtures.group(), TestFixtures.group());
+                groupsPermissions.add(branchPermissions[i], TestFixtures.group(), TestFixtures.group());
             }
         }
 
@@ -136,7 +136,7 @@ public class EditGroupsForBranchPermissionVmTest {
 
         for (int i = 0; i < permissionsCount; i++) {
             result[i][0] = permissionsForEntity.get(i);
-            result[i][1] = permissionsMap;
+            result[i][1] = groupsPermissions;
         }
 
         return result;

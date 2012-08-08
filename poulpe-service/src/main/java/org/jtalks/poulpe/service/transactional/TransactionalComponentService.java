@@ -20,7 +20,7 @@ import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -96,7 +96,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * {@inheritDoc}
      */
     @Override
-    public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
+    public GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component) {
         return permissionManager.getPermissionsMapFor(component);
     }
 

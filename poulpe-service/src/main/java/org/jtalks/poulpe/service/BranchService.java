@@ -18,8 +18,8 @@ import java.util.List;
 
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 /**
@@ -65,7 +65,7 @@ public interface BranchService extends EntityService<PoulpeBranch> {
      * @param branch branch which will be returned access list
      * @return access list
      */
-    PermissionsMap<BranchPermission> getPermissionsFor(PoulpeBranch branch);
+    GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch);
 
     /**
      * Change grants for branch.
