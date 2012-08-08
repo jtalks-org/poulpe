@@ -17,59 +17,71 @@ package org.jtalks.poulpe.validator;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zk.ui.WrongValueException;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.validation.ValidatorFactory;
 import java.util.Set;
 
 /**
- * ZK's validator of User's email.
- * It checks email's uniqueness, length, and validity.
+ * ZK's validator of User's email. It checks email's uniqueness, length, and validity. It wasn't possible to set up a
+ * Bean Validator to check mail for pattern because we had to check for uniqueness and there is no way you can pass
+ * several validators to ZK via {@code @validator()}.
  *
  * @author Nickolay Polyarniy
  */
 public class EmailValidator extends AbstractValidator {
-
+    private static final String DUPLICATED_MAIL_MESSAGE = "err.users.edit.dublicate_email";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private final UserService userService;
-    private final ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
-    private final Validator validator = factory.getValidator();
 
     /**
-     * @param userService to check by validator: is email already used?
+     * @param userService to have access to database and check whether a mail already exists in DB
      */
     public EmailValidator(UserService userService) {
         this.userService = userService;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void validate(ValidationContext validationContext) {
         String email = (String) validationContext.getProperty().getValue();
         PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
         user.setEmail(email);
-
-        //validate by pattern and length
-        Set<ConstraintViolation<PoulpeUser>> set = validator.validateProperty(user, "email");
-        if (!set.isEmpty()) {
-            addInvalidMessage(validationContext, set.iterator().next().getMessage());
+        if (beanValidationFails(validationContext, user)) {
             return;
         }
+        checkForUniqueness(validationContext, email, user);
+    }
 
-        //uniqueness validation
+    private void checkForUniqueness(ValidationContext validationContext, String email, PoulpeUser user) {
         try {
-            if (userService.isEmailAlreadyUsed(email) && !(userService.getByEmail(email).getId() == user.getId()) ) {
+            if (userService.isEmailAlreadyUsed(email) && !(userService.getByEmail(email).getId() == user.getId())) {
                 //this "if" is in case user email was A, than in edit_user it was changed to B and than to A again
-                addInvalidMessage(validationContext, Labels.getLabel("err.users.edit.dublicate_email"));
+                addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_MAIL_MESSAGE));
             }
         } catch (NotFoundException e) {
             //it should not happend. Because email already used(see root if).
             //but if it happend - then user with such email does not exist, so validation will successfully ended
+            logger.warn("Hibernate threw exception while it shouldn't have been.", e);
         }
+    }
+
+    private boolean beanValidationFails(ValidationContext validationContext, PoulpeUser user) {
+        Set<ConstraintViolation<PoulpeUser>> set = validator.validateProperty(user, "email");
+        if (!set.isEmpty()) {
+            addInvalidMessage(validationContext, set.iterator().next().getMessage());
+            return true;
+        }
+        return false;
     }
 
 }
