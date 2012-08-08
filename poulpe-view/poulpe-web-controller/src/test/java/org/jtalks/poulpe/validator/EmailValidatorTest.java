@@ -99,7 +99,6 @@ public class EmailValidatorTest {
     private void storeUsersInMockedDb(PoulpeUser... users) throws Exception {
         for (PoulpeUser user : users) {
             when(userService.getByEmail(user.getEmail())).thenReturn(user);
-            when(userService.isEmailAlreadyUsed(user.getEmail())).thenReturn(true);
         }
     }
 
