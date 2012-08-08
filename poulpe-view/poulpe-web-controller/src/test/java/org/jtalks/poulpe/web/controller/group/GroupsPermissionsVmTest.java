@@ -25,8 +25,8 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -65,9 +65,9 @@ public class GroupsPermissionsVmTest {
 
     @Test(dataProvider = "dataProviderForGetBlocks")
     public void testGetBlocks(List<GeneralPermission> permissions, List<Component> components,
-            PermissionsMap<GeneralPermission> permissionsMap) {
+            GroupsPermissions<GeneralPermission> groupsPermissions) {
         when(componentService.getAll()).thenReturn(components);
-        when(componentService.getPermissionsMapFor(any(Component.class))).thenReturn(permissionsMap);
+        when(componentService.getPermissionsMapFor(any(Component.class))).thenReturn(groupsPermissions);
 
         viewModel = new GroupsPermissionsVm(windowManager, componentService, selectedEntity);
         List<EntityPermissionsBlock> blocks = viewModel.getBlocks();
@@ -115,8 +115,8 @@ public class GroupsPermissionsVmTest {
         List<Component> components = TestFixtures.allComponents();
 
         return new Object[][] {
-                { Lists.newArrayList(), Lists.newArrayList(), new PermissionsMap<GeneralPermission>() },
-                { permissions, components, new PermissionsMap<GeneralPermission>(permissions) },
-                { BranchPermission.getAllAsList(), components, new PermissionsMap<GeneralPermission>() }, };
+                { Lists.newArrayList(), Lists.newArrayList(), new GroupsPermissions<GeneralPermission>() },
+                { permissions, components, new GroupsPermissions<GeneralPermission>(permissions) },
+                { BranchPermission.getAllAsList(), components, new GroupsPermissions<GeneralPermission>() }, };
     }
 }

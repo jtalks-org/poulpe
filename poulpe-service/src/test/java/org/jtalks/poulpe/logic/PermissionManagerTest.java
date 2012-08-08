@@ -30,8 +30,8 @@ import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.common.security.acl.sids.UserSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.AnonymousGroup;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -168,12 +168,12 @@ public class PermissionManagerTest {
         PoulpeBranch branch = TestFixtures.branchWithId();
         givenPermissions(branch, BranchPermission.values());
 
-        PermissionsMap<BranchPermission> permissionsMap = manager.getPermissionsMapFor(branch);
-        verify(aclManager).getGroupPermissionsOn(eq(branch));
-        verify(aclUtil, times(BranchPermission.values().length)).getAclFor(eq(branch));
-        assertTrue(permissionsMap.getPermissions().containsAll(permissions));
+        GroupsPermissions<BranchPermission> groupsPermissions = manager.getPermissionsMapFor(branch);
+        verify(aclManager).getGroupPermissionsOn(branch);
+        verify(aclUtil, times(BranchPermission.values().length)).getAclFor(branch);
+        assertTrue(groupsPermissions.getPermissions().containsAll(permissions));
         for (GroupAce groupAce : groupAces) {
-            List<Group> groups = permissionsMap.get(groupAce.getBranchPermission(), groupAce.isGranting());
+            List<Group> groups = groupsPermissions.get(groupAce.getBranchPermission(), groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
             assertTrue(groups.contains(AnonymousGroup.ANONYMOUS_GROUP));
         }
@@ -184,11 +184,11 @@ public class PermissionManagerTest {
         Component component = TestFixtures.randomComponentWithId();
         givenPermissions(component, GeneralPermission.values());
 
-        PermissionsMap<GeneralPermission> permissionsMap = manager.getPermissionsMapFor(component);
+        GroupsPermissions<GeneralPermission> groupsPermissions = manager.getPermissionsMapFor(component);
         verify(aclManager).getGroupPermissionsOn(eq(component));
-        assertTrue(permissionsMap.getPermissions().containsAll(permissions));
+        assertTrue(groupsPermissions.getPermissions().containsAll(permissions));
         for (GroupAce groupAce : groupAces) {
-            List<Group> groups = permissionsMap.get(GeneralPermission.findByMask(groupAce.getBranchPermissionMask()),
+            List<Group> groups = groupsPermissions.get(GeneralPermission.findByMask(groupAce.getBranchPermissionMask()),
                     groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }
@@ -234,12 +234,9 @@ public class PermissionManagerTest {
     public void testDeleteGrantsOfAnonymousGroup() throws Exception {
         PoulpeBranch branch = TestFixtures.branch();
         PermissionChanges changes = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
-        List<Group> groupList = new ArrayList<Group>();
-        groupList.add(AnonymousGroup.ANONYMOUS_GROUP);
-        changes.addRemovedGroups(groupList);
+        changes.addRemovedGroups(Lists.newArrayList(AnonymousGroup.ANONYMOUS_GROUP));
         manager.changeGrants(branch, changes);
-        List<Sid> sids = new ArrayList<Sid>();
-        sids.add(UserSid.createAnonymous());
+        List<Sid> sids = Lists.<Sid>newArrayList(UserSid.createAnonymous());
 
         verify(aclManager, times(changes.getRemovedGroups().size())).
                 delete(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
@@ -259,14 +256,6 @@ public class PermissionManagerTest {
     @DataProvider
     public Object[][] branches() {
         return new Object[][]{{TestFixtures.branch()}};
-    }
-
-    private List<UserGroupSid> getNewlyAddedSids(PermissionChanges accessChanges) {
-        return UserGroupSid.create(accessChanges.getNewlyAddedGroupsAsArray());
-    }
-
-    private List<UserGroupSid> getRemovedSids(PermissionChanges accessChanges) {
-        return UserGroupSid.create(accessChanges.getRemovedGroupsAsArray());
     }
 
     private List<Permission> listFromArray(Permission... permissions) {

@@ -101,6 +101,14 @@ public class TransactionalUserServiceTest {
     }
 
     @Test
+    public void TestFindUsersNotInList(){
+        List<PoulpeUser> users = new ArrayList<PoulpeUser>();
+        users.add(user());
+        userService.findUsersNotInList(searchString,users);
+        verify(userDao).findUsersNotInList(searchString,users, Pages.NONE);
+    }
+
+    @Test
     public void testGetAllBannedUsers() {
         List<PoulpeUser> bannedUsers = userService.getAllBannedUsers();
         assertEquals(bannedUsers, new ArrayList<PoulpeUser>());

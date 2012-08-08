@@ -28,7 +28,7 @@ import org.jtalks.common.security.acl.sids.UserSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.AnonymousGroup;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.Component;
 import org.springframework.security.acls.model.AccessControlEntry;
 import org.springframework.security.acls.model.Permission;
@@ -100,46 +100,46 @@ public class PermissionManager {
 
     /**
      * @param branch object identity
-     * @return {@link PermissionsMap<BranchPermission>} for given branch
+     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions <BranchPermission>} for given branch
      */
-    public PermissionsMap<BranchPermission> getPermissionsMapFor(Branch branch) {
+    public GroupsPermissions<BranchPermission> getPermissionsMapFor(Branch branch) {
         return getPermissionsMapFor(BranchPermission.getAllAsList(), branch);
     }
 
     /**
-     * Gets {@link PermissionsMap} for provided {@link Component}.
+     * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for provided {@link Component}.
      *
      * @param component the component to obtain PermissionsMap for
-     * @return {@link PermissionsMap} for {@link Component}
+     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for {@link Component}
      */
-    public PermissionsMap<GeneralPermission> getPermissionsMapFor(Component component) {
+    public GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component) {
         return getPermissionsMapFor(GeneralPermission.getAllAsList(), component);
     }
 
     /**
-     * Gets {@link PermissionsMap} for provided {@link Entity}.
+     * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for provided {@link Entity}.
      *
      * @param permissions the list of permissions to get
      * @param entity      the entity to get for
-     * @return {@link PermissionsMap} for provided {@link Entity}
+     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for provided {@link Entity}
      */
-    public <T extends JtalksPermission> PermissionsMap<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
-        PermissionsMap<T> permissionsMap = new PermissionsMap<T>(permissions);
+    public <T extends JtalksPermission> GroupsPermissions<T> getPermissionsMapFor(List<T> permissions, Entity entity) {
+        GroupsPermissions<T> groupsPermissions = new GroupsPermissions<T>(permissions);
         List<GroupAce> groupAces = aclManager.getGroupPermissionsOn(entity);
         for (T permission : permissions) {
             for (GroupAce groupAce : groupAces) {
                 if (groupAce.getBranchPermissionMask() == permission.getMask()) {
-                    permissionsMap.add(permission, getGroup(groupAce), groupAce.isGranting());
+                    groupsPermissions.add(permission, getGroup(groupAce), groupAce.isGranting());
                 }
             }
             for (AccessControlEntry controlEntry : aclUtil.getAclFor(entity).getEntries()) {
                 if (controlEntry.getPermission().equals(permission)
                         && controlEntry.getSid().getSidId().equals(UserSid.createAnonymous().getSidId())) {
-                    permissionsMap.add(permission, AnonymousGroup.ANONYMOUS_GROUP, controlEntry.isGranting());
+                    groupsPermissions.add(permission, AnonymousGroup.ANONYMOUS_GROUP, controlEntry.isGranting());
                 }
             }
         }
-        return permissionsMap;
+        return groupsPermissions;
     }
 
     /**
@@ -159,10 +159,7 @@ public class PermissionManager {
      * @param entity     the entity to change permissions to
      * @param granted    permission is granted or restricted
      */
-    private void changeGrantsOfGroup(Group group,
-                                     JtalksPermission permission,
-                                     Entity entity,
-                                     boolean granted) {
+    private void changeGrantsOfGroup(Group group, JtalksPermission permission, Entity entity, boolean granted) {
         if (group instanceof AnonymousGroup) {
             changeGrantsOfAnonymousGroup(permission, entity, granted);
         } else {
@@ -182,9 +179,7 @@ public class PermissionManager {
      * @param entity     the entity to change permissions to
      * @param granted    permission is granted or restricted
      */
-    private void changeGrantsOfAnonymousGroup(JtalksPermission permission,
-                                              Entity entity,
-                                              boolean granted) {
+    private void changeGrantsOfAnonymousGroup(JtalksPermission permission, Entity entity, boolean granted) {
         List<Permission> jtalksPermissions = new ArrayList<Permission>();
         jtalksPermissions.add(permission);
         List<Sid> sids = new ArrayList<Sid>();

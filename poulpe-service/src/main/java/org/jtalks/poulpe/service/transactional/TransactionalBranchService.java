@@ -22,7 +22,7 @@ import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 
@@ -89,7 +89,7 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      * {@inheritDoc}
      */
     @Override
-    public PermissionsMap<BranchPermission> getPermissionsFor(PoulpeBranch branch) {
+    public GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch) {
         return branchPermissionManager.getPermissionsMapFor(branch);
     }
 

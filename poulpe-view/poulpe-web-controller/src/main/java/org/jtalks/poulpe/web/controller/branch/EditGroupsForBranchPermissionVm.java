@@ -19,7 +19,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -128,8 +128,8 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
-        PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
-        return permissionsMap.get((BranchPermission) permissionForEntity.getPermission(), allowed);
+        GroupsPermissions<BranchPermission> groupsPermissions = branchService.getPermissionsFor(branch);
+        return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }
 
     /**

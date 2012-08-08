@@ -121,7 +121,8 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, int page, int itemsPerPage) {
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers,
+                                               int page, int itemsPerPage) {
         return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.paginate(page, itemsPerPage));
     }
 

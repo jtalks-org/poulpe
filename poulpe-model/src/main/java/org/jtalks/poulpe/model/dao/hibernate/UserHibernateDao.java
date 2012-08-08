@@ -48,9 +48,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         query.setString("username", MessageFormat.format("%{0}%", searchString));
         paginate.addPagination(query);
 
-        @SuppressWarnings("unchecked")
-        List<PoulpeUser> result = query.list();
-        return result;
+        return query.list();
     }
 
     /**

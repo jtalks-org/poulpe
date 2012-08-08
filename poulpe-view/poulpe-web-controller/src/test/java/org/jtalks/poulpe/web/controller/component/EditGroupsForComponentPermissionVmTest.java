@@ -24,7 +24,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
@@ -63,8 +63,8 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testCancelWithoutChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<GeneralPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+            GroupsPermissions<GeneralPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.cancel();
 
@@ -73,8 +73,8 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testCancelWithChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<GeneralPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+            GroupsPermissions<GeneralPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.addAll();
         viewModel.cancel();
@@ -84,8 +84,8 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<GeneralPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+            GroupsPermissions<GeneralPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.save();
 
@@ -94,8 +94,8 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithChanges(PermissionForEntity permissionForEntity,
-            PermissionsMap<GeneralPermission> permissionsMap) {
-        initTest(permissionForEntity, permissionsMap);
+            GroupsPermissions<GeneralPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
 
         viewModel.removeAll();
         viewModel.save();
@@ -108,7 +108,7 @@ public class EditGroupsForComponentPermissionVmTest {
     @DataProvider
     public Object[][] dataProvider() {
         List<PermissionForEntity> permissionsForEntity = Lists.newArrayList();
-        PermissionsMap<GeneralPermission> permissionsMap = new PermissionsMap<GeneralPermission>(
+        GroupsPermissions<GeneralPermission> groupsPermissions = new GroupsPermissions<GeneralPermission>(
                 GeneralPermission.getAllAsList());
 
         Component target = TestFixtures.randomComponent();
@@ -123,7 +123,7 @@ public class EditGroupsForComponentPermissionVmTest {
             permissionsForEntity.add(new PermissionForEntity(target, false, permissions[i]));
 
             for (int j = 0, countj = RandomUtils.nextInt(4) + 2; j < countj; j++) {
-                permissionsMap.add(permissions[i], TestFixtures.group(), TestFixtures.group());
+                groupsPermissions.add(permissions[i], TestFixtures.group(), TestFixtures.group());
             }
         }
 
@@ -133,15 +133,15 @@ public class EditGroupsForComponentPermissionVmTest {
 
         for (int i = 0; i < permissionsCount; i++) {
             result[i][0] = permissionsForEntity.get(i);
-            result[i][1] = permissionsMap;
+            result[i][1] = groupsPermissions;
         }
 
         return result;
     }
 
-    private void initTest(PermissionForEntity permissionForEntity, PermissionsMap<GeneralPermission> permissionsMap) {
+    private void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<GeneralPermission> groupsPermissions) {
         Component component = (Component) permissionForEntity.getTarget();
-        when(componentService.getPermissionsMapFor(component)).thenReturn(permissionsMap);
+        when(componentService.getPermissionsMapFor(component)).thenReturn(groupsPermissions);
 
         viewModel = new EditGroupsForComponentPermissionVm(windowManager, componentService, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
