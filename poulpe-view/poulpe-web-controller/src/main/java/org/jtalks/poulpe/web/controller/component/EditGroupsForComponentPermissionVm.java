@@ -19,7 +19,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
@@ -159,7 +159,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      */
     private List<Group> getAlreadyAddedGroups() {
         GeneralPermission permission = (GeneralPermission) permissionForEntity.getPermission();
-        PermissionsMap<GeneralPermission> accessList = componentService.getPermissionsMapFor(component);
+        GroupsPermissions<GeneralPermission> accessList = componentService.getPermissionsMapFor(component);
         return accessList.get(permission, permissionForEntity.isAllowed());
     }
 

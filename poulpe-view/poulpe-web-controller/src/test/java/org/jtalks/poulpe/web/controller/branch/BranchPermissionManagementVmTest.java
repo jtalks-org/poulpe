@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -90,9 +90,9 @@ public class BranchPermissionManagementVmTest {
      * Check method for generate data of view.
      */
     @Test(dataProvider = "provideInitDataForView")
-    public void testInitDataForView(PermissionsMap<BranchPermission> permissionsMap, Group allowedGroup, Group restrictedGroup) {
+    public void testInitDataForView(GroupsPermissions<BranchPermission> groupsPermissions, Group allowedGroup, Group restrictedGroup) {
         PoulpeBranch branch = (PoulpeBranch) sut.getSelectedEntity().getEntity();
-        when(branchService.getPermissionsFor(branch)).thenReturn(permissionsMap);
+        when(branchService.getPermissionsFor(branch)).thenReturn(groupsPermissions);
         sut.initDataForView();
         assertEquals(sut.getBranch(), branch);
 
@@ -127,15 +127,15 @@ public class BranchPermissionManagementVmTest {
         BranchPermission allowedPermission = BranchPermission.CREATE_TOPICS;
         BranchPermission restrictPermission = BranchPermission.CLOSE_TOPICS;
 
-        PermissionsMap<BranchPermission> permissionsMap = new PermissionsMap<BranchPermission>();
-        permissionsMap.addAllowed(allowedPermission, allowedGroup);
-        permissionsMap.addRestricted(restrictPermission, restrictedGroup);
+        GroupsPermissions<BranchPermission> groupsPermissions = new GroupsPermissions<BranchPermission>();
+        groupsPermissions.addAllowed(allowedPermission, allowedGroup);
+        groupsPermissions.addRestricted(restrictPermission, restrictedGroup);
 
-        for (BranchPermission permission : permissionsMap.getPermissions()) {
-            blocks.add(new PermissionManagementBlock(permission, permissionsMap, "allow", "restrict"));
+        for (BranchPermission permission : groupsPermissions.getPermissions()) {
+            blocks.add(new PermissionManagementBlock(permission, groupsPermissions, "allow", "restrict"));
         }
 
-        return new Object[][] { { permissionsMap, allowedGroup, restrictedGroup } };
+        return new Object[][] { {groupsPermissions, allowedGroup, restrictedGroup } };
     }
 
 }

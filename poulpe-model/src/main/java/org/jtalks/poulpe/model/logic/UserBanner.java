@@ -17,6 +17,7 @@ package org.jtalks.poulpe.model.logic;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dao.UserDao;
+import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.pages.Pagination;
 

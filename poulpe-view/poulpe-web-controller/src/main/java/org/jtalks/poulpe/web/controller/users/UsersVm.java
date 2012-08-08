@@ -18,7 +18,9 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.validator.EmailValidator;
 import org.jtalks.poulpe.web.controller.ZkHelper;
+import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -50,6 +52,7 @@ public class UsersVm {
     static final String EDIT_USER_DIALOG = "#editUserDialog";
 
     private final UserService userService;
+    private final Validator emailValidator;
     private ZkHelper zkHelper;
 
     private List<PoulpeUser> users;
@@ -63,6 +66,7 @@ public class UsersVm {
      */
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
+        emailValidator = new EmailValidator(userService);
     }
 
     /**
@@ -220,6 +224,10 @@ public class UsersVm {
 
     public int getItemsPerPage() {
         return ITEMS_PER_PAGE;
+    }
+
+    public Validator getEmailValidator() {
+        return emailValidator;
     }
 
     @VisibleForTesting

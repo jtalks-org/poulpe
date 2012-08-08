@@ -24,7 +24,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -101,14 +101,14 @@ public class GroupsPermissionsVm {
         blocks.clear();
 
         for (Component component : componentService.getAll()) {
-            PermissionsMap<GeneralPermission> permissionsMap = componentService.getPermissionsMapFor(component);
+            GroupsPermissions<GeneralPermission> groupsPermissions = componentService.getPermissionsMapFor(component);
             List<PermissionManagementBlock> pmBlocks = Lists.newArrayList();
 
             GeneralPermission permission = GeneralPermission.ADMIN;
-            Set<GeneralPermission> permissions = permissionsMap.getPermissions();
+            Set<GeneralPermission> permissions = groupsPermissions.getPermissions();
 
             if (permissions.contains(permission)) {
-                pmBlocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels
+                pmBlocks.add(new PermissionManagementBlock(permission, groupsPermissions, Labels
                         .getLabel("permissions.allow_label"), Labels.getLabel("permissions.restrict_label")));
             }
 

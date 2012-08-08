@@ -85,12 +85,20 @@
         <![CDATA[from PoulpeUser u where u.username = :username]]>
     </query>
 
+    <query name="findUsersByEmail">
+        <![CDATA[from PoulpeUser u where u.email = :email]]>
+    </query>
+
     <query name="findBannedUsers">
         <![CDATA[from PoulpeUser u where exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
     </query>
 
     <query name="findUnbannedUsersByLikeUsername">
         <![CDATA[from PoulpeUser u where u.username like :username and not exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
+    </query>
+
+    <query name="findUsersByLikeUsernameNotInList">
+        <![CDATA[from PoulpeUser u where  u.username like :username and not u.id in (:listUsers) ]]>
     </query>
 
 </hibernate-mapping>

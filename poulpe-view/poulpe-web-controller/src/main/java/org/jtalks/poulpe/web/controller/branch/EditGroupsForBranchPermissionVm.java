@@ -19,7 +19,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.PermissionsMap;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -42,7 +42,6 @@ import java.util.List;
  * @see BranchPermissionManagementVm
  */
 public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
-    public static final String BRANCH_PERMISSION_MANAGEMENT_ZUL = "WEB-INF/pages/forum/BranchPermissionManagement.zul";
     private final WindowManager windowManager;
     private final BranchService branchService;
     private final GroupService groupService;
@@ -99,16 +98,12 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
                 branchService.changeGrants(branch, accessChanges);
-            }
-            else {
+            } else {
                 branchService.changeRestrictions(branch, accessChanges);
             }
         }
-
         openBranchPermissionsWindow();
     }
-
-    // -- Utility methods ------------------------
 
     /**
      * {@inheritDoc}
@@ -121,19 +116,20 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         getExist().addAll(getStateAfterEdit());
 
         getAvail().clear();
-        getAvail().addAll(ListUtils.subtract(groupService.getAll(), getStateAfterEdit()));
+        List<Group> groups = groupService.getSecurityGroups().getAllGroups();
+        getAvail().addAll(ListUtils.subtract(groups, getStateAfterEdit()));
     }
 
     /**
-     * Gets list of groups which already added in persistence for current {@link PoulpeBranch} with {@link AclMode}.
+     * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
      *
      * @param branch  the branch to get for
      * @param allowed the permission mode (allowed or restricted)
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
-        PermissionsMap<BranchPermission> permissionsMap = branchService.getPermissionsFor(branch);
-        return permissionsMap.get((BranchPermission) permissionForEntity.getPermission(), allowed);
+        GroupsPermissions<BranchPermission> groupsPermissions = branchService.getPermissionsFor(branch);
+        return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }
 
     /**

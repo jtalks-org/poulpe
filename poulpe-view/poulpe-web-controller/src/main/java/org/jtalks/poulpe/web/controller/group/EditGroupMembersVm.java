@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.UiPagination;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -26,10 +26,10 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.filter;
@@ -41,13 +41,29 @@ import static org.hamcrest.text.StringContains.containsString;
  * View-Model for 'Edit Members of group'.
  *
  * @author Vyacheslav Zhivaev
+ * @author Mikhail Zaitsev
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
-    public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+	
+	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+	
+	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage";
+	
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
+
     /**
+     *  Avail pagination
+     */
+    private UiPagination availPagination;
+
+    /**
+     *  Common buffer users
+     */
+    private List<PoulpeUser> commonBufferUsers;
+
+	/**
      * Group to be edited
      */
     private final Group groupToEdit;
@@ -70,20 +86,95 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         this.groupService = groupService;
         this.userService = userService;
 
-        List<PoulpeUser> users = (List<PoulpeUser>) (List<?>) groupToEdit.getUsers();
+        List<PoulpeUser> users = new LinkedList<PoulpeUser>();
+        users.addAll((List<PoulpeUser>) (List<?>) groupToEdit.getUsers());
         setStateAfterEdit(users);
+
+        commonBufferUsers =new ArrayList<PoulpeUser>();
+
+        availPagination = new UiPagination();
+
     }
 
     // -- Accessors ------------------------------
 
     /**
      * Gets group to be edited.
-     *
      * @return the {@link Group} instance
      */
     public Group getGroupToEdit() {
         return groupToEdit;
     }
+    /**
+     * @return number of active page elements available
+     */
+    public int getActiveAvailPage() {
+        return availPagination.getActivePage();
+    }
+
+    /**
+     * @return avail pagination
+     */
+    public UiPagination getAvailPagination() {
+        return availPagination;
+    }
+
+    /**
+     * @param availPagination avail pagination
+     */
+    public void setAvailPagination(UiPagination availPagination) {
+        this.availPagination = availPagination;
+    }
+
+    /**
+     * @param activePage number of active page elements available
+     */
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
+    public void setActiveAvailPage(int activePage) {
+        availPagination.setActivePage(activePage);
+        List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
+        getAvail().clear();
+        getAvail().addAll(users);
+    }
+
+    /**
+     * @return total amount of users matched the searchString
+     */
+    @NotifyChange({AVAIL_TOTAL_SIZE})
+    public int getAvailTotalSize() {
+        int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
+        if(result<0)return 0;
+        return result;
+    }
+
+    /**
+     * @return number of available items per page
+     */
+    public int getItemsAvailPerPage() {
+        return availPagination.getItemsPerPage();
+    }
+
+    /**
+     * @param itemsPerPage number of available items per page
+     */
+    public void setItemsAvailPerPage(int itemsPerPage) {
+        availPagination.setItemsPerPage(itemsPerPage);
+    }
+
+    /**
+     * @return common buffer users
+     */
+    public List<PoulpeUser> getCommonBufferUsers() {
+        return commonBufferUsers;
+    }
+
+    /**
+     * @param commonBufferUsers common buffer users
+     */
+    public void setCommonBufferUsers(List<PoulpeUser> commonBufferUsers) {
+        this.commonBufferUsers = commonBufferUsers;
+    }
+
 
     // -- ZK Command bindings --------------------
 
@@ -92,12 +183,9 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-        List<PoulpeUser> users = Lists.newLinkedList(userService.withUsernamesMatching(getAvailFilterTxt()));
-        users.removeAll(getStateAfterEdit());
-        getAvail().clear();
-        getAvail().addAll(users);
+    	setActiveAvailPage(0);
     }
 
     /**
@@ -137,7 +225,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @Init
     public void updateVm() {
-        filterAvail();
+    	filterAvail();
         filterExist();
     }
 
@@ -146,15 +234,58 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
-        windowManager.open("usergroup.zul");
+    	windowManager.open("usergroup.zul");
     }
 
-    /**
+	/**
      * Opens edit group members dialog window.
-     *
      * @param windowManager the window manager instance
      */
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
+    
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void add() {
+    	super.add();
+    }
+    
+    @Override
+    @Command
+    @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void addAll() {
+        if(commonBufferUsers.size()<userService.countUsernameMatches("")){
+            commonBufferUsers=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
+            commonBufferUsers.addAll(getStateAfterEdit());
+        }
+        getStateAfterEdit().clear();
+        getStateAfterEdit().addAll(commonBufferUsers);
+    	getAvail().clear();
+        availPagination.setActivePage(0);
+        filterExist();
+    }
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void remove() {
+        getStateAfterEdit().removeAll(getExistSelected());
+        getAvail().addAll(getExistSelected());
+        availPagination.setActivePage(0);
+        filterExist();
+    }
+    @Override
+    @Command
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    public void removeAll() {
+        getStateAfterEdit().removeAll(getExist());
+        getAvail().addAll(getExist());
+        availPagination.setActivePage(0);
+        filterExist();
+    }
+
+
+    
+    
 }

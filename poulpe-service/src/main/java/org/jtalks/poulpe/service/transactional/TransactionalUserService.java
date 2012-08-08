@@ -15,8 +15,11 @@
 package org.jtalks.poulpe.service.transactional;
 
 import com.google.common.collect.Lists;
+
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.Component;
@@ -42,6 +45,7 @@ import static com.google.common.base.Predicates.in;
  * @author Guram Savinov
  * @author Vyacheslav Zhivaev
  * @author maxim reshetov
+ * @author Mikhail Zaitsev
  */
 public class TransactionalUserService implements UserService {
     private static final String NO_FILTER = "";
@@ -101,6 +105,39 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage){
+    	return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.paginate(page, itemsPerPage));
+    }
+    
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
+		return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
+	}
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers,
+                                               int page, int itemsPerPage) {
+        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.paginate(page, itemsPerPage));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers) {
+        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.NONE);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void updateUser(PoulpeUser user) {
         userDao.update(user);
     }
@@ -111,6 +148,15 @@ public class TransactionalUserService implements UserService {
     @Override
     public PoulpeUser get(long id) {
         return userDao.get(id);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser getByEmail(String email) {
+        PoulpeUser user = userDao.getByEmail(email);
+        return user;
     }
 
     /**
@@ -164,4 +210,6 @@ public class TransactionalUserService implements UserService {
         }
         return granting;
     }
+
+	
 }

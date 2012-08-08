@@ -23,22 +23,27 @@ import java.util.List;
  * Stores information about the user.
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
+
+    public static final int EMAIL_MAX_LENGTH = 255;
+
     private List<Group> groups = new ArrayList<Group>();
 
     /**
-     * Only for hibernate usage.
+     * Creates an empty and <i>not valid</i> instance without required fields, use {@link #PoulpeUser(String, String,
+     * String, String)} instead. This constructor is usually used by Hibernate.
      */
     public PoulpeUser() {
         super();
     }
 
     /**
-     * Create instance with requiered fields.
+     * Create instance with all the mandatory fields fields.
      *
      * @param username username
      * @param email    email
      * @param password password
-     * @param salt     salt
+     * @param salt     a security salt that is used for encrypting the passwords to be less vulnerable for decryption of
+     *                 password from its hash, more info can be found <a href="http://en.wikipedia.org/wiki/Salt_(cryptography)">here</a>.
      */
     public PoulpeUser(String username, String email, String password, String salt) {
         super(username, email, password, salt);
@@ -76,6 +81,24 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
 
     public void setGroups(List<Group> groups) {
         this.groups = groups;
+    }
+
+    /**
+     * Returns an empty user with invalid mail, username and password with ID being set.
+     *
+     * @param id an id to set to the user
+     * @return an empty user with invalid mail, username and password with ID being set
+     */
+    public static PoulpeUser withId(long id) {
+        PoulpeUser user = new PoulpeUser("", "", "", "");
+        user.setId(id);
+        return user;
+    }
+
+    @Override
+    @org.hibernate.validator.constraints.Length(max = EMAIL_MAX_LENGTH, message = "{user.email.length_constraint_violation}")
+    public String getEmail() {
+        return super.getEmail();
     }
 
     @Override

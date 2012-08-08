@@ -28,6 +28,7 @@ import java.util.List;
  * @author Vyacheslav Zhivaev
  * @author Alexey Grigorev
  * @author maxim reshetov
+ * @author Mikhail Zaitsev
  */
 public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
 
@@ -57,6 +58,13 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> getUsersInGroups(List<Group> groups);
 
     /**
+     * Retrieves user by its email
+     * @param email to look up
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
+     */
+    public PoulpeUser getByEmail(String email);
+
+    /**
      * Gets all users which excludes in groups with username like in parameter.
      *
      * @param availableFilterText some word which must be like username
@@ -65,5 +73,15 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate);
+
+    /**
+     * Gets all users which excludes in {@code listUsers} with username like in parameter.
+     *
+     * @param availableFilterText some word which must be like username
+     * @param listUsers list of users
+     * @param paginate max count of returned results
+     * @return list of users with username like in parameter
+     */
+    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate);
 
 }

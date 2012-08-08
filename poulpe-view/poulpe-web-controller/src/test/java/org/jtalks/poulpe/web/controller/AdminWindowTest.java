@@ -73,7 +73,7 @@ public class AdminWindowTest {
     @Test
     public void testOnShowComponents() {
         adminWindow.onShowComponents();
-        testOnShow("components.zul");
+        testOnShow("/WEB-INF/pages/component/components.zul");
     }
 
     @Test
@@ -95,9 +95,15 @@ public class AdminWindowTest {
     }
 
     @Test
+    public void testOnPersonalPermissions() {
+        adminWindow.onShowPersonalPermissions();
+        testOnShow("WEB-INF/pages/users/PersonalPermissions.zul");
+    }
+
+    @Test
     public void testOnShowUserBanning() {
         adminWindow.onShowUserBanning();
-        testOnShow("userbanning.zul");
+        testOnShow("WEB-INF/pages/users/UserBanning.zul");
     }
 
     @Test

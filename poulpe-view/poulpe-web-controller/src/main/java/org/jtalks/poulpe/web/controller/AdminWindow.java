@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.jtalks.poulpe.web.osod.OpenSessions;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.ContextParam;
@@ -90,7 +91,7 @@ public class AdminWindow {
      */
     @Command
     public void onShowComponents() {
-        windowManager.open("components.zul");
+        ComponentsVm.show(windowManager);
     }
 
     /**
@@ -122,7 +123,7 @@ public class AdminWindow {
      */
     @Command
     public void onShowUserBanning() {
-        windowManager.open("userbanning.zul");
+        windowManager.open("WEB-INF/pages/users/UserBanning.zul");
     }
 
     /**
@@ -155,6 +156,11 @@ public class AdminWindow {
     @Command
     public void onShowGroupsPermissions() {
         windowManager.open("groups/GroupsPermissions.zul");
+    }
+
+    @Command
+    public void onShowPersonalPermissions(){
+        windowManager.open("WEB-INF/pages/users/PersonalPermissions.zul");
     }
 
     /**

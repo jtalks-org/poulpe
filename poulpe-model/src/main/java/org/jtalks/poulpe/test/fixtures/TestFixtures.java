@@ -196,6 +196,16 @@ public final class TestFixtures {
     }
 
     /**
+     *
+     * @param username user's name
+     * @param email user's email
+     * @return  user with the given username, email and generated empty salt
+     */
+    public static PoulpeUser user(String username, String email) {
+        return new PoulpeUser(username, email, random(), "");
+    }
+
+    /**
      * @return user with random name, email, password and empty salt
      */
     public static PoulpeUser user() {

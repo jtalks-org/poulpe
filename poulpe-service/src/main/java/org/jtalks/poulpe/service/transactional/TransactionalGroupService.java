@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.service.GroupService;
@@ -55,6 +56,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public List<Group> getAll() {
         return dao.getAll();
+    }
+
+    @Override
+    public SecurityGroupList getSecurityGroups() {
+        return new SecurityGroupList(dao.getAll()).withAnonymousGroup();
     }
 
     /**

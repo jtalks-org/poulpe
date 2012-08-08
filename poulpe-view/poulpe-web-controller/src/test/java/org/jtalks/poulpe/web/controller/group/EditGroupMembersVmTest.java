@@ -25,6 +25,7 @@ import java.util.Set;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.pages.UiPagination;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -78,6 +79,7 @@ public class EditGroupMembersVmTest {
         doNothing().when(windowManager).open(anyString());
 
         viewModel = new EditGroupMembersVm(windowManager, groupService, userService, selectedEntity);
+        viewModel.setAvailPagination(new UiPagination());
         viewModel = spy(viewModel);
 
         viewModel.updateVm();
@@ -110,9 +112,9 @@ public class EditGroupMembersVmTest {
 
     @Test
     public void testRemove() {
-        givenUsersSelectedInView();
+       givenUsersSelectedInView();
 
-        viewModel.remove();
+       viewModel.remove();
 
         assertFalse(viewModel.getExist().containsAll(usersSelectedInExist));
         assertTrue(viewModel.getAvail().containsAll(usersSelectedInExist));
