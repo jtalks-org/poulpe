@@ -115,17 +115,10 @@ public interface UserService {
     /**
      * Retrieves user by its email
      * @param email to look up
-     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance
-     * @throws NotFoundException when user can't be found
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance or null, if there is
+     * no user with such email
      */
-    PoulpeUser getByEmail(String email) throws NotFoundException;
-
-    /**
-     * Checks that email already used by some user.
-     * @param email to check
-     * @return true if email already used by some user, otherwise false
-     */
-    boolean isEmailAlreadyUsed(String email);
+    PoulpeUser getByEmail(String email);
 
     /**
      * Gets all banned users from the database

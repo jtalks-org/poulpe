@@ -154,25 +154,9 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public PoulpeUser getByEmail(String email) throws NotFoundException {
+    public PoulpeUser getByEmail(String email) {
         PoulpeUser user = userDao.getByEmail(email);
-        if (user == null) {
-            throw new NotFoundException("User with " + email + " was not found");
-        }
         return user;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public boolean isEmailAlreadyUsed(String email) {
-        try {
-            PoulpeUser user = getByEmail(email);
-        } catch (NotFoundException e) {
-            return false;
-        }
-        return true;
     }
 
     /**

@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.validator;
 
-import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.slf4j.Logger;
@@ -63,15 +62,11 @@ public class EmailValidator extends AbstractValidator {
     }
 
     private void checkForUniqueness(ValidationContext validationContext, String email, PoulpeUser user) {
-        try {
-            if (userService.isEmailAlreadyUsed(email) && !(userService.getByEmail(email).getId() == user.getId())) {
-                //this "if" is in case user email was A, than in edit_user it was changed to B and than to A again
-                addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_MAIL_MESSAGE));
-            }
-        } catch (NotFoundException e) {
-            //it should not happend. Because email already used(see root if).
-            //but if it happend - then user with such email does not exist, so validation will successfully ended
-            logger.warn("Hibernate threw exception while it shouldn't have been.", e);
+        PoulpeUser userWithSuchEmail = userService.getByEmail(email);
+        if (userWithSuchEmail != null && userWithSuchEmail.getId() != user.getId()) {
+            //the second part of "if" is in case user email was A, than in edit_user it was
+            //changed to B and than to A again
+            addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_MAIL_MESSAGE));
         }
     }
 
