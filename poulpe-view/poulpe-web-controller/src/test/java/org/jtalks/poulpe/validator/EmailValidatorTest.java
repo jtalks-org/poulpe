@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.validator;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -25,7 +26,7 @@ import org.zkoss.bind.BindContext;
 import org.zkoss.bind.Property;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.impl.BinderImpl;
-import org.zkoss.bind.sys.ValidationMessages;
+import org.zkoss.bind.impl.PropertyImpl;
 
 import static org.mockito.Mockito.*;
 
@@ -33,21 +34,12 @@ import static org.mockito.Mockito.*;
  * @author Nickolay Polyarniy
  */
 public class EmailValidatorTest {
-
     EmailValidator validator;
 
     @Mock
     UserService userService;
     @Mock
     ValidationContext context;
-    @Mock
-    Property property;
-    @Mock
-    BindContext bindContext;
-    @Mock
-    BinderImpl binder;
-    @Mock
-    ValidationMessages vmsgs;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -55,66 +47,60 @@ public class EmailValidatorTest {
         validator = new EmailValidator(userService);
     }
 
-    private void setUpContext(String email, long userId) {
+    private void givenBindContextReturnsMailAndUserId(String email, long userId) {
+        BinderImpl binder = mock(BinderImpl.class);
+        BindContext bindContext = mock(BindContext.class);
+        Property property = new PropertyImpl("", "email", email);
+
         when(context.getProperty()).thenReturn(property);
-        when(property.getValue()).thenReturn(email);
-        PoulpeUser user = TestFixtures.user();
-        user.setId(userId);
         when(context.getBindContext()).thenReturn(bindContext);
-        when(bindContext.getValidatorArg("user")).thenReturn(user);
+        when(bindContext.getValidatorArg("user")).thenReturn(PoulpeUser.withId(userId));
         when(bindContext.getBinder()).thenReturn(binder);
-        when(binder.getValidationMessages()).thenReturn(vmsgs);
-    }
-
-    private void setUpUserService(PoulpeUser... users) throws Exception {
-        for (PoulpeUser user : users) {
-            when(userService.getByEmail(user.getEmail())).thenReturn(user);
-            when(userService.isEmailAlreadyUsed(user.getEmail())).thenReturn(true);
-        }
     }
 
     @Test
-    public void testLengthValidation() {
-        setUpContext("ABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABC" +
-                "DEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEA" +
-                "BCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCDEABCD" +
-                "EABCDE@rambler.ru", 1);
+    public void tooLongMailShouldFailValidation() {
+        givenBindContextReturnsMailAndUserId(RandomStringUtils.randomAlphanumeric(255) + "@rambler.ru", 1);
         validator.validate(context);
-        verify(context, atLeast(1)).setInvalid();
+        verify(context).setInvalid();
     }
 
     @Test
-    public void testPatternValidation() {
-        setUpContext("asdasd", 1);
+    public void wrongEmailPatternShouldFailValidation() {
+        givenBindContextReturnsMailAndUserId("asdasd", 1);
         validator.validate(context);
-        verify(context, atLeast(1)).setInvalid();
+        verify(context).setInvalid();
     }
 
     @Test
-    public void testExistenceValidation() throws Exception {
-        PoulpeUser user1 = TestFixtures.user();
-        PoulpeUser user2 = TestFixtures.user();
+    public void duplicatedMailShouldFailValidation() throws Exception {
+        PoulpeUser user1 = PoulpeUser.withId(1);
+        PoulpeUser user2 = PoulpeUser.withId(2);
         //user2 wants to save email which already used by user1
-        setUpContext(user1.getEmail(), user2.getId());
-        setUpUserService(user1, user2);
+        givenBindContextReturnsMailAndUserId(user1.getEmail(), user2.getId());
+        storeUsersInMockedDb(user1, user2);
         validator.validate(context);
-        if (user1.getId() != user2.getId()) {
-            verify(context, atLeast(1)).setInvalid();
-        }
+        verify(context).setInvalid();
     }
 
     /**
-     * Checks the next situation: user A was with email E1,
-     * in edit_user E1 was changed to E2, then it was changed back to E1.
-     * So user A trying to save email E1 while he already have saved email E1.
+     * Checks the next situation: user A was with email E1, in edit_user E1 was changed to E2, then it was changed back
+     * to E1. So user A trying to save email E1 while he already have saved email E1.
      */
     @Test
     public void testTheSameEmailValidation() throws Exception {
         PoulpeUser user = TestFixtures.user();
-        setUpContext(user.getEmail(), user.getId());
-        setUpUserService(user);
+        givenBindContextReturnsMailAndUserId(user.getEmail(), user.getId());
+        storeUsersInMockedDb(user);
         validator.validate(context);
         verify(context, never()).setInvalid();
+    }
+
+    private void storeUsersInMockedDb(PoulpeUser... users) throws Exception {
+        for (PoulpeUser user : users) {
+            when(userService.getByEmail(user.getEmail())).thenReturn(user);
+            when(userService.isEmailAlreadyUsed(user.getEmail())).thenReturn(true);
+        }
     }
 
 }

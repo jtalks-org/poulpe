@@ -83,6 +83,18 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
         this.groups = groups;
     }
 
+    /**
+     * Returns an empty user with invalid mail, username and password with ID being set.
+     *
+     * @param id an id to set to the user
+     * @return an empty user with invalid mail, username and password with ID being set
+     */
+    public static PoulpeUser withId(long id) {
+        PoulpeUser user = new PoulpeUser("", "", "", "");
+        user.setId(id);
+        return user;
+    }
+
     @Override
     @org.hibernate.validator.constraints.Length(max = EMAIL_MAX_LENGTH, message = "{user.email.length_constraint_violation}")
     public String getEmail() {
