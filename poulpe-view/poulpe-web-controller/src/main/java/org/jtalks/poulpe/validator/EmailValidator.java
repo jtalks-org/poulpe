@@ -48,6 +48,7 @@ public class EmailValidator extends AbstractValidator {
     public void validate(ValidationContext validationContext) throws WrongValueException {
         String email = (String) validationContext.getProperty().getValue();
         PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
+        user.setEmail(email);
 
         //validate by pattern and length
         Set<ConstraintViolation<PoulpeUser>> set = validator.validateProperty(user, "email");
