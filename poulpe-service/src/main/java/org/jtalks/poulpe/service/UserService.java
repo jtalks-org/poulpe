@@ -73,7 +73,8 @@ public interface UserService {
      * @param itemsPerPage limit of items per page
      * @return ist of users with username like in parameter
      */
-    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, int page, int itemsPerPage);
+    List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers,
+                                        int page, int itemsPerPage);
 
     /**
      * Gets all users which excludes in {@code listUsers} with username like in parameter

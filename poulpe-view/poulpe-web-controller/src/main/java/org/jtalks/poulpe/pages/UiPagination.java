@@ -20,8 +20,10 @@ package org.jtalks.poulpe.pages;
  */
 public class UiPagination {
 
+    private final int DEFAULT_VALUE = 50;
+
     private int activePage = 0;
-    private int itemsPerPage = 50;
+    private int itemsPerPage = DEFAULT_VALUE;
 
     /**
      * @return number of active pages
@@ -35,7 +37,7 @@ public class UiPagination {
      */
     public void setActivePage(int activePage) {
         this.activePage = activePage;
-        if(this.activePage<0)this.activePage=0;
+        if(this.activePage<0){this.activePage=0;}
     }
 
     /**
@@ -50,7 +52,7 @@ public class UiPagination {
      */
     public void setItemsPerPage(int itemsPerPage) {
         this.itemsPerPage = itemsPerPage;
-        if(this.itemsPerPage<0)this.itemsPerPage = 0;
+        if(this.itemsPerPage<0){this.itemsPerPage = 0;}
     }
 
     /**
@@ -59,7 +61,7 @@ public class UiPagination {
      * @return the total amount of pages
      */
     public int getTotalAmountOfPages(int nItems) {
-        if(itemsPerPage<=0)return 0;
+        if(itemsPerPage<=0){return 0;}
         if((nItems%2)>0){
             return (nItems/itemsPerPage)+1;
         }else{

@@ -37,6 +37,7 @@ import java.util.List;
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
+    private final String FORMAT = "%{0}%";
 
     /**
      * {@inheritDoc}
@@ -45,7 +46,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
         searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
         Query query = getSession().getNamedQuery("findUsersByLikeUsername");
-        query.setString("username", MessageFormat.format("%{0}%", searchString));
+        query.setString("username", MessageFormat.format(FORMAT, searchString));
         paginate.addPagination(query);
 
         return query.list();
@@ -58,7 +59,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     public int countUsernameMatches(String searchString) {
         searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
         Query query = getSession().getNamedQuery("countUsersByLikeUsername");
-        query.setString("username", MessageFormat.format("%{0}%", searchString));
+        query.setString("username", MessageFormat.format(FORMAT, searchString));
 
         Number result = (Number) query.uniqueResult();
         return result.intValue();
@@ -106,10 +107,11 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, Pagination paginate) {
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText,
+                                                 List<Group> groups, Pagination paginate) {
         availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
         Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
-        query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
+        query.setString("username", MessageFormat.format(FORMAT, availableFilterText));
 
         ArrayList groupsIds = new ArrayList();
         for (Group group : groups) {
@@ -126,12 +128,13 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate){
+    public List<PoulpeUser> findUsersNotInList(String availableFilterText,
+                                               List<PoulpeUser> listUsers, Pagination paginate){
         availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
         ArrayList<Long> ids = new ArrayList<Long>();
-        for(PoulpeUser b: listUsers)
+        for(PoulpeUser b: listUsers){
             ids.add(b.getId());
-
+        }
         Query query=null;
         if(ids.size()==0){
             query = getSession().getNamedQuery("findUsersByLikeUsername");
@@ -140,7 +143,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
             query.setParameterList("listUsers", ids);
         }
 
-        query.setString("username", MessageFormat.format("%{0}%", availableFilterText));
+        query.setString("username", MessageFormat.format(FORMAT, availableFilterText));
         paginate.addPagination(query);
 
         return query.list();
