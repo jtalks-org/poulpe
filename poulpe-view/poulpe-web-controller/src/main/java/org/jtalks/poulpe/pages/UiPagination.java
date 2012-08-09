@@ -20,10 +20,10 @@ package org.jtalks.poulpe.pages;
  */
 public class UiPagination {
 
-    private final int DEFAULT_VALUE = 50;
+    private static final int DEF_VALUE = 50;
 
     private int activePage = 0;
-    private int itemsPerPage = DEFAULT_VALUE;
+    private int itemsPerPage = DEF_VALUE;
 
     /**
      * @return number of active pages

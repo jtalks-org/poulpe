@@ -62,7 +62,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     private List<PoulpeUser> commonBufferUsers;
 
-	/**
+    /**
      * Group to be edited
      */
     private final Group groupToEdit;
@@ -142,7 +142,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     @NotifyChange({AVAIL_TOTAL_SIZE})
     public int getAvailTotalSize() {
         int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
-        if(result<0){return 0;};
+        if(result<0){return 0;}
         return result;
     }
 
@@ -271,7 +271,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
     @Override
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
         getStateAfterEdit().removeAll(getExistSelected());
         getAvail().addAll(getExistSelected());
@@ -281,7 +282,8 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
     @Override
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void removeAll() {
         getStateAfterEdit().removeAll(getExist());
         getAvail().addAll(getExist());

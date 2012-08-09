@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
 
-    private final String FORMAT = "%{0}%";
+    private static final String FORMAT = "%{0}%";
 
     /**
      * {@inheritDoc}
