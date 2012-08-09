@@ -76,6 +76,8 @@ public class EmailValidatorTest {
     public void duplicatedMailShouldFailValidation() throws Exception {
         PoulpeUser user1 = PoulpeUser.withId(1);
         PoulpeUser user2 = PoulpeUser.withId(2);
+        user1.setEmail("user1@jtalks.org");
+        user2.setEmail("somebody@mail.ru");
         //user2 wants to save email which already used by user1
         givenBindContextReturnsMailAndUserId(user1.getEmail(), user2.getId());
         storeUsersInMockedDb(user1, user2);
@@ -92,6 +94,18 @@ public class EmailValidatorTest {
         PoulpeUser user = TestFixtures.user();
         givenBindContextReturnsMailAndUserId(user.getEmail(), user.getId());
         storeUsersInMockedDb(user);
+        validator.validate(context);
+        verify(context, never()).setInvalid();
+    }
+
+    @Test
+    public void testTwoUniqueEmails() throws Exception {
+        PoulpeUser user1 = PoulpeUser.withId(1);
+        PoulpeUser user2 = PoulpeUser.withId(2);
+        user1.setEmail("user1@jtalks.org");
+        user2.setEmail("user2@mail.ru");
+        givenBindContextReturnsMailAndUserId("user3@mail.ru", user2.getId());
+        storeUsersInMockedDb(user1, user2);
         validator.validate(context);
         verify(context, never()).setInvalid();
     }
