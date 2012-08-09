@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -47,6 +48,8 @@ public class UserGroupVmTest {
     private GroupService groupService;
     @Mock
     private WindowManager windowManager;
+    @Mock
+    private BranchService branchService;
     
    
     @Mock
@@ -63,7 +66,7 @@ public class UserGroupVmTest {
     public void setUp() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Group>();
-        userGroupVm = new UserGroupVm(groupService, selectedEntity, windowManager);
+        userGroupVm = new UserGroupVm(groupService, selectedEntity, windowManager, branchService);
 
         groups = spy(new ListModelList<Group>());
         userGroupVm.setGroups(groups);
@@ -156,7 +159,7 @@ public class UserGroupVmTest {
 
     @Test(dataProvider = "provideRandomBranchesAndGroupsList")
     public void testSetSelectedGroupForAllBranches(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
-        branches = spy(new BranchGroupMap(branchesList, groupsList));
+        branches = spy(new BranchGroupMap(branchesList, groupsList, branchService));
         givenBranches();
 
         viewModel = spy(userGroupVm);
@@ -170,7 +173,7 @@ public class UserGroupVmTest {
     @Test(dataProvider = "provideRandomBranchesAndGroupsList")
     public void testSaveModeratorForBranches(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
         doReturn(branchesList).when(groupService).getModeratedBranches(selectedGroup);
-        branches = spy(new BranchGroupMap(branchesList, groupsList));
+        branches = spy(new BranchGroupMap(branchesList, groupsList,branchService));
         Group moderatorGroup = new Group("moderator");
         givenBranches();
         givenBranchesCollection();
@@ -185,7 +188,7 @@ public class UserGroupVmTest {
 
     @Test(dataProvider = "provideRandomBranchesAndGroupsList")
     public void testSaveModeratorForCurrentBranch(List<PoulpeBranch> branchesList, List<Group> groupsList) throws NoSuchFieldException, IllegalAccessException {
-        branches = spy(new BranchGroupMap(branchesList, groupsList));
+        branches = spy(new BranchGroupMap(branchesList, groupsList,branchService));
         givenBranches();
         givenBranchesCollection();
         viewModel = spy(userGroupVm);

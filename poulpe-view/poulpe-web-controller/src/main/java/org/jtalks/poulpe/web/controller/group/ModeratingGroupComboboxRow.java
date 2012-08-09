@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
 
 /**
  * Wires {@link Group} and {@link PoulpeBranch} by holding selected group for branch, allows to make interface with
@@ -24,6 +25,7 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
  * @author Leonid Kazancev
  */
 public class ModeratingGroupComboboxRow {
+    private final BranchService branchService;
     private PoulpeBranch currentBranch;
     private Group selectedGroup;
 
@@ -54,8 +56,9 @@ public class ModeratingGroupComboboxRow {
      *
      * @param currentBranch {@link PoulpeBranch} at currently processing row
      */
-    public ModeratingGroupComboboxRow(PoulpeBranch currentBranch) {
+    public ModeratingGroupComboboxRow(PoulpeBranch currentBranch, BranchService branchService) {
         this.currentBranch = currentBranch;
+        this.branchService = branchService;
     }
 
     /**
@@ -101,9 +104,10 @@ public class ModeratingGroupComboboxRow {
     }
 
     /**
-     * Sets moderators {@link Group} for 'currentBranch'.
+     * Sets moderators {@link Group} for 'currentBranch', then save it.
      */
-    public void setModeratorsGroup() {
+    public void saveModeratorsGroup() {
         currentBranch.setModeratorsGroup(selectedGroup);
+        branchService.saveBranch(currentBranch);
     }
 }

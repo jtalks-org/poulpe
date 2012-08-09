@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -45,6 +46,7 @@ public class UserGroupVm {
 
     //Injected
     private final GroupService groupService;
+    private final BranchService branchService;
     private final WindowManager windowManager;
 
     private ListModelList<Group> groups;
@@ -65,10 +67,11 @@ public class UserGroupVm {
      * @param windowManager  the window manager instance
      */
     public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity,
-                       @Nonnull WindowManager windowManager) {
+                       @Nonnull WindowManager windowManager, @Nonnull BranchService branchService) {
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
+        this.branchService = branchService;
     }
 
     /**
@@ -119,7 +122,7 @@ public class UserGroupVm {
     public void showGroupDeleteConfirmDialog() {
         showDeleteConfirmDialog = true;
         if (isModeratingGroup()) {
-            branches = new BranchGroupMap(getModeratedBranches(), groupService.getAll());
+            branches = new BranchGroupMap(getModeratedBranches(), groupService.getAll(), branchService);
             setSelectedModeratorGroupForAllBranches(selectedGroup);
             showDeleteModeratorGroupDialog = true;
         }
@@ -189,7 +192,7 @@ public class UserGroupVm {
     @NotifyChange({SELECTED_BRANCH, MODERATING_BRANCHES, SHOW_MODERATOR_GROUP_SELECTION_PART})
     public void saveModeratorForBranches() {
          branches.setModeratingGroupForAllBranches(selectedGroup);
-        closeDeleteModeratorGroupDialog();
+         closeDeleteModeratorGroupDialog();
     }
 
 
@@ -337,12 +340,15 @@ public class UserGroupVm {
      * @param selectedModeratorGroupForAllBranches
      *         {@link Group} currently selected moderator group
      */
-    @NotifyChange({SELECTED_MODERATOR_GROUP, "branches"})
+    @NotifyChange({SELECTED_MODERATOR_GROUP, MODERATING_BRANCHES})
     public void setSelectedModeratorGroupForAllBranches(Group selectedModeratorGroupForAllBranches) {
         branches.setSelectedGroupForAllBranches(selectedModeratorGroupForAllBranches);
         this.selectedModeratorGroupForAllBranches = selectedModeratorGroupForAllBranches;
     }
 
+    /**
+     * @return {@link BranchGroupMap}
+     */
     public BranchGroupMap getBranches() {
         return branches;
     }
