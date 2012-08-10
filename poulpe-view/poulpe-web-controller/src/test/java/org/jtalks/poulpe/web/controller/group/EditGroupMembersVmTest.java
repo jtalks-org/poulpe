@@ -167,6 +167,12 @@ public class EditGroupMembersVmTest {
         assertTrue(allUser.containsAll(groupToEdit.getUsers()));
     }
 
+    @Test
+    public void testItemsAvailPerPage(){
+        viewModel.setItemsAvailPerPage(100);
+        assertTrue(viewModel.getItemsAvailPerPage()==100);
+    }
+
     private void vefiryNothingChanges() {
         verify(userService, never()).updateUser(any(PoulpeUser.class));
 

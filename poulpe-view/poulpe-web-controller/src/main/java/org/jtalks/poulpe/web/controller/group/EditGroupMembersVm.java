@@ -76,7 +76,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
                               @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity)
-            throws NotFoundException {
+        throws NotFoundException {
         groupToEdit = groupService.get(selectedEntity.getEntity().getId());
         this.windowManager = windowManager;
         this.groupService = groupService;
