@@ -16,8 +16,6 @@ package org.jtalks.poulpe.validator;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.validator.AbstractValidator;
 import org.zkoss.util.resource.Labels;
@@ -55,8 +53,9 @@ public class EmailValidator extends AbstractValidator {
         PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
         String oldEmail = user.getEmail();
         user.setEmail(email);
-        if (!beanValidationFails(validationContext, user)) {
-            user.setEmail(oldEmail);
+        boolean beanValidationFailed = beanValidationFails(validationContext, user);
+        user.setEmail(oldEmail);
+        if (!beanValidationFailed) {
             checkForUniqueness(validationContext, email, user);
         }
     }
