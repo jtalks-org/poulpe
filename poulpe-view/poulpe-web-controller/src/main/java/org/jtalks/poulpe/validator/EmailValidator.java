@@ -54,11 +54,12 @@ public class EmailValidator extends AbstractValidator {
     public void validate(ValidationContext validationContext) {
         String email = (String) validationContext.getProperty().getValue();
         PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
+        String oldEmail = user.getEmail();
         user.setEmail(email);
-        if (beanValidationFails(validationContext, user)) {
-            return;
+        if (!beanValidationFails(validationContext, user)) {
+            user.setEmail(oldEmail);
+            checkForUniqueness(validationContext, email, user);
         }
-        checkForUniqueness(validationContext, email, user);
     }
 
     private void checkForUniqueness(ValidationContext validationContext, String email, PoulpeUser user) {
