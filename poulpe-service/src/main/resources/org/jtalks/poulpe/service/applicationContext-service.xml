@@ -38,7 +38,7 @@
     </aop:config>
     <tx:advice id="userServiceTxAdvice">
         <tx:attributes>
-            <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception"/>
+            <tx:method name="get*" read-only="false" rollback-for="java.lang.Exception"/>
             <tx:method name="find*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="count*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="with*" read-only="true" rollback-for="java.lang.Exception"/>
@@ -80,6 +80,7 @@
         <constructor-arg index="0" ref="groupDao"/>
         <constructor-arg index="1" ref="entityValidator"/>
         <constructor-arg index="2" ref="userBanner"/>
+        <constructor-arg index="3" ref="branchPermissionManager"/>        
     </bean>
     <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
         <constructor-arg index="0" ref="rankDao"/>

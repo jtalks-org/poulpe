@@ -37,6 +37,7 @@ import org.springframework.security.acls.model.Sid;
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
+import org.jtalks.common.model.permissions.ProfilePermission;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
@@ -115,7 +116,29 @@ public class PermissionManager {
     public GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component) {
         return getPermissionsMapFor(GeneralPermission.getAllAsList(), component);
     }
-
+    
+    /**
+     * Gets {@link PermissionsMap} for provided {@link Group}.
+     *
+     * @param groups the List grop to obtain PermissionsMap for
+     * @return {@link PermissionsMap} for {@link Group}
+     */
+    public GroupsPermissions<ProfilePermission> getPermissionsMapFor(List<Group> groups) {
+        GroupsPermissions<ProfilePermission> pm = new GroupsPermissions<ProfilePermission>(ProfilePermission.getAllAsList());
+        for (Group group: groups){
+            GroupsPermissions<ProfilePermission> pmGroup = getPermissionsMapFor(ProfilePermission.getAllAsList(), group);
+            for (ProfilePermission permission:pmGroup.getPermissions()){
+                for(Group groupInsert : pmGroup.getAllowed(permission)){
+                    pm.addAllowed(permission,groupInsert);
+                }
+                for(Group groupInsert : pmGroup.getRestricted(permission)){
+                    pm.addRestricted(permission,groupInsert);
+                }
+            }
+        }
+        return pm;
+    } 
+    
     /**
      * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for provided {@link Entity}.
      *
