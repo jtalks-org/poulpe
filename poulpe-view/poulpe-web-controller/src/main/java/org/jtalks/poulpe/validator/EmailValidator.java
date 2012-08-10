@@ -36,7 +36,6 @@ import java.util.Set;
  */
 public class EmailValidator extends AbstractValidator {
     private static final String DUPLICATED_MAIL_MESSAGE = "err.users.edit.dublicate_email";
-    private final Logger logger = LoggerFactory.getLogger(getClass());
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private final UserService userService;
 
