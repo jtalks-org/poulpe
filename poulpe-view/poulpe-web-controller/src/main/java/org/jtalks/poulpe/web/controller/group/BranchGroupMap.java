@@ -17,7 +17,9 @@ package org.jtalks.poulpe.web.controller.group;
 import com.google.common.collect.ImmutableList;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -30,6 +32,7 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class BranchGroupMap {
+    private final BranchService branchService;
     private List<Group> allAvailableGroups;
     private List<ModeratingGroupComboboxRow> branchesCollection;
     private Iterator<ModeratingGroupComboboxRow> iterator;
@@ -41,12 +44,13 @@ public class BranchGroupMap {
      * @param branches list of {@link PoulpeBranch} moderated by currently selected at {@link UserGroupVm} group
      * @param groups   list of {@link Group} available for selection
      */
-    public BranchGroupMap(List<PoulpeBranch> branches, List<Group> groups) {
+    public BranchGroupMap(List<PoulpeBranch> branches, List<Group> groups, BranchService branchService) {
         allAvailableGroups = ImmutableList.copyOf(groups);
         branchesCollection = new ArrayList<ModeratingGroupComboboxRow>(branches.size());
         for (PoulpeBranch branch : branches) {
-            branchesCollection.add(new ModeratingGroupComboboxRow(branch));
+            branchesCollection.add(new ModeratingGroupComboboxRow(branch, branchService));
         }
+        this.branchService = branchService;
     }
 
     /**
@@ -80,7 +84,7 @@ public class BranchGroupMap {
         while (iterator.hasNext()) {
             ModeratingGroupComboboxRow controller = iterator.next();
             if (controller.hasChanges(oldModeratorGroup)) {
-                controller.setModeratorsGroup();
+                controller.saveModeratorsGroup();
                 iterator.remove();
             }
         }
@@ -99,7 +103,7 @@ public class BranchGroupMap {
         while (iterator.hasNext()) {
             ModeratingGroupComboboxRow controller = iterator.next();
             if (controller.currentBrunchHasChanges(oldModeratorGroup, branch)) {
-                controller.setModeratorsGroup();
+                controller.saveModeratorsGroup();
                 iterator.remove();
             }
         }

@@ -16,6 +16,8 @@ package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.BranchService;
+import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -36,6 +38,8 @@ public class BranchGroupMapTest {
     private static final String FIELD_ITERATOR = "iterator";
     private BranchGroupMap branchGroupMap;
     private List<ModeratingGroupComboboxRow> branchesCollection;
+    @Mock
+    private BranchService branchService;
 
     private Group wasModeratorGroup;
     private Group groupToSet;
@@ -48,7 +52,7 @@ public class BranchGroupMapTest {
         MockitoAnnotations.initMocks(this);
         branchesList = provideRandomBranchesList();
         groupsList = provideRandomGroupsList();
-        branchGroupMap = new BranchGroupMap(branchesList, groupsList);
+        branchGroupMap = new BranchGroupMap(branchesList, groupsList, branchService);
         branchesCollection = branchGroupMap.getBranchesCollection();
 
         wasModeratorGroup = new Group("iAmOld");

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?page title="Edit Groups For Branch Permission" contentType="text/html; charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<!-- works with ZK 6 and later only -->
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+    <window title="Change Groups for Personal Permission" closable="true" border="normal" mode="modal"
+            onClose="@command('cancel')"
+            onCancel="@command('cancel')"
+            forward="onOK=savePermissionsButton.onClick"
+            apply="org.zkoss.bind.BindComposer"
+            viewModel="@id('editGroupsForPersonalPermissionVm') @init(editGroupsForPersonalPermissionVm)">
+        <vbox>
+            <hbox>
+                <panel title="Available" border="normal" width="300px">
+                    <panelchildren>
+                        <listbox model="@bind(editGroupsForPersonalPermissionVm.avail)" onSelect="@command('listSelected')"
+                                 multiple="true" checkmark="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick" height="250px">
+                            <listhead>
+                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
+                            </listhead>
+                            <template name="model" var="group">
+                                <listitem label="@load(group.name)"/>
+                            </template>
+                        </listbox>
+                    </panelchildren>
+                </panel>
+                <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" align="center">
+                    <image onClick="@command('add')" disabled="@load(empty editGroupsForPersonalPermissionVm.availSelected)"
+                           src="/resources/img/rightarrow.png"/>
+                    <image onClick="@command('addAll')" disabled="@load(empty editGroupsForPersonalPermissionVm.avail)"
+                           src="/resources/img/rightrightarrow.png"/>
+                    <image onClick="@command('remove')" disabled="@load(empty editGroupsForPersonalPermissionVm.existSelected)"
+                           src="/resources/img/leftarrow.png"/>
+                    <image onClick="@command('removeAll')" disabled="@load(empty editGroupsForPersonalPermissionVm.exist)"
+                           src="/resources/img/leftleftarrow.png"/>
+                </vbox>
+                <panel title="Already added" border="normal" width="300px">
+                    <panelchildren>
+                        <listbox model="@bind(editGroupsForPersonalPermissionVm.exist)" onSelect="@command('listSelected')"
+                                 multiple="true" checkmark="true" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick" height="250px">
+                            <listhead>
+                                <listheader label="Group" sclass="boldstyle" onCancel="@command('cancel')" forward="onOK=savePermissionsButton.onClick"/>
+                            </listhead>
+                            <template name="model" var="group">
+                                <listitem label="@load(group.name)"/>
+                            </template>
+                        </listbox>
+                    </panelchildren>
+                </panel>
+            </hbox>
+            <hbox align="center" pack="center" width="100%">
+                <button id="savePermissionsButton" label="${labels.window.save}" onClick="@command('save')" sclass="manage.groups.saveButton" width="100px"/>
+                <button id="cancelPermissionsButton" label="${labels.window.cancel}" onClick="@command('cancel')" width="100px"/>
+            </hbox>
+        </vbox>
+    </window>
+</zk>

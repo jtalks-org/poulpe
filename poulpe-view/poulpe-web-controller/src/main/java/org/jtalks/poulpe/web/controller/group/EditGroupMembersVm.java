@@ -32,9 +32,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.*;
 import static org.hamcrest.text.StringContains.containsString;
 
 /**
@@ -44,26 +42,25 @@ import static org.hamcrest.text.StringContains.containsString;
  * @author Mikhail Zaitsev
  */
 public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
-	
-	public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
-	
-	public static final String AVAIL_TOTAL_SIZE="availTotalSize", AVAIL_ACTIVE_PAGE="activeAvailPage";
-	
+
+    public static final String EDIT_GROUP_MEMBERS_URL = "/groups/EditMembers.zul";
+    public static final String AVAIL_TOTAL_SIZE = "availTotalSize", AVAIL_ACTIVE_PAGE = "activeAvailPage";
+
     private final GroupService groupService;
     private final UserService userService;
     private final WindowManager windowManager;
 
     /**
-     *  Avail pagination
+     * Avail pagination
      */
     private UiPagination availPagination;
 
     /**
-     *  Common buffer users
+     * Common buffer users
      */
     private List<PoulpeUser> commonBufferUsers;
 
-	/**
+    /**
      * Group to be edited
      */
     private final Group groupToEdit;
@@ -79,8 +76,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     public EditGroupMembersVm(@Nonnull WindowManager windowManager, @Nonnull GroupService groupService,
                               @Nonnull UserService userService, @Nonnull SelectedEntity<Group> selectedEntity)
-            throws NotFoundException {
-
+        throws NotFoundException {
         groupToEdit = groupService.get(selectedEntity.getEntity().getId());
         this.windowManager = windowManager;
         this.groupService = groupService;
@@ -90,7 +86,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
         users.addAll((List<PoulpeUser>) (List<?>) groupToEdit.getUsers());
         setStateAfterEdit(users);
 
-        commonBufferUsers =new ArrayList<PoulpeUser>();
+        commonBufferUsers = new ArrayList<PoulpeUser>();
 
         availPagination = new UiPagination();
 
@@ -100,11 +96,13 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
 
     /**
      * Gets group to be edited.
+     *
      * @return the {@link Group} instance
      */
     public Group getGroupToEdit() {
         return groupToEdit;
     }
+
     /**
      * @return number of active page elements available
      */
@@ -129,10 +127,11 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     /**
      * @param activePage number of active page elements available
      */
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_PROPERTY})
     public void setActiveAvailPage(int activePage) {
         availPagination.setActivePage(activePage);
-        List<PoulpeUser> users=userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(), getActiveAvailPage(), getItemsAvailPerPage());
+        List<PoulpeUser> users = userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit(),
+                getActiveAvailPage(), getItemsAvailPerPage());
         getAvail().clear();
         getAvail().addAll(users);
     }
@@ -142,8 +141,10 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @NotifyChange({AVAIL_TOTAL_SIZE})
     public int getAvailTotalSize() {
-        int result = userService.countUsernameMatches(getAvailFilterTxt())-getStateAfterEdit().size();
-        if(result<0)return 0;
+        int result = userService.countUsernameMatches(getAvailFilterTxt()) - getStateAfterEdit().size();
+        if (result < 0) {
+            return 0;
+        }
         return result;
     }
 
@@ -183,9 +184,10 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      * updated with values of search result.
      */
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void filterAvail() {
-    	setActiveAvailPage(0);
+        setActiveAvailPage(0);
     }
 
     /**
@@ -225,7 +227,7 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @Init
     public void updateVm() {
-    	filterAvail();
+        filterAvail();
         filterExist();
     }
 
@@ -234,50 +236,57 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     private void switchToGroupsWindow() {
         // TODO: Needs refactoring for window manager, it must looks like: windowManager.openGroupsWindow();
-    	windowManager.open("usergroup.zul");
+        windowManager.open("usergroup.zul");
     }
 
-	/**
+    /**
      * Opens edit group members dialog window.
+     *
      * @param windowManager the window manager instance
      */
     public static void showDialog(WindowManager windowManager) {
         windowManager.open(EDIT_GROUP_MEMBERS_URL);
     }
-    
+
     @Override
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void add() {
-    	super.add();
+        super.add();
     }
-    
+
     @Override
     @Command
-    @NotifyChange({ AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void addAll() {
-        if(commonBufferUsers.size()<userService.countUsernameMatches("")){
-            commonBufferUsers=userService.findUsersNotInList(getAvailFilterTxt(),getStateAfterEdit());
+        if (commonBufferUsers.size() < userService.countUsernameMatches("")) {
+            commonBufferUsers = userService.findUsersNotInList(getAvailFilterTxt(), getStateAfterEdit());
             commonBufferUsers.addAll(getStateAfterEdit());
         }
         getStateAfterEdit().clear();
         getStateAfterEdit().addAll(commonBufferUsers);
-    	getAvail().clear();
+        getAvail().clear();
         availPagination.setActivePage(0);
         filterExist();
     }
+
     @Override
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void remove() {
         getStateAfterEdit().removeAll(getExistSelected());
         getAvail().addAll(getExistSelected());
         availPagination.setActivePage(0);
         filterExist();
     }
+
     @Override
     @Command
-    @NotifyChange({AVAIL_ACTIVE_PAGE,AVAIL_TOTAL_SIZE,AVAIL_PROPERTY, EXIST_PROPERTY, AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
+    @NotifyChange({AVAIL_ACTIVE_PAGE, AVAIL_TOTAL_SIZE, AVAIL_PROPERTY, EXIST_PROPERTY,
+            AVAIL_SELECTED_PROPERTY, EXIST_SELECTED_PROPERTY})
     public void removeAll() {
         getStateAfterEdit().removeAll(getExist());
         getAvail().addAll(getExist());
@@ -286,6 +295,4 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
     }
 
 
-    
-    
 }
