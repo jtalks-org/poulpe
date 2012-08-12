@@ -24,6 +24,7 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
@@ -75,7 +76,9 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteComponent(Component component) throws SendingNotificationFailureException {
-        jCommuneNotifier.notifyAboutComponentDelete();
+        if(component instanceof Jcommune){
+            jCommuneNotifier.notifyAboutComponentDelete();
+        }
         dao.delete(component);
     }
 
