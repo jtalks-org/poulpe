@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
-import org.jtalks.poulpe.service.exceptions.SectionDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
@@ -55,7 +55,7 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
         } catch (IOException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        } catch (SectionDoesNotExist sectionDoesNotExist) {
+        } catch (ElementDoesNotExist elementDoesNotExist) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_HAS_NO_SUCH_SECTION), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }

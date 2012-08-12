@@ -17,7 +17,7 @@ package org.jtalks.poulpe.service;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.exceptions.SectionDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 
 import java.io.IOException;
 
@@ -67,7 +67,7 @@ public interface ForumStructureService {
      * @param section a section to be removed from the database
      * @return the updated JCommune
      */
-    Jcommune deleteSectionWithBranches(PoulpeSection section) throws IOException, SectionDoesNotExist;
+    Jcommune deleteSectionWithBranches(PoulpeSection section) throws IOException, ElementDoesNotExist;
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 

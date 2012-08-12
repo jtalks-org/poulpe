@@ -19,7 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.exceptions.SectionDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 
 import java.io.IOException;
 
@@ -33,17 +33,21 @@ public class JcommuneHttpNotifier {
     /**
      * @param section to be delete
      * @throws IOException some problem with connection to JCommune happend
-     * @throws SectionDoesNotExist if JCommune return 204 status code. That means that resource does not exist
+     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist if JCommune return 204 status code. That means that resource does not exist
      */
-    public void aboutSectionDelete(PoulpeSection section) throws IOException, SectionDoesNotExist {
+    public void aboutSectionDelete(PoulpeSection section) throws IOException, ElementDoesNotExist {
         long id = section.getId();
-        HttpClient httpClient = new DefaultHttpClient();
         String jCommuneUrl = "http://localhost:8080/jcommune";
-        HttpDelete deleteRequest = new HttpDelete(jCommuneUrl + "/sections/" + id);
+        deleteElement(jCommuneUrl + "/sections/" + id);
+    }
+
+    private void deleteElement(String url) throws ElementDoesNotExist, IOException {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpDelete deleteRequest = new HttpDelete(url);
         HttpResponse response = httpClient.execute(deleteRequest);
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode == 204 || statusCode == 404) {
-            throw new SectionDoesNotExist();
+            throw new ElementDoesNotExist();
         }
     }
 

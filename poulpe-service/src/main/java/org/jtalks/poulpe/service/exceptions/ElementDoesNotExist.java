@@ -15,13 +15,13 @@
 package org.jtalks.poulpe.service.exceptions;
 
 /**
- * Exception, which to be thrown, when section to be deleted does not exist
+ * Exception, which to be thrown, when element to be operated(for exmple - to be deleted) does not exist
  *
  * @author Nickolay Polyarniy
  */
-public class SectionDoesNotExist extends Exception {
+public class ElementDoesNotExist extends Exception {
 
-    public SectionDoesNotExist() {
+    public ElementDoesNotExist() {
         super();
     }
 }
