@@ -20,6 +20,9 @@ import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
+import org.jtalks.common.model.permissions.ProfilePermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
 
 /**
  * Service for dealing with {@link Group} objects
@@ -71,5 +74,28 @@ public interface GroupService extends EntityService<Group> {
      * @return list of branches moderated by selected group
      */
     List<PoulpeBranch> getModeratedBranches(Group group);
+ 
+    /**
+     * Return access lists for group.
+     * 
+     * @param branch group which will be returned access list
+     * @return access list
+     */
+    GroupsPermissions<ProfilePermission> getPermissionsFor();
 
+    /**
+     * Change grants for group.
+     * 
+     * @param group group to which grants will be changed
+     * @param changes grants for group
+     */
+    void changeGrants(Group group, PermissionChanges changes);
+
+    /**
+     * Change restriction for group.
+     * 
+     * @param group group to which restriction will be changed
+     * @param changes new restriction for group
+     */
+    void changeRestrictions(Group group, PermissionChanges changes);
 }

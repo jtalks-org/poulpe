@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jtalks.poulpe.model.dao.BranchDao;
@@ -24,6 +25,8 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 
 /**
  * @author stanislav bashkirtsev
@@ -33,6 +36,7 @@ public class TransactionalForumStructureService implements ForumStructureService
     private final SectionDao sectionDao;
     private final BranchDao branchDao;
     private final ComponentDao componentDao;
+    private JcommuneHttpNotifier jCommuneNotifier = new JcommuneHttpNotifier();
 
     public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao) {
         this.sectionDao = sectionDao;
@@ -54,6 +58,10 @@ public class TransactionalForumStructureService implements ForumStructureService
     @Override
     public Jcommune getJcommune() {
         return (Jcommune) componentDao.getByType(ComponentType.FORUM);
+    }
+
+    public void setjCommuneNotifier(JcommuneHttpNotifier jCommuneNotifier) {
+        this.jCommuneNotifier = jCommuneNotifier;
     }
 
     /**
@@ -81,7 +89,8 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public Jcommune deleteSectionWithBranches(PoulpeSection section) {
+    public Jcommune deleteSectionWithBranches(PoulpeSection section) throws IOException, ElementDoesNotExist {
+        jCommuneNotifier.notifyAboutSectionDelete(section);
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jcommune.removeSection(section);
         componentDao.saveOrUpdate(jcommune);

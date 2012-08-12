@@ -18,12 +18,14 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -78,10 +80,18 @@ public class ComponentsVm {
         DialogManager.Performable dc = new DialogManager.Performable() {
             @Override
             public void execute() {
-                componentService.deleteComponent(selected);
-                selected = null;
-                // Because confirmation needed, we have to send notification event programmatically
-                bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                try {
+                    componentService.deleteComponent(selected);
+                    selected = null;
+                    // Because confirmation needed, we have to send notification event programmatically
+                    bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+
+                } catch (ElementDoesNotExist elementDoesNotExist) {
+                    //TODO add error message
+                } catch (IOException e) {
+                    //TODO add error message
+                }
+
             }
         };
 
@@ -125,7 +135,7 @@ public class ComponentsVm {
         this.bindWrapper = bindWrapper;
     }
 
-    public static void show(WindowManager windowManager){
+    public static void show(WindowManager windowManager) {
         windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
 

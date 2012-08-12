@@ -38,7 +38,7 @@
     </aop:config>
     <tx:advice id="userServiceTxAdvice">
         <tx:attributes>
-            <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception"/>
+            <tx:method name="get*" read-only="false" rollback-for="java.lang.Exception"/>
             <tx:method name="find*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="count*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="with*" read-only="true" rollback-for="java.lang.Exception"/>
@@ -56,11 +56,13 @@
         <constructor-arg index="0" ref="sectionDao"/>
         <constructor-arg index="1" ref="branchDao"/>
         <constructor-arg index="2" ref="componentDao"/>
+        <property name="jCommuneNotifier" ref="jcommuneHttpNotifier" />
     </bean>
     <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
         <constructor-arg index="0" ref="componentDao"/>
         <constructor-arg index="1" ref="branchPermissionManager"/>
         <constructor-arg index="2" ref="entityValidator"/>
+        <property name="jCommuneNotifier" ref="jcommuneHttpNotifier" />
     </bean>
     <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
         <constructor-arg index="0" ref="sectionDao"/>
@@ -80,6 +82,7 @@
         <constructor-arg index="0" ref="groupDao"/>
         <constructor-arg index="1" ref="entityValidator"/>
         <constructor-arg index="2" ref="userBanner"/>
+        <constructor-arg index="3" ref="branchPermissionManager"/>        
     </bean>
     <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
         <constructor-arg index="0" ref="rankDao"/>
@@ -98,5 +101,8 @@
     <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">
         <constructor-arg index="0" ref="groupDao"/>
         <constructor-arg index="1" ref="userDao"/>
+    </bean>
+
+    <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier">
     </bean>
 </beans>
