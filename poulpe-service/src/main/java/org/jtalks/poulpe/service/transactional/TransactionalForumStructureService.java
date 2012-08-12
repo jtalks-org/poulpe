@@ -90,7 +90,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public Jcommune deleteSectionWithBranches(PoulpeSection section) throws IOException, ElementDoesNotExist {
-        jCommuneNotifier.aboutSectionDelete(section);
+        jCommuneNotifier.notifyAboutSectionDelete(section);
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jcommune.removeSection(section);
         componentDao.saveOrUpdate(jcommune);
