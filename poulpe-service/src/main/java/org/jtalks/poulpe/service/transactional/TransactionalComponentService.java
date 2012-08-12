@@ -26,9 +26,8 @@ import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
-import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -75,7 +74,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * {@inheritDoc}
      */
     @Override
-    public void deleteComponent(Component component) throws ElementDoesNotExist, IOException {
+    public void deleteComponent(Component component) throws SendingNotificationFailureException {
         jCommuneNotifier.notifyAboutComponentDelete();
         dao.delete(component);
     }

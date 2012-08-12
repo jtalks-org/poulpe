@@ -21,9 +21,8 @@ import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
@@ -48,7 +47,7 @@ public interface ComponentService extends EntityService<Component> {
      *
      * @param component component to delete
      */
-    void deleteComponent(Component component) throws ElementDoesNotExist, IOException;
+    void deleteComponent(Component component) throws SendingNotificationFailureException;
 
     /**
      * Saves new component or updates existent

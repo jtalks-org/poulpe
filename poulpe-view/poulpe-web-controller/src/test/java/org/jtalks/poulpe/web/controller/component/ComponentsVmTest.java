@@ -27,7 +27,7 @@ import java.util.Set;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -89,7 +89,7 @@ public class ComponentsVmTest {
     }
     
     @Test
-    public void deleteComponent_componentDeletedAfterConfirmation() throws ElementDoesNotExist, IOException {
+    public void deleteComponent_componentDeletedAfterConfirmation() throws SendingNotificationFailureException, IOException {
         Component selected = givenUserConfirmedDeletion();
         verify(componentService).deleteComponent(selected);
     }

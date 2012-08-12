@@ -18,7 +18,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -98,11 +98,8 @@ public class ComponentsVm {
                     // Because confirmation needed, we have to send notification event programmatically
                     bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
-                } catch (IOException e) {
+                } catch (SendingNotificationFailureException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
-                } catch (ElementDoesNotExist elementDoesNotExist) {
-                    Messagebox.show(Labels.getLabel(JCOMMUNE_HAS_NO_SUCH_SECTION), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
 

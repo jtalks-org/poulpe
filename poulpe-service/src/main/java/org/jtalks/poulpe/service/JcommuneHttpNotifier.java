@@ -19,12 +19,13 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 
 import java.io.IOException;
 
 /**
- * Class provide ability to notify JCommune about changes, such as deleting section.
+ * Notifier to notify JCommune component about elements' deleting. It is usefull to help forum keep such information,
+ * as user's messages count, up to date.
  *
  * @author Nickolay Polyarniy
  */
@@ -33,12 +34,12 @@ public class JcommuneHttpNotifier {
     private final String JCOMMUNE_URL = "http://localhost:8080/jcommune";
 
     /**
-     * @param section to be delete
-     * @throws IOException some problem with connection to JCommune happend
-     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist
-     *                     if JCommune return 204 status code. That means that resource does not exist
+     * Notifies delete the section
+     *
+     * @param section which will be deleted
+     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
      */
-    public void notifyAboutSectionDelete(PoulpeSection section) throws IOException, ElementDoesNotExist {
+    public void notifyAboutSectionDelete(PoulpeSection section) throws SendingNotificationFailureException {
         long id = section.getId();
         notifyAboutDeleteElement(JCOMMUNE_URL + "/sections/" + id);
     }
@@ -46,21 +47,21 @@ public class JcommuneHttpNotifier {
     /**
      * Notifies delete the component
      *
-     * @throws IOException some problem with connection to JCommune happend
-     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist
-     *                     if JCommune return 204 status code. That means that resource does not exist
+     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
      */
-    public void notifyAboutComponentDelete() throws ElementDoesNotExist, IOException {
+    public void notifyAboutComponentDelete() throws SendingNotificationFailureException {
         notifyAboutDeleteElement(JCOMMUNE_URL + "/wholeforum");
     }
 
-    private void notifyAboutDeleteElement(String url) throws ElementDoesNotExist, IOException {
-        HttpClient httpClient = new DefaultHttpClient();
-        HttpDelete deleteRequest = new HttpDelete(url);
-        HttpResponse response = httpClient.execute(deleteRequest);
-        int statusCode = response.getStatusLine().getStatusCode();
-        if (statusCode == 204 || statusCode == 404) {
-            throw new ElementDoesNotExist();
+    private void notifyAboutDeleteElement(String url) throws SendingNotificationFailureException {
+        try {
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpDelete deleteRequest = new HttpDelete(url);
+            HttpResponse response = null;
+            response = httpClient.execute(deleteRequest);
+            int statusCode = response.getStatusLine().getStatusCode();
+        } catch (IOException e) {
+            throw new SendingNotificationFailureException();
         }
     }
 

@@ -15,13 +15,14 @@
 package org.jtalks.poulpe.service.exceptions;
 
 /**
- * Exception, which to be thrown, when element to be operated(for exmple - to be deleted) does not exist
+ * Exception, which to be thrown, when some problems happend, while sending notification. For example JCommune server
+ * was not started. Or it dropped. And so on.
  *
  * @author Nickolay Polyarniy
  */
-public class ElementDoesNotExist extends Exception {
+public class SendingNotificationFailureException extends Exception {
 
-    public ElementDoesNotExist() {
+    public SendingNotificationFailureException() {
         super();
     }
 }
