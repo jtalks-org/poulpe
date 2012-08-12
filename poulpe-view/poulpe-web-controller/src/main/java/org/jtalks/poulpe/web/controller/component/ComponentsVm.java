@@ -26,6 +26,8 @@ import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zul.Messagebox;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -48,6 +50,10 @@ public class ComponentsVm {
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
+
+    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_notification_failed";
+    private final String JCOMMUNE_HAS_NO_SUCH_SECTION = "component.error.jcommune_has_no_such_section";
+    private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
@@ -92,10 +98,12 @@ public class ComponentsVm {
                     // Because confirmation needed, we have to send notification event programmatically
                     bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
-                } catch (ElementDoesNotExist elementDoesNotExist) {
-                    //TODO add error message
                 } catch (IOException e) {
-                    //TODO add error message
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
+                } catch (ElementDoesNotExist elementDoesNotExist) {
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_HAS_NO_SUCH_SECTION), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
                 }
 
             }
