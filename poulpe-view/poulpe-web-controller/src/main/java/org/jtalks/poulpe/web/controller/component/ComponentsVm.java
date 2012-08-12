@@ -23,9 +23,14 @@ import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -34,6 +39,7 @@ import java.util.List;
  * @author Alexey Grigorev
  */
 public class ComponentsVm {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
@@ -96,6 +102,29 @@ public class ComponentsVm {
         };
 
         dialogManager.confirmDeletion(selected.getName(), dc);
+    }
+
+    /**
+     * Sending empty httpRequest to jcommune, this request starts re-index process at jcommune.
+     */
+    @Command
+    public void reindexComponent() {
+        String EMPTY_REQUEST = "";
+        String jcommuneUrl = selected.getUrl();
+        String reindexUrlPart = "/search/index/rebuild";
+        String reindexUrl = jcommuneUrl + reindexUrlPart;
+        URL url = null;
+
+        try {
+            url = new URL(reindexUrl);
+            URLConnection connection = url.openConnection();
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+            wr.write(EMPTY_REQUEST);
+            wr.flush();
+            wr.close();
+        } catch (Exception e) {
+            logger.warn("Error sending request to Jcommune: {}. Root cause: ", reindexUrl, e);
+        }
     }
 
     /**
