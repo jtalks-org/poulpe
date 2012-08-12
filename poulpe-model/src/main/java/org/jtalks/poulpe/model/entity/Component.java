@@ -37,6 +37,7 @@ public class Component extends Entity {
     private static final String COMPONENT_EMPTY_COMPONENT_TYPE = 
             "{component.componentType.emptiness_constraint_violation}";
     private static final String COMPONENT_CANT_BE_VOID = "{component.name.emptiness_constraint_violation}";
+    private static final String URL_PROPERTY = "jcommune.url_address";
 
     public static final int COMPONENT_NAME_MAX_LENGTH = 100;
     public static final int COMPONENT_DESCRIPTION_MAX_LENGTH = 256;
@@ -98,6 +99,13 @@ public class Component extends Entity {
      */
     protected void setProperties(List<Property> properties) {
         this.properties = properties;
+    }
+
+    /**
+     * @return URL of the component
+     */
+    public String getUrl(){
+        return getProperty(URL_PROPERTY);
     }
 
     /**
