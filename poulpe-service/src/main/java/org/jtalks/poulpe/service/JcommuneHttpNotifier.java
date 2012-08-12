@@ -35,13 +35,13 @@ public class JcommuneHttpNotifier {
      * @throws IOException some problem with connection to JCommune happend
      * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist if JCommune return 204 status code. That means that resource does not exist
      */
-    public void aboutSectionDelete(PoulpeSection section) throws IOException, ElementDoesNotExist {
+    public void notifyAboutSectionDelete(PoulpeSection section) throws IOException, ElementDoesNotExist {
         long id = section.getId();
         String jCommuneUrl = "http://localhost:8080/jcommune";
-        deleteElement(jCommuneUrl + "/sections/" + id);
+        notifyAboutDeleteElement(jCommuneUrl + "/sections/" + id);
     }
 
-    private void deleteElement(String url) throws ElementDoesNotExist, IOException {
+    private void notifyAboutDeleteElement(String url) throws ElementDoesNotExist, IOException {
         HttpClient httpClient = new DefaultHttpClient();
         HttpDelete deleteRequest = new HttpDelete(url);
         HttpResponse response = httpClient.execute(deleteRequest);
