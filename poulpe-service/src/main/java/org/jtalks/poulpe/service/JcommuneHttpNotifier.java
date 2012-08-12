@@ -30,15 +30,28 @@ import java.io.IOException;
  */
 public class JcommuneHttpNotifier {
 
+    private final String JCOMMUNE_URL = "http://localhost:8080/jcommune";
+
     /**
      * @param section to be delete
      * @throws IOException some problem with connection to JCommune happend
-     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist if JCommune return 204 status code. That means that resource does not exist
+     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist
+     *                     if JCommune return 204 status code. That means that resource does not exist
      */
     public void notifyAboutSectionDelete(PoulpeSection section) throws IOException, ElementDoesNotExist {
         long id = section.getId();
-        String jCommuneUrl = "http://localhost:8080/jcommune";
-        notifyAboutDeleteElement(jCommuneUrl + "/sections/" + id);
+        notifyAboutDeleteElement(JCOMMUNE_URL + "/sections/" + id);
+    }
+
+    /**
+     * Notifies delete the component
+     *
+     * @throws IOException some problem with connection to JCommune happend
+     * @throws org.jtalks.poulpe.service.exceptions.ElementDoesNotExist
+     *                     if JCommune return 204 status code. That means that resource does not exist
+     */
+    public void notifyAboutComponentDelete() throws ElementDoesNotExist, IOException {
+        notifyAboutDeleteElement(JCOMMUNE_URL + "/wholeforum");
     }
 
     private void notifyAboutDeleteElement(String url) throws ElementDoesNotExist, IOException {

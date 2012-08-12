@@ -20,12 +20,14 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
+import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.DialogManager.Performable;
@@ -87,7 +89,7 @@ public class ComponentsVmTest {
     }
     
     @Test
-    public void deleteComponent_componentDeletedAfterConfirmation() {
+    public void deleteComponent_componentDeletedAfterConfirmation() throws ElementDoesNotExist, IOException {
         Component selected = givenUserConfirmedDeletion();
         verify(componentService).deleteComponent(selected);
     }

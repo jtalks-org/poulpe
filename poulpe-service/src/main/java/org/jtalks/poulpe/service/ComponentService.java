@@ -18,16 +18,18 @@ import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.service.exceptions.ElementDoesNotExist;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
 /**
  * Service for some operations with {@link Component}.
- * 
+ *
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  * @author Vyacheslav Zhivaev
@@ -36,37 +38,38 @@ public interface ComponentService extends EntityService<Component> {
 
     /**
      * Get all components.
-     * 
+     *
      * @return the list of the components
      */
     List<Component> getAll();
 
     /**
      * Delete the specified component.
-     * 
+     *
      * @param component component to delete
      */
-    void deleteComponent(Component component);
+    void deleteComponent(Component component) throws ElementDoesNotExist, IOException;
 
     /**
      * Saves new component or updates existent
-     * 
+     *
      * @param component to save
-     * @exception org.jtalks.common.validation.ValidationException when entity being saved violates validation
-     * constraints
+     * @throws org.jtalks.common.validation.ValidationException
+     *          when entity being saved violates validation
+     *          constraints
      */
     void saveComponent(Component component);
 
     /**
      * Get the set of unoccupied ComponentType.
-     * 
+     *
      * @return set of ComponentType
      */
     Set<ComponentType> getAvailableTypes();
 
     /**
      * Gets component by it's type.
-     * 
+     *
      * @param type the component's type
      * @return the component
      */
@@ -74,7 +77,7 @@ public interface ComponentService extends EntityService<Component> {
 
     /**
      * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link Component}.
-     * 
+     *
      * @param component the component to get for
      * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link Component}
      */
@@ -82,24 +85,24 @@ public interface ComponentService extends EntityService<Component> {
 
     /**
      * Change grants for component.
-     * 
-     * @see PermissionChanges
+     *
      * @param component the component to change for
-     * @param changes the {@link PermissionChanges} which needs to be applied
+     * @param changes   the {@link PermissionChanges} which needs to be applied
+     * @see PermissionChanges
      */
     void changeGrants(Component component, PermissionChanges changes);
 
     /**
      * Change restrictions for component.
-     * 
+     *
      * @param component the component to change for
-     * @param changes the {@link PermissionChanges} which needs to be applied
+     * @param changes   the {@link PermissionChanges} which needs to be applied
      */
     void changeRestrictions(Component component, PermissionChanges changes);
 
     /**
      * By given type retrieves {@link ComponentBase}
-     * 
+     *
      * @param componentType of the component
      * @return base component of needed type
      */
