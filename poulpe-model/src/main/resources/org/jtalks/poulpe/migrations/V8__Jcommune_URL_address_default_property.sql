@@ -14,4 +14,14 @@
 --
 
 INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES
-    ('a5674e80-e097-11e1-9b23-0800200c9a66', 'FORUM', 'jcommune.url_address', '', '/(http:\\/\\/).+/');
+    (UUID(), 'FORUM', 'jcommune.url_address', '', '/(http:\\/\\/).+/');
+
+INSERT INTO PROPERTIES
+    (UUID, NAME, VALUE, CMP_ID, VALIDATION_RULE)
+SELECT
+    UUID(), dp.NAME, dp.VALUE, c.CMP_ID, dp.VALIDATION_RULE
+FROM
+    DEFAULT_PROPERTIES dp left join PROPERTIES p on dp.NAME = p.NAME
+        join COMPONENTS c on c.COMPONENT_TYPE = dp.BASE_COMPONENT_TYPE
+WHERE
+    p.NAME is NULL;
