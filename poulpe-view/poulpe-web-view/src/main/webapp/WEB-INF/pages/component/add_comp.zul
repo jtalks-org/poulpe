@@ -4,7 +4,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-  <window mode="modal" border="normal" title="${labels.componentedit.title}" apply="org.zkoss.bind.BindComposer"
+  <window mode="modal" border="normal" title="${labels.componentedit.title}" apply="org.zkoss.bind.BindComposer" validationMessages="@id('componentMsgs')"
     viewModel="@id('vm') @init(addComponentVm)" width="430px" closable="true" onClose="@command('cancelEdit')"
     onCancel="@command('cancelEdit')" onOK="@command('createComponent', title=titleTextBox.value, description=descriptionTextBox.value, componentType=componentTypeCombobox.selectedItem.value)">
     
@@ -16,16 +16,16 @@
       <rows>
         <row>
           ${labels.component.title}
-          <textbox id="titleTextBox" width="300px" constraint="no empty" value="@validator('beanValidator')" />
+          <textbox id="componentTitleBox" width="300px" value="@validator('beanValidator')" errorMessage="@load(componentMsgs[componentTitleBox])" />
         </row>
         <row>
           ${labels.component.description}
-          <textbox id="descriptionTextBox" width="300px" value="@validator('beanValidator')" />
+          <textbox id="componentDescriptionBox" width="300px" value="@validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])" />
         </row>
         <row>
           ${labels.component.type}
           <combobox id="componentTypeCombobox" model="@load(vm.availableComponentTypes)"
-            width="300px" readonly="true" constraint="no empty">
+            width="300px" readonly="true" >
             <template name="model" var="componentType">
               <comboitem label="@load(componentType)" />
             </template>

@@ -4,7 +4,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
 
-  <window mode="modal" border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer"
+  <window mode="modal" border="normal" title="${labels.componentedit.windowname}" apply="org.zkoss.bind.BindComposer" validationMessages="@id('componentMsgs')"
     viewModel="@id('vm') @init(editComponentVm)" closable="true" width="35%" onClose="@command('cancel')" onOK="@command('save')"
     onCancel="@command('cancel')">
 
@@ -17,16 +17,17 @@
         <rows>
           <row>
             ${labels.component.title}
-            <textbox width="40%"
-              value="@bind(component.name) @validator('beanValidator')" />
+            <textbox width="40%" id="componentTitleBox"
+              value="@bind(component.name) @validator('beanValidator')"
+              errorMessage="@load(componentMsgs[componentTitleBox])" />
           </row>
           <row>
             ${labels.component.description}
-            <textbox width="95%"
-              value="@bind(component.description) @validator('beanValidator')" />
-          </row>
-        </rows>
-      </grid>
+        <textbox width="95%" id="componentDescriptionBox"
+                 value="@bind(component.description) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])"/>
+    </row>
+  </rows>
+</grid>
 
       <grid model="@load(component.properties)">
         <columns>
