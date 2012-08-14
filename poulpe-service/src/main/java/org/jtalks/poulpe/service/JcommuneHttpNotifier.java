@@ -19,7 +19,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 import java.io.IOException;
 
@@ -37,9 +38,10 @@ public class JcommuneHttpNotifier {
      * Notifies delete the section
      *
      * @param section which will be deleted
-     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
+     * @throws org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException some connection problems happend, while trying to notify jCommune
      */
-    public void notifyAboutSectionDelete(PoulpeSection section) throws SendingNotificationFailureException {
+    public void notifyAboutSectionDelete(PoulpeSection section)
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException {
         long id = section.getId();
         notifyAboutDeleteElement(JCOMMUNE_URL + "/sections/" + id);
     }
@@ -47,21 +49,26 @@ public class JcommuneHttpNotifier {
     /**
      * Notifies delete the component
      *
-     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
+     * @throws org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException some connection problems happend, while trying to notify jCommune
      */
-    public void notifyAboutComponentDelete() throws SendingNotificationFailureException {
+    public void notifyAboutComponentDelete()
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
         notifyAboutDeleteElement(JCOMMUNE_URL + "/wholeforum");
     }
 
-    private void notifyAboutDeleteElement(String url) throws SendingNotificationFailureException {
+    private void notifyAboutDeleteElement(String url)
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException {
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpDelete deleteRequest = new HttpDelete(url);
             HttpResponse response = null;
             response = httpClient.execute(deleteRequest);
             int statusCode = response.getStatusLine().getStatusCode();
+            if(statusCode<200 || statusCode>299){
+                throw new JcommuneRespondedWithErrorException();
+            }
         } catch (IOException e) {
-            throw new SendingNotificationFailureException();
+            throw new NoConnectionToJcommuneException();
         }
     }
 
