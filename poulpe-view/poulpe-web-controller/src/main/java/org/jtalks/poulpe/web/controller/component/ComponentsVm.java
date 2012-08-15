@@ -15,8 +15,10 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -26,6 +28,7 @@ import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
 
@@ -96,7 +99,7 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                    bindWrapper.postNotifyChange(ComponentsVm.this, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
                 } catch (SendingNotificationFailureException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
@@ -136,7 +139,28 @@ public class ComponentsVm {
      * Shows a window for adding component
      */
     @Command
-    public void addNewComponent() {
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewPoulpe() {
+        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.ADMIN_PANEL).newComponent("name","descr"));
+        AddComponentVm.openWindowForAdding(windowManager);
+    }
+
+    /**
+     * Shows a window for adding component
+     */
+    @Command
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewJcommune() {
+        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.FORUM).newComponent("name","descr"));
+        AddComponentVm.openWindowForAdding(windowManager);
+    }
+    /**
+     * Shows a window for adding component
+     */
+    @Command
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewArticle() {
+        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.ARTICLE).newComponent("name","descr"));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
@@ -172,5 +196,20 @@ public class ComponentsVm {
     public static void show(WindowManager windowManager) {
         windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
+
+    /**
+     * @return list of all available component types
+     */
+    public boolean isJcommuneAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.FORUM);
+    }
+    public boolean isPoulpeAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
+    }
+    public boolean isArticleAvailable() {
+     return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
+    }
+
+
 
 }

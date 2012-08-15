@@ -6,9 +6,9 @@
 
   <window mode="modal" border="normal" title="${labels.componentedit.title}" apply="org.zkoss.bind.BindComposer" validationMessages="@id('componentMsgs')"
     viewModel="@id('vm') @init(addComponentVm)" width="430px" closable="true" onClose="@command('cancelEdit')"
-    onCancel="@command('cancelEdit')" onOK="@command('createComponent', title=titleTextBox.value, description=descriptionTextBox.value, componentType=componentTypeCombobox.selectedItem.value)">
-    
-    <grid>
+    onCancel="@command('cancelEdit')" onOK="@command('createComponent', title=componentTitleBox.value, description=componentDescriptionBox.value, componentType=componentTypeCombobox.selectedItem.value)">
+
+      <grid form="@id('component') @load(vm.component) @save(vm.component, before='createComponent')">
       <columns>
         <column width="100px" />
         <column width="310px" />
@@ -16,31 +16,23 @@
       <rows>
         <row>
           ${labels.component.title}
-          <textbox id="componentTitleBox" width="300px" value="@validator('beanValidator')" errorMessage="@load(componentMsgs[componentTitleBox])" />
+          <textbox id="componentTitleBox" width="300px" value="@save(component.name) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentTitleBox])" />
         </row>
         <row>
           ${labels.component.description}
-          <textbox id="componentDescriptionBox" width="300px" value="@validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])" />
+          <textbox id="componentDescriptionBox" width="300px" value="@save(component.description) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])" />
         </row>
-        <row>
-          ${labels.component.type}
-          <combobox id="componentTypeCombobox" model="@load(vm.availableComponentTypes)"
-            width="300px" readonly="true" >
-            <template name="model" var="componentType">
-              <comboitem label="@load(componentType)" />
-            </template>
-          </combobox>
-        </row>
+
         <row align="right" spans="3">
           <hbox>
             <button image="/resources/img/accept16.png" label="${labels.componentedit.save}"
-              onClick="@command('createComponent', title=titleTextBox.value, description=descriptionTextBox.value, componentType=componentTypeCombobox.selectedItem.value)" />
+              onClick="@command('createComponent', title=componentTitleBox.value, description=componentDescriptionBox.value)" />
             <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}" onClick="@command('cancelEdit')" />
           </hbox>
         </row>
       </rows>
     </grid>
-    
+
   </window>
 
 </zk>

@@ -18,8 +18,7 @@
           <row>
             ${labels.component.title}
             <textbox width="40%" id="componentTitleBox"
-              value="@bind(component.name) @validator('beanValidator')"
-              errorMessage="@load(componentMsgs[componentTitleBox])" />
+              value="@bind(component.name) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentTitleBox])" />
           </row>
           <row>
             ${labels.component.description}

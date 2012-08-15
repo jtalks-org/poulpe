@@ -28,8 +28,16 @@
                 </template>
             </listbox>
             <div>
-                <button label="${labels.componentlist.add}" onClick="@command('addNewComponent')"
-                        disabled="@load(!vm.ableToCreateNewComponent)"/>
+                <menubar id="menubar" width="100%">
+                <menu label="${labels.componentlist.add}"  disabled="@load(!vm.ableToCreateNewComponent)">
+                    <menupopup>
+                        <menuitem label="FORUM" onClick="@command('addNewJcommune')" visible = "@load(vm.jcommuneAvailable)" />
+                        <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')" visible = "@load(vm.poulpeAvailable)" />
+                        <menuitem label="ARTICLE" onClick="@command('addNewArticle')" visible="@load(vm.articleAvailable)" />
+                    </menupopup>
+
+                </menu>
+                </menubar>
             </div>
         </vlayout>
 

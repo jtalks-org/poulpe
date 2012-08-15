@@ -120,11 +120,11 @@ public class ComponentsVmTest {
         componentsVm.deleteComponent();
     }
     
-    @Test
-    public void addNewComponent() {
-        componentsVm.addNewComponent();
-        verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
-    }
+//    @Test
+//    public void addNewComponent() {
+//        componentsVm.addNewComponent();
+//        verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
+//    }
     
     @Test
     public void configureComponent() {

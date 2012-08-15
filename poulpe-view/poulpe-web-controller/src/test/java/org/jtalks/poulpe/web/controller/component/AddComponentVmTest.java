@@ -26,6 +26,7 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -41,11 +42,13 @@ public class AddComponentVmTest {
 
     @Mock ComponentService componentService;
     @Mock WindowManager windowManager;
+    @Mock
+    SelectedEntity component;
 
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        addComponentVm = new AddComponentVm(componentService, windowManager);
+        addComponentVm = new AddComponentVm(componentService, windowManager, component);
     }
 
     @Test
@@ -59,7 +62,7 @@ public class AddComponentVmTest {
         givenBaseComponents();
         Component expected = TestFixtures.randomComponent();
 
-        addComponentVm.createComponent(expected.getName(), expected.getDescription(), expected.getComponentType());
+        addComponentVm.createComponent(expected.getName(), expected.getDescription());
 
         verify(componentService).saveComponent(fieldsEqualTo(expected));
     }
@@ -78,7 +81,7 @@ public class AddComponentVmTest {
         givenBaseComponents();
         
         Component expected = TestFixtures.randomComponent();
-        addComponentVm.createComponent(expected.getName(), expected.getDescription(), expected.getComponentType());
+        addComponentVm.createComponent(expected.getName(), expected.getDescription());
         
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
