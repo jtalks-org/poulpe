@@ -21,7 +21,10 @@ import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+import org.zkoss.util.resource.Labels;
+import org.zkoss.zul.Messagebox;
 
 /**
  * This VM is responsible for deleting the branch: whether to move the content of the branch to the other branch or
@@ -33,6 +36,9 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
     private static final String SHOW_DIALOG = "showDialog";
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
+    private final String JCOMMUNE_CONNECTION_FAILED = "branches.error.jcommune_no_connection";
+    private final String JCOMMUNE_RESPONSE_FAILED = "branches.error.jcommune_no_response";
+    private final String BRANCH_DELETING_FAILED_DIALOG_TITLE = "branches.deleting_problem_dialog.title";
 
     public DeleteBranchDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
@@ -45,9 +51,12 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
         PoulpeBranch selectedBranch = forumStructureVm.getSelectedItemInTree().getBranchItem();
         try {
             forumStructureService.removeBranch(selectedBranch);
-            forumStructureVm.removeBranchFromTree(selectedBranch);
-        } catch (SendingNotificationFailureException e) {
-            throw new IllegalStateException("Branch deletion error");
+        } catch (NoConnectionToJcommuneException e) {
+            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.OK, Messagebox.ERROR);
+        }catch (JcommuneRespondedWithErrorException ex) {
+            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.OK, Messagebox.ERROR);
         }
     }
 

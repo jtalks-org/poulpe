@@ -30,7 +30,6 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.testng.annotations.BeforeMethod;

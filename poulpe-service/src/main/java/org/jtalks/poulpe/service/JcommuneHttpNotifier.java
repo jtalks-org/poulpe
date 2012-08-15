@@ -20,7 +20,6 @@ import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
@@ -52,9 +51,9 @@ public class JcommuneHttpNotifier {
      * Notifies delete the branch
      *
      * @param branch which will be deleted
-     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
      */
-    public void notifyAboutBranchDelete(PoulpeBranch branch) throws SendingNotificationFailureException {
+    public void notifyAboutBranchDelete(PoulpeBranch branch)
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
         long id = branch.getId();
         notifyAboutDeleteElement(JCOMMUNE_URL + "/branch/" + id);
     }
