@@ -43,7 +43,7 @@ import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -96,7 +96,7 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    public void testDeleteComponent() throws SendingNotificationFailureException, IOException {
+    public void testDeleteComponent() throws NoConnectionToJcommuneException, IOException {
         //componentService.deleteComponent(component);
         //verify(componentDao).delete(component);
     }

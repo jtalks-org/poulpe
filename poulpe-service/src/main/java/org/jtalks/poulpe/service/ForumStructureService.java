@@ -17,7 +17,8 @@ package org.jtalks.poulpe.service;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 /**
  * A coarse-grained service to work with forum structure (sections, branches).
@@ -65,7 +66,8 @@ public interface ForumStructureService {
      * @param section a section to be removed from the database
      * @return the updated JCommune
      */
-    Jcommune deleteSectionWithBranches(PoulpeSection section) throws SendingNotificationFailureException;
+    Jcommune deleteSectionWithBranches(PoulpeSection section)
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException;
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 

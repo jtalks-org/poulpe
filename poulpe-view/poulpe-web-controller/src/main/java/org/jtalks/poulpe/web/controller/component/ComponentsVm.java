@@ -20,7 +20,8 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -32,7 +33,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -54,8 +54,8 @@ public class ComponentsVm {
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
 
-    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_notification_failed";
-    private final String JCOMMUNE_HAS_NO_SUCH_SECTION = "component.error.jcommune_has_no_such_section";
+    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
+    private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
     private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
@@ -101,8 +101,11 @@ public class ComponentsVm {
                     // Because confirmation needed, we have to send notification event programmatically
                     bindWrapper.postNotifyChange(ComponentsVm.this, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
-                } catch (SendingNotificationFailureException elementDoesNotExist) {
+                } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
+                } catch (JcommuneRespondedWithErrorException elementDoesNotExist){
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
 
