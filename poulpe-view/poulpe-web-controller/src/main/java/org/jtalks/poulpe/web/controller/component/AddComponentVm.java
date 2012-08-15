@@ -29,6 +29,7 @@ import java.util.List;
  * View-Model for adding a selectedEntity. Shown from {@link ComponentsVm}.
  *
  * @author Alexey Grigorev
+ * @author Leonid Kazantcev
  */
 public class AddComponentVm {
     static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
@@ -41,40 +42,28 @@ public class AddComponentVm {
      * Constructs new dialog for creating components. It should be used as a prototype, new object for every new
      * selectedEntity.
      *
-     * @param componentService service for saving selectedEntity
+     * @param componentService service for saving Component
      * @param windowManager    object for opening and closing application windows
-     * @param selectedEntity selectedEntity instance to save in the base
+     * @param selectedEntity selectedEntity holder of {@link Component} instance, witch will be saved to data base,
+     *                       after set up its name and description at UI
      */
     public AddComponentVm(ComponentService componentService, WindowManager windowManager, SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.windowManager = windowManager;
-
         component = selectedEntity.getEntity();
     }
 
     /**
-     * Creates and saves selectedEntity.
-     *
-     * @param title         of the selectedEntity
-     * @param description   its description
+     * Saves component, with params seted up at dialog to data base.
      */
     @Command
-    public void createComponent(@BindingParam(value = "title") String title,
-                                @BindingParam(value = "description") String description
-                                ) {
-
-        // TODO: move to service? looks like logic
-        // but then in service it would be 3 params
-        
-        component.setName(title);
-        component.setDescription(description);
+    public void createComponent() {
         componentService.saveComponent(component);
-
         switchToComponentsWindow();
     }
 
     /**
-     * Cancels edit and switches to components window
+     * Cancels edit and switches to components window.
      */
     @Command
     public void cancelEdit() {
@@ -89,14 +78,14 @@ public class AddComponentVm {
     }
 
     /**
-     * Opens components view, closing it
+     * Opens components view, closing current dialog.
      */
     private void switchToComponentsWindow() {
         ComponentsVm.show(windowManager);
     }
 
     /**
-     * With given window manager, opens this dialog from {@link ComponentsVm}
+     * With given window manager, opens this dialog from {@link ComponentsVm}.
      *
      * @param windowManager to be used for opening the dialog
      */

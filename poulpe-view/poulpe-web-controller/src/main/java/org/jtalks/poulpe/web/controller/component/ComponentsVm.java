@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -42,11 +41,14 @@ import java.util.List;
  * Adding, removing, editing and configuring of components.
  *
  * @author Alexey Grigorev
+ * @author Leonid Kazantcev
  */
 public class ComponentsVm {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components";
+    private static final String DEFAULT_NAME = "name";
+    private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
 
     private final ComponentService componentService;
@@ -104,7 +106,7 @@ public class ComponentsVm {
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
-                } catch (JcommuneRespondedWithErrorException elementDoesNotExist){
+                } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
@@ -139,31 +141,35 @@ public class ComponentsVm {
     }
 
     /**
-     * Shows a window for adding component
+     * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Poulpe} component.
      */
     @Command
     @NotifyChange(CAN_CREATE_NEW_COMPONENT)
     public void addNewPoulpe() {
-        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.ADMIN_PANEL).newComponent("name","descr"));
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.ADMIN_PANEL).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
     /**
-     * Shows a window for adding component
+     * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Jcommune} component.
      */
     @Command
     @NotifyChange(CAN_CREATE_NEW_COMPONENT)
     public void addNewJcommune() {
-        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.FORUM).newComponent("name","descr"));
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
+
     /**
-     * Shows a window for adding component
+     * Method will removed after completion of tests.
      */
     @Command
     @NotifyChange(CAN_CREATE_NEW_COMPONENT)
     public void addNewArticle() {
-        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.ARTICLE).newComponent("name","descr"));
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.ARTICLE).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
@@ -191,28 +197,46 @@ public class ComponentsVm {
         this.selected = selected;
     }
 
+    /**
+     * @param bindWrapper {@link BindUtilsWrapper} instance to set
+     */
     @VisibleForTesting
     void setBindWrapper(BindUtilsWrapper bindWrapper) {
         this.bindWrapper = bindWrapper;
     }
 
+    /**
+     * Opens Components window.
+     *
+     * @param windowManager implementation of {@link WindowManager} for opening and closing application windows
+     */
     public static void show(WindowManager windowManager) {
         windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
 
     /**
-     * @return list of all available component types
+     * @return true if component {@link org.jtalks.poulpe.model.entity.Jcommune} with {@link ComponentType}
+     *         FORUM type are not created yet, false otherwise
      */
     public boolean isJcommuneAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.FORUM);
     }
+
+    /**
+     * @return true if component {@link org.jtalks.poulpe.model.entity.Poulpe} with {@link ComponentType}
+     *         ADMIN_PANEL type are not created yet, false otherwise
+     */
     public boolean isPoulpeAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
     }
-    public boolean isArticleAvailable() {
-     return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
-    }
 
+    /**
+     * @return true if component with {@link org.jtalks.poulpe.model.entity.Poulpe} type are not created yet,
+     *         false otherwise
+     */
+    public boolean isArticleAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
+    }
 
 
 }

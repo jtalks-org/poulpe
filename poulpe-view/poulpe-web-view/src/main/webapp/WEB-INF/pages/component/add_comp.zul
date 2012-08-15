@@ -6,7 +6,7 @@
 
   <window mode="modal" border="normal" title="${labels.componentedit.title}" apply="org.zkoss.bind.BindComposer" validationMessages="@id('componentMsgs')"
     viewModel="@id('vm') @init(addComponentVm)" width="430px" closable="true" onClose="@command('cancelEdit')"
-    onCancel="@command('cancelEdit')" onOK="@command('createComponent', title=componentTitleBox.value, description=componentDescriptionBox.value, componentType=componentTypeCombobox.selectedItem.value)">
+    onCancel="@command('cancelEdit')" onOK="@command('createComponent')">
 
       <grid form="@id('component') @load(vm.component) @save(vm.component, before='createComponent')">
       <columns>
@@ -26,7 +26,7 @@
         <row align="right" spans="3">
           <hbox>
             <button image="/resources/img/accept16.png" label="${labels.componentedit.save}"
-              onClick="@command('createComponent', title=componentTitleBox.value, description=componentDescriptionBox.value)" />
+              onClick="@command('createComponent')" />
             <button image="/resources/img/deny16.png" label="${labels.componentedit.cancel}" onClick="@command('cancelEdit')" />
           </hbox>
         </row>
