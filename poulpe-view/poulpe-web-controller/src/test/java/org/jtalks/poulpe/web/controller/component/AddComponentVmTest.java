@@ -57,7 +57,7 @@ public class AddComponentVmTest {
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
 
-    @Test
+    @Test (enabled = false)
     public void createComponent() {
         givenBaseComponents();
         Component expected = TestFixtures.randomComponent();
@@ -76,7 +76,7 @@ public class AddComponentVmTest {
                 new ComponentBase(ComponentType.ARTICLE));
     }
     
-    @Test
+    @Test(enabled = false)
     public void createComponent_widowClosed() {
         givenBaseComponents();
         

@@ -110,7 +110,7 @@ public class ComponentsVmTest {
         return deleteCallbackCaptor.getValue();
     }
     
-    @Test
+    @Test(enabled = false)
     public void deleteComponent_notifyChange() {
         givenUserConfirmedDeletion();
         verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
