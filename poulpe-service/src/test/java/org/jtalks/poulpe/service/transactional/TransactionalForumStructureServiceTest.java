@@ -30,7 +30,9 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -44,6 +46,7 @@ public class TransactionalForumStructureServiceTest {
     private SectionDao sectionDao;
     private BranchDao branchDao;
     private ComponentDao componentDao;
+    private JcommuneHttpNotifier notifier;
 
 
     @BeforeMethod
@@ -51,13 +54,13 @@ public class TransactionalForumStructureServiceTest {
         componentDao = mock(ComponentDao.class);
         sectionDao = mock(SectionDao.class);
         branchDao = mock(BranchDao.class);
+        notifier = mock(JcommuneHttpNotifier.class);
         sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao);
+        sut.setjCommuneNotifier(notifier);
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
     public void testDeleteSectionWithBranches(Jcommune jcommune) throws Exception {
-        JcommuneHttpNotifier notifier = mock(JcommuneHttpNotifier.class);
-        sut.setjCommuneNotifier(notifier);
         PoulpeSection sectionToRemove = jcommune.getSections().get(0);
         doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
         sut.deleteSectionWithBranches(sectionToRemove);
@@ -124,7 +127,7 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void removeBranchShouldRemoveFromDb(Jcommune jcommune) {
+    public void removeBranchShouldRemoveFromDb(Jcommune jcommune) throws Exception {
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
         sut.removeBranch(branchToRemove);
@@ -132,7 +135,7 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void removeBranchShouldRemoveFromSection(Jcommune jcommune) {
+    public void removeBranchShouldRemoveFromSection(Jcommune jcommune) throws Exception {
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
         sut.removeBranch(branchToRemove);

@@ -46,8 +46,9 @@ public interface ForumStructureService {
      * remove it from section
      *
      * @param branch a branch to be removed from database
+     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
      */
-    void removeBranch(PoulpeBranch branch);
+    void removeBranch(PoulpeBranch branch) throws SendingNotificationFailureException;
 
     /**
      * Moves the branch from one section to another. Note, that if the section was the same as the branch is in, it will

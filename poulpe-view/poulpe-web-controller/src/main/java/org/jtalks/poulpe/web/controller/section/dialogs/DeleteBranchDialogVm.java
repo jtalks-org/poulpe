@@ -21,6 +21,7 @@ import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 
 /**
  * This VM is responsible for deleting the branch: whether to move the content of the branch to the other branch or
@@ -42,8 +43,12 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
     @NotifyChange(SHOW_DIALOG)
     public void confirmDeleteBranchWithContent() {
         PoulpeBranch selectedBranch = forumStructureVm.getSelectedItemInTree().getBranchItem();
-        forumStructureService.removeBranch(selectedBranch);
-        forumStructureVm.removeBranchFromTree(selectedBranch);
+        try {
+            forumStructureService.removeBranch(selectedBranch);
+            forumStructureVm.removeBranchFromTree(selectedBranch);
+        } catch (SendingNotificationFailureException e) {
+            throw new IllegalStateException("Branch deletion error");
+        }
     }
 
     @GlobalCommand("deleteBranch")

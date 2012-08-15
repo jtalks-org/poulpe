@@ -19,6 +19,7 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
 
 import java.io.IOException;
@@ -42,6 +43,17 @@ public class JcommuneHttpNotifier {
     public void notifyAboutSectionDelete(PoulpeSection section) throws SendingNotificationFailureException {
         long id = section.getId();
         notifyAboutDeleteElement(JCOMMUNE_URL + "/sections/" + id);
+    }
+
+    /**
+     * Notifies delete the branch
+     *
+     * @param branch which will be deleted
+     * @throws SendingNotificationFailureException some connection problems happend, while trying to notify jCommune
+     */
+    public void notifyAboutBranchDelete(PoulpeBranch branch) throws SendingNotificationFailureException {
+        long id = branch.getId();
+        notifyAboutDeleteElement(JCOMMUNE_URL + "/branch/" + id);
     }
 
     /**

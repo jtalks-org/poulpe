@@ -67,7 +67,8 @@ public class TransactionalForumStructureService implements ForumStructureService
      * {@inheritDoc}
      */
     @Override
-    public void removeBranch(PoulpeBranch branch) {
+    public void removeBranch(PoulpeBranch branch) throws SendingNotificationFailureException {
+        jCommuneNotifier.notifyAboutBranchDelete(branch);
         PoulpeSection section = (PoulpeSection) branch.getSection();
         section.deleteBranch(branch);
         sectionDao.saveOrUpdate(section);
