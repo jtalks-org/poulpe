@@ -62,7 +62,7 @@ public class AddComponentVmTest {
         givenBaseComponents();
         Component expected = TestFixtures.randomComponent();
 
-        addComponentVm.createComponent(expected.getName(), expected.getDescription());
+        addComponentVm.createComponent();
 
         verify(componentService).saveComponent(fieldsEqualTo(expected));
     }
@@ -81,7 +81,7 @@ public class AddComponentVmTest {
         givenBaseComponents();
         
         Component expected = TestFixtures.randomComponent();
-        addComponentVm.createComponent(expected.getName(), expected.getDescription());
+        addComponentVm.createComponent();
         
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
