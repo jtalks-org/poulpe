@@ -106,6 +106,7 @@
 
   <!-- Migrations, todo: 4 beans - that's weird, Ticket has been left for common to move init to one method -->
 
+  <!--description of what those migration mean and how they work are in the package with SQL files-->
   <bean id="flyway_common_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit">
     <property name="dataSource" ref="dataSource"/>
     <property name="basePackage" value="org.jtalks.common.migrations"/>
