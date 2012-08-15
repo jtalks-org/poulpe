@@ -33,7 +33,7 @@
           <vbox>
             <listbox id="usersListBoxToBan" width="200px" model="@load(userBanningVm.availableUsers)"
                      onClick="selectUserToBan()" onKey="selectUserToBan()"
-                     selectedItem="@save(userBanningVm.addBanFor)">
+                     selectedItem="@bind(userBanningVm.addBanFor)">
               <template name="model" var="user">
                 <listitem value="component" context="popupMenu" class="filter-list">
                   <listcell label="@load(user.username)"/>
@@ -50,7 +50,7 @@
 
     <!-- Banned users list -->
 
-    <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@save(userBanningVm.selectedUser)"
+    <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@bind(userBanningVm.selectedUser)"
              mold="paging" pageSize="50" pagingPosition="both" vflex="true"
              context="contextMenu_user">
       <listhead>

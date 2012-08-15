@@ -16,15 +16,14 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
-
-import java.io.IOException;
 
 /**
  * This VM is responsible for deleting the section: whether to move the content of the section to the other section or
@@ -36,8 +35,8 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
     private static final String SHOW_DIALOG = "showDialog";
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
-    private final String JCOMMUNE_CONNECTION_FAILED = "sections.error.jcommune_notification_failed";
-    private final String JCOMMUNE_HAS_NO_SUCH_SECTION = "sections.error.jcommune_has_no_such_section";
+    private final String JCOMMUNE_CONNECTION_FAILED = "sections.error.jcommune_no_connection";
+    private final String JCOMMUNE_RESPONSE_FAILED = "sections.error.jcommune_no_response";
     private final String SECTION_DELETING_FAILED_DIALOG_TITLE = "sections.deleting_problem_dialog.title";
 
     public DeleteSectionDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
@@ -52,8 +51,11 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
         try {
             forumStructureService.deleteSectionWithBranches(selectedSection);
             forumStructureVm.removeSectionFromTree(selectedSection);
-        } catch (SendingNotificationFailureException ex) {
+        } catch (NoConnectionToJcommuneException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.OK, Messagebox.ERROR);
+        }catch (JcommuneRespondedWithErrorException ex) {
+            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }
     }

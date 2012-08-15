@@ -15,14 +15,12 @@
 package org.jtalks.poulpe.service.exceptions;
 
 /**
- * Exception, which to be thrown, when some problems happend, while sending notification. For example JCommune server
- * was not started. Or it dropped. And so on.
- *
- * @author Nickolay Polyarniy
+ * An exception is thrown when a response has http status, indicating successful treatment did not request.
+ * @author Mikhail Zaitsev
  */
-public class SendingNotificationFailureException extends Exception {
+public class JcommuneRespondedWithErrorException extends Exception {
 
-    public SendingNotificationFailureException() {
+    public  JcommuneRespondedWithErrorException(){
         super();
     }
 }

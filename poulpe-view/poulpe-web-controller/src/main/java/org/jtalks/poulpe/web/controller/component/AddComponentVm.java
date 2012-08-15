@@ -16,9 +16,9 @@ package org.jtalks.poulpe.web.controller.component;
 
 import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
@@ -26,51 +26,44 @@ import org.zkoss.bind.annotation.Command;
 import java.util.List;
 
 /**
- * View-Model for adding a component. Shown from {@link ComponentsVm}.
+ * View-Model for adding a selectedEntity. Shown from {@link ComponentsVm}.
  *
  * @author Alexey Grigorev
+ * @author Leonid Kazantcev
  */
 public class AddComponentVm {
     static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
 
     private final ComponentService componentService;
     private final WindowManager windowManager;
+    private final Component component;
 
     /**
      * Constructs new dialog for creating components. It should be used as a prototype, new object for every new
-     * component.
+     * selectedEntity.
      *
-     * @param componentService service for saving component
+     * @param componentService service for saving Component
      * @param windowManager    object for opening and closing application windows
+     * @param selectedEntity selectedEntity holder of {@link Component} instance, witch will be saved to data base,
+     *                       after set up its name and description at UI
      */
-    public AddComponentVm(ComponentService componentService, WindowManager windowManager) {
+    public AddComponentVm(ComponentService componentService, WindowManager windowManager, SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.windowManager = windowManager;
+        component = selectedEntity.getEntity();
     }
 
     /**
-     * Creates and saves component.
-     *
-     * @param title         of the component
-     * @param description   its description
-     * @param componentType its component type
+     * Saves component, with params seted up at dialog to data base.
      */
     @Command
-    public void createComponent(@BindingParam(value = "title") String title,
-                                @BindingParam(value = "description") String description,
-                                @BindingParam(value = "componentType") ComponentType componentType) {
-
-        // TODO: move to service? looks like logic
-        // but then in service it would be 3 params
-        ComponentBase baseComponent = componentService.baseComponentFor(componentType);
-        Component component = baseComponent.newComponent(title, description);
+    public void createComponent() {
         componentService.saveComponent(component);
-
         switchToComponentsWindow();
     }
 
     /**
-     * Cancels edit and switches to components window
+     * Cancels edit and switches to components window.
      */
     @Command
     public void cancelEdit() {
@@ -78,26 +71,33 @@ public class AddComponentVm {
     }
 
     /**
-     * @return list of all available component types
+     * @return list of all available selectedEntity types
      */
     public List<ComponentType> getAvailableComponentTypes() {
         return Lists.newArrayList(componentService.getAvailableTypes());
     }
 
     /**
-     * Opens components view, closing it
+     * Opens components view, closing current dialog.
      */
     private void switchToComponentsWindow() {
         ComponentsVm.show(windowManager);
     }
 
     /**
-     * With given window manager, opens this dialog from {@link ComponentsVm}
+     * With given window manager, opens this dialog from {@link ComponentsVm}.
      *
      * @param windowManager to be used for opening the dialog
      */
     public static void openWindowForAdding(WindowManager windowManager) {
         windowManager.open(ADD_COMPONENT_LOCATION);
+    }
+
+    /**
+     * @return selectedEntity for validation
+     */
+    public Component getComponent() {
+        return component;
     }
 
 }

@@ -17,8 +17,10 @@ package org.jtalks.poulpe.web.controller.component;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -26,10 +28,10 @@ import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
 
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,11 +41,14 @@ import java.util.List;
  * Adding, removing, editing and configuring of components.
  *
  * @author Alexey Grigorev
+ * @author Leonid Kazantcev
  */
 public class ComponentsVm {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components";
+    private static final String DEFAULT_NAME = "name";
+    private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
 
     private final ComponentService componentService;
@@ -51,8 +56,8 @@ public class ComponentsVm {
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
 
-    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_notification_failed";
-    private final String JCOMMUNE_HAS_NO_SUCH_SECTION = "component.error.jcommune_has_no_such_section";
+    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
+    private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
     private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
@@ -96,10 +101,13 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this, SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                    bindWrapper.postNotifyChange(ComponentsVm.this, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
-                } catch (SendingNotificationFailureException elementDoesNotExist) {
+                } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
+                } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
 
@@ -133,10 +141,35 @@ public class ComponentsVm {
     }
 
     /**
-     * Shows a window for adding component
+     * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Poulpe} component.
      */
     @Command
-    public void addNewComponent() {
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewPoulpe() {
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.ADMIN_PANEL).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
+        AddComponentVm.openWindowForAdding(windowManager);
+    }
+
+    /**
+     * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Jcommune} component.
+     */
+    @Command
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewJcommune() {
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
+        AddComponentVm.openWindowForAdding(windowManager);
+    }
+
+    /**
+     * Method will removed after completion of tests.
+     */
+    @Command
+    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+    public void addNewArticle() {
+        selectedEntity.setEntity(componentService.
+                baseComponentFor(ComponentType.ARTICLE).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
@@ -164,13 +197,46 @@ public class ComponentsVm {
         this.selected = selected;
     }
 
+    /**
+     * @param bindWrapper {@link BindUtilsWrapper} instance to set
+     */
     @VisibleForTesting
     void setBindWrapper(BindUtilsWrapper bindWrapper) {
         this.bindWrapper = bindWrapper;
     }
 
+    /**
+     * Opens Components window.
+     *
+     * @param windowManager implementation of {@link WindowManager} for opening and closing application windows
+     */
     public static void show(WindowManager windowManager) {
         windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
+
+    /**
+     * @return true if component {@link org.jtalks.poulpe.model.entity.Jcommune} with {@link ComponentType}
+     *         FORUM type are not created yet, false otherwise
+     */
+    public boolean isJcommuneAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.FORUM);
+    }
+
+    /**
+     * @return true if component {@link org.jtalks.poulpe.model.entity.Poulpe} with {@link ComponentType}
+     *         ADMIN_PANEL type are not created yet, false otherwise
+     */
+    public boolean isPoulpeAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
+    }
+
+    /**
+     * @return true if component with {@link org.jtalks.poulpe.model.entity.Poulpe} type are not created yet,
+     *         false otherwise
+     */
+    public boolean isArticleAvailable() {
+        return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
+    }
+
 
 }

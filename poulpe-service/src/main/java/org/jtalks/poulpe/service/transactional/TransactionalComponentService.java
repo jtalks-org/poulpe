@@ -27,7 +27,8 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
-import org.jtalks.poulpe.service.exceptions.SendingNotificationFailureException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 import java.util.List;
 import java.util.Set;
@@ -75,7 +76,8 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * {@inheritDoc}
      */
     @Override
-    public void deleteComponent(Component component) throws SendingNotificationFailureException {
+    public void deleteComponent(Component component)
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
         if(component instanceof Jcommune){
             jCommuneNotifier.notifyAboutComponentDelete();
         }
