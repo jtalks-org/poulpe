@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
@@ -38,6 +39,7 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
     private final ForumStructureService forumStructureService;
     private final String JCOMMUNE_CONNECTION_FAILED = "branches.error.jcommune_no_connection";
     private final String JCOMMUNE_RESPONSE_FAILED = "branches.error.jcommune_no_response";
+    private final String JCOMMUNE_URL_FAILED = "branches.error.jcommune_no_url";
     private final String BRANCH_DELETING_FAILED_DIALOG_TITLE = "branches.deleting_problem_dialog.title";
 
     public DeleteBranchDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
@@ -52,10 +54,15 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
         try {
             forumStructureService.removeBranch(selectedBranch);
         } catch (NoConnectionToJcommuneException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
+            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
+                    Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }catch (JcommuneRespondedWithErrorException ex) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
+            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
+                    Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.OK, Messagebox.ERROR);
+        }catch (JcommuneUrlNotConfiguratedException ex) {
+            Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }
     }

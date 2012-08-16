@@ -28,6 +28,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -93,7 +94,7 @@ public class ComponentsVmTest {
     
     @Test
     public void deleteComponent_componentDeletedAfterConfirmation()
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
         Component selected = givenUserConfirmedDeletion();
         verify(componentService).deleteComponent(selected);
     }

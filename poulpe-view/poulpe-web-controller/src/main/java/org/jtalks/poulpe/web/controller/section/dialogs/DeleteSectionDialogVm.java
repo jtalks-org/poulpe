@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
@@ -37,6 +38,7 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
     private final ForumStructureService forumStructureService;
     private final String JCOMMUNE_CONNECTION_FAILED = "sections.error.jcommune_no_connection";
     private final String JCOMMUNE_RESPONSE_FAILED = "sections.error.jcommune_no_response";
+    private final String JCOMMUNE_URL_FAILED = "sections.error.jcommune_no_url";
     private final String SECTION_DELETING_FAILED_DIALOG_TITLE = "sections.deleting_problem_dialog.title";
 
     public DeleteSectionDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
@@ -52,10 +54,16 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
             forumStructureService.deleteSectionWithBranches(selectedSection);
             forumStructureVm.removeSectionFromTree(selectedSection);
         } catch (NoConnectionToJcommuneException ex) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
+            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
+                    Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }catch (JcommuneRespondedWithErrorException ex) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
+            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
+                    Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.OK, Messagebox.ERROR);
+        }catch (JcommuneUrlNotConfiguratedException ex) {
+            Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
+                    Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }
     }

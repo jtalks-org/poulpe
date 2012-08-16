@@ -26,6 +26,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 /**
@@ -69,7 +70,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public void removeBranch(PoulpeBranch branch)
-        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
         jCommuneNotifier.notifyAboutBranchDelete(branch);
         PoulpeSection section = (PoulpeSection) branch.getSection();
         section.deleteBranch(branch);
@@ -92,7 +93,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public Jcommune deleteSectionWithBranches(PoulpeSection section)
-        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
         jCommuneNotifier.notifyAboutSectionDelete(section);
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jcommune.removeSection(section);

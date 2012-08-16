@@ -60,6 +60,7 @@ public class ComponentsVm {
 
     private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
+    private final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
     private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
@@ -120,13 +121,23 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this,JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                    bindWrapper.postNotifyChange(ComponentsVm.this,
+                            JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE,
+                            "articleAvailable",
+                            SELECTED, COMPONENTS,
+                            CAN_CREATE_NEW_COMPONENT);
 
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
-                    Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
-                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
+                } catch (JcommuneUrlNotConfiguratedException elementDoesNotExist) {
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
 
@@ -146,6 +157,8 @@ public class ComponentsVm {
         } catch (NoConnectionToJcommuneException e) {
             showNotConnectedNotification();       //TODO process exception and show notification to User AS POP_UP window
         } catch (JcommuneUrlNotConfiguratedException e) {
+            showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
+        } catch (JcommuneRespondedWithErrorException e) {
             showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
         }
     }
