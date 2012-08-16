@@ -21,9 +21,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.net.URL;
+import java.net.URLConnection;
 
 /**
  * Notifier to notify JCommune component about elements' deleting. It is usefull to help forum keep such information,
@@ -34,6 +40,9 @@ import java.io.IOException;
 public class JcommuneHttpNotifier {
 
     private final String JCOMMUNE_URL = "http://localhost:8080/jcommune";
+    private static final String REINDEX_URL_PART = "/search/index/rebuild";
+    private static final String REINDEX_REQUEST = "";
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Notifies delete the section
@@ -83,5 +92,34 @@ public class JcommuneHttpNotifier {
             throw new NoConnectionToJcommuneException();
         }
     }
+
+    private void checkUrlAreConfigurated() throws JcommuneUrlNotConfiguratedException {
+        if(JCOMMUNE_URL.equals(null)||JCOMMUNE_URL.equals("")){
+            throw new JcommuneUrlNotConfiguratedException();
+        }
+    }
+
+    public void notifyAboutReindexComponent()
+            throws NoConnectionToJcommuneException, JcommuneUrlNotConfiguratedException {
+        checkUrlAreConfigurated();
+        String reindexUrl = JCOMMUNE_URL + REINDEX_URL_PART;
+        URL url = null;
+
+        try {
+            url = new URL(reindexUrl);
+            URLConnection connection = url.openConnection();
+            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
+            wr.write(REINDEX_REQUEST);
+            wr.flush();
+            wr.close();
+        } catch (IOException e) {
+            logger.warn("Error sending request to Jcommune: {}. Root cause: ", reindexUrl, e);
+            throw new NoConnectionToJcommuneException();
+        }
+
+
+
+    }
+
 
 }

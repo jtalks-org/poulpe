@@ -20,13 +20,13 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.*;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
@@ -58,6 +58,8 @@ public class ComponentsVmTest {
     @Mock ComponentService componentService;
     @Mock DialogManager dialogManager;
     @Mock BindUtilsWrapper bindWrapper;
+    @Mock
+    JcommuneHttpNotifier jcommuneHttpNotifier;
     SelectedEntity<Component> selectedEntity;
     
     @Captor ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
@@ -66,7 +68,7 @@ public class ComponentsVmTest {
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
+        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, jcommuneHttpNotifier);
         componentsVm.setBindWrapper(bindWrapper);
     }
     

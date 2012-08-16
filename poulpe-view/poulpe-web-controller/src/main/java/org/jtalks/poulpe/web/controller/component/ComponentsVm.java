@@ -19,7 +19,9 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -44,7 +46,7 @@ import java.util.List;
  * @author Leonid Kazantcev
  */
 public class ComponentsVm {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components";
     private static final String DEFAULT_NAME = "name";
@@ -55,6 +57,7 @@ public class ComponentsVm {
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
+    private final JcommuneHttpNotifier jcommuneHttpNotifier;
 
     private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
@@ -69,13 +72,15 @@ public class ComponentsVm {
      * @param dialogManager    shows confirmation dialog for deletion
      * @param windowManager    object for opening and closing application windows
      * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
+     * @param jcommuneHttpNotifier instance of {@link JcommuneHttpNotifier}
      */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
-                        SelectedEntity<Component> selectedEntity) {
+                        SelectedEntity<Component> selectedEntity, JcommuneHttpNotifier jcommuneHttpNotifier) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
+        this.jcommuneHttpNotifier = jcommuneHttpNotifier;
     }
 
     /**
@@ -122,21 +127,12 @@ public class ComponentsVm {
      */
     @Command
     public void reindexComponent() {
-        String EMPTY_REQUEST = "";
-        String jcommuneUrl = selected.getUrl();
-        String reindexUrlPart = "/search/index/rebuild";
-        String reindexUrl = jcommuneUrl + reindexUrlPart;
-        URL url = null;
-
         try {
-            url = new URL(reindexUrl);
-            URLConnection connection = url.openConnection();
-            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(EMPTY_REQUEST);
-            wr.flush();
-            wr.close();
-        } catch (Exception e) {
-            logger.warn("Error sending request to Jcommune: {}. Root cause: ", reindexUrl, e);
+            jcommuneHttpNotifier.notifyAboutReindexComponent();
+        } catch (NoConnectionToJcommuneException e) {
+            e.printStackTrace();        //TODO process exception and show notification to User AS POP_UP window
+        } catch (JcommuneUrlNotConfiguratedException e) {
+            e.printStackTrace();        //TODO process exception and show notification to User AS POP_UP window
         }
     }
 
