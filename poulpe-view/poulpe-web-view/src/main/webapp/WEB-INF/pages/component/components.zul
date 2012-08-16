@@ -25,25 +25,39 @@
                     </menu>
                 </menubar>
             </div>
-            <listbox model="@load(vm.components)" selectedItem="@save(vm.selected)">
+            <listbox selectedItem="@save(vm.selected)">
                 <listhead>
                     <listheader align="center" label="${labels.component.title}" sclass="boldstyle"/>
                     <listheader align="center" label="${labels.component.description}"/>
                     <listheader align="center" label="${labels.component.type}"/>
                 </listhead>
-                <template name="model" var="component">
-                    <listitem value="@load(component.componentType)" context="popupMenu">
-                        <listcell label="@load(component.name)"/>
-                        <listcell label="@load(component.description)"/>
-                        <listcell label="@load(component.componentType)"/>
+                    <listitem value="@load(vm.poulpe)" if="self.value != null" context="popupMenuComponent">
+                        <listcell label="@load(vm.poulpe.name)"/>
+                        <listcell label="@load(vm.poulpe.description)"/>
+                        <listcell label="@load(vm.poulpe.componentType)"/>
                     </listitem>
-                </template>
+                <listitem value="@load(vm.jcommune)" if="self.value != null" context="popupMenuJcommune">
+                    <listcell label="@load(vm.jcommune.name)"/>
+                    <listcell label="@load(vm.jcommune.description)"/>
+                    <listcell label="@load(vm.jcommune.componentType)"/>
+                </listitem>
+                <listitem value="@load(vm.article)" if="self.value != null" context="popupMenuComponent">
+                    <listcell label="@load(vm.article.name)"/>
+                    <listcell label="@load(vm.article.description)"/>
+                    <listcell label="@load(vm.article.componentType)"/>
+                </listitem>
             </listbox>
 
         </vlayout>
 
         <!--CONTEXT MENU -->
-        <menupopup id="popupMenu">
+        <menupopup id="popupMenuComponent">
+            <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
+                      onClick="@command('configureComponent')"/>
+            <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
+                      onClick="@command('deleteComponent')"/>
+        </menupopup>
+        <menupopup id="popupMenuJcommune">
             <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
             <attribute name="onClick">
                 vm.reindexComponent();
@@ -53,28 +67,13 @@
                 if(vm.showNotConfiguratedNotification){
                 popNotConfigurated.open(self,"at_pointer");
                 }
-
             </attribute>
             </menuitem>
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
                       onClick="@command('deleteComponent')"/>
-
-            <attribute name="onOpen">
-                if(event.isOpen()){
-                  Component callingComp = event.getReference();
-                  String callingCompType = callingComp.getValue().toString();
-                  if(callingCompType.equals("FORUM")){
-                    forumMenu.setVisible(true);
-                  }
-                  else{
-                    forumMenu.setVisible(false);
-                  }
-                }
-            </attribute>
-
-        </menupopup>
+          </menupopup>
         <!--POPUP WINDOWS -->
         <popup id="popNotConnected" width="150px" >
             <groupbox closable="false">

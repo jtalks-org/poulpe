@@ -72,12 +72,12 @@ public class ComponentsVmTest {
         componentsVm.setBindWrapper(bindWrapper);
     }
     
-    @Test
-    public void getComponents() {
-        componentsVm.getComponents();
-        verify(componentService).getAll();
-    }
-    
+//    @Test
+//    public void getComponents() {
+//        componentsVm.getComponents();
+//        verify(componentService).getAll();
+//    }
+//
     @Test
     public void deleteComponent() {
         Component selected = givenSelectedComponent();
