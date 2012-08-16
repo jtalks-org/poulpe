@@ -45,6 +45,8 @@ public class ComponentsVm {
 
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components", SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification", SHOW_NOT_CONFIGURATED_NOTIFICATION = "showNotConfiguratedNotification";
+    public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE ="article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
+    
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
@@ -86,11 +88,20 @@ public class ComponentsVm {
     public Component getPoulpe() {
        return  componentService.getByType(ComponentType.ADMIN_PANEL);
    }
+    public boolean isPoulpeVisible() {
+        return !(getPoulpe() ==null);
+    }
     public Component getJcommune() {
         return  componentService.getByType(ComponentType.FORUM);
     }
+    public boolean isJcommuneVisible() {
+        return !(getJcommune() ==null);
+    }
     public Component getArticle() {
         return  componentService.getByType(ComponentType.ARTICLE);
+    }
+    public boolean isArticleVisible() {
+        return !(getArticle() ==null);
     }
 
     /**
@@ -109,7 +120,7 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                    bindWrapper.postNotifyChange(ComponentsVm.this,JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
 
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
