@@ -31,17 +31,17 @@
                     <listheader align="center" label="${labels.component.description}"/>
                     <listheader align="center" label="${labels.component.type}"/>
                 </listhead>
-                    <listitem value="@load(vm.poulpe)" if="self.value != null" context="popupMenuComponent">
+                    <listitem value="@load(vm.poulpe)"  context="popupMenuComponent">
                         <listcell label="@load(vm.poulpe.name)"/>
                         <listcell label="@load(vm.poulpe.description)"/>
                         <listcell label="@load(vm.poulpe.componentType)"/>
                     </listitem>
-                <listitem value="@load(vm.jcommune)" if="self.value != null" context="popupMenuJcommune">
+                <listitem value="@load(vm.jcommune)"  context="popupMenuJcommune">
                     <listcell label="@load(vm.jcommune.name)"/>
                     <listcell label="@load(vm.jcommune.description)"/>
                     <listcell label="@load(vm.jcommune.componentType)"/>
                 </listitem>
-                <listitem value="@load(vm.article)" if="self.value != null" context="popupMenuComponent">
+                <listitem value="@load(vm.article)" context="popupMenuComponent">
                     <listcell label="@load(vm.article.name)"/>
                     <listcell label="@load(vm.article.description)"/>
                     <listcell label="@load(vm.article.componentType)"/>
