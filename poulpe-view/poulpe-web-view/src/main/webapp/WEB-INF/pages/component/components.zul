@@ -44,8 +44,18 @@
 
         <!--CONTEXT MENU -->
         <menupopup id="popupMenu">
-            <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}"
-                      onClick="@command('reindexComponent')" />
+            <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
+            <attribute name="onClick">
+                vm.reindexComponent();
+                if(vm.showNotConnectedNotification){
+                popNotConnected.open(self,"at_pointer");
+                }
+                if(vm.showNotConfiguratedNotification){
+                popNotConfigurated.open(self,"at_pointer");
+                }
+
+            </attribute>
+            </menuitem>
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
@@ -65,6 +75,19 @@
             </attribute>
 
         </menupopup>
+        <!--POPUP WINDOWS -->
+        <popup id="popNotConnected" width="150px" >
+            <groupbox closable="false">
+                <caption>Not Connected</caption>
+                <html><![CDATA[ Repeat you attemt later. ]]></html>
+            </groupbox>
+        </popup>
+        <popup id="popNotConfigurated" width="150px" >
+            <groupbox closable="false">
+                <caption>Not Configurated</caption>
+                <html><![CDATA[ Configure Jcommune URL ]]></html>
+            </groupbox>
+        </popup>
 
     </window>
 
