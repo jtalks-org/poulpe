@@ -14,9 +14,11 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -94,7 +96,7 @@ public class JcommuneHttpNotifier {
     }
 
     private void checkUrlAreConfigurated() throws JcommuneUrlNotConfiguratedException {
-        if(JCOMMUNE_URL.equals(null)||JCOMMUNE_URL.equals("")){
+        if(StringUtils.isBlank(JCOMMUNE_URL)){
             throw new JcommuneUrlNotConfiguratedException();
         }
     }
@@ -103,22 +105,16 @@ public class JcommuneHttpNotifier {
             throws NoConnectionToJcommuneException, JcommuneUrlNotConfiguratedException {
         checkUrlAreConfigurated();
         String reindexUrl = JCOMMUNE_URL + REINDEX_URL_PART;
-        URL url = null;
-
         try {
-            url = new URL(reindexUrl);
-            URLConnection connection = url.openConnection();
-            OutputStreamWriter wr = new OutputStreamWriter(connection.getOutputStream());
-            wr.write(REINDEX_REQUEST);
-            wr.flush();
-            wr.close();
+
+            HttpClient httpClient = new DefaultHttpClient();
+            HttpPost emptyRequest = new HttpPost(reindexUrl);
+            httpClient.execute(emptyRequest);
+
         } catch (IOException e) {
             logger.warn("Error sending request to Jcommune: {}. Root cause: ", reindexUrl, e);
             throw new NoConnectionToJcommuneException();
         }
-
-
-
     }
 
 
