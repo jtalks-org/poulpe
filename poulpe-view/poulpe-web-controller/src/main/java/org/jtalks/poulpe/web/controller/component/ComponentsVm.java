@@ -46,7 +46,7 @@ public class ComponentsVm {
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components", SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification", SHOW_NOT_CONFIGURATED_NOTIFICATION = "showNotConfiguratedNotification";
     public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE ="article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
-    
+
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
@@ -60,6 +60,7 @@ public class ComponentsVm {
 
     private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
+    private final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
     private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
@@ -86,8 +87,8 @@ public class ComponentsVm {
      * @return list of all component
      */
     public Component getPoulpe() {
-       return  componentService.getByType(ComponentType.ADMIN_PANEL);
-   }
+        return  componentService.getByType(ComponentType.ADMIN_PANEL);
+    }
     public boolean isPoulpeVisible() {
         return !(getPoulpe() ==null);
     }
@@ -120,13 +121,23 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this,JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE, "articleAvailable", SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                    bindWrapper.postNotifyChange(ComponentsVm.this,
+                            JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE,
+                            "articleAvailable",
+                            SELECTED, COMPONENTS,
+                            CAN_CREATE_NEW_COMPONENT);
 
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
-                    Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
-                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED), Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
+                            Messagebox.OK, Messagebox.ERROR);
+                } catch (JcommuneUrlNotConfiguratedException elementDoesNotExist) {
+                    Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
 
@@ -147,12 +158,23 @@ public class ComponentsVm {
             showNotConnectedNotification();       //TODO process exception and show notification to User AS POP_UP window
         } catch (JcommuneUrlNotConfiguratedException e) {
             showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
+        } catch (JcommuneRespondedWithErrorException e) {
+            showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
         }
     }
+
+
+    /**
+     * Opens window, witch notify about not configurated URL.
+     */
     @NotifyChange(SHOW_NOT_CONFIGURATED_NOTIFICATION)
     private void showNotConfiguratedNotification() {
         showNotConfiguratedNotification = true;
     }
+
+    /**
+     * Opens window, witch notify about no connection to JCommune component.
+     */
     @NotifyChange(SHOW_NOT_CONNECTED_NOTIFICATION)
     private void showNotConnectedNotification() {
         showNotConnectedNotification = true;
@@ -256,12 +278,24 @@ public class ComponentsVm {
         return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
     }
 
+    /**
+     * Gets visibility status of notification window, boolean show added because after single opening of popup
+     * window before next check we should have false at showNotConnectedNotification.
+     *
+     * @return true if notification is visible
+     */
     public boolean isShowNotConnectedNotification() {
         boolean show = showNotConnectedNotification;
         showNotConnectedNotification = false;
         return show;
     }
 
+    /**
+     * Gets visibility status of notification window, boolean show added because after single opening of popup
+     * window before next check we should have false at showNotConfiguratedNotification.
+     *
+     * @return true if notification is visible
+     */
     public boolean isShowNotConfiguratedNotification() {
         boolean show = showNotConfiguratedNotification;
         showNotConfiguratedNotification = false;
