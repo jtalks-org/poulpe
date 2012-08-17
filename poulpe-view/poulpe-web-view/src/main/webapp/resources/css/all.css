@@ -75,3 +75,10 @@
     font-size: 18px;
     font-family: sans-serif;
 }
+
+.popup-notification{
+    background:#F5C1C9 url(/resources/img/notification16.png) 7px 8px no-repeat;
+    color:#222222;
+    padding:5px;
+    text-align:center;
+}

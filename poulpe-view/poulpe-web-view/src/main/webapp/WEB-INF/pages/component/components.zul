@@ -5,14 +5,12 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-
+    <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
     <window title="${labels.componentlist.title}" border="none" width="100%" position="center,top"
             apply="org.zkoss.bind.BindComposer"
             viewModel="@id('vm') @init(componentsVm)" validationMessages="@id('vmsgs')">
 
-        <style src="/resources/css/all.css"/>
-
-        <vlayout>
+         <vlayout>
             <div>
                 <menubar id="menubar" width="100%">
                     <menu label="${labels.componentlist.add}" disabled="@load(!vm.ableToCreateNewComponent)">
@@ -75,13 +73,13 @@
                       onClick="@command('deleteComponent')"/>
           </menupopup>
         <!--POPUP WINDOWS -->
-        <popup id="popNotConnected" width="150px" >
-            <groupbox closable="false">
-                <caption>Not Connected</caption>
-                <html><![CDATA[ Repeat you attemt later. ]]></html>
+        <popup id="popNotConnected" width="150px">
+            <groupbox sclass="popup-notification">
+                        <label value="Not Connected" sclass="halfbold-table-title"/>
+                    Repeat you attemt later.
             </groupbox>
         </popup>
-        <popup id="popNotConfigurated" width="150px" >
+        <popup id="popNotConfigurated" width="150px" sclass="popup-notification" >
             <groupbox closable="false">
                 <caption>Not Configurated</caption>
                 <html><![CDATA[ Configure Jcommune URL ]]></html>
