@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.service;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -31,62 +32,58 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 
 /**
- * Notifier to notify JCommune component about elements' deleting. It is usefull to help forum keep such information,
- * as user's messages count, up to date.
+ * Notifier to notify JCommune component about elements' deleting. It is usefull to help forum keep such information, as
+ * user's messages count, up to date.
  *
  * @author Nickolay Polyarniy
  * @author Mikhail Zaitsev
  */
 public class JcommuneHttpNotifier {
-
     /**
      * Jcommune url
      */
     private String jCommuneUrl;
-
     /**
-     *  Minimum value of a successful status
+     * Minimum value of a successful status, less than that is an error HTTP response.
      */
     private final int MIN_HTTP_STATUS = 200;
-
     /**
-     *  Minimum value of a successful status
+     * Maximum value of a successful status, starting from 300 means an error response.
      */
     private final int MAX_HTTP_STATUS = 299;
-
     /**
-     * Whole forum link
+     * A link which means 'delete the whole component' which will cause all the topics from all the branches to be
+     * removed by JCommune.
      */
     private static final String WHOLEFORUM_URL_PART = "/wholeforum/";
-
     /**
-     * Reindex link
+     * A URL to trigger re-indexing of forum search engine.
      */
     private static final String REINDEX_URL_PART = "/search/index/rebuild";
-
     /**
-     * Sections link
+     * URL to ask JCommune to remove content of the specific section.
      */
     private static final String SECTIONS_URL_PART = "/sections/";
-
     /**
-     * Branch link
+     * URL to ask JCommune to remove content of the specific branch.
      */
     private static final String BRANCH_URL_PART = "/branch/";
-
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
      * Notifies delete the section
      *
      * @param section which will be deleted
-     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify Jcommune
-     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval
-     *         {@code MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
-     * @throws {@link JcommuneUrlNotConfiguratedException} occurs when the {@code jCommuneUrl} is incorrect
+     * @throws NoConnectionToJcommuneException
+     *          some connection problems happened, while trying to notify Jcommune
+     * @throws JcommuneRespondedWithErrorException
+     *          occurs when the response status is not in the interval {@link #MIN_HTTP_STATUS} and {@link
+     *          #MAX_HTTP_STATUS}
+     * @throws JcommuneUrlNotConfiguratedException
+     *          occurs when the {@link #jCommuneUrl} is incorrect
      */
     public void notifyAboutSectionDelete(PoulpeSection section)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         long id = section.getId();
         notifyAboutDeleteElement(jCommuneUrl + SECTIONS_URL_PART + id);
     }
@@ -95,13 +92,15 @@ public class JcommuneHttpNotifier {
      * Notifies delete the branch
      *
      * @param branch which will be deleted
-     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify Jcommune
-     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval
-     *         {@code MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
-     * @throws {@link JcommuneUrlNotConfiguratedException} occurs when the {@code jCommuneUrl} is incorrect
+     * @throws NoConnectionToJcommuneException
+     *                some connection problems happened, while trying to notify Jcommune
+     * @throws JcommuneRespondedWithErrorException
+     *                occurs when the response status is not in the interval {@link #MIN_HTTP_STATUS} and {@link
+     *                #MAX_HTTP_STATUS}
+     * @throws JcommuneUrlNotConfiguratedException occurs when the {@link #jCommuneUrl} is incorrect
      */
     public void notifyAboutBranchDelete(PoulpeBranch branch)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         long id = branch.getId();
         notifyAboutDeleteElement(jCommuneUrl + BRANCH_URL_PART + id);
     }
@@ -109,26 +108,28 @@ public class JcommuneHttpNotifier {
     /**
      * Notifies delete the component
      *
-     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify Jcommune
-     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval
-     *         {@code MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
+     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify
+     *                Jcommune
+     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval {@code
+     *                MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
      * @throws {@link JcommuneUrlNotConfiguratedException} occurs when the {@code jCommuneUrl} is incorrect
      */
     public void notifyAboutComponentDelete()
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         notifyAboutDeleteElement(jCommuneUrl + WHOLEFORUM_URL_PART);
     }
 
     /**
      * Notifies delete the element
      *
-     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify Jcommune
-     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval
-     *         {@code MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
+     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify
+     *                Jcommune
+     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval {@code
+     *                MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
      * @throws {@link JcommuneUrlNotConfiguratedException} occurs when the {@code jCommuneUrl} is incorrect
      */
     private void notifyAboutDeleteElement(String url)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         checkUrlAreConfigurated();
         try {
             HttpClient httpClient = new DefaultHttpClient();
@@ -157,20 +158,20 @@ public class JcommuneHttpNotifier {
     /**
      * Notifies reindex сomponent
      *
-     * @throws {@link NoConnectionToJcommuneException} some connection problems happend, while trying to notify Jcommune
-     * @throws {@link JcommuneRespondedWithErrorException} occurs when the response status is not in the interval
-     *         {@code MIN_HTTP_STATUS} and {@code MAX_HTTP_STATUS}
-     * @throws {@link JcommuneUrlNotConfiguratedException} occurs when the {@code jCommuneUrl} is incorrect
+     * @throws NoConnectionToJcommuneException
+     *          some connection problems happend, while trying to notify Jcommune
+     * @throws JcommuneRespondedWithErrorException
+     *          occurs when the response status is not in the interval {@code MIN_HTTP_STATUS} and {@code
+     *          MAX_HTTP_STATUS}
+     * @throws JcommuneUrlNotConfiguratedException
+     *          occurs when the {@code jCommuneUrl} is incorrect
      */
     public void notifyAboutReindexComponent()
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         checkUrlAreConfigurated();
         String reindexUrl = jCommuneUrl + REINDEX_URL_PART;
         try {
-
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpPost emptyRequest = new HttpPost(reindexUrl);
-            HttpResponse response = httpClient.execute(emptyRequest);
+            HttpResponse response = sendHttpRequest(reindexUrl);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException();
@@ -181,8 +182,15 @@ public class JcommuneHttpNotifier {
         }
     }
 
+    @VisibleForTesting
+    HttpResponse sendHttpRequest(String reindexUrl) throws IOException {
+        HttpClient httpClient = new DefaultHttpClient();
+        HttpPost emptyRequest = new HttpPost(reindexUrl);
+        return httpClient.execute(emptyRequest);
+    }
+
     /**
-     * @return  jcommune url
+     * @return jcommune url
      */
     public String getjCommuneUrl() {
         return jCommuneUrl;
