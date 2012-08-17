@@ -79,6 +79,6 @@
 .popup-notification{
     background:#F5C1C9 url(/poulpe/resources/img/notification16.png) 6px 13px no-repeat;
     color:#222222;
-    padding:5px;
+    padding-left:20px;
     text-align:center;
 }
