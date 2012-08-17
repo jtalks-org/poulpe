@@ -71,7 +71,7 @@ public class TransactionalForumStructureService implements ForumStructureService
     @Override
     public void removeBranch(PoulpeBranch branch)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
-        jCommuneNotifier.notifyAboutBranchDelete(branch);
+        jCommuneNotifier.notifyAboutBranchDelete("",branch); //TODO set JCommune url
         PoulpeSection section = (PoulpeSection) branch.getSection();
         section.deleteBranch(branch);
         sectionDao.saveOrUpdate(section);
@@ -94,7 +94,7 @@ public class TransactionalForumStructureService implements ForumStructureService
     @Override
     public Jcommune deleteSectionWithBranches(PoulpeSection section)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
-        jCommuneNotifier.notifyAboutSectionDelete(section);
+        jCommuneNotifier.notifyAboutSectionDelete("",section); //TODO set JCommune url
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jcommune.removeSection(section);
         componentDao.saveOrUpdate(jcommune);

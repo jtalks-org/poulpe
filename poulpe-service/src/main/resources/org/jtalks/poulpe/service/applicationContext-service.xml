@@ -103,6 +103,6 @@
         <constructor-arg index="1" ref="userDao"/>
     </bean>
 
-    <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier">
+    <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier" scope="singleton">
     </bean>
 </beans>

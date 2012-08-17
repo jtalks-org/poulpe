@@ -80,7 +80,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     public void deleteComponent(Component component)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
         if(component instanceof Jcommune){
-            jCommuneNotifier.notifyAboutComponentDelete();
+            jCommuneNotifier.notifyAboutComponentDelete("");
         }
         dao.delete(component);
     }
