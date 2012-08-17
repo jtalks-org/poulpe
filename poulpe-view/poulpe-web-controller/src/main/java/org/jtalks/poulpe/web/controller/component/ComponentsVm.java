@@ -32,9 +32,6 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Adding, removing, editing and configuring of components.
  *
@@ -45,7 +42,7 @@ public class ComponentsVm {
 
     public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
             COMPONENTS = "components", SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification", SHOW_NOT_CONFIGURATED_NOTIFICATION = "showNotConfiguratedNotification";
-    public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE ="article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
+    public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE = "article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
@@ -68,10 +65,10 @@ public class ComponentsVm {
     private Component selected;
 
     /**
-     * @param componentService service for loading and saving component
-     * @param dialogManager    shows confirmation dialog for deletion
-     * @param windowManager    object for opening and closing application windows
-     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
+     * @param componentService     service for loading and saving component
+     * @param dialogManager        shows confirmation dialog for deletion
+     * @param windowManager        object for opening and closing application windows
+     * @param selectedEntity       desktop-scoped bean to which selected entities passed, used for editing components
      * @param jcommuneHttpNotifier instance of {@link JcommuneHttpNotifier}
      */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
@@ -84,25 +81,45 @@ public class ComponentsVm {
     }
 
     /**
-     * @return list of all component
+     * @return {@link Component} with type ADMIN_PANEL if it exists, null otherwise
      */
     public Component getPoulpe() {
-        return  componentService.getByType(ComponentType.ADMIN_PANEL);
+        return componentService.getByType(ComponentType.ADMIN_PANEL);
     }
+
+    /**
+     * @return true if ADMIN_PANEL component is exists, false otherwise
+     */
     public boolean isPoulpeVisible() {
-        return !(getPoulpe() ==null);
+        return !(getPoulpe() == null);
     }
+
+    /**
+     * @return {@link Component} with type FORUM if it exists, null otherwise
+     */
     public Component getJcommune() {
-        return  componentService.getByType(ComponentType.FORUM);
+        return componentService.getByType(ComponentType.FORUM);
     }
+
+    /**
+     * @return true if FORUM component is exists, false otherwise
+     */
     public boolean isJcommuneVisible() {
-        return !(getJcommune() ==null);
+        return !(getJcommune() == null);
     }
+
+    /**
+     * @return {@link Component} with type ARTICLE if it exists, null otherwise
+     */
     public Component getArticle() {
-        return  componentService.getByType(ComponentType.ARTICLE);
+        return componentService.getByType(ComponentType.ARTICLE);
     }
+
+    /**
+     * @return true if ARTICLE component is exists, false otherwise
+     */
     public boolean isArticleVisible() {
-        return !(getArticle() ==null);
+        return !(getArticle() == null);
     }
 
     /**
@@ -122,7 +139,7 @@ public class ComponentsVm {
                     selected = null;
                     // Because confirmation needed, we have to send notification event programmatically
                     bindWrapper.postNotifyChange(ComponentsVm.this,
-                            JCOMMUNE,POULPE,ARTICLE,JCOMMUNE_VISIBLE,POULPE_VISIBLE,ARTICLE_VISIBLE,
+                            JCOMMUNE, POULPE, ARTICLE, JCOMMUNE_VISIBLE, POULPE_VISIBLE, ARTICLE_VISIBLE,
                             "articleAvailable",
                             SELECTED, COMPONENTS,
                             CAN_CREATE_NEW_COMPONENT);
@@ -155,11 +172,11 @@ public class ComponentsVm {
         try {
             jcommuneHttpNotifier.notifyAboutReindexComponent();
         } catch (NoConnectionToJcommuneException e) {
-            showNotConnectedNotification();       //TODO process exception and show notification to User AS POP_UP window
+            showNotConnectedNotification();
         } catch (JcommuneUrlNotConfiguratedException e) {
-            showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
+            showNotConfiguratedNotification();
         } catch (JcommuneRespondedWithErrorException e) {
-            showNotConfiguratedNotification();        //TODO process exception and show notification to User AS POP_UP window
+            showNotConfiguratedNotification();        //TODO what is that? how should i handle this?
         }
     }
 

@@ -10,14 +10,17 @@
             apply="org.zkoss.bind.BindComposer"
             viewModel="@id('vm') @init(componentsVm)" validationMessages="@id('vmsgs')">
 
-         <vlayout>
+        <vlayout>
             <div>
                 <menubar id="menubar" width="100%">
                     <menu label="${labels.componentlist.add}" disabled="@load(!vm.ableToCreateNewComponent)">
                         <menupopup>
-                            <menuitem label="FORUM" onClick="@command('addNewJcommune')" visible = "@load(vm.jcommuneAvailable)" />
-                            <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')" visible = "@load(vm.poulpeAvailable)" />
-                            <menuitem label="ARTICLE" onClick="@command('addNewArticle')" visible="@load(vm.articleAvailable)" />
+                            <menuitem label="FORUM" onClick="@command('addNewJcommune')"
+                                      visible="@load(vm.jcommuneAvailable)"/>
+                            <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')"
+                                      visible="@load(vm.poulpeAvailable)"/>
+                            <menuitem label="ARTICLE" onClick="@command('addNewArticle')"
+                                      visible="@load(vm.articleAvailable)"/>
                         </menupopup>
 
                     </menu>
@@ -29,12 +32,12 @@
                     <listheader align="center" label="${labels.component.description}"/>
                     <listheader align="center" label="${labels.component.type}"/>
                 </listhead>
-                    <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)"  context="popupMenuComponent">
-                        <listcell label="@load(vm.poulpe.name)"/>
-                        <listcell label="@load(vm.poulpe.description)"/>
-                        <listcell label="@load(vm.poulpe.componentType)"/>
-                    </listitem>
-                <listitem value="@load(vm.jcommune)" visible="@load(vm.jcommuneVisible)"  context="popupMenuJcommune">
+                <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)" context="popupMenuComponent">
+                    <listcell label="@load(vm.poulpe.name)"/>
+                    <listcell label="@load(vm.poulpe.description)"/>
+                    <listcell label="@load(vm.poulpe.componentType)"/>
+                </listitem>
+                <listitem value="@load(vm.jcommune)" visible="@load(vm.jcommuneVisible)" context="popupMenuJcommune">
                     <listcell label="@load(vm.jcommune.name)"/>
                     <listcell label="@load(vm.jcommune.description)"/>
                     <listcell label="@load(vm.jcommune.componentType)"/>
@@ -61,32 +64,32 @@
         </menupopup>
         <menupopup id="popupMenuJcommune">
             <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
-            <attribute name="onClick">
-                vm.reindexComponent();
-                if(vm.showNotConnectedNotification){
-                popNotConnected.open(self,"at_pointer");
-                }
-                if(vm.showNotConfiguratedNotification){
-                popNotConfigurated.open(self,"at_pointer");
-                }
-            </attribute>
+                <attribute name="onClick">
+                    vm.reindexComponent();
+                    if(vm.showNotConnectedNotification){
+                    popNotConnected.open(self,"at_pointer");
+                    }
+                    if(vm.showNotConfiguratedNotification){
+                    popNotConfigurated.open(self,"at_pointer");
+                    }
+                </attribute>
             </menuitem>
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
                       onClick="@command('deleteComponent')"/>
-          </menupopup>
+        </menupopup>
         <!--POPUP WINDOWS -->
-        <popup id="popNotConnected" width="250px" style="border:none">
+        <popup id="popNotConnected" width="230px" style="border:none">
             <vlayout sclass="popup-notification">
-                   <label value="Not Connected" sclass="halfbold-table-title"/>
-                    Repeat you attemt later.
+                <label value="${labels.component.error.jcommune.title.not_connected}" sclass="halfbold-table-title"/>
+                ${labels.component.error.jcommune.text.not_connected}
             </vlayout>
         </popup>
-        <popup id="popNotConfigurated" width="220px"  style="border:none" >
-            <vlayout  sclass="popup-notification">
-                <label value="Not Configurated" sclass="halfbold-table-title"/>
-                <html><![CDATA[ Configure Jcommune URL ]]></html>
+        <popup id="popNotConfigurated" width="230px" style="border:none">
+            <vlayout sclass="popup-notification">
+                <label value="${labels.component.error.jcommune.title.not_configurated}" sclass="halfbold-table-title"/>
+                ${labels.component.error.jcommune.text.not_configurated}
             </vlayout>
         </popup>
 

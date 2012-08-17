@@ -24,7 +24,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
@@ -73,12 +75,21 @@ public class ComponentsVmTest {
         componentsVm.setBindWrapper(bindWrapper);
     }
     
-//    @Test
-//    public void getComponents() {
-//        componentsVm.getComponents();
-//        verify(componentService).getAll();
-//    }
-//
+    @Test
+    public void getPoulpe() {
+        componentsVm.getPoulpe();
+        verify(componentService).getByType(ComponentType.ADMIN_PANEL);
+    }
+    @Test
+    public void getJcommune() {
+        componentsVm.getJcommune();
+        verify(componentService).getByType(ComponentType.FORUM);
+    }
+    @Test
+    public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException, NoConnectionToJcommuneException {
+        componentsVm.reindexComponent();
+        verify(jcommuneHttpNotifier).notifyAboutReindexComponent();
+    }
     @Test
     public void deleteComponent() {
         Component selected = givenSelectedComponent();
