@@ -77,17 +77,17 @@
                       onClick="@command('deleteComponent')"/>
           </menupopup>
         <!--POPUP WINDOWS -->
-        <popup id="popNotConnected" width="150px">
-            <groupbox sclass="popup-notification">
-                        <label value="Not Connected" sclass="halfbold-table-title"/>
+        <popup id="popNotConnected" width="200px" style="border:none">
+            <vlayout sclass="popup-notification">
+                   <label value="Not Connected" sclass="halfbold-table-title"/>
                     Repeat you attemt later.
-            </groupbox>
+            </vlayout>
         </popup>
-        <popup id="popNotConfigurated" width="150px" sclass="popup-notification" >
-            <groupbox closable="false">
-                <caption>Not Configurated</caption>
+        <popup id="popNotConfigurated" width="200px"  style="border:none" >
+            <vlayout  sclass="popup-notification">
+                <label value="Not Configurated" sclass="halfbold-table-title"/>
                 <html><![CDATA[ Configure Jcommune URL ]]></html>
-            </groupbox>
+            </vlayout>
         </popup>
 
     </window>
