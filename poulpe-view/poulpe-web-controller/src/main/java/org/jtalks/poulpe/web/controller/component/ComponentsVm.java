@@ -109,20 +109,6 @@ public class ComponentsVm {
     }
 
     /**
-     * @return {@link Component} with type ARTICLE if it exists, null otherwise
-     */
-    public Component getArticle() {
-        return componentService.getByType(ComponentType.ARTICLE);
-    }
-
-    /**
-     * @return true if ARTICLE component is exists, false otherwise
-     */
-    public boolean isArticleVisible() {
-        return !(getArticle() == null);
-    }
-
-    /**
      * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
      *
      * @throws IllegalStateException if no component selected
@@ -218,18 +204,6 @@ public class ComponentsVm {
                 baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
-
-    /**
-     * Method will removed after completion of tests.
-     */
-    @Command
-    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
-    public void addNewArticle() {
-        selectedEntity.setEntity(componentService.
-                baseComponentFor(ComponentType.ARTICLE).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
-        AddComponentVm.openWindowForAdding(windowManager);
-    }
-
     /**
      * Shows a component edit window for currently selected element. Selected component is set using {@link
      * #setSelected(Component)}.
@@ -287,15 +261,7 @@ public class ComponentsVm {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
     }
 
-    /**
-     * @return true if component with {@link org.jtalks.poulpe.model.entity.Poulpe} type are not created yet,
-     *         false otherwise
-     */
-    public boolean isArticleAvailable() {
-        return componentService.getAvailableTypes().contains(ComponentType.ARTICLE);
-    }
-
-    /**
+   /**
      * Gets visibility status of notification window, boolean show added because after single opening of popup
      * window before next check we should have false at showNotConnectedNotification.
      *

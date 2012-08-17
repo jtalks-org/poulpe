@@ -19,8 +19,6 @@
                                       visible="@load(vm.jcommuneAvailable)"/>
                             <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')"
                                       visible="@load(vm.poulpeAvailable)"/>
-                            <menuitem label="ARTICLE" onClick="@command('addNewArticle')"
-                                      visible="@load(vm.articleAvailable)"/>
                         </menupopup>
 
                     </menu>
@@ -32,7 +30,7 @@
                     <listheader align="center" label="${labels.component.description}"/>
                     <listheader align="center" label="${labels.component.type}"/>
                 </listhead>
-                <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)" context="popupMenuComponent">
+                <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)" context="popupMenuPoulpe">
                     <listcell label="@load(vm.poulpe.name)"/>
                     <listcell label="@load(vm.poulpe.description)"/>
                     <listcell label="@load(vm.poulpe.componentType)"/>
@@ -42,25 +40,14 @@
                     <listcell label="@load(vm.jcommune.description)"/>
                     <listcell label="@load(vm.jcommune.componentType)"/>
                 </listitem>
-                <listitem value="@load(vm.article)" visible="@load(vm.articleVisible)" context="popupMenuArticle">
-                    <listcell label="@load(vm.article.name)"/>
-                    <listcell label="@load(vm.article.description)"/>
-                    <listcell label="@load(vm.article.componentType)"/>
-                </listitem>
             </listbox>
 
         </vlayout>
 
         <!--CONTEXT MENU -->
-        <menupopup id="popupMenuComponent">
+        <menupopup id="popupMenuPoulpe">
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
-        </menupopup>
-        <menupopup id="popupMenuArticle">
-            <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
-                      onClick="@command('configureComponent')"/>
-            <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
-                      onClick="@command('deleteComponent')"/>
         </menupopup>
         <menupopup id="popupMenuJcommune">
             <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
