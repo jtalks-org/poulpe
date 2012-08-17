@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 import java.util.List;
@@ -47,9 +48,12 @@ public interface ComponentService extends EntityService<Component> {
      * Delete the specified component.
      *
      * @param component component to delete
+     * @throws {@link NoConnectionToJcommuneException}
+     * @throws {@link JcommuneRespondedWithErrorException}
+     * @throws {@link JcommuneUrlNotConfiguratedException}
      */
     void deleteComponent(Component component)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException;
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
 
     /**
      * Saves new component or updates existent

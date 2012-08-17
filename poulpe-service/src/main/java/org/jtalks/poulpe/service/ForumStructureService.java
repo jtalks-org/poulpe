@@ -18,6 +18,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 /**
@@ -47,11 +48,12 @@ public interface ForumStructureService {
      * remove it from section
      *
      * @param branch a branch to be removed from database
-     * @throws NoConnectionToJcommuneException
-     * @throws JcommuneRespondedWithErrorException
+     * @throws {@link NoConnectionToJcommuneException}
+     * @throws {@link JcommuneRespondedWithErrorException}
+     * @throws {@link JcommuneUrlNotConfiguratedException}
      */
     void removeBranch(PoulpeBranch branch)
-        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException;
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
 
     /**
      * Moves the branch from one section to another. Note, that if the section was the same as the branch is in, it will
@@ -68,9 +70,12 @@ public interface ForumStructureService {
      *
      * @param section a section to be removed from the database
      * @return the updated JCommune
+     * @throws {@link NoConnectionToJcommuneException}
+     * @throws {@link JcommuneRespondedWithErrorException}
+     * @throws {@link JcommuneUrlNotConfiguratedException}
      */
     Jcommune deleteSectionWithBranches(PoulpeSection section)
-        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException;
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 
