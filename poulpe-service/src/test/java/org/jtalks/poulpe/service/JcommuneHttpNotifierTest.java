@@ -16,9 +16,8 @@ public class JcommuneHttpNotifierTest {
     @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
     public void testNotifyAboutReindexComponent() throws Exception {
         doReturn(illegalResponse()).when(sut).sendHttpRequest(anyString());
-        sut.setjCommuneUrl("url");
 
-        sut.notifyAboutReindexComponent();
+        sut.notifyAboutReindexComponent("url");
     }
 
     private HttpResponse illegalResponse() {

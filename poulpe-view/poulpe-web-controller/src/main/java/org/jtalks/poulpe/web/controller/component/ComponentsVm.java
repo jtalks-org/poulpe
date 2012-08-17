@@ -156,7 +156,7 @@ public class ComponentsVm {
     @Command
     public void reindexComponent() {
         try {
-            jcommuneHttpNotifier.notifyAboutReindexComponent();
+            jcommuneHttpNotifier.notifyAboutReindexComponent("url");   //TODO set JCommune url
         } catch (NoConnectionToJcommuneException e) {
             showNotConnectedNotification();
         } catch (JcommuneUrlNotConfiguratedException e) {

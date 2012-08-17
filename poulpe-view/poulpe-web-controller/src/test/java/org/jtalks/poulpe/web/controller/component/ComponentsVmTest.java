@@ -86,9 +86,9 @@ public class ComponentsVmTest {
         verify(componentService).getByType(ComponentType.FORUM);
     }
     @Test
-    public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException, NoConnectionToJcommuneException {
+    public void reindexComponent() throws Exception {
         componentsVm.reindexComponent();
-        verify(jcommuneHttpNotifier).notifyAboutReindexComponent();
+        verify(jcommuneHttpNotifier).notifyAboutReindexComponent("url");
     }
     @Test
     public void deleteComponent() {
