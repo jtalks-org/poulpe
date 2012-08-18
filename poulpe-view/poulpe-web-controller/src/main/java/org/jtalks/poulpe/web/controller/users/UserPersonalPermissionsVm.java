@@ -82,7 +82,7 @@ public class UserPersonalPermissionsVm {
     public void updateView() {
         blocks.clear();
         List<ProfilePermission> permissions = ProfilePermission.getAllAsList();
-        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPermissionsFor();;
+        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPermissionsFor();
 
         for (ProfilePermission permission : permissions) {
             blocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels

@@ -17,10 +17,7 @@ package org.jtalks.poulpe.model.dto;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.JtalksPermission;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 
@@ -98,7 +95,8 @@ public class GroupsPermissions<T extends JtalksPermission> {
     }
 
     /**
-     * Based on 'allow' flag, add 'allow' permission (if it's {@code true}), or 'restrict' permission on it (otherwise).
+     * Based on 'allow' flag, add 'allow' permission (if it's {@code true}), or 'restrict' permission on it
+     * (otherwise).
      *
      * @param permission the permission to add
      * @param group      the group for which permission added
@@ -116,7 +114,12 @@ public class GroupsPermissions<T extends JtalksPermission> {
      * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
     public List<Group> getAllowed(T permission) {
-        return Collections.unmodifiableList(accessListMap.get(permission).getAllowed());
+        GroupAccessList groupAccessList = accessListMap.get(permission);
+        if (groupAccessList == null) {
+            return Collections.unmodifiableList(new ArrayList<Group>());
+        } else {
+            return Collections.unmodifiableList(groupAccessList.getAllowed());
+        }
     }
 
     /**
@@ -126,12 +129,17 @@ public class GroupsPermissions<T extends JtalksPermission> {
      * @return list of {@link Group}, list instance is UNMODIFIABLE
      */
     public List<Group> getRestricted(T permission) {
-        return Collections.unmodifiableList(accessListMap.get(permission).getRestricted());
+        GroupAccessList groupAccessList = accessListMap.get(permission);
+        if (groupAccessList == null) {
+            return Collections.unmodifiableList(new ArrayList<Group>());
+        } else{
+            return Collections.unmodifiableList(groupAccessList.getRestricted());
+        }
     }
 
     /**
-     * For given permission, retrieves list of {@link Group} that are allowed or restricted relative to parameter
-     * {@code allowed}.
+     * For given permission, retrieves list of {@link Group} that are allowed or restricted relative to parameter {@code
+     * allowed}.
      *
      * @param permission the permission to get for
      * @param allowed    the flag indicating which type of groups needed: allowed (if {@code true}) or restricted
