@@ -98,8 +98,20 @@ public class UserPersonalPermissionsVm {
         windowManager.open(PERSONAL_PERMISSION_MANAGEMENT_PAGE);
     }
    
-    
+    /**
+     * Gets blocks which represents state of each permission.
+     *
+     * @return all blocks, list instance is UNMODIFIABLE
+     */    
     public List<PermissionManagementBlock> getBlocks() {
         return Collections.unmodifiableList(blocks);
     }
+    /**
+     * Method to get currently selected item
+     *
+     * @return currently selected entity
+     */
+    public SelectedEntity<Object> getSelectedEntity() {
+        return selectedEntity;
+    }    
 }
