@@ -141,7 +141,7 @@ public class JcommuneHttpNotifier {
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new NoConnectionToJcommuneException();
         }
     }
