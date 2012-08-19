@@ -2,7 +2,10 @@ package org.jtalks.poulpe.service;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
@@ -18,6 +21,21 @@ public class JcommuneHttpNotifierTest {
         doReturn(illegalResponse()).when(sut).sendHttpRequest(anyString());
 
         sut.notifyAboutReindexComponent("url");
+    }
+
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
+    public void testNotifyAboutComponentDelete()  throws Exception {
+        sut.notifyAboutComponentDelete("url");
+    }
+
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
+    public void testNotifyAboutBranchDelete()  throws Exception {
+        sut.notifyAboutBranchDelete("url", new PoulpeBranch());
+    }
+
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
+    public void testNotifyAboutSectionDelete()  throws Exception {
+        sut.notifyAboutSectionDelete("url", new PoulpeSection());
     }
 
     private HttpResponse illegalResponse() {
