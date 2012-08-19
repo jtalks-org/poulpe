@@ -43,6 +43,9 @@ public class UserGroupVm {
             SHOW_MODERATOR_GROUP_SELECTION_PART = "showDeleteModeratorGroupDialog",
             MODERATING_BRANCHES = "branches", SELECTED_MODERATOR_GROUP = "selectedModeratorGroupForAllBranches",
             SELECTED_BRANCH = "selectedBranch", GROUP_SERVICE = "groupService";
+			
+	// names of the groups, that are prohibited to delete
+    private static final String[] RESTRICTED_GROUPS = {"Administrators", "Banned Users", "Registered Users"};
 
     //Injected
     private final GroupService groupService;
@@ -52,12 +55,14 @@ public class UserGroupVm {
     private ListModelList<Group> groups;
     private BranchGroupMap branches;
     private Group selectedGroup;
+	private Group contextSelectedGroup;
     private Group selectedModeratorGroupForAllBranches;
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     private boolean showDeleteConfirmDialog, showGroupDialog, showDeleteModeratorGroupDialog;
+	private boolean canShowDeleteContextDialog = true;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -232,6 +237,24 @@ public class UserGroupVm {
     private boolean isModeratingGroup() {
         return selectedGroup != null && groupService.getModeratedBranches(selectedGroup).size() != 0;
     }
+	
+	/**
+     * Saves the value of group, which context menu was called for.
+     * Checks, if group's name is in the list of groups prohibited to delete.
+     * Sets canShowDeleteContextDialog to "false", if the selected group is in the prohibited list
+     * @param contextSelectedGroup determines the group, which context menu was called for
+     */
+    @Command
+    @NotifyChange({"contextSelectedGroup","canShowDeleteContextDialog"})
+    public void handleContextSelectedGroup(@BindingParam("group") Group contextSelectedGroup) {
+        this.contextSelectedGroup = contextSelectedGroup;
+        canShowDeleteContextDialog = true;
+        for (String groupName : RESTRICTED_GROUPS) {
+            if (groupName.equals(contextSelectedGroup.getName())) {
+                canShowDeleteContextDialog = false;
+            }
+        }
+    }
 
     // -- Getters/Setters --------------------
 
@@ -352,4 +375,36 @@ public class UserGroupVm {
     public BranchGroupMap getBranches() {
         return branches;
     }
-}
+	
+	/**
+     * 
+     * @return  the group, context menu was called for
+     */
+    public Group getContextSelectedGroup() {
+        return contextSelectedGroup;
+    }
+
+    /**
+     * Sets the group, selected menu was called for
+     * @param contextSelectedGroup  the group, context menu was called for
+     */
+    public void setContextSelectedGroup(Group contextSelectedGroup) {
+        this.contextSelectedGroup = contextSelectedGroup;
+    }
+
+    /**
+     * 
+     * @return if "delete" option available in context dialog for particular group
+     */
+    public boolean isCanShowDeleteContextDialog() {
+        return canShowDeleteContextDialog;
+    }
+
+    /**
+     * Sets if  "delete" option available in context dialog for particular group
+     * @param canShowDeleteContextDialog means to show option "delete" in context menu or not
+     */
+    public void setCanShowDeleteContextDialog(boolean canShowDeleteContextDialog) {
+        this.canShowDeleteContextDialog = canShowDeleteContextDialog;
+    }
+}	
