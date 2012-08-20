@@ -133,16 +133,13 @@ public class ComponentsVm {
                             SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneUrlNotConfiguratedException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 }
             }
         };
