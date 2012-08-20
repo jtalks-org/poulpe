@@ -39,7 +39,7 @@ public final class TestFixtures {
     private static final Random RANDOM = new Random();
     private static final int SECTIONS_COUNT = 10;
     private static final int BRANCH_COUNT_MIN = 5;
-    private static final int BRANCH_COUNT_MAX = 5;
+    private static final int BRANCH_COUNT_MAX = 15;
     private static final int USERS_COUNT = 5;
     private static final int POST_LIMIT_COUNT = 1000;
     private static final int LENGTH = 10;
