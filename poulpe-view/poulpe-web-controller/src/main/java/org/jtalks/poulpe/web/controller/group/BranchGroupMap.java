@@ -19,7 +19,6 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,7 +31,6 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class BranchGroupMap {
-    private final BranchService branchService;
     private List<Group> allAvailableGroups;
     private List<ModeratingGroupComboboxRow> branchesCollection;
     private Iterator<ModeratingGroupComboboxRow> iterator;
@@ -41,8 +39,9 @@ public class BranchGroupMap {
      * Construct branchCollection by creating list record for every branch, so every branch will had his own combobox,
      * to select moderator group.
      *
-     * @param branches list of {@link PoulpeBranch} moderated by currently selected at {@link UserGroupVm} group
-     * @param groups   list of {@link Group} available for selection
+     * @param branches      list of {@link PoulpeBranch} moderated by currently selected at {@link UserGroupVm} group
+     * @param groups        list of {@link Group} available for selection
+     * @param branchService the branch service instance
      */
     public BranchGroupMap(List<PoulpeBranch> branches, List<Group> groups, BranchService branchService) {
         allAvailableGroups = ImmutableList.copyOf(groups);
@@ -50,7 +49,6 @@ public class BranchGroupMap {
         for (PoulpeBranch branch : branches) {
             branchesCollection.add(new ModeratingGroupComboboxRow(branch, branchService));
         }
-        this.branchService = branchService;
     }
 
     /**
