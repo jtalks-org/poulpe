@@ -20,7 +20,6 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 
 import java.util.List;
@@ -47,7 +46,8 @@ public class AddComponentVm {
      * @param selectedEntity selectedEntity holder of {@link Component} instance, witch will be saved to data base,
      *                       after set up its name and description at UI
      */
-    public AddComponentVm(ComponentService componentService, WindowManager windowManager, SelectedEntity<Component> selectedEntity) {
+    public AddComponentVm(ComponentService componentService, WindowManager windowManager,
+                          SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.windowManager = windowManager;
         component = selectedEntity.getEntity();

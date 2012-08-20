@@ -35,6 +35,7 @@ import org.testng.annotations.Test;
 
 /**
  * @author Alexey Grigorev
+ * @author Kazantcev Leonid
  */
 public class AddComponentVmTest {
 
@@ -57,14 +58,11 @@ public class AddComponentVmTest {
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
 
-    @Test (enabled = false)
+    @Test
     public void createComponent() {
-        givenBaseComponents();
-        Component expected = TestFixtures.randomComponent();
-
         addComponentVm.createComponent();
-
-        verify(componentService).saveComponent(fieldsEqualTo(expected));
+        verify(componentService).saveComponent(addComponentVm.getComponent());
+        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
 
     private void givenBaseComponents() {
@@ -75,16 +73,7 @@ public class AddComponentVmTest {
         when(componentService.baseComponentFor(ComponentType.ARTICLE)).thenReturn(
                 new ComponentBase(ComponentType.ARTICLE));
     }
-    
-    @Test(enabled = false)
-    public void createComponent_widowClosed() {
-        givenBaseComponents();
-        
-        Component expected = TestFixtures.randomComponent();
-        addComponentVm.createComponent();
-        
-        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
-    }
+
 
     @Test
     public void getAvailableComponentTypes() {

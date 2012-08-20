@@ -40,25 +40,31 @@ import org.zkoss.zul.Messagebox;
  */
 public class ComponentsVm {
 
-    public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
-            COMPONENTS = "components", SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification", SHOW_NOT_CONFIGURATED_NOTIFICATION = "showNotConfiguratedNotification";
-    public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE = "article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
+    public static final String SELECTED = "selected";
+    public static final String CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent";
+    public static final String COMPONENTS = "components";
+    public static final String SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification";
+    public static final String SHOW_NOT_CONFIGURED_NOTIFICATION = "showNotConfiguredNotification";
+    public static final String JCOMMUNE = "jcommune";
+    public static final String POULPE = "poulpe";
+    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
+    public static final String POULPE_VISIBLE = "poulpeVisible";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
     private boolean showNotConnectedNotification;
-    private boolean showNotConfiguratedNotification;
+    private boolean showNotConfiguredNotification;
     private final ComponentService componentService;
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
     private final JcommuneHttpNotifier jcommuneHttpNotifier;
 
-    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
-    private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
-    private final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
-    private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
+    private static final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
+    private static final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
+    private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
+    private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
@@ -123,13 +129,8 @@ public class ComponentsVm {
                 try {
                     componentService.deleteComponent(selected);
                     selected = null;
-                    // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this,
-                            JCOMMUNE, POULPE, ARTICLE, JCOMMUNE_VISIBLE, POULPE_VISIBLE, ARTICLE_VISIBLE,
-                            "articleAvailable",
-                            SELECTED, COMPONENTS,
-                            CAN_CREATE_NEW_COMPONENT);
-
+                    bindWrapper.postNotifyChange(ComponentsVm.this, JCOMMUNE, POULPE, JCOMMUNE_VISIBLE, POULPE_VISIBLE,
+                            SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
@@ -143,7 +144,6 @@ public class ComponentsVm {
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
                             Messagebox.OK, Messagebox.ERROR);
                 }
-
             }
         };
 
@@ -166,13 +166,12 @@ public class ComponentsVm {
         }
     }
 
-
     /**
      * Opens window, witch notify about not configurated URL.
      */
-    @NotifyChange(SHOW_NOT_CONFIGURATED_NOTIFICATION)
+    @NotifyChange(SHOW_NOT_CONFIGURED_NOTIFICATION)
     private void showNotConfiguratedNotification() {
-        showNotConfiguratedNotification = true;
+        showNotConfiguredNotification = true;
     }
 
     /**
@@ -204,6 +203,7 @@ public class ComponentsVm {
                 baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
+
     /**
      * Shows a component edit window for currently selected element. Selected component is set using {@link
      * #setSelected(Component)}.
@@ -261,7 +261,7 @@ public class ComponentsVm {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
     }
 
-   /**
+    /**
      * Gets visibility status of notification window, boolean show added because after single opening of popup
      * window before next check we should have false at showNotConnectedNotification.
      *
@@ -275,13 +275,13 @@ public class ComponentsVm {
 
     /**
      * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showNotConfiguratedNotification.
+     * window before next check we should have false at showNotConfiguredNotification.
      *
      * @return true if notification is visible
      */
-    public boolean isShowNotConfiguratedNotification() {
-        boolean show = showNotConfiguratedNotification;
-        showNotConfiguratedNotification = false;
+    public boolean isShowNotConfiguredNotification() {
+        boolean show = showNotConfiguredNotification;
+        showNotConfiguredNotification = false;
         return show;
     }
 }
