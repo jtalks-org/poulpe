@@ -72,7 +72,7 @@ public class UserGroupVm {
      * @param groupService   the group service instance
      * @param selectedEntity the selected entity instance
      * @param windowManager  the window manager instance
-     * @param branchService the branch service instance
+     * @param branchService  the branch service instance
      */
     public UserGroupVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Group> selectedEntity,
                        @Nonnull WindowManager windowManager, @Nonnull BranchService branchService) {
@@ -411,4 +411,4 @@ public class UserGroupVm {
     public void setCanShowDeleteContextDialog(boolean canShowDeleteContextDialog) {
         this.canShowDeleteContextDialog = canShowDeleteContextDialog;
     }
-}	
+}
