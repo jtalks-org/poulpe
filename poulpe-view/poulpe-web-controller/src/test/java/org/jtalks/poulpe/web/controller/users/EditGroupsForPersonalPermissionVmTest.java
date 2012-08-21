@@ -1,16 +1,14 @@
 /**
- * Copyright (C) 2011  JTalks.org Team
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 2.1 of the License, or (at your option) any later version.
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- * You should have received a copy of the GNU Lesser General Public
+ * Copyright (C) 2011 JTalks.org Team This library is free software; you can
+ * redistribute it and/or modify it under the terms of the GNU Lesser General
+ * Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version. This library is
+ * distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details. You should have received a copy of the GNU Lesser General Public
  * License along with this library; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
  */
 package org.jtalks.poulpe.web.controller.users;
 
@@ -45,23 +43,23 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 import org.jtalks.common.model.permissions.ProfilePermission;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 
 /**
- * Tests for {@link EditGroupsForBranchPermissionVm}.
- * 
- * @author Vyacheslav Zhivaev
- * 
+ * Tests for {@link EditGroupsForPersonalPermissionVm}.
+ *
+ * @author Enykey
+ *
  */
 public class EditGroupsForPersonalPermissionVmTest {
 
-    // limits dataProvider out
-    private final int DATA_PROVIDER_LIMIT = 20;
 
     // SUT
     private EditGroupsForPersonalPermissionVm viewModel;
-
-    @Mock GroupService groupService;
-    @Mock WindowManager windowManager;
+    @Mock
+    GroupService groupService;
+    @Mock
+    WindowManager windowManager;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -69,38 +67,12 @@ public class EditGroupsForPersonalPermissionVmTest {
     }
 
     @Test(dataProvider = "dataProvider")
-    public void cancel(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
+    public void testUpdateView(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
         initTest(permissionForEntity, groupsPermissions);
-        viewModel.cancel();
-        vefiryNothingChanges();
-    }
-
-    @Test(dataProvider = "dataProvider")
-    public void testSaveWithChanges(PermissionForEntity permissionForEntity,
-            GroupsPermissions<ProfilePermission> groupsPermissions) {
-        initTest(permissionForEntity, groupsPermissions);
-
-        viewModel.removeAll();
-        viewModel.save();
-
-        //vefiryPermissionsChanged(permissionForEntity);  //how to test this part?
-
-        verify(windowManager).open(anyString());
-    }
-
-    @Test(dataProvider = "dataProvider")
-    public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-                                       GroupsPermissions<ProfilePermission> groupsPermissions) {
-        initTest(permissionForEntity, groupsPermissions);
-
-        viewModel.save();
-
-        vefiryNothingChanges();
+        viewModel.updateVm();
     }
 
     public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
-        when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
-        when(groupService.getPersonalPermissions()).thenReturn(groupsPermissions);
 
         viewModel = new EditGroupsForPersonalPermissionVm(windowManager, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
@@ -110,28 +82,16 @@ public class EditGroupsForPersonalPermissionVmTest {
 
     @DataProvider
     public Object[][] dataProvider() {
-        // TODO: probably copy-paste
+        groupService.getAll();
         List<PermissionForEntity> permissionsForEntity = Lists.newArrayList();
         GroupsPermissions<ProfilePermission> groupsPermissions = new GroupsPermissions<ProfilePermission>(
                 ProfilePermission.getAllAsList());
 
-        // target entity (Group)
         Group target = TestFixtures.group();
-        // permissions to work with
-        ProfilePermission[] profilePermissions = ProfilePermission.values();
 
-        // building fixtures
-        int count = Math.min(DATA_PROVIDER_LIMIT, profilePermissions.length);
-        for (int i = 0; i < count; i++) {
-            permissionsForEntity.add(new PermissionForEntity(target, true, profilePermissions[i]));
-            permissionsForEntity.add(new PermissionForEntity(target, false, profilePermissions[i]));
+        permissionsForEntity.add(new PermissionForEntity(target, true, ProfilePermission.SEND_PRIVATE_MESSAGES));
+        permissionsForEntity.add(new PermissionForEntity(target, false, ProfilePermission.EDIT_PROFILE));
 
-            for (int j = 0, countj = RandomUtils.nextInt(4) + 2; j < countj; j++) {
-                groupsPermissions.add(profilePermissions[i], TestFixtures.group(), TestFixtures.group());
-            }
-        }
-
-        // converting fixtures to usable state, adding same PermissionsMap for each PermissionForEntity
         int permissionsCount = permissionsForEntity.size();
         Object[][] result = new Object[permissionsCount][2];
 
@@ -141,24 +101,5 @@ public class EditGroupsForPersonalPermissionVmTest {
         }
 
         return result;
-    }
-
-    private void vefiryPermissionsChanged(PermissionForEntity permissionForEntity) {
-        Group target = (Group) permissionForEntity.getTarget();
-
-        if (permissionForEntity.isAllowed()) {
-            verify(groupService).changeGrants(eq(target), any(PermissionChanges.class));
-        } else {
-            verify(groupService).changeRestrictions(eq(target), any(PermissionChanges.class));
-        }
-    }
-
-    private void vefiryNothingChanges() {
-        verify(groupService, never()).changeGrants(any(Group.class), any(PermissionChanges.class));
-        verify(groupService, never()).changeRestrictions(any(Group.class), any(PermissionChanges.class));
-        //verify(groupService, never()).saveBranch(any(Group.class));
-
-        verify(groupService, never()).saveGroup(any(Group.class));
-        verify(groupService, never()).deleteGroup(any(Group.class));
     }
 }
