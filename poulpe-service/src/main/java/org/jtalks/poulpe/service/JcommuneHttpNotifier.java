@@ -59,7 +59,7 @@ public class JcommuneHttpNotifier {
     /**
      * URL to ask JCommune to remove content of the specific section.
      */
-    private static final String SECTIONS_URL_PART = "/sections/";
+    private static final String SECTIONS_URL_PART = "/section/";
     /**
      * URL to ask JCommune to remove content of the specific branch.
      */
