@@ -178,7 +178,7 @@ public class JcommuneHttpNotifier {
             HttpResponse response = sendHttpRequest(reindexUrl);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
-                throw new JcommuneRespondedWithErrorException();
+                throw new JcommuneRespondedWithErrorException(String.valueOf(statusCode));
             }
         } catch (IOException e) {
             throw new NoConnectionToJcommuneException();

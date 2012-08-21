@@ -19,7 +19,6 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -73,18 +72,18 @@ public class ComponentsVm {
     private Component selected;
 
     /**
-     * @param componentService     service for loading and saving component
-     * @param dialogManager        shows confirmation dialog for deletion
-     * @param windowManager        object for opening and closing application windows
-     * @param selectedEntity       desktop-scoped bean to which selected entities passed, used for editing components
-         */
+     * @param componentService service for loading and saving component
+     * @param dialogManager    shows confirmation dialog for deletion
+     * @param windowManager    object for opening and closing application windows
+     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
+     */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
                         SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
-     }
+    }
 
     /**
      * @return {@link Component} with type ADMIN_PANEL if it exists, null otherwise
@@ -161,7 +160,7 @@ public class ComponentsVm {
             Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT),
                     Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneRespondedWithErrorException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT),
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT) + e.getMessage(),
                     Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
     }
