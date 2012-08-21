@@ -81,7 +81,7 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
     }
 
     /**
-     * Saves the state.
+     * Saves the state of PersonalPermission for each group. Entity Group according with its own permission change
      */
     @Command
     public void save() {
@@ -94,7 +94,7 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
             listGroupForSave.add(groupForSave);
             PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
                     ListUtils.intersection(listGroupForSave, ListUtils.subtract(addedGroups, alreadyAddedGroups)),
-                    ListUtils.intersection(ListUtils.subtract(alreadyAddedGroups,addedGroups),listGroupForSave)); //ListUtils.intersection(ListUtils.subtract(alreadyAddedGroups,addedGroups),listGroupForSave)
+                    ListUtils.intersection(ListUtils.subtract(alreadyAddedGroups,addedGroups),listGroupForSave));
 
             if (!accessChanges.isEmpty()) {
                 if (permissionForEntity.isAllowed()) {
@@ -132,7 +132,7 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
      * specified mode
      */
     private List<Group> getAlreadyAddedGroupsForMode(boolean allowed) {
-        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPermissionsFor();
+        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPersonalPermissions();
         return permissionsMap.get((ProfilePermission) permissionForEntity.getPermission(), allowed);
     }
 

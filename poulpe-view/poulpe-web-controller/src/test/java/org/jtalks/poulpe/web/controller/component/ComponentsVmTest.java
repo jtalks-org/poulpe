@@ -18,6 +18,7 @@ import com.google.common.collect.Sets;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
@@ -52,8 +53,6 @@ import static org.testng.Assert.*;
  * @author Kazancev Lenonid
  */
 public class ComponentsVmTest {
-    private static final String NOT_CONNECTED_FIELD = "showNotConnectedNotification";
-    private static final String NOT_CONFIGURED_FIELD = "showNotConfiguredNotification";
     // sut
     ComponentsVm componentsVm;
 
@@ -66,8 +65,7 @@ public class ComponentsVmTest {
     DialogManager dialogManager;
     @Mock
     BindUtilsWrapper bindWrapper;
-    @Mock
-    JcommuneHttpNotifier jcommuneHttpNotifier;
+
     SelectedEntity<Component> selectedEntity;
 
     @Captor
@@ -77,7 +75,7 @@ public class ComponentsVmTest {
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, jcommuneHttpNotifier);
+        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
         componentsVm.setBindWrapper(bindWrapper);
     }
 
@@ -95,8 +93,11 @@ public class ComponentsVmTest {
 
     @Test
     public void reindexComponent() throws Exception {
+        ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
+        Component jcommune = componentBase.newComponent("Name","Description");
+        componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
-        verify(jcommuneHttpNotifier).notifyAboutReindexComponent("url");
+        verify(componentService).reindexComponent(jcommune);
     }
 
     @Test
@@ -198,39 +199,6 @@ public class ComponentsVmTest {
     private void givenNoAvailableTypes() {
         Set<ComponentType> empty = Collections.emptySet();
         when(componentService.getAvailableTypes()).thenReturn(empty);
-    }
-
-    @Test
-    public void isShowNotConfiguredNotification() throws NoSuchFieldException, IllegalAccessException {
-        setShowNotConfiguredNotification(true);
-        boolean value = componentsVm.isShowNotConfiguredNotification();
-
-        assertTrue(value);
-        assertFalse(componentsVm.isShowNotConfiguredNotification());
-    }
-
-    @Test
-    public void isShowNotConnectedNotification() throws NoSuchFieldException, IllegalAccessException {
-        setShowNotConnectedNotification(true);
-        boolean value = componentsVm.isShowNotConnectedNotification();
-
-        assertTrue(value);
-        assertFalse(componentsVm.isShowNotConnectedNotification());
-    }
-
-    private void setShowNotConnectedNotification(boolean value) throws NoSuchFieldException, IllegalAccessException {
-        setField(NOT_CONNECTED_FIELD, value);
-    }
-
-    private void setShowNotConfiguredNotification(boolean value) throws NoSuchFieldException, IllegalAccessException {
-        setField(NOT_CONFIGURED_FIELD, value);
-    }
-
-    private void setField(String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
-        Class clazz = componentsVm.getClass();
-        Field field = clazz.getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(componentsVm, value);
     }
 
     @Test

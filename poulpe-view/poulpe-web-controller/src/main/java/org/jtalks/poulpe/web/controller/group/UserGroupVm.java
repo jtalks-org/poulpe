@@ -57,14 +57,13 @@ public class UserGroupVm {
     private ListModelList<Group> groups;
     private BranchGroupMap branches;
     private Group selectedGroup;
-    private Group contextSelectedGroup;
     private Group selectedModeratorGroupForAllBranches;
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     private boolean showDeleteConfirmDialog, showGroupDialog, showDeleteModeratorGroupDialog;
-    private boolean canShowDeleteContextDialog = true;
+    private boolean disabledDeleteContextDialog = false;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -244,18 +243,18 @@ public class UserGroupVm {
     /**
      * Saves the value of group, which context menu was called for.
      * Checks, if group's name is in the list of groups prohibited to delete.
-     * Sets canShowDeleteContextDialog to "false", if the selected group is in the prohibited list
+     * Sets disabledDeleteContextDialog to "true", if the selected group is in the prohibited list
      *
-     * @param contextSelectedGroup determines the group, which context menu was called for
+     * @param selectedGroup determines the group, which context menu was called for
      */
     @Command
-    @NotifyChange({"contextSelectedGroup", "canShowDeleteContextDialog"})
+    @NotifyChange({"selectedGroup","disabledDeleteContextDialog"})
     public void handleContextSelectedGroup(@BindingParam("group") Group contextSelectedGroup) {
-        this.contextSelectedGroup = contextSelectedGroup;
-        canShowDeleteContextDialog = true;
+        this.selectedGroup = selectedGroup;
+        disabledDeleteContextDialog = false;
         for (String groupName : RESTRICTED_GROUPS) {
-            if (groupName.equals(contextSelectedGroup.getName())) {
-                canShowDeleteContextDialog = false;
+            if (groupName.equals(selectedGroup.getName())) {
+                disabledDeleteContextDialog = true;
             }
         }
     }
@@ -381,34 +380,17 @@ public class UserGroupVm {
     }
 
     /**
-     * @return the group, context menu was called for
-     */
-    public Group getContextSelectedGroup() {
-        return contextSelectedGroup;
-    }
-
-    /**
-     * Sets the group, selected menu was called for
-     *
-     * @param contextSelectedGroup the group, context menu was called for
-     */
-    public void setContextSelectedGroup(Group contextSelectedGroup) {
-        this.contextSelectedGroup = contextSelectedGroup;
-    }
-
-    /**
      * @return if "delete" option available in context dialog for particular group
-     */
-    public boolean isCanShowDeleteContextDialog() {
-        return canShowDeleteContextDialog;
+	 */
+    public boolean isDisabledDeleteContextDialog() {
+        return disabledDeleteContextDialog;
     }
-
-    /**
-     * Sets if  "delete" option available in context dialog for particular group
-     *
-     * @param canShowDeleteContextDialog means to show option "delete" in context menu or not
-     */
-    public void setCanShowDeleteContextDialog(boolean canShowDeleteContextDialog) {
-        this.canShowDeleteContextDialog = canShowDeleteContextDialog;
+	
+	/**
+	 * Sets if  "delete" option disabled in context dialog for particular group
+     * @param disabledDeleteContextDialog means to disable option "delete" in context menu or not
+	 */
+    public void setDisabledDeleteContextDialog(boolean disabledDeleteContextDialog) {
+        this.disabledDeleteContextDialog = disabledDeleteContextDialog;
     }
 }

@@ -100,7 +100,7 @@ public class EditGroupsForPersonalPermissionVmTest {
 
     public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
         when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
-        when(groupService.getPermissionsFor()).thenReturn(groupsPermissions);
+        when(groupService.getPersonalPermissions()).thenReturn(groupsPermissions);
 
         viewModel = new EditGroupsForPersonalPermissionVm(windowManager, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));

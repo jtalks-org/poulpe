@@ -34,7 +34,6 @@
 
   <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop"/>
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton"/>
-  <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier" scope="singleton"/>
   <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity"/>
 
   <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.ForumStructureVm" scope="desktop">
@@ -143,7 +142,6 @@
     <constructor-arg index="1" ref="dialogManager" />
     <constructor-arg index="2" ref="windowManager" />
     <constructor-arg index="3" ref="selectedEntity" />
-    <constructor-arg index="4" ref="jcommuneHttpNotifier" />
   </bean>
   <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
     <constructor-arg index="0" ref="componentService" />
