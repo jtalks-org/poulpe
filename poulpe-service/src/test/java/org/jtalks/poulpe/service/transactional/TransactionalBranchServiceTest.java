@@ -60,7 +60,6 @@ public class TransactionalBranchServiceTest {
 
     private long BRANCH_ID = 1L;
 
-
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
