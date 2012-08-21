@@ -170,3 +170,10 @@ public class TransactionalBranchServiceTest {
                 any(PoulpeBranch.class));
     }
 }
+
+
+
+
+
+
+
