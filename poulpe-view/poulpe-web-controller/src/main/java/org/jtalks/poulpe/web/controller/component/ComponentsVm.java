@@ -19,7 +19,6 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -40,44 +39,50 @@ import org.zkoss.zul.Messagebox;
  */
 public class ComponentsVm {
 
-    public static final String SELECTED = "selected", CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent",
-            COMPONENTS = "components", SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification", SHOW_NOT_CONFIGURATED_NOTIFICATION = "showNotConfiguratedNotification";
-    public static final String JCOMMUNE = "jcommune", POULPE = "poulpe", ARTICLE = "article", JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible", ARTICLE_VISIBLE = "articleVisible";
+    public static final String SELECTED = "selected";
+    public static final String CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent";
+    public static final String COMPONENTS = "components";
+    public static final String JCOMMUNE = "jcommune";
+    public static final String POULPE = "poulpe";
+    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
+    public static final String POULPE_VISIBLE = "poulpeVisible";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
-    private boolean showNotConnectedNotification;
-    private boolean showNotConfiguratedNotification;
+
     private final ComponentService componentService;
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
-    private final JcommuneHttpNotifier jcommuneHttpNotifier;
 
-    private final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
-    private final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
-    private final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
-    private final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
+    private static final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
+    private static final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
+    private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
+    private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT = "component.error.jcommune.text.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE = "component.error.jcommune.title.not_configured";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT = "component.error.jcommune.text.not_configured";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
     private Component selected;
 
     /**
-     * @param componentService     service for loading and saving component
-     * @param dialogManager        shows confirmation dialog for deletion
-     * @param windowManager        object for opening and closing application windows
-     * @param selectedEntity       desktop-scoped bean to which selected entities passed, used for editing components
-     * @param jcommuneHttpNotifier instance of {@link JcommuneHttpNotifier}
+     * @param componentService service for loading and saving component
+     * @param dialogManager    shows confirmation dialog for deletion
+     * @param windowManager    object for opening and closing application windows
+     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
      */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
-                        SelectedEntity<Component> selectedEntity, JcommuneHttpNotifier jcommuneHttpNotifier) {
+                        SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
-        this.jcommuneHttpNotifier = jcommuneHttpNotifier;
     }
 
     /**
@@ -123,27 +128,18 @@ public class ComponentsVm {
                 try {
                     componentService.deleteComponent(selected);
                     selected = null;
-                    // Because confirmation needed, we have to send notification event programmatically
-                    bindWrapper.postNotifyChange(ComponentsVm.this,
-                            JCOMMUNE, POULPE, ARTICLE, JCOMMUNE_VISIBLE, POULPE_VISIBLE, ARTICLE_VISIBLE,
-                            "articleAvailable",
-                            SELECTED, COMPONENTS,
-                            CAN_CREATE_NEW_COMPONENT);
-
+                    bindWrapper.postNotifyChange(ComponentsVm.this, JCOMMUNE, POULPE, JCOMMUNE_VISIBLE, POULPE_VISIBLE,
+                            SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 } catch (JcommuneUrlNotConfiguratedException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
-                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE),
-                            Messagebox.OK, Messagebox.ERROR);
+                            Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 }
-
             }
         };
 
@@ -156,31 +152,17 @@ public class ComponentsVm {
     @Command
     public void reindexComponent() {
         try {
-            jcommuneHttpNotifier.notifyAboutReindexComponent("url");   //TODO set JCommune url
+            componentService.reindexComponent(selected);
         } catch (NoConnectionToJcommuneException e) {
-            showNotConnectedNotification();
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneUrlNotConfiguratedException e) {
-            showNotConfiguratedNotification();
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneRespondedWithErrorException e) {
-            showNotConfiguratedNotification();        //TODO what is that? how should i handle this?
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT) + e.getMessage(),
+                    Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
-    }
-
-
-    /**
-     * Opens window, witch notify about not configurated URL.
-     */
-    @NotifyChange(SHOW_NOT_CONFIGURATED_NOTIFICATION)
-    private void showNotConfiguratedNotification() {
-        showNotConfiguratedNotification = true;
-    }
-
-    /**
-     * Opens window, witch notify about no connection to JCommune component.
-     */
-    @NotifyChange(SHOW_NOT_CONNECTED_NOTIFICATION)
-    private void showNotConnectedNotification() {
-        showNotConnectedNotification = true;
     }
 
     /**
@@ -204,6 +186,7 @@ public class ComponentsVm {
                 baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
+
     /**
      * Shows a component edit window for currently selected element. Selected component is set using {@link
      * #setSelected(Component)}.
@@ -259,29 +242,5 @@ public class ComponentsVm {
      */
     public boolean isPoulpeAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
-    }
-
-   /**
-     * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showNotConnectedNotification.
-     *
-     * @return true if notification is visible
-     */
-    public boolean isShowNotConnectedNotification() {
-        boolean show = showNotConnectedNotification;
-        showNotConnectedNotification = false;
-        return show;
-    }
-
-    /**
-     * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showNotConfiguratedNotification.
-     *
-     * @return true if notification is visible
-     */
-    public boolean isShowNotConfiguratedNotification() {
-        boolean show = showNotConfiguratedNotification;
-        showNotConfiguratedNotification = false;
-        return show;
     }
 }

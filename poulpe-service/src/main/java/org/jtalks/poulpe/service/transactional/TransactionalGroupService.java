@@ -115,7 +115,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public GroupsPermissions<ProfilePermission> getPermissionsFor() {
+    public GroupsPermissions<ProfilePermission> getPersonalPermissions() {
         return permissionManager.getPermissionsMapFor(getAll());
     }
 

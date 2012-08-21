@@ -50,35 +50,14 @@
                       onClick="@command('configureComponent')"/>
         </menupopup>
         <menupopup id="popupMenuJcommune">
-            <menuitem id="forumMenu" image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
-                <attribute name="onClick">
-                    vm.reindexComponent();
-                    if(vm.showNotConnectedNotification){
-                    popNotConnected.open(self,"at_pointer");
-                    }
-                    if(vm.showNotConfiguratedNotification){
-                    popNotConfigurated.open(self,"at_pointer");
-                    }
-                </attribute>
-            </menuitem>
+            <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}"
+                      onClick="@command('reindexComponent')" />
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
                       onClick="@command('deleteComponent')"/>
         </menupopup>
-        <!--POPUP WINDOWS -->
-        <popup id="popNotConnected" width="280px" style="border:none">
-            <vlayout sclass="popup-notification">
-                <label value="${labels.component.error.jcommune.title.not_connected}" sclass="halfbold-table-title"/>
-                ${labels.component.error.jcommune.text.not_connected}
-            </vlayout>
-        </popup>
-        <popup id="popNotConfigurated" width="280px" style="border:none">
-            <vlayout sclass="popup-notification">
-                <label value="${labels.component.error.jcommune.title.not_configurated}" sclass="halfbold-table-title"/>
-                ${labels.component.error.jcommune.text.not_configurated}
-            </vlayout>
-        </popup>
+
 
     </window>
 

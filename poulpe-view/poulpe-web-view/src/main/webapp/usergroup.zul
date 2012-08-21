@@ -37,7 +37,8 @@
         <listheader align="left" label="${labels.groups.memberCount}"/>
       </listhead>
       <template name="model" var="group">
-        <listitem id="@load(String.valueOf(group.getId()))" context="editPopupMenu">
+        <listitem id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
+				onRightClick="@command('handleContextSelectedGroup', group = group)">
           <listcell label="@load(group.getName())"/>
           <listcell label="@load(group.getUsers().size())"/>
         </listitem>
@@ -54,7 +55,7 @@
       <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')"/>
       <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
-                onClick="@command('showGroupDeleteConfirmDialog')"/>
+                onClick="@command('showGroupDeleteConfirmDialog')" disabled="@load(vm.disabledDeleteContextDialog)"/>
     </menupopup>
 
     <!-- NEW/EDIT GROUP DIALOG-->

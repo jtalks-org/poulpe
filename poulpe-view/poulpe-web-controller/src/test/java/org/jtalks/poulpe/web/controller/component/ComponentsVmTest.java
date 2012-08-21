@@ -14,19 +14,11 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.*;
-
-import java.util.Collections;
-import java.util.Set;
-
+import com.google.common.collect.Sets;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Poulpe;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
@@ -45,51 +37,69 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Sets;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Collections;
+import java.util.Set;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 /**
  * @author Vermut
  * @author Alexey Grigorev
+ * @author Kazancev Lenonid
  */
 public class ComponentsVmTest {
-
     // sut
     ComponentsVm componentsVm;
-    
+
     // dependencies
-    @Mock WindowManager windowManager;
-    @Mock ComponentService componentService;
-    @Mock DialogManager dialogManager;
-    @Mock BindUtilsWrapper bindWrapper;
     @Mock
-    JcommuneHttpNotifier jcommuneHttpNotifier;
+    WindowManager windowManager;
+    @Mock
+    ComponentService componentService;
+    @Mock
+    DialogManager dialogManager;
+    @Mock
+    BindUtilsWrapper bindWrapper;
+
     SelectedEntity<Component> selectedEntity;
-    
-    @Captor ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
+
+    @Captor
+    ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
 
     @BeforeMethod
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, jcommuneHttpNotifier);
+        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
         componentsVm.setBindWrapper(bindWrapper);
     }
-    
+
     @Test
     public void getPoulpe() {
         componentsVm.getPoulpe();
         verify(componentService).getByType(ComponentType.ADMIN_PANEL);
     }
+
     @Test
     public void getJcommune() {
         componentsVm.getJcommune();
         verify(componentService).getByType(ComponentType.FORUM);
     }
+
     @Test
     public void reindexComponent() throws Exception {
+        ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
+        Component jcommune = componentBase.newComponent("Name","Description");
+        componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
-        verify(jcommuneHttpNotifier).notifyAboutReindexComponent("url");
+        verify(componentService).reindexComponent(jcommune);
     }
+
     @Test
     public void deleteComponent() {
         Component selected = givenSelectedComponent();
@@ -102,20 +112,20 @@ public class ComponentsVmTest {
         componentsVm.setSelected(selected);
         return selected;
     }
-    
+
     @Test
     public void deleteComponent_componentDeletedAfterConfirmation()
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
         Component selected = givenUserConfirmedDeletion();
         verify(componentService).deleteComponent(selected);
     }
 
     private Component givenUserConfirmedDeletion() {
         Component selected = givenSelectedComponent();
-        
+
         componentsVm.deleteComponent();
         captureDeletePerfomable(selected).execute();
-        
+
         return selected;
     }
 
@@ -123,38 +133,50 @@ public class ComponentsVmTest {
         verify(dialogManager).confirmDeletion(eq(selected.getName()), deleteCallbackCaptor.capture());
         return deleteCallbackCaptor.getValue();
     }
-    
+
     @Test(enabled = false)
     public void deleteComponent_notifyChange() {
         givenUserConfirmedDeletion();
         verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
                 ComponentsVm.CAN_CREATE_NEW_COMPONENT);
     }
-    
+
     @Test(expectedExceptions = IllegalStateException.class)
     public void deleteComponent_componentMustBeSelected() {
         componentsVm.deleteComponent();
     }
-    
-//    @Test
-//    public void addNewComponent() {
-//        componentsVm.addNewComponent();
-//        verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
-//    }
-    
+
+    @Test
+    public void addNewPoulpe() throws InstantiationException, IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+        ComponentBase componentBase = new ComponentBase(ComponentType.ADMIN_PANEL);
+        doReturn(componentBase).when(componentService).baseComponentFor(ComponentType.ADMIN_PANEL);
+        componentsVm.addNewPoulpe();
+
+        verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
+    }
+
+    @Test
+    public void addNewJcommune() {
+        ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
+        doReturn(componentBase).when(componentService).baseComponentFor(ComponentType.FORUM);
+        componentsVm.addNewJcommune();
+
+        verify(windowManager).open(AddComponentVm.ADD_COMPONENT_LOCATION);
+    }
+
     @Test
     public void configureComponent() {
         componentsVm.configureComponent();
         verify(windowManager).open(EditComponentVm.EDIT_COMPONENT_LOCATION);
     }
-    
+
     @Test
     public void configureComponent_selectedComponentSet() {
         Component selected = givenSelectedComponent();
         componentsVm.configureComponent();
         assertEquals(selectedEntity.getEntity(), selected);
     }
-    
+
     @Test
     public void isAbleToCreateNewComponent_able() {
         givenAvailableTypes();
@@ -166,16 +188,36 @@ public class ComponentsVmTest {
         Set<ComponentType> all = Sets.newHashSet(ComponentType.values());
         when(componentService.getAvailableTypes()).thenReturn(all);
     }
-    
+
     @Test
     public void isAbleToCreateNewComponent_notAble() {
         givenNoAvailableTypes();
         boolean actual = componentsVm.isAbleToCreateNewComponent();
         assertFalse(actual);
     }
-    
+
     private void givenNoAvailableTypes() {
         Set<ComponentType> empty = Collections.emptySet();
         when(componentService.getAvailableTypes()).thenReturn(empty);
     }
+
+    @Test
+    public void isJcommuneAvailable() {
+        componentsVm.isJcommuneAvailable();
+        verify(componentService).getAvailableTypes();
+    }
+
+    @Test
+    public void isPoulpeAvailable() {
+        componentsVm.isPoulpeAvailable();
+        verify(componentService).getAvailableTypes();
+    }
+
+    @Test
+    public void show() {
+        ComponentsVm.show(windowManager);
+        verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
+    }
+
+
 }

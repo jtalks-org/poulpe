@@ -64,8 +64,9 @@ public class JcommuneHttpNotifier {
     /**
      * URL to ask JCommune to remove content of the specific branch.
      */
-    private static final String BRANCH_URL_PART = "/branch/";
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+    private static final String BRANCH_URL_PART = "/branches/";
+
+    private final Logger logger = LoggerFactory.getLogger(getClass()); //TODO for debug
 
     /**
      * Notifies delete the section
@@ -81,7 +82,7 @@ public class JcommuneHttpNotifier {
      *          occurs when the {@code #jCommuneUrl} is incorrect
      */
     public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException {
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
         long id = section.getId();
         notifyAboutDeleteElement(jCommuneUrl + SECTIONS_URL_PART + id);
     }
@@ -137,10 +138,11 @@ public class JcommuneHttpNotifier {
             HttpDelete deleteRequest = new HttpDelete(url);
             HttpResponse response = httpClient.execute(deleteRequest);
             int statusCode = response.getStatusLine().getStatusCode();
+            logger.warn("Status response notify about delete element JCommune: "+statusCode +"; URL request: "+ url);
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new NoConnectionToJcommuneException();
         }
     }
@@ -177,10 +179,9 @@ public class JcommuneHttpNotifier {
             HttpResponse response = sendHttpRequest(reindexUrl);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
-                throw new JcommuneRespondedWithErrorException();
+                throw new JcommuneRespondedWithErrorException(String.valueOf(statusCode));
             }
         } catch (IOException e) {
-            logger.warn("Error sending request to Jcommune: {}. Root cause: ", reindexUrl, e);
             throw new NoConnectionToJcommuneException();
         }
     }

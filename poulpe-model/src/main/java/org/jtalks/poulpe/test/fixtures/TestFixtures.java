@@ -20,14 +20,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.poulpe.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.entity.TopicType;
+import org.jtalks.poulpe.model.entity.*;
 
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +37,14 @@ import java.util.Random;
 public final class TestFixtures {
 
     private static final Random RANDOM = new Random();
+    private static final int SECTIONS_COUNT = 10;
+    private static final int BRANCH_COUNT_MIN = 5;
+    private static final int BRANCH_COUNT_MAX = 15;
+    private static final int USERS_COUNT = 5;
+    private static final int POST_LIMIT_COUNT = 1000;
+    private static final int LENGTH = 10;
 
+    private TestFixtures(){}
     /**
      * @return branch with random name and description beloning to random section with moderators group
      */
@@ -54,6 +54,10 @@ public final class TestFixtures {
         newBranch.setModeratorsGroup(group());
         return newBranch;
     }
+
+    /**
+     * @return branch with id = 1L, random name and description belong to random section and moderators group
+     */
     public static PoulpeBranch branchWithId() {
         PoulpeBranch newBranch = new PoulpeBranch(random(), random());
         newBranch.setSection(section());
@@ -61,6 +65,7 @@ public final class TestFixtures {
         newBranch.setId(1L);
         return newBranch;
     }
+
     /**
      * @return topic type with random name and description
      */
@@ -113,17 +118,17 @@ public final class TestFixtures {
     }
 
     /**
-     * @return jcommune component with 10 sections
+     * @return jcommune component with SECTIONS_COUNT sections
      */
     public static Jcommune jcommuneWithSections() {
-        return jcommuneWithSections(10);
+        return jcommuneWithSections(SECTIONS_COUNT);
     }
 
     /**
-     * @return section with random amount of branches (from 5 to 15)
+     * @return section with random amount of branches (from BRANCH_COUNT_MIN to BRANCH_COUNT_MAX)
      */
     public static PoulpeSection sectionWithBranches() {
-        return sectionWithBranches(5 + randomInt(10));
+        return sectionWithBranches(BRANCH_COUNT_MIN + randomInt(BRANCH_COUNT_MAX - BRANCH_COUNT_MIN));
     }
 
     /**
@@ -149,6 +154,9 @@ public final class TestFixtures {
         return component(randomComponentType());
     }
 
+    /**
+     * @return component of random {@link ComponentType} with id = 1L
+     */
     public static Component randomComponentWithId() {
         Component component = component(randomComponentType());
         component.setId(1L);
@@ -196,10 +204,9 @@ public final class TestFixtures {
     }
 
     /**
-     *
      * @param username user's name
-     * @param email user's email
-     * @return  user with the given username, email and generated empty salt
+     * @param email    user's email
+     * @return user with the given username, email and generated empty salt
      */
     public static PoulpeUser user(String username, String email) {
         return new PoulpeUser(username, email, random(), "");
@@ -216,7 +223,7 @@ public final class TestFixtures {
      * @return group with randoms users
      */
     public static Group groupWithUsers() {
-        List<PoulpeUser> users = usersListOf(5);
+        List<PoulpeUser> users = usersListOf(USERS_COUNT);
         Group group = group();
         group.setUsers((List<User>) (Object) users);
         return group;
@@ -227,11 +234,12 @@ public final class TestFixtures {
      * @return list of users
      */
     public static List<PoulpeUser> usersListOf(int n) {
-        List<PoulpeUser> result = Lists.newArrayListWithCapacity(n);
+        int count = n;
+        List<PoulpeUser> result = Lists.newArrayListWithCapacity(count);
 
-        while (n > 0) {
+        while (count > 0) {
             result.add(user());
-            n--;
+            count--;
         }
 
         return result;
@@ -255,14 +263,14 @@ public final class TestFixtures {
      * @return rank with random name and post limit
      */
     public static Rank rank() {
-        return new Rank(random(), randomInt(1000));
+        return new Rank(random(), randomInt(POST_LIMIT_COUNT));
     }
 
     /**
-     * @return random string of 10 symbols
+     * @return random string of LENGTH symbols
      */
     private static String random() {
-        return RandomStringUtils.randomAlphanumeric(10);
+        return RandomStringUtils.randomAlphanumeric(LENGTH);
     }
 
     /**

@@ -118,25 +118,26 @@ public class PermissionManager {
     }
     
     /**
-     * Gets {@link PermissionsMap} for provided {@link Group}.
+     * Gets {@link PermissionsMap} for provided list of {@link Group}'s.
      *
-     * @param groups the List grop to obtain PermissionsMap for
+     * 
+     * @param groups the List {@link Group}'s to obtain PermissionsMap for
      * @return {@link PermissionsMap} for {@link Group}
      */
     public GroupsPermissions<ProfilePermission> getPermissionsMapFor(List<Group> groups) {
-        GroupsPermissions<ProfilePermission> pm = new GroupsPermissions<ProfilePermission>(ProfilePermission.getAllAsList());
+        GroupsPermissions<ProfilePermission> permissions = new GroupsPermissions<ProfilePermission>(ProfilePermission.getAllAsList());
         for (Group group: groups){
             GroupsPermissions<ProfilePermission> pmGroup = getPermissionsMapFor(ProfilePermission.getAllAsList(), group);
             for (ProfilePermission permission:pmGroup.getPermissions()){
                 for(Group groupInsert : pmGroup.getAllowed(permission)){
-                    pm.addAllowed(permission,groupInsert);
+                    permissions.addAllowed(permission,groupInsert);
                 }
                 for(Group groupInsert : pmGroup.getRestricted(permission)){
-                    pm.addRestricted(permission,groupInsert);
+                    permissions.addRestricted(permission,groupInsert);
                 }
             }
         }
-        return pm;
+        return permissions;
     } 
     
     /**

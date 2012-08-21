@@ -21,12 +21,7 @@ import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.zkoss.bind.Validator;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.ContextParam;
-import org.zkoss.bind.annotation.ContextType;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zul.Textbox;
 
@@ -41,11 +36,11 @@ public class UsersVm {
 
     private static final int ITEMS_PER_PAGE = 50;
 
-    private static final String SELECTED_ITEM_PROP = "selectedUser",
-            VIEW_DATA_PROP = "viewData",
-            ACTIVE_PAGE = "activePage",
-            USERS = "users",
-            TOTAL_SIZE = "totalSize";
+    private static final String SELECTED_ITEM_PROP = "selectedUser";
+    private static final String VIEW_DATA_PROP = "viewData";
+    private static final String ACTIVE_PAGE = "activePage";
+    private static final String USERS = "users";
+    private static final String TOTAL_SIZE = "totalSize";
 
     static final String NO_FILTER_SEARCH_STRING = "";
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
@@ -79,6 +74,10 @@ public class UsersVm {
         init(component, new ZkHelper(component));
     }
 
+    /**
+     * @param component {@link org.jtalks.poulpe.model.entity.Jcommune} instance
+     * @param zkHelper  instance of {@link ZkHelper}
+     */
     @VisibleForTesting
     void init(Component component, ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
@@ -92,11 +91,20 @@ public class UsersVm {
         displayFirstPage(NO_FILTER_SEARCH_STRING);
     }
 
+    /**
+     * Sets first page as active page.
+     *
+     * @param searchString expression to filter users
+     */
     private void displayFirstPage(String searchString) {
         this.searchString = searchString;
         setActivePage(0);
     }
 
+    /**
+     * @param page number of page used to users look up
+     * @return list containing users on page with number given as param
+     */
     private List<PoulpeUser> usersOf(int page) {
         return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
     }
@@ -185,22 +193,18 @@ public class UsersVm {
         closeEditDialog();
     }
 
+    /**
+     * Cancel current edit operation by closing dialog.
+     */
     @Command
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void cancelEdit() {
         closeEditDialog();
     }
 
-    @Command
-    public void newPassword(String newPassword) {
-
-    }
-
-    public void setNewPassword(String newPassword) {
-
-    }
-
-
+    /**
+     * Close currently opened edit dialog.
+     */
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
     }
@@ -214,22 +218,37 @@ public class UsersVm {
         return selectedUser;
     }
 
+    /**
+     * @param selectedUser {@link PoulpeUser} to set as currently selected
+     */
     public void setSelectedUser(PoulpeUser selectedUser) {
         this.selectedUser = selectedUser;
     }
 
+    /**
+     * @return expression from search string
+     */
     public String getSearchString() {
         return searchString;
     }
 
+    /**
+     * @return users count, shown on a single page
+     */
     public int getItemsPerPage() {
         return ITEMS_PER_PAGE;
     }
 
+    /**
+     * @return {@link Validator} instance used for e-mail validation
+     */
     public Validator getEmailValidator() {
         return emailValidator;
     }
 
+    /**
+     * @param zkHelper instance to set
+     */
     @VisibleForTesting
     void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
