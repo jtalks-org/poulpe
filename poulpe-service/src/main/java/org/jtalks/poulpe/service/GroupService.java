@@ -76,12 +76,11 @@ public interface GroupService extends EntityService<Group> {
     List<PoulpeBranch> getModeratedBranches(Group group);
  
     /**
-     * Return access lists for group.
+     * Return PersonalPermissions access lists for all available {@link Group}'s.
      * 
-     * @param branch group which will be returned access list
      * @return access list
      */
-    GroupsPermissions<ProfilePermission> getPermissionsFor();
+    GroupsPermissions<ProfilePermission> getPersonalPermissions();
 
     /**
      * Change grants for group.
