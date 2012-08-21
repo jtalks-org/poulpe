@@ -53,7 +53,8 @@ public interface ComponentService extends EntityService<Component> {
      * @throws {@link JcommuneUrlNotConfiguratedException}
      */
     void deleteComponent(Component component)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
+            JcommuneUrlNotConfiguratedException;
 
     /**
      * Saves new component or updates existent
@@ -64,6 +65,18 @@ public interface ComponentService extends EntityService<Component> {
      *          constraints
      */
     void saveComponent(Component component);
+
+    /**
+     * Runs re-index on  the specified component.
+     *
+     * @param component component to re-index
+     * @throws {@link NoConnectionToJcommuneException}
+     * @throws {@link JcommuneRespondedWithErrorException}
+     * @throws {@link JcommuneUrlNotConfiguratedException}
+     */
+    void reindexComponent(Component component)
+            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
+            NoConnectionToJcommuneException;
 
     /**
      * Get the set of unoccupied ComponentType.
