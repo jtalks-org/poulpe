@@ -106,8 +106,9 @@ public class ZkHelper {
      */
     public Component findComponent(String selector) {
         List<Component> comps = Selectors.find(component, selector);
-        if (comps.size() > 0)
+        if (comps.size() > 0){
             return comps.get(0);
+        }
         return null;
     }
 

@@ -19,6 +19,7 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -61,29 +62,29 @@ public class ComponentsVm {
     private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
     private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
-    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_DIALOG_TITLE = "component.error.jcommune.title.not_connected";
-    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_DIALOG_TEXT = "component.error.jcommune.text.not_connected";
-    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_DIALOG_TITLE = "component.error.jcommune.title.not_configured";
-    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_DIALOG_TEXT = "component.error.jcommune.text.not_configured";
-    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_DIALOG_TITLE = "component.error.jcommune.title.error_response";
-    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_DIALOG_TEXT = "component.error.jcommune.text.error_response";
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT = "component.error.jcommune.text.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE = "component.error.jcommune.title.not_configured";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT = "component.error.jcommune.text.not_configured";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
     private Component selected;
 
     /**
-     * @param componentService service for loading and saving component
-     * @param dialogManager    shows confirmation dialog for deletion
-     * @param windowManager    object for opening and closing application windows
-     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
-     */
+     * @param componentService     service for loading and saving component
+     * @param dialogManager        shows confirmation dialog for deletion
+     * @param windowManager        object for opening and closing application windows
+     * @param selectedEntity       desktop-scoped bean to which selected entities passed, used for editing components
+         */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
                         SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
-    }
+     }
 
     /**
      * @return {@link Component} with type ADMIN_PANEL if it exists, null otherwise
@@ -154,14 +155,14 @@ public class ComponentsVm {
         try {
             componentService.reindexComponent(selected);
         } catch (NoConnectionToJcommuneException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_DIALOG_TEXT),
-                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneUrlNotConfiguratedException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_DIALOG_TEXT),
-                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneRespondedWithErrorException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_DIALOG_TEXT),
-                    Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
     }
 
