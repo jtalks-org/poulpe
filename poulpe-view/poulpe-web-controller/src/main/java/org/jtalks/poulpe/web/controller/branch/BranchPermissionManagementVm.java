@@ -21,7 +21,7 @@ import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -46,7 +46,7 @@ public class BranchPermissionManagementVm {
             BRANCH_PERMISSION_MANAGEMENT_PAGE = "WEB-INF/pages/forum/BranchPermissionManagement.zul",
             MANAGE_GROUPS_DIALOG_ZUL = "WEB-INF/pages/forum/EditGroupsForBranchPermission.zul";
     private final WindowManager windowManager;
-    private final BranchService branchService;
+    private final PermissionsService permissionsService;
     private final SelectedEntity<Object> selectedEntity;
     private PoulpeBranch branch;
     private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
@@ -56,13 +56,14 @@ public class BranchPermissionManagementVm {
      * Constructs the VM with given dependencies.
      *
      * @param windowManager  the window manager instance
-     * @param branchService  branch service
+     * @param permissionsService  the permissions service instance
      * @param selectedEntity the selectedEntity with PoulpeBranch to edit
      */
-    public BranchPermissionManagementVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
+    public BranchPermissionManagementVm(@Nonnull WindowManager windowManager,
+                                        @Nonnull PermissionsService permissionsService,
                                         @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
-        this.branchService = branchService;
+        this.permissionsService = permissionsService;
         this.selectedEntity = selectedEntity;
     }
 
@@ -124,7 +125,7 @@ public class BranchPermissionManagementVm {
     public void initDataForView() {
         blocks.clear();
         this.branch = (PoulpeBranch) selectedEntity.getEntity();
-        GroupsPermissions<BranchPermission> groupsPermissions = branchService.getPermissionsFor(branch);
+        GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor(branch);
         for (BranchPermission permission : groupsPermissions.getPermissions()) {
             blocks.add(new PermissionManagementBlock(permission, groupsPermissions,
                     zkHelper.getLabel("permissions.allow_label"), zkHelper.getLabel("permissions.restrict_label")));

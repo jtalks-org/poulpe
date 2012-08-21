@@ -14,17 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -36,7 +31,11 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 /**
  * Tests for {@link BranchPermissionManagementVm}.
@@ -50,10 +49,10 @@ public class BranchPermissionManagementVmTest {
 
     // SUT
     private BranchPermissionManagementVm sut;
-    
+
     // context related
     @Mock WindowManager windowManager;
-    @Mock BranchService branchService;
+    @Mock PermissionsService permissionsService;
     @Mock ZkHelper zkHelper;
 
     @BeforeMethod
@@ -64,7 +63,7 @@ public class BranchPermissionManagementVmTest {
         SelectedEntity<Object> selectedEntity = new SelectedEntity<Object>();
         selectedEntity.setEntity(branch);
 
-        sut = new BranchPermissionManagementVm(windowManager, branchService, selectedEntity);
+        sut = new BranchPermissionManagementVm(windowManager, permissionsService, selectedEntity);
         sut.setZkHelper(zkHelper);
     }
 
@@ -92,7 +91,7 @@ public class BranchPermissionManagementVmTest {
     @Test(dataProvider = "provideInitDataForView")
     public void testInitDataForView(GroupsPermissions<BranchPermission> groupsPermissions, Group allowedGroup, Group restrictedGroup) {
         PoulpeBranch branch = (PoulpeBranch) sut.getSelectedEntity().getEntity();
-        when(branchService.getPermissionsFor(branch)).thenReturn(groupsPermissions);
+        when(permissionsService.getPermissionsFor(branch)).thenReturn(groupsPermissions);
         sut.initDataForView();
         assertEquals(sut.getBranch(), branch);
 

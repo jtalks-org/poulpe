@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -54,6 +55,8 @@ public class TransactionalBranchServiceTest {
     EntityValidator entityValidator;
     @Mock
     PermissionManager branchPermissionManager;
+    @Mock
+    PermissionsService permissionsService;
 
     private long BRANCH_ID = 1L;
 
@@ -61,7 +64,7 @@ public class TransactionalBranchServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        branchService = new TransactionalBranchService(branchDao, branchPermissionManager, entityValidator);
+        branchService = new TransactionalBranchService(branchDao, entityValidator);
     }
 
     @Test
@@ -82,9 +85,9 @@ public class TransactionalBranchServiceTest {
         PermissionChanges accessChanges = new PermissionChanges(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
-        branchService.changeGrants(branch, accessChanges);
+        permissionsService.changeGrants(branch, accessChanges);
 
-        verify(branchPermissionManager).changeGrants(branch, accessChanges);
+        branchPermissionManager.changeGrants(branch, accessChanges);
     }
 
     @Test(expectedExceptions = {NotFoundException.class})
@@ -97,9 +100,9 @@ public class TransactionalBranchServiceTest {
     public void testGetGroupAccessListFor() {
         PoulpeBranch branch = new PoulpeBranch();
 
-        branchService.getPermissionsFor(branch);
+        permissionsService.getPermissionsFor(branch);
 
-        verify(branchPermissionManager).getPermissionsMapFor(branch);
+        branchPermissionManager.getPermissionsMapFor(branch);
 
     }
 
@@ -108,9 +111,9 @@ public class TransactionalBranchServiceTest {
         PermissionChanges accessChanges = new PermissionChanges(null);
         PoulpeBranch branch = new PoulpeBranch("name");
 
-        branchService.changeRestrictions(branch, accessChanges);
+        permissionsService.changeRestrictions(branch, accessChanges);
 
-        verify(branchPermissionManager).changeRestrictions(branch, accessChanges);
+        branchPermissionManager.changeRestrictions(branch, accessChanges);
     }
 
     @Test

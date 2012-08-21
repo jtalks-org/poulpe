@@ -81,14 +81,14 @@
   <bean id="branchPermissionManagementVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
     <constructor-arg ref="windowManager"/>
-    <constructor-arg ref="branchService"/>
+    <constructor-arg ref="permissionsService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>
 
   <bean id="editGroupsForBranchPermissionVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
     <constructor-arg ref="windowManager"/>
-    <constructor-arg ref="branchService"/>
+    <constructor-arg ref="permissionsService"/>
     <constructor-arg ref="groupService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>

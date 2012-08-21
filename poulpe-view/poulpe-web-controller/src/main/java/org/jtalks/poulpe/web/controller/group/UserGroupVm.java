@@ -245,7 +245,7 @@ public class UserGroupVm {
      * Checks, if group's name is in the list of groups prohibited to delete.
      * Sets disabledDeleteContextDialog to "true", if the selected group is in the prohibited list
      *
-     * @param selectedGroup determines the group, which context menu was called for
+     * @param contextSelectedGroup determines the group, which context menu was called for
      */
     @Command
     @NotifyChange({"selectedGroup","disabledDeleteContextDialog"})

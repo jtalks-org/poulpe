@@ -17,12 +17,12 @@ package org.jtalks.poulpe.web.controller.branch;
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -43,7 +43,7 @@ import java.util.List;
  */
 public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
     private final WindowManager windowManager;
-    private final BranchService branchService;
+    private final PermissionsService permissionsService;
     private final GroupService groupService;
     private final SelectedEntity<Object> selectedEntity;
     // Related to internal state
@@ -54,18 +54,19 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
      * Construct VM for editing group list for selected {@link BranchPermission}.
      *
      * @param windowManager  the window manager instance
-     * @param branchService  the branch service instance
+     * @param permissionsService  the permissions service instance
      * @param groupService   the group service instance
      * @param selectedEntity the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
      *                       VM state
      */
-    public EditGroupsForBranchPermissionVm(@Nonnull WindowManager windowManager, @Nonnull BranchService branchService,
+    public EditGroupsForBranchPermissionVm(@Nonnull WindowManager windowManager,
+                                           @Nonnull PermissionsService permissionsService,
                                            @Nonnull GroupService groupService,
                                            @Nonnull SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
 
         this.windowManager = windowManager;
-        this.branchService = branchService;
+        this.permissionsService = permissionsService;
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
 
@@ -97,9 +98,9 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
-                branchService.changeGrants(branch, accessChanges);
+                permissionsService.changeGrants(branch, accessChanges);
             } else {
-                branchService.changeRestrictions(branch, accessChanges);
+                permissionsService.changeRestrictions(branch, accessChanges);
             }
         }
         openBranchPermissionsWindow();
@@ -128,7 +129,7 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
-        GroupsPermissions<BranchPermission> groupsPermissions = branchService.getPermissionsFor(branch);
+        GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor(branch);
         return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }
 
