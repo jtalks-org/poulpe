@@ -34,7 +34,7 @@
 
   <bean id="windowManager" class="org.jtalks.poulpe.web.controller.WindowManagerImpl" scope="desktop"/>
   <bean id="dialogManager" class="org.jtalks.poulpe.web.controller.DialogManagerImpl" scope="singleton"/>
-  <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier" scope="singleton"/>
+
   <bean id="selectedEntity" scope="desktop" class="org.jtalks.poulpe.web.controller.SelectedEntity"/>
 
   <bean id="forumStructureVm" class="org.jtalks.poulpe.web.controller.section.ForumStructureVm" scope="desktop">
