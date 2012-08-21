@@ -14,13 +14,10 @@
  */
 package org.jtalks.poulpe.service;
 
-import java.util.List;
-
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+
+import java.util.List;
 
 /**
  * Service for dealing with {@link PoulpeBranch} objects
@@ -59,27 +56,4 @@ public interface BranchService extends EntityService<PoulpeBranch> {
      */
     void deleteBranchMovingTopics(PoulpeBranch victim, PoulpeBranch recipient);
 
-    /**
-     * Return access lists for branch.
-     * 
-     * @param branch branch which will be returned access list
-     * @return access list
-     */
-    GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch);
-
-    /**
-     * Change grants for branch.
-     * 
-     * @param branch branch to which grants will be changed
-     * @param changes grants for branch
-     */
-    void changeGrants(PoulpeBranch branch, PermissionChanges changes);
-
-    /**
-     * Change restriction for branch.
-     * 
-     * @param branch branch to which restriction will be changed
-     * @param changes new restriction for branch
-     */
-    void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
 }

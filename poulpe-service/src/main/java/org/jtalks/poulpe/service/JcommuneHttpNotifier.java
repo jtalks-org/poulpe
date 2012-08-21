@@ -137,7 +137,7 @@ public class JcommuneHttpNotifier {
             HttpPost deleteRequest = new HttpPost(url);
             HttpResponse response = httpClient.execute(deleteRequest);
             int statusCode = response.getStatusLine().getStatusCode();
-            logger.warn("Status response notify about delete element JCommune: "+statusCode +"; URL request: "+ url);
+            logger.info("Status response notify about delete element JCommune: "+statusCode +"; URL request: "+ url);
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException();
             }

@@ -14,17 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
+
+import java.util.List;
 
 /**
  * Implementation of {@link BranchService}.
@@ -35,20 +31,17 @@ import org.jtalks.poulpe.service.BranchService;
  */
 public class TransactionalBranchService extends AbstractTransactionalEntityService<PoulpeBranch, BranchDao> implements
         BranchService {
-    private final PermissionManager branchPermissionManager;
     private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service.
      * 
      * @param branchDao instance of {@link BranchDao}
-     * @param branchPermissionManager instance of {@link PermissionManager}
      * @param validator instance of {@link EntityValidator}
      */
-    public TransactionalBranchService(BranchDao branchDao, PermissionManager branchPermissionManager,
+    public TransactionalBranchService(BranchDao branchDao,
             EntityValidator validator) {
         this.dao = branchDao;
-        this.branchPermissionManager = branchPermissionManager;
         this.validator = validator;
     }
 
@@ -85,27 +78,4 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
         dao.delete(victim.getId());
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch) {
-        return branchPermissionManager.getPermissionsMapFor(branch);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeGrants(PoulpeBranch branch, PermissionChanges changes) {
-        branchPermissionManager.changeGrants(branch, changes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeRestrictions(PoulpeBranch branch, PermissionChanges changes) {
-        branchPermissionManager.changeRestrictions(branch, changes);
-    }
 }
