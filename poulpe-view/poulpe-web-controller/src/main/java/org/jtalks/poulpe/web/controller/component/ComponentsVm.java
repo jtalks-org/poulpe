@@ -19,7 +19,6 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -43,8 +42,6 @@ public class ComponentsVm {
     public static final String SELECTED = "selected";
     public static final String CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent";
     public static final String COMPONENTS = "components";
-    public static final String SHOW_NOT_CONNECTED_NOTIFICATION = "showNotConnectedNotification";
-    public static final String SHOW_NOT_CONFIGURED_NOTIFICATION = "showNotConfiguredNotification";
     public static final String JCOMMUNE = "jcommune";
     public static final String POULPE = "poulpe";
     public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
@@ -53,37 +50,39 @@ public class ComponentsVm {
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
-    private boolean showNotConnectedNotification;
-    private boolean showNotConfiguredNotification;
+
     private final ComponentService componentService;
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
-    private final JcommuneHttpNotifier jcommuneHttpNotifier;
 
     private static final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private static final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
     private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
     private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT = "component.error.jcommune.text.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE = "component.error.jcommune.title.not_configured";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT = "component.error.jcommune.text.not_configured";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
 
     private Component selected;
 
     /**
-     * @param componentService     service for loading and saving component
-     * @param dialogManager        shows confirmation dialog for deletion
-     * @param windowManager        object for opening and closing application windows
-     * @param selectedEntity       desktop-scoped bean to which selected entities passed, used for editing components
-     * @param jcommuneHttpNotifier instance of {@link JcommuneHttpNotifier}
+     * @param componentService service for loading and saving component
+     * @param dialogManager    shows confirmation dialog for deletion
+     * @param windowManager    object for opening and closing application windows
+     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
      */
     public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
-                        SelectedEntity<Component> selectedEntity, JcommuneHttpNotifier jcommuneHttpNotifier) {
+                        SelectedEntity<Component> selectedEntity) {
         this.componentService = componentService;
         this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
-        this.jcommuneHttpNotifier = jcommuneHttpNotifier;
     }
 
     /**
@@ -153,30 +152,17 @@ public class ComponentsVm {
     @Command
     public void reindexComponent() {
         try {
-            jcommuneHttpNotifier.notifyAboutReindexComponent("url");   //TODO set JCommune url
+            componentService.reindexComponent(selected);
         } catch (NoConnectionToJcommuneException e) {
-            showNotConnectedNotification();
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneUrlNotConfiguratedException e) {
-            showNotConfiguratedNotification();
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT),
+                    Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneRespondedWithErrorException e) {
-            showNotConfiguratedNotification();        //TODO what is that? how should i handle this?
+            Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT) + e.getMessage(),
+                    Labels.getLabel(JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
-    }
-
-    /**
-     * Opens window, witch notify about not configurated URL.
-     */
-    @NotifyChange(SHOW_NOT_CONFIGURED_NOTIFICATION)
-    private void showNotConfiguratedNotification() {
-        showNotConfiguredNotification = true;
-    }
-
-    /**
-     * Opens window, witch notify about no connection to JCommune component.
-     */
-    @NotifyChange(SHOW_NOT_CONNECTED_NOTIFICATION)
-    private void showNotConnectedNotification() {
-        showNotConnectedNotification = true;
     }
 
     /**
@@ -256,29 +242,5 @@ public class ComponentsVm {
      */
     public boolean isPoulpeAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
-    }
-
-    /**
-     * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showNotConnectedNotification.
-     *
-     * @return true if notification is visible
-     */
-    public boolean isShowNotConnectedNotification() {
-        boolean show = showNotConnectedNotification;
-        showNotConnectedNotification = false;
-        return show;
-    }
-
-    /**
-     * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showNotConfiguredNotification.
-     *
-     * @return true if notification is visible
-     */
-    public boolean isShowNotConfiguredNotification() {
-        boolean show = showNotConfiguredNotification;
-        showNotConfiguredNotification = false;
-        return show;
     }
 }

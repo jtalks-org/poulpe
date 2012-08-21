@@ -44,7 +44,7 @@ public final class TestFixtures {
     private static final int POST_LIMIT_COUNT = 1000;
     private static final int LENGTH = 10;
 
-
+    private TestFixtures(){}
     /**
      * @return branch with random name and description beloning to random section with moderators group
      */
@@ -230,10 +230,11 @@ public final class TestFixtures {
     }
 
     /**
-     * @param count amount of users
+     * @param n amount of users
      * @return list of users
      */
-    public static List<PoulpeUser> usersListOf(int count) {
+    public static List<PoulpeUser> usersListOf(int n) {
+        int count = n;
         List<PoulpeUser> result = Lists.newArrayListWithCapacity(count);
 
         while (count > 0) {

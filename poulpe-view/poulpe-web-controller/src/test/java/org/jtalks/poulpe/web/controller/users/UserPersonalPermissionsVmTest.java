@@ -90,7 +90,7 @@ public class UserPersonalPermissionsVmTest {
     @Test(dataProvider = "provideInitDataForView")
     public void testInitDataForView(GroupsPermissions<ProfilePermission> groupsPermissions, Group allowedGroup, Group restrictedGroup) {
         Group group = (Group) sut.getSelectedEntity().getEntity();
-        when(groupService.getPermissionsFor()).thenReturn(groupsPermissions);
+        when(groupService.getPersonalPermissions()).thenReturn(groupsPermissions);
         sut.updateView();
     }
 

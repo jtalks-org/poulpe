@@ -202,16 +202,9 @@ public class UsersVm {
         closeEditDialog();
     }
 
-    @Command
-    public void newPassword(String newPassword) {
-
-    }
-
-    public void setNewPassword(String newPassword) {
-
-    }
-
-
+    /**
+     * Close currently opened edit dialog.
+     */
     private void closeEditDialog() {
         zkHelper.findComponent(EDIT_USER_DIALOG).detach();
     }
