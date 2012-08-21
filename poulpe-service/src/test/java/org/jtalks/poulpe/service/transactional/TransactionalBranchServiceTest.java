@@ -100,7 +100,6 @@ public class TransactionalBranchServiceTest {
         PoulpeBranch branch = new PoulpeBranch();
 
         permissionsService.getPermissionsFor(branch);
-
         branchPermissionManager.getPermissionsMapFor(branch);
 
     }
@@ -111,7 +110,6 @@ public class TransactionalBranchServiceTest {
         PoulpeBranch branch = new PoulpeBranch("name");
 
         permissionsService.changeRestrictions(branch, accessChanges);
-
         branchPermissionManager.changeRestrictions(branch, accessChanges);
     }
 
