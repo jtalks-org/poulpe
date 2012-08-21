@@ -37,8 +37,8 @@
         <listheader align="left" label="${labels.groups.memberCount}"/>
       </listhead>
       <template name="model" var="group">
-        <listitem id="@load(String.valueOf(group.getId()))" context="editPopupMenu"
-				onRightClick="@command('handleContextSelectedGroup', group = group)">
+        <listitem id="@load(String.valueOf(group.getId()))"
+				onRightClick="@command('handleContextSelectedGroup', group = group, menu = editPopupMenu)">
           <listcell label="@load(group.getName())"/>
           <listcell label="@load(group.getUsers().size())"/>
         </listitem>

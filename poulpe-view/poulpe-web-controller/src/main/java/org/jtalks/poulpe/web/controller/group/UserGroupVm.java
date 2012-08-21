@@ -26,6 +26,7 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
+import org.zkoss.zul.Popup;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -241,15 +242,15 @@ public class UserGroupVm {
     }
 
     /**
-     * Saves the value of group, which context menu was called for.
-     * Checks, if group's name is in the list of groups prohibited to delete.
-     * Sets disabledDeleteContextDialog to "true", if the selected group is in the prohibited list
-     *
+     * Saves the value of group, that context menu was called for.
+     * Checks, if group's name is in the list of "prohibited to delete" groups.
+     * Sets disabledDeleteContextDialog to "true", if the selected group is in the "prohibited" list
+     * Opens the context menu with enabled or disabled DELETE option
      * @param selectedGroup determines the group, which context menu was called for
      */
     @Command
     @NotifyChange({"selectedGroup","disabledDeleteContextDialog"})
-    public void handleContextSelectedGroup(@BindingParam("group") Group contextSelectedGroup) {
+    public void handleContextSelectedGroup(@BindingParam("group") Group selectedGroup, @BindingParam("menu") Popup editPopupMenu) {
         this.selectedGroup = selectedGroup;
         disabledDeleteContextDialog = false;
         for (String groupName : RESTRICTED_GROUPS) {
@@ -257,6 +258,7 @@ public class UserGroupVm {
                 disabledDeleteContextDialog = true;
             }
         }
+        editPopupMenu.open(editPopupMenu);
     }
 
     // -- Getters/Setters --------------------
