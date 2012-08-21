@@ -129,6 +129,7 @@ public class TransactionalForumStructureServiceTest {
     public void removeBranchShouldRemoveFromDb(Jcommune jcommune) throws Exception {
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
+        doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
         sut.removeBranch(branchToRemove);
         verify(branchDao).delete(branchToRemove);
     }
@@ -137,6 +138,7 @@ public class TransactionalForumStructureServiceTest {
     public void removeBranchShouldRemoveFromSection(Jcommune jcommune) throws Exception {
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
+        doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
         sut.removeBranch(branchToRemove);
         assertFalse(section.getBranches().contains(branchToRemove));
         verify(sectionDao).saveOrUpdate(section);
