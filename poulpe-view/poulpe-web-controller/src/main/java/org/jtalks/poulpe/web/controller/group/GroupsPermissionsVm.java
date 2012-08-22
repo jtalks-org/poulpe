@@ -14,19 +14,15 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
-import javax.annotation.Nonnull;
-
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
-import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
+import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkmacro.EntityPermissionsBlock;
@@ -35,7 +31,10 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.util.resource.Labels;
 
-import com.google.common.collect.Lists;
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
 /**
  * View-Model for 'Group Permissions'.
@@ -49,6 +48,7 @@ public class GroupsPermissionsVm {
     // Injected
     private final WindowManager windowManager;
     private final ComponentService componentService;
+    private final PermissionsService permissionsService;
     private final SelectedEntity<Object> selectedEntity;
 
     // Internal state
@@ -61,10 +61,13 @@ public class GroupsPermissionsVm {
      * @param componentService the component service instance
      * @param selectedEntity the selected entity instance, for obtaining group which to be edited
      */
-    public GroupsPermissionsVm(@Nonnull WindowManager windowManager, @Nonnull ComponentService componentService,
-            @Nonnull SelectedEntity<Object> selectedEntity) {
+    public GroupsPermissionsVm(@Nonnull WindowManager windowManager,
+                               @Nonnull ComponentService componentService,
+                               @Nonnull PermissionsService permissionsService,
+                               @Nonnull SelectedEntity<Object> selectedEntity) {
         this.windowManager = windowManager;
         this.componentService = componentService;
+        this.permissionsService = permissionsService;
         this.selectedEntity = selectedEntity;
         blocks = Lists.newArrayList();
 
@@ -101,7 +104,7 @@ public class GroupsPermissionsVm {
         blocks.clear();
 
         for (Component component : componentService.getAll()) {
-            GroupsPermissions<GeneralPermission> groupsPermissions = componentService.getPermissionsMapFor(component);
+            GroupsPermissions<GeneralPermission> groupsPermissions = permissionsService.getPermissionsMapFor(component);
             List<PermissionManagementBlock> pmBlocks = Lists.newArrayList();
 
             GeneralPermission permission = GeneralPermission.ADMIN;

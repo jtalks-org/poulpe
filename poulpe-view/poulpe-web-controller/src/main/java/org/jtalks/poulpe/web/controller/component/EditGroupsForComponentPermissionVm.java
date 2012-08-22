@@ -17,12 +17,12 @@ package org.jtalks.poulpe.web.controller.component;
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -33,9 +33,7 @@ import org.zkoss.bind.annotation.NotifyChange;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-import static ch.lambdaj.Lambda.filter;
-import static ch.lambdaj.Lambda.having;
-import static ch.lambdaj.Lambda.on;
+import static ch.lambdaj.Lambda.*;
 import static org.hamcrest.text.StringContains.containsString;
 
 /**
@@ -47,30 +45,31 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     public static final String GROUPS_PERMISSIONS_ZUL = "groups/GroupsPermissions.zul";
     // Injected
     private final WindowManager windowManager;
-    private final ComponentService componentService;
+    //private final ComponentService componentService;
     private final GroupService groupService;
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
     private final Component component;
+    private final PermissionsService permissionsService;
 
     /**
      * Construct VM for editing group list for selected permission.
      *
      * @param windowManager    the window manager instance
-     * @param componentService the component service instance
+     * @param permissionsService the permissions service instance
      * @param groupService     the group service instance
      * @param selectedEntity   the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
      *                         VM state
      */
     public EditGroupsForComponentPermissionVm(@Nonnull WindowManager windowManager,
-                                              @Nonnull ComponentService componentService,
+                                              @Nonnull PermissionsService permissionsService,
                                               @Nonnull GroupService groupService,
                                               @Nonnull SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
         component = (Component) permissionForEntity.getTarget();
 
         this.windowManager = windowManager;
-        this.componentService = componentService;
+        this.permissionsService = permissionsService;
         this.groupService = groupService;
     }
 
@@ -122,10 +121,10 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
-                componentService.changeGrants(component, accessChanges);
+                permissionsService.changeGrants(component, accessChanges);
             }
             else {
-                componentService.changeRestrictions(component, accessChanges);
+                permissionsService.changeRestrictions(component, accessChanges);
             }
         }
 
@@ -159,7 +158,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
      */
     private List<Group> getAlreadyAddedGroups() {
         GeneralPermission permission = (GeneralPermission) permissionForEntity.getPermission();
-        GroupsPermissions<GeneralPermission> accessList = componentService.getPermissionsMapFor(component);
+        GroupsPermissions<GeneralPermission> accessList = permissionsService.getPermissionsMapFor(component);
         return accessList.get(permission, permissionForEntity.isAllowed());
     }
 

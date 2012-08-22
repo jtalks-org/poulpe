@@ -74,7 +74,7 @@ public class TransactionalComponentServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        componentService = new TransactionalComponentService(componentDao, permissionManager, validator);
+        componentService = new TransactionalComponentService(componentDao, validator);
     }
 
     @Test

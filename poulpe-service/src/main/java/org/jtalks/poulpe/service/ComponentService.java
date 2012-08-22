@@ -14,10 +14,7 @@
  */
 package org.jtalks.poulpe.service;
 
-import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -92,31 +89,6 @@ public interface ComponentService extends EntityService<Component> {
      * @return the component
      */
     Component getByType(ComponentType type);
-
-    /**
-     * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link Component}.
-     *
-     * @param component the component to get for
-     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link Component}
-     */
-    GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component);
-
-    /**
-     * Change grants for component.
-     *
-     * @param component the component to change for
-     * @param changes   the {@link PermissionChanges} which needs to be applied
-     * @see PermissionChanges
-     */
-    void changeGrants(Component component, PermissionChanges changes);
-
-    /**
-     * Change restrictions for component.
-     *
-     * @param component the component to change for
-     * @param changes   the {@link PermissionChanges} which needs to be applied
-     */
-    void changeRestrictions(Component component, PermissionChanges changes);
 
     /**
      * By given type retrieves {@link ComponentBase}

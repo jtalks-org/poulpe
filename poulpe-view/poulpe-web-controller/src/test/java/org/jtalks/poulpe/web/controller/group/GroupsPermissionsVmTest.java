@@ -14,13 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller.group;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
@@ -29,6 +23,7 @@ import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -40,7 +35,12 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
+import java.util.List;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 public class GroupsPermissionsVmTest {
 
@@ -51,6 +51,8 @@ public class GroupsPermissionsVmTest {
     private WindowManager windowManager;
     @Mock
     private ComponentService componentService;
+    @Mock
+    private PermissionsService permissionsService;
 
     private SelectedEntity<Object> selectedEntity;
 
@@ -60,16 +62,16 @@ public class GroupsPermissionsVmTest {
 
         selectedEntity = new SelectedEntity<Object>();
 
-        viewModel = new GroupsPermissionsVm(windowManager, componentService, selectedEntity);
+        viewModel = new GroupsPermissionsVm(windowManager, componentService,permissionsService, selectedEntity);
     }
 
     @Test(dataProvider = "dataProviderForGetBlocks")
     public void testGetBlocks(List<GeneralPermission> permissions, List<Component> components,
             GroupsPermissions<GeneralPermission> groupsPermissions) {
         when(componentService.getAll()).thenReturn(components);
-        when(componentService.getPermissionsMapFor(any(Component.class))).thenReturn(groupsPermissions);
+        when(permissionsService.getPermissionsMapFor(any(Component.class))).thenReturn(groupsPermissions);
 
-        viewModel = new GroupsPermissionsVm(windowManager, componentService, selectedEntity);
+        viewModel = new GroupsPermissionsVm(windowManager, componentService,permissionsService, selectedEntity);
         List<EntityPermissionsBlock> blocks = viewModel.getBlocks();
 
         verify(componentService, atLeastOnce()).getAll();

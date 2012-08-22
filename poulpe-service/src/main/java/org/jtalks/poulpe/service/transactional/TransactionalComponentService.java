@@ -14,13 +14,9 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -43,7 +39,6 @@ import java.util.Set;
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
-    private final PermissionManager permissionManager;
     private final EntityValidator validator;
 
     /**
@@ -55,13 +50,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * Creates new instance of the service
      *
      * @param dao               dao we use for Component
-     * @param permissionManager the permission manager, instance of {@link PermissionManager}
      * @param validator         used to validate entites
      */
-    public TransactionalComponentService(ComponentDao dao, PermissionManager permissionManager,
-                                         EntityValidator validator) {
+    public TransactionalComponentService(ComponentDao dao, EntityValidator validator) {
         this.dao = dao;
-        this.permissionManager = permissionManager;
         this.validator = validator;
     }
 
@@ -125,30 +117,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public Component getByType(ComponentType type) {
         return dao.getByType(type);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component) {
-        return permissionManager.getPermissionsMapFor(component);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeGrants(Component component, PermissionChanges changes) {
-        permissionManager.changeGrants(component, changes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeRestrictions(Component component, PermissionChanges changes) {
-        permissionManager.changeRestrictions(component, changes);
     }
 
     /**

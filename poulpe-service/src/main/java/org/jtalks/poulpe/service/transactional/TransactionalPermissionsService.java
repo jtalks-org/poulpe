@@ -16,9 +16,11 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
 
@@ -31,10 +33,7 @@ public class TransactionalPermissionsService implements PermissionsService{
     }
 
     /**
-     * Return access lists for branch.
-     *
-     * @param branch branch which will be returned access list
-     * @return access list
+     * {@inheritDoc}
      */
     @Override
     public GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch) {
@@ -42,10 +41,7 @@ public class TransactionalPermissionsService implements PermissionsService{
     }
 
     /**
-     * Change grants for branch.
-     *
-     * @param branch  branch to which grants will be changed
-     * @param changes grants for branch
+     * {@inheritDoc}
      */
     @Override
     public void changeGrants(PoulpeBranch branch, PermissionChanges changes) {
@@ -53,13 +49,34 @@ public class TransactionalPermissionsService implements PermissionsService{
     }
 
     /**
-     * Change restriction for branch.
-     *
-     * @param branch  branch to which restriction will be changed
-     * @param changes new restriction for branch
+     * {@inheritDoc}
      */
     @Override
     public void changeRestrictions(PoulpeBranch branch, PermissionChanges changes) {
         permissionManager.changeRestrictions(branch, changes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component) {
+        return permissionManager.getPermissionsMapFor(component);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeGrants(Component component, PermissionChanges changes) {
+        permissionManager.changeGrants(component, changes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeRestrictions(Component component, PermissionChanges changes) {
+        permissionManager.changeRestrictions(component, changes);
     }
 }
