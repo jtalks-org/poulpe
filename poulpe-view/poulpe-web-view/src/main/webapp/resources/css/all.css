@@ -83,3 +83,9 @@
     padding-left: 20px;
     text-align:center;
 }
+.popup-notification-ok{
+    background:#D1FCBF;
+    color:#222222;
+    padding:5px;
+    text-align:center;
+}

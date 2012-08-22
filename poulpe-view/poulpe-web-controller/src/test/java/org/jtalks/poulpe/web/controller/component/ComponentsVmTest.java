@@ -53,6 +53,7 @@ import static org.testng.Assert.*;
  * @author Kazancev Lenonid
  */
 public class ComponentsVmTest {
+    private static final String REINDEX_STARTED_FIELD = "showReindexStartedNotification";
     // sut
     ComponentsVm componentsVm;
 
@@ -217,6 +218,26 @@ public class ComponentsVmTest {
     public void show() {
         ComponentsVm.show(windowManager);
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
+    }
+
+    @Test
+    public void isShowNotConfiguredNotification() throws NoSuchFieldException, IllegalAccessException {
+        setShowReindexStartedNotification(true);
+        boolean value = componentsVm.isShowReindexStartedNotification();
+
+        assertTrue(value);
+        assertFalse(componentsVm.isShowReindexStartedNotification());
+    }
+
+    private void setShowReindexStartedNotification(boolean value) throws NoSuchFieldException, IllegalAccessException {
+        setField(REINDEX_STARTED_FIELD, value);
+    }
+
+    private void setField(String fieldName, Object value) throws NoSuchFieldException, IllegalAccessException {
+        Class clazz = componentsVm.getClass();
+        Field field = clazz.getDeclaredField(fieldName);
+        field.setAccessible(true);
+        field.set(componentsVm, value);
     }
 
 

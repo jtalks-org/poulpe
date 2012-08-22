@@ -50,15 +50,27 @@
                       onClick="@command('configureComponent')"/>
         </menupopup>
         <menupopup id="popupMenuJcommune">
-            <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}"
-                      onClick="@command('reindexComponent')" />
+            <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
+                <attribute name="onClick">
+                    vm.reindexComponent();
+                    if(vm.showReindexStartedNotification){
+                    popupReindexStarted.open(self,"at_pointer");
+                    }
+                </attribute>
+            </menuitem>
             <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                       onClick="@command('configureComponent')"/>
             <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
                       onClick="@command('deleteComponent')"/>
         </menupopup>
 
-
+        <!--POPUP WINDOWS -->
+        <popup id="popupReindexStarted" width="250px" style="border:none">
+            <vlayout sclass="popup-notification-ok">
+                <label value="${labels.component.ok.jcommune.title.reindex_start}" sclass="halfbold-table-title"/>
+                ${labels.component.ok.jcommune.text.reindex_start}
+            </vlayout>
+        </popup>
     </window>
 
 </zk>

@@ -46,6 +46,7 @@ public class ComponentsVm {
     public static final String POULPE = "poulpe";
     public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
     public static final String POULPE_VISIBLE = "poulpeVisible";
+    public static final String SHOW_REINDEX_START_NOTIFICATION = "showReindexStartedNotification";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
@@ -55,6 +56,7 @@ public class ComponentsVm {
     private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
+    private boolean showReindexStartedNotification;
 
     private static final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private static final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
@@ -153,6 +155,8 @@ public class ComponentsVm {
     public void reindexComponent() {
         try {
             componentService.reindexComponent(selected);
+            showReindexStartedNotification();
+
         } catch (NoConnectionToJcommuneException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT),
                     Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE), Messagebox.OK, Messagebox.ERROR);
@@ -242,5 +246,22 @@ public class ComponentsVm {
      */
     public boolean isPoulpeAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
+    }
+
+    @NotifyChange(SHOW_REINDEX_START_NOTIFICATION)
+    private void showReindexStartedNotification() {
+        showReindexStartedNotification = true;
+    }
+
+    /**
+     * Gets visibility status of notification window, boolean show added because after single opening of popup
+     * window before next check we should have false at showReindexStartedNotification.
+     *
+     * @return true if notification is visible
+     */
+    public boolean isShowReindexStartedNotification() {
+        boolean show = showReindexStartedNotification;
+        showReindexStartedNotification = false;
+        return show;
     }
 }
