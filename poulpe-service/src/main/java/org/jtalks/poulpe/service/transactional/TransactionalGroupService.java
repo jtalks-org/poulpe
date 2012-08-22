@@ -25,10 +25,6 @@ import org.jtalks.poulpe.service.GroupService;
 import ru.javatalks.utils.general.Assert;
 
 import java.util.List;
-import org.jtalks.common.model.permissions.ProfilePermission;
-import org.jtalks.poulpe.logic.PermissionManager;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 
 /**
  * @author alexander afanasiev
@@ -38,7 +34,6 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         implements GroupService {
     private final EntityValidator validator;
     private final UserBanner userBanner;
-    private final PermissionManager permissionManager;    
 
     /**
      * Create an instance of entity based service
@@ -49,11 +44,10 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      *
      * @param userBanner - class for working with banning users instance
      */
-    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner, PermissionManager permissionManager) {
+    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
         this.dao = groupDao;
         this.userBanner = userBanner;
         this.validator = validator;
-        this.permissionManager = permissionManager;
     }
 
     /**
@@ -110,28 +104,5 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public List<PoulpeBranch> getModeratedBranches(Group group){
         return dao.getModeratingBranches(group);
-    }
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GroupsPermissions<ProfilePermission> getPersonalPermissions() {
-        return permissionManager.getPermissionsMapFor(getAll());
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeGrants(Group group, PermissionChanges changes) {
-        permissionManager.changeGrants(group, changes);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public void changeRestrictions(Group group, PermissionChanges changes) {
-        permissionManager.changeRestrictions(group, changes);
     }
 }

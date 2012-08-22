@@ -15,29 +15,24 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import com.google.common.collect.Lists;
-import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
-
-import java.util.Collections;
-import java.util.List;
-import javax.annotation.Nonnull;
-import org.jtalks.common.model.dao.GroupDao;
-import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.group.BranchGroupMap;
+import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.zul.ListModelList;
+import org.zkoss.bind.annotation.Init;
+import org.zkoss.util.resource.Labels;
+
+import javax.annotation.Nonnull;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Works with user permissions like editing own profile or sending private
@@ -57,6 +52,7 @@ public class UserPersonalPermissionsVm {
     
     
     private final GroupService groupService;
+    private final PermissionsService permissionsService;
     private final WindowManager windowManager;
     private SelectedEntity<Object> selectedEntity;
     private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
@@ -68,9 +64,12 @@ public class UserPersonalPermissionsVm {
      * @param selectedEntity the selected entity instance
      * @param windowManager the window manager instance
      */
-    public UserPersonalPermissionsVm(@Nonnull GroupService groupService, @Nonnull SelectedEntity<Object> selectedEntity,
-            @Nonnull WindowManager windowManager) {
+    public UserPersonalPermissionsVm(@Nonnull GroupService groupService,
+                                     @Nonnull SelectedEntity<Object> selectedEntity,
+                                     @Nonnull PermissionsService permissionsService,
+                                     @Nonnull WindowManager windowManager) {
         this.groupService = groupService;
+        this.permissionsService = permissionsService;
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
     }
@@ -82,7 +81,8 @@ public class UserPersonalPermissionsVm {
     public void updateView() {
         blocks.clear();
         List<ProfilePermission> permissions = ProfilePermission.getAllAsList();
-        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPersonalPermissions();
+        GroupsPermissions<ProfilePermission> permissionsMap =
+                permissionsService.getPersonalPermissions(groupService.getAll());
 
         for (ProfilePermission permission : permissions) {
             blocks.add(new PermissionManagementBlock(permission, permissionsMap, Labels

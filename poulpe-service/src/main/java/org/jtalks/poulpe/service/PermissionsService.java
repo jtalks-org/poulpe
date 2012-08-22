@@ -2,12 +2,16 @@
 
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+
+import java.util.List;
 
 public interface PermissionsService {
 
@@ -59,4 +63,27 @@ public interface PermissionsService {
      * @param changes   the {@link PermissionChanges} which needs to be applied
      */
     void changeRestrictions(Component component, PermissionChanges changes);
+
+    /**
+     * Return PersonalPermissions access lists for all available {@link org.jtalks.common.model.entity.Group}'s.
+     * @param groups all groups
+     * @return access list
+     */
+    GroupsPermissions<ProfilePermission> getPersonalPermissions(List<Group> groups);
+
+    /**
+     * Change grants for group.
+     *
+     * @param group group to which grants will be changed
+     * @param changes grants for group
+     */
+    void changeGrants(Group group, PermissionChanges changes);
+
+    /**
+     * Change restriction for group.
+     *
+     * @param group group to which restriction will be changed
+     * @param changes new restriction for group
+     */
+    void changeRestrictions(Group group, PermissionChanges changes);
 }

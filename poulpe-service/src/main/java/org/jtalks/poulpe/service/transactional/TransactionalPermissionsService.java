@@ -15,14 +15,18 @@
 
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
+
+import java.util.List;
 
 public class TransactionalPermissionsService implements PermissionsService{
 
@@ -78,5 +82,29 @@ public class TransactionalPermissionsService implements PermissionsService{
     @Override
     public void changeRestrictions(Component component, PermissionChanges changes) {
         permissionManager.changeRestrictions(component, changes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public GroupsPermissions<ProfilePermission> getPersonalPermissions(List<Group> groups) {
+        return permissionManager.getPermissionsMapFor(groups);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeGrants(Group group, PermissionChanges changes) {
+        permissionManager.changeGrants(group, changes);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void changeRestrictions(Group group, PermissionChanges changes) {
+        permissionManager.changeRestrictions(group, changes);
     }
 }
