@@ -42,13 +42,14 @@ public class AuthenticationCleaningAccessDeniedExceptionHandler extends AccessDe
     public void handle(HttpServletRequest request, HttpServletResponse response, 
     		AccessDeniedException accessDeniedException) throws IOException, ServletException { 
     	
+    	String errorPage;
     	if (alternativeRoutes.containsKey(request.getServletPath())) {
-    		setErrorPage(alternativeRoutes.get(request.getServletPath()));
+    		errorPage = alternativeRoutes.get(request.getServletPath());
     	} else {
-    		setErrorPage(defaultErrorPage);
     		SecurityContextHolder.getContext().setAuthentication(null);
+    		errorPage = defaultErrorPage;
     	}
-        super.handle(request, response, accessDeniedException);
+    	response.sendRedirect(request.getContextPath() + errorPage);
     }
     
     // Injected
