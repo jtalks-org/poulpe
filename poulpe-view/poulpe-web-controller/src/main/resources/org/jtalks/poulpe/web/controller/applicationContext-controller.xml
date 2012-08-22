@@ -44,12 +44,14 @@
   <bean id="userPersonalPermissionsVm" class="org.jtalks.poulpe.web.controller.users.UserPersonalPermissionsVm" scope="desktop">
     <constructor-arg index="0" ref="groupService"/>
     <constructor-arg index="1" ref="selectedEntity"/>
-    <constructor-arg index="2" ref="windowManager"/>
+    <constructor-arg index="2" ref="permissionsService"/>
+    <constructor-arg index="3" ref="windowManager"/>
   </bean>
   <bean id="editGroupsForPersonalPermissionVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.users.EditGroupsForPersonalPermissionVm">
     <constructor-arg ref="windowManager"/>
     <constructor-arg ref="groupService"/>
+    <constructor-arg ref="permissionsService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean> 
   <bean id="deleteBranchDialogVm"  scope="desktop"
@@ -124,6 +126,7 @@
   <bean id="groupsPermissionsVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.GroupsPermissionsVm">
     <constructor-arg ref="windowManager"/>
     <constructor-arg ref="componentService"/>
+    <constructor-arg ref="permissionsService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>
 
