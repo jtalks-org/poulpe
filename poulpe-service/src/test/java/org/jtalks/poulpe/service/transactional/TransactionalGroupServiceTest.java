@@ -28,12 +28,9 @@ import org.testng.annotations.Test;
 
 import java.util.Collections;
 import java.util.Set;
-import org.jtalks.poulpe.logic.PermissionManager;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 /**
  * Test for {@link TransactionalGroupService}
@@ -45,14 +42,13 @@ public class TransactionalGroupServiceTest {
 	GroupDao dao;
 	@Mock
 	EntityValidator entityValidator;
-        PermissionManager permissionManager;        
 
 	private Group group = new Group("new group");
 
 	@BeforeMethod
 	public void beforeMethod() {
 		MockitoAnnotations.initMocks(this);
-		service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class),permissionManager);
+		service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class));
 	}
 
 	@Test

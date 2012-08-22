@@ -14,19 +14,16 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
-import org.jtalks.poulpe.web.controller.branch.*;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
-
-import java.util.List;
-
+import com.google.common.collect.Lists;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
+import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.ZkHelper;
+import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -34,9 +31,9 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.Lists;
-import org.jtalks.common.model.permissions.ProfilePermission;
-import org.jtalks.poulpe.service.GroupService;
+import java.util.List;
+
+import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link BranchPermissionManagementVm}.
@@ -54,6 +51,8 @@ public class UserPersonalPermissionsVmTest {
     // context related
     @Mock WindowManager windowManager;
     @Mock GroupService groupService;
+    @Mock
+    PermissionsService permissionsService;
 
     @BeforeMethod
     public void beforeMethod() {
@@ -63,7 +62,7 @@ public class UserPersonalPermissionsVmTest {
         SelectedEntity<Object> selectedEntity = new SelectedEntity<Object>();
         selectedEntity.setEntity(group);
 
-        sut = new UserPersonalPermissionsVm(groupService, selectedEntity, windowManager);
+        sut = new UserPersonalPermissionsVm(groupService ,selectedEntity,permissionsService, windowManager);
     }
 
     /**
@@ -90,7 +89,7 @@ public class UserPersonalPermissionsVmTest {
     @Test(dataProvider = "provideInitDataForView")
     public void testInitDataForView(GroupsPermissions<ProfilePermission> groupsPermissions, Group allowedGroup, Group restrictedGroup) {
         Group group = (Group) sut.getSelectedEntity().getEntity();
-        when(groupService.getPersonalPermissions()).thenReturn(groupsPermissions);
+        when(permissionsService.getPersonalPermissions(groupService.getAll())).thenReturn(groupsPermissions);
         sut.updateView();
     }
 

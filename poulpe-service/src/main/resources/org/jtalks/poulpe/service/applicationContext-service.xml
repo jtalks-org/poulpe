@@ -80,7 +80,6 @@
         <constructor-arg index="0" ref="groupDao"/>
         <constructor-arg index="1" ref="entityValidator"/>
         <constructor-arg index="2" ref="userBanner"/>
-        <constructor-arg index="3" ref="branchPermissionManager"/>        
     </bean>
     <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
         <constructor-arg index="0" ref="rankDao"/>

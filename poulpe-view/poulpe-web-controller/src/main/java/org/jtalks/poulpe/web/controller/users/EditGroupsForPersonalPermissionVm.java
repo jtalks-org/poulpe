@@ -17,10 +17,12 @@ package org.jtalks.poulpe.web.controller.users;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.permissions.ProfilePermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
-import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
@@ -29,7 +31,6 @@ import org.zkoss.bind.annotation.Init;
 
 import javax.annotation.Nonnull;
 import java.util.List;
-import org.jtalks.common.model.permissions.ProfilePermission;
 
 
 /**
@@ -49,6 +50,7 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
     private final SelectedEntity<Object> selectedEntity;
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
+    private final PermissionsService permissionsService;
 
     /**
      * Construct VM for editing group list for selected
@@ -61,11 +63,13 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
      */
     public EditGroupsForPersonalPermissionVm(@Nonnull WindowManager windowManager,
             @Nonnull GroupService groupService,
+            @Nonnull PermissionsService permissionsService,
             @Nonnull SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
 
         this.windowManager = windowManager;
         this.groupService = groupService;
+        this.permissionsService = permissionsService;
         this.selectedEntity = selectedEntity;
 
         getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(permissionForEntity.isAllowed()));
@@ -98,9 +102,9 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
 
             if (!accessChanges.isEmpty()) {
                 if (permissionForEntity.isAllowed()) {
-                    groupService.changeGrants(groupForSave, accessChanges);
+                    permissionsService.changeGrants(groupForSave, accessChanges);
                 } else {
-                    groupService.changeRestrictions(groupForSave, accessChanges);
+                    permissionsService.changeRestrictions(groupForSave, accessChanges);
                 }
             }
         }
@@ -132,7 +136,8 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
      * specified mode
      */
     private List<Group> getAlreadyAddedGroupsForMode(boolean allowed) {
-        GroupsPermissions<ProfilePermission> permissionsMap = groupService.getPersonalPermissions();
+        GroupsPermissions<ProfilePermission> permissionsMap =
+                permissionsService.getPersonalPermissions(groupService.getAll());
         return permissionsMap.get((ProfilePermission) permissionForEntity.getPermission(), allowed);
     }
 
