@@ -98,7 +98,7 @@
   <bean id="editGroupsForComponentPermissionVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.component.EditGroupsForComponentPermissionVm">
     <constructor-arg ref="windowManager"/>
-    <constructor-arg ref="componentService"/>
+    <constructor-arg ref="permissionsService"/>
     <constructor-arg ref="groupService"/>
     <constructor-arg ref="selectedEntity"/>
   </bean>

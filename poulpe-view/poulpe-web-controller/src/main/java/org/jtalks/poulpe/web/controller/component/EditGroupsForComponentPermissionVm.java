@@ -45,7 +45,6 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     public static final String GROUPS_PERMISSIONS_ZUL = "groups/GroupsPermissions.zul";
     // Injected
     private final WindowManager windowManager;
-    //private final ComponentService componentService;
     private final GroupService groupService;
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
