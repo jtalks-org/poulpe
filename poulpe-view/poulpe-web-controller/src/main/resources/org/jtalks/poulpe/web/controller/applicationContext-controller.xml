@@ -46,7 +46,7 @@
     <constructor-arg index="1" ref="selectedEntity"/>
     <constructor-arg index="2" ref="windowManager"/>
   </bean>
-  <bean id="editGroupsForPersonalPermissionVm" scope="prototype"
+  <bean id="editGroupsForPersonalPermissionVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.users.EditGroupsForPersonalPermissionVm">
     <constructor-arg ref="windowManager"/>
     <constructor-arg ref="groupService"/>

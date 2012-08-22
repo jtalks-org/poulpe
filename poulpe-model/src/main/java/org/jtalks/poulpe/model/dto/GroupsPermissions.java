@@ -16,6 +16,7 @@ package org.jtalks.poulpe.model.dto;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.JtalksPermission;
+import org.jtalks.common.model.permissions.ProfilePermission;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentMap;
@@ -28,7 +29,6 @@ import java.util.concurrent.ConcurrentSkipListMap;
  * @author Vyacheslav Zhivaev
  */
 public class GroupsPermissions<T extends JtalksPermission> {
-
     private final ConcurrentMap<T, GroupAccessList> accessListMap = new ConcurrentSkipListMap<T, GroupAccessList>();
 
     /**
@@ -132,7 +132,7 @@ public class GroupsPermissions<T extends JtalksPermission> {
         GroupAccessList groupAccessList = accessListMap.get(permission);
         if (groupAccessList == null) {
             return Collections.unmodifiableList(new ArrayList<Group>());
-        } else{
+        } else {
             return Collections.unmodifiableList(groupAccessList.getRestricted());
         }
     }
@@ -156,5 +156,14 @@ public class GroupsPermissions<T extends JtalksPermission> {
      */
     public Set<T> getPermissions() {
         return Collections.unmodifiableSet(accessListMap.keySet());
+    }
+
+    /**
+     * Gets groups permissions with all the profile permissions but no groups restricted or allowed.
+     *
+     * @return groups permissions with all the profile permissions but no groups restricted or allowed
+     */
+    public static GroupsPermissions<ProfilePermission> profilePermissions() {
+        return new GroupsPermissions<ProfilePermission>(ProfilePermission.getAllAsList());
     }
 }

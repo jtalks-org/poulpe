@@ -14,17 +14,16 @@
  */
 package org.jtalks.poulpe.model.dto;
 
-import javax.annotation.concurrent.Immutable;
-
 import org.apache.commons.lang.Validate;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.permissions.JtalksPermission;
 
+import javax.annotation.concurrent.Immutable;
+
 /**
  * DTO container for {@link JtalksPermission} and {@link Entity} for which permission is.
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
  */
 @Immutable
 public class PermissionForEntity {
@@ -34,9 +33,9 @@ public class PermissionForEntity {
 
     /**
      * Constructs container.
-     * 
-     * @param target the entity for which permission is
-     * @param allowed the allowed (when {@code true}) or restricted flag
+     *
+     * @param target     the entity for which permission is
+     * @param allowed    the allowed (when {@code true}) or restricted flag
      * @param permission the permission
      */
     public PermissionForEntity(Entity target, boolean allowed, JtalksPermission permission) {
@@ -47,9 +46,9 @@ public class PermissionForEntity {
 
     /**
      * Constructs container.
-     * 
-     * @param target the entity for which permission is
-     * @param mode the mode of permission, can be only {@code "allow"} or {@code "restrict"} (case ignored)
+     *
+     * @param target     the entity for which permission is
+     * @param mode       the mode of permission, can be only {@code "allow"} or {@code "restrict"} (case ignored)
      * @param permission the permission
      */
     public PermissionForEntity(Entity target, String mode, JtalksPermission permission) {
@@ -64,7 +63,7 @@ public class PermissionForEntity {
 
     /**
      * Gets target entity.
-     * 
+     *
      * @return the target
      */
     public Entity getTarget() {
@@ -73,7 +72,7 @@ public class PermissionForEntity {
 
     /**
      * Is this container builded to allow permission.
-     * 
+     *
      * @return the allowedNotRestricted
      */
     public boolean isAllowed() {
@@ -82,11 +81,33 @@ public class PermissionForEntity {
 
     /**
      * Gets permission.
-     * 
+     *
      * @return the permission
      */
     public JtalksPermission getPermission() {
         return permission;
+    }
+
+    /**
+     * Returns a permission restricted to the specified entity.
+     *
+     * @param target     an entity (Object Identity) to restrict access to
+     * @param permission a permission that won't be allowed to do with specified entity
+     * @return permission that will be restricted to the specified entity
+     */
+    public static PermissionForEntity restricted(Entity target, JtalksPermission permission) {
+        return new PermissionForEntity(target, false, permission);
+    }
+
+    /**
+     * Returns a permission allowed to the specified entity.
+     *
+     * @param target     an entity (Object Identity) to allow access to
+     * @param permission a permission that will be allowed to do with specified entity
+     * @return permission that will be allowed to the specified entity
+     */
+    public static PermissionForEntity allowed(Entity target, JtalksPermission permission) {
+        return new PermissionForEntity(target, true, permission);
     }
 
 }
