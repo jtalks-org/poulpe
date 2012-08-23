@@ -18,6 +18,7 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
@@ -154,7 +155,7 @@ public class ComponentsVm {
     @Command
     public void reindexComponent() {
         try {
-            componentService.reindexComponent(selected);
+            componentService.reindexComponent((Jcommune) selected);
             showReindexStartedNotification();
 
         } catch (NoConnectionToJcommuneException e) {

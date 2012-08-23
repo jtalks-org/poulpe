@@ -95,7 +95,7 @@ public class ComponentsVmTest {
     @Test
     public void reindexComponent() throws Exception {
         ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
-        Component jcommune = componentBase.newComponent("Name","Description");
+        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name","Description");
         componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
         verify(componentService).reindexComponent(jcommune);

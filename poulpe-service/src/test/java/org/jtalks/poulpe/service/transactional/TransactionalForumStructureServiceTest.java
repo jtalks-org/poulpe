@@ -59,7 +59,9 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void testDeleteSectionWithBranches(Jcommune jcommune) throws Exception {
+    public void testDeleteSectionWithBranches(Jcommune jcommuneWithoutSpy) throws Exception {
+        Jcommune jcommune = spy(jcommuneWithoutSpy);
+        doReturn("").when(jcommune).getUrl();
         PoulpeSection sectionToRemove = jcommune.getSections().get(0);
         doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
         sut.deleteSectionWithBranches(sectionToRemove);
@@ -126,7 +128,9 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void removeBranchShouldRemoveFromDb(Jcommune jcommune) throws Exception {
+    public void removeBranchShouldRemoveFromDb(Jcommune jcommuneWithoutSpy) throws Exception {
+        Jcommune jcommune = spy(jcommuneWithoutSpy);
+        doReturn("").when(jcommune).getUrl();
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
         doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);
@@ -135,7 +139,9 @@ public class TransactionalForumStructureServiceTest {
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")
-    public void removeBranchShouldRemoveFromSection(Jcommune jcommune) throws Exception {
+    public void removeBranchShouldRemoveFromSection(Jcommune jcommuneWithoutSpy) throws Exception {
+        Jcommune jcommune = spy(jcommuneWithoutSpy);
+        doReturn("").when(jcommune).getUrl();
         PoulpeSection section = jcommune.getSections().get(0);
         PoulpeBranch branchToRemove = section.getBranch(0);
         doReturn(jcommune).when(componentDao).getByType(ComponentType.FORUM);

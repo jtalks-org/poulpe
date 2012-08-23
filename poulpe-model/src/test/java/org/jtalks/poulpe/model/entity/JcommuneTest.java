@@ -14,18 +14,21 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.util.List;
 
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 
 /**
  * @author Guram Savinov
  */
 public class JcommuneTest {
+    private static final String URL_WITH_SUFFIX = "http://javatalks.ru/";
+    private static final String URL_WITHOUT_SUFFIX = "http://javatalks.ru";
+
     @Test(dataProvider = "provideFilledJcommune")
     public void testMoveSection(Jcommune jcommune) {
         List<PoulpeSection> sections = jcommune.getSections();
@@ -54,6 +57,18 @@ public class JcommuneTest {
         PoulpeSection removed = sections.get(1);
         jcommune.removeSection(removed);
         assertFalse(sections.contains(removed));
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetUrlWithSuffix(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, URL_WITH_SUFFIX);
+        assertEquals(jcommune.getUrl(), URL_WITHOUT_SUFFIX);
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetUrlWithoutSuffix(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, URL_WITHOUT_SUFFIX);
+        assertEquals(jcommune.getUrl(), URL_WITHOUT_SUFFIX);
     }
 
     @DataProvider

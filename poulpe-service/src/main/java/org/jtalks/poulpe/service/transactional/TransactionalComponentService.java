@@ -73,7 +73,8 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
             JcommuneUrlNotConfiguratedException {
         if (component instanceof Jcommune) {
-            jCommuneNotifier.notifyAboutComponentDelete(component.getUrl());
+            Jcommune jcommune = (Jcommune) component;
+            jCommuneNotifier.notifyAboutComponentDelete(jcommune.getUrl());
         }
         dao.delete(component);
     }
@@ -88,10 +89,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     }
 
     @Override
-    public void reindexComponent(Component component)
+    public void reindexComponent(Jcommune jcommune)
             throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
             NoConnectionToJcommuneException {
-        String url = component.getUrl();
+        String url = jcommune.getUrl();
         jCommuneNotifier.notifyAboutReindexComponent(url);
     }
 

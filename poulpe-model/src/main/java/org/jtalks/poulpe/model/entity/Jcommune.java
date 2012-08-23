@@ -21,12 +21,14 @@ import java.util.List;
 
 /**
  * The central JCommune entity that contains all the configuration for respective component.
- * 
+ *
  * @author Guram Savinov
  * @author Vahluev Vyacheslav
+ * @author Leonid Kazantcev
  */
 public class Jcommune extends Component {
-
+    static final String URL_PROPERTY = "jcommune.url_address";
+    static final String URL_SUFFIX = "/";
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
@@ -39,9 +41,9 @@ public class Jcommune extends Component {
     /**
      * Creates JCommune component with ComponentType.FORUM type, given name, description and the list of properties.
      * Instances should be created using {@link ComponentBase#newComponent(String, String)} with FORUM ComponentBase
-     * 
-     * @param name of the component
-     * @param description its descriptions
+     *
+     * @param name              of the component
+     * @param description       its descriptions
      * @param defaultProperties of the component
      */
     Jcommune(String name, String description, List<Property> defaultProperties) {
@@ -64,7 +66,7 @@ public class Jcommune extends Component {
 
     /**
      * Removes the specified section from jcommune instance if it's there, does nothing if it's not there.
-     * 
+     *
      * @param section the section to remove it from the list
      * @return {@code true} if the specified section wasn't in the list
      */
@@ -74,7 +76,7 @@ public class Jcommune extends Component {
 
     /**
      * Adds a section to the list if it doesn't exist or update it.
-     * 
+     *
      * @param section the section to add or update
      */
     public void addOrUpdateSection(PoulpeSection section) {
@@ -87,13 +89,25 @@ public class Jcommune extends Component {
     }
 
     /**
-     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right. 
-     * 
+     * @return URL of the component
+     */
+    public String getUrl() {
+        String url = getProperty(URL_PROPERTY);
+        if (url.endsWith(URL_SUFFIX)) {
+            int urlLenght = url.length();
+            url = url.substring(0, urlLenght - 1);
+        }
+        return url;
+    }
+
+    /**
+     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right.
+     *
      * @param section a section to move
-     * @param target a target section that will be shifted
+     * @param target  a target section that will be shifted
      */
     public void moveSection(PoulpeSection section, PoulpeSection target) {
-    	sections.remove(section);
+        sections.remove(section);
         int position = sections.indexOf(target);
         sections.set(position, section);
         sections.add(position + 1, target);

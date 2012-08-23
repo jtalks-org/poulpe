@@ -35,6 +35,7 @@ import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
@@ -70,6 +71,7 @@ public class TransactionalComponentServiceTest {
     JcommuneHttpNotifier jcommuneHttpNotifier;
 
     Component component = TestFixtures.randomComponent();
+    Jcommune jcommune = spy((Jcommune) TestFixtures.component(ComponentType.FORUM));
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -126,7 +128,8 @@ public class TransactionalComponentServiceTest {
     public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
             NoConnectionToJcommuneException {
         componentService.setjCommuneNotifier(jcommuneHttpNotifier);
-        componentService.reindexComponent(component);
-        verify(jcommuneHttpNotifier).notifyAboutReindexComponent(component.getUrl());
+        doReturn("").when(jcommune).getUrl();
+        componentService.reindexComponent(jcommune);
+        verify(jcommuneHttpNotifier).notifyAboutReindexComponent(jcommune.getUrl());
     }
 }

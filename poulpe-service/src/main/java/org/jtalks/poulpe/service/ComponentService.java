@@ -18,6 +18,7 @@ import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -66,12 +67,12 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Runs re-index on  the specified component.
      *
-     * @param component component to re-index
+     * @param jcommune component to re-index
      * @throws {@link NoConnectionToJcommuneException}
      * @throws {@link JcommuneRespondedWithErrorException}
      * @throws {@link JcommuneUrlNotConfiguratedException}
      */
-    void reindexComponent(Component component)
+    void reindexComponent(Jcommune jcommune)
             throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
             NoConnectionToJcommuneException;
 
