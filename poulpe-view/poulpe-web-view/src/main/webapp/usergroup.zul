@@ -37,8 +37,11 @@
         <listheader align="left" label="${labels.groups.memberCount}"/>
       </listhead>
       <template name="model" var="group">
-        <listitem id="@load(String.valueOf(group.getId()))"
-				onRightClick="@command('handleContextSelectedGroup', group = group, menu = editPopupMenu)">
+        <listitem id="@load(String.valueOf(group.getId()))"	context="@load(
+                					((group.getName() eq 'Registered Users') or
+                					 (group.getName() eq 'Administrators') or
+                					 (group.getName() eq 'Banned Users')) ?
+                					 'menuWithoutDeleteOption':'menuWithDeleteOption')">
           <listcell label="@load(group.getName())"/>
           <listcell label="@load(group.getUsers().size())"/>
         </listitem>
@@ -48,14 +51,22 @@
       </zscript>
     </listbox>
 
-    <!--CONTEXT MENU-->
-    <menupopup id="editPopupMenu">
+    <!--CONTEXT MENU WITH DELETE OPTION-->
+    <menupopup id="menuWithDeleteOption">
       <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
                 onClick="@command('showEditDialog')"/>
       <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')"/>
       <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
-                onClick="@command('showGroupDeleteConfirmDialog')" disabled="@load(vm.disabledDeleteContextDialog)"/>
+                onClick="@command('showGroupDeleteConfirmDialog')" />
+    </menupopup>
+
+	<!--CONTEXT MENU WITHOUT DELETE OPTION-->
+    <menupopup id="menuWithoutDeleteOption">
+      <menuitem image="/resources/img/groupsedit16.png" label="${labels.groups.menuitem.edit_group}"
+                onClick="@command('showEditDialog')"/>
+      <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
+                onClick="@command('showGroupMemberEditWindow')"/>
     </menupopup>
 
     <!-- NEW/EDIT GROUP DIALOG-->
