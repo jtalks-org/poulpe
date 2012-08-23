@@ -37,6 +37,9 @@
         <listheader align="left" label="${labels.groups.memberCount}"/>
       </listhead>
       <template name="model" var="group">
+        <!-- Don't show Delete option of context menu for restricted users,
+             that are at the moment 'Registered Users', 'Administrators', 'Banned Users'.
+             Look for details and reason here: http://jira.jtalks.org/browse/POULPE-392 -->
         <listitem id="@load(String.valueOf(group.getId()))"	context="@load(
                 					((group.getName() eq 'Registered Users') or
                 					 (group.getName() eq 'Administrators') or
@@ -67,6 +70,8 @@
                 onClick="@command('showEditDialog')"/>
       <menuitem image="/resources/img/members16.png" label="${labels.groups.menuitem.edit_members}"
                 onClick="@command('showGroupMemberEditWindow')"/>
+      <menuitem image="/resources/img/remove16.png" label="${labels.groups.menuitem.delete_group}"
+                      onClick="@command('showGroupDeleteConfirmDialog')" disabled="true" />
     </menupopup>
 
     <!-- NEW/EDIT GROUP DIALOG-->
