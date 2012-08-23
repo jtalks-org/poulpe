@@ -89,6 +89,8 @@ public class Jcommune extends Component {
     }
 
     /**
+     * Returns the URL of JCommune, cuts the last symbol if it is '/', to provide link in correct format.
+     *
      * @return URL of the component
      */
     public String getUrl() {
