@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jtalks.common.model.entity.Property;
 
 import java.util.ArrayList;
@@ -95,11 +96,7 @@ public class Jcommune extends Component {
      */
     public String getUrl() {
         String url = getProperty(URL_PROPERTY);
-        if (url.endsWith(URL_SUFFIX)) {
-            int urlLenght = url.length();
-            url = url.substring(0, urlLenght - 1);
-        }
-        return url;
+        return StringUtils.removeEnd(url, URL_SUFFIX);
     }
 
     /**
