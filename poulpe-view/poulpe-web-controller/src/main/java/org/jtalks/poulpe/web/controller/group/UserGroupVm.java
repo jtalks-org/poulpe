@@ -47,9 +47,6 @@ public class UserGroupVm {
     private static final String SELECTED_GROUP = "selectedGroup";
     private static final String GROUP_SERVICE = "groupService";
 
-    // names of the groups, that are prohibited to delete
-    private static final String[] RESTRICTED_GROUPS = {"Administrators", "Banned Users", "Registered Users"};
-
     //Injected
     private final GroupService groupService;
     private final BranchService branchService;
@@ -64,7 +61,6 @@ public class UserGroupVm {
 
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     private boolean showDeleteConfirmDialog, showGroupDialog, showDeleteModeratorGroupDialog;
-    private boolean disabledDeleteContextDialog = false;
 
     /**
      * Construct View-Model for 'User groups' view.
@@ -241,26 +237,6 @@ public class UserGroupVm {
         return selectedGroup != null && groupService.getModeratedBranches(selectedGroup).size() != 0;
     }
 
-    /**
-     * Saves the value of group, that context menu was called for.
-     * Checks, if group's name is in the list of "prohibited to delete" groups.
-     * Sets disabledDeleteContextDialog to "true", if the selected group is in the "prohibited" list
-     * Opens the context menu with enabled or disabled DELETE option
-     * @param selectedGroup determines the group, which context menu was called for
-     */
-    @Command
-    @NotifyChange({"selectedGroup","disabledDeleteContextDialog"})
-    public void handleContextSelectedGroup(@BindingParam("group") Group selectedGroup, @BindingParam("menu") Popup editPopupMenu) {
-        this.selectedGroup = selectedGroup;
-        disabledDeleteContextDialog = false;
-        for (String groupName : RESTRICTED_GROUPS) {
-            if (groupName.equals(selectedGroup.getName())) {
-                disabledDeleteContextDialog = true;
-            }
-        }
-        editPopupMenu.open(editPopupMenu);
-    }
-
     // -- Getters/Setters --------------------
 
     /**
@@ -379,20 +355,5 @@ public class UserGroupVm {
      */
     public BranchGroupMap getBranches() {
         return branches;
-    }
-
-    /**
-     * @return if "delete" option available in context dialog for particular group
-	 */
-    public boolean isDisabledDeleteContextDialog() {
-        return disabledDeleteContextDialog;
-    }
-	
-	/**
-	 * Sets if  "delete" option disabled in context dialog for particular group
-     * @param disabledDeleteContextDialog means to disable option "delete" in context menu or not
-	 */
-    public void setDisabledDeleteContextDialog(boolean disabledDeleteContextDialog) {
-        this.disabledDeleteContextDialog = disabledDeleteContextDialog;
     }
 }
