@@ -132,7 +132,7 @@ public class JcommuneHttpNotifier {
      */
     private void notifyAboutDeleteElement(String url)
         throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
-        checkUrlAreConfigurated(url);
+        checkUrlIsConfigured(url);
         try {
             HttpClient httpClient = new DefaultHttpClient();
             HttpDelete deleteRequest = new HttpDelete(url);
@@ -153,7 +153,7 @@ public class JcommuneHttpNotifier {
      * @param  jCommuneUrl JCommune Url
      * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException} occurs when the {@code jCommuneUrl} is incorrect
      */
-    private void checkUrlAreConfigurated(String jCommuneUrl) throws JcommuneUrlNotConfiguredException {
+    private void checkUrlIsConfigured(String jCommuneUrl) throws JcommuneUrlNotConfiguredException {
         if (StringUtils.isBlank(jCommuneUrl)) {
             throw new JcommuneUrlNotConfiguredException();
         }
@@ -173,7 +173,7 @@ public class JcommuneHttpNotifier {
      */
     public void notifyAboutReindexComponent(String jCommuneUrl)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
-        checkUrlAreConfigurated(jCommuneUrl);
+        checkUrlIsConfigured(jCommuneUrl);
         String reindexUrl = jCommuneUrl + REINDEX_URL_PART;
         try {
             HttpResponse response = sendHttpRequest(reindexUrl);
