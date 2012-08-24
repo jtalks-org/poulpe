@@ -35,34 +35,33 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Works with user permissions like editing own profile or sending private
- * messages. These permissions might be restricted the some groups (like Banned
- * Users might not have permissions to send private messages because they may
- * send spam or they can't edit their profile because they can put spam into
- * their signature).
+ * Works with user permissions like editing own profile or sending private messages. These permissions might be
+ * restricted the some groups (like Banned Users might not have permissions to send private messages because they may
+ * send spam or they can't edit their profile because they can put spam into their signature).
  *
  * @author stanislav bashkirtsev
  * @author Enykey
  */
 public class UserPersonalPermissionsVm {
 
-    private static final String 
+    private static final String
             PERSONAL_PERMISSION_MANAGEMENT_PAGE = "WEB-INF/pages/users/PersonalPermissions.zul",
             MANAGE_GROUPS_DIALOG_ZUL = "WEB-INF/pages/users/EditGroupsForPersonalPermission.zul";
-    
-    
+
+
     private final GroupService groupService;
     private final PermissionsService permissionsService;
     private final WindowManager windowManager;
     private SelectedEntity<Object> selectedEntity;
     private final List<PermissionManagementBlock> blocks = Lists.newArrayList();
     private Group group;
+
     /**
      * Construct View-Model for 'User Personal Permissions' view.
      *
-     * @param groupService the group service instance
+     * @param groupService   the group service instance
      * @param selectedEntity the selected entity instance
-     * @param windowManager the window manager instance
+     * @param windowManager  the window manager instance
      */
     public UserPersonalPermissionsVm(@Nonnull GroupService groupService,
                                      @Nonnull SelectedEntity<Object> selectedEntity,
@@ -101,7 +100,7 @@ public class UserPersonalPermissionsVm {
                                  @BindingParam("mode") String mode) {
         selectedEntity.setEntity(new PermissionForEntity(group, mode, permission));
         windowManager.open(MANAGE_GROUPS_DIALOG_ZUL);
-    }    
+    }
 
     /**
      * Method opens page with permissions to choosen branch
@@ -111,15 +110,16 @@ public class UserPersonalPermissionsVm {
     public static void showPage(WindowManager windowManager) {
         windowManager.open(PERSONAL_PERMISSION_MANAGEMENT_PAGE);
     }
-   
+
     /**
      * Gets blocks which represents state of each permission.
      *
      * @return all blocks, list instance is UNMODIFIABLE
-     */    
+     */
     public List<PermissionManagementBlock> getBlocks() {
         return Collections.unmodifiableList(blocks);
     }
+
     /**
      * Method to get currently selected item
      *
@@ -127,5 +127,5 @@ public class UserPersonalPermissionsVm {
      */
     public SelectedEntity<Object> getSelectedEntity() {
         return selectedEntity;
-    }    
+    }
 }

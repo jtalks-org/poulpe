@@ -55,9 +55,9 @@ public class BranchPermissionManagementVm {
     /**
      * Constructs the VM with given dependencies.
      *
-     * @param windowManager  the window manager instance
-     * @param permissionsService  the permissions service instance
-     * @param selectedEntity the selectedEntity with PoulpeBranch to edit
+     * @param windowManager      the window manager instance
+     * @param permissionsService the permissions service instance
+     * @param selectedEntity     the selectedEntity with PoulpeBranch to edit
      */
     public BranchPermissionManagementVm(@Nonnull WindowManager windowManager,
                                         @Nonnull PermissionsService permissionsService,

@@ -37,8 +37,8 @@ import java.util.List;
  * @author stanislav bashkirtsev
  */
 public class BranchEditingDialog {
-    private static final String SHOW_DIALOG = "showDialog", EDITED_BRANCH = "editedBranch",
-            MODERATING_GROUP = "moderatingGroup", CANDIDATES_TO_MODERATE = "candidatesToModerate";
+    private static final String SHOW_DIALOG = "showDialog", EDITED_BRANCH = "editedBranch";
+    private static final String MODERATING_GROUP = "moderatingGroup", CANDIDATES_TO_MODERATE = "candidatesToModerate";
     private final GroupService groupService;
     private final ListModelList<PoulpeSection> sectionList = new ListModelList<PoulpeSection>();
     private final GroupList groupList = new GroupList();

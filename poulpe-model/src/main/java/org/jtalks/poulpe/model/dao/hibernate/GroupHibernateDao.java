@@ -32,8 +32,8 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
-    private static final String FIND_BRANCHES_MODERATED_BY_GROUP ="findBranchesModeratedByGroup",
-            FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS="findAllGroups";
+    private static final String FIND_BRANCHES_MODERATED_BY_GROUP = "findBranchesModeratedByGroup";
+    private static final String FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS = "findAllGroups";
 
     /**
      * {@inheritDoc}
