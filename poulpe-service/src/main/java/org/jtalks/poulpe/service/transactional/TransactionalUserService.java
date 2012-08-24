@@ -178,8 +178,8 @@ public class TransactionalUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
+    @Override     //TODO Rename method to 'get*' when delete creating a group 'ban users'!
+    public List<PoulpeUser> loadNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
         return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
     }
 

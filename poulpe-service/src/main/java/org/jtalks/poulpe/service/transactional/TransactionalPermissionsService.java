@@ -28,7 +28,7 @@ import org.jtalks.poulpe.service.PermissionsService;
 
 import java.util.List;
 
-public class TransactionalPermissionsService implements PermissionsService{
+public class TransactionalPermissionsService implements PermissionsService {
 
     private PermissionManager permissionManager;
 

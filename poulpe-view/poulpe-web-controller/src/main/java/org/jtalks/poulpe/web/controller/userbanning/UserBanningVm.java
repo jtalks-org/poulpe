@@ -68,7 +68,7 @@ public class UserBanningVm {
      */
     @Nonnull
     public List<PoulpeUser> getAvailableUsers() {
-        return userService.getNonBannedUsersByUsername(availableFilter, Pages.paginate(0, MAX_COMBOBOX_SIZE));
+        return userService.loadNonBannedUsersByUsername(availableFilter, Pages.paginate(0, MAX_COMBOBOX_SIZE));
     }
 
     /**

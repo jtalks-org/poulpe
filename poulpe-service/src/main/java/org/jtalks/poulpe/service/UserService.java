@@ -149,7 +149,7 @@ public interface UserService {
      * @param pagination          Params to limit
      * @return List of {@PoulpeUser}
      */
-    List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
+    List<PoulpeUser> loadNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
 
     /**
      * Check, whether user with specified name have rights to accept component of specified type.
