@@ -53,6 +53,7 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
         PoulpeBranch selectedBranch = forumStructureVm.getSelectedItemInTree().getBranchItem();
         try {
             forumStructureService.removeBranch(selectedBranch);
+            forumStructureVm.removeBranchFromTree(selectedBranch);
         } catch (NoConnectionToJcommuneException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                     Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
