@@ -34,12 +34,12 @@ import org.zkoss.zul.Messagebox;
  */
 public class DeleteSectionDialogVm extends AbstractDialogVm {
     private static final String SHOW_DIALOG = "showDialog";
+    private static final String JCOMMUNE_CONNECTION_FAILED = "sections.error.jcommune_no_connection";
+    private static final String JCOMMUNE_RESPONSE_FAILED = "sections.error.jcommune_no_response";
+    private static final String JCOMMUNE_URL_FAILED = "sections.error.jcommune_no_url";
+    private static final String SECTION_DELETING_FAILED_DIALOG_TITLE = "sections.deleting_problem_dialog.title";
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
-    private final String JCOMMUNE_CONNECTION_FAILED = "sections.error.jcommune_no_connection";
-    private final String JCOMMUNE_RESPONSE_FAILED = "sections.error.jcommune_no_response";
-    private final String JCOMMUNE_URL_FAILED = "sections.error.jcommune_no_url";
-    private final String SECTION_DELETING_FAILED_DIALOG_TITLE = "sections.deleting_problem_dialog.title";
 
     public DeleteSectionDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
@@ -57,11 +57,11 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
             Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                     Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        }catch (JcommuneRespondedWithErrorException ex) {
+        } catch (JcommuneRespondedWithErrorException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
                     Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        }catch (JcommuneUrlNotConfiguredException ex) {
+        } catch (JcommuneUrlNotConfiguredException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
                     Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
