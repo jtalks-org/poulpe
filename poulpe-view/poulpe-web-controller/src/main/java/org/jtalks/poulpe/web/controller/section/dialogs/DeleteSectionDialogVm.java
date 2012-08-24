@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
@@ -61,7 +61,7 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
             Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
                     Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        }catch (JcommuneUrlNotConfiguratedException ex) {
+        }catch (JcommuneUrlNotConfiguredException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
                     Labels.getLabel(SECTION_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);

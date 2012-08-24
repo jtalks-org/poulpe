@@ -18,9 +18,9 @@ package org.jtalks.poulpe.service.exceptions;
  * An exception is thrown when a Jcommune URL are not configurated yet.
  * @author Leonid Kazantcev
  */
-public class JcommuneUrlNotConfiguratedException extends Exception {
+public class JcommuneUrlNotConfiguredException extends Exception {
 
-    public  JcommuneUrlNotConfiguratedException(){
+    public JcommuneUrlNotConfiguredException(){
         super();
     }
 }
