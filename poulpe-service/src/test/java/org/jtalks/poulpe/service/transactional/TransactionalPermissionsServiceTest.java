@@ -17,6 +17,7 @@ package org.jtalks.poulpe.service.transactional;
 
 
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
@@ -29,16 +30,18 @@ import static org.testng.Assert.*;
 public class TransactionalPermissionsServiceTest {
 
     private PermissionsService permissionsService;
+    private PermissionManager permissionManader;
 
     @BeforeMethod
     public void beforeMethod(){
-        permissionsService = mock(TransactionalPermissionsService.class);
+        permissionManader = mock(PermissionManager.class);
+        permissionsService = spy(new TransactionalPermissionsService(permissionManader));
     }
 
     @Test
     public void testGetPermissionsFor(){
         PoulpeBranch branch = new PoulpeBranch();
-        when(permissionsService.getPermissionsFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
+        when(permissionManader.getPermissionsMapFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
         assertNotNull(permissionsService.getPermissionsFor(branch));
     }
 
