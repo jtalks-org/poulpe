@@ -54,11 +54,11 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
     /**
      * Construct VM for editing group list for selected permission.
      *
-     * @param windowManager    the window manager instance
+     * @param windowManager      the window manager instance
      * @param permissionsService the permissions service instance
-     * @param groupService     the group service instance
-     * @param selectedEntity   the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
-     *                         VM state
+     * @param groupService       the group service instance
+     * @param selectedEntity     the SelectedEntity contains {@link PermissionForEntity} with data needed for
+     *                           construction VM state
      */
     public EditGroupsForComponentPermissionVm(@Nonnull WindowManager windowManager,
                                               @Nonnull PermissionsService permissionsService,
@@ -121,8 +121,7 @@ public class EditGroupsForComponentPermissionVm extends TwoSideListWithFilterVm<
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
                 permissionsService.changeGrants(component, accessChanges);
-            }
-            else {
+            } else {
                 permissionsService.changeRestrictions(component, accessChanges);
             }
         }

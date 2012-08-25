@@ -15,15 +15,14 @@
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.ForumStructureService;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
 
@@ -35,12 +34,12 @@ import org.zkoss.zul.Messagebox;
  */
 public class DeleteBranchDialogVm extends AbstractDialogVm {
     private static final String SHOW_DIALOG = "showDialog";
+    private static final String JCOMMUNE_CONNECTION_FAILED = "branches.error.jcommune_no_connection";
+    private static final String JCOMMUNE_RESPONSE_FAILED = "branches.error.jcommune_no_response";
+    private static final String JCOMMUNE_URL_FAILED = "branches.error.jcommune_no_url";
+    private static final String BRANCH_DELETING_FAILED_DIALOG_TITLE = "branches.deleting_problem_dialog.title";
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
-    private final String JCOMMUNE_CONNECTION_FAILED = "branches.error.jcommune_no_connection";
-    private final String JCOMMUNE_RESPONSE_FAILED = "branches.error.jcommune_no_response";
-    private final String JCOMMUNE_URL_FAILED = "branches.error.jcommune_no_url";
-    private final String BRANCH_DELETING_FAILED_DIALOG_TITLE = "branches.deleting_problem_dialog.title";
 
     public DeleteBranchDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
@@ -53,15 +52,16 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
         PoulpeBranch selectedBranch = forumStructureVm.getSelectedItemInTree().getBranchItem();
         try {
             forumStructureService.removeBranch(selectedBranch);
+            forumStructureVm.removeBranchFromTree(selectedBranch);
         } catch (NoConnectionToJcommuneException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                     Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        }catch (JcommuneRespondedWithErrorException ex) {
+        } catch (JcommuneRespondedWithErrorException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
                     Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
-        }catch (JcommuneUrlNotConfiguratedException ex) {
+        } catch (JcommuneUrlNotConfiguredException ex) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
                     Messagebox.OK, Messagebox.ERROR);
         }

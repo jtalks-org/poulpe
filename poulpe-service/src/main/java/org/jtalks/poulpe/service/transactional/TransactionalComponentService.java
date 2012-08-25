@@ -24,7 +24,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 import java.util.List;
@@ -71,9 +71,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Override
     public void deleteComponent(Component component)
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
-            JcommuneUrlNotConfiguratedException {
+            JcommuneUrlNotConfiguredException {
         if (component instanceof Jcommune) {
-            jCommuneNotifier.notifyAboutComponentDelete(component.getUrl());
+            Jcommune jcommune = (Jcommune) component;
+            jCommuneNotifier.notifyAboutComponentDelete(jcommune.getUrl());
         }
         dao.delete(component);
     }
@@ -88,10 +89,10 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     }
 
     @Override
-    public void reindexComponent(Component component)
-            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
+    public void reindexComponent(Jcommune jcommune)
+            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,
             NoConnectionToJcommuneException {
-        String url = component.getUrl();
+        String url = jcommune.getUrl();
         jCommuneNotifier.notifyAboutReindexComponent(url);
     }
 

@@ -5,7 +5,7 @@
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
-  <version>0.19-SNAPSHOT</version>
+  <version>0.20-SNAPSHOT</version>
 
   <name>${project.artifactId}</name>
 
@@ -447,7 +447,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <commonVersion>0.32</commonVersion>
+    <commonVersion>0.33</commonVersion>
   </properties>
 
   <distributionManagement>

@@ -1,4 +1,17 @@
-
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 
 package org.jtalks.poulpe.service;
 
@@ -26,7 +39,7 @@ public interface PermissionsService {
     /**
      * Change grants for branch.
      *
-     * @param branch branch to which grants will be changed
+     * @param branch  branch to which grants will be changed
      * @param changes grants for branch
      */
     void changeGrants(PoulpeBranch branch, PermissionChanges changes);
@@ -34,7 +47,7 @@ public interface PermissionsService {
     /**
      * Change restriction for branch.
      *
-     * @param branch branch to which restriction will be changed
+     * @param branch  branch to which restriction will be changed
      * @param changes new restriction for branch
      */
     void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
@@ -66,6 +79,7 @@ public interface PermissionsService {
 
     /**
      * Return PersonalPermissions access lists for all available {@link org.jtalks.common.model.entity.Group}'s.
+     *
      * @param groups all groups
      * @return access list
      */
@@ -74,7 +88,7 @@ public interface PermissionsService {
     /**
      * Change grants for group.
      *
-     * @param group group to which grants will be changed
+     * @param group   group to which grants will be changed
      * @param changes grants for group
      */
     void changeGrants(Group group, PermissionChanges changes);
@@ -82,7 +96,7 @@ public interface PermissionsService {
     /**
      * Change restriction for group.
      *
-     * @param group group to which restriction will be changed
+     * @param group   group to which restriction will be changed
      * @param changes new restriction for group
      */
     void changeRestrictions(Group group, PermissionChanges changes);

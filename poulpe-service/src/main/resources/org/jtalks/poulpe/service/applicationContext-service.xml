@@ -22,26 +22,27 @@
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
     <!-- Declaration AOP configs -->
+
     <aop:config>
-        <aop:pointcut id="defaultTxPointcut" expression="within(org.jtalks.poulpe.service.transactional..*)"/>
+        <aop:pointcut id="defaultTxPointcut" expression="within(org.jtalks.poulpe.service.transactional.*) and not within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService))"/>
         <aop:advisor advice-ref="txAdvice" pointcut-ref="defaultTxPointcut" />
     </aop:config>
     <tx:advice id="txAdvice">
-        <tx:attributes>
-            <tx:method name="*" rollback-for="java.lang.Exception"/>
-        </tx:attributes>
-    </tx:advice>
-
-    <aop:config>
-        <aop:pointcut id="permissionsServiceTxPointcut" expression="within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService.*)" />
-        <aop:advisor advice-ref="permissionsServiceTxAdvice" pointcut-ref="permissionsServiceTxPointcut"/>
-    </aop:config>
-    <tx:advice id="permissionsServiceTxAdvice">
         <tx:attributes>
             <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="find*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="count*" read-only="true" rollback-for="java.lang.Exception"/>
             <tx:method name="with*" read-only="true" rollback-for="java.lang.Exception"/>
+            <tx:method name="*" rollback-for="java.lang.Exception"/>
+        </tx:attributes>
+    </tx:advice>
+
+    <aop:config>
+        <aop:pointcut id="permissionsServiceTxPointcut" expression="within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService)" />
+        <aop:advisor advice-ref="permissionsServiceTxAdvice" pointcut-ref="permissionsServiceTxPointcut"/>
+    </aop:config>
+    <tx:advice id="permissionsServiceTxAdvice">
+        <tx:attributes>
             <tx:method name="*" rollback-for="java.lang.Exception"/>
         </tx:attributes>
     </tx:advice>

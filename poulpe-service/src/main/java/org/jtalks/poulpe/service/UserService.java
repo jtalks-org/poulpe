@@ -52,25 +52,28 @@ public interface UserService {
      *
      * @param availableFilterText some word which must be like username
      * @param groups              List of groups
-     * @param page         page number for retrieving
-     * @param itemsPerPage limit of items per page
+     * @param page                page number for retrieving
+     * @param itemsPerPage        limit of items per page
      * @return list of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups, int page, int itemsPerPage);
-   /**
-    * Gets all users which excludes in groups with username like in parameter
-    * @param availableFilterText some word which must be like username
-    * @param groups List of groups
-    * @return list of users with username like in parameter
-    */
+
+    /**
+     * Gets all users which excludes in groups with username like in parameter
+     *
+     * @param availableFilterText some word which must be like username
+     * @param groups              List of groups
+     * @return list of users with username like in parameter
+     */
     List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups);
 
     /**
      * Gets all users which excludes in {@code listUsers} with username like in parameter
+     *
      * @param availableFilterText some word which must be like username
-     * @param listUsers list of users
-     * @param page page number for retrieving
-     * @param itemsPerPage limit of items per page
+     * @param listUsers           list of users
+     * @param page                page number for retrieving
+     * @param itemsPerPage        limit of items per page
      * @return ist of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers,
@@ -78,11 +81,13 @@ public interface UserService {
 
     /**
      * Gets all users which excludes in {@code listUsers} with username like in parameter
+     *
      * @param availableFilterText some word which must be like username
-     * @param listUsers list of users
+     * @param listUsers           list of users
      * @return ist of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers);
+
     /**
      * @param searchString string for searching users, if empty - all users will be returned
      * @return amount of users matched the given string
@@ -115,9 +120,10 @@ public interface UserService {
 
     /**
      * Retrieves user by its email
+     *
      * @param email to look up
-     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance or null, if there is
-     * no user with such email
+     * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance or null, if there is no user with
+     *         such email
      */
     PoulpeUser getByEmail(String email);
 
@@ -143,13 +149,16 @@ public interface UserService {
     void revokeBan(PoulpeUser... bannedUsersToRevoke);
 
     /**
-     * Get firsts (count) of non banned users with filter by username
+     * Get firsts (count) of non banned users with filter by username. Note, that this method was named loadXxx()
+     * because we have configured read-only transactions for methods started with getXxx(). This method name is
+     * temporal because right now we create Banned Users group if it's not created which violates read-only nature of
+     * this transaction.
      *
      * @param availableFilterText Filter value to username (like '%availableFilterText%')
      * @param pagination          Params to limit
-     * @return List of {@PoulpeUser}
+     * @return List of {@link PoulpeUser}
      */
-    List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
+    List<PoulpeUser> loadNonBannedUsersByUsername(String availableFilterText, Pagination pagination);
 
     /**
      * Check, whether user with specified name have rights to accept component of specified type.

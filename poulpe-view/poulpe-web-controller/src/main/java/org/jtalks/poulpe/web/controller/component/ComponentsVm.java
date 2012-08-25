@@ -18,9 +18,10 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
@@ -138,7 +139,7 @@ public class ComponentsVm {
                 } catch (JcommuneRespondedWithErrorException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
-                } catch (JcommuneUrlNotConfiguratedException elementDoesNotExist) {
+                } catch (JcommuneUrlNotConfiguredException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED),
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
                 }
@@ -154,13 +155,13 @@ public class ComponentsVm {
     @Command
     public void reindexComponent() {
         try {
-            componentService.reindexComponent(selected);
+            componentService.reindexComponent((Jcommune) selected);
             showReindexStartedNotification();
 
         } catch (NoConnectionToJcommuneException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT),
                     Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE), Messagebox.OK, Messagebox.ERROR);
-        } catch (JcommuneUrlNotConfiguratedException e) {
+        } catch (JcommuneUrlNotConfiguredException e) {
             Messagebox.show(Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT),
                     Labels.getLabel(JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE), Messagebox.OK, Messagebox.ERROR);
         } catch (JcommuneRespondedWithErrorException e) {

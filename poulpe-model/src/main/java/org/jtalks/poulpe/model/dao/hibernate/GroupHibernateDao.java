@@ -19,6 +19,7 @@ import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import ru.javatalks.utils.general.Assert;
 
@@ -32,8 +33,8 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
-    private static final String FIND_BRANCHES_MODERATED_BY_GROUP ="findBranchesModeratedByGroup",
-            FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS="findAllGroups";
+    private static final String FIND_BRANCHES_MODERATED_BY_GROUP = "findBranchesModeratedByGroup";
+    private static final String FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS = "findAllGroups";
 
     /**
      * {@inheritDoc}
@@ -55,7 +56,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
             return this.getAll();
         }
         Query query = getSession().getNamedQuery(FIND_GROUP_BY_NAME);
-        query.setString("name", name);
+        query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
         return query.list();
     }
 

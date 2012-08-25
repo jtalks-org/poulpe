@@ -98,17 +98,17 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups,
-                                                 int page, int itemsPerPage){
-        return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.paginate(page, itemsPerPage));
+                                                 int page, int itemsPerPage) {
+        return userDao.findUsersNotInGroups(availableFilterText, groups, Pages.paginate(page, itemsPerPage));
     }
-    
+
     /**
      * {@inheritDoc}
      */
     @Override
-	public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
-        return userDao.findUsersNotInGroups(availableFilterText, groups,  Pages.NONE);
-	}
+    public List<PoulpeUser> findUsersNotInGroups(String availableFilterText, List<Group> groups) {
+        return userDao.findUsersNotInGroups(availableFilterText, groups, Pages.NONE);
+    }
 
     /**
      * {@inheritDoc}
@@ -116,7 +116,7 @@ public class TransactionalUserService implements UserService {
     @Override
     public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers,
                                                int page, int itemsPerPage) {
-        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.paginate(page, itemsPerPage));
+        return userDao.findUsersNotInList(availableFilterText, listUsers, Pages.paginate(page, itemsPerPage));
     }
 
     /**
@@ -124,7 +124,7 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers) {
-        return userDao.findUsersNotInList(availableFilterText,listUsers,Pages.NONE);
+        return userDao.findUsersNotInList(availableFilterText, listUsers, Pages.NONE);
     }
 
     /**
@@ -178,8 +178,8 @@ public class TransactionalUserService implements UserService {
     /**
      * {@inheritDoc}
      */
-    @Override
-    public List<PoulpeUser> getNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
+    @Override     //TODO Rename method to 'get*' when delete creating a group 'ban users'!
+    public List<PoulpeUser> loadNonBannedUsersByUsername(String availableFilterText, Pagination pagination) {
         return userBanner.getNonBannedUsersByUsername(availableFilterText, pagination);
     }
 
@@ -203,5 +203,5 @@ public class TransactionalUserService implements UserService {
         return granting;
     }
 
-	
+
 }

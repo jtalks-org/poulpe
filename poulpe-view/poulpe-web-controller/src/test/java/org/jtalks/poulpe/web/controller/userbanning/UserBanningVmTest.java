@@ -46,7 +46,7 @@ public class UserBanningVmTest {
 	@Test
 	public void testGetAvailableUsers() throws Exception {
 		sut.getAvailableUsers();
-		verify(userService, times(1)).getNonBannedUsersByUsername("", Pages.paginate(0, 10));
+		verify(userService, times(1)).loadNonBannedUsersByUsername("", Pages.paginate(0, 10));
 	}
 
 	@Test

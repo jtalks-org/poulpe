@@ -18,8 +18,9 @@ import org.jtalks.common.service.EntityService;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 import java.util.List;
@@ -47,11 +48,11 @@ public interface ComponentService extends EntityService<Component> {
      * @param component component to delete
      * @throws {@link NoConnectionToJcommuneException}
      * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link JcommuneUrlNotConfiguratedException}
+     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
      */
     void deleteComponent(Component component)
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
-            JcommuneUrlNotConfiguratedException;
+            JcommuneUrlNotConfiguredException;
 
     /**
      * Saves new component or updates existent
@@ -66,13 +67,13 @@ public interface ComponentService extends EntityService<Component> {
     /**
      * Runs re-index on  the specified component.
      *
-     * @param component component to re-index
+     * @param jcommune component to re-index
      * @throws {@link NoConnectionToJcommuneException}
      * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link JcommuneUrlNotConfiguratedException}
+     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
      */
-    void reindexComponent(Component component)
-            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
+    void reindexComponent(Jcommune jcommune)
+            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,
             NoConnectionToJcommuneException;
 
     /**

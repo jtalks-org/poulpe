@@ -116,7 +116,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void testGetNonBannedByUsername() {
-        List<PoulpeUser> nonBannedUsers = userService.getNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
+        List<PoulpeUser> nonBannedUsers = userService.loadNonBannedUsersByUsername(searchString, Pages.paginate(0, 1000));
         assertEquals(nonBannedUsers, new ArrayList<PoulpeUser>());
     }
 

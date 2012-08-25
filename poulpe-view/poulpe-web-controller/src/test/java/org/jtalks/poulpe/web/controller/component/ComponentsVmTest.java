@@ -20,9 +20,8 @@ import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
@@ -95,7 +94,7 @@ public class ComponentsVmTest {
     @Test
     public void reindexComponent() throws Exception {
         ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
-        Component jcommune = componentBase.newComponent("Name","Description");
+        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name","Description");
         componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
         verify(componentService).reindexComponent(jcommune);
@@ -116,7 +115,7 @@ public class ComponentsVmTest {
 
     @Test
     public void deleteComponent_componentDeletedAfterConfirmation()
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException {
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         Component selected = givenUserConfirmedDeletion();
         verify(componentService).deleteComponent(selected);
     }
