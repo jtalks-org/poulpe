@@ -16,5 +16,28 @@
 package org.jtalks.poulpe.service.transactional;
 
 
+import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.model.dto.GroupsPermissions;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.service.PermissionsService;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import static org.mockito.Mockito.*;
+
 public class TransactionalPermissionsServiceTest {
+
+    private PermissionsService permissionsService;
+
+    @BeforeMethod
+    public void beforeMethod(){
+        permissionsService = mock(TransactionalPermissionsService.class);
+    }
+
+    @Test
+    public void testGetPermissionsFor(){
+        when(permissionsService.getPermissionsFor(new PoulpeBranch())).
+                thenReturn(new GroupsPermissions<BranchPermission>());
+    }
+
 }

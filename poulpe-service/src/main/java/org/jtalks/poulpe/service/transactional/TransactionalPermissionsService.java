@@ -32,8 +32,8 @@ public class TransactionalPermissionsService implements PermissionsService {
 
     private PermissionManager permissionManager;
 
-    public TransactionalPermissionsService(PermissionManager permissionManager){
-        this.permissionManager=permissionManager;
+    public TransactionalPermissionsService(PermissionManager permissionManager) {
+        this.permissionManager = permissionManager;
     }
 
     /**
