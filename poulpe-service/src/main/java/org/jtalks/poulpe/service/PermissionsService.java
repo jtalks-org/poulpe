@@ -53,10 +53,12 @@ public interface PermissionsService {
     void changeRestrictions(PoulpeBranch branch, PermissionChanges changes);
 
     /**
-     * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link org.jtalks.poulpe.model.entity.Component}.
+     * Gets {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined
+     * {@link org.jtalks.poulpe.model.entity.Component}.
      *
      * @param component the component to get for
-     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined {@link org.jtalks.poulpe.model.entity.Component}
+     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions} for defined
+     *         {@link org.jtalks.poulpe.model.entity.Component}
      */
     GroupsPermissions<GeneralPermission> getPermissionsMapFor(Component component);
 
