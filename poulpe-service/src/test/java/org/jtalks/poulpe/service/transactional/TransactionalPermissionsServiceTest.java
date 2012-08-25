@@ -16,33 +16,81 @@
 package org.jtalks.poulpe.service.transactional;
 
 
+import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
+import org.jtalks.poulpe.model.dto.PermissionChanges;
+import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.List;
+
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotNull;
 
 public class TransactionalPermissionsServiceTest {
 
     private PermissionsService permissionsService;
-    private PermissionManager permissionManader;
+    private PermissionManager permissionManager;
 
     @BeforeMethod
-    public void beforeMethod(){
-        permissionManader = mock(PermissionManager.class);
-        permissionsService = spy(new TransactionalPermissionsService(permissionManader));
+    public void beforeMethod() {
+        permissionManager = mock(PermissionManager.class);
+        permissionsService = spy(new TransactionalPermissionsService(permissionManager));
     }
 
     @Test
-    public void testGetPermissionsFor(){
-        PoulpeBranch branch = new PoulpeBranch();
-        when(permissionManader.getPermissionsMapFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
+    public void testGetPermissionsFor() {
+        PoulpeBranch branch = mock(PoulpeBranch.class);
+        when(permissionManager.getPermissionsMapFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
         assertNotNull(permissionsService.getPermissionsFor(branch));
     }
+
+    @Test
+    public void testChangeGrants() {
+        PermissionChanges changes = mock(PermissionChanges.class);
+        PoulpeBranch branch = mock(PoulpeBranch.class);
+        permissionsService.changeGrants(branch, changes);
+
+        Component component = mock(Component.class);
+        permissionsService.changeGrants(component, changes);
+
+        Group group = mock(Group.class);
+        permissionsService.changeGrants(group, changes);
+    }
+
+    @Test
+    public void testChangeRestrictions() {
+        PermissionChanges changes = mock(PermissionChanges.class);
+        PoulpeBranch branch = mock(PoulpeBranch.class);
+        permissionsService.changeRestrictions(branch, changes);
+
+        Component component = mock(Component.class);
+        permissionsService.changeRestrictions(component, changes);
+
+        Group group = mock(Group.class);
+        permissionsService.changeRestrictions(group, changes);
+    }
+
+    @Test
+    public void testGetPermissionsMapFor() {
+        Component component = mock(Component.class);
+        when(permissionManager.getPermissionsMapFor(component)).thenReturn(new GroupsPermissions<GeneralPermission>());
+        assertNotNull(permissionsService.getPermissionsMapFor(component));
+    }
+
+    @Test
+    public void testGetPersonalPermissions() {
+        List<Group> groups = mock(List.class);
+        when(permissionManager.getPermissionsMapFor(groups)).thenReturn(new GroupsPermissions<ProfilePermission>());
+        assertNotNull(permissionsService.getPersonalPermissions(groups));
+    }
+
 
 }
