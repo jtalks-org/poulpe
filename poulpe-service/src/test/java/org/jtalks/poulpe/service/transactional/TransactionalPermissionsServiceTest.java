@@ -24,6 +24,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 public class TransactionalPermissionsServiceTest {
 
@@ -36,8 +37,9 @@ public class TransactionalPermissionsServiceTest {
 
     @Test
     public void testGetPermissionsFor(){
-        when(permissionsService.getPermissionsFor(new PoulpeBranch())).
-                thenReturn(new GroupsPermissions<BranchPermission>());
+        PoulpeBranch branch = new PoulpeBranch();
+        when(permissionsService.getPermissionsFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
+        assertNotNull(permissionsService.getPermissionsFor(branch));
     }
 
 }
