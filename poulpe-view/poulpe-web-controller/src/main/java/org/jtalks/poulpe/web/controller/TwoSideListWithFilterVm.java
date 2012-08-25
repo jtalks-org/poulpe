@@ -33,8 +33,8 @@ import java.util.Set;
  * @author Vyacheslav Zhivaev
  */
 public class TwoSideListWithFilterVm<E> {
-    public static final String AVAIL_PROPERTY = "avail", EXIST_PROPERTY = "exist",
-            AVAIL_SELECTED_PROPERTY = "availSelected", EXIST_SELECTED_PROPERTY = "existSelected";
+    public static final String AVAIL_PROPERTY = "avail", EXIST_PROPERTY = "exist";
+    public static final String AVAIL_SELECTED_PROPERTY = "availSelected", EXIST_SELECTED_PROPERTY = "existSelected";
     /**
      * String represents text in filter field for available items list.
      */

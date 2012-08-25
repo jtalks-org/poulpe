@@ -148,7 +148,7 @@ public class UserBanningVm {
      */
     @Command
     @NotifyChange({AVAILABLE_USERS_PROP})
-    public void setAvailableFilter(@BindingParam("filterText")String filterText) {
+    public void setAvailableFilter(@BindingParam("filterText") String filterText) {
         this.availableFilter = filterText;
     }
 

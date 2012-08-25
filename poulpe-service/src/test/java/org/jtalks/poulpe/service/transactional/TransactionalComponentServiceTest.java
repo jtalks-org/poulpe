@@ -38,7 +38,7 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.Mock;
@@ -125,7 +125,7 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguratedException,
+    public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,
             NoConnectionToJcommuneException {
         componentService.setjCommuneNotifier(jcommuneHttpNotifier);
         doReturn("").when(jcommune).getUrl();

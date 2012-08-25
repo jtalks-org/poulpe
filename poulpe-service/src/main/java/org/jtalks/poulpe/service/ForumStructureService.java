@@ -18,7 +18,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 /**
@@ -50,10 +50,10 @@ public interface ForumStructureService {
      * @param branch a branch to be removed from database
      * @throws {@link NoConnectionToJcommuneException}
      * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link JcommuneUrlNotConfiguratedException}
+     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
      */
     void removeBranch(PoulpeBranch branch)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException;
 
     /**
      * Moves the branch from one section to another. Note, that if the section was the same as the branch is in, it will
@@ -72,10 +72,10 @@ public interface ForumStructureService {
      * @return the updated JCommune
      * @throws {@link NoConnectionToJcommuneException}
      * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link JcommuneUrlNotConfiguratedException}
+     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
      */
     Jcommune deleteSectionWithBranches(PoulpeSection section)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException;
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException;
 
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 

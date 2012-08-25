@@ -142,17 +142,16 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
 
     /**
      * Handler of event when branch node dragged and dropped to another node.
-     * 
+     *
      * @param draggedNode the node represents dragged branch item
-     * @param targetNode the node represents target item (it can be branch or section item)
+     * @param targetNode  the node represents target item (it can be branch or section item)
      */
     public void onDropBranch(TreeNode<ForumStructureItem> draggedNode,
-            TreeNode<ForumStructureItem> targetNode) {
+                             TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem targetItem = targetNode.getData();
         if (targetItem.isBranch()) {
             dropNodeBefore(draggedNode, targetNode);
-        }
-        else {
+        } else {
             dropNodeIn(draggedNode, targetNode);
         }
         setSelectedNode(draggedNode);
@@ -160,12 +159,12 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
 
     /**
      * Handler of event when section node dragged and dropped to another section node.
-     * 
+     *
      * @param draggedNode the node represents dragged section item
-     * @param targetNode the node represents target section item
+     * @param targetNode  the node represents target section item
      */
     public void onDropSection(TreeNode<ForumStructureItem> draggedNode,
-            TreeNode<ForumStructureItem> targetNode) {
+                              TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
         PoulpeSection draggedSection = draggedItem.getSectionItem();
@@ -180,7 +179,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * Checks that dropping item haven't effect.
      *
      * @param draggedItem the item to move
-     * @param targetItem the target item
+     * @param targetItem  the target item
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
     public boolean noEffectAfterDropItem(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
@@ -190,8 +189,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         } else if (draggedItem.isSection()) {
             return noEffectAfterDropSection(draggedItem, targetItem);
         }
-
-       return false;
+        return false;
     }
 
     /**

@@ -26,7 +26,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguratedException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
 /**
@@ -70,7 +70,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public void removeBranch(PoulpeBranch branch)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jCommuneNotifier.notifyAboutBranchDelete(jcommune.getUrl(), branch);
         PoulpeSection section = (PoulpeSection) branch.getSection();
@@ -94,7 +94,7 @@ public class TransactionalForumStructureService implements ForumStructureService
      */
     @Override
     public Jcommune deleteSectionWithBranches(PoulpeSection section)
-        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguratedException{
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
         Jcommune jcommune = (Jcommune) componentDao.getByType(ComponentType.FORUM);
         jCommuneNotifier.notifyAboutSectionDelete(jcommune.getUrl(), section);
         jcommune.removeSection(section);
