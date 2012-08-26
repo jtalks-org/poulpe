@@ -23,7 +23,7 @@ import org.hibernate.SessionFactory;
  * @author stanislav bashkirtsev
  */
 public final class SingletonOpenSessionsHolder {
-    private static SingletonOpenSessionsHolder HOLDER;
+    private static SingletonOpenSessionsHolder holder;
     private final OpenSessions openSessions;
 
     /**
@@ -43,10 +43,10 @@ public final class SingletonOpenSessionsHolder {
      * @return a new instance of {@link OpenSessions} that can be used in {@link OpenSessionOnDesktopZkListener}
      */
     public synchronized static OpenSessions instantiate(SessionFactory sessionFactory) {
-        if (HOLDER == null) {
-            HOLDER = new SingletonOpenSessionsHolder(sessionFactory);
+        if (holder == null) {
+            holder = new SingletonOpenSessionsHolder(sessionFactory);
         }
-        return HOLDER.openSessions;
+        return holder.openSessions;
     }
 
     /**
@@ -60,9 +60,9 @@ public final class SingletonOpenSessionsHolder {
      *                               was invoked
      */
     public static OpenSessions getOpenSessions() {
-        if (HOLDER == null) {
+        if (holder == null) {
             throw new IllegalStateException("Class should be instantiated with 'instantiate()' method first.");
         }
-        return HOLDER.openSessions;
+        return holder.openSessions;
     }
 }
