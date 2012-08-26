@@ -17,24 +17,24 @@ public class JcommuneHttpNotifierTest {
     private final JcommuneHttpNotifier sut = spy(new JcommuneHttpNotifier());
 
     @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
-    public void testNotifyAboutReindexComponent() throws Exception {
+    public void shouldThrowIfResponseIsNotOfValidCode() throws Exception {
         doReturn(illegalResponse()).when(sut).sendHttpRequest(anyString());
 
         sut.notifyAboutReindexComponent("url");
     }
 
-    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
-    public void testNotifyAboutComponentDelete()  throws Exception {
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class, enabled = false)
+    public void testNotifyAboutComponentDelete() throws Exception {
         sut.notifyAboutComponentDelete("url");
     }
 
-    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
-    public void testNotifyAboutBranchDelete()  throws Exception {
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class, enabled = false)
+    public void testNotifyAboutBranchDelete() throws Exception {
         sut.notifyAboutBranchDelete("url", new PoulpeBranch());
     }
 
-    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
-    public void testNotifyAboutSectionDelete()  throws Exception {
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class, enabled = false)
+    public void testNotifyAboutSectionDelete() throws Exception {
         sut.notifyAboutSectionDelete("url", new PoulpeSection());
     }
 
