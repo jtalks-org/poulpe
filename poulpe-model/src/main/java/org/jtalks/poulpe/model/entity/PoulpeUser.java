@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import org.hibernate.validator.constraints.Length;
 import org.jtalks.common.model.entity.Group;
 
 import java.util.ArrayList;
@@ -23,9 +24,6 @@ import java.util.List;
  * Stores information about the user.
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
-
-    public static final int EMAIL_MAX_LENGTH = 255;
-
     private List<Group> groups = new ArrayList<Group>();
 
     /**
@@ -95,12 +93,18 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
         return user;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
-    @org.hibernate.validator.constraints.Length(max = EMAIL_MAX_LENGTH, message = "{user.email.length_constraint_violation}")
+    @Length(max = EMAIL_MAX_LENGTH, message = "{user.email.length_constraint_violation}")
     public String getEmail() {
         return super.getEmail();
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "PoulpeUser [id=" + getId() + ", email=" + getEmail() + ", username=" + getUsername() + "]";
