@@ -133,6 +133,11 @@ public class BranchEditingDialog {
         return forumStructureService.saveBranch(section, editedBranch);
     }
 
+    /**
+     * Gets a list of all the groups in the database so that user can choose another moderating group from the list.
+     *
+     * @return a list of all the groups in the database
+     */
     public List<Group> getCandidatesToModerate() {
         return groupList.getGroups();
     }
