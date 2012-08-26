@@ -15,6 +15,9 @@
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
 /**
+ * Since all the dialogs have {@code showDialog} property, it may worth using this abstract VM to have methods to show
+ * dialogs out of box (of course reading of those methods should be ensured by user of the code).
+ *
  * @author stanislav bashkirtsev
  */
 public class AbstractDialogVm {
