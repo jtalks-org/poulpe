@@ -65,7 +65,6 @@
     <constructor-arg index="1" ref="forumStructureService"/>
   </bean>
   <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
-    <constructor-arg index="0" ref="openSessions"/>
     <property name="windowManager" ref="windowManager"/>
   </bean>
 
