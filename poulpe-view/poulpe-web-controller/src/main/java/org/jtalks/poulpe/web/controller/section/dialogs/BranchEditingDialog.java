@@ -160,6 +160,12 @@ public class BranchEditingDialog {
         return groupList.getEqual(currentModeratorsGroup);
     }
 
+    /**
+     * Sets the moderating group to the branch after user changed it in the dialog's list.
+     *
+     * @param moderatingGroup a new moderating group to set to the branch (or the old one, but this doesn't change
+     *                        anything)
+     */
     public void setModeratingGroup(Group moderatingGroup) {
         editedBranch.setModeratorsGroup(moderatingGroup);
     }
