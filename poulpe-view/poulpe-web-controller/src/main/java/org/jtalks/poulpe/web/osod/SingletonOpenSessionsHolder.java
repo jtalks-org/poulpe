@@ -22,7 +22,7 @@ import org.hibernate.SessionFactory;
  *
  * @author stanislav bashkirtsev
  */
-public class SingletonOpenSessionsHolder {
+public final class SingletonOpenSessionsHolder {
     private static SingletonOpenSessionsHolder HOLDER;
     private final OpenSessions openSessions;
 

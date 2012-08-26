@@ -23,7 +23,7 @@ package org.jtalks.poulpe.pages;
  * @author Alexey Grigorev
  * @see Pagination
  */
-public class Pages {
+public final class Pages {
 
     /**
      * Hidden for preventing instantiation of utility-class.
