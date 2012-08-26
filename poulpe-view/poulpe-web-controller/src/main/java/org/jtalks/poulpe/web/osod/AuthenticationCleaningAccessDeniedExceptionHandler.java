@@ -34,6 +34,9 @@ import java.util.Map;
  * @author dionis 6/28/12 10:01 PM
  */
 public class AuthenticationCleaningAccessDeniedExceptionHandler extends AccessDeniedHandlerImpl {
+    private Map<String, String> alternativeRoutes;
+    private String defaultErrorPage;
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
                        AccessDeniedException accessDeniedException) throws IOException, ServletException {
@@ -47,11 +50,6 @@ public class AuthenticationCleaningAccessDeniedExceptionHandler extends AccessDe
         }
         response.sendRedirect(request.getContextPath() + errorPage);
     }
-
-    // Injected
-    private Map<String, String> alternativeRoutes;
-    // Injected
-    private String defaultErrorPage;
 
     public void setDefaultErrorPage(String defaultErrorPage) {
         this.defaultErrorPage = defaultErrorPage;

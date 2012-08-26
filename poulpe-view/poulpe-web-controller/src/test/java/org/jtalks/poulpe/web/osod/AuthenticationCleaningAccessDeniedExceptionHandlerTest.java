@@ -14,65 +14,53 @@
  */
 package org.jtalks.poulpe.web.osod;
 
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.access.AccessDeniedException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collections;
+
+import static org.mockito.Mockito.*;
 
 /**
  * @author Evgeny Surovtsev
  */
 public class AuthenticationCleaningAccessDeniedExceptionHandlerTest {
     AuthenticationCleaningAccessDeniedExceptionHandler accessDeniedHandler;
-    AccessDeniedException accessDeniedException;
     HttpServletRequest request;
     HttpServletResponse response;
     static final String contextPath = "http://localhost";
-    static final String defaultErorPage = "/login.zul?access_denied=1";
-    
-	static final Map<String, String> alternativeRoutesMap = new HashMap<String, String>();
-    static {
-    	alternativeRoutesMap.put("/login.zul", "/");
-    }
-    
-    
+
+
     @BeforeMethod
     public void setUp() throws Exception {
-    	accessDeniedHandler = new AuthenticationCleaningAccessDeniedExceptionHandler();
-    	accessDeniedHandler.setDefaultErrorPage(defaultErorPage);
-    	accessDeniedHandler.setAlternativeRoutes(alternativeRoutesMap);
-    	
-    	accessDeniedException = new AccessDeniedException("403");
-    	request = mock(HttpServletRequest.class);
-    	response = mock(HttpServletResponse.class);;
-    	
-    	doReturn(contextPath).when(request).getContextPath();
+        accessDeniedHandler = new AuthenticationCleaningAccessDeniedExceptionHandler();
+        accessDeniedHandler.setDefaultErrorPage("/login.zul?access_denied=1");
+        accessDeniedHandler.setAlternativeRoutes(Collections.singletonMap("/login.zul", "/"));
+
+        request = mock(HttpServletRequest.class);
+        response = mock(HttpServletResponse.class);
+
+        doReturn(contextPath).when(request).getContextPath();
     }
 
     @Test(dataProvider = "provideRedirectData")
     public void redirectTest(String errorPage, String expectedRedirect) throws IOException, ServletException {
-    	doReturn(errorPage).when(request).getServletPath();
-    	accessDeniedHandler.handle(request, response, accessDeniedException);
-    	verify(response).sendRedirect(contextPath + expectedRedirect);
+        doReturn(errorPage).when(request).getServletPath();
+        accessDeniedHandler.handle(request, response, new AccessDeniedException("403"));
+        verify(response).sendRedirect(contextPath + expectedRedirect);
     }
 
     @DataProvider
     public Object[][] provideRedirectData() {
-        return new Object[][] {
-        		{"/fake_url", "/login.zul?access_denied=1"},
-        		{"/login.zul", "/"}
+        return new Object[][]{
+                {"/fake_url", "/login.zul?access_denied=1"},
+                {"/login.zul", "/"}
         };
     }
 }
