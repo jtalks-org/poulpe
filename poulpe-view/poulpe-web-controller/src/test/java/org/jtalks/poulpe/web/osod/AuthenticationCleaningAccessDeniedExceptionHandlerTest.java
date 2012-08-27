@@ -14,18 +14,20 @@
  */
 package org.jtalks.poulpe.web.osod;
 
-import org.springframework.security.access.AccessDeniedException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.DataProvider;
-import org.testng.annotations.Test;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+
+import java.io.IOException;
+import java.util.Collections;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Collections;
 
-import static org.mockito.Mockito.*;
+import org.springframework.security.access.AccessDeniedException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 /**
  * @author Evgeny Surovtsev
@@ -49,18 +51,23 @@ public class AuthenticationCleaningAccessDeniedExceptionHandlerTest {
         doReturn(contextPath).when(request).getContextPath();
     }
 
-    @Test(dataProvider = "provideRedirectData")
-    public void redirectTest(String errorPage, String expectedRedirect) throws IOException, ServletException {
-        doReturn(errorPage).when(request).getServletPath();
+    @Test
+    public void commonUrlRedirectsToLoginForm() throws IOException, ServletException {
+    	String currentUrl = "/fake_url";
+    	String redirectedUrl = "/login.zul?access_denied=1";
+    	
+    	doReturn(currentUrl).when(request).getServletPath();
         accessDeniedHandler.handle(request, response, new AccessDeniedException("403"));
-        verify(response).sendRedirect(contextPath + expectedRedirect);
+        verify(response).sendRedirect(contextPath + redirectedUrl);
     }
-
-    @DataProvider
-    public Object[][] provideRedirectData() {
-        return new Object[][]{
-                {"/fake_url", "/login.zul?access_denied=1"},
-                {"/login.zul", "/"}
-        };
+    
+    @Test
+    public void specialUrlRedirectsToAlternativeRoute() throws IOException, ServletException {
+    	String currentUrl = "/login.zul";
+    	String redirectedUrl = "/";
+    	
+    	doReturn(currentUrl).when(request).getServletPath();
+        accessDeniedHandler.handle(request, response, new AccessDeniedException("403"));
+        verify(response).sendRedirect(contextPath + redirectedUrl);
     }
 }
