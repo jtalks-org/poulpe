@@ -23,8 +23,9 @@ import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
-import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.Messagebox;
+
+import static org.zkoss.util.resource.Labels.getLabel;
 
 /**
  * This VM is responsible for deleting the branch: whether to move the content of the branch to the other branch or
@@ -41,11 +42,20 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
 
+    /**
+     * Constructor
+     *
+     * @param forumStructureVm      forum structure visual model
+     * @param forumStructureService forum structure service
+     */
     public DeleteBranchDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
         this.forumStructureService = forumStructureService;
     }
 
+    /**
+     * Confirm delete branch with content
+     */
     @Command
     @NotifyChange(SHOW_DIALOG)
     public void confirmDeleteBranchWithContent() {
@@ -54,22 +64,30 @@ public class DeleteBranchDialogVm extends AbstractDialogVm {
             forumStructureService.removeBranch(selectedBranch);
             forumStructureVm.removeBranchFromTree(selectedBranch);
         } catch (NoConnectionToJcommuneException e) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
-                    Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
-                    Messagebox.OK, Messagebox.ERROR);
+            showError(JCOMMUNE_CONNECTION_FAILED);
         } catch (JcommuneRespondedWithErrorException ex) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_RESPONSE_FAILED),
-                    Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
-                    Messagebox.OK, Messagebox.ERROR);
+            showError(JCOMMUNE_RESPONSE_FAILED);
         } catch (JcommuneUrlNotConfiguredException ex) {
-            Messagebox.show(Labels.getLabel(JCOMMUNE_URL_FAILED), Labels.getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE),
-                    Messagebox.OK, Messagebox.ERROR);
+            showError(JCOMMUNE_URL_FAILED);
         }
     }
 
+    /**
+     * Delete branch command
+     */
     @GlobalCommand("deleteBranch")
     @NotifyChange(SHOW_DIALOG)
     public void deleteBranch() {
         showDialog();
+    }
+
+    /**
+     * Show error message
+     *
+     * @param message message
+     */
+    protected void showError(String message) {
+        Messagebox.show(getLabel(message),
+                getLabel(BRANCH_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
     }
 }

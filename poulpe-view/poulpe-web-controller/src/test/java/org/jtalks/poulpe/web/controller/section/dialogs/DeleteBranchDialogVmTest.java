@@ -14,12 +14,17 @@
  */
 package org.jtalks.poulpe.web.controller.section.dialogs;
 
-import org.jtalks.poulpe.service.BranchService;
+import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.ForumStructureService;
+import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
+import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
+import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
@@ -27,7 +32,16 @@ import static org.testng.Assert.assertTrue;
  * @author stanislav bashkirtsev
  */
 public class DeleteBranchDialogVmTest {
-    DeleteBranchDialogVm sut = new DeleteBranchDialogVm(mock(ForumStructureVm.class), mock(ForumStructureService.class));
+    private  DeleteBranchDialogVm sut;
+    private  ForumStructureService forumStructureService;
+    private  ForumStructureVm forumStructureVm;
+
+    @BeforeMethod
+    public void beforeMethod(){
+        forumStructureService = mock(ForumStructureService.class);
+        forumStructureVm = mock(ForumStructureVm.class);
+        sut = spy(new DeleteBranchDialogVm(forumStructureVm,forumStructureService));
+    }
 
     @Test
     public void testIsShowDialog() throws Exception {
@@ -35,4 +49,49 @@ public class DeleteBranchDialogVmTest {
         assertTrue(sut.isShowDialog());
         assertFalse(sut.isShowDialog());
     }
+
+    @Test
+    public void testDeleteBranch(){
+        sut.deleteBranch();
+    }
+
+    @Test
+    public void testConfirmDeleteBranchWithContentNoConnection()
+        throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
+        testConfirmDeleteBranchWithContent("branches.error.jcommune_no_connection", new NoConnectionToJcommuneException());
+    }
+
+    @Test
+    public void testConfirmDeleteBranchWithContentJcommuneResponded()
+            throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
+        testConfirmDeleteBranchWithContent("branches.error.jcommune_no_response", new JcommuneRespondedWithErrorException());
+    }
+
+    @Test
+    public void testConfirmDeleteBranchWithContentJcommuneUrl()
+            throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
+        testConfirmDeleteBranchWithContent("branches.error.jcommune_no_url", new JcommuneUrlNotConfiguredException());
+    }
+
+    @Test
+    public void testConfirmDeleteBranchWithContentNoException()
+            throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
+        testConfirmDeleteBranchWithContent(null,null);
+    }
+
+    private void testConfirmDeleteBranchWithContent(String message, Exception exception)
+            throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
+        PoulpeBranch branch = new PoulpeBranch();
+        ForumStructureItem forumStructureItem = new ForumStructureItem(branch);
+        when(forumStructureVm.getSelectedItemInTree()).thenReturn(forumStructureItem);
+        if(exception!=null){
+            doNothing().when(sut).showError(message);
+            doThrow(exception).when(forumStructureService).removeBranch(branch);
+        }else{
+            doNothing().when(forumStructureService).removeBranch(branch);
+            doNothing().when(forumStructureVm).removeBranchFromTree(branch);
+        }
+        sut.confirmDeleteBranchWithContent();
+    }
+
 }
