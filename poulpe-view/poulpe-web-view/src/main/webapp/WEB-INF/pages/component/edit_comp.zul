@@ -22,11 +22,11 @@
           </row>
           <row>
             ${labels.component.description}
-        <textbox width="95%" id="componentDescriptionBox"
-                 value="@bind(component.description) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])"/>
-    </row>
-  </rows>
-</grid>
+            <textbox width="95%" id="componentDescriptionBox"
+              value="@bind(component.description) @validator('beanValidator')" errorMessage="@load(componentMsgs[componentDescriptionBox])"/>
+          </row>
+        </rows>
+      </grid>
 
       <grid model="@load(component.properties)">
         <columns>
