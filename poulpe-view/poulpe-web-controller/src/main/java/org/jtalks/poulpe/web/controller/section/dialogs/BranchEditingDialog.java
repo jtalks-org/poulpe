@@ -170,3 +170,4 @@ public class BranchEditingDialog {
         editedBranch.setModeratorsGroup(moderatingGroup);
     }
 }
+

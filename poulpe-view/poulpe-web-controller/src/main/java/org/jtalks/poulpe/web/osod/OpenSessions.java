@@ -55,6 +55,9 @@ public class OpenSessions {
     public void openSession(String desktopId) {
         if (noSessionBoundToThread()) {
             Session session = getOrCreateSession(desktopId);
+            if(session.isOpen()){
+                 int a=0;
+            }
             sessions.putIfAbsent(desktopId, session);
             bindToThread(session);
         }
