@@ -19,10 +19,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Collections;
 
 import static org.mockito.Mockito.*;
@@ -31,36 +29,40 @@ import static org.mockito.Mockito.*;
  * @author Evgeny Surovtsev
  */
 public class AuthenticationCleaningAccessDeniedExceptionHandlerTest {
-    AuthenticationCleaningAccessDeniedExceptionHandler accessDeniedHandler;
-    HttpServletRequest request;
-    HttpServletResponse response;
-    static final String contextPath = "http://localhost";
-
+    private static final String CONTEXT_PATH = "http://localhost";
+    private AuthenticationCleaningAccessDeniedExceptionHandler accessDeniedHandler;
 
     @BeforeMethod
     public void setUp() throws Exception {
         accessDeniedHandler = new AuthenticationCleaningAccessDeniedExceptionHandler();
-        accessDeniedHandler.setDefaultErrorPage("/login.zul?access_denied=1");
-        accessDeniedHandler.setAlternativeRoutes(Collections.singletonMap("/login.zul", "/"));
-
-        request = mock(HttpServletRequest.class);
-        response = mock(HttpServletResponse.class);
-
-        doReturn(contextPath).when(request).getContextPath();
     }
 
-    @Test(dataProvider = "provideRedirectData")
-    public void redirectTest(String errorPage, String expectedRedirect) throws IOException, ServletException {
-        doReturn(errorPage).when(request).getServletPath();
+    @Test(dataProvider = "requestAndResponse")
+    public void commonUrlRedirectsToLoginForm(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String currentUrl = "/fake_url";
+        String redirectedUrl = "/login.zul?access_denied=1";
+
+        doReturn(currentUrl).when(request).getServletPath();
+        accessDeniedHandler.setDefaultErrorPage("/login.zul?access_denied=1");
         accessDeniedHandler.handle(request, response, new AccessDeniedException("403"));
-        verify(response).sendRedirect(contextPath + expectedRedirect);
+        verify(response).sendRedirect(CONTEXT_PATH + redirectedUrl);
+    }
+
+    @Test(dataProvider = "requestAndResponse")
+    public void specialUrlRedirectsToAlternativeRoute(HttpServletRequest request, HttpServletResponse response) throws Exception {
+        String currentUrl = "/login.zul";
+        String redirectedUrl = "/";
+
+        doReturn(currentUrl).when(request).getServletPath();
+        accessDeniedHandler.setAlternativeRoutes(Collections.singletonMap("/login.zul", "/"));
+        accessDeniedHandler.handle(request, response, new AccessDeniedException("403"));
+        verify(response).sendRedirect(CONTEXT_PATH + redirectedUrl);
     }
 
     @DataProvider
-    public Object[][] provideRedirectData() {
-        return new Object[][]{
-                {"/fake_url", "/login.zul?access_denied=1"},
-                {"/login.zul", "/"}
-        };
+    public Object[][] requestAndResponse() {
+        HttpServletRequest request = mock(HttpServletRequest.class);
+        doReturn(CONTEXT_PATH).when(request).getContextPath();
+        return new Object[][]{{request, mock(HttpServletResponse.class)}};
     }
 }
