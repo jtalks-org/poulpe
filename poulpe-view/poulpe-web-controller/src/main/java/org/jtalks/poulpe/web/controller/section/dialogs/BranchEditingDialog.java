@@ -47,6 +47,13 @@ public class BranchEditingDialog {
     private PoulpeBranch editedBranch = new PoulpeBranch();
     private boolean showDialog;
 
+    /**
+     * Constructor
+     *
+     * @param groupService          group service
+     * @param forumStructureVm      forum structure visual model
+     * @param forumStructureService forum structure service
+     */
     public BranchEditingDialog(GroupService groupService, ForumStructureVm forumStructureVm,
                                ForumStructureService forumStructureService) {
         this.groupService = groupService;
@@ -54,18 +61,29 @@ public class BranchEditingDialog {
         this.forumStructureService = forumStructureService;
     }
 
+    /**
+     * Showing branch dialog command
+     *
+     * @param selectedBranch selected branch
+     */
     @GlobalCommand
     @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
     public void showBranchDialog(@BindingParam("selectedBranch") PoulpeBranch selectedBranch) {
         showDialog(selectedBranch);
     }
 
+    /**
+     * Showing dialog for created branch
+     */
     @GlobalCommand
     @NotifyChange({SHOW_DIALOG, EDITED_BRANCH, MODERATING_GROUP, CANDIDATES_TO_MODERATE})
     public void showCreateBranchDialog() {
         showDialog(new PoulpeBranch());
     }
 
+    /**
+     * Saving branch command
+     */
     @Command
     @NotifyChange(SHOW_DIALOG)
     public void saveBranch() {
@@ -81,6 +99,11 @@ public class BranchEditingDialog {
         showDialog = false;
     }
 
+    /**
+     * Show dialog with parameters branch
+     *
+     * @param editedBranch edited branch
+     */
     private void showDialog(PoulpeBranch editedBranch) {
         groupList.setGroups(groupService.getAll());
         this.editedBranch = editedBranch;
@@ -101,6 +124,11 @@ public class BranchEditingDialog {
         return result;
     }
 
+    /**
+     * Selected section for branch
+     *
+     * @param section section
+     */
     public void selectSection(PoulpeSection section) {
         sectionList.addToSelection(section);
     }
@@ -124,10 +152,20 @@ public class BranchEditingDialog {
         this.sectionList.addAll(forumTree.getSections());
     }
 
+    /**
+     * Get edited branch
+     *
+     * @return edited branch
+     */
     public PoulpeBranch getEditedBranch() {
         return editedBranch;
     }
 
+    /**
+     * Store selected branch
+     *
+     * @return edited branch
+     */
     PoulpeBranch storeSelectedBranch() {
         PoulpeSection section = sectionList.getSelection().iterator().next();
         return forumStructureService.saveBranch(section, editedBranch);

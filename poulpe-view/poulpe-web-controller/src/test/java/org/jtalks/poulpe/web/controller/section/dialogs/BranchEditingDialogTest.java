@@ -59,7 +59,7 @@ public class BranchEditingDialogTest {
         assertEquals(sut.getSectionList().size(), treeModel.getRoot().getChildCount());
     }
 
-    @Test(dataProvider = "provideGroups", enabled = false)
+    @Test(dataProvider = "provideGroups", enabled = true)
     public void testGetCandidatesToModerate(List<Group> givenGroups) throws Exception {
         doReturn(givenGroups).when(groupService).getAll();
         doReturn(buildTreeModel()).when(forumStructureVm).getTreeModel();
@@ -69,15 +69,18 @@ public class BranchEditingDialogTest {
         assertEquals(candidatesToModerate, givenGroups);
     }
 
-    @Test(dataProvider = "provideBranchWithModeratingGroup", enabled = false)
+    @Test(dataProvider = "provideBranchWithModeratingGroup", enabled = true)
     public void getModeratorsGroupShouldReturnGroupFromBranch(PoulpeBranch branch) {
+        doReturn(buildTreeModel()).when(forumStructureVm).getTreeModel();
         doReturn(Arrays.asList(branch.getModeratorsGroup())).when(groupService).getAll();
-        sut.showBranchDialog(new PoulpeBranch());
+        sut.showBranchDialog(branch);
         assertEquals(sut.getModeratingGroup(), branch.getModeratorsGroup());
     }
 
-    @Test(enabled = false)
-    public void isShowingDialogShouldChangeFlagAfterFirstInvocation() {
+    @Test(dataProvider = "provideGroups", enabled = true)
+    public void isShowingDialogShouldChangeFlagAfterFirstInvocation(List<Group> givenGroups) {
+        doReturn(givenGroups).when(groupService).getAll();
+        doReturn(buildTreeModel()).when(forumStructureVm).getTreeModel();
         sut.showBranchDialog(branch());
         assertTrue(sut.isShowDialog());
         assertFalse(sut.isShowDialog());
