@@ -28,42 +28,46 @@
             <template name="blockTemplate" var="bt">
                 <groupbox>
                     <caption label="@bind(bt.permission)"/>
-                    <borderlayout height="30px">
-                        <west border="none" width="80px">
+                    <anchorlayout>
+                        <anchorchildren width="80px">
                             <label value="@bind(bt.allowRow.rowLabel)"/>
-                        </west>
-                        <center border="none">
-                            <hlayout children="@bind(bt.allowRow.groups) @template('allowRowTemplate')">
-
+                        </anchorchildren>
+                        <anchorchildren width="100%">
+                            <div style="overflow: hidden;" children="@bind(bt.allowRow.groups) @template('allowRowTemplate')">
                                 <template name="allowRowTemplate" var="art">
-                                    <label value="@bind(art.name)" sclass="manage-permissions-added-group-label"/>
+                                    <div sclass="manage-permissions-added-group-div">
+                                        <label value="@bind(art.name)" sclass="manage-permissions-added-group-label"/>
+                                    </div>
                                 </template>
-                            </hlayout>
-                        </center>
-                        <east border="none">
+                            </div>
+                            <div sclass="empty-div-in-add-group"></div>
+                        </anchorchildren>
+                        <anchorchildren width="80px">
                             <button label="${labels.groups.button.edit}" sclass="add-group-button"
                                     onClick="@command('showGroupsDialog', permission=bt.permission, mode='allow')">
                             </button>
-                        </east>
-                    </borderlayout>
-                    <borderlayout height="30px">
-                        <west border="none" width="80px">
+                        </anchorchildren>
+                    </anchorlayout>
+                    <anchorlayout>
+                        <anchorchildren width="80px">
                             <label value="@bind(bt.restrictRow.rowLabel)"/>
-                        </west>
-                        <center border="none">
-                            <hlayout children="@load(bt.restrictRow.groups) @template('restrictRowTemplate')">
-
+                        </anchorchildren>
+                        <anchorchildren width="100%">
+                            <div style="overflow: hidden;" children="@load(bt.restrictRow.groups) @template('restrictRowTemplate')">
                                 <template name="restrictRowTemplate" var="rrt">
-                                    <label value="@bind(rrt.name)" sclass="manage-permissions-added-group-label"/>
+                                    <div sclass="manage-permissions-added-group-div">
+                                        <label value="@bind(rrt.name)" sclass="manage-permissions-added-group-label"/>
+                                    </div>
                                 </template>
-                            </hlayout>
-                        </center>
-                        <east border="none">
+                            </div>
+                            <div sclass="empty-div-in-add-group"></div>
+                        </anchorchildren>
+                        <anchorchildren width="80px">
                             <button label="${labels.groups.button.edit}" sclass="add-group-button"
                                     onClick="@command('showGroupsDialog', permission=bt.permission, mode='restrict')">
                             </button>
-                        </east>
-                    </borderlayout>
+                        </anchorchildren>
+                    </anchorlayout>
                 </groupbox>
             </template>
         </vlayout>
