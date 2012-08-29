@@ -37,7 +37,7 @@
           <row>
             <!-- TODO: it may be better to move somewhere out this 'component.property' prefix -->
             ${c:l('component.property.'.concat(property.name))}
-            <textbox width="95%" value="@bind(property.value)"
+            <textbox width="95%" value="@load(property.value) @save(property.value, before='save')"
               constraint="${property.validationRule}: ${c:l('component.property.error.'.concat(property.name))}" />
 
           </row>
