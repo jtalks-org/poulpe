@@ -52,7 +52,7 @@ public class JcommuneHttpNotifier {
      * A link which means 'delete the whole component' which will cause all the topics from all the branches to be
      * removed by JCommune.
      */
-    private static final String WHOLEFORUM_URL_PART = "/wholeforum/";
+    private static final String WHOLEFORUM_URL_PART = "/component";
     /**
      * A URL to trigger re-indexing of forum search engine.
      */
