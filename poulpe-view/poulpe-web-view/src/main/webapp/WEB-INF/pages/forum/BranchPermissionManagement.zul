@@ -20,7 +20,8 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
-            viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
+            viewModel="@id('branchPermissionManagementVm') @init(branchPermissionManagementVm)" 
+            border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
         <label value="${labels.branches.label.branch}" sclass="caption-label"/>
         <label value="@bind(branchPermissionManagementVm.branch.name)" sclass="caption-label"/>
         <style src="/resources/css/all.css"/>
@@ -28,24 +29,26 @@
             <template name="blockTemplate" var="bt">
                 <groupbox>
                     <caption label="@bind(bt.permission)"/>
+                    <!-- using <anchorlayout> here instead of "standard" <borderlayout> as we need the layout 
+                    which will be automatically adjusted to child's height. <borderlayout> doesn't do this properly-->
                     <anchorlayout>
                         <anchorchildren width="80px">
                             <label value="@bind(bt.allowRow.rowLabel)"/>
                         </anchorchildren>
                         <anchorchildren width="100%">
-                            <div style="overflow: hidden;" children="@bind(bt.allowRow.groups) @template('allowRowTemplate')">
+                            <div style="overflow: hidden;" children="@bind(bt.allowRow.groups) 
+                            		@template('allowRowTemplate')">
                                 <template name="allowRowTemplate" var="art">
-                                    <div sclass="manage-permissions-added-group-div">
-                                        <label value="@bind(art.name)" sclass="manage-permissions-added-group-label"/>
-                                    </div>
+									<label value="@bind(art.name)" sclass="manage-permissions-added-group-label"/>
                                 </template>
                             </div>
+                            <!-- we need this "empty" div to keep width of group's <anchorchildren> if no groups
+                            	are defined for the <anchorchildren> -->
                             <div sclass="empty-div-in-add-group"></div>
                         </anchorchildren>
-                        <anchorchildren width="80px">
+                        <anchorchildren width="60px">
                             <button label="${labels.groups.button.edit}" sclass="add-group-button"
-                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='allow')">
-                            </button>
+                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='allow')" />
                         </anchorchildren>
                     </anchorlayout>
                     <anchorlayout>
@@ -53,19 +56,17 @@
                             <label value="@bind(bt.restrictRow.rowLabel)"/>
                         </anchorchildren>
                         <anchorchildren width="100%">
-                            <div style="overflow: hidden;" children="@load(bt.restrictRow.groups) @template('restrictRowTemplate')">
+                            <div style="overflow: hidden;" children="@load(bt.restrictRow.groups) 
+                            		@template('restrictRowTemplate')">
                                 <template name="restrictRowTemplate" var="rrt">
-                                    <div sclass="manage-permissions-added-group-div">
-                                        <label value="@bind(rrt.name)" sclass="manage-permissions-added-group-label"/>
-                                    </div>
+									<label value="@bind(rrt.name)" sclass="manage-permissions-added-group-label"/>
                                 </template>
                             </div>
                             <div sclass="empty-div-in-add-group"></div>
                         </anchorchildren>
-                        <anchorchildren width="80px">
+                        <anchorchildren width="60px">
                             <button label="${labels.groups.button.edit}" sclass="add-group-button"
-                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='restrict')">
-                            </button>
+                                    onClick="@command('showGroupsDialog', permission=bt.permission, mode='restrict')"/>
                         </anchorchildren>
                     </anchorlayout>
                 </groupbox>

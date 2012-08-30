@@ -23,23 +23,28 @@
       'mode' - necessary - string "allow" or "restrict"
 -->
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-  <borderlayout height="30px">
-    <west border="none" width="80px">
-      <label value="${arg.row.rowLabel}" />
-    </west>
-    <center border="none">
-      <hbox>
-        <label forEach="${arg.row.groups}" value="${each.name}" sclass="manage-permissions-added-group-label" />
-      </hbox>
-    </center>
-    <east border="none">
-      <button label="${labels.groups.button.edit}" sclass="add-group-button"
-          onClick="@command('showGroupsDialog', entity=self.getAttribute('entity'), permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
-        <custom-attributes entity="${arg.entity}" />
-        <custom-attributes permission="${arg.permission}" />
-        <custom-attributes mode="${arg.mode}" />
-      </button>
-    </east>
-  </borderlayout>
+		xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+	<!-- using <anchorlayout> here instead of "standard" <borderlayout> as we need the layout 
+	which will be automatically adjusted to child's height. <borderlayout> doesn't do this properly-->
+	<anchorlayout>
+		<anchorchildren width="80px">
+			<label value="${arg.row.rowLabel}" />
+		</anchorchildren>
+  		<anchorchildren width="100%">
+			<div style="overflow: hidden;">
+				<label forEach="${arg.row.groups}" value="${each.name}" sclass="manage-permissions-added-group-label" />
+			</div>
+			<!-- we need this "empty" div to keep width of group's <anchorchildren> if no groups
+				are defined for the <anchorchildren> -->
+			<div sclass="empty-div-in-add-group"></div>
+		</anchorchildren>
+  		<anchorchildren width="60px">
+			<button label="${labels.groups.button.edit}" sclass="add-group-button" 
+					onClick="@command('showGroupsDialog', entity=self.getAttribute('entity'), permission=self.getAttribute('permission'), mode=self.getAttribute('mode'))">
+        		<custom-attributes entity="${arg.entity}" />
+        		<custom-attributes permission="${arg.permission}" />
+        		<custom-attributes mode="${arg.mode}" />
+      		</button>
+		</anchorchildren>
+	</anchorlayout>
 </zk>
