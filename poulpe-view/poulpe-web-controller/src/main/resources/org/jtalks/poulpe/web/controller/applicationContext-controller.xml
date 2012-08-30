@@ -66,6 +66,7 @@
   </bean>
   <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
     <property name="windowManager" ref="windowManager"/>
+    <property name="componentService" ref="componentService"/>
   </bean>
 
   <bean id="forumStructureBranchDialogVm" scope="desktop"

@@ -18,33 +18,45 @@
         </groupbox>
       </north>
       <west splittable="true" collapsible="true" flex="true" minsize="150" maxsize="300">
-        <tree width="170px">
-          <treecols/>
-          <treechildren>
-            <treeitem open="false" label="Components" onClick="@command('onBlankPage')">
-              <treechildren>
-                <treeitem label="${labels.admin.components}" onClick="@command('onShowComponents')"/>
-                <treeitem label="${labels.admin.group_permissions}" onClick="@command('onShowGroupsPermissions')"/>
-              </treechildren>
-            </treeitem>
-            <treeitem open="false" label="JCommune" onClick="@command('onBlankPage')">
-              <treechildren>
-                <treeitem label="${labels.admin.forum}" onClick="@command('onShowForumStructure')"/>
-              </treechildren>
-            </treeitem>
-            <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
-              <treechildren>
-                <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')"/>
-                <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')"/>
-                <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')"/>
-                <treeitem label="${labels.admin.user.personal_permissions}"
-                          onClick="@command('onShowPersonalPermissions')"/>
-                <!--<treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />-->
-              </treechildren>
-            </treeitem>
-            <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
-          </treechildren>
-        </tree>
+        <vbox style="border:1px;">
+          <!-- Tree for displaying static part of menu-->
+          <tree width="170px" style="border:0; padding:0;">
+            <treecols/>
+            <treechildren>
+              <treeitem open="false" label="Components" onClick="@command('onBlankPage')">
+                <treechildren>
+                  <treeitem label="${labels.admin.components}" onClick="@command('onShowComponents')"/>
+                  <treeitem label="${labels.admin.group_permissions}" onClick="@command('onShowGroupsPermissions')"/>
+                </treechildren>
+              </treeitem>
+              <treeitem open="false" label="JCommune" onClick="@command('onBlankPage')">
+                <treechildren>
+                  <treeitem label="${labels.admin.forum}" onClick="@command('onShowForumStructure')"/>
+                </treechildren>
+              </treeitem>
+              <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
+                <treechildren>
+                  <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')"/>
+                  <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')"/>
+                  <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')"/>
+                  <treeitem label="${labels.admin.user.personal_permissions}"
+                            onClick="@command('onShowPersonalPermissions')"/>
+                  <!--<treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />-->
+                </treechildren>
+              </treeitem>
+              <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
+            </treechildren>
+          </tree>
+          <!-- Tree for displaying dynamic part of menu(list of components, that exist)-->
+          <tree width="170px" style="border:0;padding:0;">
+            <treechildren children="@load(vm.components) @template('componentsModel')">
+              <template name="componentsModel" var="component">
+                <treeitem label="${component.name}" onClick="@command('onComponentClick',component = component)"
+                          if="${component.componentType != vm.adminPanelType}"/>
+              </template>
+            </treechildren>
+          </tree>
+        </vbox>
       </west>
       <center id="workArea" border="0"/>
     </borderlayout>
