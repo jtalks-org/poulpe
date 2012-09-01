@@ -43,24 +43,28 @@ public interface ComponentService extends EntityService<Component> {
     List<Component> getAll();
 
     /**
-     * Delete the specified component.
+     * Delete the specified component and notify it about the deletion of its content so that it can re-index its
+     * database and do some clean-up.
      *
-     * @param component component to delete
-     * @throws {@link NoConnectionToJcommuneException}
-     * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
+     * @param component component to delete and notify
+     * @throws NoConnectionToJcommuneException
+     *          if it wasn't possible to notify component about its removal because nothing was found by the URL
+     *          specified in the configuration of the component (for instance because it was configured wrong)
+     * @throws JcommuneRespondedWithErrorException
+     *          if request reached some host but that host answered with some HTTP error (only error codes between 201
+     *          and 299 are acceptable)
+     * @throws JcommuneUrlNotConfiguredException if url to the component wasn't configured by admin
+     *
      */
-    void deleteComponent(Component component)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
-            JcommuneUrlNotConfiguredException;
+    void deleteComponent(Component component) throws NoConnectionToJcommuneException,
+            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException;
 
     /**
      * Saves new component or updates existent
      *
      * @param component to save
      * @throws org.jtalks.common.validation.ValidationException
-     *          when entity being saved violates validation
-     *          constraints
+     *          when entity being saved violates validation constraints
      */
     void saveComponent(Component component);
 
