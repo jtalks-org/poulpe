@@ -20,6 +20,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -81,7 +82,7 @@ public class JcommuneHttpNotifier {
      *          occurs when the {@code #jCommuneUrl} is incorrect
      */
     public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         long id = section.getId();
         notifyAboutDeleteElement(jCommuneUrl + SECTIONS_URL_PART + id);
     }
@@ -100,7 +101,7 @@ public class JcommuneHttpNotifier {
      *          occurs when the {@code #jCommuneUrl} is incorrect
      */
     public void notifyAboutBranchDelete(String jCommuneUrl, PoulpeBranch branch)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         long id = branch.getId();
         notifyAboutDeleteElement(jCommuneUrl + BRANCH_URL_PART + id);
     }
@@ -117,7 +118,7 @@ public class JcommuneHttpNotifier {
      *                jCommuneUrl} is incorrect
      */
     public void notifyAboutComponentDelete(String jCommuneUrl)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         notifyAboutDeleteElement(jCommuneUrl + WHOLEFORUM_URL_PART);
     }
 
@@ -132,15 +133,13 @@ public class JcommuneHttpNotifier {
      * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException} occurs when the {@code
      *                url} is incorrect
      */
-    private void notifyAboutDeleteElement(String url)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
+    protected void notifyAboutDeleteElement(String url)
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         checkUrlIsConfigured(url);
         try {
-            HttpClient httpClient = new DefaultHttpClient();
-            HttpDelete deleteRequest = new HttpDelete(url);
-            HttpResponse response = httpClient.execute(deleteRequest);
+            HttpResponse response = sendHttpRequest(url,HttpDelete.METHOD_NAME);
             int statusCode = response.getStatusLine().getStatusCode();
-            logger.info("Status response notify about delete element JCommune: " + statusCode + "; URL request: " + url);
+            logger.info("Status response notify about delete element JCommune: "+statusCode+"; URL request: " + url);
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException();
             }
@@ -156,7 +155,7 @@ public class JcommuneHttpNotifier {
      * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException} occurs when the {@code
      *                jCommuneUrl} is incorrect
      */
-    private void checkUrlIsConfigured(String jCommuneUrl) throws JcommuneUrlNotConfiguredException {
+    protected void checkUrlIsConfigured(String jCommuneUrl) throws JcommuneUrlNotConfiguredException {
         if (StringUtils.isBlank(jCommuneUrl)) {
             throw new JcommuneUrlNotConfiguredException();
         }
@@ -175,11 +174,11 @@ public class JcommuneHttpNotifier {
      *          occurs when the {@code jCommuneUrl} is incorrect
      */
     public void notifyAboutReindexComponent(String jCommuneUrl)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
         checkUrlIsConfigured(jCommuneUrl);
         String reindexUrl = jCommuneUrl + REINDEX_URL_PART;
         try {
-            HttpResponse response = sendHttpRequest(reindexUrl);
+            HttpResponse response = sendHttpRequest(reindexUrl,HttpPost.METHOD_NAME);
             int statusCode = response.getStatusLine().getStatusCode();
             if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
                 throw new JcommuneRespondedWithErrorException(String.valueOf(statusCode));
@@ -190,9 +189,14 @@ public class JcommuneHttpNotifier {
     }
 
     @VisibleForTesting
-    HttpResponse sendHttpRequest(String reindexUrl) throws IOException {
+    HttpResponse sendHttpRequest(String reindexUrl, String httpMethod) throws IOException {
         HttpClient httpClient = new DefaultHttpClient();
-        HttpPost emptyRequest = new HttpPost(reindexUrl);
+        HttpUriRequest emptyRequest = null;
+        if(HttpDelete.METHOD_NAME.equals(httpMethod)){
+            emptyRequest = new HttpDelete(reindexUrl);
+        }else if(HttpPost.METHOD_NAME.equals(httpMethod)){
+            emptyRequest = new HttpPost(reindexUrl);
+        }
         return httpClient.execute(emptyRequest);
     }
 
