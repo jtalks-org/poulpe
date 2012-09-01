@@ -60,18 +60,15 @@ import static org.mockito.Mockito.*;
  */
 public class TransactionalComponentServiceTest {
     private TransactionalComponentService componentService;
+    @Mock
+    private ComponentDao componentDao;
+    @Mock
+    private EntityValidator validator;
+    @Mock
+    private JcommuneHttpNotifier jcommuneHttpNotifier;
 
-    @Mock
-    ComponentDao componentDao;
-    @Mock
-    EntityValidator validator;
-    @Mock
-    PermissionManager permissionManager;
-    @Mock
-    JcommuneHttpNotifier jcommuneHttpNotifier;
-
-    Component component = TestFixtures.randomComponent();
-    Jcommune jcommune = spy((Jcommune) TestFixtures.component(ComponentType.FORUM));
+    private Component component = TestFixtures.randomComponent();
+    private Jcommune jcommune = spy((Jcommune) TestFixtures.component(ComponentType.FORUM));
 
     @BeforeMethod
     public void setUp() throws Exception {
