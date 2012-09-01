@@ -5,72 +5,67 @@
 
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
-    <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
-    <window title="${labels.componentlist.title}" border="none" width="100%" position="center,top"
-            apply="org.zkoss.bind.BindComposer"
-            viewModel="@id('vm') @init(componentsVm)" validationMessages="@id('vmsgs')">
+  <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
+  <window title="${labels.componentlist.title}" border="none" width="100%" position="center,top"
+          apply="org.zkoss.bind.BindComposer"
+          viewModel="@id('vm') @init(componentsVm)" validationMessages="@id('vmsgs')">
+    <vlayout>
+      <div>
+        <menubar id="menubar" width="100%">
+          <menu label="${labels.componentlist.add}" disabled="@load(!vm.ableToCreateNewComponent)">
+            <menupopup>
+              <menuitem label="FORUM" onClick="@command('addNewJcommune')" visible="@load(vm.jcommuneAvailable)"/>
+              <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')" visible="@load(vm.poulpeAvailable)"/>
+            </menupopup>
+          </menu>
+        </menubar>
+      </div>
+      <listbox selectedItem="@save(vm.selected)">
+        <listhead>
+          <listheader align="center" label="${labels.component.title}" sclass="boldstyle"/>
+          <listheader align="center" label="${labels.component.description}"/>
+          <listheader align="center" label="${labels.component.type}"/>
+        </listhead>
+        <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)" context="popupMenuPoulpe">
+          <listcell label="@load(vm.poulpe.name)"/>
+          <listcell label="@load(vm.poulpe.description)"/>
+          <listcell label="@load(vm.poulpe.componentType)"/>
+        </listitem>
+        <listitem value="@load(vm.jcommune)" visible="@load(vm.jcommuneVisible)" context="popupMenuJcommune">
+          <listcell label="@load(vm.jcommune.name)"/>
+          <listcell label="@load(vm.jcommune.description)"/>
+          <listcell label="@load(vm.jcommune.componentType)"/>
+        </listitem>
+      </listbox>
+    </vlayout>
 
-        <vlayout>
-            <div>
-                <menubar id="menubar" width="100%">
-                    <menu label="${labels.componentlist.add}" disabled="@load(!vm.ableToCreateNewComponent)">
-                        <menupopup>
-                            <menuitem label="FORUM" onClick="@command('addNewJcommune')"
-                                      visible="@load(vm.jcommuneAvailable)"/>
-                            <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')"
-                                      visible="@load(vm.poulpeAvailable)"/>
-                        </menupopup>
+    <!--CONTEXT MENU -->
+    <menupopup id="popupMenuPoulpe">
+      <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
+                onClick="@command('configureComponent')"/>
+    </menupopup>
+    <menupopup id="popupMenuJcommune">
+      <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
+        <attribute name="onClick">
+          vm.reindexComponent();
+          if(vm.showReindexStartedNotification){
+          popupReindexStarted.open(self,"at_pointer");
+          }
+        </attribute>
+      </menuitem>
+      <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
+                onClick="@command('configureComponent')"/>
+      <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
+                onClick="@command('deleteComponent')"/>
+    </menupopup>
 
-                    </menu>
-                </menubar>
-            </div>
-            <listbox selectedItem="@save(vm.selected)">
-                <listhead>
-                    <listheader align="center" label="${labels.component.title}" sclass="boldstyle"/>
-                    <listheader align="center" label="${labels.component.description}"/>
-                    <listheader align="center" label="${labels.component.type}"/>
-                </listhead>
-                <listitem value="@load(vm.poulpe)" visible="@load(vm.poulpeVisible)" context="popupMenuPoulpe">
-                    <listcell label="@load(vm.poulpe.name)"/>
-                    <listcell label="@load(vm.poulpe.description)"/>
-                    <listcell label="@load(vm.poulpe.componentType)"/>
-                </listitem>
-                <listitem value="@load(vm.jcommune)" visible="@load(vm.jcommuneVisible)" context="popupMenuJcommune">
-                    <listcell label="@load(vm.jcommune.name)"/>
-                    <listcell label="@load(vm.jcommune.description)"/>
-                    <listcell label="@load(vm.jcommune.componentType)"/>
-                </listitem>
-            </listbox>
-
-        </vlayout>
-
-        <!--CONTEXT MENU -->
-        <menupopup id="popupMenuPoulpe">
-            <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
-                      onClick="@command('configureComponent')"/>
-        </menupopup>
-        <menupopup id="popupMenuJcommune">
-            <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
-                <attribute name="onClick">
-                    vm.reindexComponent();
-                    if(vm.showReindexStartedNotification){
-                    popupReindexStarted.open(self,"at_pointer");
-                    }
-                </attribute>
-            </menuitem>
-            <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
-                      onClick="@command('configureComponent')"/>
-            <menuitem image="/resources/img/remove16.png" label="${labels.componentlist.delete}"
-                      onClick="@command('deleteComponent')"/>
-        </menupopup>
-
-        <!--POPUP WINDOWS -->
-        <popup id="popupReindexStarted" width="250px" style="border:none">
-            <vlayout sclass="popup-notification-ok">
-                <label value="${labels.component.ok.jcommune.title.reindex_start}" sclass="halfbold-table-title"/>
-                ${labels.component.ok.jcommune.text.reindex_start}
-            </vlayout>
-        </popup>
-    </window>
+    <!--POPUP WINDOWS -->
+    <popup id="popupReindexStarted" width="250px" style="border:none">
+      <vlayout sclass="popup-notification-ok">
+        <label value="${labels.component.ok.jcommune.title.reindex_start}" sclass="halfbold-table-title"/>
+        ${labels.component.ok.jcommune.text.reindex_start}
+      </vlayout>
+    </popup>
+  </window>
 
 </zk>
