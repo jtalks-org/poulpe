@@ -144,7 +144,7 @@ public class JcommuneHttpNotifier {
                 throw new JcommuneRespondedWithErrorException();
             }
         } catch (IOException e) {
-            throw new NoConnectionToJcommuneException();
+            throw new NoConnectionToJcommuneException(e);
         }
     }
 
@@ -184,17 +184,10 @@ public class JcommuneHttpNotifier {
                 throw new JcommuneRespondedWithErrorException(String.valueOf(statusCode));
             }
         } catch (IOException e) {
-            throw new NoConnectionToJcommuneException();
+            throw new NoConnectionToJcommuneException(e);
         }
     }
 
-    /**
-     * Send HTTP request
-     * @param reindexUrl url
-     * @param httpMethod method
-     * @return response
-     * @throws IOException
-     */
     @VisibleForTesting
     HttpResponse sendHttpRequest(String reindexUrl, String httpMethod) throws IOException {
         HttpClient httpClient = new DefaultHttpClient();
