@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import com.google.common.collect.Sets;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -38,12 +37,11 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.*;
 
 /**
@@ -94,7 +92,7 @@ public class ComponentsVmTest {
     @Test
     public void reindexComponent() throws Exception {
         ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
-        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name","Description");
+        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name", "Description");
         componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
         verify(componentService).reindexComponent(jcommune);
@@ -137,8 +135,7 @@ public class ComponentsVmTest {
     @Test(enabled = false)
     public void deleteComponent_notifyChange() {
         givenUserConfirmedDeletion();
-        verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
-                ComponentsVm.CAN_CREATE_NEW_COMPONENT);
+        verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -178,38 +175,8 @@ public class ComponentsVmTest {
     }
 
     @Test
-    public void isAbleToCreateNewComponent_able() {
-        givenAvailableTypes();
-        boolean actual = componentsVm.isAbleToCreateNewComponent();
-        assertTrue(actual);
-    }
-
-    private void givenAvailableTypes() {
-        Set<ComponentType> all = Sets.newHashSet(ComponentType.values());
-        when(componentService.getAvailableTypes()).thenReturn(all);
-    }
-
-    @Test
-    public void isAbleToCreateNewComponent_notAble() {
-        givenNoAvailableTypes();
-        boolean actual = componentsVm.isAbleToCreateNewComponent();
-        assertFalse(actual);
-    }
-
-    private void givenNoAvailableTypes() {
-        Set<ComponentType> empty = Collections.emptySet();
-        when(componentService.getAvailableTypes()).thenReturn(empty);
-    }
-
-    @Test
     public void isJcommuneAvailable() {
         componentsVm.isJcommuneAvailable();
-        verify(componentService).getAvailableTypes();
-    }
-
-    @Test
-    public void isPoulpeAvailable() {
-        componentsVm.isPoulpeAvailable();
         verify(componentService).getAvailableTypes();
     }
 

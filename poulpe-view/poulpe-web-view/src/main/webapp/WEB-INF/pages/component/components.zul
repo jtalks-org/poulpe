@@ -12,10 +12,9 @@
     <vlayout>
       <div>
         <menubar id="menubar" width="100%">
-          <menu label="${labels.componentlist.add}" disabled="@load(!vm.ableToCreateNewComponent)">
+          <menu label="${labels.componentlist.add}">
             <menupopup>
-              <menuitem label="FORUM" onClick="@command('addNewJcommune')" visible="@load(vm.jcommuneAvailable)"/>
-              <menuitem label="ADMIN_PANEL" onClick="@command('addNewPoulpe')" visible="@load(vm.poulpeAvailable)"/>
+              <menuitem label="FORUM" onClick="@command('addNewJcommune')" disabled="@load(!vm.jcommuneAvailable)"/>
             </menupopup>
           </menu>
         </menubar>

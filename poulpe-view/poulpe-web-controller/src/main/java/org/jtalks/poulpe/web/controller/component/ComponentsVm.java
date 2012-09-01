@@ -39,14 +39,12 @@ import org.zkoss.zul.Messagebox;
  * @author Leonid Kazantcev
  */
 public class ComponentsVm {
-
-    public static final String SELECTED = "selected";
-    public static final String CAN_CREATE_NEW_COMPONENT = "ableToCreateNewComponent";
-    public static final String COMPONENTS = "components";
-    public static final String JCOMMUNE = "jcommune";
-    public static final String POULPE = "poulpe";
-    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
-    public static final String POULPE_VISIBLE = "poulpeVisible";
+    /**
+     * These are the properties of the VM to specify in {@link NotifyChange}.
+     */
+    public static final String SELECTED = "selected", JCOMMUNE_AVAILABLE = "jcommuneAvailable";
+    public static final String COMPONENTS = "components", JCOMMUNE = "jcommune", POULPE = "poulpe";
+    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible";
     public static final String SHOW_REINDEX_START_NOTIFICATION = "showReindexStartedNotification";
 
     private static final String DEFAULT_NAME = "name";
@@ -122,6 +120,7 @@ public class ComponentsVm {
      * @throws IllegalStateException if no component selected
      */
     @Command
+    @NotifyChange({JCOMMUNE_AVAILABLE})
     public void deleteComponent() {
         Validate.validState(selected != null, "entity to delete must be selected");
 
@@ -132,7 +131,7 @@ public class ComponentsVm {
                     componentService.deleteComponent(selected);
                     selected = null;
                     bindWrapper.postNotifyChange(ComponentsVm.this, JCOMMUNE, POULPE, JCOMMUNE_VISIBLE, POULPE_VISIBLE,
-                            SELECTED, COMPONENTS, CAN_CREATE_NEW_COMPONENT);
+                            SELECTED, COMPONENTS);
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
@@ -174,7 +173,6 @@ public class ComponentsVm {
      * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Poulpe} component.
      */
     @Command
-    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
     public void addNewPoulpe() {
         selectedEntity.setEntity(componentService.
                 baseComponentFor(ComponentType.ADMIN_PANEL).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
@@ -185,7 +183,7 @@ public class ComponentsVm {
      * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Jcommune} component.
      */
     @Command
-    @NotifyChange(CAN_CREATE_NEW_COMPONENT)
+//    @NotifyChange(JCOMMUNE_AVAILABLE)
     public void addNewJcommune() {
         selectedEntity.setEntity(componentService.
                 baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
@@ -200,13 +198,6 @@ public class ComponentsVm {
     public void configureComponent() {
         selectedEntity.setEntity(selected);
         EditComponentVm.openWindowForEdit(windowManager);
-    }
-
-    /**
-     * @return {@code true} only if new component can be created, {@code false} otherwise.
-     */
-    public boolean isAbleToCreateNewComponent() {
-        return !componentService.getAvailableTypes().isEmpty();
     }
 
     /**
@@ -234,19 +225,11 @@ public class ComponentsVm {
     }
 
     /**
-     * @return true if component {@link org.jtalks.poulpe.model.entity.Jcommune} with {@link ComponentType}
-     *         FORUM type are not created yet, false otherwise
+     * @return true if component {@link org.jtalks.poulpe.model.entity.Jcommune} with {@link ComponentType} FORUM type
+     *         are not created yet, false otherwise
      */
     public boolean isJcommuneAvailable() {
         return componentService.getAvailableTypes().contains(ComponentType.FORUM);
-    }
-
-    /**
-     * @return true if component {@link org.jtalks.poulpe.model.entity.Poulpe} with {@link ComponentType}
-     *         ADMIN_PANEL type are not created yet, false otherwise
-     */
-    public boolean isPoulpeAvailable() {
-        return componentService.getAvailableTypes().contains(ComponentType.ADMIN_PANEL);
     }
 
     @NotifyChange(SHOW_REINDEX_START_NOTIFICATION)
@@ -255,8 +238,8 @@ public class ComponentsVm {
     }
 
     /**
-     * Gets visibility status of notification window, boolean show added because after single opening of popup
-     * window before next check we should have false at showReindexStartedNotification.
+     * Gets visibility status of notification window, boolean show added because after single opening of popup window
+     * before next check we should have false at showReindexStartedNotification.
      *
      * @return true if notification is visible
      */
