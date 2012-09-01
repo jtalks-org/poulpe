@@ -44,8 +44,8 @@ public class ComponentsVm {
      */
     public static final String SELECTED = "selected", JCOMMUNE_AVAILABLE = "jcommuneAvailable";
     public static final String COMPONENTS = "components", JCOMMUNE = "jcommune", POULPE = "poulpe";
-    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible", POULPE_VISIBLE = "poulpeVisible";
     public static final String SHOW_REINDEX_START_NOTIFICATION = "showReindexStartedNotification";
+    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
@@ -120,7 +120,6 @@ public class ComponentsVm {
      * @throws IllegalStateException if no component selected
      */
     @Command
-    @NotifyChange({JCOMMUNE_AVAILABLE})
     public void deleteComponent() {
         Validate.validState(selected != null, "entity to delete must be selected");
 
@@ -130,8 +129,8 @@ public class ComponentsVm {
                 try {
                     componentService.deleteComponent(selected);
                     selected = null;
-                    bindWrapper.postNotifyChange(ComponentsVm.this, JCOMMUNE, POULPE, JCOMMUNE_VISIBLE, POULPE_VISIBLE,
-                            SELECTED, COMPONENTS);
+                    bindWrapper.postNotifyChange(ComponentsVm.this,
+                            SELECTED, COMPONENTS, JCOMMUNE_AVAILABLE, JCOMMUNE_VISIBLE);
                 } catch (NoConnectionToJcommuneException elementDoesNotExist) {
                     Messagebox.show(Labels.getLabel(JCOMMUNE_CONNECTION_FAILED),
                             Labels.getLabel(COMPONENT_DELETING_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
@@ -183,7 +182,6 @@ public class ComponentsVm {
      * Shows a window for adding {@link org.jtalks.poulpe.model.entity.Jcommune} component.
      */
     @Command
-//    @NotifyChange(JCOMMUNE_AVAILABLE)
     public void addNewJcommune() {
         selectedEntity.setEntity(componentService.
                 baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
