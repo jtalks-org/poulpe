@@ -41,8 +41,6 @@ import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE
 public class AdminWindow {
     public static final String RU_LOCALE_LANG = "ru";
     public static final String EN_LOCALE_LANG = "en";
-    private ComponentType adminPanelType = ComponentType.ADMIN_PANEL;
-
     @Wire
     private Center workArea;
     @Wire
@@ -88,7 +86,7 @@ public class AdminWindow {
      * @return the type of admin panel
      */
     public ComponentType getAdminPanelType() {
-        return adminPanelType;
+        return ComponentType.ADMIN_PANEL;
     }
 
     /**
