@@ -32,7 +32,7 @@ import static org.mockito.Mockito.when;
 public class AdminWindowTest {
 
     @InjectMocks
-    AdminWindow adminWindow = new AdminWindow();
+    AdminWindow adminWindow = new AdminWindow(null);
 
     @Mock
     ZkHelper zkHelper;

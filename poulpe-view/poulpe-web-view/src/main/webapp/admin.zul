@@ -34,11 +34,6 @@
                   <treeitem label="${labels.admin.group_permissions}" onClick="@command('onShowGroupsPermissions')"/>
                 </treechildren>
               </treeitem>
-              <treeitem open="false" label="JCommune" onClick="@command('onBlankPage')">
-                <treechildren>
-                  <treeitem label="${labels.admin.forum}" onClick="@command('onShowForumStructure')"/>
-                </treechildren>
-              </treeitem>
               <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
                 <treechildren>
                   <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')"/>

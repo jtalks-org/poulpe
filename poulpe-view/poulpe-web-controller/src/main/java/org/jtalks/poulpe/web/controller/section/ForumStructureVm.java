@@ -22,11 +22,7 @@ import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
-import org.zkoss.bind.annotation.BindingParam;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.GlobalCommand;
-import org.zkoss.bind.annotation.Init;
-import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
@@ -68,9 +64,8 @@ public class ForumStructureVm {
     }
 
     /**
-     * Global command to update tree on events from different view models.
-     * More information about global commands:
-     * {@link http://books.zkoss.org/wiki/ZK%20Developer's%20Reference/MVVM/Data%20Binding/Global%20Command%20Binding}
+     * Global command to update tree on events from different view models. <a href="http://books.zkoss.org/wiki/ZK%20Developer's%20Reference/MVVM/Data%20Binding/Global%20Command%20Binding">More
+     * information about global commands</a>.
      */
     @GlobalCommand
     @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})

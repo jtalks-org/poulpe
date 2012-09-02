@@ -73,7 +73,7 @@ public class ComponentsVmTest {
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
+        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, null);
         componentsVm.setBindWrapper(bindWrapper);
     }
 

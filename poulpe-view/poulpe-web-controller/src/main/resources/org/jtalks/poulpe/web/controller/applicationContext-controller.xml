@@ -65,6 +65,7 @@
     <constructor-arg index="1" ref="forumStructureService"/>
   </bean>
   <bean id="adminWindowVm" class="org.jtalks.poulpe.web.controller.AdminWindow" scope="prototype">
+    <constructor-arg index="0" ref="componentListInMenu"/>
     <property name="windowManager" ref="windowManager"/>
     <property name="componentService" ref="componentService"/>
   </bean>
@@ -145,6 +146,7 @@
     <constructor-arg index="1" ref="dialogManager" />
     <constructor-arg index="2" ref="windowManager" />
     <constructor-arg index="3" ref="selectedEntity" />
+    <constructor-arg index="4" ref="componentListInMenu"/>
   </bean>
   <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
     <constructor-arg index="0" ref="componentService" />
@@ -156,8 +158,8 @@
     <constructor-arg index="1" ref="windowManager" />
     <constructor-arg index="2" ref="selectedEntity" />
   </bean>
-  
-  
+
+  <bean id="componentListInMenu" class="org.jtalks.poulpe.web.controller.component.ComponentList"/>
   <bean id="openSessions" class="org.jtalks.poulpe.web.osod.SingletonOpenSessionsHolder" factory-method="instantiate">
     <constructor-arg ref="sessionFactory"/>
   </bean>
