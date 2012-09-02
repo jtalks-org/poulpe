@@ -22,10 +22,8 @@ public class DeleteComponentDialog implements EventListener<Event> {
     private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
     private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
-    private final BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     private final ComponentService componentService;
     private final ComponentList componentsToUpdate;
-    private ComponentsVm toUpdateAfterDeletion;
     private Component toDelete;
 
     public DeleteComponentDialog(ComponentService componentService, ComponentList componentsToUpdate) {
@@ -33,8 +31,7 @@ public class DeleteComponentDialog implements EventListener<Event> {
         this.componentsToUpdate = componentsToUpdate;
     }
 
-    public void confirmDeletion(Component toDelete, ComponentsVm toUpdateAfterDeletion) {
-        this.toUpdateAfterDeletion = toUpdateAfterDeletion;
+    public void confirmDeletion(Component toDelete) {
         this.toDelete = toDelete;
         String title = String.format(Labels.getLabel("dialogmanager.delete.title"), toDelete.getName());
         String text = String.format(Labels.getLabel("dialogmanager.delete.question"), toDelete.getName());
@@ -44,7 +41,6 @@ public class DeleteComponentDialog implements EventListener<Event> {
     public void deleteComponent() {
         try {
             componentService.deleteComponent(toDelete);
-            bindWrapper.notifyAllPropsChanged(toUpdateAfterDeletion);
             componentsToUpdate.remove(toDelete);
             toDelete = null;
         } catch (NoConnectionToJcommuneException elementDoesNotExist) {

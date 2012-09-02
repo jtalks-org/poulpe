@@ -61,6 +61,7 @@ public class AdminWindow {
         zkHelper.wireComponents(view, this);
         windowManager.setWorkArea(workArea);
         components.renew(componentService.getAll());
+        components.registerListener(this);
     }
 
     /**

@@ -27,8 +27,6 @@ import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
 import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
 import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -66,7 +64,7 @@ public class ComponentsVmTest {
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, null);
+        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, new ComponentList());
         componentsVm.setBindWrapper(bindWrapper);
     }
 
@@ -99,7 +97,7 @@ public class ComponentsVmTest {
         setField("deleteComponentDialog", deleteComponentDialog);
 
         componentsVm.deleteComponent();
-        verify(deleteComponentDialog).confirmDeletion(selected, componentsVm);
+        verify(deleteComponentDialog).confirmDeletion(selected);
     }
 
     private Component givenSelectedComponent() {

@@ -18,6 +18,7 @@ import org.springframework.beans.BeanUtils;
 import org.zkoss.bind.BindUtils;
 
 import java.beans.PropertyDescriptor;
+import java.util.Collection;
 
 /**
  * This class represent the wrapper around {@link org.zkoss.bind.BindUtils}. BindUtils is utility which needs to help
@@ -66,6 +67,18 @@ public class BindUtilsWrapper {
         PropertyDescriptor[] props = BeanUtils.getPropertyDescriptors(vm.getClass());
         for (PropertyDescriptor prop : props) {
             postNotifyChange(vm, prop.getName());
+        }
+    }
+
+    /**
+     * Notifies all the VM about all their properties inside were changed so that ZK can re-read them and update its
+     * UI.
+     *
+     * @param vms a visual models to iterate through all their properties and trigger ZK Binder notifications
+     */
+    public void notifyAllPropsChanged(Collection<Object> vms) {
+        for (Object vm : vms) {
+            notifyAllPropsChanged(vm);
         }
     }
 }

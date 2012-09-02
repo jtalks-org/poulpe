@@ -84,6 +84,7 @@ public class ComponentsVm {
         this.selectedEntity = selectedEntity;
         this.componentsToUpdate = componentsToUpdate;
         this.deleteComponentDialog = new DeleteComponentDialog(componentService, componentsToUpdate);
+        componentsToUpdate.registerListener(this);
     }
 
     /**
@@ -122,7 +123,7 @@ public class ComponentsVm {
     @Command
     public void deleteComponent() {
         Validate.validState(selected != null, "entity to delete must be selected");
-        deleteComponentDialog.confirmDeletion(selected, this);
+        deleteComponentDialog.confirmDeletion(selected);
     }
 
     /**
