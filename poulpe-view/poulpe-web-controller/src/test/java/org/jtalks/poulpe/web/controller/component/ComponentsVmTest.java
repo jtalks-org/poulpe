@@ -19,14 +19,13 @@ import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
-import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
+import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
+import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
@@ -38,10 +37,7 @@ import org.testng.annotations.Test;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
 /**
@@ -65,9 +61,6 @@ public class ComponentsVmTest {
     BindUtilsWrapper bindWrapper;
 
     SelectedEntity<Component> selectedEntity;
-
-    @Captor
-    ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
 
     @BeforeMethod
     public void beforeTest() {
@@ -99,43 +92,20 @@ public class ComponentsVmTest {
     }
 
     @Test
-    public void deleteComponent() {
+    public void deleteComponent() throws NoSuchFieldException, IllegalAccessException {
+        //given
         Component selected = givenSelectedComponent();
+        DeleteComponentDialog deleteComponentDialog = mock(DeleteComponentDialog.class);
+        setField("deleteComponentDialog", deleteComponentDialog);
+
         componentsVm.deleteComponent();
-        verify(dialogManager).confirmDeletion(eq(selected.getName()), any(DialogManager.Performable.class));
+        verify(deleteComponentDialog).confirmDeletion(selected, componentsVm);
     }
 
     private Component givenSelectedComponent() {
         Component selected = TestFixtures.randomComponent();
         componentsVm.setSelected(selected);
         return selected;
-    }
-
-    @Test
-    public void deleteComponent_componentDeletedAfterConfirmation()
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
-        Component selected = givenUserConfirmedDeletion();
-        verify(componentService).deleteComponent(selected);
-    }
-
-    private Component givenUserConfirmedDeletion() {
-        Component selected = givenSelectedComponent();
-
-        componentsVm.deleteComponent();
-        captureDeletePerfomable(selected).execute();
-
-        return selected;
-    }
-
-    private Performable captureDeletePerfomable(Component selected) {
-        verify(dialogManager).confirmDeletion(eq(selected.getName()), deleteCallbackCaptor.capture());
-        return deleteCallbackCaptor.getValue();
-    }
-
-    @Test(enabled = false)
-    public void deleteComponent_notifyChange() {
-        givenUserConfirmedDeletion();
-        verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -205,6 +175,5 @@ public class ComponentsVmTest {
         field.setAccessible(true);
         field.set(componentsVm, value);
     }
-
 
 }

@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.entity.Component;
@@ -20,18 +20,19 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.zkoss.bind.annotation.Command;
 
 import java.util.List;
 
 /**
- * View-Model for adding a selectedEntity. Shown from {@link ComponentsVm}.
+ * View-Model for adding a selectedEntity. Shown from {@link org.jtalks.poulpe.web.controller.component.ComponentsVm}.
  *
  * @author Alexey Grigorev
  * @author Leonid Kazantcev
  */
 public class AddComponentVm {
-    static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
+    public static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
 
     private final ComponentService componentService;
     private final WindowManager windowManager;

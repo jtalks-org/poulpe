@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -22,6 +22,7 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.zkoss.bind.annotation.Command;
 
 /**
@@ -32,7 +33,7 @@ import org.zkoss.bind.annotation.Command;
  * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
+    public static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
 
     private final ComponentService componentService;
     private final Component component;

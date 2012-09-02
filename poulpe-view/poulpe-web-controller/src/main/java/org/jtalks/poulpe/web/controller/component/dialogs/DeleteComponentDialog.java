@@ -1,10 +1,12 @@
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+import org.jtalks.poulpe.web.controller.component.ComponentList;
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.event.Event;

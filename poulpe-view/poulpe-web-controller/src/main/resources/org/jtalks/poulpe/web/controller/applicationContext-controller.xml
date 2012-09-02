@@ -148,12 +148,12 @@
     <constructor-arg index="3" ref="selectedEntity" />
     <constructor-arg index="4" ref="componentListInMenu"/>
   </bean>
-  <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.EditComponentVm">
+  <bean id="editComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm">
     <constructor-arg index="0" ref="componentService" />
     <constructor-arg index="1" ref="selectedEntity" />
     <property name="windowManager" ref="windowManager" />
   </bean>
-  <bean id="addComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.AddComponentVm">
+  <bean id="addComponentVm" scope="prototype" class="org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm">
     <constructor-arg index="0" ref="componentService" />
     <constructor-arg index="1" ref="windowManager" />
     <constructor-arg index="2" ref="selectedEntity" />

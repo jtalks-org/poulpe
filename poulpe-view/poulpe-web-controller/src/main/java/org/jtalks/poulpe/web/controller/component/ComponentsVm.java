@@ -26,6 +26,9 @@ import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
+import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
+import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
@@ -42,10 +45,15 @@ public class ComponentsVm {
     /**
      * These are the properties of the VM to specify in {@link NotifyChange}.
      */
-    public static final String SELECTED = "selected", JCOMMUNE_AVAILABLE = "jcommuneAvailable";
-    public static final String COMPONENTS = "components", JCOMMUNE = "jcommune", POULPE = "poulpe";
+    public static final String SELECTED = "selected";
     public static final String SHOW_REINDEX_START_NOTIFICATION = "showReindexStartedNotification";
-    public static final String JCOMMUNE_VISIBLE = "jcommuneVisible";
+
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT = "component.error.jcommune.text.not_connected";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE = "component.error.jcommune.title.not_configured";
+    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT = "component.error.jcommune.text.not_configured";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
+    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
 
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
@@ -57,15 +65,9 @@ public class ComponentsVm {
     private final SelectedEntity<Component> selectedEntity;
     private boolean showReindexStartedNotification;
 
-    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
-    private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TEXT = "component.error.jcommune.text.not_connected";
-    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TITLE = "component.error.jcommune.title.not_configured";
-    private static final String JCOMMUNE_REINDEX_NOT_CONFIGURED_TEXT = "component.error.jcommune.text.not_configured";
-    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
-    private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
     private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
     private final ComponentList componentsToUpdate;
-
+    private final DeleteComponentDialog deleteComponentDialog;
     private Component selected;
 
     /**
@@ -81,6 +83,7 @@ public class ComponentsVm {
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
         this.componentsToUpdate = componentsToUpdate;
+        this.deleteComponentDialog = new DeleteComponentDialog(componentService, componentsToUpdate);
     }
 
     /**
@@ -119,8 +122,7 @@ public class ComponentsVm {
     @Command
     public void deleteComponent() {
         Validate.validState(selected != null, "entity to delete must be selected");
-
-        new DeleteComponentDialog(componentService, componentsToUpdate).confirmDeletion(selected, this);
+        deleteComponentDialog.confirmDeletion(selected, this);
     }
 
     /**
