@@ -6,10 +6,10 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}" width="100%" height="100%">
     <button label="${labels.forum_structure.create_section_button}" onClick="@global-command('showNewSectionDialog')"/>
 
-    <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">
+    <tree model="@bind(vm.treeModel)" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">
       <template name="model">
         <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)" label="@load(each)"
-                  onDrop="@command('dropEventHandler', event=event)"/>
+                  context="treeContextMenu"  onDrop="@command('dropEventHandler', event=event)"/>
       </template>
     </tree>
 
