@@ -49,7 +49,7 @@ public class AddComponentVmTest {
     @BeforeMethod
     public void beforeMethod() {
         MockitoAnnotations.initMocks(this);
-        addComponentVm = new AddComponentVm(componentService, windowManager, component);
+        addComponentVm = new AddComponentVm(componentService, windowManager, component, new ComponentList());
     }
 
     @Test

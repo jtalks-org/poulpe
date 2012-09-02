@@ -49,7 +49,7 @@ public class EditComponentVmTest {
         SelectedEntity<Component> selectedEntity = new SelectedEntity<Component>();
         selectedEntity.setEntity(component);
         
-        editComponentVm = new EditComponentVm(componentService, selectedEntity);
+        editComponentVm = new EditComponentVm(componentService, selectedEntity, new ComponentList());
         editComponentVm.setWindowManager(windowManager);
     }
 

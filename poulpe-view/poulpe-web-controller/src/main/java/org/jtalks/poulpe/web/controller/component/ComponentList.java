@@ -40,6 +40,10 @@ public class ComponentList implements Iterable<Component> {
         bindUtils.notifyAllPropsChanged(listeningVms);
     }
 
+    public void componentsUpdated() {
+        bindUtils.notifyAllPropsChanged(listeningVms);
+    }
+
     public void registerListener(@Nonnull Object vmToListen) {
         listeningVms.add(vmToListen);
     }
