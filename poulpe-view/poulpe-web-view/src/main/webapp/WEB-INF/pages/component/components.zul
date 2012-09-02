@@ -47,7 +47,9 @@
       <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
         <attribute name="onClick">
           vm.reindexComponent();
-          Clients.evalJavaScript("$('.z-popup').show().fadeOut(5000)");
+          if(vm.showReindexStartedNotification) {
+            Clients.evalJavaScript("$('.z-popup').show().fadeOut(5000)");
+          }
         </attribute>
       </menuitem>
       <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
