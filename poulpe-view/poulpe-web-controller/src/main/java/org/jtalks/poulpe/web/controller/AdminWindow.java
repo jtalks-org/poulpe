@@ -25,7 +25,6 @@ import org.zkoss.zul.Center;
 import org.zkoss.zul.Window;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 
 import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;

@@ -47,9 +47,7 @@
       <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
         <attribute name="onClick">
           vm.reindexComponent();
-          if(vm.showReindexStartedNotification){
-          popupReindexStarted.open(self,"at_pointer");
-          }
+          Clients.evalJavaScript("$('.z-popup').show().fadeOut(5000)");
         </attribute>
       </menuitem>
       <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
@@ -59,10 +57,9 @@
     </menupopup>
 
     <!--POPUP WINDOWS -->
-    <popup id="popupReindexStarted" width="250px" style="border:none">
+    <popup id="popupReindexStarted" width="270px" style="top:30%;left:30%;">
       <vlayout sclass="popup-notification-ok">
-        <label value="${labels.component.ok.jcommune.title.reindex_start}" sclass="halfbold-table-title"/>
-        ${labels.component.ok.jcommune.text.reindex_start}
+        <label value="${labels.component.jcommune_reindex_popup}" sclass="jcommune-reindex-popup-label"/>
       </vlayout>
     </popup>
   </window>

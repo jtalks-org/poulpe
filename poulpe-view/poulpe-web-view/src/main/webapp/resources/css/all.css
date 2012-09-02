@@ -69,12 +69,13 @@
 
 .top-right-system-menu {
     float: right;
-    padding: 5px
+    padding: 5px;
 }
 
-.halfbold-table-title {
+.jcommune-reindex-popup-label {
     font-weight: 600;
     font-size: 9pt;
+    padding: 10px;
 }
 
 .boldstyle {
@@ -91,13 +92,15 @@
 .popup-notification{
     background:#F5C1C9 url(/poulpe/resources/img/notification16.png) 6px center no-repeat;
     color:#222222;
-    padding:5px;
-    padding-left: 20px;
     text-align:center;
 }
-.popup-notification-ok{
+
+.z-popup .z-popup-cnt {
+    padding:0 0 0 0;
+}
+
+.popup-notification-ok > *{
     background:#D1FCBF;
     color:#222222;
-    padding:5px;
     text-align:center;
 }
