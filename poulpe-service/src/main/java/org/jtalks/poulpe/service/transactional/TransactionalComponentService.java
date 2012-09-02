@@ -70,8 +70,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteComponent(Component component)
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
-            JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
         if (component instanceof Jcommune) {
             Jcommune jcommune = (Jcommune) component;
             jCommuneNotifier.notifyAboutComponentDelete(jcommune.getUrl());
@@ -90,8 +89,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
 
     @Override
     public void reindexComponent(Jcommune jcommune)
-            throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,
-            NoConnectionToJcommuneException {
+        throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,NoConnectionToJcommuneException {
         String url = jcommune.getUrl();
         jCommuneNotifier.notifyAboutReindexComponent(url);
     }

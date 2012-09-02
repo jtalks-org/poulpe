@@ -31,7 +31,6 @@ package org.jtalks.poulpe.service.transactional;
 import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.common.validation.ValidationError;
 import org.jtalks.common.validation.ValidationException;
-import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -46,12 +45,13 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
+
 
 /**
  * @author Pavel Vervenko
@@ -74,6 +74,7 @@ public class TransactionalComponentServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         componentService = new TransactionalComponentService(componentDao, validator);
+        componentService.setjCommuneNotifier(jcommuneHttpNotifier);
     }
 
     @Test
@@ -102,9 +103,17 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    public void testDeleteComponent() throws NoConnectionToJcommuneException, IOException {
-        //componentService.deleteComponent(component);
-        //verify(componentDao).delete(component);
+    public void testDeleteComponent() throws NoConnectionToJcommuneException,
+            JcommuneUrlNotConfiguredException, JcommuneRespondedWithErrorException {
+        doNothing().when(jcommuneHttpNotifier).notifyAboutComponentDelete(anyString());
+        doNothing().when(componentDao).delete(jcommune);
+        componentService.deleteComponent(jcommune);
+    }
+
+    @Test
+    public void getByType(){
+        when(componentDao.getByType(jcommune.getComponentType())).thenReturn(jcommune);
+        assertEquals(componentService.getByType(jcommune.getComponentType()),jcommune);
     }
 
     @Test
@@ -127,6 +136,6 @@ public class TransactionalComponentServiceTest {
         componentService.setjCommuneNotifier(jcommuneHttpNotifier);
         doReturn("").when(jcommune).getUrl();
         componentService.reindexComponent(jcommune);
-        verify(jcommuneHttpNotifier).notifyAboutReindexComponent(jcommune.getUrl());
+        verify(componentService.getjCommuneNotifier()).notifyAboutReindexComponent(jcommune.getUrl());
     }
 }
