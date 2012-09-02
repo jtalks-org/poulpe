@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -23,13 +22,11 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
 import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
 import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
-import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
@@ -45,7 +42,6 @@ public class ComponentsVm {
     /**
      * These are the properties of the VM to specify in {@link NotifyChange}.
      */
-    public static final String SELECTED = "selected";
     public static final String SHOW_REINDEX_START_NOTIFICATION = "showReindexStartedNotification";
 
     private static final String JCOMMUNE_REINDEX_NOT_CONNECTED_TITLE = "component.error.jcommune.title.not_connected";
@@ -60,31 +56,27 @@ public class ComponentsVm {
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
 
     private final ComponentService componentService;
-    private final DialogManager dialogManager;
     private final WindowManager windowManager;
     private final SelectedEntity<Component> selectedEntity;
     private boolean showReindexStartedNotification;
 
-    private BindUtilsWrapper bindWrapper = new BindUtilsWrapper();
-    private final ComponentList componentsToUpdate;
     private final DeleteComponentDialog deleteComponentDialog;
     private Component selected;
 
     /**
-     * @param componentService service for loading and saving component
-     * @param dialogManager    shows confirmation dialog for deletion
-     * @param windowManager    object for opening and closing application windows
-     * @param selectedEntity   desktop-scoped bean to which selected entities passed, used for editing components
+     * @param componentService       service for loading and saving component
+     * @param windowManager          object for opening and closing application windows
+     * @param selectedEntity         desktop-scoped bean to which selected entities passed, used for editing components
+     * @param componentsToBeNotified edit/add dialogs notify this VM about changes in the current component list via
+     *                               this {@link ComponentList}
      */
-    public ComponentsVm(ComponentService componentService, DialogManager dialogManager, WindowManager windowManager,
-                        SelectedEntity<Component> selectedEntity, ComponentList componentsToUpdate) {
+    public ComponentsVm(ComponentService componentService, WindowManager windowManager,
+                        SelectedEntity<Component> selectedEntity, ComponentList componentsToBeNotified) {
         this.componentService = componentService;
-        this.dialogManager = dialogManager;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
-        this.componentsToUpdate = componentsToUpdate;
-        this.deleteComponentDialog = new DeleteComponentDialog(componentService, componentsToUpdate);
-        componentsToUpdate.registerListener(this);
+        this.deleteComponentDialog = new DeleteComponentDialog(componentService, componentsToBeNotified);
+        componentsToBeNotified.registerListener(this);
     }
 
     /**
@@ -116,7 +108,8 @@ public class ComponentsVm {
     }
 
     /**
-     * Deletes selected component. Selected component is set using {@link #setSelected(Component)}.
+     * Shows a delete component dialog to confirm removal. Selected component is set using {@link
+     * #setSelected(Component)}.
      *
      * @throws IllegalStateException if no component selected
      */
@@ -182,14 +175,6 @@ public class ComponentsVm {
      */
     public void setSelected(Component selected) {
         this.selected = selected;
-    }
-
-    /**
-     * @param bindWrapper {@link BindUtilsWrapper} instance to set
-     */
-    @VisibleForTesting
-    void setBindWrapper(BindUtilsWrapper bindWrapper) {
-        this.bindWrapper = bindWrapper;
     }
 
     /**

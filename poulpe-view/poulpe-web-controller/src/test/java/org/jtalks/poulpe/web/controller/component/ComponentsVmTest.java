@@ -20,13 +20,11 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
-import org.jtalks.poulpe.web.controller.DialogManager;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
 import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
 import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
-import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -47,25 +45,17 @@ public class ComponentsVmTest {
     private static final String REINDEX_STARTED_FIELD = "showReindexStartedNotification";
     // sut
     ComponentsVm componentsVm;
-
-    // dependencies
     @Mock
     WindowManager windowManager;
     @Mock
     ComponentService componentService;
-    @Mock
-    DialogManager dialogManager;
-    @Mock
-    BindUtilsWrapper bindWrapper;
-
     SelectedEntity<Component> selectedEntity;
 
     @BeforeMethod
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity, new ComponentList());
-        componentsVm.setBindWrapper(bindWrapper);
+        componentsVm = new ComponentsVm(componentService, windowManager, selectedEntity, new ComponentList());
     }
 
     @Test
