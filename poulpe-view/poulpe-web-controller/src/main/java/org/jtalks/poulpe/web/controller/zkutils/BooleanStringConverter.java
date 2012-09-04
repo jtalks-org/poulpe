@@ -19,8 +19,11 @@ import org.zkoss.bind.Converter;
 import org.zkoss.zk.ui.Component;
 
 /**
- * Class is usefull for example: to represent boolean parameter of object as checkbox, even it is stored in object
- * as string. (For example: property email_notification_enabled of jcommune component)
+ * Class is usefull for example: to represent boolean parameter of object as checkbox, even if it is stored in object
+ * as string.(For example: string-property email_notification_enabled(which can be only "true" ot "false") of jcommune's
+ * component)
+ *
+ * @author Nickolay Polyarniy
  */
 public class BooleanStringConverter implements Converter {
 
