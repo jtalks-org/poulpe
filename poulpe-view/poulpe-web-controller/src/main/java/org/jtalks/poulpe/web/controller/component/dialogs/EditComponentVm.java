@@ -24,6 +24,7 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
+import org.jtalks.poulpe.web.controller.zkutils.BooleanStringConverter;
 import org.zkoss.bind.annotation.Command;
 
 /**
@@ -49,6 +50,7 @@ public class EditComponentVm {
         windowManager.open(EDIT_COMPONENT_LOCATION);
     }
     private WindowManager windowManager;
+    private final BooleanStringConverter booleanStringConverter = new BooleanStringConverter();
 
     /**
      * Creates edit dialog for editing currently selected component
@@ -94,6 +96,10 @@ public class EditComponentVm {
      */
     public Component getComponent() {
         return component;
+    }
+
+    public BooleanStringConverter getBooleanStringConverter() {
+        return booleanStringConverter;
     }
 
     /**
