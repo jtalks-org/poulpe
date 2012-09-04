@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.select.annotation.Wire;
@@ -24,7 +25,6 @@ import org.zkoss.zul.Center;
 import org.zkoss.zul.Window;
 
 import javax.servlet.http.HttpServletResponse;
-
 import java.util.List;
 
 import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE;
@@ -40,8 +40,6 @@ import static org.jtalks.poulpe.web.controller.LocaleProvidingFilter.USER_LOCALE
 public class AdminWindow {
     public static final String RU_LOCALE_LANG = "ru";
     public static final String EN_LOCALE_LANG = "en";
-    private ComponentType adminPanelType = ComponentType.ADMIN_PANEL; 
-
     @Wire
     private Center workArea;
     @Wire
@@ -49,17 +47,23 @@ public class AdminWindow {
     private WindowManager windowManager;
     private ZkHelper zkHelper = new ZkHelper(adminWindow);
     private ComponentService componentService;
-    private List<Component> components;                  
+    private final ComponentList components;
+
+    public AdminWindow(ComponentList components) {
+        this.components = components;
+    }
 
     @Init
     public void init(@ContextParam(ContextType.VIEW) org.zkoss.zk.ui.Component view) {
         zkHelper.wireComponents(view, this);
         windowManager.setWorkArea(workArea);
-        components = componentService.getAll();
+        components.renew(componentService.getAll());
+        components.registerListener(this);
     }
 
     /**
      * Sets the service for working with components
+     *
      * @param componentService componentService to set
      */
     public void setComponentService(ComponentService componentService) {
@@ -68,22 +72,25 @@ public class AdminWindow {
 
     /**
      * Returns the list of components, that were created
+     *
      * @return the list of components, that were created
      */
     public List<Component> getComponents() {
-        return components;
+        return components.getList();
     }
 
     /**
      * Returns the type of admin panel
+     *
      * @return the type of admin panel
      */
     public ComponentType getAdminPanelType() {
-        return adminPanelType;
+        return ComponentType.ADMIN_PANEL;
     }
 
     /**
      * Handles the event, when one of the components was clicked
+     *
      * @param component component, that was clicked
      */
     @Command
@@ -94,7 +101,7 @@ public class AdminWindow {
             onBlankPage();
         }
     }
-    
+
     /**
      * Sets Russian language for the admin panel.
      */

@@ -14,23 +14,17 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import com.google.common.collect.Sets;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
-import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
-import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
-import org.jtalks.poulpe.web.controller.DialogManager;
-import org.jtalks.poulpe.web.controller.DialogManager.Performable;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
+import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
+import org.jtalks.poulpe.web.controller.component.dialogs.DeleteComponentDialog;
+import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -38,11 +32,7 @@ import org.testng.annotations.Test;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collections;
-import java.util.Set;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -55,28 +45,17 @@ public class ComponentsVmTest {
     private static final String REINDEX_STARTED_FIELD = "showReindexStartedNotification";
     // sut
     ComponentsVm componentsVm;
-
-    // dependencies
     @Mock
     WindowManager windowManager;
     @Mock
     ComponentService componentService;
-    @Mock
-    DialogManager dialogManager;
-    @Mock
-    BindUtilsWrapper bindWrapper;
-
     SelectedEntity<Component> selectedEntity;
-
-    @Captor
-    ArgumentCaptor<DialogManager.Performable> deleteCallbackCaptor;
 
     @BeforeMethod
     public void beforeTest() {
         MockitoAnnotations.initMocks(this);
         selectedEntity = new SelectedEntity<Component>();
-        componentsVm = new ComponentsVm(componentService, dialogManager, windowManager, selectedEntity);
-        componentsVm.setBindWrapper(bindWrapper);
+        componentsVm = new ComponentsVm(componentService, windowManager, selectedEntity, new ComponentList());
     }
 
     @Test
@@ -94,51 +73,27 @@ public class ComponentsVmTest {
     @Test
     public void reindexComponent() throws Exception {
         ComponentBase componentBase = new ComponentBase(ComponentType.FORUM);
-        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name","Description");
+        Jcommune jcommune = (Jcommune) componentBase.newComponent("Name", "Description");
         componentsVm.setSelected(jcommune);
         componentsVm.reindexComponent();
         verify(componentService).reindexComponent(jcommune);
     }
 
     @Test
-    public void deleteComponent() {
+    public void deleteComponent() throws NoSuchFieldException, IllegalAccessException {
+        //given
         Component selected = givenSelectedComponent();
+        DeleteComponentDialog deleteComponentDialog = mock(DeleteComponentDialog.class);
+        setField("deleteComponentDialog", deleteComponentDialog);
+
         componentsVm.deleteComponent();
-        verify(dialogManager).confirmDeletion(eq(selected.getName()), any(DialogManager.Performable.class));
+        verify(deleteComponentDialog).confirmDeletion(selected);
     }
 
     private Component givenSelectedComponent() {
         Component selected = TestFixtures.randomComponent();
         componentsVm.setSelected(selected);
         return selected;
-    }
-
-    @Test
-    public void deleteComponent_componentDeletedAfterConfirmation()
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
-        Component selected = givenUserConfirmedDeletion();
-        verify(componentService).deleteComponent(selected);
-    }
-
-    private Component givenUserConfirmedDeletion() {
-        Component selected = givenSelectedComponent();
-
-        componentsVm.deleteComponent();
-        captureDeletePerfomable(selected).execute();
-
-        return selected;
-    }
-
-    private Performable captureDeletePerfomable(Component selected) {
-        verify(dialogManager).confirmDeletion(eq(selected.getName()), deleteCallbackCaptor.capture());
-        return deleteCallbackCaptor.getValue();
-    }
-
-    @Test(enabled = false)
-    public void deleteComponent_notifyChange() {
-        givenUserConfirmedDeletion();
-        verify(bindWrapper).postNotifyChange(componentsVm, ComponentsVm.SELECTED, ComponentsVm.COMPONENTS,
-                ComponentsVm.CAN_CREATE_NEW_COMPONENT);
     }
 
     @Test(expectedExceptions = IllegalStateException.class)
@@ -178,38 +133,8 @@ public class ComponentsVmTest {
     }
 
     @Test
-    public void isAbleToCreateNewComponent_able() {
-        givenAvailableTypes();
-        boolean actual = componentsVm.isAbleToCreateNewComponent();
-        assertTrue(actual);
-    }
-
-    private void givenAvailableTypes() {
-        Set<ComponentType> all = Sets.newHashSet(ComponentType.values());
-        when(componentService.getAvailableTypes()).thenReturn(all);
-    }
-
-    @Test
-    public void isAbleToCreateNewComponent_notAble() {
-        givenNoAvailableTypes();
-        boolean actual = componentsVm.isAbleToCreateNewComponent();
-        assertFalse(actual);
-    }
-
-    private void givenNoAvailableTypes() {
-        Set<ComponentType> empty = Collections.emptySet();
-        when(componentService.getAvailableTypes()).thenReturn(empty);
-    }
-
-    @Test
     public void isJcommuneAvailable() {
         componentsVm.isJcommuneAvailable();
-        verify(componentService).getAvailableTypes();
-    }
-
-    @Test
-    public void isPoulpeAvailable() {
-        componentsVm.isPoulpeAvailable();
         verify(componentService).getAvailableTypes();
     }
 
@@ -238,6 +163,5 @@ public class ComponentsVmTest {
         field.setAccessible(true);
         field.set(componentsVm, value);
     }
-
 
 }

@@ -30,6 +30,7 @@ import java.util.List;
 public class Jcommune extends Component {
     static final String URL_PROPERTY = "jcommune.url_address";
     static final String URL_SUFFIX = "/";
+    static final String URL_PROTOCOL = "http://";
     private List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
 
     /**
@@ -96,6 +97,9 @@ public class Jcommune extends Component {
      */
     public String getUrl() {
         String url = getProperty(URL_PROPERTY);
+        if(url != null && !url.startsWith(URL_PROTOCOL)){
+            url = URL_PROTOCOL + url;
+        }
         return StringUtils.removeEnd(url, URL_SUFFIX);
     }
 

@@ -27,28 +27,52 @@ import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zkplus.databind.BindingListModelList;
 import org.zkoss.zul.ListModelList;
 
+/**
+ * How to use this class:
+ * 
+ * The component has 2 lists: available groups (left) & those that are already granted/restricted to the
+ * permission (right), and allow users to selects some items from one list and moves them
+ * to another.
+ * For add component to zul page need insert <?component name="dualList"  macroURI="/WEB-INF/zkmacros/DualList.zul"?>
+ * 
+ * use on page: 
+ *  <dualList id = "dualLBox" fullList="${vm.fullList}" rightList="${vm.rightList}"/>
+ *  where param fullList - all available groups
+ *        param rightList - aleready added grops for permission
+ * 
+ * get data from component:
+ *      you need to send component as arg (component = dualLBox) into some method. ex: <button id="savePermissionsButton" label="save" onClick="@command('save', component = dualLBox)"/>
+ *  in method:
+ *      param DualListComponent - get as @BindingParam("component") AbstractComponent
+ *      get data - ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight()  
+ * ex.  public void save(@BindingParam("component") AbstractComponent DualListComponent) {
+ *         List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();//getStateAfterEdit();
+ *      } 
+ * 
+ * @author Enykey
+ */
 public class DualListVm{
 
-    public static final String CANDIDATE_PROPERTY = "candidate", CHOSEN_PROPERTY = "chosen";
-    public static final String CANDIDATE_SELECTED_PROPERTY = "candidateSelected", CHOSEN_SELECTED_PROPERTY = "chosenSelected";
+    public static final String LEFT_PROPERTY = "left", RIGHT_PROPERTY = "right";
+    public static final String LEFT_SELECTED_PROPERTY = "leftSelected", RIGHT_SELECTED_PROPERTY = "rightSelected";
     /**
      * String represents text in filter field for available items list.
      */
-    private String candidateFilterTxt = "";
+    private String leftFilterTxt = "";
     /**
      * String represents text in filter field for exist items list.
      */
-    private String chosenFilterTxt = "";
+    private String rightFilterTxt = "";
 
     /**
      * List of available for adding items.
      */
-    private ListModelList<Group> candidate = new BindingListModelList<Group>(new ArrayList<Group>(), false);
+    private ListModelList<Group> left = new BindingListModelList<Group>(new ArrayList<Group>(), false);
 
     /**
      * List of already existed (added) items.
      */
-    private ListModelList<Group> chosen = new BindingListModelList<Group>(new ArrayList<Group>(), false);
+    private ListModelList<Group> right = new BindingListModelList<Group>(new ArrayList<Group>(), false);
 
     /**
      * List represents state of existed items after editing.
@@ -61,28 +85,32 @@ public class DualListVm{
      */
     
     public DualListVm() {
-        candidate.setMultiple(true);
-        chosen.setMultiple(true);
+        left.setMultiple(true);
+        right.setMultiple(true);
     }
     
     /**
      * Fill ModelLists for component 
      * 
-     * @param candidateList list of groups that not added to permissions
-     * @param chosenList list of groups already added to permissions
+     * @param leftList list of groups that not added to permissions
+     * @param rightList list of groups already added to permissions
      */    
     @Init
-    public void initVm(@BindingParam("candidateList") List<Group> candidateList, @BindingParam("chosenList") List<Group> chosenList){
-        this.candidate.clear();
-        this.candidate.addAll(candidateList);
+    public void initVm(@BindingParam("fullList") List<Group> fullList, @BindingParam("rightList") List<Group> rightList){
+
+        this.fullList = fullList;
         
-        this.chosen.clear();
-        this.chosen.addAll(chosenList); 
+        this.right.clear();
+        this.right.addAll(rightList); 
+        
+        this.left.clear();
+        this.left.addAll(ListUtils.subtract(fullList, rightList));
+        
         
         this.stateAfterEdit.clear();
-        this.stateAfterEdit.addAll(chosenList); 
+        this.stateAfterEdit.addAll(rightList); 
         
-        this.fullList = ListUtils.union(candidateList, chosenList);
+
     }
     
     // -- Accessors -----------------------------
@@ -93,16 +121,16 @@ public class DualListVm{
      * @return text for filter field
      */
     public String getAvailFilterTxt() {
-        return candidateFilterTxt;
+        return leftFilterTxt;
     }
 
     /**
      * Sets filter text for available list.
      *
-     * @param candidateFilterTxt the filter text to set
+     * @param leftFilterTxt the filter text to set
      */
-    public void setAvailFilterTxt(@Nonnull String candidateFilterTxt) {
-        this.candidateFilterTxt = candidateFilterTxt;
+    public void setAvailFilterTxt(@Nonnull String leftFilterTxt) {
+        this.leftFilterTxt = leftFilterTxt;
     }
 
     /**
@@ -111,16 +139,16 @@ public class DualListVm{
      * @return text for filter field
      */
     public String getExistFilterTxt() {
-        return chosenFilterTxt;
+        return rightFilterTxt;
     }
 
     /**
      * Sets filter text for a list of existing items.
      *
-     * @param chosenFilterTxt the filter text to set
+     * @param rightFilterTxt the filter text to set
      */
-    public void setExistFilterTxt(@Nonnull String chosenFilterTxt) {
-        this.chosenFilterTxt = chosenFilterTxt;
+    public void setExistFilterTxt(@Nonnull String rightFilterTxt) {
+        this.rightFilterTxt = rightFilterTxt;
     }
 
     /**
@@ -128,17 +156,17 @@ public class DualListVm{
      *
      * @return the list of available items
      */
-    public ListModelList<Group> getCandidate() {
-        return candidate;
+    public ListModelList<Group> getLeft() {
+        return left;
     }
 
     /**
      * Gets list of existing items.
      *
-     * @return the list of chosen items
+     * @return the list of right items
      */
-    public ListModelList<Group> getChosen() {
-        return chosen;
+    public ListModelList<Group> getRight() {
+        return right;
     }
 
     /**
@@ -155,8 +183,8 @@ public class DualListVm{
      *
      * @return set of selected items in available list
      */
-    public Set<Group> getCandidateSelected() {
-        return candidate.getSelection();
+    public Set<Group> getLeftSelected() {
+        return left.getSelection();
     }
 
     /**
@@ -164,8 +192,8 @@ public class DualListVm{
      *
      * @return set of selected items in existed list
      */
-    public Set<Group> getChosenSelected() {
-        return chosen.getSelection();
+    public Set<Group> getRightSelected() {
+        return right.getSelection();
     }
 
     // -- ZK Commands ---------------------------
@@ -174,9 +202,9 @@ public class DualListVm{
      * Adds available selected item in consistent state.
      */
     @Command
-    @NotifyChange({CANDIDATE_PROPERTY, CHOSEN_PROPERTY, CANDIDATE_SELECTED_PROPERTY, CHOSEN_SELECTED_PROPERTY})
+    @NotifyChange({LEFT_PROPERTY, RIGHT_PROPERTY, LEFT_SELECTED_PROPERTY, RIGHT_SELECTED_PROPERTY})
     public void add() {
-        stateAfterEdit.addAll(getCandidateSelected());
+        stateAfterEdit.addAll(getLeftSelected());
         updateVm();
     }
 
@@ -184,9 +212,9 @@ public class DualListVm{
      * Adds all available items in consistent state.
      */
     @Command
-    @NotifyChange({CANDIDATE_PROPERTY, CHOSEN_PROPERTY, CANDIDATE_SELECTED_PROPERTY, CHOSEN_SELECTED_PROPERTY})
+    @NotifyChange({LEFT_PROPERTY, RIGHT_PROPERTY, LEFT_SELECTED_PROPERTY, RIGHT_SELECTED_PROPERTY})
     public void addAll() {
-        stateAfterEdit.addAll(getCandidate());
+        stateAfterEdit.addAll(getLeft());
         updateVm();
     }
 
@@ -194,9 +222,9 @@ public class DualListVm{
      * Removes selected item from consistent state.
      */
     @Command
-    @NotifyChange({CANDIDATE_PROPERTY, CHOSEN_PROPERTY, CANDIDATE_SELECTED_PROPERTY, CHOSEN_SELECTED_PROPERTY})
+    @NotifyChange({LEFT_PROPERTY, RIGHT_PROPERTY, LEFT_SELECTED_PROPERTY, RIGHT_SELECTED_PROPERTY})
     public void remove() {
-        stateAfterEdit.removeAll(getChosenSelected());
+        stateAfterEdit.removeAll(getRightSelected());
         updateVm();
     }
 
@@ -204,9 +232,9 @@ public class DualListVm{
      * Removes all selected items from consistent state.
      */
     @Command
-    @NotifyChange({CANDIDATE_PROPERTY, CHOSEN_PROPERTY, CANDIDATE_SELECTED_PROPERTY, CHOSEN_SELECTED_PROPERTY})
+    @NotifyChange({LEFT_PROPERTY, RIGHT_PROPERTY, LEFT_SELECTED_PROPERTY, RIGHT_SELECTED_PROPERTY})
     public void removeAll() {
-        stateAfterEdit.removeAll(getChosen());
+        stateAfterEdit.removeAll(getRight());
         updateVm();
     }
 
@@ -215,7 +243,7 @@ public class DualListVm{
      * any of two list's in window.
      */
     @Command
-    @NotifyChange({"candidateSelected", "chosenSelected"})
+    @NotifyChange({"leftSelected", "rightSelected"})
     public void listSelected() {
         // NOOP
     }
@@ -227,11 +255,11 @@ public class DualListVm{
      */
     
     protected void updateVm() {
-        getChosen().clear();
-        getChosen().addAll(getStateAfterEdit());
+        getRight().clear();
+        getRight().addAll(getStateAfterEdit());
 
-        getCandidate().clear();
-        getCandidate().addAll(ListUtils.subtract(fullList, getStateAfterEdit()));
+        getLeft().clear();
+        getLeft().addAll(ListUtils.subtract(fullList, getStateAfterEdit()));
     
     }
 
@@ -241,21 +269,21 @@ public class DualListVm{
     /**
      * Set list of available items.
      *
-     * @param candidate list of available items
+     * @param left list of available items
      */
-    public void setAvail(ListModelList<Group> candidate) {
-        this.candidate = candidate;
+    public void setAvail(ListModelList<Group> left) {
+        this.left = left;
     }
     /**
      * Set list of exist items.
      *
-     * @param chosen list of exist items
+     * @param right list of exist items
      */
-    public void setExist(ListModelList<Group> chosen) {
-        this.chosen = chosen;
+    public void setExist(ListModelList<Group> right) {
+        this.right = right;
     }
     /**
-     * Get list of chosen items after edit
+     * Get list of right items after edit
      * @return list of groups after edit
      */
     public List<Group> getStateAfterEdit() {

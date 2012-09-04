@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?page title="Edit Groups For Branch Permission" contentType="text/html; charset=UTF-8"?>
+<?page title="Edit Groups For Personal Permission" contentType="text/html; charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
 <!--<?component name="dualList" macroURI="/WEB-INF/zkmacros/DualList.zul"?>-->
 <?component name="dualList"  macroURI="/WEB-INF/zkmacros/DualList.zul"?>

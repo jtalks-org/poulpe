@@ -5,7 +5,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <!-- View of customized component DualListbox -->
-    <vlayout id="www"  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.jtalks.poulpe.web.controller.zkmacro.DualListVm', candidateList=arg.candidateList,chosenList=arg.chosenList)" >
+    <vlayout id="DualList"  apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init('org.jtalks.poulpe.web.controller.zkmacro.DualListVm', candidateList=arg.candidateList,chosenList=arg.chosenList)" >
             <hbox id="qqq">
                 <panel title="Available" border="normal" width="300px">
                     <panelchildren>

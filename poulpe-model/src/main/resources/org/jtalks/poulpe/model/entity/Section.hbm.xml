@@ -32,8 +32,8 @@
     <property column="UUID" name="uuid" not-null="true"/>
     <property column="NAME" name="name" not-null="true"/>
     <property column="DESCRIPTION" name="description"/>
-    <!--'save-update' so not remove the associated objects when deleting JCommune and sections-->
-    <list name="branches" cascade="save-update">
+
+    <list name="branches" cascade="all">
       <cache usage="nonstrict-read-write"/>
       <key column="SECTION_ID" foreign-key="FK_SECTION"/>
       <list-index column="POSITION"/>
