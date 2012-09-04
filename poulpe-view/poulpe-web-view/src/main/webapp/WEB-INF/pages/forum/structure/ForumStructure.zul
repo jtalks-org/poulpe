@@ -6,12 +6,25 @@
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}" width="100%" height="100%">
     <button label="${labels.forum_structure.create_section_button}" onClick="@global-command('showNewSectionDialog')"/>
 
+      <checkbox id="expandTree" label="Expand tree" onCheck="doChecked()" />
+              <zscript><![CDATA[
+                  void doChecked() {
+                      layout.value = (expandTree.isChecked() ? "Expand tree" : "");
+                  }
+              ]]></zscript>
+      <hlayout>
+          You have selected :
+          <label id="layout" />
+      </hlayout>
+
     <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">
       <template name="model">
         <treeitem draggable="@load(each.data.draggableId)" droppable="@load(each.data.droppableId)" label="@load(each)"
                   onDrop="@command('dropEventHandler', event=event)"/>
       </template>
+
     </tree>
+
 
     <menupopup id="treeContextMenu">
       <menuitem label="${labels.forum_structure.edit_item}" image="/resources/img/edit16.png"
