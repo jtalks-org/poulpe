@@ -23,6 +23,8 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
+import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -70,7 +72,11 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void deleteComponent(Component component)
-        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException {
+        throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException, EntityIsRemovedException {
+        Component existInDbComponent = getByType(component.getComponentType());
+        if (existInDbComponent == null || component.getId() != existInDbComponent.getId()) {
+            throw new EntityIsRemovedException();
+        }
         if (component instanceof Jcommune) {
             Jcommune jcommune = (Jcommune) component;
             jCommuneNotifier.notifyAboutComponentDelete(jcommune.getUrl());
@@ -81,6 +87,7 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     /**
      * {@inheritDoc}
      */
+    @Deprecated
     @Override
     public void saveComponent(Component component) {
         validator.throwOnValidationFailure(component);
@@ -130,5 +137,37 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     public void setjCommuneNotifier(JcommuneHttpNotifier jCommuneNotifier) {
         this.jCommuneNotifier = jCommuneNotifier;
+    }
+
+    /** 
+     * {@inheritDoc}
+     * 
+     * Before saving check if a component with the same type exists in database.
+     * Throw exception if component already exists.  
+     */
+    @Override
+    public void addComponent(Component component) throws EntityUniqueConstraintException {
+        validator.throwOnValidationFailure(component);
+        Component existInDbComponent = getByType(component.getComponentType());
+        if (existInDbComponent != null && component.getId() != existInDbComponent.getId()) {
+            throw new EntityUniqueConstraintException();
+        }
+        dao.saveOrUpdate(component);
+    }
+
+    /** 
+     * {@inheritDoc}
+     * 
+     * Before updating check if the component exists in database.
+     * Throw exception if component was removed by another user.  
+     */
+    @Override
+    public void updateComponent(Component component) throws EntityIsRemovedException {
+        validator.throwOnValidationFailure(component);
+        Component existInDbComponent = getByType(component.getComponentType());
+        if (existInDbComponent == null || component.getId() != existInDbComponent.getId()) {
+            throw new EntityIsRemovedException();
+        }
+        dao.saveOrUpdate(component);
     }
 }

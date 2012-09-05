@@ -36,6 +36,7 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -49,6 +50,7 @@ import java.util.Collections;
 import java.util.Set;
 
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -78,8 +80,8 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test
-    public void testSaveComponent() {
-        componentService.saveComponent(component);
+    public void testAddComponent() throws Exception {
+        componentService.addComponent(component);
 
         verify(validator).throwOnValidationFailure(component);
         verify(componentDao).saveOrUpdate(component);
@@ -92,9 +94,9 @@ public class TransactionalComponentServiceTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
-    public void testSaveComponentException() {
+    public void testAddComponentException() throws Exception {
         givenConstraintsViolations();
-        componentService.saveComponent(component);
+        componentService.addComponent(component);
     }
 
     private void givenConstraintsViolations() {
@@ -104,8 +106,9 @@ public class TransactionalComponentServiceTest {
 
     @Test
     public void testDeleteComponent() throws NoConnectionToJcommuneException,
-            JcommuneUrlNotConfiguredException, JcommuneRespondedWithErrorException {
+            JcommuneUrlNotConfiguredException, JcommuneRespondedWithErrorException, EntityIsRemovedException {
         doNothing().when(jcommuneHttpNotifier).notifyAboutComponentDelete(anyString());
+        when(componentService.getByType(jcommune.getComponentType())).thenReturn(jcommune);
         doNothing().when(componentDao).delete(jcommune);
         componentService.deleteComponent(jcommune);
     }

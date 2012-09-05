@@ -15,17 +15,20 @@
 package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import static org.apache.commons.lang3.Validate.notNull;
+import static org.zkoss.util.resource.Labels.getLabel;
 
 import javax.annotation.Nonnull;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.jtalks.poulpe.web.controller.zkutils.BooleanStringConverter;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.zul.Messagebox;
 
 /**
  * ViewModel class for EditComponent View
@@ -36,6 +39,8 @@ import org.zkoss.bind.annotation.Command;
  */
 public class EditComponentVm {
     public static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
+    public static final String COMPONENT_EDITING_FAILED = "component.error.is_removed";
+    public static final String COMPONENT_EDITING_FAILED_TITLE = "component.error.editing_failed_title";
 
     private final ComponentService componentService;
     private final Component component;
@@ -71,9 +76,16 @@ public class EditComponentVm {
      */
     @Command
     public void save() {
-        componentService.saveComponent(component);
-        components.componentsUpdated();
-        switchToComponentsWindow();
+        try {
+            componentService.updateComponent(component);
+            components.componentsUpdated();
+        } catch (EntityIsRemovedException ex) {
+            components.renew(componentService.getAll());
+            Messagebox.show(getLabel(COMPONENT_EDITING_FAILED),
+                            getLabel(COMPONENT_EDITING_FAILED_TITLE), Messagebox.OK, Messagebox.ERROR);
+        } finally {
+            switchToComponentsWindow();
+        }
     }
 
     /**

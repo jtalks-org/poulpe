@@ -19,6 +19,8 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
+import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -54,10 +56,11 @@ public interface ComponentService extends EntityService<Component> {
      *          if request reached some host but that host answered with some HTTP error (only error codes between 201
      *          and 299 are acceptable)
      * @throws JcommuneUrlNotConfiguredException if url to the component wasn't configured by admin
+     * @throws EntityIsRemovedException if component was removed by another user
      *
      */
     void deleteComponent(Component component) throws NoConnectionToJcommuneException,
-            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException;
+            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException, EntityIsRemovedException;
 
     /**
      * Saves new component or updates existent
@@ -65,8 +68,29 @@ public interface ComponentService extends EntityService<Component> {
      * @param component to save
      * @throws org.jtalks.common.validation.ValidationException
      *          when entity being saved violates validation constraints
+     * @deprecated addComponent and updateComponent are used 
      */
     void saveComponent(Component component);
+    
+    /**
+     * Saves new component.
+     * Use instead of {@link saveComponent}.
+     * 
+     * @param component to save
+     * @throws ValidationException when entity being saved violates validation constraints
+     * @throws EntityUniqueConstraintException if component with the same {@link ComponentType} already exists in database
+     */
+    void addComponent(Component component) throws EntityUniqueConstraintException;
+
+    /**
+     * Update existed component.
+     * Use instead of {@link saveComponent}.
+     * 
+     * @param component to update
+     * @throws ValidationException when entity being saved violates validation constraints
+     * @throws EntityIsRemovedException if the component was removed from database by another user
+     */
+    void updateComponent(Component component) throws EntityIsRemovedException;
 
     /**
      * Runs re-index on  the specified component.

@@ -53,9 +53,9 @@ public class AddComponentVmTest {
     }
 
     @Test
-    public void createComponent() {
+    public void createComponent() throws Exception {
         addComponentVm.createComponent();
-        verify(componentService).saveComponent(addComponentVm.getComponent());
+        verify(componentService).addComponent(addComponentVm.getComponent());
         verify(windowManager).open(ComponentsVm.COMPONENTS_PAGE_LOCATION);
     }
 

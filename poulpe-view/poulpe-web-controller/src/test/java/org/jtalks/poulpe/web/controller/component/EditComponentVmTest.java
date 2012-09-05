@@ -54,9 +54,9 @@ public class EditComponentVmTest {
     }
 
     @Test
-    public void save_componentSaved() {
+    public void save_componentSaved() throws Exception {
         editComponentVm.save();
-        verify(componentService).saveComponent(component);
+        verify(componentService).updateComponent(component);
     }
     
     @Test
@@ -66,9 +66,9 @@ public class EditComponentVmTest {
     }
     
     @Test
-    public void cancel_componentIsNotSaved() {
+    public void cancel_componentIsNotSaved() throws Exception {
         editComponentVm.cancel();
-        verify(componentService, never()).saveComponent(component);
+        verify(componentService, never()).updateComponent(component);
     }
     
     @Test
