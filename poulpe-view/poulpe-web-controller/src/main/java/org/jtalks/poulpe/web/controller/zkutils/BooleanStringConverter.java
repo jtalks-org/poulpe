@@ -32,17 +32,13 @@ public class BooleanStringConverter implements Converter {
      * @param value string to be converted
      * @param comp associated component
      * @param ctx bind context for associate Binding and extra parameter (e.g. format)
-     * @return the converted Boolean. For string.equalsIgnoreIgnoreCase("true") - it returns true,
-     * else - false
+     * @return the converted Boolean. For string.equalsIgnoreIgnoreCase("true") - it returns true(for example: if
+     * string = "true", string = "TrUe"), else - false(even if string = "smth#$%", or string is null)
      */
     @Override
     public Object coerceToUi(Object value, Component comp, BindContext ctx) {
         String string = (String) value;
-        if (string.equalsIgnoreCase("true")) {
-            return true;
-        } else {
-            return false;
-        }
+        return Boolean.parseBoolean(string);
     }
 
     /**
@@ -50,15 +46,12 @@ public class BooleanStringConverter implements Converter {
      * @param value boolean to be converted
      * @param comp associated component
      * @param ctx bind context for associate Binding and extra parameter (e.g. format)
-     * @return the converted String. For boolean.equals(Boolean.TRUE) - it returns "true", else - "false"
+     * @return the converted String. For boolean.equals(Boolean.TRUE) - it returns "true", else - "false"(even if
+     * boolean-value is null)
      */
     @Override
     public Object coerceToBean(Object value, Component comp, BindContext ctx) {
         Boolean bool = (Boolean) value;
-        if (bool.equals(Boolean.TRUE)) {
-            return "true";
-        } else {
-            return "false";
-        }
+        return bool.toString();
     }
 }

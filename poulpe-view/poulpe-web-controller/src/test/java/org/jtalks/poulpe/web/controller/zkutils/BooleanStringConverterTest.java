@@ -32,37 +32,37 @@ public class BooleanStringConverterTest {
     BooleanStringConverter boolStrConverter = new BooleanStringConverter();
 
     @Test
-    public void testStrToBoolTrue() throws Exception {
+    public void testMixedCaseStringShouldBeConvertedToTrue() throws Exception {
         String sTrue = "TrUe";
         assertEquals(boolStrConverter.coerceToUi(sTrue, null, null), true);
     }
 
     @Test
-    public void testStrToBoolFalse() throws Exception {
+    public void testMixedCaseStringShouldBeConvertedToFalse() throws Exception {
         String sFalse = "fALSe";
         assertEquals(boolStrConverter.coerceToUi(sFalse, null, null), false);
     }
 
     @Test
-    public void testBoolToStrTrue() throws Exception {
+    public void testBooleanShouldBeConvertedToTrue() throws Exception {
         boolean bool = true;
         assertEquals(boolStrConverter.coerceToBean(bool, null, null), "true");
     }
 
     @Test
-    public void testBoolToStrFalse() throws Exception {
+    public void testBooleanShouldBeConvertedToFalse() throws Exception {
         boolean bool = false;
         assertEquals(boolStrConverter.coerceToBean(bool, null, null), "false");
     }
 
     @Test
-    public void testObjectBoolToStrTrue() throws Exception {
+    public void testBooleanObjectShouldBeConvertedToTrue() throws Exception {
         Boolean bool = true;
         assertEquals(boolStrConverter.coerceToBean(bool, null, null), "true");
     }
 
     @Test
-    public void testObjectBoolToStrFalse() throws Exception {
+    public void testBooleanObjectShouldBeConvertedToFalse() throws Exception {
         Boolean bool = false;
         assertEquals(boolStrConverter.coerceToBean(bool, null, null), "false");
     }
