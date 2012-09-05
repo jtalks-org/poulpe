@@ -55,7 +55,6 @@ public class EditComponentVm {
         windowManager.open(EDIT_COMPONENT_LOCATION);
     }
     private WindowManager windowManager;
-    private final BooleanStringConverter booleanStringConverter = new BooleanStringConverter();
 
     /**
      * Creates edit dialog for editing currently selected component
@@ -108,10 +107,6 @@ public class EditComponentVm {
      */
     public Component getComponent() {
         return component;
-    }
-
-    public BooleanStringConverter getBooleanStringConverter() {
-        return booleanStringConverter;
     }
 
     /**
