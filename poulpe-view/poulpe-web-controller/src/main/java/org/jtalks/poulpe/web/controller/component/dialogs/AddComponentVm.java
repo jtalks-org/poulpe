@@ -18,11 +18,14 @@ import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.zkoss.bind.annotation.Command;
+import org.zkoss.zul.Messagebox;
+import static org.zkoss.util.resource.Labels.getLabel;
 
 import java.util.List;
 
@@ -34,6 +37,8 @@ import java.util.List;
  */
 public class AddComponentVm {
     public static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
+    public static final String COMPONENT_CREATING_FAILED = "component.error.creating_failed";
+    public static final String COMPONENT_CREATING_FAILED_TITLE = "component.error.creating_failed_title";
 
     private final ComponentService componentService;
     private final WindowManager windowManager;
@@ -62,9 +67,16 @@ public class AddComponentVm {
      */
     @Command
     public void createComponent() {
-        componentService.saveComponent(component);
-        componentList.add(component);
-        switchToComponentsWindow();
+        try {
+            componentService.addComponent(component);
+            componentList.add(component);
+        } catch (EntityUniqueConstraintException ex) {
+            componentList.renew(componentService.getAll());
+            Messagebox.show(getLabel(COMPONENT_CREATING_FAILED),
+                            getLabel(COMPONENT_CREATING_FAILED_TITLE), Messagebox.OK, Messagebox.ERROR);
+        } finally {
+            switchToComponentsWindow();
+        }
     }
 
     /**

@@ -43,7 +43,8 @@
               constraint="${property.validationRule}: ${c:l('component.property.error.'.concat(property.name))}" />
 
             <checkbox if="${property.validationRule == '/(true)|(false)/' or property.validationRule == '/(false)|(true)/'}"
-              checked="@load(property.value) @save(property.value, before='save')@converter(vm.booleanStringConverter)"/>
+              checked="@load(property.value) @save(property.value, before='save')
+              @converter('org.jtalks.poulpe.web.controller.zkutils.BooleanStringConverter')"/>
           </row>
         </template>
       </grid>

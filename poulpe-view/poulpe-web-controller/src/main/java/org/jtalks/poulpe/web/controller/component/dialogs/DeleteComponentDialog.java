@@ -3,6 +3,7 @@ package org.jtalks.poulpe.web.controller.component.dialogs;
 import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -65,6 +66,10 @@ public class DeleteComponentDialog implements EventListener<Event> {
             showDialog(JCOMMUNE_RESPONSE_FAILED);
         } catch (JcommuneUrlNotConfiguredException elementDoesNotExist) {
             showDialog(JCOMMUNE_URL_FAILED);
+        } catch (EntityIsRemovedException ex) {
+            // component was removed by another user: just update ComponentList
+            componentsToUpdate.renew(componentService.getAll());
+            toDelete = null;
         }
     }
 
