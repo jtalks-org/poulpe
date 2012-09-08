@@ -22,6 +22,7 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -48,7 +49,7 @@ public class EditComponentVmTest {
         SelectedEntity<Component> selectedEntity = new SelectedEntity<Component>();
         selectedEntity.setEntity(component);
         
-        editComponentVm = new EditComponentVm(componentService, selectedEntity);
+        editComponentVm = new EditComponentVm(componentService, selectedEntity, new ComponentList());
         editComponentVm.setWindowManager(windowManager);
     }
 

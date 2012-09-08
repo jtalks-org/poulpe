@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller;
 
+import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -32,7 +34,7 @@ import static org.mockito.Mockito.when;
 public class AdminWindowTest {
 
     @InjectMocks
-    AdminWindow adminWindow = new AdminWindow();
+    AdminWindow adminWindow = new AdminWindow(null);
 
     @Mock
     ZkHelper zkHelper;
@@ -132,5 +134,11 @@ public class AdminWindowTest {
     public void testOnShowGroupsPermissions() {
         adminWindow.onShowGroupsPermissions();
         testOnShow("groups/GroupsPermissions.zul");
+    }
+
+    @Test
+    public void testOnComponentClick() {
+        adminWindow.onComponentClick(TestFixtures.component(ComponentType.FORUM));
+        verify(windowManager).open("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
 }

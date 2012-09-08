@@ -14,13 +14,17 @@
  */
 package org.jtalks.poulpe.web.controller.zkutils;
 
+import org.springframework.beans.BeanUtils;
 import org.zkoss.bind.BindUtils;
+
+import java.beans.PropertyDescriptor;
+import java.util.Collection;
 
 /**
  * This class represent the wrapper around {@link org.zkoss.bind.BindUtils}. BindUtils is utility which needs to help
  * developer to use zk bind, but because BindUtils contains static methods, it do our code hard to testing. This wrapper
  * needs to testing, it can be easy mocked with mockito or other mock frameworks.
- * 
+ *
  * @author Vermut
  * @author Alexey Grigorev
  */
@@ -28,10 +32,9 @@ public class BindUtilsWrapper {
 
     /**
      * Post a notify change to corresponding event queue to notify a bean's property changing
-     * 
-     * @param bean the bean instance
+     *
+     * @param bean     the bean instance
      * @param property the property name of bean
-     * 
      * @see org.zkoss.bind.BindUtils#postNotifyChange(String, String, Object, String)
      */
     public void postNotifyChange(Object bean, String property) {
@@ -44,8 +47,8 @@ public class BindUtilsWrapper {
 
     /**
      * Notifies about changes of passed property names to vm component
-     * 
-     * @param vm zk view-model object
+     *
+     * @param vm         zk view-model object
      * @param properties needed to be notified
      * @see #postNotifyChange(Object, String)
      */
@@ -55,4 +58,27 @@ public class BindUtilsWrapper {
         }
     }
 
+    /**
+     * Notifies the VM about all the properties inside were changed so that ZK can re-read them and update its UI.
+     *
+     * @param vm a visual model to iterate through all the properties and trigger ZK Binder notifications
+     */
+    public void notifyAllPropsChanged(Object vm) {
+        PropertyDescriptor[] props = BeanUtils.getPropertyDescriptors(vm.getClass());
+        for (PropertyDescriptor prop : props) {
+            postNotifyChange(vm, prop.getName());
+        }
+    }
+
+    /**
+     * Notifies all the VM about all their properties inside were changed so that ZK can re-read them and update its
+     * UI.
+     *
+     * @param vms a visual models to iterate through all their properties and trigger ZK Binder notifications
+     */
+    public void notifyAllPropsChanged(Collection<Object> vms) {
+        for (Object vm : vms) {
+            notifyAllPropsChanged(vm);
+        }
+    }
 }

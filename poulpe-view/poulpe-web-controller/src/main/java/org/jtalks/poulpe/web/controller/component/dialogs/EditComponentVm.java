@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
@@ -22,6 +22,9 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.ComponentList;
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
+import org.jtalks.poulpe.web.controller.zkutils.BooleanStringConverter;
 import org.zkoss.bind.annotation.Command;
 
 /**
@@ -32,31 +35,34 @@ import org.zkoss.bind.annotation.Command;
  * @author Alexey Grigorev
  */
 public class EditComponentVm {
-    static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
+    public static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
 
     private final ComponentService componentService;
     private final Component component;
-
-    private WindowManager windowManager;
+    private final ComponentList components;
 
     /**
      * Opens window for editing component.
-     * 
+     *
      * @param windowManager The object which is responsible for creation and closing application windows
      */
     public static void openWindowForEdit(WindowManager windowManager) {
         windowManager.open(EDIT_COMPONENT_LOCATION);
     }
+    private WindowManager windowManager;
+    private final BooleanStringConverter booleanStringConverter = new BooleanStringConverter();
 
     /**
      * Creates edit dialog for editing currently selected component
-     * 
+     *
      * @param componentService service for saving component
      * @param selectedComponent currently selected component
+     * @param components
      */
     public EditComponentVm(@Nonnull ComponentService componentService,
-            @Nonnull SelectedEntity<Component> selectedComponent) {
+                           @Nonnull SelectedEntity<Component> selectedComponent, ComponentList components) {
         this.componentService = componentService;
+        this.components = components;
         this.component = notNull(selectedComponent.getEntity());
     }
 
@@ -66,6 +72,7 @@ public class EditComponentVm {
     @Command
     public void save() {
         componentService.saveComponent(component);
+        components.componentsUpdated();
         switchToComponentsWindow();
     }
 
@@ -89,6 +96,10 @@ public class EditComponentVm {
      */
     public Component getComponent() {
         return component;
+    }
+
+    public BooleanStringConverter getBooleanStringConverter() {
+        return booleanStringConverter;
     }
 
     /**

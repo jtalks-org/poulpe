@@ -93,7 +93,7 @@ public class EditGroupsForPersonalPermissionVm_dev {
         List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
         @SuppressWarnings("unchecked")
-        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("www").getAttribute("vm")).getChosen();//getStateAfterEdit();
+        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();//getStateAfterEdit();
         for (Group groupForSave : groupService.getAll()) {
             List<Group> listGroupForSave = Lists.newArrayList();
             listGroupForSave.add(groupForSave);
@@ -115,15 +115,15 @@ public class EditGroupsForPersonalPermissionVm_dev {
      * Gets list of groups without permission record
      * @return list of groups w/o already added
      */
-    public List<Group> getCandidateList(){
-        return ListUtils.subtract(groupService.getAll(), getAlreadyAddedGroups());
+    public List<Group> getFullList(){
+        return groupService.getAll();
     }
     
     /**
      * Gets list of groups with permission record
      * @return list of already added groups 
      */    
-    public List<Group> getChosenList(){
+    public List<Group> getRightList(){
         return getAlreadyAddedGroups();
     }
 

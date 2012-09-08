@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import com.google.common.collect.Lists;
 import org.jtalks.poulpe.model.entity.Component;
@@ -20,22 +20,25 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.component.ComponentList;
+import org.jtalks.poulpe.web.controller.component.ComponentsVm;
 import org.zkoss.bind.annotation.Command;
 
 import java.util.List;
 
 /**
- * View-Model for adding a selectedEntity. Shown from {@link ComponentsVm}.
+ * View-Model for adding a selectedEntity. Shown from {@link org.jtalks.poulpe.web.controller.component.ComponentsVm}.
  *
  * @author Alexey Grigorev
  * @author Leonid Kazantcev
  */
 public class AddComponentVm {
-    static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
+    public static final String ADD_COMPONENT_LOCATION = "/WEB-INF/pages/component/add_comp.zul";
 
     private final ComponentService componentService;
     private final WindowManager windowManager;
     private final Component component;
+    private final ComponentList componentList;
 
     /**
      * Constructs new dialog for creating components. It should be used as a prototype, new object for every new
@@ -43,13 +46,14 @@ public class AddComponentVm {
      *
      * @param componentService service for saving Component
      * @param windowManager    object for opening and closing application windows
-     * @param selectedEntity selectedEntity holder of {@link Component} instance, witch will be saved to data base,
-     *                       after set up its name and description at UI
+     * @param selectedEntity selectedEntity holder of {@link org.jtalks.poulpe.model.entity.Component} instance, witch will be saved to data base,
+     * @param componentList
      */
     public AddComponentVm(ComponentService componentService, WindowManager windowManager,
-                          SelectedEntity<Component> selectedEntity) {
+                          SelectedEntity<Component> selectedEntity, ComponentList componentList) {
         this.componentService = componentService;
         this.windowManager = windowManager;
+        this.componentList = componentList;
         component = selectedEntity.getEntity();
     }
 
@@ -59,6 +63,7 @@ public class AddComponentVm {
     @Command
     public void createComponent() {
         componentService.saveComponent(component);
+        componentList.add(component);
         switchToComponentsWindow();
     }
 

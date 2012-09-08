@@ -62,11 +62,14 @@
   <bean id="aclCache" class="org.springframework.security.acls.domain.EhCacheBasedAclCache">
     <constructor-arg>
       <bean class="org.springframework.cache.ehcache.EhCacheFactoryBean">
-        <property name="cacheManager">
-          <bean class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"/>
-        </property>
+        <property name="cacheManager" ref="replicatingCache"/>
+        <property name="cacheName" value="org.jtalks.EHCOMMON"/>
       </bean>
     </constructor-arg>
+  </bean>
+
+  <bean id="replicatingCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+    <property name="configLocation" value="classpath:/org/jtalks/poulpe/model/entity/ehcache.xml"/>
   </bean>
 
   <bean id="jtalksAclAuthorizationStrategy" class="org.jtalks.poulpe.security.AclAuthorizationStrategyImpl"/>
@@ -75,9 +78,9 @@
     <constructor-arg ref="aclService"/>
     <property name="aclUtil" ref="aclUtil"/>
   </bean>
-  <bean  name="aclUtil" class="org.jtalks.common.security.acl.AclUtil">
-      <constructor-arg ref="aclService"/>
-      <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
+  <bean name="aclUtil" class="org.jtalks.common.security.acl.AclUtil">
+    <constructor-arg ref="aclService"/>
+    <property name="objectIdentityGenerator" ref="typeConvertingObjectIdentityGenerator"/>
   </bean>
   <bean id="typeConvertingObjectIdentityGenerator" factory-method="createDefaultGenerator"
         class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">

@@ -14,15 +14,14 @@
  */
 package org.jtalks.poulpe.model.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.validation.constraints.NotNull;
-
 import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotBlank;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Property;
+
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represent jtalks engine component.
@@ -32,9 +31,9 @@ import org.jtalks.common.model.entity.Property;
  */
 public class Component extends Entity {
     private static final String COMPONENT_NAME_ILLEGAL_LENGTH = "{component.name.length_constraint_violation}";
-    private static final String COMPONENT_DESCRIPTION_ILLEGAL_LENGTH = 
+    private static final String COMPONENT_DESCRIPTION_ILLEGAL_LENGTH =
             "{component.description.length_constraint_violation}";
-    private static final String COMPONENT_EMPTY_COMPONENT_TYPE = 
+    private static final String COMPONENT_EMPTY_COMPONENT_TYPE =
             "{component.componentType.emptiness_constraint_violation}";
     private static final String COMPONENT_CANT_BE_VOID = "{component.name.emptiness_constraint_violation}";
     public static final int COMPONENT_NAME_MAX_LENGTH = 100;
@@ -53,15 +52,14 @@ public class Component extends Entity {
     private List<Property> properties = new ArrayList<Property>();
 
     /**
-     * Default constructor, sets nothing - all values are nulls.
-     * Visible for hibernate
+     * Default constructor, sets nothing - all values are nulls. Visible for hibernate
      */
     protected Component() {
     }
-    
+
     /**
      * Initializes component with given component type. For using is subclasses.
-     * 
+     *
      * @param componentType type of the component
      */
     protected Component(ComponentType componentType) {
@@ -69,13 +67,13 @@ public class Component extends Entity {
     }
 
     /**
-     * Constructor with all parameters.
-     * Instances should be created using {@link ComponentBase#newComponent(String, String)}.
+     * Constructor with all parameters. Instances should be created using {@link ComponentBase#newComponent(String,
+     * String)}.
      *
-     * @param name name of the component
-     * @param description description of the component
+     * @param name          name of the component
+     * @param description   description of the component
      * @param componentType type of the component {@link ComponentType}
-     * @param properties list of properties {@link Property}}
+     * @param properties    list of properties {@link Property}}
      */
     Component(String name, String description, ComponentType componentType, List<Property> properties) {
         this.name = name;
@@ -93,6 +91,7 @@ public class Component extends Entity {
 
     /**
      * Visible for Hibernate
+     *
      * @param properties the component properties
      */
     protected void setProperties(List<Property> properties) {
@@ -142,28 +141,11 @@ public class Component extends Entity {
     }
 
     /**
-     * Adds the property to this component
+     * Sets the property some value if one is exist. If it is not, then adds a new property
      *
-     * @param name is the name of the property
+     * @param name  is the name of the property
      * @param value is the value of the property
-     * 
-     * @deprecated looks like no one uses it, thus it should be deleted
      */
-    @Deprecated
-    public void addProperty(String name, String value) {
-        properties.add(new Property(name, value));
-    }
-
-    /**
-     * Sets the property some value if one is exist. If it
-     * is not, then adds a new property
-     *
-     * @param name is the name of the property
-     * @param value is the value of the property
-     * 
-     * @deprecated looks like no one uses it, thus it should be deleted
-     */
-    @Deprecated
     public void setProperty(String name, String value) {
         for (Property p : properties) {
             if (p.getName().equals(name)) {
@@ -171,19 +153,15 @@ public class Component extends Entity {
                 return;
             }
         }
-        
-        addProperty(name, value);
+        properties.add(new Property(name, value));
     }
 
     /**
-     * Returns the property by its name or null
-     * if none was found
+     * Returns the property by its name or null if none was found
+     *
      * @param name is the name of the property
      * @return property value or null if not found
-     * 
-     * @deprecated looks like no one uses it, thus it should be deleted
      */
-    @Deprecated
     public String getProperty(String name) {
         for (Property p : properties) {
             if (p.getName().equals(name)) {
@@ -193,7 +171,9 @@ public class Component extends Entity {
         return null;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         return "Component [id=" + getId() + ", name=" + name + ", description=" + description + ", componentType="
