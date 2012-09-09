@@ -35,15 +35,21 @@
   <bean id="validatorFactory" class="org.jtalks.common.validation.config.PredefinedConstraintValidationFactory">
     <property name="validators">
       <list>
-        <ref bean="uniqueConstraintValidator" />
+        <!--  <ref bean="uniqueConstraintValidator" />  -->
+        <ref bean="stubConstraintValidator" />
       </list>
     </property>
   </bean>
 
+  <bean id="stubConstraintValidator" class="org.jtalks.poulpe.model.validation.validator.EmptyStubConstraintValidator">
+  </bean>
+
+  <!--  not used -->
   <bean id="uniqueConstraintValidator" class="org.jtalks.common.validation.unique.UniqueConstraintValidator">
     <property name="uniquenessViolatorsRetriever" ref="uniquenessViolatorsRetriever" />
   </bean>
 
+  <!--  not used -->
   <bean id="uniquenessViolatorsRetriever" class="org.jtalks.common.validation.unique.UniquenessViolatorsRetriever">
     <property name="sessionFactory" ref="sessionFactory" />
   </bean>
