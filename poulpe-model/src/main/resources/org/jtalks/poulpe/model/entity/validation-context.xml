@@ -44,14 +44,4 @@
   <bean id="stubConstraintValidator" class="org.jtalks.poulpe.model.validation.validator.EmptyStubConstraintValidator">
   </bean>
 
-  <!--  not used -->
-  <bean id="uniqueConstraintValidator" class="org.jtalks.common.validation.unique.UniqueConstraintValidator">
-    <property name="uniquenessViolatorsRetriever" ref="uniquenessViolatorsRetriever" />
-  </bean>
-
-  <!--  not used -->
-  <bean id="uniquenessViolatorsRetriever" class="org.jtalks.common.validation.unique.UniquenessViolatorsRetriever">
-    <property name="sessionFactory" ref="sessionFactory" />
-  </bean>
-
 </beans>
