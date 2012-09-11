@@ -141,7 +141,6 @@ public class DualListVm{
     public String getExistFilterTxt() {
         return rightFilterTxt;
     }
-
     /**
      * Sets filter text for a list of existing items.
      *
