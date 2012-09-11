@@ -56,7 +56,7 @@ public class EditGroupsForPersonalPermissionVmTest {
     @Test(dataProvider = "dataProvider")
     public void testUpdateView(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
         initTest(permissionForEntity, groupsPermissions);
-        viewModel.updateVm();
+        //viewModel.updateVm();
     }
 
     public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<ProfilePermission> groupsPermissions) {
@@ -64,7 +64,7 @@ public class EditGroupsForPersonalPermissionVmTest {
         viewModel = new EditGroupsForPersonalPermissionVm(windowManager, groupService, permissionsService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
 
-        viewModel.updateVm();
+        //viewModel.updateVm();
     }
 
     @DataProvider

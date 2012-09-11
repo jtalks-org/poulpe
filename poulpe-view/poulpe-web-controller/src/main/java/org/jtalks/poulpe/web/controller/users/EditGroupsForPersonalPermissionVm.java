@@ -24,13 +24,15 @@ import org.jtalks.poulpe.model.dto.PermissionForEntity;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import org.jtalks.poulpe.web.controller.zkmacro.DualListVm;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.zk.ui.AbstractComponent;
+
 
 
 /**
@@ -43,7 +45,7 @@ import java.util.List;
  * @author Enykey
  * @see UserPersonalPermissionsVm
  */
-public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<Group> {
+public class EditGroupsForPersonalPermissionVm {
 
     private final WindowManager windowManager;
     private final GroupService groupService;
@@ -71,8 +73,6 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
         this.groupService = groupService;
         this.permissionsService = permissionsService;
         this.selectedEntity = selectedEntity;
-
-        getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(permissionForEntity.isAllowed()));
     }
 
     // -- ZK Command bindings --------------------
@@ -84,15 +84,16 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
         openPersonalPermissionsWindow();
     }
 
+
     /**
      * Saves the state of PersonalPermission for each group. Entity Group according with its own permission change
      */
     @Command
-    public void save() {
-        List<Group> alreadyAddedGroups = getAlreadyAddedGroupsForMode(permissionForEntity.isAllowed());
+    public void save(@BindingParam("component") AbstractComponent DualListComponent) {
+        List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
         @SuppressWarnings("unchecked")
-        List<Group> addedGroups = getStateAfterEdit();
+        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();//getStateAfterEdit();
         for (Group groupForSave : groupService.getAll()) {
             List<Group> listGroupForSave = Lists.newArrayList();
             listGroupForSave.add(groupForSave);
@@ -110,21 +111,20 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
         }
         openPersonalPermissionsWindow();
     }
-
     /**
-     * {@inheritDoc}
+     * Gets list of groups without permission record
+     * @return list of groups w/o already added
      */
-    @SuppressWarnings("unchecked")
-    @Init
-    @Override
-    public void updateVm() {
-        getExist().clear();
-        getExist().addAll(getStateAfterEdit());
-
-        getAvail().clear();
-        //List<Group> groups = groupService.getSecurityGroups().getAllGroups();
-        List<Group> groups = groupService.getAll();
-        getAvail().addAll(ListUtils.subtract(groups, getStateAfterEdit()));
+    public List<Group> getFullList(){
+        return groupService.getAll();
+    }
+    
+    /**
+     * Gets list of groups with permission record
+     * @return list of already added groups 
+     */    
+    public List<Group> getRightList(){
+        return getAlreadyAddedGroups();
     }
 
     /**
@@ -135,10 +135,10 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
      * @return list of groups already added for current {@link Group} with
      * specified mode
      */
-    private List<Group> getAlreadyAddedGroupsForMode(boolean allowed) {
+    private List<Group> getAlreadyAddedGroups() {
         GroupsPermissions<ProfilePermission> permissionsMap =
                 permissionsService.getPersonalPermissions(groupService.getAll());
-        return permissionsMap.get((ProfilePermission) permissionForEntity.getPermission(), allowed);
+        return permissionsMap.get((ProfilePermission) permissionForEntity.getPermission(), permissionForEntity.isAllowed());
     }
 
     /**
@@ -147,4 +147,5 @@ public class EditGroupsForPersonalPermissionVm extends TwoSideListWithFilterVm<G
     private void openPersonalPermissionsWindow() {
         UserPersonalPermissionsVm.showPage(windowManager);
     }
+
 }
