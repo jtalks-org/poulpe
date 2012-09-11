@@ -247,7 +247,7 @@ public class PermissionManagerTest {
 
     @DataProvider
     public Object[][] accessChanges() {
-        PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CREATE_TOPICS);
+        PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
         accessChanges.addNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
         accessChanges.addRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
         return new Object[][]{{accessChanges}};

@@ -96,8 +96,8 @@ public class BranchPermissionManagementVmTest {
         assertEquals(sut.getBranch(), branch);
 
         List<PermissionManagementBlock> blocks = sut.getBlocks();
-        assertTrue(blocks.get(0).getAllowRow().getGroups().contains(allowedGroup));
-        assertTrue(blocks.get(1).getRestrictRow().getGroups().contains(restrictedGroup));
+        assertTrue(blocks.get(1).getAllowRow().getGroups().contains(allowedGroup));
+        assertTrue(blocks.get(0).getRestrictRow().getGroups().contains(restrictedGroup));
         assertTrue(blocks.size() == 2);
     }
 
@@ -105,12 +105,12 @@ public class BranchPermissionManagementVmTest {
     @DataProvider
     public Object[][] provideTypeOfPermissionsToBranch() {
         return new Object[][]{
-            { BranchPermission.CREATE_TOPICS },
+            { BranchPermission.CREATE_ANNOUNCEMENTS },
             { BranchPermission.CLOSE_TOPICS },
             { BranchPermission.VIEW_TOPICS },
-            { BranchPermission.DELETE_TOPICS },
+            { BranchPermission.CREATE_STICKED_TOPICS },
             { BranchPermission.MOVE_TOPICS },
-            { BranchPermission.SPLIT_TOPICS },
+            { BranchPermission.EDIT_OWN_POSTS },
             { BranchPermission.CREATE_POSTS },
             { BranchPermission.DELETE_OTHERS_POSTS },
             { BranchPermission.DELETE_OWN_POSTS },
@@ -123,7 +123,7 @@ public class BranchPermissionManagementVmTest {
         Group restrictedGroup = TestFixtures.group();
 
         List<PermissionManagementBlock> blocks = Lists.newArrayList();
-        BranchPermission allowedPermission = BranchPermission.CREATE_TOPICS;
+        BranchPermission allowedPermission = BranchPermission.CREATE_POSTS;
         BranchPermission restrictPermission = BranchPermission.CLOSE_TOPICS;
 
         GroupsPermissions<BranchPermission> groupsPermissions = new GroupsPermissions<BranchPermission>();
