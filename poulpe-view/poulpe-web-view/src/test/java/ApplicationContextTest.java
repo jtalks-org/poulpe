@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.osod;
+
 
 import static org.testng.Assert.*;
 
@@ -31,7 +31,7 @@ public class ApplicationContextTest {
         		"classpath:/org/jtalks/poulpe/service/applicationContext-service.xml",
         		"classpath:/org/jtalks/poulpe/service/applicationContext-service-security.xml",
         		"classpath:/org/jtalks/poulpe/web/controller/applicationContext-controller.xml",
-//        		"/WEB-INF/applicationContext-web-view-security.xml"
+        		"/src/main/webapp/WEB-INF/applicationContext-web-view-security.xml"
         });
         assertNotNull(ctx);
     }
