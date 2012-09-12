@@ -26,6 +26,7 @@ public class DeleteComponentDialog implements EventListener<Event> {
     private static final String JCOMMUNE_CONNECTION_FAILED = "component.error.jcommune_no_connection";
     private static final String JCOMMUNE_RESPONSE_FAILED = "component.error.jcommune_no_response";
     private static final String JCOMMUNE_URL_FAILED = "component.error.jcommune_no_url";
+    private static final String COMPONENT_DELETING_FAILED = "component.error.is_removed";
     private static final String COMPONENT_DELETING_FAILED_DIALOG_TITLE = "component.deleting_problem_dialog.title";
 
     private final ComponentService componentService;
@@ -67,7 +68,7 @@ public class DeleteComponentDialog implements EventListener<Event> {
         } catch (JcommuneUrlNotConfiguredException elementDoesNotExist) {
             showDialog(JCOMMUNE_URL_FAILED);
         } catch (EntityIsRemovedException ex) {
-            // component was removed by another user: just update ComponentList
+            showDialog(COMPONENT_DELETING_FAILED);
             componentsToUpdate.renew(componentService.getAll());
             toDelete = null;
         }

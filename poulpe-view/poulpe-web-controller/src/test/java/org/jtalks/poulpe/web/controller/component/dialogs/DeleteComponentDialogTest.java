@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
+import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -68,6 +69,15 @@ public class DeleteComponentDialogTest {
 
         sut.onEvent(positiveConfirm());
         verify(sut).showDialog("component.error.jcommune_no_url");
+    }
+
+    @Test
+    public void componentWasRemovedShouldShowError() throws Exception {
+        doThrow(EntityIsRemovedException.class).when(componentService).deleteComponent(any(Component.class));
+        doNothing().when(sut).showDialog(anyString());
+
+        sut.onEvent(positiveConfirm());
+        verify(sut).showDialog("component.error.is_removed");
     }
 
     private Event positiveConfirm() {

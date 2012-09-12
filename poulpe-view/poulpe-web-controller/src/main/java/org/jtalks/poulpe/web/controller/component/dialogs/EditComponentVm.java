@@ -39,8 +39,8 @@ import org.zkoss.zul.Messagebox;
  */
 public class EditComponentVm {
     public static final String EDIT_COMPONENT_LOCATION = "/WEB-INF/pages/component/edit_comp.zul";
-    public static final String COMPONENT_EDITING_FAILED = "component.error.is_removed";
-    public static final String COMPONENT_EDITING_FAILED_TITLE = "component.error.editing_failed_title";
+    private static final String COMPONENT_EDITING_FAILED = "component.error.is_removed";
+    private static final String COMPONENT_EDITING_FAILED_TITLE = "component.error.editing_failed_title";
 
     private final ComponentService componentService;
     private final Component component;
