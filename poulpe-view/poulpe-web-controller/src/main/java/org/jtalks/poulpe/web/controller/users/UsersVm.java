@@ -56,8 +56,7 @@ public class UsersVm {
     private PoulpeUser selectedUser;
 
     /**
-     * @param userService the service to get access to users and to store
-     *                    changes to the database
+     * @param userService the service to get access to users and to store changes to the database
      */
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
@@ -124,8 +123,8 @@ public class UsersVm {
     }
 
     /**
-     * Updates the active page value with the current page of pagination.
-     * Updates the list of users so it displays the needed page.
+     * Updates the active page value with the current page of pagination. Updates the list of users so it displays the
+     * needed page.
      *
      * @param activePage current page of pagination
      */
@@ -171,18 +170,14 @@ public class UsersVm {
 
     /**
      * Opens edit user dialog.
-     *
-     * @param user selected user
      */
     @Command
-    public void editUser(@BindingParam(value = "user") PoulpeUser user) {
-        selectedUser = user;
+    public void editUser() {
         zkHelper.wireToZul(EDIT_USER_URL);
     }
 
     /**
-     * Validates editing user, on success saves him, on failure shows the error
-     * message.
+     * Validates editing user, on success saves him, on failure shows the error message.
      *
      * @param user editing user
      */

@@ -15,7 +15,7 @@
     </hbox>
     
     <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@bind(vm.activePage)" />
-    <listbox id="listbox" model="@bind(vm.users)" vflex="true" height="500px">
+    <listbox id="listbox" model="@bind(vm.users)" selectedItem="@bind(vm.selectedUser)" vflex="true" height="500px">
        <listhead>
         <listheader label="${labels.users.username}" sort="auto(username)" />
         <listheader label="${labels.users.email}" sort="auto(email)" />
@@ -24,8 +24,7 @@
         <listheader label="${labels.users.role}" sort="auto(role)" />
       </listhead>
       <template name="model" var="user">
-        <listitem onDoubleClick="@command('editUser', user=user)"
-                  onOK="@command('editUser', user=user)">
+        <listitem context="popupMenu">
           <listcell label="@load(user.username)" />
           <listcell label="@load(user.email)" />
           <listcell label="@load(user.firstName)" />
@@ -34,5 +33,9 @@
         </listitem>
       </template>
     </listbox>
+
+    <menupopup id="popupMenu">
+      <menuitem image="/resources/img/edit16.png" label="Edit" onClick="@command('editUser')"/>
+    </menupopup>
   </window>
 </zk>

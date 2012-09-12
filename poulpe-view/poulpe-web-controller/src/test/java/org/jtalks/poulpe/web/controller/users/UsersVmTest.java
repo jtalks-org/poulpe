@@ -205,7 +205,8 @@ public class UsersVmTest {
     
     @Test
     public void testEditUser() throws Exception {
-        usersVm.editUser(new PoulpeUser());
+        usersVm.setSelectedUser(new PoulpeUser());
+        usersVm.editUser();
         verify(zkHelper).wireToZul(EDIT_USER_URL);
     }
 
