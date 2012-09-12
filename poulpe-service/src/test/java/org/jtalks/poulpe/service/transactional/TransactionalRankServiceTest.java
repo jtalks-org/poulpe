@@ -14,21 +14,13 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.jtalks.common.model.entity.Rank;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.testng.annotations.Test;
 import org.jtalks.poulpe.model.dao.RankDao;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 /**
@@ -36,7 +28,6 @@ import static org.mockito.Mockito.verify;
  * @author Pavel Vervenko
  */
 public class TransactionalRankServiceTest {
-    @Mock EntityValidator entityValidator;
     @Mock RankDao rankDao;
     private TransactionalRankService rankService;
     private Rank rank;
@@ -44,7 +35,7 @@ public class TransactionalRankServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        rankService = new TransactionalRankService(rankDao, entityValidator);
+        rankService = new TransactionalRankService(rankDao);
         rank = new Rank("");
     }
 
@@ -60,22 +51,4 @@ public class TransactionalRankServiceTest {
         verify(rankDao).delete(rank);
     }
 
-    @Test
-    public void testSaveRank() {
-        rankService.saveRank(rank);
-        verify(entityValidator).throwOnValidationFailure(rank);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void testSaveRankException() {
-        String notUniqueName = "name";
-        rank.setRankName(notUniqueName);
-        givenConstraintsViolations();
-        rankService.saveRank(rank);
-    }
-    
-    private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(Rank.class));
-    }
 }

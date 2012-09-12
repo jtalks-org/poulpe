@@ -18,7 +18,6 @@ import java.util.List;
 
 import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.RankDao;
 import org.jtalks.poulpe.service.RankService;
 
@@ -28,7 +27,6 @@ import org.jtalks.poulpe.service.RankService;
  * @author Pavel Vervenko
  */
 public class TransactionalRankService extends AbstractTransactionalEntityService<Rank, RankDao> implements RankService {
-    private final EntityValidator validator;
 
     /**
      * Create an instance of service
@@ -36,9 +34,8 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      * @param rankDao rank DAO
      * @param validator entity validator
      */
-    public TransactionalRankService(RankDao rankDao, EntityValidator validator) {
+    public TransactionalRankService(RankDao rankDao) {
         this.dao = rankDao;
-        this.validator = validator;
     }
 
     /**
@@ -62,7 +59,6 @@ public class TransactionalRankService extends AbstractTransactionalEntityService
      */
     @Override
     public void saveRank(Rank rank) {
-        validator.throwOnValidationFailure(rank);
         dao.saveOrUpdate(rank);
     }
 }

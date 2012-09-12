@@ -15,21 +15,13 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.Set;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 
 /**
@@ -40,15 +32,13 @@ public class TransactionalGroupServiceTest {
 
 	@Mock
 	GroupDao dao;
-	@Mock
-	EntityValidator entityValidator;
 
 	private Group group = new Group("new group");
 
 	@BeforeMethod
 	public void beforeMethod() {
 		MockitoAnnotations.initMocks(this);
-		service = new TransactionalGroupService(dao, entityValidator, mock(UserBanner.class));
+		service = new TransactionalGroupService(dao, mock(UserBanner.class));
 	}
 
 	@Test
@@ -69,24 +59,4 @@ public class TransactionalGroupServiceTest {
 		verify(dao).getByName("name");
 	}
 
-	@Test
-	public void saveGroup() {
-		service.saveGroup(group);
-		verifyEntityValidated();
-	}
-
-	private void verifyEntityValidated() {
-		verify(entityValidator).throwOnValidationFailure(group);
-	}
-
-	@Test(expectedExceptions = ValidationException.class)
-	public void saveNotValidGroup() {
-		givenConstraintsViolations();
-		service.saveGroup(group);
-	}
-
-	private void givenConstraintsViolations() {
-		Set<ValidationError> dontCare = Collections.emptySet();
-		doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
-	}
 }

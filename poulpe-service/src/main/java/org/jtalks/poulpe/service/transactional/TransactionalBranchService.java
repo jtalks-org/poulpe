@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
@@ -31,18 +30,14 @@ import java.util.List;
  */
 public class TransactionalBranchService extends AbstractTransactionalEntityService<PoulpeBranch, BranchDao> implements
         BranchService {
-    private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service.
      * 
      * @param branchDao instance of {@link BranchDao}
-     * @param validator instance of {@link EntityValidator}
      */
-    public TransactionalBranchService(BranchDao branchDao,
-            EntityValidator validator) {
+    public TransactionalBranchService(BranchDao branchDao) {
         this.dao = branchDao;
-        this.validator = validator;
     }
 
     /**
@@ -58,7 +53,6 @@ public class TransactionalBranchService extends AbstractTransactionalEntityServi
      */
     @Override
     public void saveBranch(PoulpeBranch selectedBranch) {
-        validator.throwOnValidationFailure(selectedBranch);
         dao.saveOrUpdate(selectedBranch);
     }
 

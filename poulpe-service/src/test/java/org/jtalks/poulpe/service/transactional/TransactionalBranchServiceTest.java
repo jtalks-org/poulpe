@@ -15,9 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
@@ -31,11 +28,8 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 
@@ -52,8 +46,6 @@ public class TransactionalBranchServiceTest {
     @Mock
     BranchDao branchDao;
     @Mock
-    EntityValidator entityValidator;
-    @Mock
     PermissionManager branchPermissionManager;
     @Mock
     PermissionsService permissionsService;
@@ -63,7 +55,7 @@ public class TransactionalBranchServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        branchService = new TransactionalBranchService(branchDao, entityValidator);
+        branchService = new TransactionalBranchService(branchDao);
     }
 
     @Test
@@ -154,19 +146,6 @@ public class TransactionalBranchServiceTest {
         assertEquals(branchCaptor.getValue().getName(), "new branch");
     }
 
-    @Test(expectedExceptions = ValidationException.class)
-    public void testSaveBranchWithException() {
-        PoulpeBranch branch = new PoulpeBranch();
-
-        givenConstraintsViolations();
-        branchService.saveBranch(branch);
-    }
-
-    private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(
-                any(PoulpeBranch.class));
-    }
 }
 
 

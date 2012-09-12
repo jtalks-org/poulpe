@@ -14,18 +14,9 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
-
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.mockito.Mock;
@@ -42,7 +33,6 @@ public class TransactionalTopicTypeServiceTest {
     private TransactionalTopicTypeService topicTypeService;
 
     @Mock TopicTypeDao dao;
-    @Mock EntityValidator entityValidator;
 
     private long topicTypeId = 10;
     private TopicType topicType = topicTypeWithId(topicTypeId);
@@ -56,7 +46,7 @@ public class TransactionalTopicTypeServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        topicTypeService = new TransactionalTopicTypeService(dao, entityValidator);
+        topicTypeService = new TransactionalTopicTypeService(dao);
     }
 
     @Test
@@ -69,23 +59,6 @@ public class TransactionalTopicTypeServiceTest {
     public void saveTopic() {
         topicTypeService.saveOrUpdate(topicType);
         verify(dao).saveOrUpdate(topicType);
-    }
-
-    @Test
-    public void saveTopicValidated() {
-        topicTypeService.saveOrUpdate(topicType);
-        verify(entityValidator).throwOnValidationFailure(topicType);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void saveTopicWithConstraintsViolations() {
-        givenConstraintsViolations();
-        topicTypeService.saveOrUpdate(topicType);
-    }
-
-    private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(TopicType.class));
     }
 
     @Test

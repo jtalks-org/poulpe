@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
@@ -41,7 +40,6 @@ import java.util.Set;
  */
 public class TransactionalComponentService extends AbstractTransactionalEntityService<Component, ComponentDao>
         implements ComponentService {
-    private final EntityValidator validator;
 
     /**
      * Jcommune HTTP notifier
@@ -52,11 +50,9 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      * Creates new instance of the service
      *
      * @param dao               dao we use for Component
-     * @param validator         used to validate entites
      */
-    public TransactionalComponentService(ComponentDao dao, EntityValidator validator) {
+    public TransactionalComponentService(ComponentDao dao) {
         this.dao = dao;
-        this.validator = validator;
     }
 
     /**
@@ -90,7 +86,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     @Deprecated
     @Override
     public void saveComponent(Component component) {
-        validator.throwOnValidationFailure(component);
         dao.saveOrUpdate(component);
     }
 
@@ -147,7 +142,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void addComponent(Component component) throws EntityUniqueConstraintException {
-        validator.throwOnValidationFailure(component);
         Component existInDbComponent = getByType(component.getComponentType());
         if (existInDbComponent != null && component.getId() != existInDbComponent.getId()) {
             throw new EntityUniqueConstraintException();
@@ -163,7 +157,6 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
      */
     @Override
     public void updateComponent(Component component) throws EntityIsRemovedException {
-        validator.throwOnValidationFailure(component);
         Component existInDbComponent = getByType(component.getComponentType());
         if (existInDbComponent == null || component.getId() != existInDbComponent.getId()) {
             throw new EntityIsRemovedException();

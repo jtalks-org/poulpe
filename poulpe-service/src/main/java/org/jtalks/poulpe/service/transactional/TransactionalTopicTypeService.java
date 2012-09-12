@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
@@ -32,8 +31,6 @@ import org.jtalks.poulpe.service.TopicTypeService;
 public class TransactionalTopicTypeService extends AbstractTransactionalEntityService<TopicType, TopicTypeDao>
         implements TopicTypeService {
 
-    private final EntityValidator validator;
-
     /**
      * Create an instance of entity based service
      * 
@@ -41,9 +38,8 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      * operations.
      * @param validator entity validator
      */
-    public TransactionalTopicTypeService(TopicTypeDao topicDao, EntityValidator validator) {
+    public TransactionalTopicTypeService(TopicTypeDao topicDao) {
         this.dao = topicDao;
-        this.validator = validator;
     }
 
     /**
@@ -67,7 +63,6 @@ public class TransactionalTopicTypeService extends AbstractTransactionalEntitySe
      */
     @Override
     public void saveOrUpdate(TopicType topicType) {
-        validator.throwOnValidationFailure(topicType);
         dao.saveOrUpdate(topicType);
     }
 

@@ -16,7 +16,6 @@ package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -32,7 +31,6 @@ import java.util.List;
  */
 public class TransactionalGroupService extends AbstractTransactionalEntityService<Group, GroupDao>
         implements GroupService {
-    private final EntityValidator validator;
     private final UserBanner userBanner;
 
     /**
@@ -40,14 +38,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      *
      * @param groupDao  - data access object, which should be able do all CRUD
      *                  operations.
-     * @param validator - an entity validator
-     *
      * @param userBanner - class for working with banning users instance
      */
-    public TransactionalGroupService(GroupDao groupDao, EntityValidator validator, UserBanner userBanner) {
+    public TransactionalGroupService(GroupDao groupDao, UserBanner userBanner) {
         this.dao = groupDao;
         this.userBanner = userBanner;
-        this.validator = validator;
     }
 
     /**
@@ -86,7 +81,6 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public void saveGroup(Group group) {
         Assert.throwIfNull(group, "group");
-        validator.throwOnValidationFailure(group);
         dao.saveOrUpdate(group);
     }
 

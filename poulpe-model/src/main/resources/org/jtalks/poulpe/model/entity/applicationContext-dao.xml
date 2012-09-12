@@ -48,8 +48,6 @@
     <property name="sessionFactory" ref="sessionFactory"/>
   </bean>
 
-  <import resource="validation-context.xml"/>
-
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
   <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
     <property name="driverClassName" value="${jdbc.driverClassName}"/>

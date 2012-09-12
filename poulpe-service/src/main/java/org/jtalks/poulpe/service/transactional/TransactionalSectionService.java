@@ -17,7 +17,6 @@ package org.jtalks.poulpe.service.transactional;
 import java.util.List;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
-import org.jtalks.common.validation.EntityValidator;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
@@ -29,7 +28,6 @@ import org.jtalks.poulpe.service.SectionService;
  */
 public class TransactionalSectionService extends AbstractTransactionalEntityService<PoulpeSection, SectionDao>
         implements SectionService {
-    private final EntityValidator validator;
 
     /**
      * Create an instance of entity based service
@@ -37,9 +35,8 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      * @param sectionDao - data access object
      * @param validator entity validator
      */
-    public TransactionalSectionService(SectionDao sectionDao, EntityValidator validator) {
+    public TransactionalSectionService(SectionDao sectionDao) {
         this.dao = sectionDao;
-        this.validator = validator;
     }
 
     /**
@@ -55,7 +52,6 @@ public class TransactionalSectionService extends AbstractTransactionalEntityServ
      */
     @Override
     public void saveSection(PoulpeSection section) {
-        validator.throwOnValidationFailure(section);
         dao.saveOrUpdate(section);
     }
 

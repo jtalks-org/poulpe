@@ -14,19 +14,11 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
-import java.util.Collections;
-import java.util.Set;
-
 import org.apache.commons.lang.RandomStringUtils;
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.SectionDao;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.SectionService;
@@ -42,7 +34,6 @@ import org.testng.annotations.Test;
  * @author Vyacheslav Zhivaev
  */
 public class TransactionalSectionServiceTest {
-    @Mock EntityValidator entityValidator;
     @Mock SectionDao sectionDao;
     private static final long SECTION_ID = 1L;
     private SectionService sectionService;
@@ -50,7 +41,7 @@ public class TransactionalSectionServiceTest {
     @BeforeMethod
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        sectionService = new TransactionalSectionService(sectionDao, entityValidator);
+        sectionService = new TransactionalSectionService(sectionDao);
     }
 
     @Test
@@ -87,28 +78,9 @@ public class TransactionalSectionServiceTest {
     }
 
     @Test
-    public void testSaveSection(){
-         PoulpeSection section = buildFakeSection();
-         sectionService.saveSection(section);
-         verify(entityValidator).throwOnValidationFailure(section);
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void saveSectionWithConstraintsViolations() {
-        PoulpeSection section = buildFakeSection();
-        givenConstraintsViolations();
-        sectionService.saveSection(section);
-    }
-
-    @Test
     public void testGetAll() {
         sectionService.getAll();
         verify(sectionDao).getAll();
-    }
-
-    private void givenConstraintsViolations() {
-        Set<ValidationError> dontCare = Collections.emptySet();
-        doThrow(new ValidationException(dontCare)).when(entityValidator).throwOnValidationFailure(any(PoulpeSection.class));
     }
 
     private PoulpeSection buildFakeSection() {

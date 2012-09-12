@@ -28,9 +28,6 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import org.jtalks.common.validation.EntityValidator;
-import org.jtalks.common.validation.ValidationError;
-import org.jtalks.common.validation.ValidationException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -46,10 +43,6 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.Collections;
-import java.util.Set;
-
-import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -65,8 +58,6 @@ public class TransactionalComponentServiceTest {
     @Mock
     private ComponentDao componentDao;
     @Mock
-    private EntityValidator validator;
-    @Mock
     private JcommuneHttpNotifier jcommuneHttpNotifier;
 
     private Component component = TestFixtures.randomComponent();
@@ -75,15 +66,14 @@ public class TransactionalComponentServiceTest {
     @BeforeMethod
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        componentService = new TransactionalComponentService(componentDao, validator);
+        componentService = new TransactionalComponentService(componentDao);
         componentService.setjCommuneNotifier(jcommuneHttpNotifier);
     }
 
     @Test
     public void testAddComponent() throws Exception {
+        when(componentService.getByType(component.getComponentType())).thenReturn(component);
         componentService.addComponent(component);
-
-        verify(validator).throwOnValidationFailure(component);
         verify(componentDao).saveOrUpdate(component);
     }
 
@@ -91,17 +81,6 @@ public class TransactionalComponentServiceTest {
     public void testGetAll() {
         componentService.getAll();
         verify(componentDao).getAll();
-    }
-
-    @Test(expectedExceptions = ValidationException.class)
-    public void testAddComponentException() throws Exception {
-        givenConstraintsViolations();
-        componentService.addComponent(component);
-    }
-
-    private void givenConstraintsViolations() {
-        Set<ValidationError> empty = Collections.emptySet();
-        doThrow(new ValidationException(empty)).when(validator).throwOnValidationFailure(any(Component.class));
     }
 
     @Test
