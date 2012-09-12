@@ -31,6 +31,9 @@ import org.zkoss.bind.annotation.Init;
 
 import javax.annotation.Nonnull;
 import java.util.List;
+import org.jtalks.poulpe.web.controller.zkmacro.DualListVm;
+import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.zk.ui.AbstractComponent;
 
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
@@ -41,7 +44,7 @@ import java.util.List;
  * @author Vyacheslav Zhivaev
  * @see BranchPermissionManagementVm
  */
-public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Group> {
+public class EditGroupsForBranchPermissionVm {
     private final WindowManager windowManager;
     private final PermissionsService permissionsService;
     private final GroupService groupService;
@@ -71,7 +74,7 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         this.selectedEntity = selectedEntity;
 
         branch = (PoulpeBranch) permissionForEntity.getTarget();
-        getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed()));
+        //getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed()));
     }
 
     // -- ZK Command bindings --------------------
@@ -88,13 +91,14 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
      * Saves the state.
      */
     @Command
-    public void save() {
-        List<Group> alreadyAddedGroups = getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed());
+    public void save(@BindingParam("component") AbstractComponent DualListComponent) {
+        List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
         @SuppressWarnings("unchecked")
+        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
         PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
-                ListUtils.subtract(getStateAfterEdit(), alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
-                getStateAfterEdit()));
+                ListUtils.subtract(addedGroups, alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
+                addedGroups));
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
@@ -107,32 +111,28 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @SuppressWarnings("unchecked")
-    @Init
-    @Override
-    public void updateVm() {
-        getExist().clear();
-        getExist().addAll(getStateAfterEdit());
-
-        getAvail().clear();
-        List<Group> groups = groupService.getSecurityGroups().getAllGroups();
-        getAvail().addAll(ListUtils.subtract(groups, getStateAfterEdit()));
-    }
-
-    /**
      * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
      *
      * @param branch  the branch to get for
      * @param allowed the permission mode (allowed or restricted)
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
+    @Deprecated
     private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
         GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor(branch);
         return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), allowed);
     }
 
+    /**
+     * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
+     *
+     * @return list of groups already added for current {@link PoulpeBranch} with specified mode
+     */
+    private List<Group> getAlreadyAddedGroups() {
+        GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor((PoulpeBranch)permissionForEntity.getTarget());
+        return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), permissionForEntity.isAllowed());
+    }
+    
     /**
      * Opens window with BranchPermissions page.
      */
@@ -140,4 +140,19 @@ public class EditGroupsForBranchPermissionVm extends TwoSideListWithFilterVm<Gro
         selectedEntity.setEntity(branch);
         BranchPermissionManagementVm.showPage(windowManager);
     }
+    /**
+     * Gets list of groups without permission record
+     * @return list of groups w/o already added
+     */
+    public List<Group> getFullList(){
+        return groupService.getAll();
+    }
+    
+    /**
+     * Gets list of groups with permission record
+     * @return list of already added groups 
+     */    
+    public List<Group> getRightList(){
+        return getAlreadyAddedGroups();
+    }    
 }
