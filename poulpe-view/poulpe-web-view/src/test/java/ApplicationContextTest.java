@@ -14,25 +14,29 @@
  */
 
 
-import static org.testng.Assert.*;
-
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.testng.annotations.Test;
 
+import static org.testng.Assert.assertNotNull;
+
 /**
+ * Is created in order to find out if we changed the classes or Spring contexts per se so that it won't start up. Usual
+ * tests won't show this kind of problems because they don't instantiate app contexts, thus the only way to figure out
+ * that the contexts are being created correctly is this test.
+ *
  * @author Evgeny Surovtsev
  */
 public class ApplicationContextTest {
     @Test
-    public void testApplicationContextConfigurations() {
-        ApplicationContext ctx = new FileSystemXmlApplicationContext(new String[] {
-        		"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml",
-        		"classpath:/org/jtalks/poulpe/service/applicationContext-service.xml",
-        		"classpath:/org/jtalks/poulpe/service/applicationContext-service-security.xml",
-        		"classpath:/org/jtalks/poulpe/web/controller/applicationContext-controller.xml",
-        		"/src/main/webapp/WEB-INF/applicationContext-web-view-security.xml"
-        });
+    public void applicationContextShouldConstructAllBeans() {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext(
+                "/org/jtalks/poulpe/model/entity/applicationContext-dao.xml",
+                "/org/jtalks/poulpe/service/applicationContext-service.xml",
+                "/org/jtalks/poulpe/service/applicationContext-service-security.xml",
+                "/org/jtalks/poulpe/web/controller/applicationContext-controller.xml",
+                "classpath:*/WEB-INF/applicationContext-web-view-security.xml"
+        );
         assertNotNull(ctx);
     }
 }
