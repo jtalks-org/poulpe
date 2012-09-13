@@ -1,4 +1,4 @@
-/**
+package org.jtalks.poulpe.web.view; /**
  * Copyright (C) 2012  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -35,6 +35,10 @@ public class ApplicationContextTest {
                 "/org/jtalks/poulpe/service/applicationContext-service.xml",
                 "/org/jtalks/poulpe/service/applicationContext-service-security.xml",
                 "/org/jtalks/poulpe/web/controller/applicationContext-controller.xml",
+                /*classpath:* syntax ensures Spring searches in all the Class Path roots (classes, test-classes),
+                * couldn't find why other way to load resources from WEB-INF as classpath ones, maven doesn't look
+                * to put them into the target on compilation phase, so have no idea how it's loaded. If someone
+                * figures out, would be grateful :)*/
                 "classpath:*/WEB-INF/applicationContext-web-view-security.xml"
         );
         assertNotNull(ctx);
