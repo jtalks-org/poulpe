@@ -37,12 +37,13 @@ public class TransactionalForumStructureService implements ForumStructureService
     private final SectionDao sectionDao;
     private final BranchDao branchDao;
     private final ComponentDao componentDao;
-    private JcommuneHttpNotifier jCommuneNotifier = new JcommuneHttpNotifier();
+    private final JcommuneHttpNotifier jCommuneNotifier;
 
-    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao) {
+    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao, JcommuneHttpNotifier jCommuneNotifier) {
         this.sectionDao = sectionDao;
         this.branchDao = branchDao;
         this.componentDao = componentDao;
+        this.jCommuneNotifier = jCommuneNotifier;
     }
 
     /**
@@ -59,10 +60,6 @@ public class TransactionalForumStructureService implements ForumStructureService
     @Override
     public Jcommune getJcommune() {
         return (Jcommune) componentDao.getByType(ComponentType.FORUM);
-    }
-
-    public void setjCommuneNotifier(JcommuneHttpNotifier jCommuneNotifier) {
-        this.jCommuneNotifier = jCommuneNotifier;
     }
 
     /**

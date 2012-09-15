@@ -31,7 +31,6 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -54,8 +53,7 @@ public class TransactionalForumStructureServiceTest {
         sectionDao = mock(SectionDao.class);
         branchDao = mock(BranchDao.class);
         notifier = mock(JcommuneHttpNotifier.class);
-        sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao);
-        sut.setjCommuneNotifier(notifier);
+        sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao, notifier);
     }
 
     @Test(dataProvider = "provideJcommuneWithSectionsAndBranches")

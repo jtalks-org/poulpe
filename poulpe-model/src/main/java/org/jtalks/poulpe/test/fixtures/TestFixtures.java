@@ -212,6 +212,10 @@ public final class TestFixtures {
         return new PoulpeUser(username, email, random(), "");
     }
 
+    public static PoulpeUser user(String username, String password, String email) {
+        return new PoulpeUser(username, email, password, "");
+    }
+
     /**
      * @return user with random name, email, password and empty salt
      */
