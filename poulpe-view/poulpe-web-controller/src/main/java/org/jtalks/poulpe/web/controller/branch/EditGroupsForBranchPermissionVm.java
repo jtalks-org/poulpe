@@ -145,7 +145,8 @@ public class EditGroupsForBranchPermissionVm {
      * @return list of groups w/o already added
      */
     public List<Group> getFullList(){
-        return groupService.getAll();
+        //return groupService.getAll();
+        return groupService.getSecurityGroups().getAllGroups();
     }
     
     /**
