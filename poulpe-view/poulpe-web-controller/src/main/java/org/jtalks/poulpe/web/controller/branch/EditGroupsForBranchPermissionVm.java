@@ -14,9 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.poulpe.logic.SecurityGroupListForBranchPermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
@@ -24,15 +29,10 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
-import org.jtalks.poulpe.web.controller.TwoSideListWithFilterVm;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.zkoss.bind.annotation.Command;
-import org.zkoss.bind.annotation.Init;
-
-import javax.annotation.Nonnull;
-import java.util.List;
 import org.jtalks.poulpe.web.controller.zkmacro.DualListVm;
 import org.zkoss.bind.annotation.BindingParam;
+import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.AbstractComponent;
 
 /**
@@ -49,6 +49,7 @@ public class EditGroupsForBranchPermissionVm {
     private final PermissionsService permissionsService;
     private final GroupService groupService;
     private final SelectedEntity<Object> selectedEntity;
+    private final SecurityGroupListForBranchPermission securityGroupListForBranchPermission;
     // Related to internal state
     private final PermissionForEntity permissionForEntity;
     private final PoulpeBranch branch;
@@ -72,9 +73,9 @@ public class EditGroupsForBranchPermissionVm {
         this.permissionsService = permissionsService;
         this.groupService = groupService;
         this.selectedEntity = selectedEntity;
-
+        
         branch = (PoulpeBranch) permissionForEntity.getTarget();
-        //getStateAfterEdit().addAll(getAlreadyAddedGroupsForMode(branch, permissionForEntity.isAllowed()));
+        securityGroupListForBranchPermission = new SecurityGroupListForBranchPermission(groupService);
     }
 
     // -- ZK Command bindings --------------------
@@ -96,9 +97,10 @@ public class EditGroupsForBranchPermissionVm {
 
         @SuppressWarnings("unchecked")
         List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
-        PermissionChanges accessChanges = new PermissionChanges(permissionForEntity.getPermission(),
-                ListUtils.subtract(addedGroups, alreadyAddedGroups), ListUtils.subtract(alreadyAddedGroups,
-                addedGroups));
+        PermissionChanges accessChanges = new PermissionChanges(
+        		permissionForEntity.getPermission(),
+                ListUtils.subtract(addedGroups, alreadyAddedGroups), 
+                ListUtils.subtract(alreadyAddedGroups, addedGroups));
 
         if (!accessChanges.isEmpty()) {
             if (permissionForEntity.isAllowed()) {
@@ -113,24 +115,12 @@ public class EditGroupsForBranchPermissionVm {
     /**
      * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
      *
-     * @param branch  the branch to get for
-     * @param allowed the permission mode (allowed or restricted)
-     * @return list of groups already added for current {@link PoulpeBranch} with specified mode
-     */
-    @Deprecated
-    private List<Group> getAlreadyAddedGroupsForMode(PoulpeBranch branch, boolean allowed) {
-        GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor(branch);
-        return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), allowed);
-    }
-
-    /**
-     * Gets list of groups that are allowed/restricted to/from permission for the specified branch.
-     *
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<Group> getAlreadyAddedGroups() {
-        GroupsPermissions<BranchPermission> groupsPermissions = permissionsService.getPermissionsFor((PoulpeBranch)permissionForEntity.getTarget());
-        return groupsPermissions.get((BranchPermission) permissionForEntity.getPermission(), permissionForEntity.isAllowed());
+        GroupsPermissions<BranchPermission> groupsPermissions = 
+        		permissionsService.getPermissionsFor((PoulpeBranch)permissionForEntity.getTarget());
+        return groupsPermissions.get(getCurrentBranchPermission(), permissionForEntity.isAllowed());
     }
     
     /**
@@ -144,9 +134,8 @@ public class EditGroupsForBranchPermissionVm {
      * Gets list of groups without permission record
      * @return list of groups w/o already added
      */
-    public List<Group> getFullList(){
-        //return groupService.getAll();
-        return groupService.getSecurityGroups().getAllGroups();
+    public List<Group> getFullList() {
+    	return securityGroupListForBranchPermission.getSecurityGroupList(getCurrentBranchPermission());
     }
     
     /**
@@ -155,5 +144,9 @@ public class EditGroupsForBranchPermissionVm {
      */    
     public List<Group> getRightList(){
         return getAlreadyAddedGroups();
-    }    
+    }
+    
+    private BranchPermission getCurrentBranchPermission() {
+    	return (BranchPermission) permissionForEntity.getPermission();
+    }
 }
