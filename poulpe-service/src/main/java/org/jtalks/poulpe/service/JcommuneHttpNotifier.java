@@ -192,7 +192,8 @@ public class JcommuneHttpNotifier {
      *          request will be fine or {@link JcommuneRespondedWithErrorException} might be thrown in case if some
      *          other site was specified and it returned 404
      */
-    private void createAndSendRequest(String url, String httpMethod) throws JcommuneRespondedWithErrorException, NoConnectionToJcommuneException {
+    private void createAndSendRequest(String url, String httpMethod) throws JcommuneRespondedWithErrorException,
+            NoConnectionToJcommuneException {
         logger.info("Sending [{}] request to JCommune: [{}]", httpMethod, url);
         String adminPassword = userDao.getByUsername("admin").getPassword();
         HttpRequestBase request = createWithHttpMethod(httpMethod, url + "?password=" + adminPassword);
