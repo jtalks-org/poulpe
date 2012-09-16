@@ -20,9 +20,13 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
 import org.jtalks.poulpe.web.controller.ZkHelper;
+import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
+import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.Path;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Textbox;
 
 import javax.annotation.Nonnull;
@@ -44,7 +48,9 @@ public class UsersVm {
 
     static final String NO_FILTER_SEARCH_STRING = "";
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
+    static final String CHANGE_PASSWORD_URL = "/WEB-INF/pages/users/change_password.zul";
     static final String EDIT_USER_DIALOG = "#editUserDialog";
+    static final String CHANGE_PASSWORD_DIALOG = "#changePasswordDialog";
 
     private final UserService userService;
     private final Validator emailValidator;
@@ -247,6 +253,57 @@ public class UsersVm {
     @VisibleForTesting
     void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
+    }
+
+    /**
+     * Shows the form for password changing
+     */
+    @Command
+    public void showChangePasswordWindow() {
+        zkHelper.wireToZul(CHANGE_PASSWORD_URL);
+    }
+
+    /**
+     * Cancel current changing password operation by closing dialog.
+     */
+    @Command
+    public void cancelChangePassword() {
+        closeChangePasswordDialog();
+    }
+
+    /**
+     * Closes the dialog for password changing
+     */
+    private void closeChangePasswordDialog() {
+        zkHelper.findComponent(CHANGE_PASSWORD_DIALOG).detach();
+    }
+
+    /**
+     * Changes the password of selected user
+     * @param newPassword - new user's password
+     */
+    @Command
+    @NotifyChange("confirmPasswordBox")
+    public void changePassword(@BindingParam("newPassword") String newPassword) {
+        Textbox confirmPasswordBox = (Textbox) Path.getComponent("/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox");
+        if (newPassword.equals(confirmPasswordBox.getValue())) {
+            String hash = getMD5Hash(newPassword);
+            selectedUser.setPassword(hash);
+            userService.updateUser(selectedUser);
+            closeChangePasswordDialog();
+        } else {
+            throw new WrongValueException(confirmPasswordBox, "Passwords do not match");
+        }
+    }
+
+    /**
+     * Encodes the password with md5 algorithm and returns hash code
+     * @param password - password to encode
+     * @return md5 hash of the password
+     */
+    private String getMD5Hash(String password) {
+        PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
+        return passwordEncoder.encodePassword(password, null);
     }
 
 }

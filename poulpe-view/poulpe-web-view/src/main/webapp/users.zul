@@ -35,7 +35,8 @@
     </listbox>
 
     <menupopup id="popupMenu">
-      <menuitem image="/resources/img/edit16.png" label="Edit" onClick="@command('editUser')"/>
+      <menuitem image="/resources/img/edit16.png" label="${labels.users.edituserdialog.title}" onClick="@command('editUser')"/>
+      <menuitem image="/resources/img/changepass16.png" label="${labels.users.changePasswordDialog.title}" onClick="@command('showChangePasswordWindow')"/>
     </menupopup>
   </window>
 </zk>
