@@ -14,10 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.branch;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-
 import org.apache.commons.collections.ListUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -35,6 +31,8 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zk.ui.AbstractComponent;
 
+import java.util.List;
+
 /**
  * Feeds the dialog for adding/removing groups for permissions. The page has 2 lists: available groups & those that are
  * already granted/restricted to the permission. So when the user selects some items from one list and moves them to
@@ -47,7 +45,6 @@ import org.zkoss.zk.ui.AbstractComponent;
 public class EditGroupsForBranchPermissionVm {
     private final WindowManager windowManager;
     private final PermissionsService permissionsService;
-    private final GroupService groupService;
     private final SelectedEntity<Object> selectedEntity;
     private final SecurityGroupListForBranchPermission securityGroupListForBranchPermission;
     // Related to internal state
@@ -57,49 +54,42 @@ public class EditGroupsForBranchPermissionVm {
     /**
      * Construct VM for editing group list for selected {@link BranchPermission}.
      *
-     * @param windowManager  the window manager instance
-     * @param permissionsService  the permissions service instance
-     * @param groupService   the group service instance
-     * @param selectedEntity the SelectedEntity contains {@link PermissionForEntity} with data needed for construction
-     *                       VM state
+     * @param windowManager      the window manager instance
+     * @param permissionsService the permissions service instance
+     * @param groupService       the group service instance
+     * @param selectedEntity     the SelectedEntity contains {@link PermissionForEntity} with data needed for
+     *                           construction VM state
      */
-    public EditGroupsForBranchPermissionVm(@Nonnull WindowManager windowManager,
-                                           @Nonnull PermissionsService permissionsService,
-                                           @Nonnull GroupService groupService,
-                                           @Nonnull SelectedEntity<Object> selectedEntity) {
+    public EditGroupsForBranchPermissionVm(WindowManager windowManager, PermissionsService permissionsService,
+                                           GroupService groupService, SelectedEntity<Object> selectedEntity) {
         permissionForEntity = (PermissionForEntity) selectedEntity.getEntity();
 
         this.windowManager = windowManager;
         this.permissionsService = permissionsService;
-        this.groupService = groupService;
         this.selectedEntity = selectedEntity;
-        
+
         branch = (PoulpeBranch) permissionForEntity.getTarget();
         securityGroupListForBranchPermission = new SecurityGroupListForBranchPermission(groupService);
     }
 
     // -- ZK Command bindings --------------------
 
-    /**
-     * Closes the dialog.
-     */
+    /** Closes the dialog. */
     @Command
     public void cancel() {
         openBranchPermissionsWindow();
     }
 
-    /**
-     * Saves the state.
-     */
+    /** Saves the state. */
     @Command
     public void save(@BindingParam("component") AbstractComponent DualListComponent) {
         List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
         @SuppressWarnings("unchecked")
-        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
+        List<Group> addedGroups = ((DualListVm) DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
         PermissionChanges accessChanges = new PermissionChanges(
-        		permissionForEntity.getPermission(),
-                ListUtils.subtract(addedGroups, alreadyAddedGroups), 
+                permissionForEntity.getPermission(),
+                ListUtils.subtract(addedGroups, alreadyAddedGroups),
                 ListUtils.subtract(alreadyAddedGroups, addedGroups));
 
         if (!accessChanges.isEmpty()) {
@@ -118,35 +108,36 @@ public class EditGroupsForBranchPermissionVm {
      * @return list of groups already added for current {@link PoulpeBranch} with specified mode
      */
     private List<Group> getAlreadyAddedGroups() {
-        GroupsPermissions<BranchPermission> groupsPermissions = 
-        		permissionsService.getPermissionsFor((PoulpeBranch)permissionForEntity.getTarget());
+        GroupsPermissions<BranchPermission> groupsPermissions =
+                permissionsService.getPermissionsFor((PoulpeBranch) permissionForEntity.getTarget());
         return groupsPermissions.get(getCurrentBranchPermission(), permissionForEntity.isAllowed());
     }
-    
-    /**
-     * Opens window with BranchPermissions page.
-     */
+
+    /** Opens window with BranchPermissions page. */
     private void openBranchPermissionsWindow() {
         selectedEntity.setEntity(branch);
         BranchPermissionManagementVm.showPage(windowManager);
     }
+
     /**
      * Gets list of groups without permission record
+     *
      * @return list of groups w/o already added
      */
     public List<Group> getFullList() {
-    	return securityGroupListForBranchPermission.getSecurityGroupList(getCurrentBranchPermission());
+        return securityGroupListForBranchPermission.getSecurityGroupList(getCurrentBranchPermission());
     }
-    
+
     /**
      * Gets list of groups with permission record
-     * @return list of already added groups 
-     */    
-    public List<Group> getRightList(){
+     *
+     * @return list of already added groups
+     */
+    public List<Group> getRightList() {
         return getAlreadyAddedGroups();
     }
-    
+
     private BranchPermission getCurrentBranchPermission() {
-    	return (BranchPermission) permissionForEntity.getPermission();
+        return (BranchPermission) permissionForEntity.getPermission();
     }
 }
