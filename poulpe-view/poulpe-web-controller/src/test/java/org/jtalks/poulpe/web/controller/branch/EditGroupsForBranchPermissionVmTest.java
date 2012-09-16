@@ -36,6 +36,9 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.List;
+import org.jtalks.poulpe.model.dto.AnonymousGroup;
+import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.assertEquals;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
@@ -73,6 +76,15 @@ public class EditGroupsForBranchPermissionVmTest {
         vefiryNothingChanges();
     }
 
+    @Test(dataProvider = "dataProvider")
+    public void testAnonimus(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
+        initTest(permissionForEntity, groupsPermissions);
+        SecurityGroupList exeptedList = new SecurityGroupList(Lists.<Group>newArrayList(new Group()));
+        doReturn(exeptedList).when(groupService).getSecurityGroups();
+        List<Group> actualList = viewModel.getFullList();
+        assertEquals(actualList,exeptedList.getAllGroups());
+    }
+    
 //    @Test(dataProvider = "dataProvider")
 //    public void testSaveWithChanges(PermissionForEntity permissionForEntity,
 //            GroupsPermissions<BranchPermission> groupsPermissions) {
