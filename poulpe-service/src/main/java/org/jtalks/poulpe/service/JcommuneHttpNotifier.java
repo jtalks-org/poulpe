@@ -174,6 +174,24 @@ public class JcommuneHttpNotifier {
         }
     }
 
+    /**
+     * Creates the HTTP request from specified data, adds admin password to the URL and sends to JCommune. The password
+     * is required to be set in order to secure this invocation, otherwise anyway would be able to send such request to
+     * JCommune.
+     *
+     * @param url        an address to send the request to
+     * @param httpMethod delete or post request, see {@link HttpDelete}, {@link HttpPost}
+     * @throws JcommuneRespondedWithErrorException
+     *          if HTTP request reached JCommune, but JCommune responded with error code, such situation may happen for
+     *          instance when we're deleting some branch, but it was already deleted, or JCommune has troubles removing
+     *          that branch (database connection lost). Note that if we reach some other site and it responds with 404
+     *          for example, this will be still this error.
+     * @throws NoConnectionToJcommuneException
+     *          if nothing was found at the specified URL, note that if URL was set incorrectly to point to another
+     *          site, this can't be figured out by us, we just operate with HTTP codes, which means that either the
+     *          request will be fine or {@link JcommuneRespondedWithErrorException} might be thrown in case if some
+     *          other site was specified and it returned 404
+     */
     private void createAndSendRequest(String url, String httpMethod) throws JcommuneRespondedWithErrorException, NoConnectionToJcommuneException {
         logger.info("Sending [{}] request to JCommune: [{}]", httpMethod, url);
         String adminPassword = userDao.getByUsername("admin").getPassword();
@@ -189,23 +207,44 @@ public class JcommuneHttpNotifier {
         }
     }
 
+    /**
+     * Figures out whether the HTTP response was successful or not, if not than exception is thrown.
+     *
+     * @param response JCommune's HTTP response
+     * @throws JcommuneRespondedWithErrorException
+     *          if the HTTP code in the response appeared to be error one
+     */
     private void assertStatusSuccessful(HttpResponse response) throws JcommuneRespondedWithErrorException {
         int statusCode = response.getStatusLine().getStatusCode();
         if (statusCode < MIN_HTTP_STATUS || statusCode > MAX_HTTP_STATUS) {
-            logErrorResponse(response, statusCode);
+            logErrorResponse(response);
             throw new JcommuneRespondedWithErrorException(String.valueOf(statusCode));
         }
     }
 
-    private void logErrorResponse(HttpResponse response, int statusCode) {
+    /**
+     * Logs an error that was received from JCommune in the HTTP response body. Note that this doesn't check whether the
+     * response was actually error one or not, so caller methods should ensure this.
+     *
+     * @param response HTTP response from JCommune to log its body
+     */
+    private void logErrorResponse(HttpResponse response) {
         try {
             logger.info("Error HTTP code was returned by JCommune: [{}]. Response body: [{}]",
-                    statusCode, IOUtils.toString(response.getEntity().getContent()));
+                    response.getStatusLine().getStatusCode(), IOUtils.toString(response.getEntity().getContent()));
         } catch (IOException e) {
             logger.warn("Was not possible to read JCommune error response due to exception.", e);
         }
     }
 
+    /**
+     * Creates HTTP request based on the specified method.
+     *
+     * @param httpMethod either {@link HttpDelete#getMethod()} or {@link HttpPost#getMethod()}
+     * @param url        address of JCommune
+     * @return constructed HTTP request based on specified method
+     * @throws IllegalArgumentException if the method was neither DELETE nor POST
+     */
     private HttpRequestBase createWithHttpMethod(String httpMethod, String url) {
         if (HttpDelete.METHOD_NAME.equals(httpMethod)) {
             return new HttpDelete(url);
@@ -216,12 +255,20 @@ public class JcommuneHttpNotifier {
         }
     }
 
+    /**
+     * Sets http-specific parameters and actually sends the request, this was factored out in a separate method in order
+     * to be mocked out since it's impossible to mock the HTTP call itself.
+     *
+     * @param request prepared http request that has to be only sent, no URL or other configuration should be required
+     * @return the HTTP response that actually came from the host
+     * @throws IOException if problems (e.g. no connection) were found while sending request
+     */
     @VisibleForTesting
-    HttpResponse doSendRequest(HttpUriRequest emptyRequest) throws IOException {
+    HttpResponse doSendRequest(HttpUriRequest request) throws IOException {
         HttpClient httpClient = new DefaultHttpClient();
         httpClient.getParams().setParameter("http.socket.timeout", HTTP_CONNECTION_TIMEOUT);
         httpClient.getParams().setParameter("http.connection.timeout", HTTP_CONNECTION_TIMEOUT);
-        return httpClient.execute(emptyRequest);
+        return httpClient.execute(request);
     }
 
 }

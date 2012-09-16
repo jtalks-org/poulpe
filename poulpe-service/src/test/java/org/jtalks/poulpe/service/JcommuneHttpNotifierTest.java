@@ -39,7 +39,7 @@ public class JcommuneHttpNotifierTest {
     public void successfulNotifyAboutReindexComponent() throws Exception {
         doReturn(validResponse()).when(sut).doSendRequest(any(HttpUriRequest.class));
         sut.notifyAboutReindexComponent("url");
-        verify(sut).doSendRequest(argThat(eqRequest("url/search/index/rebuild?password=password", "password", "POST")));
+        verify(sut).doSendRequest(argThat(eqRequest("url/search/index/rebuild?password=password", "POST")));
     }
 
     @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
@@ -70,21 +70,21 @@ public class JcommuneHttpNotifierTest {
     public void testNotifyAboutComponentDelete() throws Exception {
         doReturn(validResponse()).when(sut).doSendRequest(any(HttpUriRequest.class));
         sut.notifyAboutComponentDelete("url");
-        verify(sut).doSendRequest(argThat(eqRequest("url/component?password=password", "password", "DELETE")));
+        verify(sut).doSendRequest(argThat(eqRequest("url/component?password=password", "DELETE")));
     }
 
     @Test
     public void testNotifyAboutBranchDelete() throws Exception {
         doReturn(validResponse()).when(sut).doSendRequest(any(HttpUriRequest.class));
         sut.notifyAboutBranchDelete("url", new PoulpeBranch());
-        verify(sut).doSendRequest(argThat(eqRequest("url/branches/0?password=password", "password", "DELETE")));
+        verify(sut).doSendRequest(argThat(eqRequest("url/branches/0?password=password", "DELETE")));
     }
 
     @Test
     public void testNotifyAboutSectionDelete() throws Exception {
         doReturn(validResponse()).when(sut).doSendRequest(any(HttpUriRequest.class));
         sut.notifyAboutSectionDelete("url", new PoulpeSection());
-        verify(sut).doSendRequest(argThat(eqRequest("url/sections/0?password=password", "password", "DELETE")));
+        verify(sut).doSendRequest(argThat(eqRequest("url/sections/0?password=password", "DELETE")));
     }
 
     @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
@@ -119,25 +119,21 @@ public class JcommuneHttpNotifierTest {
     /** A special matcher for our case to check whether the HTTP request are equal or not. */
     static class HttpRequestMatcher extends BaseMatcher<HttpUriRequest> {
         private final String url;
-        private final String adminPassword;
         private final String method;
 
-        private HttpRequestMatcher(String url, String adminPassword, String method) {
+        private HttpRequestMatcher(String url, String method) {
             this.url = url;
-            this.adminPassword = adminPassword;
             this.method = method;
         }
 
-        public static HttpRequestMatcher eqRequest(String url, String adminPassword, String method) {
-            return new HttpRequestMatcher(url, adminPassword, method);
+        public static HttpRequestMatcher eqRequest(String url, String method) {
+            return new HttpRequestMatcher(url, method);
         }
 
         @Override
         public boolean matches(Object o) {
             HttpUriRequest request = (HttpUriRequest) o;
-            return /*adminPassword.equals(request.getParams().getParameter("password"))*/
-                     url.equals(request.getURI().toString())
-                    && method.equals(request.getMethod());
+            return url.equals(request.getURI().toString()) && method.equals(request.getMethod());
         }
 
         @Override
