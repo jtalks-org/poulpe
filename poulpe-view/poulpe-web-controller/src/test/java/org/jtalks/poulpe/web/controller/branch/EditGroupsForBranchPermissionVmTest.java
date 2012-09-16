@@ -52,11 +52,6 @@ import static org.mockito.Mockito.*;
  * 
  */
 public class EditGroupsForBranchPermissionVmTest {
-
-    // limits dataProvider out
-    private final int DATA_PROVIDER_LIMIT = 20;
-
-    // SUT
     private EditGroupsForBranchPermissionVm viewModel;
 
     @Mock BranchService branchService;
@@ -85,28 +80,6 @@ public class EditGroupsForBranchPermissionVmTest {
         assertEquals(actualList,exeptedList.getAllGroups());
     }
     
-//    @Test(dataProvider = "dataProvider")
-//    public void testSaveWithChanges(PermissionForEntity permissionForEntity,
-//            GroupsPermissions<BranchPermission> groupsPermissions) {
-//        initTest(permissionForEntity, groupsPermissions);
-//
-//        viewModel.removeAll();
-//        viewModel.save();
-//
-//        vefiryPermissionsChanged(permissionForEntity);
-//
-//        verify(windowManager).open(anyString());
-//    }
-
-//    @Test(dataProvider = "dataProvider")
-//    public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-//                                       GroupsPermissions<BranchPermission> groupsPermissions) {
-//        initTest(permissionForEntity, groupsPermissions);
-//
-//        viewModel.save();
-//
-//        vefiryNothingChanges();
-//    }
 
     public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
         when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
@@ -114,8 +87,6 @@ public class EditGroupsForBranchPermissionVmTest {
 
         viewModel = new EditGroupsForBranchPermissionVm(windowManager, permissionsService, groupService,
                 ObjectsFactory.createSelectedEntity((Object) permissionForEntity));
-
-       // viewModel.updateVm();
     }
 
     @DataProvider
@@ -131,6 +102,7 @@ public class EditGroupsForBranchPermissionVmTest {
         BranchPermission[] branchPermissions = BranchPermission.values();
 
         // building fixtures
+        int DATA_PROVIDER_LIMIT = 20;
         int count = Math.min(DATA_PROVIDER_LIMIT, branchPermissions.length);
         for (int i = 0; i < count; i++) {
             permissionsForEntity.add(new PermissionForEntity(target, true, branchPermissions[i]));
@@ -151,16 +123,6 @@ public class EditGroupsForBranchPermissionVmTest {
         }
 
         return result;
-    }
-
-    private void vefiryPermissionsChanged(PermissionForEntity permissionForEntity) {
-        PoulpeBranch target = (PoulpeBranch) permissionForEntity.getTarget();
-
-        if (permissionForEntity.isAllowed()) {
-            verify(permissionsService).changeGrants(eq(target), any(PermissionChanges.class));
-        } else {
-            verify(permissionsService).changeRestrictions(eq(target), any(PermissionChanges.class));
-        }
     }
 
     private void vefiryNothingChanges() {
