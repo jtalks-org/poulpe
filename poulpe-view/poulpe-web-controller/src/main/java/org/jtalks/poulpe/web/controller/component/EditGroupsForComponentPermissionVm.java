@@ -34,7 +34,7 @@ import javax.annotation.Nonnull;
 import java.util.List;
 
 import static ch.lambdaj.Lambda.*;
-import static org.hamcrest.text.StringContains.containsString;
+import static org.hamcrest.core.StringContains.containsString;
 
 /**
  * View Model for editing groups for component permission.

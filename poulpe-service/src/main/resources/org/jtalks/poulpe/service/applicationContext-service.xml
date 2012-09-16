@@ -21,87 +21,90 @@
        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
        http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd">
 
-    <!-- Declaration AOP configs -->
+  <!-- Declaration AOP configs -->
 
-    <aop:config>
-        <aop:pointcut id="defaultTxPointcut" expression="within(org.jtalks.poulpe.service.transactional.*) and not within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService))"/>
-        <aop:advisor advice-ref="txAdvice" pointcut-ref="defaultTxPointcut" />
-    </aop:config>
-    <tx:advice id="txAdvice">
-        <tx:attributes>
-            <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception"/>
-            <tx:method name="find*" read-only="true" rollback-for="java.lang.Exception"/>
-            <tx:method name="count*" read-only="true" rollback-for="java.lang.Exception"/>
-            <tx:method name="with*" read-only="true" rollback-for="java.lang.Exception"/>
-            <tx:method name="*" rollback-for="java.lang.Exception" no-rollback-for="org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException,
+  <aop:config>
+    <aop:pointcut id="defaultTxPointcut"
+                  expression="within(org.jtalks.poulpe.service.transactional.*) and not within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService))"/>
+    <aop:advisor advice-ref="txAdvice" pointcut-ref="defaultTxPointcut"/>
+  </aop:config>
+  <tx:advice id="txAdvice">
+    <tx:attributes>
+      <tx:method name="get*" read-only="true" rollback-for="java.lang.Exception"/>
+      <tx:method name="find*" read-only="true" rollback-for="java.lang.Exception"/>
+      <tx:method name="count*" read-only="true" rollback-for="java.lang.Exception"/>
+      <tx:method name="with*" read-only="true" rollback-for="java.lang.Exception"/>
+      <tx:method name="*" rollback-for="java.lang.Exception" no-rollback-for="org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException,
                                                                                        org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException,
                                                                                         org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException"/>
-        </tx:attributes>
-    </tx:advice>
+    </tx:attributes>
+  </tx:advice>
 
-    <aop:config>
-        <aop:pointcut id="permissionsServiceTxPointcut" expression="within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService)" />
-        <aop:advisor advice-ref="permissionsServiceTxAdvice" pointcut-ref="permissionsServiceTxPointcut"/>
-    </aop:config>
-    <tx:advice id="permissionsServiceTxAdvice">
-        <tx:attributes>
-            <tx:method name="*" rollback-for="java.lang.Exception"/>
-        </tx:attributes>
-    </tx:advice>
+  <aop:config>
+    <aop:pointcut id="permissionsServiceTxPointcut"
+                  expression="within(org.jtalks.poulpe.service.transactional.TransactionalPermissionsService)"/>
+    <aop:advisor advice-ref="permissionsServiceTxAdvice" pointcut-ref="permissionsServiceTxPointcut"/>
+  </aop:config>
+  <tx:advice id="permissionsServiceTxAdvice">
+    <tx:attributes>
+      <tx:method name="*" rollback-for="java.lang.Exception"/>
+    </tx:attributes>
+  </tx:advice>
 
-    <!--Declaration services bean -->
-    <bean id="branchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
-        <constructor-arg index="0" ref="branchDao"/>
-    </bean>
-    <bean id="forumStructureService" class="org.jtalks.poulpe.service.transactional.TransactionalForumStructureService">
-        <constructor-arg index="0" ref="sectionDao"/>
-        <constructor-arg index="1" ref="branchDao"/>
-        <constructor-arg index="2" ref="componentDao"/>
-        <property name="jCommuneNotifier" ref="jcommuneHttpNotifier" />
-    </bean>
-    <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
-        <constructor-arg index="0" ref="componentDao"/>
-        <property name="jCommuneNotifier" ref="jcommuneHttpNotifier" />
-    </bean>
-    <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
-        <constructor-arg index="0" ref="sectionDao"/>
-    </bean>
-    <bean id="topicTypeService" class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
-        <constructor-arg index="0" ref="topicTypeDao"/>
-    </bean>
-    <bean id="userService" class="org.jtalks.poulpe.service.transactional.TransactionalUserService">
-        <constructor-arg index="0" ref="userDao"/>
-        <constructor-arg index="1" ref="userBanner"/>
-        <constructor-arg index="2" ref="aclManager"/>
-        <constructor-arg index="3" ref="componentDao"/>
-    </bean>
-    <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
-        <constructor-arg index="0" ref="groupDao"/>
-        <constructor-arg index="1" ref="userBanner"/>
-    </bean>
-    <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
-        <constructor-arg index="0" ref="rankDao"/>
-    </bean>
-    <bean id="poulpeSecurityService" class="org.jtalks.poulpe.service.transactional.SecurityService">
-        <constructor-arg index="0" ref="userDao"/>
-    </bean>
+  <!--Declaration services bean -->
+  <bean id="branchService" class="org.jtalks.poulpe.service.transactional.TransactionalBranchService">
+    <constructor-arg index="0" ref="branchDao"/>
+  </bean>
+  <bean id="forumStructureService" class="org.jtalks.poulpe.service.transactional.TransactionalForumStructureService">
+    <constructor-arg index="0" ref="sectionDao"/>
+    <constructor-arg index="1" ref="branchDao"/>
+    <constructor-arg index="2" ref="componentDao"/>
+    <constructor-arg index="3" ref="jcommuneHttpNotifier"/>
+  </bean>
+  <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
+    <constructor-arg index="0" ref="componentDao"/>
+    <property name="jCommuneNotifier" ref="jcommuneHttpNotifier"/>
+  </bean>
+  <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
+    <constructor-arg index="0" ref="sectionDao"/>
+  </bean>
+  <bean id="topicTypeService" class="org.jtalks.poulpe.service.transactional.TransactionalTopicTypeService">
+    <constructor-arg index="0" ref="topicTypeDao"/>
+  </bean>
+  <bean id="userService" class="org.jtalks.poulpe.service.transactional.TransactionalUserService">
+    <constructor-arg index="0" ref="userDao"/>
+    <constructor-arg index="1" ref="userBanner"/>
+    <constructor-arg index="2" ref="aclManager"/>
+    <constructor-arg index="3" ref="componentDao"/>
+  </bean>
+  <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
+    <constructor-arg index="0" ref="groupDao"/>
+    <constructor-arg index="1" ref="userBanner"/>
+  </bean>
+  <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
+    <constructor-arg index="0" ref="rankDao"/>
+  </bean>
+  <bean id="poulpeSecurityService" class="org.jtalks.poulpe.service.transactional.SecurityService">
+    <constructor-arg index="0" ref="userDao"/>
+  </bean>
 
-    <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
-        <constructor-arg index="0" ref="aclManager"/>
-        <constructor-arg index="1" ref="groupDao"/>
-        <constructor-arg index="2" ref="aclUtil"/>
-    </bean>
+  <bean id="branchPermissionManager" class="org.jtalks.poulpe.logic.PermissionManager">
+    <constructor-arg index="0" ref="aclManager"/>
+    <constructor-arg index="1" ref="groupDao"/>
+    <constructor-arg index="2" ref="aclUtil"/>
+  </bean>
 
-    <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">
-        <constructor-arg index="0" ref="groupDao"/>
-        <constructor-arg index="1" ref="userDao"/>
-    </bean>
+  <bean id="userBanner" class="org.jtalks.poulpe.model.logic.UserBanner">
+    <constructor-arg index="0" ref="groupDao"/>
+    <constructor-arg index="1" ref="userDao"/>
+  </bean>
 
-    <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier" scope="singleton" >
-    </bean>
+  <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier">
+    <constructor-arg index="0" ref="userDao"/>
+  </bean>
 
-    <bean id="permissionsService" class="org.jtalks.poulpe.service.transactional.TransactionalPermissionsService" >
-        <constructor-arg ref="branchPermissionManager" />
-    </bean>
+  <bean id="permissionsService" class="org.jtalks.poulpe.service.transactional.TransactionalPermissionsService">
+    <constructor-arg ref="branchPermissionManager"/>
+  </bean>
 
 </beans>
