@@ -36,20 +36,16 @@ import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
 import java.util.List;
-import org.jtalks.poulpe.model.dto.AnonymousGroup;
-import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyString;
-import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 
 /**
  * Tests for {@link EditGroupsForBranchPermissionVm}.
- * 
+ *
  * @author Vyacheslav Zhivaev
- * 
+ *
  */
 public class EditGroupsForBranchPermissionVmTest {
     private EditGroupsForBranchPermissionVm viewModel;
@@ -79,7 +75,7 @@ public class EditGroupsForBranchPermissionVmTest {
         List<Group> actualList = viewModel.getFullList();
         assertEquals(actualList,exeptedList.getAllGroups());
     }
-    
+
 
     public void initTest(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
         when(groupService.getSecurityGroups()).thenReturn(new SecurityGroupList());
