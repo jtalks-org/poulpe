@@ -169,13 +169,4 @@ public class ForumStructureVm {
     public void setTreeModel(ForumStructureTreeModel treeModel) {
         this.treeModel = treeModel;
     }
-
-    @Command
-    public void expandTree() {
-            TreeNode<ForumStructureItem> root = treeModel.getRoot();
-            for(int i = 0; i < root.getChildCount(); i++) {
-                int[] path = treeModel.getPath(root.getChildAt(i));
-                treeModel.addOpenPath(path);
-            }
-    }
 }
