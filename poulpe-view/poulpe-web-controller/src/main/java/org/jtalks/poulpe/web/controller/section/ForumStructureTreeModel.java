@@ -50,6 +50,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      */
     public ForumStructureTreeModel putBranch(ForumStructureItem branchToPut, ForumStructureItem destinationSection) {
         TreeNode<ForumStructureItem> destinationSectionNode = find(destinationSection);
+
         ZkTreeNode<ForumStructureItem> branchNodeToPut = (ZkTreeNode<ForumStructureItem>) find(branchToPut);
         if (branchNodeToPut == null) {
             branchNodeToPut = new ZkTreeNode<ForumStructureItem>(branchToPut);
@@ -243,5 +244,6 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     public Jcommune getRootAsJcommune() {
         return (Jcommune) (Object) getRoot().getData();
     }
+
 
 }

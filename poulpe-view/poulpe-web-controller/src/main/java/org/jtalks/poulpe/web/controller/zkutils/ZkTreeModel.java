@@ -84,6 +84,7 @@ public class ZkTreeModel<E> extends DefaultTreeModel<E> {
             return null;
         }
         return child.getData();
+
     }
 
     /**
