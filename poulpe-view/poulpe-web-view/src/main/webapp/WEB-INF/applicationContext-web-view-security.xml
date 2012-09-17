@@ -35,7 +35,7 @@
   </http>
 
     <beans:bean id="redirectingAccessDeniedExceptionHandler" 
-            class="org.jtalks.poulpe.web.osod.AuthenticationCleaningAccessDeniedExceptionHandler">
+            class="org.jtalks.poulpe.web.AuthenticationCleaningAccessDeniedExceptionHandler">
         <beans:property name="defaultErrorPage" value="/login.zul?access_denied=1"/>
         <beans:property name="alternativeRoutes">
             <beans:map>

@@ -40,6 +40,8 @@ import java.util.List;
  * the lists to this view model.
  *
  * @author Vyacheslav Zhivaev
+ * @author Evgeny Surovtsev 
+ * 
  * @see BranchPermissionManagementVm
  */
 public class EditGroupsForBranchPermissionVm {
@@ -85,9 +87,9 @@ public class EditGroupsForBranchPermissionVm {
     public void save(@BindingParam("component") AbstractComponent DualListComponent) {
         List<Group> alreadyAddedGroups = getAlreadyAddedGroups();
 
-        @SuppressWarnings("unchecked")
         List<Group> addedGroups = ((DualListVm) DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
-        PermissionChanges accessChanges = new PermissionChanges(
+        @SuppressWarnings("unchecked")
+		PermissionChanges accessChanges = new PermissionChanges(
                 permissionForEntity.getPermission(),
                 ListUtils.subtract(addedGroups, alreadyAddedGroups),
                 ListUtils.subtract(alreadyAddedGroups, addedGroups));
@@ -137,6 +139,9 @@ public class EditGroupsForBranchPermissionVm {
         return getAlreadyAddedGroups();
     }
 
+    /**
+     * Returns the current BranchPermission which user is trying to change permissions for  
+     */
     private BranchPermission getCurrentBranchPermission() {
         return (BranchPermission) permissionForEntity.getPermission();
     }

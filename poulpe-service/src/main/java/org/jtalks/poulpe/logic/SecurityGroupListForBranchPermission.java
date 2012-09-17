@@ -23,12 +23,15 @@ import org.jtalks.poulpe.service.GroupService;
 
 /**
  * The class filters list of all available security groups (see {@link SecurityGroupList}) and returns only those ones 
- * which are allowed for certain {@link BranchPermission}.<br/>
+ * which are allowed for certain {@link BranchPermission}.
  * 
  * @author Evgeny Surovtsev
  *
  */
 public class SecurityGroupListForBranchPermission {
+	/**
+	 * Constructor for SecurityGroupListForBranchPermission.
+	 */
 	public SecurityGroupListForBranchPermission(GroupService groupService) {
 		this.groupService = groupService;
 	}
@@ -46,6 +49,9 @@ public class SecurityGroupListForBranchPermission {
         return securityGroupList.getAllGroups();
 	}
 	
+	/**
+	 * Return if a given BranchPermission is allowed for Anonymous 
+	 */
 	private boolean isAnonymousAllowed(BranchPermission branchPermission) {
 		return (branchPermission == BranchPermission.VIEW_TOPICS);
 	}
