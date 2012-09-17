@@ -1,0 +1,37 @@
+[1mdiff --git a/poulpe-view/poulpe-web-controller/src/main/java/org/jtalks/poulpe/web/controller/section/ForumStructureVm.java b/poulpe-view/poulpe-web-controller/src/main/java/org/jtalks/poulpe/web/controller/section/ForumStructureVm.java[m
+[1mindex 252d6c6..44d1857 100644[m
+[1m--- a/poulpe-view/poulpe-web-controller/src/main/java/org/jtalks/poulpe/web/controller/section/ForumStructureVm.java[m
+[1m+++ b/poulpe-view/poulpe-web-controller/src/main/java/org/jtalks/poulpe/web/controller/section/ForumStructureVm.java[m
+[36m@@ -172,18 +172,12 @@[m [mpublic class ForumStructureVm {[m
+ [m
+     @Command[m
+     public void expandTree() {[m
+[31m-[m
+[31m-        try {[m
+             TreeNode<ForumStructureItem> root = treeModel.getRoot();[m
+             int[] path = treeModel.getPath(root.getChildAt(0));[m
+             treeModel.addOpenPath(path);[m
+[31m-            for(int i=0; i < root.getChildCount(); i++) {[m
+[32m+[m[32m            for(int i = 0; i < root.getChildCount(); i++) {[m
+                 path = treeModel.getPath(root.getChildAt(i));[m
+                 treeModel.addOpenPath(path);[m
+             }[m
+[31m-        } catch (Exception e) {[m
+[31m-            e.printStackTrace();[m
+[31m-        }[m
+     }[m
+[31m-[m
+ }[m
+[1mdiff --git a/poulpe-view/poulpe-web-view/src/main/webapp/WEB-INF/pages/forum/structure/ForumStructure.zul b/poulpe-view/poulpe-web-view/src/main/webapp/WEB-INF/pages/forum/structure/ForumStructure.zul[m
+[1mindex 0189a91..7482a23 100644[m
+[1m--- a/poulpe-view/poulpe-web-view/src/main/webapp/WEB-INF/pages/forum/structure/ForumStructure.zul[m
+[1m+++ b/poulpe-view/poulpe-web-view/src/main/webapp/WEB-INF/pages/forum/structure/ForumStructure.zul[m
+[36m@@ -5,7 +5,7 @@[m
+   <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"[m
+           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}" width="100%" height="100%">[m
+     <button label="${labels.forum_structure.create_section_button}" onClick="@global-command('showNewSectionDialog')"/>[m
+[31m-    <button id="bt" label="${labels.forum_structure.expand_all_button}" onClick="@command ('expandTree')"/>[m
+[32m+[m[32m    <button label="${labels.forum_structure.expand_all_button}" onClick="@command ('expandTree')"/>[m
+ [m
+     <tree model="@bind(vm.treeModel)" context="treeContextMenu" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">[m
+       <template name="model">[m
