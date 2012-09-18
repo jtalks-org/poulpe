@@ -29,17 +29,18 @@ import org.jtalks.poulpe.service.GroupService;
  *
  */
 public class SecurityGroupListForBranchPermission {
-	/**
-	 * Constructor for SecurityGroupListForBranchPermission.
-	 */
 	public SecurityGroupListForBranchPermission(GroupService groupService) {
 		this.groupService = groupService;
 	}
 	
 	/**
-	 * The method returns list of available security groups (persistent and special) for defined Branch permission.
+	 * Usually not all security groups shall have an access to a Branch Permission. For example an access for 
+	 * Anonymous user's group should be narrowed only to VIEW_TOPICS Brand Permission and be disallowed to the rest of 
+	 * the Brand Permissions. This method returns a list of security groups which can have an access to the given
+	 * Branch Permission.     
 	 * 
-	 * @param branchPermission The Branch Permission which a list of security groups will be returned for. 
+	 * @param branchPermission The Branch Permission which a list of security groups will be returned for.
+	 * @return List of available security groups (persistent and special) for defined Branch permission.
 	 */
 	public List<Group> getSecurityGroupList(BranchPermission branchPermission) {
 		SecurityGroupList securityGroupList = groupService.getSecurityGroups();
@@ -50,7 +51,10 @@ public class SecurityGroupListForBranchPermission {
 	}
 	
 	/**
-	 * Return if a given BranchPermission is allowed for Anonymous 
+	 * Checks if a given Brand Permission is allowed for the Anonymous user.
+	 * 
+	 * @param branchPermission
+	 * @return true if a given BranchPermission is allowed for Anonymous or false otherwise. 
 	 */
 	private boolean isAnonymousAllowed(BranchPermission branchPermission) {
 		return (branchPermission == BranchPermission.VIEW_TOPICS);

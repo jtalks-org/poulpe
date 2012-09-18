@@ -31,6 +31,12 @@ import org.testng.annotations.Test;
 
 
 /**
+ * Currently Anonymous users can get access to VIEW_TOPICS branch permission only. The idea of the Test is to test
+ * the order of getting Security groups list for a given Branch Permission. In the case of "Anonymous supported" 
+ * Branch Permission there should be only one method called - SecurityGroupList.getAllGroups(), whereas for the 
+ * "Anonymous not supported" Branch Permission Anonymous groups shall be removed from the list by calling 
+ * SecurityGroupList.removeAnonymousGroup() additionally to SecurityGroupList.getAllGroups(). 
+ * 
  * @author Evgeny Surovtsev
  */
 public class SecurityGroupListForBranchPermissionTest {
@@ -51,9 +57,6 @@ public class SecurityGroupListForBranchPermissionTest {
 		doReturn(null).when(securityGroupList).getAllGroups();
     }
 
-	/**
-     * For all of branchPermissionsForAnonymous values an Anonymous group shall be kept
-     */
     @Test(dataProvider = "getBranchPermissionsForAnonymous")
     public void permissionsForAnonymousTest(BranchPermission branchPermission) {
     	securityGroupListForBranchPermission.getSecurityGroupList(branchPermission);
@@ -61,9 +64,6 @@ public class SecurityGroupListForBranchPermissionTest {
     	verify(securityGroupList, never()).removeAnonymousGroup();
     }
     
-    /**
-     * For all of branchPermissionsForNotAnonymous values an Anonymous group shall be removed
-     */
     @Test(dataProvider = "getBranchPermissionsForNotAnonymous")
     public void permissionsForNotAnonymousTest(BranchPermission branchPermission) {
     	securityGroupListForBranchPermission.getSecurityGroupList(branchPermission);
@@ -71,6 +71,9 @@ public class SecurityGroupListForBranchPermissionTest {
     	verify(securityGroupList).removeAnonymousGroup();
     }
     
+    /**
+     * @return All Branch Permissions which are allowed only for anonymous user.
+     */
     @DataProvider
     public Object[][] getBranchPermissionsForAnonymous() {
         return new Object[][] {
@@ -79,15 +82,20 @@ public class SecurityGroupListForBranchPermissionTest {
     }
     
     /**
-     * Get an Object[][] with all BranchPermission values with exception of BranchPermissionsForAnonymous values
+     * @return All Branch Permissions which are allowed only for non anonymous user.
      */
     @DataProvider
-    public Object[][] getBranchPermissionsForNotAnonymous() { 
+    public Object[][] getBranchPermissionsForNotAnonymous() {
+    	// To get rid of enumerating all values from BranchPermission enumeration we're applying the algorithm
+    	// where we take the whole BranchPermission enumeration and remove from it values which are allowed for 
+    	// anonymous user. These values are available via calling getBranchPermissionsForAnonymous() method.
     	List<BranchPermission> branchPermissionList = BranchPermission.getAllAsList();
     	for (Object[] branchPermissionForAnonymous: getBranchPermissionsForAnonymous()) {
     		branchPermissionList.remove((BranchPermission) branchPermissionForAnonymous[0]);
     	}
     	
+    	// Here we have a list of branch permissions which are allowed only for non anonymous user 
+    	// Convert it into Object[][] format and return.
     	Object[][] branchPermissionsForNotAnonymous = new Object[branchPermissionList.size()][];
     	for (int i = 0; i < branchPermissionList.size(); i++) {
     		Object[] branchPermissionArray = new Object[1];
