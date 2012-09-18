@@ -11,8 +11,8 @@
     <groupbox form="@id('component') @load(vm.component) @save(vm.component, before='save')">
       <grid>
         <columns>
-          <column width="25%" />
-          <column width="75%" />
+          <column width="30%" />
+          <column width="70%" />
         </columns>
         <rows>
           <row>
@@ -30,8 +30,8 @@
 
       <grid model="@load(component.properties)">
         <columns>
-          <column width="25%" />
-          <column width="75%" />
+          <column width="30%" />
+          <column width="70%" />
         </columns>
         <template name="model" var="property">
           <row>

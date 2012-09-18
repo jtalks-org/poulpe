@@ -13,15 +13,10 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 --
 
-INSERT INTO `DEFAULT_PROPERTIES` (`UUID`, `BASE_COMPONENT_TYPE`, `NAME`, `VALUE`, `VALIDATION_RULE`) VALUES 
-	(UUID(), 'ADMIN_PANEL', 'poulpe.experimental_feature', 'false', '/(true)|(false)/');
+UPDATE DEFAULT_PROPERTIES
+SET NAME = 'poulpe.experimental_features_enabled'
+WHERE NAME = 'poulpe.experimental_feature';
 
-INSERT INTO PROPERTIES
-    (UUID, NAME, VALUE, CMP_ID, VALIDATION_RULE)
-SELECT
-    UUID(), dp.NAME, dp.VALUE, c.CMP_ID, dp.VALIDATION_RULE
-FROM
-    DEFAULT_PROPERTIES dp left join PROPERTIES p on dp.NAME = p.NAME
-        join COMPONENTS c on c.COMPONENT_TYPE = dp.BASE_COMPONENT_TYPE
-WHERE
-    p.NAME is NULL;
+UPDATE PROPERTIES
+SET NAME = 'poulpe.experimental_features_enabled'
+WHERE NAME = 'poulpe.experimental_feature';
