@@ -25,7 +25,6 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Textbox;
 
@@ -299,14 +298,16 @@ public class UsersVm {
      */
     @Command
     @NotifyChange("confirmPasswordBox")
-    public void changePassword(@BindingParam("newPassword") String newPassword, @BindingParam("confirmedPassword") String confirmedPassword) {
+    public void changePassword(@BindingParam("newPassword") String newPassword, 
+                               @BindingParam("confirmedPassword") String confirmedPassword) {
         if (newPassword.equals(confirmedPassword)) {
             String hash = getMD5Hash(newPassword);
             selectedUser.setPassword(hash);
             userService.updateUser(selectedUser);
             closeChangePasswordDialog();
         } else {
-            Textbox confirmPasswordBox = (Textbox) zkHelper.getComponentByPath("/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox");
+            String path = "/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox";
+            Textbox confirmPasswordBox = (Textbox) zkHelper.getComponentByPath(path);
             throw new WrongValueException(confirmPasswordBox, "Passwords do not match");
         }
     }
