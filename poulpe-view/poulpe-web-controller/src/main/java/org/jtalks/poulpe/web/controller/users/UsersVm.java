@@ -274,7 +274,7 @@ public class UsersVm {
     /**
      * Closes the dialog for password changing
      */
-    private void closeChangePasswordDialog() {
+    public void closeChangePasswordDialog() {
         zkHelper.findComponent(CHANGE_PASSWORD_DIALOG).detach();
     }
 
@@ -284,14 +284,14 @@ public class UsersVm {
      */
     @Command
     @NotifyChange("confirmPasswordBox")
-    public void changePassword(@BindingParam("newPassword") String newPassword) {
-        Textbox confirmPasswordBox = (Textbox) Path.getComponent("/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox");
-        if (newPassword.equals(confirmPasswordBox.getValue())) {
+    public void changePassword(@BindingParam("newPassword") String newPassword, @BindingParam("confirmedPassword") String confirmedPassword) {
+        if (newPassword.equals(confirmedPassword)) {
             String hash = getMD5Hash(newPassword);
             selectedUser.setPassword(hash);
             userService.updateUser(selectedUser);
             closeChangePasswordDialog();
         } else {
+            Textbox confirmPasswordBox = (Textbox) zkHelper.getComponentByPath("/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox");
             throw new WrongValueException(confirmPasswordBox, "Passwords do not match");
         }
     }
@@ -301,7 +301,7 @@ public class UsersVm {
      * @param password - password to encode
      * @return md5 hash of the password
      */
-    private String getMD5Hash(String password) {
+    public String getMD5Hash(String password) {
         PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
         return passwordEncoder.encodePassword(password, null);
     }

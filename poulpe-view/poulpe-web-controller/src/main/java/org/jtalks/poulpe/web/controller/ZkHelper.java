@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.zkoss.util.resource.Labels;
 import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.Executions;
+import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.select.Selectors;
 import org.zkoss.zk.ui.util.ConventionWires;
 
@@ -215,5 +216,14 @@ public class ZkHelper {
      */
     public Cookie createCookie(String name, String value) {
         return new Cookie(name, value);
+    }
+
+    /**
+     * Returns a component, that is allocated by specified path
+     * @param path where to look for component
+     * @return component, that is allocated by specified path
+     */
+    public Component getComponentByPath(String path) {
+        return Path.getComponent(path);
     }
 }
