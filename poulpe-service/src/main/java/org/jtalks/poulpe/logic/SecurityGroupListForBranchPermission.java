@@ -14,51 +14,49 @@
  */
 package org.jtalks.poulpe.logic;
 
-import java.util.List;
-
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.service.GroupService;
 
+import java.util.List;
+
 /**
- * The class filters list of all available security groups (see {@link SecurityGroupList}) and returns only those ones 
- * which are allowed for certain {@link BranchPermission}.
- * 
- * @author Evgeny Surovtsev
+ * The class filters list of all available security groups (see {@link SecurityGroupList}) and returns only those which
+ * are allowed for certain {@link BranchPermission}.
  *
+ * @author Evgeny Surovtsev
  */
 public class SecurityGroupListForBranchPermission {
-	public SecurityGroupListForBranchPermission(GroupService groupService) {
-		this.groupService = groupService;
-	}
-	
-	/**
-	 * Usually not all security groups shall have an access to a Branch Permission. For example an access for 
-	 * Anonymous user's group should be narrowed only to VIEW_TOPICS Brand Permission and be disallowed to the rest of 
-	 * the Brand Permissions. This method returns a list of security groups which can have an access to the given
-	 * Branch Permission.     
-	 * 
-	 * @param branchPermission The Branch Permission which a list of security groups will be returned for.
-	 * @return List of available security groups (persistent and special) for defined Branch permission.
-	 */
-	public List<Group> getSecurityGroupList(BranchPermission branchPermission) {
-		SecurityGroupList securityGroupList = groupService.getSecurityGroups();
-		if (!isAnonymousAllowed(branchPermission)) {
-			securityGroupList.removeAnonymousGroup();
-		}
+    public SecurityGroupListForBranchPermission(GroupService groupService) {
+        this.groupService = groupService;
+    }
+
+    /**
+     * Usually not all security groups shall have an access to a Branch Permission. For example an access for Anonymous
+     * user's group should be narrowed only to VIEW_TOPICS Brand Permission and be disallowed to the rest of the Brand
+     * Permissions. This method returns a list of security groups which can have an access to the given Branch
+     * Permission.
+     *
+     * @param branchPermission The Branch Permission which a list of security groups will be returned for.
+     * @return List of available security groups (persistent and special) for defined Branch permission.
+     */
+    public List<Group> getSecurityGroupList(BranchPermission branchPermission) {
+        SecurityGroupList securityGroupList = groupService.getSecurityGroups();
+        if (!isAnonymousAllowed(branchPermission)) {
+            securityGroupList.removeAnonymousGroup();
+        }
         return securityGroupList.getAllGroups();
-	}
-	
-	/**
-	 * Checks if a given Brand Permission is allowed for the Anonymous user.
-	 * 
-	 * @param branchPermission
-	 * @return true if a given BranchPermission is allowed for Anonymous or false otherwise. 
-	 */
-	private boolean isAnonymousAllowed(BranchPermission branchPermission) {
-		return (branchPermission == BranchPermission.VIEW_TOPICS);
-	}
-	
-	private GroupService groupService;
+    }
+
+    /**
+     * Checks if a given Brand Permission is allowed for the Anonymous user.
+     *
+     * @return true if a given BranchPermission is allowed for Anonymous or false otherwise
+     */
+    private boolean isAnonymousAllowed(BranchPermission branchPermission) {
+        return (branchPermission == BranchPermission.VIEW_TOPICS);
+    }
+
+    private final GroupService groupService;
 }
