@@ -110,6 +110,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns list containing users on page with number given as param
      * @param page number of page used to users look up
      * @return list containing users on page with number given as param
      */
@@ -126,6 +127,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns total amount of users matched the searchString
      * @return total amount of users matched the searchString
      */
     public int getTotalSize() {
@@ -145,6 +147,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns currently active page
      * @return currently active page
      */
     public int getActivePage() {
@@ -224,6 +227,7 @@ public class UsersVm {
     }
 
     /**
+     * Sets the user as currently selected
      * @param selectedUser {@link PoulpeUser} to set as currently selected
      */
     public void setSelectedUser(PoulpeUser selectedUser) {
@@ -231,6 +235,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns expression from search string
      * @return expression from search string
      */
     public String getSearchString() {
@@ -238,6 +243,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns users count, shown on a single page
      * @return users count, shown on a single page
      */
     public int getItemsPerPage() {
@@ -245,6 +251,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns instance used for e-mail validation
      * @return {@link Validator} instance used for e-mail validation
      */
     public Validator getEmailValidator() {
@@ -252,6 +259,7 @@ public class UsersVm {
     }
 
     /**
+     * Sets zkHelper
      * @param zkHelper instance to set
      */
     @VisibleForTesting
