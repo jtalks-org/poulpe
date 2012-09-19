@@ -92,6 +92,9 @@ public class UsersVm {
 
     // === listing and search ===
 
+    /**
+     * Prepares for listing
+     */
     private void prepareForListing() {
         displayFirstPage(NO_FILTER_SEARCH_STRING);
     }
@@ -115,6 +118,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns currently bounded list of users
      * @return currently bounded list of users
      */
     public List<PoulpeUser> getUsers() {
