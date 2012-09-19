@@ -37,9 +37,8 @@ import java.util.List;
  * @author Alexey Grigorev
  */
 public class UsersVm {
-
+    /** Number of items per page  */
     private static final int ITEMS_PER_PAGE = 50;
-
     private static final String SELECTED_ITEM_PROP = "selectedUser";
     private static final String VIEW_DATA_PROP = "viewData";
     private static final String ACTIVE_PAGE = "activePage";
@@ -47,9 +46,13 @@ public class UsersVm {
     private static final String TOTAL_SIZE = "totalSize";
 
     static final String NO_FILTER_SEARCH_STRING = "";
+    /** Url to zul page for user editing*/
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
+    /** Url to zul file for changing password*/
     static final String CHANGE_PASSWORD_URL = "/WEB-INF/pages/users/change_password.zul";
+    /** Component's id for edit user dialog */
     static final String EDIT_USER_DIALOG = "#editUserDialog";
+    /** Component's id for changing password dialog */
     static final String CHANGE_PASSWORD_DIALOG = "#changePasswordDialog";
 
     private final UserService userService;
