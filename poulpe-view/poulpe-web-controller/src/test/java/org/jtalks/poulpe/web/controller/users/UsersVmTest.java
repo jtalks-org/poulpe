@@ -251,7 +251,7 @@ public class UsersVmTest {
     }
 
     @Test(expectedExceptions = WrongValueException.class)
-    public void testChangePasswordForException() {
+    public void passwordChangeShouldFailBecauseTheyDontMatch() {
         usersVm.changePassword("1", "2");
     }
 
