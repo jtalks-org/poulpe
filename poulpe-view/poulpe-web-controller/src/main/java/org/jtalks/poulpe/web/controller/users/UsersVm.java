@@ -293,8 +293,13 @@ public class UsersVm {
     }
 
     /**
-     * Changes the password of selected user
-     * @param newPassword - new user's password
+     * Changes the password of selected user if entered password equals confirmed password,
+     * otherwise throws an exception(shows validation error on the confirmed password field).
+     * We need to make it here because we have to check passwords matching
+     * and to get md5 hash before changing password and this is hard to implement in view.
+     *
+     * @param newPassword entered new password
+     * @param confirmedPassword entered password for confirmation
      */
     @Command
     @NotifyChange("confirmPasswordBox")
