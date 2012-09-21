@@ -8,6 +8,7 @@
     <window title="Change Groups for Personal Permission" closable="true" border="normal" mode="modal"
             onClose="@command('cancel')"
             onCancel="@command('cancel')"
+            onOK="@command('save', component = dualLBox)"
             forward="onOK=savePermissionsButton.onClick"
             apply="org.zkoss.bind.BindComposer"
             viewModel="@id('editGroupsForPersonalPermissionVm') @init(editGroupsForPersonalPermissionVm)">

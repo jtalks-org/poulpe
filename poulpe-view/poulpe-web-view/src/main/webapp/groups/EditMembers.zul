@@ -6,7 +6,7 @@
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window mode="modal" closable="true" border="normal" title="${labels.groups.edit_members.group_caption}"
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
-      onClose="@command('cancel')">
+      onClose="@command('cancel')" onOK="@command('save')" onCancel="@command('cancel')">
       <caption label="@load(editGroupMembersVm.groupToEdit.name)" />
     <vbox>
       <hbox>
@@ -42,7 +42,7 @@
         </vbox>
         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
           <image style="cursor:pointer" onClick="@command('add')" disabled="@load(empty editGroupMembersVm.availSelected)"
-              src="/resources/img/rightarrow.png" sclass="edit.members.addButton" />
+              src="/resources/img/rightarrow.png" sclass="edit.members.addButton"/>
           <image style="cursor:pointer" onClick="@command('addAll')" disabled="@load(empty editGroupMembersVm.avail)"
               src="/resources/img/rightrightarrow.png" sclass="edit.members.addAllButton" />
           <image style="cursor:pointer" onClick="@command('remove')" disabled="@load(empty editGroupMembersVm.existSelected)"
@@ -81,7 +81,7 @@
         </vbox>
       </hbox>
       <hbox align="center" pack="center" height="30px">
-        <button label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton" />
+        <button id="saveButton" label="${labels.window.save}" onClick="@command('save')" sclass="edit.members.saveButton" />
         <button label="${labels.window.cancel}" onClick="@command('cancel')" sclass="edit.members.cancelButton" />
       </hbox>
     </vbox>
