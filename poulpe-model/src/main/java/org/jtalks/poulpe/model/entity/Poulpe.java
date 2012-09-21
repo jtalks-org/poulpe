@@ -44,5 +44,14 @@ public class Poulpe extends Component {
     Poulpe(String name, String description, List<Property> properties) {
         super(name, description, ComponentType.ADMIN_PANEL, properties);
     }
+    
+    /**
+     * Returns boolean representation of poulpe.experimental_features_enabled property value.
+     * 
+     * @return {@code true} if the property value equals "true"; {@code false} - otherwise
+     */
+    public boolean isExperimentalFeaturesEnabled() {
+        return Boolean.parseBoolean(getProperty("poulpe.experimental_features_enabled"));
+    }
 
 }

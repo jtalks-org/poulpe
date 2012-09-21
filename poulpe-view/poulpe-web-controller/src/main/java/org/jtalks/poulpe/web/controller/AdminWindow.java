@@ -16,6 +16,7 @@ package org.jtalks.poulpe.web.controller;
 
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
@@ -228,5 +229,15 @@ public class AdminWindow {
     public void setZkHelper(ZkHelper zkHelper) {
         this.zkHelper = zkHelper;
     }
-
+    
+    /**
+     * Defines visibility of 'Experimental Feature' item in the admin window.
+     * 
+     * @return {@code true} if the item is visible; {@code false} if the item isn't visible.
+     */
+    public boolean isExperimentalFeatureItemVisible() {
+        Poulpe adminPanel = (Poulpe) componentService.getByType(getAdminPanelType());
+        return (adminPanel != null && adminPanel.isExperimentalFeaturesEnabled());
+    }
+    
 }
