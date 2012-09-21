@@ -51,7 +51,7 @@ public class DeleteBranchDialogVmTest {
     }
 
     @Test
-    public void testDeleteBranch(){
+    public void testDeleteBranch() throws Exception {
         sut.deleteBranch();
     }
 
@@ -77,6 +77,8 @@ public class DeleteBranchDialogVmTest {
     public void testConfirmDeleteBranchWithContentNoException()
             throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException{
         testConfirmDeleteBranchWithContent(null,null);
+        verify(forumStructureService).removeBranch(any(PoulpeBranch.class));
+        verify(forumStructureVm).removeBranchFromTree(any(PoulpeBranch.class));
     }
 
     private void testConfirmDeleteBranchWithContent(String message, Exception exception)
