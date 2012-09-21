@@ -5,7 +5,7 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="editUserDialog" title="${labels.users.edituserdialog.title}" closable="true" border="normal"
     width="386px" mode="modal" onCancel="@command('cancelEdit')" onClose="@command('cancelEdit')"
-    onOK="@command('saveUser', user=vm.selectedUser))">
+    onOK='Events.postEvent("onClick", editButton, null);'>
     <groupbox form="@id('fx') @load(vm.selectedUser) @save(vm.selectedUser, before='saveUser')">
       <grid>
         <columns>
