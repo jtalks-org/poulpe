@@ -25,7 +25,6 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.Component;
-import org.zkoss.zk.ui.Path;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Textbox;
 
@@ -37,9 +36,8 @@ import java.util.List;
  * @author Alexey Grigorev
  */
 public class UsersVm {
-
+    /** Number of items per page  */
     private static final int ITEMS_PER_PAGE = 50;
-
     private static final String SELECTED_ITEM_PROP = "selectedUser";
     private static final String VIEW_DATA_PROP = "viewData";
     private static final String ACTIVE_PAGE = "activePage";
@@ -47,9 +45,13 @@ public class UsersVm {
     private static final String TOTAL_SIZE = "totalSize";
 
     static final String NO_FILTER_SEARCH_STRING = "";
+    /** Url to zul page for user editing*/
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
+    /** Url to zul file for changing password*/
     static final String CHANGE_PASSWORD_URL = "/WEB-INF/pages/users/change_password.zul";
+    /** Component's id for edit user dialog */
     static final String EDIT_USER_DIALOG = "#editUserDialog";
+    /** Component's id for changing password dialog */
     static final String CHANGE_PASSWORD_DIALOG = "#changePasswordDialog";
 
     private final UserService userService;
@@ -92,6 +94,9 @@ public class UsersVm {
 
     // === listing and search ===
 
+    /**
+     * Prepares for listing
+     */
     private void prepareForListing() {
         displayFirstPage(NO_FILTER_SEARCH_STRING);
     }
@@ -107,6 +112,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns list containing users on page with number given as param
      * @param page number of page used to users look up
      * @return list containing users on page with number given as param
      */
@@ -115,6 +121,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns currently bounded list of users
      * @return currently bounded list of users
      */
     public List<PoulpeUser> getUsers() {
@@ -122,6 +129,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns total amount of users matched the searchString
      * @return total amount of users matched the searchString
      */
     public int getTotalSize() {
@@ -141,6 +149,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns currently active page
      * @return currently active page
      */
     public int getActivePage() {
@@ -220,6 +229,7 @@ public class UsersVm {
     }
 
     /**
+     * Sets the user as currently selected
      * @param selectedUser {@link PoulpeUser} to set as currently selected
      */
     public void setSelectedUser(PoulpeUser selectedUser) {
@@ -227,6 +237,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns expression from search string
      * @return expression from search string
      */
     public String getSearchString() {
@@ -234,6 +245,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns users count, shown on a single page
      * @return users count, shown on a single page
      */
     public int getItemsPerPage() {
@@ -241,6 +253,7 @@ public class UsersVm {
     }
 
     /**
+     * Returns instance used for e-mail validation
      * @return {@link Validator} instance used for e-mail validation
      */
     public Validator getEmailValidator() {
@@ -248,6 +261,7 @@ public class UsersVm {
     }
 
     /**
+     * Sets zkHelper
      * @param zkHelper instance to set
      */
     @VisibleForTesting
@@ -274,24 +288,31 @@ public class UsersVm {
     /**
      * Closes the dialog for password changing
      */
-    private void closeChangePasswordDialog() {
+    public void closeChangePasswordDialog() {
         zkHelper.findComponent(CHANGE_PASSWORD_DIALOG).detach();
     }
 
     /**
-     * Changes the password of selected user
-     * @param newPassword - new user's password
+     * Changes the password of selected user if entered password equals confirmed password,
+     * otherwise throws an exception(shows validation error on the confirmed password field).
+     * We need to make it here because we have to check passwords matching
+     * and to get md5 hash before changing password and this is hard to implement in view.
+     *
+     * @param newPassword entered new password
+     * @param confirmedPassword entered password for confirmation
      */
     @Command
     @NotifyChange("confirmPasswordBox")
-    public void changePassword(@BindingParam("newPassword") String newPassword) {
-        Textbox confirmPasswordBox = (Textbox) Path.getComponent("/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox");
-        if (newPassword.equals(confirmPasswordBox.getValue())) {
+    public void changePassword(@BindingParam("newPassword") String newPassword, 
+                               @BindingParam("confirmedPassword") String confirmedPassword) {
+        if (newPassword.equals(confirmedPassword)) {
             String hash = getMD5Hash(newPassword);
             selectedUser.setPassword(hash);
             userService.updateUser(selectedUser);
             closeChangePasswordDialog();
         } else {
+            String path = "/adminWindow/usersWindow/changePasswordDialog/confirmPasswordBox";
+            Textbox confirmPasswordBox = (Textbox) zkHelper.getComponentByPath(path);
             throw new WrongValueException(confirmPasswordBox, "Passwords do not match");
         }
     }
@@ -301,7 +322,7 @@ public class UsersVm {
      * @param password - password to encode
      * @return md5 hash of the password
      */
-    private String getMD5Hash(String password) {
+    public String getMD5Hash(String password) {
         PasswordEncoder passwordEncoder = new Md5PasswordEncoder();
         return passwordEncoder.encodePassword(password, null);
     }

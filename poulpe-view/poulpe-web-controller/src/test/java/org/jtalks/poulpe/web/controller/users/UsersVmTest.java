@@ -15,7 +15,9 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_URL;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
@@ -30,6 +32,7 @@ import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.zkoss.zk.ui.Component;
+import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
 
@@ -43,6 +46,7 @@ public class UsersVmTest {
     @Mock Window userDialog;
     @Mock Component component;
     @Mock Textbox searchTextBox;
+    @Mock PoulpeUser selectedUser;
     
     final String searchString = "searchString";
 
@@ -232,4 +236,44 @@ public class UsersVmTest {
         verify(userDialog).detach();
     }
 
+    @Test
+    public void testGetMD5Hash() {
+        assertEquals(usersVm.getMD5Hash("admin"), "21232f297a57a5a743894a0e4a801fc3");
+    }
+
+    @Test
+    public void testChangePassword() {
+        usersVm.setSelectedUser(selectedUser);
+        Component mockComponent = mock(Component.class);
+        when(zkHelper.findComponent(CHANGE_PASSWORD_DIALOG)).thenReturn(mockComponent);
+        usersVm.changePassword("admin","admin");
+        verify(selectedUser).setPassword("21232f297a57a5a743894a0e4a801fc3");
+    }
+
+    @Test(expectedExceptions = WrongValueException.class)
+    public void passwordChangeShouldFailBecauseTheyDontMatch() {
+        usersVm.changePassword("1", "2");
+    }
+
+    @Test
+    public void testCloseChangePasswordDialog() {
+        Component mockComponent = mock(Component.class);
+        when(zkHelper.findComponent(CHANGE_PASSWORD_DIALOG)).thenReturn(mockComponent);
+        usersVm.closeChangePasswordDialog();
+        verify(mockComponent).detach();
+    }
+
+    @Test
+    public void testCancelChangePassword() {
+        Component mockComponent = mock(Component.class);
+        when(zkHelper.findComponent(CHANGE_PASSWORD_DIALOG)).thenReturn(mockComponent);
+        usersVm.cancelChangePassword();
+        verify(mockComponent).detach();
+    }
+    
+    @Test
+    public void testShowChangePasswordWindow() {
+        usersVm.showChangePasswordWindow();
+        verify(zkHelper).wireToZul(CHANGE_PASSWORD_URL);
+    }
 }
