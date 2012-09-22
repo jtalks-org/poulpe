@@ -14,6 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
+import java.io.Reader;
+import java.io.StringReader;
+
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
@@ -30,6 +33,7 @@ import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
+import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Messagebox;
 
 /**
@@ -51,6 +55,10 @@ public class ComponentsVm {
     private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TITLE = "component.error.jcommune.title.error_response";
     private static final String JCOMMUNE_REINDEX_ERROR_RESPONSE_TEXT = "component.error.jcommune.text.error_response";
 
+    private static final String BACKUPDB_ERROR_DIALOG_TITLE = "component.poulpe.backupdb.backup_error_dialog.title";
+    private static final String BACKUPDB_ERROR_DIALOG_TEXT = "component.poulpe.backupdb.backup_error_dialog.text";
+    private static final String BACKUPDB_DUMP_FILENAME = "jtalks.sql";
+    
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
@@ -168,6 +176,24 @@ public class ComponentsVm {
     public void configureComponent() {
         selectedEntity.setEntity(selected);
         EditComponentVm.openWindowForEdit(windowManager);
+    }
+    
+    /**
+     * Performs the full database backup into SQL text file shape and forces a user's browser to download the 
+     * resulting file. If an Error occures during the preparing of database backup a diagnostic message box
+     * is displayed.
+     */
+    @Command
+    public void backupDatabase() {
+    	// This is a temporary solution which is coded just for demonstration common UI approach with 
+    	// database dump file downloading. 
+    	//TODO: Change to using FileDownloadService
+    	Reader dump = new StringReader("-- Functionality is not implemented yet, see the progress here: " + 
+    			"http://jira.jtalks.org/browse/POULPE-276");
+    	Filedownload.save(dump, "text/plain", BACKUPDB_DUMP_FILENAME);
+    	
+//    	Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), 
+//    			Messagebox.OK, Messagebox.ERROR);
     }
 
     /**

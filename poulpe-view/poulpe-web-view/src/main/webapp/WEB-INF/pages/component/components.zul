@@ -42,6 +42,8 @@
     <menupopup id="popupMenuPoulpe">
       <menuitem image="/resources/img/edit16.png" label="${labels.componentlist.configure}"
                 onClick="@command('configureComponent')"/>
+	  <menuitem image="/resources/img/save16.png" label="${labels.componentlist.backup_db}"
+                onClick="@command('backupDatabase')"/>
     </menupopup>
     <menupopup id="popupMenuJcommune">
       <menuitem image="/resources/img/refresh16.png" label="${labels.componentlist.reindex}">
