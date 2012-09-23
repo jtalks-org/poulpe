@@ -59,6 +59,7 @@ public class UsersVm {
     private ZkHelper zkHelper;
 
     private List<PoulpeUser> users;
+    private List<PoulpeUser> filteredUsers;
     private String searchString = NO_FILTER_SEARCH_STRING;
     private int activePage = 0;
     private PoulpeUser selectedUser;
@@ -69,6 +70,7 @@ public class UsersVm {
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
         emailValidator = new EmailValidator(userService);
+        filteredUsers = userService.getAll(); //findUsersPaginated(NO_FILTER_SEARCH_STRING, 1, ITEMS_PER_PAGE);
     }
 
     /**
@@ -165,6 +167,15 @@ public class UsersVm {
     @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE})
     public void searchUsers(@BindingParam(value = "searchString") String searchString) {
         displayFirstPage(searchString);
+        selectedUser = null;
+    }
+
+    @Command
+    @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE, "filteredUsers"})
+    public void filterUsers(@BindingParam(value = "searchString") String searchString) {
+        this.searchString = searchString;
+        // this.activePage = activePage;
+        this.filteredUsers = usersOf(activePage);
     }
 
     /**
@@ -250,6 +261,14 @@ public class UsersVm {
      */
     public int getItemsPerPage() {
         return ITEMS_PER_PAGE;
+    }
+
+    public List<PoulpeUser> getFilteredUsers() {
+        return filteredUsers;
+    }
+
+    public void setFilteredUsers(List<PoulpeUser> filteredUsers) {
+        this.filteredUsers = filteredUsers;
     }
 
     /**

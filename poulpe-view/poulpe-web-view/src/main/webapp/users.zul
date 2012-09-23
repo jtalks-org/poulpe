@@ -5,13 +5,27 @@
   <window id="usersWindow" title="${labels.users.list.title}" border="normal" width="100%" height="100%"
     apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(usersVm)" validationMessages="@id('usersMsgs')">
     <hbox>
+      <bandbox id="searchBox" autodrop="true" onChanging="@command('filterUsers', searchString=event.value)">
+        <bandpopup id="">
+          <listbox id="userList" width="200px" model="@load(vm.filteredUsers)" selectedItem="@bind(vm.selectedUser)"
+                   onSelect="searchBox.setValue(userList.getSelectedItem().getLabel()); searchBox.close();">
+            <template name="model" var="user">
+              <listitem>
+                <listcell label="@load(user.username)" onClick="@command('searchUsers', searchString=user.username, searchBox = searchBox)" />
+              </listitem>
+            </template>
+          </listbox>
+        </bandpopup>
+      </bandbox>
+      <!--
       <label value="${labels.users.label.search}" />
       :
       <textbox id="searchBox" onOK="@command('searchUsers', searchString=self.value)" width="150px" multiline="false" maxlength="20" />
       <button label="${labels.users.label.button.search}" sclass="users.searchButton"
               onClick="@command('searchUsers', searchString=searchBox.value)" />
               
-      <button label="${labels.users.label.button.clearSearchResult}" onClick="@command('clearSearch', searchBox=searchBox)" />        
+      <button label="${labels.users.label.button.clearSearchResult}" onClick="@command('clearSearch', searchBox=searchBox)" />
+      -->
     </hbox>
     
     <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@bind(vm.activePage)" />
