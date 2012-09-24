@@ -18,9 +18,9 @@ import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_URL;
+import static org.jtalks.poulpe.web.controller.users.UsersVm.ITEMS_PER_PAGE;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
-
 import java.util.Arrays;
 import java.util.List;
 
@@ -47,7 +47,7 @@ public class UsersVmTest {
     @Mock Component component;
     @Mock Textbox searchTextBox;
     @Mock PoulpeUser selectedUser;
-    
+
     final String searchString = "searchString";
 
     @BeforeMethod
@@ -153,14 +153,21 @@ public class UsersVmTest {
         usersVm.searchUsers(searchString);
         verifyFirstPageShown(searchString);
     }
-    
+
     @Test
     public void searchUsers_firstPageShown() {
         usersVm.searchUsers(searchString);
         verifyFirstPageShown(searchString);
         assertActivePageIs(0);
     }
-    
+
+    @Test
+    public void filterUsersTestForSearching() {
+        usersVm.setActivePage(0);
+        usersVm.filterUsers(searchString);
+        verify(userService).findUsersPaginated(eq(searchString), eq(0), eq(ITEMS_PER_PAGE));
+    }
+
     @Test
     public void clearSearch_firstPageWithNoFilterRequested() {
         givenSearchStringInSeachbox();
