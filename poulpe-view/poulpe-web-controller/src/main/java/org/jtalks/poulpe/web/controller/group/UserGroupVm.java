@@ -46,6 +46,8 @@ public class UserGroupVm {
     private static final String SELECTED_BRANCH = "selectedBranch";
     private static final String SELECTED_GROUP = "selectedGroup";
     private static final String GROUP_SERVICE = "groupService";
+    private static final String DISABLED_MENU_DELETE = "disabledMenuDelete";
+    private static final String DISABLED_MENU_EDIT = "disabledMenuEdit";
 
     //Injected
     private final GroupService groupService;
@@ -303,10 +305,34 @@ public class UserGroupVm {
      *
      * @param group selected at UI
      */
+    @NotifyChange({DISABLED_MENU_DELETE, DISABLED_MENU_EDIT})
     public void setSelectedGroup(Group group) {
         this.selectedGroup = group;
     }
 
+    /*
+     * Get permission to enable menu item "Delete"
+     */
+    public boolean isDisabledMenuDelete() {
+        if (selectedGroup!=null&&(selectedGroup.getName().equals("Registered Users") || selectedGroup.getName().equals("Administrators") || selectedGroup.getName().equals("Banned Users"))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /*
+     * Get permission to enable menu item "Edit"
+     */
+    public boolean isDisabledMenuEdit() {
+        
+        if (selectedGroup!=null&&(selectedGroup.getName().equals("Registered Users") || selectedGroup.getName().equals("Banned Users"))){
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     /**
      * Sets List of groups which shown at UI.
      *
