@@ -106,5 +106,5 @@
   <bean id="permissionsService" class="org.jtalks.poulpe.service.transactional.TransactionalPermissionsService">
     <constructor-arg ref="branchPermissionManager"/>
   </bean>
-
+  
 </beans>

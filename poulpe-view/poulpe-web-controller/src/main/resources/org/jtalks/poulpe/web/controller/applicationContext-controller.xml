@@ -147,7 +147,22 @@
     <constructor-arg index="1" ref="windowManager"/>
     <constructor-arg index="2" ref="selectedEntity"/>
     <constructor-arg index="3" ref="componentListInMenu"/>
+    
+    <property name="fileDownloadService">
+      <bean id="fileDownloadService" class="org.jtalks.poulpe.logic.databasebackup.FileDownloadService">
+        <property name="contentFileNameWithoutExt" value="jtalks" />
+        <property name="contentProvider">
+          <bean class="org.jtalks.poulpe.logic.databasebackup.StringContentProvider">
+            <constructor-arg value="-- Functionality is not implemented yet, see the progress here: http://jira.jtalks.org/browse/POULPE-276"/>
+          </bean>
+        </property>
+        <property name="fileDownloader">
+          <bean class="org.jtalks.poulpe.web.controller.component.ZulFileDownloader" />
+        </property>
+      </bean>
+    </property> 
   </bean>
+  
   <bean id="editComponentVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm">
     <constructor-arg index="0" ref="componentService"/>
