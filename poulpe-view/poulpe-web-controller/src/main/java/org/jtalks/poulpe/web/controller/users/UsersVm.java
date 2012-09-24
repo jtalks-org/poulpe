@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class UsersVm {
     /** Number of items per page  */
-    private static final int ITEMS_PER_PAGE = 50;
+    static final int ITEMS_PER_PAGE = 50;
     private static final String SELECTED_ITEM_PROP = "selectedUser";
     private static final String VIEW_DATA_PROP = "viewData";
     private static final String ACTIVE_PAGE = "activePage";
@@ -70,7 +70,7 @@ public class UsersVm {
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
         emailValidator = new EmailValidator(userService);
-        filteredUsers = userService.getAll(); //findUsersPaginated(NO_FILTER_SEARCH_STRING, 1, ITEMS_PER_PAGE);
+        filteredUsers = userService.getAll();
     }
 
     /**
@@ -170,11 +170,16 @@ public class UsersVm {
         selectedUser = null;
     }
 
+    /**
+     * Filters all users using the given string.
+     * In contrast to the method searchUsers(String searchString) it doesn't change the users on active page.
+     * @param searchString string for filtering
+     */
     @Command
     @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE, "filteredUsers"})
     public void filterUsers(@BindingParam(value = "searchString") String searchString) {
         this.searchString = searchString;
-        // this.activePage = activePage;
+        selectedUser = null;
         this.filteredUsers = usersOf(activePage);
     }
 
@@ -263,10 +268,17 @@ public class UsersVm {
         return ITEMS_PER_PAGE;
     }
 
+    /**
+     * @return users, that match the current filter
+     */
     public List<PoulpeUser> getFilteredUsers() {
         return filteredUsers;
     }
 
+    /**
+     * Sets the value of filtered users
+     * @param filteredUsers the value to set
+     */
     public void setFilteredUsers(List<PoulpeUser> filteredUsers) {
         this.filteredUsers = filteredUsers;
     }

@@ -14,10 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.component;
 
-import java.io.Reader;
-import java.io.StringReader;
-
 import org.apache.commons.lang3.Validate;
+import org.jtalks.poulpe.logic.databasebackup.FileDownloadException;
+import org.jtalks.poulpe.logic.databasebackup.FileDownloadService;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -33,7 +32,6 @@ import org.jtalks.poulpe.web.controller.component.dialogs.EditComponentVm;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.util.resource.Labels;
-import org.zkoss.zul.Filedownload;
 import org.zkoss.zul.Messagebox;
 
 /**
@@ -57,7 +55,6 @@ public class ComponentsVm {
 
     private static final String BACKUPDB_ERROR_DIALOG_TITLE = "component.poulpe.backupdb.backup_error_dialog.title";
     private static final String BACKUPDB_ERROR_DIALOG_TEXT = "component.poulpe.backupdb.backup_error_dialog.text";
-    private static final String BACKUPDB_DUMP_FILENAME = "jtalks.sql";
     
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
@@ -185,15 +182,12 @@ public class ComponentsVm {
      */
     @Command
     public void backupDatabase() {
-    	// This is a temporary solution which is coded just for demonstration common UI approach with 
-    	// database dump file downloading. 
-    	//TODO: Change to using FileDownloadService
-    	Reader dump = new StringReader("-- Functionality is not implemented yet, see the progress here: " + 
-    			"http://jira.jtalks.org/browse/POULPE-276");
-    	Filedownload.save(dump, "text/plain", BACKUPDB_DUMP_FILENAME);
-    	
-//    	Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), 
-//    			Messagebox.OK, Messagebox.ERROR);
+    	try {
+			fileDownloadService.PerformFileDownload();
+		} catch (FileDownloadException e) {
+	    	Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), 
+	    			Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
+		}
     }
 
     /**
@@ -236,4 +230,10 @@ public class ComponentsVm {
         showReindexStartedNotification = false;
         return show;
     }
+    
+    // injected
+    FileDownloadService fileDownloadService;
+	public void setFileDownloadService(FileDownloadService fileDownloadService) {
+		this.fileDownloadService = fileDownloadService;
+	}
 }
