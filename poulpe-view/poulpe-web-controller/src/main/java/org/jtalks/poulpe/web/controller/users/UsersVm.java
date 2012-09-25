@@ -37,7 +37,7 @@ import java.util.List;
  */
 public class UsersVm {
     /** Number of items per page  */
-    static final int ITEMS_PER_PAGE = 50;
+    private static final int ITEMS_PER_PAGE = 50;
     private static final String SELECTED_ITEM_PROP = "selectedUser";
     private static final String VIEW_DATA_PROP = "viewData";
     private static final String ACTIVE_PAGE = "activePage";
@@ -70,7 +70,6 @@ public class UsersVm {
     public UsersVm(@Nonnull UserService userService) {
         this.userService = userService;
         emailValidator = new EmailValidator(userService);
-        filteredUsers = userService.getAll();
     }
 
     /**

@@ -18,7 +18,6 @@ import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_DIALOG;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
 import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_URL;
-import static org.jtalks.poulpe.web.controller.users.UsersVm.ITEMS_PER_PAGE;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 import java.util.Arrays;
@@ -49,6 +48,7 @@ public class UsersVmTest {
     @Mock PoulpeUser selectedUser;
 
     final String searchString = "searchString";
+    final int ITEMS_PER_PAGE = 50;
 
     @BeforeMethod
     public void setUp() throws Exception {
