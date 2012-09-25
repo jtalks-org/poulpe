@@ -40,7 +40,8 @@
         <!-- Don't show Delete option of context menu for restricted users,
              that are at the moment 'Registered Users', 'Administrators', 'Banned Users'.
              Look for details and reason here: http://jira.jtalks.org/browse/POULPE-392 -->
-        <listitem id="@load(String.valueOf(group.getId()))" context="@load('menu')">
+
+          <listitem id="@load(String.valueOf(group.getId()))" context="@load('menu')">
           <listcell label="@load(group.getName())"/>
           <listcell label="@load(group.getUsers().size())"/>
         </listitem>

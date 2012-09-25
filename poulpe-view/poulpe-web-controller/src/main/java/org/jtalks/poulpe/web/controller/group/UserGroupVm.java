@@ -332,6 +332,7 @@ public class UserGroupVm {
             return false;
         }
     }
+ 
     
     /**
      * Sets List of groups which shown at UI.
