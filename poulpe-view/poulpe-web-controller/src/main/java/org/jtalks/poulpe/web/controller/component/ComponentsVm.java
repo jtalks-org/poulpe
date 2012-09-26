@@ -67,6 +67,9 @@ public class ComponentsVm {
 
     private final DeleteComponentDialog deleteComponentDialog;
     private Component selected;
+    
+    // injected
+    private FileDownloadService fileDownloadService;
 
     /**
      * @param componentService       service for loading and saving component
@@ -182,12 +185,12 @@ public class ComponentsVm {
      */
     @Command
     public void backupDatabase() {
-    	try {
-			fileDownloadService.PerformFileDownload();
-		} catch (FileDownloadException e) {
-	    	Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), 
-	    			Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
-		}
+        try {
+            fileDownloadService.performFileDownload();
+        } catch (FileDownloadException e) {
+            Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), 
+                    Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
+        }
     }
 
     /**
@@ -231,9 +234,12 @@ public class ComponentsVm {
         return show;
     }
     
-    // injected
-    FileDownloadService fileDownloadService;
-	public void setFileDownloadService(FileDownloadService fileDownloadService) {
-		this.fileDownloadService = fileDownloadService;
-	}
+    /**
+     * Injects the FileDownloadService instance. 
+     * 
+     * @param fileDownloadService an instance to inject.
+     */
+    public void setFileDownloadService(FileDownloadService fileDownloadService) {
+        this.fileDownloadService = fileDownloadService;
+    }
 }
