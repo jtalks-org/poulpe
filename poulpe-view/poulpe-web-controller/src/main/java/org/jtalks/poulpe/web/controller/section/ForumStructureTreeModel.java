@@ -246,8 +246,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     public void expandTree() {
-        int count = getRoot().getChildCount();
-        for(int i = 0; i < count; i++) {
+        for(int i = 0; i < getRoot().getChildCount(); i++) {
             addOpenPath(new int[]{i});
         }
     }

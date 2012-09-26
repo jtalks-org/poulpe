@@ -109,4 +109,11 @@ public class ForumStructureTreeModelTest {
         return new ZkTreeNode<ForumStructureItem>(
                 new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
     }
+
+    @Test
+    public void testExpandTree() {
+        int[] path = new int[]{1};
+        sut.addOpenPath(path);
+        assertTrue(sut.isPathOpened(path));
+    }
 }

@@ -64,17 +64,4 @@ public class ForumStructureVmTest {
         Jcommune jcommune = TestFixtures.jcommuneWithSections();
         return new Object[][]{{jcommune}};
     }
-    @Test
-    public void testExpandTree() {
-
-        TreeNode<ForumStructureItem> root = treeModel.getRoot();
-        for(int i = 0; i < root.getChildCount(); i++) {
-            treeModel.addOpenPath(new int[]{i});
-        }
-
-        for(int i = 0; i < root.getChildCount(); i++) {
-            int[] path = treeModel.getPath(root.getChildAt(i));
-            assertTrue(treeModel.isPathOpened(path));
-        }
-    }
 }
