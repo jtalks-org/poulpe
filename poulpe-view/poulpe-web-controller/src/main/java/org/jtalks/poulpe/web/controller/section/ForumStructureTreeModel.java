@@ -245,5 +245,10 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return (Jcommune) (Object) getRoot().getData();
     }
 
-
+    public void expandTree() {
+        int count = getRoot().getChildCount();
+        for(int i = 0; i < count; i++) {
+            addOpenPath(new int[]{i});
+        }
+    }
 }

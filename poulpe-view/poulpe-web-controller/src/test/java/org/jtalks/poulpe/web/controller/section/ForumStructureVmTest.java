@@ -18,18 +18,24 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.test.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
+import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 import org.zkoss.zul.DefaultTreeNode;
 import org.zkoss.zul.TreeNode;
+
+import java.util.ArrayList;
 
 /**
  * @author stanislav bashkirtsev
@@ -57,5 +63,18 @@ public class ForumStructureVmTest {
     public Object[][] provideRandomJcommuneWithSections() {
         Jcommune jcommune = TestFixtures.jcommuneWithSections();
         return new Object[][]{{jcommune}};
+    }
+    @Test
+    public void testExpandTree() {
+
+        TreeNode<ForumStructureItem> root = treeModel.getRoot();
+        for(int i = 0; i < root.getChildCount(); i++) {
+            treeModel.addOpenPath(new int[]{i});
+        }
+
+        for(int i = 0; i < root.getChildCount(); i++) {
+            int[] path = treeModel.getPath(root.getChildAt(i));
+            assertTrue(treeModel.isPathOpened(path));
+        }
     }
 }
