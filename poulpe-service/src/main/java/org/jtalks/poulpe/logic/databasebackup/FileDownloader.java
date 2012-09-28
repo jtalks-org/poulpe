@@ -37,7 +37,7 @@ public abstract class FileDownloader {
      *
      * @param mimeContentType String representation of the MIME content type.
      */
-    public final void setMimeContentType(final String mimeContentType) {
+    public void setMimeContentType(final String mimeContentType) {
         this.mimeContentType = mimeContentType;
     }
 
@@ -46,7 +46,7 @@ public abstract class FileDownloader {
      *
      * @return A string representation of the MIME content type.
      */
-    protected final String getMimeContentType() {
+    protected String getMimeContentType() {
         return mimeContentType;
     }
 
@@ -56,7 +56,7 @@ public abstract class FileDownloader {
      *
      * @param contentFileName The filename to set.
      */
-    public final void setContentFileName(final String contentFileName) {
+    public void setContentFileName(final String contentFileName) {
         this.contentFileName = contentFileName;
     }
 
@@ -66,7 +66,7 @@ public abstract class FileDownloader {
      *
      * @return The filename to get.
      */
-    protected final String getContentFileName() {
+    protected String getContentFileName() {
         return contentFileName;
     }
 
