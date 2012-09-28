@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012  JTalks.org Team
+ * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -20,7 +20,7 @@ import java.io.UnsupportedEncodingException;
 
 /**
  * The class provides given string as a content.
- * 
+ *
  * @author Evgeny Surovtsev
  *
  */
@@ -31,10 +31,10 @@ public class StringContentProvider implements ContentProvider {
     StringContentProvider(final String content) {
         this.content = content;
     }
-	
+
     @Override
-    public InputStream getContent() throws FileDownloadException {
-        InputStream contentInputStream = null; 
+    public final InputStream getContent() throws FileDownloadException {
+        InputStream contentInputStream = null;
         try {
             contentInputStream = new ByteArrayInputStream(content.getBytes("UTF-8"));
         } catch (UnsupportedEncodingException e) {
@@ -44,17 +44,17 @@ public class StringContentProvider implements ContentProvider {
     }
 
     @Override
-    public String getMimeContentType() {
+    public final String getMimeContentType() {
         return MIME_CONTENT_TYPE;
     }
 
     @Override
-    public String getContentFileNameExt() {
+    public final String getContentFileNameExt() {
         return FILE_NAME_EXT;
     }
 
-    private String content;
-	
-    private final static String MIME_CONTENT_TYPE = "text/plain";  
-    private final static String FILE_NAME_EXT = ".sql";
+    private final String content;
+
+    private static final String MIME_CONTENT_TYPE = "text/plain";
+    private static final String FILE_NAME_EXT = ".sql";
 }

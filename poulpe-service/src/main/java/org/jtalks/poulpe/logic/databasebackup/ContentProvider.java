@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012  JTalks.org Team
+ * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -17,10 +17,10 @@ package org.jtalks.poulpe.logic.databasebackup;
 import java.io.InputStream;
 
 /**
- * This is an interface for providing content which later will be shipped to a user as a file via standard browser's 
- * download functionality. The interface defines common methods such as get a content or return MIME type or 
+ * This is an interface for providing content which later will be shipped to a user as a file via standard browser's
+ * download functionality. The interface defines common methods such as get a content or return MIME type or
  * file based extension for provided content.
- * 
+ *
  * @author Evgeny Surovtsev
  *
  */
@@ -28,13 +28,13 @@ public interface ContentProvider {
     /**
      * The "main" method which prepares content for downloading. Besides of actual preparing also a post processing
      * under the content like compressing it before sending to the browser and other such activities can be performed
-     * here.  
-     * 
+     * here.
+     *
      * @return Content for sending to a user's browser as a file to download.
      * @throws FileDownloadException is thrown in case of any errors during content preparing.
      */
     InputStream getContent() throws FileDownloadException;
-    
+
     /**
      * The method returns a MIME type for the content which was/will be provided by {@link #getContent()} method.
      * This method is used for setting MIME type in browser's response.
@@ -42,13 +42,13 @@ public interface ContentProvider {
      * @return String which represents the defined MIME content type.
      */
     String getMimeContentType();
-    
+
     /**
      * The method returns file extension for the content which was/will be provided by {@link #getContent()} method.
-     * This needs for forming final filename which will be passed to the browser so browser will be adviced under 
-     * which name downloaded file should be saved. 
-     * 
-     * @return Filename extension like ".html" with the dot prefixed. 
+     * This needs for forming final filename which will be passed to the browser so browser will be adviced under
+     * which name downloaded file should be saved.
+     *
+     * @return Filename extension like ".html" with the dot prefixed.
      */
     String getContentFileNameExt();
 }
