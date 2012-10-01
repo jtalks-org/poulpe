@@ -23,6 +23,7 @@ import org.testng.annotations.Test;
 import org.zkoss.zul.TreeNode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.*;
 
@@ -112,8 +113,38 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void testExpandTree() {
+
+        sut.expandTree();
+
         int[] path = new int[]{1};
-        sut.addOpenPath(path);
         assertTrue(sut.isPathOpened(path));
+
+        removeOpenPaths();
+        assertNull(sut.getOpenPaths());
+
+        removeSections();
+        assertEquals(0, sut.getSections().size());
+
+        sut.expandTree();
+        assertNull(sut.getOpenPaths());
+
+
+
+    }
+
+    private void removeSections() {
+        List<PoulpeSection> poulpeSections = sut.getSections();
+        for(PoulpeSection ps:poulpeSections) {
+            sut.removeSection(ps);
+        }
+    }
+
+    private void removeOpenPaths() {
+        for(int i = 0; i < sut.getRoot().getChildCount();i++) {
+            int[] child = sut.getPath(sut.getRoot().getChildAt(i));
+            if(sut.isPathOpened(child)) {
+                sut.removeOpenPath(child);
+            }
+        }
     }
 }
