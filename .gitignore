@@ -8,6 +8,7 @@
 .project
 .metadata
 .mymetadata
+.checkstyle
 
 # IntelliJ Idea project files
 .idea

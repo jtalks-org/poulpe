@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012  JTalks.org Team
+ * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -14,26 +14,33 @@
  */
 package org.jtalks.poulpe.logic.databasebackup;
 
+
 /**
  * The Exception is thrown when any error occurs while preparing content or sending file to downloading.
- * 
+ *
  * @author Evgeny Surovtsev
  *
  */
 public class FileDownloadException extends Exception {
-    public FileDownloadException(Exception e) {
+    /**
+     * Constructor creates an instance and uses error message from given Exception.
+     *
+     * @param e An exception which is used to construct FileDownloadException.
+     */
+    public FileDownloadException(final Exception e) {
         super();
         message = e.getMessage();
     }
-    
+
     /**
-     * Provide the error message about thrown exception. 
+     * Provide the error message about thrown exception.
+     * {@inheritDoc}
      */
     @Override
-    public String getMessage() {
+    public final String getMessage() {
         return message;
     }
 
-    private String message;
+    private final String message;
     private static final long serialVersionUID = 1L;
 }

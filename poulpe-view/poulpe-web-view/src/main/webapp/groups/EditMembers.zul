@@ -8,7 +8,7 @@
       apply="org.zkoss.bind.BindComposer" viewModel="@id('editGroupMembersVm') @init(editGroupMembersVm)"
       onClose="@command('cancel')" onOK="@command('save')" onCancel="@command('cancel')">
       <caption label="@load(editGroupMembersVm.groupToEdit.name)" />
-    <vbox>
+    <vbox id="parent">
       <hbox>
         <vbox>
           <panel title="${labels.groups.edit_members.available}" border="normal">
@@ -42,13 +42,33 @@
         </vbox>
         <vbox style="padding-top: 100px" sclass="manage-groups-dialog-vertical-buttons" width="40px" align="center">
           <image style="cursor:pointer" onClick="@command('add')" disabled="@load(empty editGroupMembersVm.availSelected)"
-              src="/resources/img/rightarrow.png" sclass="edit.members.addButton"/>
+              src="/resources/img/rightarrow.png" sclass="edit.members.addButton">
+              <attribute name="onClick"><![CDATA[
+                     parent.focus();
+                    ]]>
+              </attribute>
+          </image>
           <image style="cursor:pointer" onClick="@command('addAll')" disabled="@load(empty editGroupMembersVm.avail)"
-              src="/resources/img/rightrightarrow.png" sclass="edit.members.addAllButton" />
+              src="/resources/img/rightrightarrow.png" sclass="edit.members.addAllButton">
+              <attribute name="onClick"><![CDATA[
+                     parent.focus();
+                    ]]>
+              </attribute>
+          </image>
           <image style="cursor:pointer" onClick="@command('remove')" disabled="@load(empty editGroupMembersVm.existSelected)"
-              src="/resources/img/leftarrow.png" sclass="edit.members.removeButton" />
+              src="/resources/img/leftarrow.png" sclass="edit.members.removeButton">
+              <attribute name="onClick"><![CDATA[
+                     parent.focus();
+                    ]]>
+              </attribute>
+          </image>
           <image style="cursor:pointer" onClick="@command('removeAll')" disabled="@load(empty editGroupMembersVm.exist)"
-              src="/resources/img/leftleftarrow.png" sclass="edit.members.removeAllButton" />
+              src="/resources/img/leftleftarrow.png" sclass="edit.members.removeAllButton">
+              <attribute name="onClick"><![CDATA[
+                     parent.focus();
+                    ]]>
+              </attribute>
+          </image>
         </vbox>
         <vbox>
           <panel title="${labels.groups.edit_members.already_in_group}" border="normal">

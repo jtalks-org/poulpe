@@ -12,8 +12,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-/** 
- * The package contains classes and interfaces for supporting the database backup and pushing the resulting dump file 
+/**
+ * The package contains classes and interfaces for supporting the database backup and pushing the resulting dump file
  * to the browser to download functionality.
  */
 package org.jtalks.poulpe.logic.databasebackup;

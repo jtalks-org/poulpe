@@ -68,7 +68,10 @@ public class ComponentsVm {
     private final DeleteComponentDialog deleteComponentDialog;
     private Component selected;
     
-    // injected
+    /**
+     * fileDownloadService is used for preparing a dump of database and later to push a browser to download the dump.
+     * The parameter is injected.
+     */
     private FileDownloadService fileDownloadService;
 
     /**
@@ -177,18 +180,18 @@ public class ComponentsVm {
         selectedEntity.setEntity(selected);
         EditComponentVm.openWindowForEdit(windowManager);
     }
-    
+
     /**
-     * Performs the full database backup into SQL text file shape and forces a user's browser to download the 
-     * resulting file. If an Error occures during the preparing of database backup a diagnostic message box
+     * Performs the full database backup into SQL text file shape and forces a user's browser to download the
+     * resulting file. If an Error occurs during the preparing of database backup a diagnostic message box
      * is displayed.
      */
     @Command
-    public void backupDatabase() {
+    public final void backupDatabase() {
         try {
             fileDownloadService.performFileDownload();
         } catch (FileDownloadException e) {
-            Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT), 
+            Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT),
                     Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
     }
@@ -233,13 +236,13 @@ public class ComponentsVm {
         showReindexStartedNotification = false;
         return show;
     }
-    
+
     /**
-     * Injects the FileDownloadService instance. 
-     * 
+     * Injects the FileDownloadService instance.
+     *
      * @param fileDownloadService an instance to inject.
      */
-    public void setFileDownloadService(FileDownloadService fileDownloadService) {
+    public final void setFileDownloadService(final FileDownloadService fileDownloadService) {
         this.fileDownloadService = fileDownloadService;
     }
 }

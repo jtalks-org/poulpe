@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012  JTalks.org Team
+ * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -19,10 +19,16 @@ import java.io.InputStream;
 import org.jtalks.poulpe.logic.databasebackup.FileDownloader;
 import org.zkoss.zul.Filedownload;
 
+/**
+ * The class provides a download file functionality by using ZK's file downloader.
+ *
+ * @author Evgeny Surovtsev
+ *
+ */
 public class ZulFileDownloader extends FileDownloader {
 
     @Override
-    protected void download(InputStream content) {
+    protected final void download(final InputStream content) {
         Filedownload.save(content, getMimeContentType(), getContentFileName());
     }
 

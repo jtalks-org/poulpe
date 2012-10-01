@@ -7,8 +7,11 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window title="${labels.permission_groups.title}" closable="true" border="normal" mode="modal"
       onClose="@command('cancel')" apply="org.zkoss.bind.BindComposer"
+      onCancel="@command('cancel')"
+      onOK="@command('save')"
+      forward="onOK=saveButton.onClick"
       viewModel="@id('editGroupsForComponentPermissionVm') @init(editGroupsForComponentPermissionVm)">
-    <vbox>
+    <vbox id="parent">
       <hbox>
         <vbox>
           <panel title="${labels.permission_groups.available}" border="normal" width="300px">
@@ -30,14 +33,34 @@
           </panel>
         </vbox>
         <vbox style="padding-top: 100px" align="center">
-          <button onClick="@command('add')" disabled="@load(empty editGroupsForComponentPermissionVm.availSelected)"
-              image="/resources/img/rightarrow.png" />
-          <button onClick="@command('addAll')" disabled="@load(empty editGroupsForComponentPermissionVm.avail)"
-              image="/resources/img/rightrightarrow.png" />
-          <button onClick="@command('remove')" disabled="@load(empty editGroupsForComponentPermissionVm.existSelected)"
-              image="/resources/img/leftarrow.png" />
-          <button onClick="@command('removeAll')" disabled="@load(empty editGroupsForComponentPermissionVm.exist)"
-              image="/resources/img/leftleftarrow.png" />
+          <image onClick="@command('add')" disabled="@load(empty editGroupsForComponentPermissionVm.availSelected)"
+              src="/resources/img/rightarrow.png">
+            <attribute name="onClick"><![CDATA[
+                        parent.focus();
+                    ]]>
+            </attribute>
+          </image>
+          <image onClick="@command('addAll')" disabled="@load(empty editGroupsForComponentPermissionVm.avail)"
+              src="/resources/img/rightrightarrow.png">
+            <attribute name="onClick"><![CDATA[
+                        parent.focus();
+                    ]]>
+            </attribute>
+          </image>
+          <image onClick="@command('remove')" disabled="@load(empty editGroupsForComponentPermissionVm.existSelected)"
+              src="/resources/img/leftarrow.png">
+            <attribute name="onClick"><![CDATA[
+                        parent.focus();
+                    ]]>
+            </attribute>
+          </image>
+          <image onClick="@command('removeAll')" disabled="@load(empty editGroupsForComponentPermissionVm.exist)"
+              src="/resources/img/leftleftarrow.png">
+            <attribute name="onClick"><![CDATA[
+                        parent.focus();
+                    ]]>
+            </attribute>
+          </image>
         </vbox>
         <vbox>
           <panel title="${labels.permission_groups.already_added}" border="normal" width="300px">
@@ -60,8 +83,8 @@
         </vbox>
       </hbox>
       <hbox align="center" pack="center" width="100%">
-        <button onClick="@command('save')" label="${labels.window.save}" width="100px" />
-        <button onClick="@command('cancel')" label="${labels.window.cancel}" width="100px" />
+        <button id="saveButton" onClick="@command('save')" label="${labels.window.save}" width="100px" />
+        <button id="cancelButton" onClick="@command('cancel')" label="${labels.window.cancel}" width="100px" />
       </hbox>
     </vbox>
   </window>

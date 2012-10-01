@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2012  JTalks.org Team
+ * Copyright (C) 2011  JTalks.org Team
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
  * License as published by the Free Software Foundation; either
@@ -18,52 +18,52 @@ import java.io.InputStream;
 
 /**
  * An abstract class which performs file downloading process by forcing a browser to start getting the file.
- * 
+ *
  * @author Evgeny Surovtsev
  *
  */
 public abstract class FileDownloader {
     /**
      * The method performs pushing input stream as a file to a browser's download process using predefined MIME Content
-     * Type (see {@link #setMimeContentType(String)}) and Content Filename (see {@link #setContentFileName(String)}). 
-     * 
+     * Type (see {@link #setMimeContentType(String)}) and Content Filename (see {@link #setContentFileName(String)}).
+     *
      * @param content InputStream object which will be pushed to downloading.
-     * @throws FileDownloadException throws and exception in case any errors occur during file downloading process. 
+     * @throws FileDownloadException throws and exception in case any errors occur during file downloading process.
      */
-    abstract protected void download(InputStream content) throws FileDownloadException;
-    
+    protected abstract void download(InputStream content) throws FileDownloadException;
+
     /**
-     * The method sets a MIME type for the content (Ex. "text/plain"). 
-     * 
+     * The method sets a MIME type for the content (Ex. "text/plain").
+     *
      * @param mimeContentType String representation of the MIME content type.
      */
-    public void setMimeContentType(String mimeContentType) {
-        this.mimeContentType= mimeContentType; 
+    public void setMimeContentType(final String mimeContentType) {
+        this.mimeContentType = mimeContentType;
     }
-    
+
     /**
      * The method gets a MIME type for the content (Ex. "text/plain").
-     * 
+     *
      * @return A string representation of the MIME content type.
      */
     protected String getMimeContentType() {
-        return mimeContentType; 
+        return mimeContentType;
     }
-    
+
     /**
-     * Set the Content filename which will be used for storing content on the local disk for a user 
+     * Set the Content filename which will be used for storing content on the local disk for a user
      * (ex. "jtalks.sql").
-     * 
+     *
      * @param contentFileName The filename to set.
      */
-    public void setContentFileName(String contentFileName) {
+    public void setContentFileName(final String contentFileName) {
         this.contentFileName = contentFileName;
     }
-    
+
     /**
-     * Get the Content filename which will be used for storing content on the local disk for a user 
+     * Get the Content filename which will be used for storing content on the local disk for a user
      * (ex. "jtalks.sql").
-     * 
+     *
      * @return The filename to get.
      */
     protected String getContentFileName() {
@@ -71,7 +71,7 @@ public abstract class FileDownloader {
     }
 
     // injected
-    private String mimeContentType;    
+    private String mimeContentType;
     // injected
     private String contentFileName;
 }
