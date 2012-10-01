@@ -116,23 +116,31 @@ public class ForumStructureTreeModelTest {
 
         // before expand tree
         assertEquals(0, sut.getOpenCount());
+        assertNull(sut.getOpenPaths());
+
+        int[] path = new int[]{1};
+        assertFalse(sut.isPathOpened(path));
 
         sut.expandTree();
         // after expand tree
         assertEquals(3, sut.getOpenCount());
-
-        int[] path = new int[]{1};
         assertTrue(sut.isPathOpened(path));
 
         sut.expandTree();
         // after second calling to expand tree
         assertEquals(3, sut.getOpenCount());
+    }
 
+    @Test
+    public void testExpandTreeWithNoElements() {
         // remove open paths
-        removeOpenPaths();
+        if(sut.getOpenCount() > 0) {
+            removeOpenPaths();
+        }
         // remove all elements from tree
-        removeSections();
-
+        if(sut.getSections().size() > 0) {
+            removeSections();
+        }
         // when no elements in tree
         sut.expandTree();
         assertEquals(0, sut.getOpenCount());
