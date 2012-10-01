@@ -118,7 +118,7 @@ public class ForumStructureTreeModelTest {
 
         int[] path = new int[]{1};
         assertTrue(sut.isPathOpened(path));
-
+        /*
         removeOpenPaths();
         assertNull(sut.getOpenPaths());
 
@@ -127,11 +127,11 @@ public class ForumStructureTreeModelTest {
 
         sut.expandTree();
         assertNull(sut.getOpenPaths());
-
+       */
 
 
     }
-
+    /*
     private void removeSections() {
         List<PoulpeSection> poulpeSections = sut.getSections();
         for(PoulpeSection ps:poulpeSections) {
@@ -147,4 +147,5 @@ public class ForumStructureTreeModelTest {
             }
         }
     }
+    */
 }
