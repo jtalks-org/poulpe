@@ -139,7 +139,7 @@ public class ForumStructureVm {
         TreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
-        if (treeModel.noEffectAfterDropItem(draggedItem, targetItem)) {
+        if (treeModel.noEffectAfterDropNode(draggedNode, targetNode)) {
             return;
         }
         if (draggedItem.isBranch()) {

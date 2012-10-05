@@ -177,62 +177,34 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
-     * Checks that dropping item haven't effect.
+     * Checks that dropping node haven't effect.
      *
-     * @param draggedItem the item to move
-     * @param targetItem  the target item
+     * @param draggedNode the node to move
+     * @param targetNode  the target node
      * @return {@code true} if dropping have no effect, otherwise return {@code false}
      */
-    public boolean noEffectAfterDropItem(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
+    public boolean noEffectAfterDropNode(TreeNode<ForumStructureItem> draggedNode, TreeNode<ForumStructureItem> targetNode) {
+        ForumStructureItem draggedItem = draggedNode.getData();
         if (draggedItem.isBranch()) {
-            PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            return noEffectAfterDropBranch(draggedBranch, targetItem);
-        } else if (draggedItem.isSection()) {
-            return noEffectAfterDropSection(draggedItem, targetItem);
-        }
-        return false;
-    }
-
-    /**
-     * Checks that dropping branch haven't effect.
-     *
-     * @param draggedBranch the branch to move
-     * @param targetItem    the target item, may be branch as well as section
-     * @return {@code true} if dropping have no effect, otherwise return {@code false}
-     */
-    public boolean noEffectAfterDropBranch(PoulpeBranch draggedBranch, ForumStructureItem targetItem) {
-        PoulpeSection draggedSection = draggedBranch.getPoulpeSection();
-        if (targetItem.isSection()) {
-            return draggedSection.equals(targetItem.getSectionItem());
-        }
-
-        PoulpeBranch targetBranch = targetItem.getBranchItem();
-        PoulpeSection targetSection = targetBranch.getPoulpeSection();
-        if (draggedSection.equals(targetSection)) {
-            List<PoulpeBranch> branches = draggedSection.getPoulpeBranches();
-            int draggedIndex = branches.indexOf(draggedBranch);
-            int targetIndex = branches.indexOf(targetBranch);
-            if (targetIndex - 1 == draggedIndex) {
-                return true;
+            TreeNode<ForumStructureItem> draggedParentNode = draggedNode.getParent();
+            ForumStructureItem targetItem = targetNode.getData();
+            if (targetItem.isSection()) {
+                return draggedParentNode.equals(targetNode);
             }
+            TreeNode<ForumStructureItem> targetParentNode = targetNode.getParent();
+            if (draggedParentNode.equals(targetParentNode)) {
+                int draggedIndex = draggedParentNode.getIndex(draggedNode);
+                int targetIndex = draggedParentNode.getIndex(targetNode);
+                return targetIndex - 1 == draggedIndex;
+            } else {
+                return false;
+            }
+        } else if (draggedItem.isSection()) {
+            int draggedIndex = getRoot().getIndex(draggedNode);
+            int targetIndex = getRoot().getIndex(targetNode);
+            return targetIndex - 1 == draggedIndex;
         }
-
-        return false;
-    }
-
-    /**
-     * Checks that dropping section haven't effect.
-     *
-     * @param draggedItem the section item to move
-     * @param targetItem  the target section item
-     * @return {@code true} if dropping have no effect, otherwise return {@code false}
-     */
-    public boolean noEffectAfterDropSection(ForumStructureItem draggedItem, ForumStructureItem targetItem) {
-        PoulpeSection draggedSection = draggedItem.getSectionItem();
-        List<PoulpeSection> sections = getRootAsJcommune().getSections();
-        int draggedIndex = sections.indexOf(draggedSection);
-        int targetIndex = sections.indexOf(targetItem.getSectionItem());
-        return targetIndex - 1 == draggedIndex;
+        return true;
     }
 
     /**

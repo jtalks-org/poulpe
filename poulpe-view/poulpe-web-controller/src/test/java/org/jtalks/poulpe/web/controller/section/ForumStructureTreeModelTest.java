@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.section;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
@@ -37,11 +38,8 @@ public class ForumStructureTreeModelTest {
     public void setUp() throws Exception {
         sut = new ForumStructureTreeModel(createSectionNode());
         sut.getRoot().add(createSectionNode());
-        sut.getRoot().add(createSectionNode());
-        sut.getRoot().add(createSectionNode());
-        sut.getRoot().getChildAt(1).add(createBranchNode());
-        sut.getRoot().getChildAt(1).add(createBranchNode());
-        sut.getRoot().getChildAt(1).add(createBranchNode());
+        sut.getRoot().add(createSectionNodeWithBranches());
+        sut.getRoot().add(createSectionNodeWithBranches());
     }
 
     @Test
@@ -111,6 +109,14 @@ public class ForumStructureTreeModelTest {
                 new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
     }
 
+    private TreeNode<ForumStructureItem> createSectionNodeWithBranches() {
+        TreeNode<ForumStructureItem> sectionNode = createSectionNode();
+        sectionNode.add(createBranchNode());
+        sectionNode.add(createBranchNode());
+        sectionNode.add(createBranchNode());
+        return sectionNode;
+    }
+
     @Test
     public void testExpandTree() {
 
@@ -145,6 +151,45 @@ public class ForumStructureTreeModelTest {
         sut.expandTree();
         assertEquals(0, sut.getOpenCount());
         assertNull(sut.getOpenPaths());
+    }
+
+    @Test
+    public void testCheckEffectAfterDropBranchToSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
+        TreeNode<ForumStructureItem> target = sut.getChild(0);
+        assertFalse(sut.noEffectAfterDropNode(dragged, target));
+        target = sut.getChild(1);
+        assertTrue(sut.noEffectAfterDropNode(dragged, target));
+    }
+    
+    @Test
+    public void testCheckEffectAfterDropBranchToBranch() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 1);
+        TreeNode<ForumStructureItem> target = sut.getChild(1, 0);
+        assertFalse(sut.noEffectAfterDropNode(dragged, target));
+        target = sut.getChild(1, 2);
+        assertTrue(sut.noEffectAfterDropNode(dragged, target));
+        target = sut.getChild(2, 0);
+        assertFalse(sut.noEffectAfterDropNode(dragged, target));
+    }
+
+    @Test
+    public void testCheckEffectAfterDropSectionToSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1);
+        TreeNode<ForumStructureItem> target = sut.getChild(2);
+        assertTrue(sut.noEffectAfterDropNode(dragged, target));
+        dragged = sut.getChild(2);
+        target = sut.getChild(1);
+        assertFalse(sut.noEffectAfterDropNode(dragged, target));
+    }
+
+    @Test
+    public void testCheckEffectAfterDropNotBranchOrSection() {
+        Entity notBranchOrSection = new Entity() {
+        };
+        TreeNode<ForumStructureItem> dragged = new ZkTreeNode<ForumStructureItem>(
+                new ForumStructureItem(notBranchOrSection));
+        assertTrue(sut.noEffectAfterDropNode(dragged, dragged));
     }
 
     private void removeSections() {
