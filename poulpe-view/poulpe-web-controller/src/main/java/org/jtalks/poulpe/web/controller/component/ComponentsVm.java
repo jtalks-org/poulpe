@@ -15,8 +15,8 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.logic.databasebackup.FileDownloadException;
 import org.jtalks.poulpe.logic.databasebackup.FileDownloadService;
+import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -36,7 +36,7 @@ import org.zkoss.zul.Messagebox;
 
 /**
  * Adding, removing, editing and configuring of components.
- *
+ * 
  * @author Alexey Grigorev
  * @author Leonid Kazantcev
  */
@@ -55,7 +55,7 @@ public class ComponentsVm {
 
     private static final String BACKUPDB_ERROR_DIALOG_TITLE = "component.poulpe.backupdb.backup_error_dialog.title";
     private static final String BACKUPDB_ERROR_DIALOG_TEXT = "component.poulpe.backupdb.backup_error_dialog.text";
-    
+
     private static final String DEFAULT_NAME = "name";
     private static final String DEFAULT_DESCRIPTION = "descr";
     public static final String COMPONENTS_PAGE_LOCATION = "/WEB-INF/pages/component/components.zul";
@@ -67,7 +67,7 @@ public class ComponentsVm {
 
     private final DeleteComponentDialog deleteComponentDialog;
     private Component selected;
-    
+
     /**
      * fileDownloadService is used for preparing a dump of database and later to push a browser to download the dump.
      * The parameter is injected.
@@ -75,14 +75,18 @@ public class ComponentsVm {
     private FileDownloadService fileDownloadService;
 
     /**
-     * @param componentService       service for loading and saving component
-     * @param windowManager          object for opening and closing application windows
-     * @param selectedEntity         desktop-scoped bean to which selected entities passed, used for editing components
-     * @param componentsToBeNotified edit/add dialogs notify this VM about changes in the current component list via
-     *                               this {@link ComponentList}
+     * @param componentService
+     *            service for loading and saving component
+     * @param windowManager
+     *            object for opening and closing application windows
+     * @param selectedEntity
+     *            desktop-scoped bean to which selected entities passed, used for editing components
+     * @param componentsToBeNotified
+     *            edit/add dialogs notify this VM about changes in the current component list via this
+     *            {@link ComponentList}
      */
-    public ComponentsVm(ComponentService componentService, WindowManager windowManager,
-                        SelectedEntity<Component> selectedEntity, ComponentList componentsToBeNotified) {
+    public ComponentsVm(final ComponentService componentService, final WindowManager windowManager,
+            final SelectedEntity<Component> selectedEntity, final ComponentList componentsToBeNotified) {
         this.componentService = componentService;
         this.windowManager = windowManager;
         this.selectedEntity = selectedEntity;
@@ -119,10 +123,11 @@ public class ComponentsVm {
     }
 
     /**
-     * Shows a delete component dialog to confirm removal. Selected component is set using {@link
-     * #setSelected(Component)}.
-     *
-     * @throws IllegalStateException if no component selected
+     * Shows a delete component dialog to confirm removal. Selected component is set using
+     * {@link #setSelected(Component)}.
+     * 
+     * @throws IllegalStateException
+     *             if no component selected
      */
     @Command
     public void deleteComponent() {
@@ -156,8 +161,8 @@ public class ComponentsVm {
      */
     @Command
     public void addNewPoulpe() {
-        selectedEntity.setEntity(componentService.
-                baseComponentFor(ComponentType.ADMIN_PANEL).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
+        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.ADMIN_PANEL).newComponent(
+                DEFAULT_NAME, DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
@@ -166,14 +171,14 @@ public class ComponentsVm {
      */
     @Command
     public void addNewJcommune() {
-        selectedEntity.setEntity(componentService.
-                baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME, DEFAULT_DESCRIPTION));
+        selectedEntity.setEntity(componentService.baseComponentFor(ComponentType.FORUM).newComponent(DEFAULT_NAME,
+                DEFAULT_DESCRIPTION));
         AddComponentVm.openWindowForAdding(windowManager);
     }
 
     /**
-     * Shows a component edit window for currently selected element. Selected component is set using {@link
-     * #setSelected(Component)}.
+     * Shows a component edit window for currently selected element. Selected component is set using
+     * {@link #setSelected(Component)}.
      */
     @Command
     public void configureComponent() {
@@ -182,33 +187,36 @@ public class ComponentsVm {
     }
 
     /**
-     * Performs the full database backup into SQL text file shape and forces a user's browser to download the
-     * resulting file. If an Error occurs during the preparing of database backup a diagnostic message box
-     * is displayed.
+     * Performs the full database backup into SQL text file shape and forces a user's browser to download the resulting
+     * file. If an Error occurs during the preparing of database backup a diagnostic message box is displayed.
      */
     @Command
     public final void backupDatabase() {
         try {
             fileDownloadService.performFileDownload();
         } catch (FileDownloadException e) {
-            Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT),
+            // TODO: change to logging
+            e.printStackTrace();
+            Messagebox.show(Labels.getLabel(BACKUPDB_ERROR_DIALOG_TEXT) + ": " + e.getClass().getName(),
                     Labels.getLabel(BACKUPDB_ERROR_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
         }
     }
 
     /**
-     * @param selected currently selected component
+     * @param selected
+     *            currently selected component
      */
-    public void setSelected(Component selected) {
+    public void setSelected(final Component selected) {
         this.selected = selected;
     }
 
     /**
      * Opens Components window.
-     *
-     * @param windowManager implementation of {@link WindowManager} for opening and closing application windows
+     * 
+     * @param windowManager
+     *            implementation of {@link WindowManager} for opening and closing application windows
      */
-    public static void show(WindowManager windowManager) {
+    public static void show(final WindowManager windowManager) {
         windowManager.open(COMPONENTS_PAGE_LOCATION);
     }
 
@@ -228,7 +236,7 @@ public class ComponentsVm {
     /**
      * Gets visibility status of notification window, boolean show added because after single opening of popup window
      * before next check we should have false at showReindexStartedNotification.
-     *
+     * 
      * @return true if notification is visible
      */
     public boolean isShowReindexStartedNotification() {
@@ -239,8 +247,9 @@ public class ComponentsVm {
 
     /**
      * Injects the FileDownloadService instance.
-     *
-     * @param fileDownloadService an instance to inject.
+     * 
+     * @param fileDownloadService
+     *            an instance to inject.
      */
     public final void setFileDownloadService(final FileDownloadService fileDownloadService) {
         this.fileDownloadService = fileDownloadService;

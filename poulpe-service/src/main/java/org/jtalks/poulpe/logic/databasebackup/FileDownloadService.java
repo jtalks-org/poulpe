@@ -16,6 +16,8 @@ package org.jtalks.poulpe.logic.databasebackup;
 
 import java.io.InputStream;
 
+import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
+
 /**
  * The class is used to download a file in the browser. For performing this the class uses next objects
  * which should be set via setters:

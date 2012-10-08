@@ -16,6 +16,8 @@ package org.jtalks.poulpe.logic.databasebackup;
 
 import java.io.InputStream;
 
+import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
+
 /**
  * This is an interface for providing content which later will be shipped to a user as a file via standard browser's
  * download functionality. The interface defines common methods such as get a content or return MIME type or

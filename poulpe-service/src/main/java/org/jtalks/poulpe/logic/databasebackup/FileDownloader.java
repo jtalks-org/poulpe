@@ -16,6 +16,8 @@ package org.jtalks.poulpe.logic.databasebackup;
 
 import java.io.InputStream;
 
+import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
+
 /**
  * An abstract class which performs file downloading process by forcing a browser to start getting the file.
  *
