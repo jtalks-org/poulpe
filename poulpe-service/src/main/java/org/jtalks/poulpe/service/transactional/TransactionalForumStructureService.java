@@ -136,4 +136,14 @@ public class TransactionalForumStructureService implements ForumStructureService
         sectionDao.update(targetSection);
         sectionDao.update(sectionBranchWasRemovedFrom);
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void moveSection(PoulpeSection section, PoulpeSection target) {
+        Jcommune jcommune = getJcommune();
+        jcommune.moveSection(section, target);
+        componentDao.saveOrUpdate(jcommune);
+    }
 }

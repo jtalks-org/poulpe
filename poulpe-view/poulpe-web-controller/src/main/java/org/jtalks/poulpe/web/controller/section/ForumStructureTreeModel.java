@@ -166,18 +166,12 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      */
     public void onDropSection(TreeNode<ForumStructureItem> draggedNode,
                               TreeNode<ForumStructureItem> targetNode) {
-        ForumStructureItem draggedItem = draggedNode.getData();
-        ForumStructureItem targetItem = targetNode.getData();
-        PoulpeSection draggedSection = draggedItem.getSectionItem();
-        PoulpeSection targetSection = targetItem.getSectionItem();
-        Jcommune jcommune = getRootAsJcommune();
-        jcommune.moveSection(draggedSection, targetSection);
         dropNodeBefore(draggedNode, targetNode);
         setSelectedNode(draggedNode);
     }
 
     /**
-     * Checks that dropping node haven't effect.
+     * Checks that node dropping haven't effect.
      *
      * @param draggedNode the node to move
      * @param targetNode  the target node
