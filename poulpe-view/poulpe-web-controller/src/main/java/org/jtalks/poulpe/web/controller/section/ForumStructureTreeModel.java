@@ -142,32 +142,27 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
-     * Handler of event when branch node dragged and dropped to another node.
+     * Handler of event when node dragged and dropped to target node.
+     * Node can represent branch or section item.
      *
-     * @param draggedNode the node represents dragged branch item
-     * @param targetNode  the node represents target item (it can be branch or section item)
+     * @param draggedNode the dragged node
+     * @param targetNode the target node
      */
-    public void onDropBranch(TreeNode<ForumStructureItem> draggedNode,
+    public void onDropNode(TreeNode<ForumStructureItem> draggedNode,
                              TreeNode<ForumStructureItem> targetNode) {
-        ForumStructureItem targetItem = targetNode.getData();
-        if (targetItem.isBranch()) {
+        ForumStructureItem draggedItem = draggedNode.getData();
+        if (draggedItem.isBranch()) {
+            ForumStructureItem targetItem = targetNode.getData();
+            if (targetItem.isBranch()) {
+                dropNodeBefore(draggedNode, targetNode);
+            } else {
+                dropNodeIn(draggedNode, targetNode);
+            }
+            setSelectedNode(draggedNode);
+        } else if (draggedItem.isSection()) {
             dropNodeBefore(draggedNode, targetNode);
-        } else {
-            dropNodeIn(draggedNode, targetNode);
+            setSelectedNode(draggedNode);
         }
-        setSelectedNode(draggedNode);
-    }
-
-    /**
-     * Handler of event when section node dragged and dropped to another section node.
-     *
-     * @param draggedNode the node represents dragged section item
-     * @param targetNode  the node represents target section item
-     */
-    public void onDropSection(TreeNode<ForumStructureItem> draggedNode,
-                              TreeNode<ForumStructureItem> targetNode) {
-        dropNodeBefore(draggedNode, targetNode);
-        setSelectedNode(draggedNode);
     }
 
     /**

@@ -140,11 +140,11 @@ public class ForumStructureVm {
         if (treeModel.noEffectAfterDropNode(draggedNode, targetNode)) {
             return;
         }
+        treeModel.onDropNode(draggedNode, targetNode);
         ForumStructureItem draggedItem = draggedNode.getData();
         ForumStructureItem targetItem = targetNode.getData();
         if (draggedItem.isBranch()) {
             PoulpeBranch draggedBranch = draggedItem.getBranchItem();
-            treeModel.onDropBranch(draggedNode, targetNode);
             if (targetItem.isBranch()) {
                 PoulpeBranch targetBranch = targetItem.getBranchItem();
                 forumStructureService.moveBranch(draggedBranch, targetBranch);
@@ -153,7 +153,6 @@ public class ForumStructureVm {
                 forumStructureService.moveBranch(draggedBranch, targetSection);
             }
         } else if (draggedItem.isSection()) {
-            treeModel.onDropSection(draggedNode, targetNode);
             PoulpeSection draggedSection = draggedItem.getSectionItem();
             PoulpeSection targetSection = targetItem.getSectionItem();
             forumStructureService.moveSection(draggedSection, targetSection);
