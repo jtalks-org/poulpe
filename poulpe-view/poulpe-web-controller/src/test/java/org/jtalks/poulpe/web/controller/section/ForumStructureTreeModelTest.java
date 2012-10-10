@@ -233,6 +233,42 @@ public class ForumStructureTreeModelTest {
         verify(spy, never()).setSelectedNode(entityItem);
     }
 
+    @Test
+    public void testGetSelectedSection() {
+        TreeNode<ForumStructureItem> selected = sut.getChild(1);
+        sut.setSelectedNode(selected);
+        PoulpeSection section = selected.getData().getSectionItem();
+        assertEquals(sut.getSelectedSection(), section);
+    }
+
+    @Test
+    public void testGetSectionOfSelectedBranch() {
+        TreeNode<ForumStructureItem> selected = sut.getChild(1, 1);
+        sut.setSelectedNode(selected);
+        PoulpeSection section = selected.getParent().getData().getSectionItem();
+        assertEquals(sut.getSelectedSection(), section);
+    }
+
+    @Test
+    public void testGetSelectedSectionWhenNothingIsSelected() {
+        assertNull(sut.getSelectedSection());
+    }
+
+    @Test
+    public void testAddSectionIfAbsent() {
+        PoulpeSection absent = new PoulpeSection();
+        sut.addIfAbsent(absent);
+        assertTrue(sut.getSections().contains(absent));
+    }
+
+    @Test
+    public void testAddSectionIfPresent() {
+        PoulpeSection present = sut.getChild(1).getData().getSectionItem();
+        List<PoulpeSection> sections = sut.getSections();
+        sut.addIfAbsent(present);
+        assertEquals(sut.getSections(), sections);
+    }
+
     private void removeSections() {
         List<PoulpeSection> poulpeSections = sut.getSections();
         for(PoulpeSection ps:poulpeSections) {
