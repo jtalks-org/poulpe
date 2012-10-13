@@ -114,10 +114,6 @@
     <constructor-arg index="3" ref="branchService"/>
   </bean>
 
-  <bean id="rankManagementVm" scope="desktop" class="org.jtalks.poulpe.web.controller.rank.RankManagementVm">
-    <constructor-arg index="0" ref="rankService"/>
-  </bean>
-
   <bean id="editGroupMembersVm" scope="prototype" class="org.jtalks.poulpe.web.controller.group.EditGroupMembersVm">
     <constructor-arg ref="windowManager"/>
     <constructor-arg ref="groupService"/>
