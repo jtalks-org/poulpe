@@ -19,6 +19,7 @@ import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.zkoss.zul.TreeNode;
@@ -26,13 +27,17 @@ import org.zkoss.zul.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
+ * @author Guram Savinov
  */
 public class ForumStructureTreeModelTest {
-    ForumStructureTreeModel sut;
+    private ForumStructureTreeModel sut;
+    private ForumStructureTreeModel spy;
 
     @BeforeMethod
     public void setUp() throws Exception {
@@ -40,6 +45,7 @@ public class ForumStructureTreeModelTest {
         sut.getRoot().add(createSectionNode());
         sut.getRoot().add(createSectionNodeWithBranches());
         sut.getRoot().add(createSectionNodeWithBranches());
+        spy = Mockito.spy(sut);
     }
 
     @Test
@@ -174,12 +180,83 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testCheckEffectAfterDropNotBranchOrSection() {
-        Entity notBranchOrSection = new Entity() {
-        };
-        TreeNode<ForumStructureItem> dragged = new ZkTreeNode<ForumStructureItem>(
-                new ForumStructureItem(notBranchOrSection));
-        assertTrue(sut.noEffectAfterDropNode(dragged, dragged));
+    public void testCheckEffectAfterDropEntity() {
+        TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
+                new ForumStructureItem(new Entity() {}));
+        assertTrue(sut.noEffectAfterDropNode(entityItem, entityItem));
+    }
+
+    @Test
+    public void testOnDropBranchToBranch() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
+        TreeNode<ForumStructureItem> target = sut.getChild(1, 1);
+        spy.onDropNode(dragged, target);
+        verify(spy).dropNodeBefore(dragged, target);
+        verify(spy).setSelectedNode(dragged);
+    }
+
+    @Test
+    public void testOnDropBranchToSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
+        TreeNode<ForumStructureItem> target = sut.getChild(2);
+        spy.onDropNode(dragged, target);
+        verify(spy).dropNodeIn(dragged, target);
+        verify(spy).setSelectedNode(dragged);
+    }
+    
+    @Test
+    public void testOnDropSectionToSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(0);
+        TreeNode<ForumStructureItem> target = sut.getChild(2);
+        spy.onDropNode(dragged, target);
+        verify(spy).dropNodeBefore(dragged, target);
+        verify(spy).setSelectedNode(dragged);
+    }
+
+    @Test
+    public void testOnDropEntity() {
+        TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
+                new ForumStructureItem(new Entity() {}));
+        spy.onDropNode(entityItem, entityItem);
+        verify(spy, never()).dropNodeBefore(entityItem, entityItem);
+        verify(spy, never()).dropNodeIn(entityItem, entityItem);
+        verify(spy, never()).setSelectedNode(entityItem);
+    }
+
+    @Test
+    public void testGetSelectedSection() {
+        TreeNode<ForumStructureItem> selected = sut.getChild(1);
+        sut.setSelectedNode(selected);
+        PoulpeSection section = selected.getData().getSectionItem();
+        assertEquals(sut.getSelectedSection(), section);
+    }
+
+    @Test
+    public void testGetSectionOfSelectedBranch() {
+        TreeNode<ForumStructureItem> selected = sut.getChild(1, 1);
+        sut.setSelectedNode(selected);
+        PoulpeSection section = selected.getParent().getData().getSectionItem();
+        assertEquals(sut.getSelectedSection(), section);
+    }
+
+    @Test
+    public void testGetSelectedSectionWhenNothingIsSelected() {
+        assertNull(sut.getSelectedSection());
+    }
+
+    @Test
+    public void testAddSectionIfAbsent() {
+        PoulpeSection absent = new PoulpeSection();
+        sut.addIfAbsent(absent);
+        assertTrue(sut.getSections().contains(absent));
+    }
+
+    @Test
+    public void testAddSectionIfPresent() {
+        PoulpeSection present = sut.getChild(1).getData().getSectionItem();
+        List<PoulpeSection> sections = sut.getSections();
+        sut.addIfAbsent(present);
+        assertEquals(sut.getSections(), sections);
     }
 
     private void removeSections() {

@@ -88,4 +88,12 @@ public interface ForumStructureService {
      * @param target a target branch that will be shifted
      */
     void moveBranch(PoulpeBranch branch, PoulpeBranch target);
+
+    /**
+     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right. 
+     * 
+     * @param section a section to move
+     * @param target a target section that will be shifted
+     */
+    void moveSection(PoulpeSection section, PoulpeSection target);
 }

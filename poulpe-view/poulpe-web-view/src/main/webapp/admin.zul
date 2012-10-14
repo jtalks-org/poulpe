@@ -41,7 +41,6 @@
                   <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')"/>
                   <treeitem label="${labels.admin.user.personal_permissions}"
                             onClick="@command('onShowPersonalPermissions')"/>
-                  <!--<treeitem label="${labels.admin.ranks}" onClick="@command('onShowRanks')" />-->
                 </treechildren>
               </treeitem>
               <treeitem open="false" label="Experimental Features" visible="@load(vm.experimentalFeatureItemVisible)" onClick="@command('onBlankPage')">

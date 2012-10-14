@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeModel;
@@ -44,9 +43,9 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * one or it will simply create a new node inside the section.The branch doesn't change its position if it's already
      * in the specified section.
      *
-     * @param branchToPut        a branch item to be moved/added to the specified section
+     * @param branchToPut a branch item to be moved/added to the specified section
      * @param destinationSection a section that is accepting a specified branch
-     * @return this
+     * @return {@code this}
      */
     public ForumStructureTreeModel putBranch(ForumStructureItem branchToPut, ForumStructureItem destinationSection) {
         TreeNode<ForumStructureItem> destinationSectionNode = find(destinationSection);
@@ -61,6 +60,13 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return this;
     }
 
+    /**
+     * Moves branch to the parent section. Creates node for branch if it absent in tree.
+     * Parent section will be opened, moved branch will be selected.
+     * 
+     * @param branch a branch to move
+     * @return {@code this}
+     */
     public ForumStructureTreeModel moveBranchIfSectionChanged(PoulpeBranch branch) {
         ZkTreeNode<ForumStructureItem> branchNode = (ZkTreeNode<ForumStructureItem>) find(
                 new ForumStructureItem(branch));
@@ -75,6 +81,12 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return this;
     }
 
+    /**
+     * Creates section and adds it to the tree if section is absent,
+     * otherwise doing nothing.
+     * 
+     * @param section a section to be added
+     */
     public void addIfAbsent(PoulpeSection section) {
         TreeNode<ForumStructureItem> sectionNode = find(new ForumStructureItem(section));
         if (sectionNode == null) {
@@ -83,6 +95,11 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         }
     }
 
+    /**
+     * Returns the selected in tree section or section of selected branch.
+     * 
+     * @return the selected section or {@code null} if nothing is selected
+     */
     public PoulpeSection getSelectedSection() {
         ForumStructureItem selectedData = getSelectedData(0);
         if (selectedData != null) {
@@ -95,7 +112,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * Removes a branch from the tree or does nothing if the branch wasn't found.
      *
      * @param branch a branch to remove from the tree
-     * @return a node that was containing that branch or null if no such node found and thus branch wasn't removed
+     * @return a node that was containing that branch or {@code null} if no such node found and thus branch wasn't removed
      */
     public ZkTreeNode<ForumStructureItem> removeBranch(@Nullable PoulpeBranch branch) {
         ForumStructureItem itemToRemove = new ForumStructureItem(branch);
@@ -106,7 +123,7 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * Deletes a section from the tree or does nothing if the section can't be found.
      *
      * @param section a section to be removed from the tree
-     * @return the removed node or null if no section was found and thus nothing was removed
+     * @return the removed node or {@code null} if no section was found and thus nothing was removed
      */
     public ZkTreeNode<ForumStructureItem> removeSection(@Nullable PoulpeSection section) {
         ForumStructureItem nodeData = new ForumStructureItem(section);
@@ -122,7 +139,9 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
-     * @return a list of sections or empty list if there are no sections in forum structure
+     * Returns the list of forum structure sections.
+     * 
+     * @return a list of sections or empty list if there are no sections in the forum structure
      */
     public List<PoulpeSection> getSections() {
         List<PoulpeSection> sections = new ArrayList<PoulpeSection>();
@@ -142,46 +161,35 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
-     * Handler of event when branch node dragged and dropped to another node.
+     * Handler of event when node dragged and dropped to the target node.
+     * Node can represent branch or section item.
      *
-     * @param draggedNode the node represents dragged branch item
-     * @param targetNode  the node represents target item (it can be branch or section item)
+     * @param draggedNode the dragged node
+     * @param targetNode the target node
      */
-    public void onDropBranch(TreeNode<ForumStructureItem> draggedNode,
+    public void onDropNode(TreeNode<ForumStructureItem> draggedNode,
                              TreeNode<ForumStructureItem> targetNode) {
-        ForumStructureItem targetItem = targetNode.getData();
-        if (targetItem.isBranch()) {
-            dropNodeBefore(draggedNode, targetNode);
-        } else {
-            dropNodeIn(draggedNode, targetNode);
-        }
-        setSelectedNode(draggedNode);
-    }
-
-    /**
-     * Handler of event when section node dragged and dropped to another section node.
-     *
-     * @param draggedNode the node represents dragged section item
-     * @param targetNode  the node represents target section item
-     */
-    public void onDropSection(TreeNode<ForumStructureItem> draggedNode,
-                              TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem draggedItem = draggedNode.getData();
-        ForumStructureItem targetItem = targetNode.getData();
-        PoulpeSection draggedSection = draggedItem.getSectionItem();
-        PoulpeSection targetSection = targetItem.getSectionItem();
-        Jcommune jcommune = getRootAsJcommune();
-        jcommune.moveSection(draggedSection, targetSection);
-        dropNodeBefore(draggedNode, targetNode);
-        setSelectedNode(draggedNode);
+        if (draggedItem.isBranch()) {
+            ForumStructureItem targetItem = targetNode.getData();
+            if (targetItem.isBranch()) {
+                dropNodeBefore(draggedNode, targetNode);
+            } else {
+                dropNodeIn(draggedNode, targetNode);
+            }
+            setSelectedNode(draggedNode);
+        } else if (draggedItem.isSection()) {
+            dropNodeBefore(draggedNode, targetNode);
+            setSelectedNode(draggedNode);
+        }
     }
 
     /**
-     * Checks that dropping node haven't effect.
+     * Checks that node dropping has no effect.
      *
      * @param draggedNode the node to move
-     * @param targetNode  the target node
-     * @return {@code true} if dropping have no effect, otherwise return {@code false}
+     * @param targetNode the target node
+     * @return {@code true} if dropping has no effect, otherwise return {@code false}
      */
     public boolean noEffectAfterDropNode(TreeNode<ForumStructureItem> draggedNode, TreeNode<ForumStructureItem> targetNode) {
         ForumStructureItem draggedItem = draggedNode.getData();
@@ -208,15 +216,8 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     }
 
     /**
-     * Since the {@link Jcommune} object is the root of the Forum Structure tree, this method can fetch this object from
-     * the tree and return it.
-     *
-     * @return the {@link Jcommune} object that is the root of the Forum Structure tree
+     * Opens all closed section nodes.
      */
-    public Jcommune getRootAsJcommune() {
-        return (Jcommune) (Object) getRoot().getData();
-    }
-
     public void expandTree() {
         for(int i = 0; i < getRoot().getChildCount(); i++) {
             int[] path = new int[]{i};

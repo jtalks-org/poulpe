@@ -18,7 +18,6 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.Property;
-import org.jtalks.common.model.entity.Rank;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.*;
 
@@ -27,9 +26,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Provides unified way for creating text fixtures.<br>
- * <br>
- * This class is not under test source folder because it should be accessible for all components.
+ * Provides unified way for creating text fixtures.<br> <br> This class is not under test source folder because it
+ * should be accessible for all components.
  *
  * @author Kirill Afonin
  * @author Alexey Grigorev
@@ -44,10 +42,10 @@ public final class TestFixtures {
     private static final int POST_LIMIT_COUNT = 1000;
     private static final int LENGTH = 10;
 
-    private TestFixtures(){}
-    /**
-     * @return branch with random name and description beloning to random section with moderators group
-     */
+    private TestFixtures() {
+    }
+
+    /** @return branch with random name and description beloning to random section with moderators group */
     public static PoulpeBranch branch() {
         PoulpeBranch newBranch = new PoulpeBranch(random(), random());
         newBranch.setSection(section());
@@ -55,9 +53,7 @@ public final class TestFixtures {
         return newBranch;
     }
 
-    /**
-     * @return branch with id = 1L, random name and description belong to random section and moderators group
-     */
+    /** @return branch with id = 1L, random name and description belong to random section and moderators group */
     public static PoulpeBranch branchWithId() {
         PoulpeBranch newBranch = new PoulpeBranch(random(), random());
         newBranch.setSection(section());
@@ -66,9 +62,7 @@ public final class TestFixtures {
         return newBranch;
     }
 
-    /**
-     * @return topic type with random name and description
-     */
+    /** @return topic type with random name and description */
     public static TopicType topicType() {
         return new TopicType(random(), random());
     }
@@ -82,9 +76,7 @@ public final class TestFixtures {
         return base.newComponent(random(), random());
     }
 
-    /**
-     * @return list of components of all {@link ComponentType} values
-     */
+    /** @return list of components of all {@link ComponentType} values */
     public static List<Component> allComponents() {
         List<Component> result = Lists.newArrayList();
 
@@ -95,9 +87,7 @@ public final class TestFixtures {
         return result;
     }
 
-    /**
-     * @return component with {@link ComponentType} = {@link ComponentType#FORUM}
-     */
+    /** @return component with {@link ComponentType} = {@link ComponentType#FORUM} */
     public static Jcommune jcommune() {
         return (Jcommune) component(ComponentType.FORUM);
     }
@@ -117,16 +107,12 @@ public final class TestFixtures {
         return jcommune;
     }
 
-    /**
-     * @return jcommune component with SECTIONS_COUNT sections
-     */
+    /** @return jcommune component with SECTIONS_COUNT sections */
     public static Jcommune jcommuneWithSections() {
         return jcommuneWithSections(SECTIONS_COUNT);
     }
 
-    /**
-     * @return section with random amount of branches (from BRANCH_COUNT_MIN to BRANCH_COUNT_MAX)
-     */
+    /** @return section with random amount of branches (from BRANCH_COUNT_MIN to BRANCH_COUNT_MAX) */
     public static PoulpeSection sectionWithBranches() {
         return sectionWithBranches(BRANCH_COUNT_MIN + randomInt(BRANCH_COUNT_MAX - BRANCH_COUNT_MIN));
     }
@@ -147,49 +133,37 @@ public final class TestFixtures {
         return section;
     }
 
-    /**
-     * @return component of random {@link ComponentType}
-     */
+    /** @return component of random {@link ComponentType} */
     public static Component randomComponent() {
         return component(randomComponentType());
     }
 
-    /**
-     * @return component of random {@link ComponentType} with id = 1L
-     */
+    /** @return component of random {@link ComponentType} with id = 1L */
     public static Component randomComponentWithId() {
         Component component = component(randomComponentType());
         component.setId(1L);
         return component;
     }
 
-    /**
-     * @return random {@link ComponentType} value
-     */
+    /** @return random {@link ComponentType} value */
     public static ComponentType randomComponentType() {
         ComponentType[] types = ComponentType.values();
         return types[randomInt(types.length)];
     }
 
-    /**
-     * @return {@link ComponentBase} with random {@link ComponentType}
-     */
+    /** @return {@link ComponentBase} with random {@link ComponentType} */
     public static ComponentBase baseComponent() {
         return new ComponentBase(randomComponentType());
     }
 
-    /**
-     * @return property with random name, description and validation rule
-     */
+    /** @return property with random name, description and validation rule */
     public static Property property() {
         Property property = new Property(random(), random());
         property.setValidationRule(random());
         return property;
     }
 
-    /**
-     * @return section with random name
-     */
+    /** @return section with random name */
     public static PoulpeSection section() {
         return new PoulpeSection(random());
     }
@@ -216,16 +190,12 @@ public final class TestFixtures {
         return new PoulpeUser(username, email, password, "");
     }
 
-    /**
-     * @return user with random name, email, password and empty salt
-     */
+    /** @return user with random name, email, password and empty salt */
     public static PoulpeUser user() {
         return user(random());
     }
 
-    /**
-     * @return group with randoms users
-     */
+    /** @return group with randoms users */
     public static Group groupWithUsers() {
         List<PoulpeUser> users = usersListOf(USERS_COUNT);
         Group group = group();
@@ -249,30 +219,17 @@ public final class TestFixtures {
         return result;
     }
 
-    /**
-     * @return group with random name and description
-     */
+    /** @return group with random name and description */
     public static Group group() {
         return new Group(random(), random());
     }
 
-    /**
-     * @return list with one group of banned users
-     */
+    /** @return list with one group of banned users */
     public static List<Group> bannedGroups() {
         return Collections.singletonList(group());
     }
 
-    /**
-     * @return rank with random name and post limit
-     */
-    public static Rank rank() {
-        return new Rank(random(), randomInt(POST_LIMIT_COUNT));
-    }
-
-    /**
-     * @return random string of LENGTH symbols
-     */
+    /** @return random string of LENGTH symbols */
     private static String random() {
         return RandomStringUtils.randomAlphanumeric(LENGTH);
     }

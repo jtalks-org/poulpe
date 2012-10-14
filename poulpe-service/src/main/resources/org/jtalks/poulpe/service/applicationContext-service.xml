@@ -81,9 +81,6 @@
     <constructor-arg index="0" ref="groupDao"/>
     <constructor-arg index="1" ref="userBanner"/>
   </bean>
-  <bean id="rankService" class="org.jtalks.poulpe.service.transactional.TransactionalRankService">
-    <constructor-arg index="0" ref="rankDao"/>
-  </bean>
   <bean id="poulpeSecurityService" class="org.jtalks.poulpe.service.transactional.SecurityService">
     <constructor-arg index="0" ref="userDao"/>
   </bean>
