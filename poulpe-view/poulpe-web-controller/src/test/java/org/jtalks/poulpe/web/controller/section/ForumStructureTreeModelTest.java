@@ -132,9 +132,9 @@ public class ForumStructureTreeModelTest {
 
 
     public void testExpandTreeToAlreadyOpenedTree() {
-        int openCountAfter  = sut.getRoot().getChildCount();
+        int alreadyOpenedCount  = sut.getOpenCount();
         sut.expandTree();
-        assertEquals(openCountAfter, sut.getOpenCount());
+        assertEquals(alreadyOpenedCount, sut.getOpenCount());
     }
 
     @Test
