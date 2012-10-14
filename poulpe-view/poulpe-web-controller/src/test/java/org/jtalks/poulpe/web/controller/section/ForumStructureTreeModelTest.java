@@ -119,38 +119,28 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void testExpandTree() {
-
-        // before expand tree
-        assertEquals(0, sut.getOpenCount());
-        assertNull(sut.getOpenPaths());
-
-        int[] path = new int[]{1};
-        assertFalse(sut.isPathOpened(path));
-
+        int openCountAfter = sut.getRoot().getChildCount();
         sut.expandTree();
-        // after expand tree
-        assertEquals(3, sut.getOpenCount());
-        assertTrue(sut.isPathOpened(path));
+        assertEquals(openCountAfter, sut.getOpenCount());
+    }
 
+
+    public void testExpandTreeToAlreadyOpenedTree() {
+        int openCountAfter  = sut.getRoot().getChildCount();
         sut.expandTree();
-        // after second calling to expand tree
-        assertEquals(3, sut.getOpenCount());
+        assertEquals(openCountAfter, sut.getOpenCount());
     }
 
     @Test
     public void testExpandTreeWithNoElements() {
         // remove open paths
-        if(sut.getOpenCount() > 0) {
-            removeOpenPaths();
-        }
+        removeOpenPaths();
         // remove all elements from tree
-        if(sut.getSections().size() > 0) {
-            removeSections();
-        }
-        // when no elements in tree
+        removeSections();
+
+        int openCount = 0;
         sut.expandTree();
-        assertEquals(0, sut.getOpenCount());
-        assertNull(sut.getOpenPaths());
+        assertEquals(openCount, sut.getOpenCount());
     }
 
     @Test
@@ -200,10 +190,12 @@ public class ForumStructureTreeModelTest {
     }
 
     private void removeOpenPaths() {
-        for(int i = 0; i < sut.getRoot().getChildCount();i++) {
-            int[] child = sut.getPath(sut.getRoot().getChildAt(i));
-            if(sut.isPathOpened(child)) {
-                sut.removeOpenPath(child);
+        TreeNode<ForumStructureItem> root = sut.getRoot();
+        int childCount = root.getChildCount();
+        for(int i = 0; i < childCount; i++) {
+            int[] path = sut.getPath(root.getChildAt(i));
+            if(sut.isPathOpened(path)) {
+                sut.removeOpenPath(path);
             }
         }
     }

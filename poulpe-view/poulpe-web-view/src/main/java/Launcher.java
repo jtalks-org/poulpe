@@ -33,7 +33,7 @@ public class Launcher {
         long start = System.currentTimeMillis();
         Server server = new Server();
         Connector connector = new SelectChannelConnector();
-        connector.setPort(8080);
+        connector.setPort(8888);
 
         server.addConnector(connector);
         WebAppContext webAppContext = new WebAppContext();
