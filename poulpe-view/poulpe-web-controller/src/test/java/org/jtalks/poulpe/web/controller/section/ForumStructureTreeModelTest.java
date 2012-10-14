@@ -91,7 +91,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void removeSectionShouldDoNothingIfNullPassed(){
+    public void removeSectionShouldDoNothingIfNullPassed() {
         int sizeBeforeRemoval = sut.getSections().size();
         assertNull(sut.removeSection(null));
         assertEquals(sut.getSections().size(), sizeBeforeRemoval);
@@ -125,28 +125,25 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void testExpandTree() {
-        int openCountAfter = sut.getRoot().getChildCount();
         sut.expandTree();
-        assertEquals(openCountAfter, sut.getOpenCount());
+        assertEquals(sut.getRoot().getChildCount(), sut.getOpenCount());
     }
 
-
+    @Test
     public void testExpandTreeToAlreadyOpenedTree() {
-        int alreadyOpenedCount  = sut.getOpenCount();
+        for (TreeNode<ForumStructureItem> child : sut.getRoot().getChildren()) {
+            sut.addOpenObject(child);
+        }
         sut.expandTree();
-        assertEquals(alreadyOpenedCount, sut.getOpenCount());
+        assertEquals(sut.getRoot().getChildCount(), sut.getOpenCount());
     }
 
     @Test
     public void testExpandTreeWithNoElements() {
-        // remove open paths
         removeOpenPaths();
-        // remove all elements from tree
-        removeSections();
-
-        int openCount = 0;
+        removeAllSections();
         sut.expandTree();
-        assertEquals(openCount, sut.getOpenCount());
+        assertEquals(0, sut.getOpenCount());
     }
 
     @Test
@@ -157,7 +154,7 @@ public class ForumStructureTreeModelTest {
         target = sut.getChild(1);
         assertTrue(sut.noEffectAfterDropNode(dragged, target));
     }
-    
+
     @Test
     public void testCheckEffectAfterDropBranchToBranch() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 1);
@@ -182,7 +179,8 @@ public class ForumStructureTreeModelTest {
     @Test
     public void testCheckEffectAfterDropEntity() {
         TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
-                new ForumStructureItem(new Entity() {}));
+                new ForumStructureItem(new Entity() {
+                }));
         assertTrue(sut.noEffectAfterDropNode(entityItem, entityItem));
     }
 
@@ -203,7 +201,7 @@ public class ForumStructureTreeModelTest {
         verify(spy).dropNodeIn(dragged, target);
         verify(spy).setSelectedNode(dragged);
     }
-    
+
     @Test
     public void testOnDropSectionToSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(0);
@@ -216,7 +214,8 @@ public class ForumStructureTreeModelTest {
     @Test
     public void testOnDropEntity() {
         TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
-                new ForumStructureItem(new Entity() {}));
+                new ForumStructureItem(new Entity() {
+                }));
         spy.onDropNode(entityItem, entityItem);
         verify(spy, never()).dropNodeBefore(entityItem, entityItem);
         verify(spy, never()).dropNodeIn(entityItem, entityItem);
@@ -259,9 +258,9 @@ public class ForumStructureTreeModelTest {
         assertEquals(sut.getSections(), sections);
     }
 
-    private void removeSections() {
+    private void removeAllSections() {
         List<PoulpeSection> poulpeSections = sut.getSections();
-        for(PoulpeSection ps:poulpeSections) {
+        for (PoulpeSection ps : poulpeSections) {
             sut.removeSection(ps);
         }
     }
@@ -269,9 +268,9 @@ public class ForumStructureTreeModelTest {
     private void removeOpenPaths() {
         TreeNode<ForumStructureItem> root = sut.getRoot();
         int childCount = root.getChildCount();
-        for(int i = 0; i < childCount; i++) {
+        for (int i = 0; i < childCount; i++) {
             int[] path = sut.getPath(root.getChildAt(i));
-            if(sut.isPathOpened(path)) {
+            if (sut.isPathOpened(path)) {
                 sut.removeOpenPath(path);
             }
         }
