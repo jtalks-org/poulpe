@@ -18,7 +18,7 @@
         </groupbox>
       </north>
       <west splittable="true" collapsible="true" flex="true" minsize="150" maxsize="300">
-        <tree width="170px">
+        <tree width="200px">
             <treecols/>
             <treechildren>
               <treeitem open="false" label="Components" onClick="@command('onBlankPage')">
@@ -31,7 +31,7 @@
                       </template>
                     </treechildren>
                   </treeitem>        
-                  <treeitem label="${labels.admin.group_permissions}" onClick="@command('onShowGroupsPermissions')"/>
+                  <treeitem label="${labels.admin.component_permissions}" onClick="@command('onShowGroupsPermissions')"/>
                 </treechildren>
               </treeitem>
               <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
