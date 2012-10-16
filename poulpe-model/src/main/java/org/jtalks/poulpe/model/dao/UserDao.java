@@ -17,7 +17,7 @@ package org.jtalks.poulpe.model.dao;
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pagination;
+import org.jtalks.poulpe.model.pages.Pagination;
 
 import java.util.List;
 

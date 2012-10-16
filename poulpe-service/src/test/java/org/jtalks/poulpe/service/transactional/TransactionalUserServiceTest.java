@@ -24,7 +24,7 @@ import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
-import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.model.pages.Pages;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

@@ -19,7 +19,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.service.GroupService;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.section.ForumStructureItem;
 import org.jtalks.poulpe.web.controller.section.ForumStructureTreeModel;
 import org.jtalks.poulpe.web.controller.section.ForumStructureVm;
@@ -31,7 +31,7 @@ import org.testng.annotations.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.jtalks.poulpe.test.fixtures.TestFixtures.branch;
+import static org.jtalks.poulpe.model.fixtures.TestFixtures.branch;
 import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForumStructure;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;

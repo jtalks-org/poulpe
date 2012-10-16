@@ -30,7 +30,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.JcommuneHttpNotifier;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;

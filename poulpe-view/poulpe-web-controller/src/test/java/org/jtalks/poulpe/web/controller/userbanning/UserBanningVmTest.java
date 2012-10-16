@@ -2,7 +2,7 @@ package org.jtalks.poulpe.web.controller.userbanning;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserList;
-import org.jtalks.poulpe.pages.Pages;
+import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.testng.annotations.BeforeMethod;

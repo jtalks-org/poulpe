@@ -25,7 +25,7 @@ import java.util.Set;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.entity.*;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;

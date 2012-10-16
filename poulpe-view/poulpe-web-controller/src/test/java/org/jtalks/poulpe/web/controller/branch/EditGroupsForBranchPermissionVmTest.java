@@ -26,7 +26,7 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.PermissionsService;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.utils.ObjectsFactory;
 import org.mockito.Mock;

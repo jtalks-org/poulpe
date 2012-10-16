@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jtalks.poulpe.pages;
+package org.jtalks.poulpe.model.pages;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;

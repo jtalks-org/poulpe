@@ -7,7 +7,7 @@ import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;

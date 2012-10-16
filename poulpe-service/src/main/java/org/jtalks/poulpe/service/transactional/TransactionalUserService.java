@@ -24,8 +24,8 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
-import org.jtalks.poulpe.pages.Pages;
-import org.jtalks.poulpe.pages.Pagination;
+import org.jtalks.poulpe.model.pages.Pages;
+import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.List;

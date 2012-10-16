@@ -12,27 +12,42 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.pages;
+package org.jtalks.poulpe.model.pages;
 
+import static org.mockito.Mockito.*;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.testng.annotations.Test;
+import org.testng.annotations.BeforeMethod;
 
 /**
- * Used when no pagination is needed. Typically should be accessed via
- * {@link Pages#NONE}
- * 
  * @author Alexey Grigorev
  */
-class NoPagination implements Pagination {
-
-    @Override
-    public Criteria addPagination(Criteria criteria) {
-        return criteria;
+public class NoPaginationTest {
+    
+    @Mock Query query;
+    @Mock Criteria criteria;
+    
+    @BeforeMethod
+    public void beforeMethod() {
+        MockitoAnnotations.initMocks(this);
     }
 
-    @Override
-    public Query addPagination(Query query) {
-        return query;
+    @Test
+    public void addPaginationCriteria() {
+        Pages.NONE.addPagination(criteria);
+        
+        verify(criteria, never()).setFirstResult(anyInt());
+        verify(criteria, never()).setMaxResults(anyInt());
     }
 
+    @Test
+    public void addPaginationQuery() {
+        Pages.NONE.addPagination(query);
+        
+        verify(query, never()).setFirstResult(anyInt());
+        verify(query, never()).setMaxResults(anyInt());
+    }
 }

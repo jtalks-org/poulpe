@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.group;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.UiPagination;
+import org.jtalks.poulpe.model.pages.UiPagination;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;

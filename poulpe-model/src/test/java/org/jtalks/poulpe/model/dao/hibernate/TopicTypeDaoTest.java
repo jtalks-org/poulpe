@@ -25,7 +25,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;

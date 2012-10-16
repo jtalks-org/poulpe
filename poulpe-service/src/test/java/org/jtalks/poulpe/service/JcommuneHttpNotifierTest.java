@@ -20,7 +20,7 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 
 import static org.jtalks.poulpe.service.JcommuneHttpNotifierTest.HttpRequestMatcher.eqRequest;
-import static org.jtalks.poulpe.test.fixtures.TestFixtures.user;
+import static org.jtalks.poulpe.model.fixtures.TestFixtures.user;
 import static org.mockito.Mockito.*;
 
 /** @author stanislav bashkirtsev */

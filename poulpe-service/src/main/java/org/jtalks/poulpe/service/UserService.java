@@ -18,7 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.pages.Pagination;
+import org.jtalks.poulpe.model.pages.Pagination;
 
 import java.util.List;
 

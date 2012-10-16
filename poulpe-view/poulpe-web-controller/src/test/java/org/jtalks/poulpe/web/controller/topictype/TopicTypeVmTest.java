@@ -20,7 +20,7 @@ import static org.testng.Assert.*;
 
 import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.service.TopicTypeService;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.DialogManager;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;

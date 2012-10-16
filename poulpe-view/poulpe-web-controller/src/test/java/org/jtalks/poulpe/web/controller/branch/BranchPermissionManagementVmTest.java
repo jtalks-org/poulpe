@@ -20,7 +20,7 @@ import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
-import org.jtalks.poulpe.test.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.ZkHelper;
