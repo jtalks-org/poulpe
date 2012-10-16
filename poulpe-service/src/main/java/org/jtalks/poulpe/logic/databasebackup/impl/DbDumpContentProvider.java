@@ -17,12 +17,8 @@ package org.jtalks.poulpe.logic.databasebackup.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -33,7 +29,6 @@ import org.jtalks.poulpe.logic.databasebackup.exceptions.DataBaseDoesntContainTa
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
-import org.jtalks.poulpe.logic.databasebackup.exceptions.ResourcesClosingException;
 
 /**
  * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
@@ -59,34 +54,26 @@ public class DbDumpContentProvider implements ContentProvider {
      */
     @Override
     public InputStream getContent() throws FileDownloadException {
-        Connection connection = null;
-        StringBuffer result = new StringBuffer();
-        result.append(getHeaderInfo());
-        try {
-            connection = getDataSource().getConnection();
-            DatabaseMetaData dbMetaData = connection.getMetaData();
+        StringBuffer result = new StringBuffer(getHeaderInfo());
 
-            List<String> tableNames = getTableNames(dbMetaData);
+        try {
+            TableDataInformationProvider tableDataInfoProvider = new TableDataInformationProvider(getDataSource());
+
+            List<String> tableNames = TableDependenciesResolver.resolveDependencies(tableDataInfoProvider,
+                    tableDataInfoProvider.getTableNamesList());
             if (tableNames.size() == 0) {
                 throw new DataBaseDoesntContainTablesException();
             }
 
             for (String tableName : tableNames) {
-                DbDumpTable table = new DbDumpTable(connection, dbMetaData, tableName);
+                DbDumpTable table = new DbDumpTable(getDataSource(), tableName);
                 result.append(table);
             }
+
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
-        } finally {
-            if (connection != null) {
-                try {
-                    connection.close();
-                } catch (SQLException e) {
-                    throw new ResourcesClosingException(e);
-                }
-            }
         }
-
+        System.out.println(result);
         InputStream inputStream = null;
         try {
             inputStream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
@@ -97,39 +84,28 @@ public class DbDumpContentProvider implements ContentProvider {
     }
 
     /**
-     * Returns the list of all table names which database contains.
-     * 
-     * @param dbMetaData
-     *            An object will be used to fetch information about table names database has.
-     * @return a List of Strings where every String instance represents a table name from the database.
-     * @throws SQLException
-     *             is thrown if there is an error during calaborating with tha database.
-     */
-    private List<String> getTableNames(final DatabaseMetaData dbMetaData) throws SQLException {
-        ResultSet tablesResultSet = null;
-        List<String> tableNames = new ArrayList<String>();
-        try {
-            tablesResultSet = dbMetaData.getTables(null, null, null, null);
-            while (tablesResultSet.next()) {
-                if ("TABLE".equalsIgnoreCase(tablesResultSet.getString("TABLE_TYPE"))) {
-                    tableNames.add(tablesResultSet.getString("TABLE_NAME"));
-                }
-            }
-        } finally {
-            if (tablesResultSet != null) {
-                tablesResultSet.close();
-            }
-        }
-        return tableNames;
-    }
-
-    /**
      * The method prints a header for the whole exported data file.
      * 
      * @return A text formated header for the dump file.
      */
     private StringBuffer getHeaderInfo() {
         StringBuffer headerInfo = new StringBuffer();
+
+        headerInfo.append("--\n");
+        headerInfo.append("-- Copyright (C) 2011  JTalks.org Team\n");
+        headerInfo.append("-- This library is free software; you can redistribute it and/or\n");
+        headerInfo.append("-- modify it under the terms of the GNU Lesser General Public\n");
+        headerInfo.append("-- License as published by the Free Software Foundation; either\n");
+        headerInfo.append("-- version 2.1 of the License, or (at your option) any later version.\n");
+        headerInfo.append("-- This library is distributed in the hope that it will be useful,\n");
+        headerInfo.append("-- but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
+        headerInfo.append("-- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n");
+        headerInfo.append("-- Lesser General Public License for more details.\n");
+        headerInfo.append("-- You should have received a copy of the GNU Lesser General Public\n");
+        headerInfo.append("-- License along with this library; if not, write to the Free Software\n");
+        headerInfo.append("-- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n");
+        headerInfo.append("--\n\n");
+
         headerInfo.append("-- JTalks SQL Dump\n");
         headerInfo.append("-- Generation Time: ");
         headerInfo.append(new SimpleDateFormat("dd.MM.yyyy HH:mm:ss").format(new Date()));

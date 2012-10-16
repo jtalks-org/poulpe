@@ -1,17 +1,25 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.logic.databasebackup.impl;
 
-import java.sql.Connection;
-import java.sql.DatabaseMetaData;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.sql.DataSource;
 
 /**
  * The class is used to export all information (structure, data) about concrete table from the database into text based
@@ -20,7 +28,11 @@ import java.util.Map;
  * @author Evgeny Surovtsev
  * 
  */
-public class DbDumpTable {
+class DbDumpTable {
+    private final String tableName;
+    private final TableDataInformationProvider tableDataInfoProvider;
+    private final String toStringRepresentation;
+
     /**
      * The constructor creates a text based representation of the table with the same name as the name given in the
      * constructor's parameters. For that constructor successively calls Create Table Structure (see
@@ -35,13 +47,12 @@ public class DbDumpTable {
      * @throws SQLException
      *             is thrown when there is an SQL error during preparing the text based form of the table.
      */
-    public DbDumpTable(final Connection connection, final DatabaseMetaData dbMetaData, final String tableName)
+    public DbDumpTable(final DataSource dataSource, final String tableName)
             throws SQLException {
-        this.connection = connection;
-        this.dbMetaData = dbMetaData;
+        this.tableDataInfoProvider = new TableDataInformationProvider(dataSource);
         this.tableName = tableName;
 
-        toStringRepresentation = (getTableStructure().append(getDumpedData())).toString();
+        this.toStringRepresentation = (getTableStructure().append(getDumpedData())).toString();
     }
 
     /**
@@ -61,13 +72,23 @@ public class DbDumpTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private StringBuffer getTableStructure() throws SQLException {
-        List<String> tableColumnsDescription = getTableColumnDescriptionList();
-        List<String> primaryKeyList = getTablePrimaryKeyList();
-        String otherTableParameters = getOtherTableParameters();
+        StringBuffer tableStructure = new StringBuffer(formatStructureHeader());
+        tableStructure.append("CREATE TABLE IF NOT EXISTS " + TableDataUtil.getSqlColumnQuotedString(tableName)
+                + " (\n" + StringUtil.join(getTableColumnDescriptionList(), ",\n"));
 
-        return new StringBuffer(formatStructureHeader()).append(String.format(CREATE_STATEMENT,
-                getSqlQuotedString(tableName), join(tableColumnsDescription, ",\n"), join(primaryKeyList, ","),
-                otherTableParameters));
+        List<String> tablePrimaryKeyList = getTablePrimaryKeyList();
+        if (tablePrimaryKeyList.size() > 0) {
+            tableStructure.append(",\n" + StringUtil.join(tablePrimaryKeyList, ",\n"));
+        }
+
+        List<String> tableForeignKeyList = getTableForeignKeyList();
+        if (tableForeignKeyList.size() > 0) {
+            tableStructure.append(",\n" + StringUtil.join(tableForeignKeyList, ",\n"));
+        }
+
+        tableStructure.append("\n) " + getOtherTableParameters() + ";\n\n");
+
+        return tableStructure;
     }
 
     /**
@@ -82,22 +103,9 @@ public class DbDumpTable {
     private String getOtherTableParameters() throws SQLException {
         StringBuffer otherTableParameters = new StringBuffer();
 
-        Statement stmt = null;
-        try {
-            stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(String.format(SHOW_TABLE_STATEMENT, getSqlQuotedString(tableName)));
-            if (rs.next()) {
-                for (String column : OTHER_PARAMETER_MAP.keySet()) {
-                    String value = rs.getString(column);
-                    if (value != null) {
-                        otherTableParameters.append(OTHER_PARAMETER_MAP.get(column) + "=" + value + " ");
-                    }
-                }
-            }
-        } finally {
-            if (stmt != null) {
-                stmt.close();
-            }
+        Map<String, String> parameters = tableDataInfoProvider.getCommonTableParameters(tableName);
+        for (String key : parameters.keySet()) {
+            otherTableParameters.append(key + "=" + parameters.get(key) + " ");
         }
 
         return otherTableParameters.toString();
@@ -114,15 +122,31 @@ public class DbDumpTable {
     private List<String> getTablePrimaryKeyList() throws SQLException {
         List<String> tablePrimaryKeyList = new ArrayList<String>();
 
-        ResultSet primaryKeys = dbMetaData.getPrimaryKeys(null, null, tableName);
-        while (primaryKeys.next()) {
-            String primaryKey = primaryKeys.getString("PK_NAME");
-            if (primaryKey != null) {
-                tablePrimaryKeyList.add(String.format(PRIMARY_KEY,
-                        getSqlQuotedString(primaryKeys.getString("COLUMN_NAME"))));
-            }
+        List<TableDataPrimaryKey> primaryKeyList = tableDataInfoProvider.getPrimaryKeyList(tableName);
+        for (TableDataPrimaryKey primaryKey : primaryKeyList) {
+            tablePrimaryKeyList.add("    PRIMARY KEY ("
+                    + TableDataUtil.getSqlColumnQuotedString(primaryKey.getPkColumnName()) + ")");
         }
+
         return tablePrimaryKeyList;
+    }
+
+    private List<String> getTableForeignKeyList() throws SQLException {
+        List<String> tableForeignKeyList = new ArrayList<String>();
+
+        List<TableDataForeignKey> foreignKeyList = tableDataInfoProvider.getForeignKeyList(tableName);
+        for (TableDataForeignKey foreignKey : foreignKeyList) {
+            String foreignKeyDescription = "    KEY "
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkTableName()) + " ("
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkColumnName()) + "),\n" + "    CONSTRAINT "
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkTableName()) + " FOREIGN KEY ("
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkColumnName()) + ") REFERENCES "
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getPkTableName()) + " ("
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getPkColumnName()) + ")";
+            tableForeignKeyList.add(foreignKeyDescription);
+        }
+
+        return tableForeignKeyList;
     }
 
     /**
@@ -135,22 +159,33 @@ public class DbDumpTable {
      */
     private List<String> getTableColumnDescriptionList() throws SQLException {
         List<String> tableColumnDescriptionList = new ArrayList<String>();
-        ResultSet tableMetaData = null;
-        try {
-            tableMetaData = dbMetaData.getColumns(null, null, tableName, "%");
 
-            while (tableMetaData.next()) {
-                String nullString = ("NO".equalsIgnoreCase(tableMetaData.getString("IS_NULLABLE"))) ? "NOT NULL"
-                        : "NULL";
-                tableColumnDescriptionList.add(String.format(TABLE_COLUMN_DESCRIPTION,
-                        getSqlQuotedString(tableMetaData.getString("COLUMN_NAME")),
-                        tableMetaData.getString("TYPE_NAME"), tableMetaData.getInt("COLUMN_SIZE"), nullString));
+        List<TableDataColumn> columnDescriptionList = tableDataInfoProvider.getColumnDescriptionList(tableName);
+        for (TableDataColumn column : columnDescriptionList) {
+            StringBuffer columnDescription = new StringBuffer("    ");
+            columnDescription.append(TableDataUtil.getSqlColumnQuotedString(column.getName()) + " " + column.getType());
+
+            if (column.isHasSize()) {
+                columnDescription.append("(" + column.getSize() + ")");
             }
-        } finally {
-            if (tableMetaData != null) {
-                tableMetaData.close();
+
+            if (column.isNullable()) {
+                columnDescription.append(" NULL");
+            } else {
+                columnDescription.append(" NOT NULL");
             }
+
+            if (column.isHasDefaultValue()) {
+                columnDescription.append(" DEFAULT " + column.getDefaultValue());
+            }
+
+            if (column.isAutoincrement()) {
+                columnDescription.append(" AUTO_INCREMENT");
+            }
+
+            tableColumnDescriptionList.add(columnDescription.toString());
         }
+
         return tableColumnDescriptionList;
     }
 
@@ -164,62 +199,22 @@ public class DbDumpTable {
      */
     private StringBuffer getDumpedData() throws SQLException {
         StringBuffer result = new StringBuffer(formatDumpedDataHeader());
-        PreparedStatement stmt = null;
-        ResultSet rs = null;
-        try {
-            stmt = connection.prepareStatement(String.format(SELECT_STATEMENT, tableName));
-            rs = stmt.executeQuery();
-            ResultSetMetaData metaData = rs.getMetaData();
-            int columnCount = metaData.getColumnCount();
 
-            while (rs.next()) {
-                List<String> nameColumns = new ArrayList<String>();
-                List<String> valueColumns = new ArrayList<String>();
-                for (int i = 0; i < columnCount; i++) {
-                    Object value = rs.getObject(i + 1);
-                    String columnValue = "NULL";
-                    if (value != null) {
-                        columnValue = getSqlQuotedString(value.toString());
-                    }
-                    nameColumns.add(getSqlQuotedString(metaData.getColumnName(i + 1)));
-                    valueColumns.add(columnValue);
-                }
+        for (TableDataDump dataDump : tableDataInfoProvider.getDumpedData(tableName)) {
+            List<String> nameColumns = new ArrayList<String>();
+            List<String> valueColumns = new ArrayList<String>();
 
-                result.append(String.format(INSERT_STATEMENT, getSqlQuotedString(tableName), join(nameColumns, ","),
-                        join(valueColumns, ",")));
+            Map<String, String> params = dataDump.getColumnsValueMap();
+            for (String column : params.keySet()) {
+                nameColumns.add(TableDataUtil.getSqlColumnQuotedString(column));
+                valueColumns.add(params.get(column));
             }
-        } finally {
-            if (rs != null) {
-                rs.close();
-            }
-            if (stmt != null) {
-                stmt.close();
-            }
+            result.append("INSERT INTO " + TableDataUtil.getSqlColumnQuotedString(tableName) + " ("
+                    + StringUtil.join(nameColumns, ",") + ") VALUES (" + StringUtil.join(valueColumns, ",") + ");\n");
         }
+
         result.append("\n\n");
         return result;
-    }
-
-    // TODO: the method is very common and should be moved to an Utility class.
-    /**
-     * An utility's method which joins a given collection of Strings into one String using a given delimiter as a glue.
-     * 
-     * @param collection
-     *            A collection of Strings to be joined.
-     * @param delimiter
-     *            A delimiter which will be used for joining the given Collection.
-     * @return The String as a result of joining the given Collection with given delimiter.
-     */
-    private String join(final Collection<String> collection, final String delimiter) {
-        if (collection.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (String value : collection) {
-            sb.append(value + delimiter);
-        }
-        sb.delete(sb.length() - delimiter.length(), sb.length());
-        return sb.toString();
     }
 
     /**
@@ -246,42 +241,5 @@ public class DbDumpTable {
         structureHeader.append("-- Table structure for table '" + tableName + "'\n");
         structureHeader.append("--\n\n");
         return structureHeader;
-    }
-
-    /**
-     * The method just quotes a given value, so it is available to use in the SQL statements.
-     * 
-     * @param value
-     *            A value which will be quoted.
-     * @return Already quoted value.
-     */
-    private String getSqlQuotedString(final String value) {
-        String s = value;
-        if (QUOTE_SIGN.length() > 0) {
-            s = value.replaceAll(QUOTE_SIGN, "\\" + QUOTE_SIGN);
-        }
-
-        return QUOTE_SIGN + s + QUOTE_SIGN;
-    }
-
-    private final Connection connection;
-    private final DatabaseMetaData dbMetaData;
-    private final String tableName;
-
-    private final String toStringRepresentation;
-
-    private static final String QUOTE_SIGN = "'";
-    private static final String INSERT_STATEMENT = "INSERT INTO %s (%s) VALUES (%s);\n";
-    private static final String CREATE_STATEMENT = "CREATE TABLE IF NOT EXISTS %s (\n%s,\n%s\n) %s;\n\n";
-    private static final String SELECT_STATEMENT = "SELECT * FROM %s";
-    private static final String TABLE_COLUMN_DESCRIPTION = "    %s %s (%d) %s";
-    private static final String PRIMARY_KEY = "    PRIMARY KEY (%s)";
-    private static final String SHOW_TABLE_STATEMENT = "SHOW TABLE STATUS WHERE Name=%s";
-
-    private static final Map<String, String> OTHER_PARAMETER_MAP = new HashMap<String, String>();
-    static {
-        OTHER_PARAMETER_MAP.put("Engine", "ENGINE");
-        OTHER_PARAMETER_MAP.put("Collation", "COLLATE");
-        OTHER_PARAMETER_MAP.put("Auto_increment", "AUTO_INCREMENT");
     }
 }
