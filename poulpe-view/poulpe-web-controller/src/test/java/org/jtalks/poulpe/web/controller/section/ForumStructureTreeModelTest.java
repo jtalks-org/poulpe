@@ -77,7 +77,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testRemoveSection() throws Exception {
+    public void removeSection() throws Exception {
         PoulpeSection sectionToRemove = sut.getSections().get(0);
         assertSame(sut.removeSection(sectionToRemove).getData().getSectionItem(), sectionToRemove);
         assertNull(sut.find(new ForumStructureItem(sectionToRemove)));
@@ -98,7 +98,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testRemoveBranch() throws Exception {
+    public void removeBranch() throws Exception {
         PoulpeBranch branchToRemove = sut.getChild(1, 0).getData().getBranchItem();
         assertSame(sut.removeBranch(branchToRemove).getData().getBranchItem(), branchToRemove);
         assertNull(sut.find(new ForumStructureItem(branchToRemove)));
@@ -124,13 +124,13 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testExpandTree() {
+    public void expandTree() {
         sut.expandTree();
         assertEquals(sut.getRoot().getChildCount(), sut.getOpenCount());
     }
 
     @Test
-    public void testExpandTreeToAlreadyOpenedTree() {
+    public void expandTreeToAlreadyOpenedTree() {
         for (TreeNode<ForumStructureItem> child : sut.getRoot().getChildren()) {
             sut.addOpenObject(child);
         }
@@ -139,7 +139,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testExpandTreeWithNoElements() {
+    public void expandTreeWithNoElements() {
         removeOpenPaths();
         removeAllSections();
         sut.expandTree();
@@ -147,37 +147,56 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testCheckEffectAfterDropBranchToSection() {
+    public void checkEffectAfterDropBranchToAnotherSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
         TreeNode<ForumStructureItem> target = sut.getChild(0);
         assertFalse(sut.noEffectAfterDropNode(dragged, target));
-        target = sut.getChild(1);
+    }
+
+    @Test
+    public void checkEffectAfterDropBranchToSameSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
+        TreeNode<ForumStructureItem> target = sut.getChild(1);
         assertTrue(sut.noEffectAfterDropNode(dragged, target));
     }
 
     @Test
-    public void testCheckEffectAfterDropBranchToBranch() {
+    public void checkEffectAfterDropBranchToPreviousBranch() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 1);
         TreeNode<ForumStructureItem> target = sut.getChild(1, 0);
         assertFalse(sut.noEffectAfterDropNode(dragged, target));
-        target = sut.getChild(1, 2);
+    }
+
+    @Test
+    public void checkEffectAfterDropBranchToNextBranch() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 1);
+        TreeNode<ForumStructureItem> target = sut.getChild(1, 2);
         assertTrue(sut.noEffectAfterDropNode(dragged, target));
-        target = sut.getChild(2, 0);
+    }
+
+    @Test
+    public void checkEffectAfterDropBranchToBranchInAnotherSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 1);
+        TreeNode<ForumStructureItem> target = sut.getChild(2, 0);
+        assertFalse(sut.noEffectAfterDropNode(dragged, target));
+    }
+    
+    @Test
+    public void checkEffectAfterDropSectionToPreviousSection() {
+        TreeNode<ForumStructureItem> dragged = sut.getChild(2);
+        TreeNode<ForumStructureItem> target = sut.getChild(1);
         assertFalse(sut.noEffectAfterDropNode(dragged, target));
     }
 
     @Test
-    public void testCheckEffectAfterDropSectionToSection() {
+    public void checkEffectAfterDropSectionToNextSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1);
         TreeNode<ForumStructureItem> target = sut.getChild(2);
         assertTrue(sut.noEffectAfterDropNode(dragged, target));
-        dragged = sut.getChild(2);
-        target = sut.getChild(1);
-        assertFalse(sut.noEffectAfterDropNode(dragged, target));
     }
 
     @Test
-    public void testCheckEffectAfterDropEntity() {
+    public void checkEffectAfterDropEntity() {
         TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
                 new ForumStructureItem(new Entity() {
                 }));
@@ -185,7 +204,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testOnDropBranchToBranch() {
+    public void onDropBranchToBranch() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
         TreeNode<ForumStructureItem> target = sut.getChild(1, 1);
         spy.onDropNode(dragged, target);
@@ -194,7 +213,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testOnDropBranchToSection() {
+    public void onDropBranchToSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
         TreeNode<ForumStructureItem> target = sut.getChild(2);
         spy.onDropNode(dragged, target);
@@ -203,7 +222,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testOnDropSectionToSection() {
+    public void onDropSectionToSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(0);
         TreeNode<ForumStructureItem> target = sut.getChild(2);
         spy.onDropNode(dragged, target);
@@ -212,7 +231,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testOnDropEntity() {
+    public void onDropEntity() {
         TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
                 new ForumStructureItem(new Entity() {
                 }));
@@ -223,7 +242,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testGetSelectedSection() {
+    public void getSelectedSection() {
         TreeNode<ForumStructureItem> selected = sut.getChild(1);
         sut.setSelectedNode(selected);
         PoulpeSection section = selected.getData().getSectionItem();
@@ -231,7 +250,7 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testGetSectionOfSelectedBranch() {
+    public void getSectionOfSelectedBranch() {
         TreeNode<ForumStructureItem> selected = sut.getChild(1, 1);
         sut.setSelectedNode(selected);
         PoulpeSection section = selected.getParent().getData().getSectionItem();
@@ -239,19 +258,19 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
-    public void testGetSelectedSectionWhenNothingIsSelected() {
+    public void getSelectedSectionWhenNothingIsSelected() {
         assertNull(sut.getSelectedSection());
     }
 
     @Test
-    public void testAddSectionIfAbsent() {
+    public void addSectionIfAbsent() {
         PoulpeSection absent = new PoulpeSection();
         sut.addIfAbsent(absent);
         assertTrue(sut.getSections().contains(absent));
     }
 
     @Test
-    public void testAddSectionIfPresent() {
+    public void addSectionIfPresent() {
         PoulpeSection present = sut.getChild(1).getData().getSectionItem();
         List<PoulpeSection> sections = sut.getSections();
         sut.addIfAbsent(present);
@@ -275,4 +294,5 @@ public class ForumStructureTreeModelTest {
             }
         }
     }
+
 }
