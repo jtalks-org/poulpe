@@ -28,8 +28,20 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+/**
+ * The class works directly with the database layer for providing database related meta data and table data.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 class TableDataInformationProvider {
 
+    /**
+     * Constructs Provider object with given data source.
+     * 
+     * @param dataSource
+     *            DataSource which provider object will be using to obtain information about db.
+     */
     TableDataInformationProvider(final DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -37,8 +49,6 @@ class TableDataInformationProvider {
     /**
      * Returns the list of all table names which database contains.
      * 
-     * @param dbMetaData
-     *            An object will be used to fetch information about table names database has.
      * @return a List of Strings where every String instance represents a table name from the database.
      * @throws SQLException
      *             is thrown if there is an error during calaborating with tha database.
@@ -67,6 +77,11 @@ class TableDataInformationProvider {
         return tableNames;
     }
 
+    /**
+     * Getter for data source.
+     * 
+     * @return Configured Data Source object.
+     */
     private DataSource getDataSource() {
         return dataSource;
     }
@@ -75,6 +90,8 @@ class TableDataInformationProvider {
      * Returns the list of table's columns description. For each column information about column's name, type and other
      * parameters returns. The information is provided in the form ready to be inserted into SQL CREATE TABLE statement.
      * 
+     * @param tableName
+     *            A table name which column description list will be prepared for.
      * @return A list of strings where each string represents description of one column.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -145,6 +162,15 @@ class TableDataInformationProvider {
     }
 
     // TODO: common part with getPrimaryKeyList() should be moved into common function.
+    /**
+     * Returns the list of tables foreign keys.
+     * 
+     * @param tableName
+     *            A table name for which a list of foreign keys will be obtained.
+     * @return A list of {@link TableDataForeignKey} object represented foreign keys.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     public List<TableDataForeignKey> getForeignKeyList(final String tableName)
             throws SQLException {
 
@@ -174,6 +200,15 @@ class TableDataInformationProvider {
     }
 
     // TODO: common part with getForeignKeyList() should be moved into common function.
+    /**
+     * Returns the list of tables' primary keys.
+     * 
+     * @param tableName
+     *            A table name for which a list of primary keys will be obtained.
+     * @return A list of {@link TableDataPrimaryKey} object represented foreign keys.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     public List<TableDataPrimaryKey> getPrimaryKeyList(final String tableName)
             throws SQLException {
 
@@ -197,6 +232,16 @@ class TableDataInformationProvider {
         return tablePrimaryKeyList;
     }
 
+    /**
+     * Returns the map of additional table's parameters such as table's engine, collation, etc. The checked parameters
+     * are defined in {@link #OTHER_PARAMETER_MAP}.
+     * 
+     * @param tableName
+     *            A table name for which a list of common parameters will be prepared.
+     * @return A map of Parameter name - Parameter value pair for the given table.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     public Map<String, String> getCommonTableParameters(final String tableName) throws SQLException {
         Map<String, String> parameters = new HashMap<String, String>();
 
@@ -227,8 +272,17 @@ class TableDataInformationProvider {
         return parameters;
     }
 
-    public List<TableDataDump> getDumpedData(final String tableName) throws SQLException {
-        List<TableDataDump> dataDumpList = new ArrayList<TableDataDump>();
+    /**
+     * The method obtains and returns table rows data for the given table.
+     * 
+     * @param tableName
+     *            A table which should be dumped.
+     * @return A list of obtained rows ({@link TableDataRow}).
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
+    public List<TableDataRow> getDumpedData(final String tableName) throws SQLException {
+        List<TableDataRow> dataDumpList = new ArrayList<TableDataRow>();
 
         Connection connection = null;
         PreparedStatement stmt = null;
@@ -245,39 +299,21 @@ class TableDataInformationProvider {
                 String columnValue;
                 for (int i = 1; i <= columnCount; i++) {
                     if (rs.getObject(i) != null) {
-                        switch (metaData.getColumnType(i)) {
-                        case java.sql.Types.CHAR:
-                        case java.sql.Types.VARCHAR:
-                        case java.sql.Types.LONGVARCHAR:
-                        case java.sql.Types.DATE:
-                        case java.sql.Types.TIME:
-                        case java.sql.Types.TIMESTAMP:
-                        case java.sql.Types.NCHAR:
-                        case java.sql.Types.NVARCHAR:
-                        case java.sql.Types.LONGNVARCHAR:
-                        case java.sql.Types.BLOB:
-                        case java.sql.Types.CLOB:
-                        case java.sql.Types.NCLOB:
-                        case java.sql.Types.BINARY:
-                        case java.sql.Types.VARBINARY:
-                        case java.sql.Types.LONGVARBINARY:
-                            columnValue = TableDataUtil.getSqlValueQuotedString(rs.getObject(i).toString());
-                            break;
+                        SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(metaData.getColumnType(i));
 
-                        case java.sql.Types.NULL:
+                        if (columnType == SqlTypes.NULL) {
                             columnValue = "NULL";
-                            break;
-
-                        default:
+                        } else if (columnType.isTextBased()) {
+                            columnValue = TableDataUtil.getSqlValueQuotedString(rs.getObject(i).toString());
+                        } else {
                             columnValue = rs.getObject(i).toString();
-                            break;
                         }
                     } else {
                         columnValue = "NULL";
                     }
                     dataDump.put(metaData.getColumnName(i), columnValue);
                 }
-                dataDumpList.add(new TableDataDump(dataDump));
+                dataDumpList.add(new TableDataRow(dataDump));
             }
         } finally {
             if (rs != null) {

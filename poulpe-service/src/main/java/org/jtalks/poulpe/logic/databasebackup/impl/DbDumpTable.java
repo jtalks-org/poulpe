@@ -38,10 +38,8 @@ class DbDumpTable {
      * constructor's parameters. For that constructor successively calls Create Table Structure (see
      * {@link #getTableStructure()}) and Export data (see {@link #getDumpedData()}) methods.
      * 
-     * @param connection
-     *            an Instance of database Connection.
-     * @param dbMetaData
-     *            an Instance of DatabaseMetaData.
+     * @param dataSource
+     *            A Data Source object which will be used to access the database.
      * @param tableName
      *            the name of the table in the database which will be exported into text based form.
      * @throws SQLException
@@ -112,9 +110,9 @@ class DbDumpTable {
     }
 
     /**
-     * Returns the list of the primary keys for the table.
+     * Returns the list of SQL-shape formatted primary keys for the table.
      * 
-     * @return List of the strings where each string contains a primary key's definition in the SQL terms and could
+     * @return List of the strings where each string contains a primary key's definition in the SQL terms and could be
      *         attached to the CREATE TABLE statement lately.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -131,6 +129,14 @@ class DbDumpTable {
         return tablePrimaryKeyList;
     }
 
+    /**
+     * Returns the list of SQL-shape formatted foreign keys for the table.
+     * 
+     * @return List of strings where each string represents a foreign's key definition in the SQL terms and could be
+     *         attached to the CREATE TABLE statement lately.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     private List<String> getTableForeignKeyList() throws SQLException {
         List<String> tableForeignKeyList = new ArrayList<String>();
 
@@ -200,7 +206,7 @@ class DbDumpTable {
     private StringBuffer getDumpedData() throws SQLException {
         StringBuffer result = new StringBuffer(formatDumpedDataHeader());
 
-        for (TableDataDump dataDump : tableDataInfoProvider.getDumpedData(tableName)) {
+        for (TableDataRow dataDump : tableDataInfoProvider.getDumpedData(tableName)) {
             List<String> nameColumns = new ArrayList<String>();
             List<String> valueColumns = new ArrayList<String>();
 

@@ -22,33 +22,78 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-class TableDependenciesResolver {
-    public TableDependenciesResolver() {
-        this("");
-    }
-
-    public TableDependenciesResolver(final String tableName) {
+/**
+ * When the dump file is generated it contains CREATE TABLE statements for each table from the database. Unfortunately
+ * it's not possible to create tables (run CREATE TABLE statements) in free order because of relationships (via foreign
+ * keys) between tables. So tables should be created in the order when table under creation is not dependent on tables
+ * which are not created yet.
+ * 
+ * The main purpose of the class is to sort given table names list so they will be arranged in the order when a table in
+ * the list is independent on the tables below. When this is ready we can export tables data from the top of the list to
+ * its bottom.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
+final class TableDependenciesResolver {
+    /**
+     * Constructor creates a new instance of Table Dependencies object for a givenTable Name.
+     * 
+     * @param tableName
+     *            Specifies a Table Name which a Table Dependencies will be stored for.
+     */
+    private TableDependenciesResolver(final String tableName) {
         this.tableName = tableName;
     }
 
-    public String getTableName() {
+    /**
+     * Returns Database table name for the current Dependency Table object.
+     * 
+     * @return Database Table Name
+     */
+    private String getTableName() {
         return tableName;
     }
 
-    public Set<String> getDependencies() {
+    /**
+     * Returns Dependencies (table names) for the current Table object.
+     * 
+     * @return Set of the table names which the current table is dependent on.
+     */
+    private Set<String> getDependencies() {
         return new HashSet<String>(dependencies);
     }
 
-    public void addDependency(final String dependency) {
+    /**
+     * Adds a new table name which the current table is dependent on.
+     * 
+     * @param dependency
+     *            Table name which the current table is dependent on.
+     */
+    private void addDependency(final String dependency) {
         dependencies.add(dependency);
     }
 
-    public static List<String> resolveDependencies(final TableDataInformationProvider tableDataUtil,
+    /**
+     * The static method is used to resolve dependencies for given list of table names (i.e. sorts table names so less
+     * dependent tables will be on top and more dependent tables will be on the bottom).
+     * 
+     * @param tableDataInfoProvider
+     *            An instance of service which provides information about table structure and table data (
+     *            {@link TableDataInformationProvider}). The instance is used to get a list of foreign key for each
+     *            table in the list.
+     * @param tableNames
+     *            A list of tables which should be sorted in order to resolve the dependencies.
+     * @return A sorted list of table names where less dependent table are at a top of the list.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
+    public static List<String> resolveDependencies(final TableDataInformationProvider tableDataInfoProvider,
             final List<String> tableNames) throws SQLException {
         List<TableDependenciesResolver> tablesAndTheirDependencies = new ArrayList<TableDependenciesResolver>();
         for (String tableName : tableNames) {
             TableDependenciesResolver tableDependencies = new TableDependenciesResolver(tableName);
-            List<TableDataForeignKey> foreignKeyList = tableDataUtil.getForeignKeyList(tableName);
+            List<TableDataForeignKey> foreignKeyList = tableDataInfoProvider.getForeignKeyList(tableName);
             for (TableDataForeignKey foreignKey : foreignKeyList) {
                 tableDependencies.addDependency(foreignKey.getPkTableName());
             }

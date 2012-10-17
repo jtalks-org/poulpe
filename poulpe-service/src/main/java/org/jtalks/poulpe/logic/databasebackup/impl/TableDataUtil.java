@@ -14,7 +14,19 @@
  */
 package org.jtalks.poulpe.logic.databasebackup.impl;
 
-public class TableDataUtil {
+/**
+ * Table Data Utility class performs different operations for preparing SQL statement strings.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
+public final class TableDataUtil {
+    /**
+     * Private constructor to disable creating instances of the Utility class.
+     */
+    private TableDataUtil() {
+    }
+
     /**
      * The method just quotes a given value, so it is available to use in the SQL statements.
      * 

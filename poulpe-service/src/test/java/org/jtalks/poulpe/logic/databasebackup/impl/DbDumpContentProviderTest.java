@@ -30,7 +30,7 @@ import org.testng.annotations.Test;
  */
 public class DbDumpContentProviderTest {
 
-    @Test(enabled=false)
+    @Test(enabled = false)
     public final void performFileDownloadTest() throws FileDownloadException {
         DataSource dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(
                 "com.mysql.jdbc.Driver", "jdbc:mysql://localhost/p_poulpe?characterEncoding=UTF-8", "root", "root");

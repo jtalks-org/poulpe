@@ -19,32 +19,33 @@ import java.io.InputStream;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 
 /**
- * The class is used to download a file in the browser. For performing this the class uses next objects
- * which should be set via setters:
+ * The class is used to download a file in the browser. For performing this the class uses next objects which should be
+ * set via setters:
  * <ul>
- * <li>{@link ContentProvider} - the interface gets content for the downloading file and probably performs
- * an additional transformation under it like compressing it and other such activities.
+ * <li>{@link ContentProvider} - the interface gets content for the downloading file and probably performs an additional
+ * transformation under it like compressing it and other such activities.
  * <li>{@link FileDownloader} - the class is responsible for sending the file to the browser.</li>
  * </ul>
- *
+ * 
  * @author Evgeny Surovtsev
- *
+ * 
  */
 public class FileDownloadService {
     /**
      * By default constructor. ContentProvider, FileDownloader and ContentFilenameWithoutExt should be set via setters.
      */
     FileDownloadService() {
-        contentProvider = null;
-        fileDownloader = null;
-        contentFileNameWithoutExt = null;
     }
+
     /**
      * Constructor which sets ContentProvider, FileDownloader and ContentFilenameWithoutExt via its parameters.
-     *
-     * @param contentProvider An instance of ContentProvider.
-     * @param fileDownloader An instance of FileDownloader.
-     * @param contentFileNameWithoutExt Filename without extension which will be used for suggesting browser.
+     * 
+     * @param contentProvider
+     *            An instance of ContentProvider.
+     * @param fileDownloader
+     *            An instance of FileDownloader.
+     * @param contentFileNameWithoutExt
+     *            Filename without extension which will be used for suggesting browser.
      */
     FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
             final String contentFileNameWithoutExt) {
@@ -54,12 +55,11 @@ public class FileDownloadService {
     }
 
     /**
-     *This is the main method of the class. The method performs the actual file preparing using the provided
-     * {@link ContentProvider} and sends the resulting file to the browser using
-     * the provided {@link FileDownloader}.
-     *
-     * @throws FileDownloadException is thrown in case of any errors during file preparing or sending it
-     * to the browser.
+     * This is the main method of the class. The method performs the actual file preparing using the provided
+     * {@link ContentProvider} and sends the resulting file to the browser using the provided {@link FileDownloader}.
+     * 
+     * @throws FileDownloadException
+     *             is thrown in case of any errors during file preparing or sending it to the browser.
      */
     public final void performFileDownload() throws FileDownloadException {
         try {
@@ -75,8 +75,9 @@ public class FileDownloadService {
 
     /**
      * Injects a Content provider object which will be used for creating content which later will be send to a browser.
-     *
-     * @param contentProvider An instance of a Content Provider
+     * 
+     * @param contentProvider
+     *            An instance of a Content Provider
      */
     public final void setContentProvider(final ContentProvider contentProvider) {
         this.contentProvider = contentProvider;
@@ -84,8 +85,9 @@ public class FileDownloadService {
 
     /**
      * Injects a File Downloader object which "knows" how to send previously prepared content to a user's browser.
-     *
-     * @param fileDownloader The instance of the FileDownloader
+     * 
+     * @param fileDownloader
+     *            The instance of the FileDownloader
      */
     public final void setFileDownloader(final FileDownloader fileDownloader) {
         this.fileDownloader = fileDownloader;
@@ -93,8 +95,9 @@ public class FileDownloadService {
 
     /**
      * Injects a local filename for prepared content in the shape without filename extension (Ex. "jtalks").
-     *
-     * @param contentFileNameWithoutExt String which represents the filename without extension.
+     * 
+     * @param contentFileNameWithoutExt
+     *            String which represents the filename without extension.
      */
     public final void setContentFileNameWithoutExt(final String contentFileNameWithoutExt) {
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;

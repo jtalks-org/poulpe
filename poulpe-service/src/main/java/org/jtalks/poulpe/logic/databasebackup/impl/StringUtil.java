@@ -16,11 +16,20 @@ package org.jtalks.poulpe.logic.databasebackup.impl;
 
 import java.util.Collection;
 
-public class StringUtil {
+//TODO: The class must be migrated to a COMMON project!
+/**
+ * String Utility class performs different operations under String objects.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
+public final class StringUtil {
+    /**
+     * private constructor to disable creating instances of the Utility class.
+     */
     private StringUtil() {
     }
 
-    // TODO: the method is very common and should be moved to a common utility class.
     /**
      * An utility's method which joins a given collection of Strings into one String using a given delimiter as a glue.
      * 

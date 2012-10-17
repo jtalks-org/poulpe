@@ -16,13 +16,30 @@ package org.jtalks.poulpe.logic.databasebackup.impl;
 
 import java.sql.SQLException;
 
-//the class is immutable
+/**
+ * The class represent a Primary key description data object. The class is immutable.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 final class TableDataPrimaryKey {
-
+    /**
+     * Initiate an instance of the class with a given Primary Key value.
+     * 
+     * @param pkColumnName
+     *            A String that represents Primary Key value.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     public TableDataPrimaryKey(final String pkColumnName) throws SQLException {
         this.pkColumnName = pkColumnName;
     }
 
+    /**
+     * Returns a primary key value.
+     * 
+     * @return Primary key.
+     */
     public String getPkColumnName() {
         return pkColumnName;
     }

@@ -15,57 +15,18 @@
 package org.jtalks.poulpe.logic.databasebackup.impl;
 
 /**
- * The class is immutable.
+ * The class represent a Table's Data Column description data object. The class is immutable.
  * 
- * @author surev01
+ * @author Evgeny Surovtsev
  * 
  */
 final class TableDataColumn {
-
-    public static class Builder {
-
-        public Builder(final String name, final String type) {
-            super();
-            this.name = name;
-            this.type = type;
-        }
-
-        public Builder setNullable(final boolean nullable) {
-            this.nullable = nullable;
-            return this;
-        }
-
-        public Builder setSize(final int size) {
-            this.size = size;
-            this.hasSize = true;
-            return this;
-        }
-
-        public Builder setDefaultValue(final String defaultValue) {
-            this.defaultValue = defaultValue;
-            this.hasDefaultValue = true;
-            return this;
-        }
-
-        public Builder setAutoincrement(final boolean autoincrement) {
-            this.autoincrement = autoincrement;
-            return this;
-        }
-
-        public TableDataColumn build() {
-            return new TableDataColumn(this);
-        }
-
-        private boolean nullable;
-        private boolean autoincrement;
-        private boolean hasDefaultValue;
-        private String defaultValue;
-        private final String name;
-        private int size;
-        private boolean hasSize;
-        private final String type;
-    }
-
+    /**
+     * Construct Table Data Column object based on given Builder.
+     * 
+     * @param builder
+     *            An instance which will be used for constructing Table Data Column.
+     */
     private TableDataColumn(final Builder builder) {
         nullable = builder.nullable;
         autoincrement = builder.autoincrement;
@@ -77,34 +38,74 @@ final class TableDataColumn {
         type = builder.type;
     }
 
+    /**
+     * Returns a Name of the column.
+     * 
+     * @return Column Name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Returns a Size of the column.
+     * 
+     * @return Column Size.
+     */
     public int getSize() {
         return size;
     }
 
+    /**
+     * Returns if current column supports (has) size definition.
+     * 
+     * @return True if current column has predefined size or False otherwise.
+     */
     public boolean isHasSize() {
         return hasSize;
     }
 
+    /**
+     * Returns a String representation of the column's type.
+     * 
+     * @return Column Type.
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Returns if current column supports (has) default value.
+     * 
+     * @return True if current column has predefined value or False otherwise.
+     */
     public boolean isHasDefaultValue() {
         return hasDefaultValue;
     }
 
+    /**
+     * Returns a String representation of the column's default value.
+     * 
+     * @return Column Default Value.
+     */
     public String getDefaultValue() {
         return defaultValue;
     }
 
+    /**
+     * Returns if current column can keep null values.
+     * 
+     * @return True if current column can contain null values or False otherwise.
+     */
     public boolean isNullable() {
         return nullable;
     }
 
+    /**
+     * Returns if current column is auto incremental.
+     * 
+     * @return True if current column is auto incremental or False otherwise.
+     */
     public boolean isAutoincrement() {
         return autoincrement;
     }
@@ -118,4 +119,95 @@ final class TableDataColumn {
     private final boolean hasSize;
     private final String type;
 
+    /**
+     * Using the Builder is the only way to to construct TableDataColumn object.
+     * 
+     * @author Evgeny Surovtsev
+     * 
+     */
+    public static class Builder {
+
+        /**
+         * Prepare Builder object with obliged parameters.
+         * 
+         * @param name
+         *            The name of the table column.
+         * @param type
+         *            The type of the table column.
+         */
+        public Builder(final String name, final String type) {
+            super();
+            this.name = name;
+            this.type = type;
+        }
+
+        /**
+         * Sets that the column under the building can keep nullable values.
+         * 
+         * @param nullable
+         *            Defines if column can keep nullable values.
+         * @return Instance of the same Builder.
+         */
+        public Builder setNullable(final boolean nullable) {
+            this.nullable = nullable;
+            return this;
+        }
+
+        /**
+         * Defines the size of the column.
+         * 
+         * @param size
+         *            Column's size.
+         * @return Instance of the same Builder.
+         */
+        public Builder setSize(final int size) {
+            this.size = size;
+            this.hasSize = true;
+            return this;
+        }
+
+        /**
+         * Sets default value parameter for the column.
+         * 
+         * @param defaultValue
+         *            Default's value for the column.
+         * @return Instance of the same Builder.
+         */
+        public Builder setDefaultValue(final String defaultValue) {
+            this.defaultValue = defaultValue;
+            this.hasDefaultValue = true;
+            return this;
+        }
+
+        /**
+         * Sets that the column under the building should be auto incremental.
+         * 
+         * @param autoincrement
+         *            Defines if column is auto incremental.
+         * @return Instance of the same Builder.
+         */
+        public Builder setAutoincrement(final boolean autoincrement) {
+            this.autoincrement = autoincrement;
+            return this;
+        }
+
+        /**
+         * Build the TableDataColumn object.
+         * 
+         * @return An instance of just built TableDataColumn.
+         */
+        public TableDataColumn build() {
+            return new TableDataColumn(this);
+        }
+
+        private final String name;
+        private final String type;
+
+        private boolean nullable;
+        private boolean autoincrement;
+        private boolean hasDefaultValue;
+        private String defaultValue;
+        private int size;
+        private boolean hasSize;
+    }
 }

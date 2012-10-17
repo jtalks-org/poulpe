@@ -16,9 +16,28 @@ package org.jtalks.poulpe.logic.databasebackup.impl;
 
 import java.sql.SQLException;
 
-//the class is immutable
+/**
+ * The class represent a Foreign key description data object. The class is immutable.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 final class TableDataForeignKey {
 
+    /**
+     * Initiate an instance of the class with a given Foreign Key information.
+     * 
+     * @param fkTableName
+     *            A Table which contain Foreign key.
+     * @param fkColumnName
+     *            A Foreign Key value.
+     * @param pkTableName
+     *            A Table which contain Primary key.
+     * @param pkColumnName
+     *            A Primary Key value.
+     * @throws SQLException
+     *             Is thrown in case any errors during work with database occur.
+     */
     public TableDataForeignKey(final String fkTableName, final String fkColumnName, final String pkTableName,
             final String pkColumnName) throws SQLException {
         this.fkTableName = fkTableName;
@@ -27,18 +46,38 @@ final class TableDataForeignKey {
         this.pkColumnName = pkColumnName;
     }
 
+    /**
+     * Returns a foreign key table name.
+     * 
+     * @return Foreign table name.
+     */
     public String getFkTableName() {
         return fkTableName;
     }
 
+    /**
+     * Returns a foreign key value.
+     * 
+     * @return Foreign key.
+     */
     public String getFkColumnName() {
         return fkColumnName;
     }
 
+    /**
+     * Returns a primary key table name.
+     * 
+     * @return Primary table name.
+     */
     public String getPkTableName() {
         return pkTableName;
     }
 
+    /**
+     * Returns a primary key value.
+     * 
+     * @return Primary key.
+     */
     public String getPkColumnName() {
         return pkColumnName;
     }
