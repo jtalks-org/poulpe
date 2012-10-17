@@ -14,12 +14,10 @@
  */
 package org.jtalks.poulpe.web.controller.section;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.web.controller.zkutils.ZkTreeNode;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.zkoss.zul.TreeNode;
@@ -27,8 +25,6 @@ import org.zkoss.zul.TreeNode;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
 import static org.testng.Assert.*;
 
 /**
@@ -37,15 +33,33 @@ import static org.testng.Assert.*;
  */
 public class ForumStructureTreeModelTest {
     private ForumStructureTreeModel sut;
-    private ForumStructureTreeModel spy;
+    private NodeFactory nodeFactory;
+    
+    private class NodeFactory {
+        private int branchCounter = 0;
+        private int sectionCounter = 0;
+        
+        private ZkTreeNode<ForumStructureItem> createBranchNode() {
+            PoulpeBranch branch = new PoulpeBranch("branch" + branchCounter);
+            branchCounter++;
+            return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
+        }
+        
+        private ZkTreeNode<ForumStructureItem> createSectionNode() {
+            PoulpeSection section = new PoulpeSection("section" + sectionCounter);
+            sectionCounter++;
+            return new ZkTreeNode<ForumStructureItem>(
+                    new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
+        }
+    }
 
     @BeforeMethod
     public void setUp() throws Exception {
-        sut = new ForumStructureTreeModel(createSectionNode());
-        sut.getRoot().add(createSectionNode());
+        nodeFactory = new NodeFactory();
+        sut = new ForumStructureTreeModel(nodeFactory.createSectionNode());
+        sut.getRoot().add(nodeFactory.createSectionNode());
         sut.getRoot().add(createSectionNodeWithBranches());
         sut.getRoot().add(createSectionNodeWithBranches());
-        spy = Mockito.spy(sut);
     }
 
     @Test
@@ -72,7 +86,7 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void getSectionsWithNoSectionsShouldReturnAllEmptyList() throws Exception {
-        sut = new ForumStructureTreeModel(createBranchNode());//actually any node will be good for the root
+        sut = new ForumStructureTreeModel(nodeFactory.createBranchNode());//actually any node will be good for the root
         assertTrue(sut.getSections().isEmpty());
     }
 
@@ -104,22 +118,11 @@ public class ForumStructureTreeModelTest {
         assertNull(sut.find(new ForumStructureItem(branchToRemove)));
     }
 
-    private ZkTreeNode<ForumStructureItem> createBranchNode() {
-        PoulpeBranch branch = new PoulpeBranch(RandomStringUtils.random(10));
-        return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
-    }
-
-    private ZkTreeNode<ForumStructureItem> createSectionNode() {
-        PoulpeSection section = new PoulpeSection(RandomStringUtils.random(10));
-        return new ZkTreeNode<ForumStructureItem>(
-                new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
-    }
-
     private TreeNode<ForumStructureItem> createSectionNodeWithBranches() {
-        TreeNode<ForumStructureItem> sectionNode = createSectionNode();
-        sectionNode.add(createBranchNode());
-        sectionNode.add(createBranchNode());
-        sectionNode.add(createBranchNode());
+        TreeNode<ForumStructureItem> sectionNode = nodeFactory.createSectionNode();
+        sectionNode.add(nodeFactory.createBranchNode());
+        sectionNode.add(nodeFactory.createBranchNode());
+        sectionNode.add(nodeFactory.createBranchNode());
         return sectionNode;
     }
 
@@ -205,29 +208,34 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void onDropBranchToBranch() {
-        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
-        TreeNode<ForumStructureItem> target = sut.getChild(1, 1);
-        spy.onDropNode(dragged, target);
-        verify(spy).dropNodeBefore(dragged, target);
-        verify(spy).setSelectedNode(dragged);
+        TreeNode<ForumStructureItem> dragged = sut.getChild(1, 2);
+        TreeNode<ForumStructureItem> target = sut.getChild(1, 0);
+        sut.onDropNode(dragged, target);
+        assertEquals(sut.getChild(1, 0), dragged);
+        assertEquals(sut.getChild(1, 1), target);
+        ForumStructureItem selected = sut.getSelectedData(1);
+        assertEquals(selected, dragged.getData());
     }
 
     @Test
     public void onDropBranchToSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
         TreeNode<ForumStructureItem> target = sut.getChild(2);
-        spy.onDropNode(dragged, target);
-        verify(spy).dropNodeIn(dragged, target);
-        verify(spy).setSelectedNode(dragged);
+        sut.onDropNode(dragged, target);
+        assertEquals(sut.getChild(2, 3), dragged);
+        ForumStructureItem selected = sut.getSelectedData(1);
+        assertEquals(selected, dragged.getData());
     }
 
     @Test
     public void onDropSectionToSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(0);
         TreeNode<ForumStructureItem> target = sut.getChild(2);
-        spy.onDropNode(dragged, target);
-        verify(spy).dropNodeBefore(dragged, target);
-        verify(spy).setSelectedNode(dragged);
+        sut.onDropNode(dragged, target);
+        assertEquals(sut.getChild(1), dragged);
+        assertEquals(sut.getChild(2), target);
+        ForumStructureItem selected = sut.getSelectedData(0);
+        assertEquals(selected, dragged.getData());
     }
 
     @Test
@@ -235,10 +243,13 @@ public class ForumStructureTreeModelTest {
         TreeNode<ForumStructureItem> entityItem = new ZkTreeNode<ForumStructureItem>(
                 new ForumStructureItem(new Entity() {
                 }));
-        spy.onDropNode(entityItem, entityItem);
-        verify(spy, never()).dropNodeBefore(entityItem, entityItem);
-        verify(spy, never()).dropNodeIn(entityItem, entityItem);
-        verify(spy, never()).setSelectedNode(entityItem);
+        TreeNode<ForumStructureItem> beforeTarget = sut.getChild(1, 0);
+        TreeNode<ForumStructureItem> target = sut.getChild(1, 1);
+        TreeNode<ForumStructureItem> afterTarget = sut.getChild(1, 2);
+        sut.onDropNode(entityItem, target);
+        assertEquals(sut.getChild(1, 0), beforeTarget);
+        assertEquals(sut.getChild(1, 1), target);
+        assertEquals(sut.getChild(1, 2), afterTarget);
     }
 
     @Test
