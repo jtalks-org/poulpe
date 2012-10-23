@@ -74,7 +74,7 @@
     </class>
 
     <query name="findUsersByLikeUsername">
-        <![CDATA[from PoulpeUser u where u.username like :username]]>
+        <![CDATA[from PoulpeUser u where u.username like :username order by u.username]]>
     </query>
 
     <query name="countUsersByLikeUsername">
