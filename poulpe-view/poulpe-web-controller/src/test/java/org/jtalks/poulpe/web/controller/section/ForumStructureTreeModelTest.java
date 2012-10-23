@@ -33,31 +33,14 @@ import static org.testng.Assert.*;
  */
 public class ForumStructureTreeModelTest {
     private ForumStructureTreeModel sut;
-    private NodeFactory nodeFactory;
-    
-    private class NodeFactory {
-        private int branchCounter = 0;
-        private int sectionCounter = 0;
-        
-        private ZkTreeNode<ForumStructureItem> createBranchNode() {
-            PoulpeBranch branch = new PoulpeBranch("branch" + branchCounter);
-            branchCounter++;
-            return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
-        }
-        
-        private ZkTreeNode<ForumStructureItem> createSectionNode() {
-            PoulpeSection section = new PoulpeSection("section" + sectionCounter);
-            sectionCounter++;
-            return new ZkTreeNode<ForumStructureItem>(
-                    new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
-        }
-    }
+	private int branchCounter;
+	private int sectionCounter;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        nodeFactory = new NodeFactory();
-        sut = new ForumStructureTreeModel(nodeFactory.createSectionNode());
-        sut.getRoot().add(nodeFactory.createSectionNode());
+    	branchCounter = sectionCounter = 0;
+        sut = new ForumStructureTreeModel(createSectionNode());
+        sut.getRoot().add(createSectionNode());
         sut.getRoot().add(createSectionNodeWithBranches());
         sut.getRoot().add(createSectionNodeWithBranches());
     }
@@ -86,7 +69,7 @@ public class ForumStructureTreeModelTest {
 
     @Test
     public void getSectionsWithNoSectionsShouldReturnAllEmptyList() throws Exception {
-        sut = new ForumStructureTreeModel(nodeFactory.createBranchNode());//actually any node will be good for the root
+        sut = new ForumStructureTreeModel(createBranchNode());//actually any node will be good for the root
         assertTrue(sut.getSections().isEmpty());
     }
 
@@ -116,14 +99,6 @@ public class ForumStructureTreeModelTest {
         PoulpeBranch branchToRemove = sut.getChild(1, 0).getData().getBranchItem();
         assertSame(sut.removeBranch(branchToRemove).getData().getBranchItem(), branchToRemove);
         assertNull(sut.find(new ForumStructureItem(branchToRemove)));
-    }
-
-    private TreeNode<ForumStructureItem> createSectionNodeWithBranches() {
-        TreeNode<ForumStructureItem> sectionNode = nodeFactory.createSectionNode();
-        sectionNode.add(nodeFactory.createBranchNode());
-        sectionNode.add(nodeFactory.createBranchNode());
-        sectionNode.add(nodeFactory.createBranchNode());
-        return sectionNode;
     }
 
     @Test
@@ -286,6 +261,27 @@ public class ForumStructureTreeModelTest {
         List<PoulpeSection> sections = sut.getSections();
         sut.addIfAbsent(present);
         assertEquals(sut.getSections(), sections);
+    }
+
+    private ZkTreeNode<ForumStructureItem> createBranchNode() {
+    	PoulpeBranch branch = new PoulpeBranch("branch" + branchCounter);
+    	branchCounter++;
+    	return new ZkTreeNode<ForumStructureItem>(new ForumStructureItem(branch));
+    }
+    
+    private ZkTreeNode<ForumStructureItem> createSectionNode() {
+    	PoulpeSection section = new PoulpeSection("section" + sectionCounter);
+    	sectionCounter++;
+    	return new ZkTreeNode<ForumStructureItem>(
+    			new ForumStructureItem(section), new ArrayList<TreeNode<ForumStructureItem>>());
+    }
+    
+    private TreeNode<ForumStructureItem> createSectionNodeWithBranches() {
+    	TreeNode<ForumStructureItem> sectionNode = createSectionNode();
+    	sectionNode.add(createBranchNode());
+    	sectionNode.add(createBranchNode());
+    	sectionNode.add(createBranchNode());
+    	return sectionNode;
     }
 
     private void removeAllSections() {
