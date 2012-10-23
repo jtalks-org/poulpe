@@ -48,7 +48,7 @@
   </bean>
 
   <!--Declaration and setting up datasource, sessionFactory and transactionalManager beans -->
-  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+  <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
     <property name="driverClass" value="${jdbc.driverClassName}"/>
     <property name="jdbcUrl" value="${JTALKS_DB_URL:jdbc:mysql://localhost/p_poulpe?characterEncoding=UTF-8}"/>
     <property name="user" value="${JTALKS_DB_USER:root}"/>
