@@ -5,7 +5,8 @@
   <window viewModel="@id('vm') @init(forumStructureVm)" validationMessages="@id('vmsgs')"
           apply="org.zkoss.bind.BindComposer" title="${labels.forum_structure.window_title}" width="100%" height="100%">
     <button label="${labels.forum_structure.create_section_button}" onClick="@global-command('showNewSectionDialog')"/>
-    <button label="${labels.forum_structure.expand_all_button}" onClick="@command ('expandTree')"/>
+    <button label="${labels.forum_structure.expand_all_button}" onClick="@command ('expandTree')" />
+    <button label="${labels.forum_structure.collapse_all_button}" onClick="@command ('collapseTree')" />
 
     <tree model="@bind(vm.treeModel)" selectedItem="@save(vm.selectedNode)" vflex="true" height="500px">
       <template name="model">

@@ -24,6 +24,7 @@ import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
+import org.zkoss.zk.ui.event.OpenEvent;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
 
@@ -136,7 +137,7 @@ public class ForumStructureVm {
     @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void dropEventHandler(@BindingParam("event") DropEvent event) {
         TreeNode<ForumStructureItem> draggedNode = ((Treeitem) event.getDragged()).getValue();
-        TreeNode<ForumStructureItem> targetNode = ((Treeitem) event.getTarget()).getValue();
+        TreeNode<ForumStructureItem> targetNode  = ((Treeitem) event.getTarget()).getValue();
         if (treeModel.noEffectAfterDropNode(draggedNode, targetNode)) {
             return;
         }
@@ -170,5 +171,10 @@ public class ForumStructureVm {
     @Command
     public void expandTree() {
         treeModel.expandTree();
+    }
+
+    @Command
+    public void collapseTree() {
+        treeModel.collapseTree();
     }
 }

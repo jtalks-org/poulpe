@@ -125,6 +125,29 @@ public class ForumStructureTreeModelTest {
     }
 
     @Test
+    public void collapseTree() {
+        sut.collapseTree();
+        assertEquals(0, sut.getOpenCount());
+    }
+
+    @Test
+    public void collapseTreeToAlreadyClosedTree() {
+        for (TreeNode<ForumStructureItem> child : sut.getRoot().getChildren()) {
+            sut.removeOpenObject(child);
+        }
+        sut.collapseTree();
+        assertEquals(0, sut.getOpenCount());
+    }
+
+    @Test
+    public void collapseTreeWithNoElements() {
+        removeOpenPaths();
+        removeAllSections();
+        sut.collapseTree();
+        assertEquals(0, sut.getOpenCount());
+    }
+
+    @Test
     public void checkEffectAfterDropBranchToAnotherSection() {
         TreeNode<ForumStructureItem> dragged = sut.getChild(1, 0);
         TreeNode<ForumStructureItem> target = sut.getChild(0);

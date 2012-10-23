@@ -226,4 +226,16 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
             }
         }
     }
+
+    /**
+     * Closes all opened section nodes.
+     */
+    public void collapseTree() {
+        for(int i = 0; i < getRoot().getChildCount(); i++) {
+            int[] path = new int[]{i};
+            if( isPathOpened(path) ) {
+                removeOpenPath(path);
+            }
+        }
+    }
 }
