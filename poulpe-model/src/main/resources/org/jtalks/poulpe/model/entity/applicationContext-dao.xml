@@ -53,6 +53,9 @@
     <property name="jdbcUrl" value="${JTALKS_DB_URL:jdbc:mysql://localhost/p_poulpe?characterEncoding=UTF-8}"/>
     <property name="user" value="${JTALKS_DB_USER:root}"/>
     <property name="password" value="${JTALKS_DB_PASSWORD:root}"/>
+    <!--Every hour we'll be hitting DB to make sure MySQL doesn't kill the connection. By default if connection
+    is idle for 8 hrs, MySQL kills it-->
+    <property name="idleConnectionTestPeriod" value="3600"/>
   </bean>
   <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"
         depends-on="flyway_poulpe">
