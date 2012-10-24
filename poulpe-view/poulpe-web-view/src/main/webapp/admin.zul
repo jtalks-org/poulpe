@@ -4,6 +4,16 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <style src="/resources/css/all.css"/>
+  <zscript language="Java">
+	void open() {
+		Treeitem it = self;
+		if (it.isOpen()) {
+			it.setOpen(false);
+		} else {
+			it.setOpen(true);
+		}
+	}
+  </zscript>
   <window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)" apply="org.zkoss.bind.BindComposer" width="100%"
           height="100%">
     <borderlayout>
@@ -21,30 +31,46 @@
         <tree width="200px">
             <treecols/>
             <treechildren>
-              <treeitem open="false" label="Components" onClick="@command('onBlankPage')">
+              <treeitem open="false" label="Components" onClick="@command('onBlankPage')" >
+				<attribute name="onClick">open();</attribute>
                 <treechildren>
-                  <treeitem label="${labels.admin.components}" onClick="@command('onShowComponents')">
+                  <treeitem open="false" label="${labels.admin.components}" onClick="@command('onShowComponents')">
+					<attribute name="onClick">open();</attribute>
                     <treechildren children="@load(vm.components) @template('componentsModel')">
                       <template name="componentsModel" var="component">
                         <treeitem label="${component.name}" onClick="@command('onComponentClick',component = component)"
-                                  if="${component.componentType != vm.adminPanelType}"/>
+                                  if="${component.componentType != vm.adminPanelType}" >
+						  <attribute name="onClick">open();</attribute>	
+						</treeitem>
                       </template>
                     </treechildren>
                   </treeitem>        
-                  <treeitem label="${labels.admin.component_permissions}" onClick="@command('onShowGroupsPermissions')"/>
+                  <treeitem label="${labels.admin.component_permissions}" onClick="@command('onShowGroupsPermissions')" >
+					<attribute name="onClick">open();</attribute>
+				  </treeitem>  	
                 </treechildren>
               </treeitem>
-              <treeitem open="false" label="Users" onClick="@command('onBlankPage')">
+              <treeitem open="false" label="Users" onClick="@command('onBlankPage')" >
+				<attribute name="onClick">open();</attribute>
                 <treechildren>
-                  <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')"/>
-                  <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')"/>
-                  <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')"/>
+                  <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')" >
+					<attribute name="onClick">open();</attribute>
+				  </treeitem>
+                  <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')" >
+					<attribute name="onClick">open();</attribute>
+				  </treeitem>
+                  <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')" >
+					<attribute name="onClick">open();</attribute>
+				  </treeitem>
                   <treeitem label="${labels.admin.user.personal_permissions}"
-                            onClick="@command('onShowPersonalPermissions')"/>
+                            onClick="@command('onShowPersonalPermissions')" >
+					<attribute name="onClick">open();</attribute>
+				  </treeitem>
                 </treechildren>
               </treeitem>
               <treeitem open="false" label="Experimental Features" visible="@load(vm.experimentalFeatureItemVisible)" onClick="@command('onBlankPage')">
-              </treeitem>        
+				<attribute name="onClick">open();</attribute>
+			  </treeitem>        
               <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
             </treechildren>
           </tree>
