@@ -18,9 +18,11 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
+import org.jtalks.poulpe.validator.GroupValidator;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
+import org.zkoss.bind.Validator;
 import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
@@ -46,6 +48,8 @@ public class UserGroupVm {
     private static final String SELECTED_BRANCH = "selectedBranch";
     private static final String SELECTED_GROUP = "selectedGroup";
     private static final String GROUP_SERVICE = "groupService";
+
+    private Validator groupValidator;
 
     //Injected
     private final GroupService groupService;
@@ -76,6 +80,7 @@ public class UserGroupVm {
         this.selectedEntity = selectedEntity;
         this.windowManager = windowManager;
         this.branchService = branchService;
+
     }
 
     /**
@@ -85,6 +90,7 @@ public class UserGroupVm {
     @Init
     public void init() {
         groups = new ListModelList<Group>(groupService.getAll(), true);
+        groupValidator = new GroupValidator(groupService);
     }
 
     /**
@@ -355,5 +361,13 @@ public class UserGroupVm {
      */
     public BranchGroupMap getBranches() {
         return branches;
+    }
+    /**
+     * Gets validator instance {@link GroupValidator}.
+     *
+     * @return {@link GroupValidator}
+     */
+    public Validator getGroupValidator() {
+        return groupValidator;
     }
 }

@@ -90,7 +90,7 @@
           <rows>
             <row>
               <label value="${labels.groups.editdialog.name}"/>
-              <textbox id="newGroupNameBox" value="@bind(fx.name) @validator('beanValidator')" hflex="1" focus="true"
+              <textbox id="newGroupNameBox" value="@bind(fx.name) @validator(vm.groupValidator, group=vm.selectedGroup)" hflex="1" focus="true"
                        errorMessage="@load(vmsgs[newGroupNameBox])"/>
             </row>
             <row>
