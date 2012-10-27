@@ -12,10 +12,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl;
+package org.jtalks.poulpe.logic.databasebackup.impl.dto;
 
-import java.util.HashMap;
 import java.util.Map;
+
+import com.google.common.collect.Maps;
 
 /**
  * The class represent a single row data from the table. The class is immutable.
@@ -23,16 +24,19 @@ import java.util.Map;
  * @author Evgeny Surovtsev
  * 
  */
-final class TableDataRow {
-
+public final class TableRow {
     /**
-     * Initiate an instance of the class (a data row) with a given row information.
+     * Adds an information about a new column (name and value) into the container.
      * 
-     * @param dumpData
-     *            A map of pairs Column Name - Column Data information for a one row.
+     * @param columnName
+     *            The name of the new column.
+     * @param columnValue
+     *            The value of the new column.
+     * @return The object itself.
      */
-    public TableDataRow(final Map<String, String> dumpData) {
-        this.dumpData = new HashMap<String, String>(dumpData);
+    public TableRow addColumn(final String columnName, final String columnValue) {
+        dumpData.put(columnName, columnValue);
+        return this;
     }
 
     /**
@@ -41,8 +45,26 @@ final class TableDataRow {
      * @return A map representation of Column Name - Column Value pairs for the row.
      */
     public Map<String, String> getColumnsValueMap() {
-        return new HashMap<String, String>(dumpData);
+        return Maps.newHashMap(dumpData);
     }
 
-    private final Map<String, String> dumpData;
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 17;
+        result = prime * result + ((dumpData == null) ? 0 : dumpData.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return (this == obj) || (obj instanceof TableRow && dumpData.equals(((TableRow) obj).dumpData));
+    }
+
+    @Override
+    public String toString() {
+        return "TableRow [dumpData=" + dumpData + "]";
+    }
+
+    private final Map<String, String> dumpData = Maps.newHashMap();
 }

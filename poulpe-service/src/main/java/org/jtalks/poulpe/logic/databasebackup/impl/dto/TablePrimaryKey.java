@@ -12,9 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl;
-
-import java.sql.SQLException;
+package org.jtalks.poulpe.logic.databasebackup.impl.dto;
 
 /**
  * The class represent a Primary key description data object. The class is immutable.
@@ -22,16 +20,17 @@ import java.sql.SQLException;
  * @author Evgeny Surovtsev
  * 
  */
-final class TableDataPrimaryKey {
+public final class TablePrimaryKey {
     /**
      * Initiate an instance of the class with a given Primary Key value.
      * 
      * @param pkColumnName
      *            A String that represents Primary Key value.
-     * @throws SQLException
-     *             Is thrown in case any errors during work with database occur.
      */
-    public TableDataPrimaryKey(final String pkColumnName) throws SQLException {
+    public TablePrimaryKey(final String pkColumnName) {
+        if (pkColumnName == null) {
+            throw new NullPointerException("pkColumnName parameter cannot be null.");
+        }
         this.pkColumnName = pkColumnName;
     }
 
@@ -42,6 +41,25 @@ final class TableDataPrimaryKey {
      */
     public String getPkColumnName() {
         return pkColumnName;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + ((pkColumnName == null) ? 0 : pkColumnName.hashCode());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "TablePrimaryKey=" + pkColumnName;
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        return (this == obj)
+                || (pkColumnName != null
+                        && obj instanceof TablePrimaryKey && pkColumnName.equals(((TablePrimaryKey) obj).pkColumnName));
     }
 
     private final String pkColumnName;

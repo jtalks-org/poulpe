@@ -29,6 +29,7 @@ import org.jtalks.poulpe.logic.databasebackup.exceptions.DataBaseDoesntContainTa
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.logic.databasebackup.impl.jdbc.DbTableNameList;
 
 /**
  * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
@@ -57,17 +58,14 @@ public class DbDumpContentProvider implements ContentProvider {
         StringBuffer result = new StringBuffer(getHeaderInfo());
 
         try {
-            TableDataInformationProvider tableDataInfoProvider = new TableDataInformationProvider(getDataSource());
-
-            List<String> tableNames = TableDependenciesResolver.resolveDependencies(tableDataInfoProvider,
-                    tableDataInfoProvider.getTableNamesList());
+            List<String> tableNames = DbTableNameList.getIndependentList(getDataSource());
             if (tableNames.size() == 0) {
                 throw new DataBaseDoesntContainTablesException();
             }
 
             for (String tableName : tableNames) {
-                DbDumpTable table = new DbDumpTable(getDataSource(), tableName);
-                result.append(table);
+                SqlTableDump tableDump = new SqlTableDump(getDataSource(), tableName);
+                result.append(tableDump);
             }
 
         } catch (SQLException e) {

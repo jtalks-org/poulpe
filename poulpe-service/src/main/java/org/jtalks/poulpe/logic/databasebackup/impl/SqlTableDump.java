@@ -21,17 +21,26 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.jtalks.poulpe.logic.databasebackup.impl.dto.TableColumn;
+import org.jtalks.poulpe.logic.databasebackup.impl.dto.TableForeignKey;
+import org.jtalks.poulpe.logic.databasebackup.impl.dto.TablePrimaryKey;
+import org.jtalks.poulpe.logic.databasebackup.impl.dto.TableRow;
+import org.jtalks.poulpe.logic.databasebackup.impl.jdbc.DbTable;
+import org.jtalks.poulpe.logic.databasebackup.impl.jdbc.TableDataUtil;
+
+import com.google.common.base.Joiner;
+
 /**
- * The class is used to export all information (structure, data) about concrete table from the database into text based
- * SQL commands shape.
+ * The class represents a full table dump and is used to export all information (structure, data) about concrete table
+ * from the database into text based SQL commands shape.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-class DbDumpTable {
+class SqlTableDump {
     private final String tableName;
-    private final TableDataInformationProvider tableDataInfoProvider;
     private final String toStringRepresentation;
+    private final DbTable tableInfo;
 
     /**
      * The constructor creates a text based representation of the table with the same name as the name given in the
@@ -45,9 +54,8 @@ class DbDumpTable {
      * @throws SQLException
      *             is thrown when there is an SQL error during preparing the text based form of the table.
      */
-    public DbDumpTable(final DataSource dataSource, final String tableName)
-            throws SQLException {
-        this.tableDataInfoProvider = new TableDataInformationProvider(dataSource);
+    public SqlTableDump(final DataSource dataSource, final String tableName) throws SQLException {
+        this.tableInfo = new DbTable(dataSource, tableName);
         this.tableName = tableName;
 
         this.toStringRepresentation = (getTableStructure().append(getDumpedData())).toString();
@@ -70,21 +78,22 @@ class DbDumpTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private StringBuffer getTableStructure() throws SQLException {
+        Joiner joiner = Joiner.on("," + NEWLINE_CHAR).skipNulls();
         StringBuffer tableStructure = new StringBuffer(formatStructureHeader());
         tableStructure.append("CREATE TABLE IF NOT EXISTS " + TableDataUtil.getSqlColumnQuotedString(tableName)
-                + " (\n" + StringUtil.join(getTableColumnDescriptionList(), ",\n"));
+                + " (" + NEWLINE_CHAR + joiner.join(getTableColumnDescriptionList()));
 
         List<String> tablePrimaryKeyList = getTablePrimaryKeyList();
         if (tablePrimaryKeyList.size() > 0) {
-            tableStructure.append(",\n" + StringUtil.join(tablePrimaryKeyList, ",\n"));
+            tableStructure.append("," + NEWLINE_CHAR + joiner.join(tablePrimaryKeyList));
         }
 
         List<String> tableForeignKeyList = getTableForeignKeyList();
         if (tableForeignKeyList.size() > 0) {
-            tableStructure.append(",\n" + StringUtil.join(tableForeignKeyList, ",\n"));
+            tableStructure.append("," + NEWLINE_CHAR + joiner.join(tableForeignKeyList));
         }
 
-        tableStructure.append("\n) " + getOtherTableParameters() + ";\n\n");
+        tableStructure.append(NEWLINE_CHAR + ") " + getOtherTableParameters() + ";" + NEWLINE_CHAR + NEWLINE_CHAR);
 
         return tableStructure;
     }
@@ -101,7 +110,7 @@ class DbDumpTable {
     private String getOtherTableParameters() throws SQLException {
         StringBuffer otherTableParameters = new StringBuffer();
 
-        Map<String, String> parameters = tableDataInfoProvider.getCommonTableParameters(tableName);
+        Map<String, String> parameters = tableInfo.getCommonParameterMap();
         for (String key : parameters.keySet()) {
             otherTableParameters.append(key + "=" + parameters.get(key) + " ");
         }
@@ -120,8 +129,8 @@ class DbDumpTable {
     private List<String> getTablePrimaryKeyList() throws SQLException {
         List<String> tablePrimaryKeyList = new ArrayList<String>();
 
-        List<TableDataPrimaryKey> primaryKeyList = tableDataInfoProvider.getPrimaryKeyList(tableName);
-        for (TableDataPrimaryKey primaryKey : primaryKeyList) {
+        List<TablePrimaryKey> primaryKeyList = tableInfo.getPrimaryKeyList();
+        for (TablePrimaryKey primaryKey : primaryKeyList) {
             tablePrimaryKeyList.add("    PRIMARY KEY ("
                     + TableDataUtil.getSqlColumnQuotedString(primaryKey.getPkColumnName()) + ")");
         }
@@ -140,11 +149,12 @@ class DbDumpTable {
     private List<String> getTableForeignKeyList() throws SQLException {
         List<String> tableForeignKeyList = new ArrayList<String>();
 
-        List<TableDataForeignKey> foreignKeyList = tableDataInfoProvider.getForeignKeyList(tableName);
-        for (TableDataForeignKey foreignKey : foreignKeyList) {
+        List<TableForeignKey> foreignKeyList = tableInfo.getForeignKeyList();
+        for (TableForeignKey foreignKey : foreignKeyList) {
             String foreignKeyDescription = "    KEY "
                     + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkTableName()) + " ("
-                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkColumnName()) + "),\n" + "    CONSTRAINT "
+                    + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkColumnName()) + ")," + NEWLINE_CHAR
+                    + "    CONSTRAINT "
                     + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkTableName()) + " FOREIGN KEY ("
                     + TableDataUtil.getSqlColumnQuotedString(foreignKey.getFkColumnName()) + ") REFERENCES "
                     + TableDataUtil.getSqlColumnQuotedString(foreignKey.getPkTableName()) + " ("
@@ -166,8 +176,8 @@ class DbDumpTable {
     private List<String> getTableColumnDescriptionList() throws SQLException {
         List<String> tableColumnDescriptionList = new ArrayList<String>();
 
-        List<TableDataColumn> columnDescriptionList = tableDataInfoProvider.getColumnDescriptionList(tableName);
-        for (TableDataColumn column : columnDescriptionList) {
+        List<TableColumn> columnDescriptionList = tableInfo.getStructure();
+        for (TableColumn column : columnDescriptionList) {
             StringBuffer columnDescription = new StringBuffer("    ");
             columnDescription.append(TableDataUtil.getSqlColumnQuotedString(column.getName()) + " " + column.getType());
 
@@ -206,7 +216,7 @@ class DbDumpTable {
     private StringBuffer getDumpedData() throws SQLException {
         StringBuffer result = new StringBuffer(formatDumpedDataHeader());
 
-        for (TableDataRow dataDump : tableDataInfoProvider.getDumpedData(tableName)) {
+        for (TableRow dataDump : tableInfo.getData()) {
             List<String> nameColumns = new ArrayList<String>();
             List<String> valueColumns = new ArrayList<String>();
 
@@ -215,11 +225,13 @@ class DbDumpTable {
                 nameColumns.add(TableDataUtil.getSqlColumnQuotedString(column));
                 valueColumns.add(params.get(column));
             }
+            Joiner joiner = Joiner.on(",").skipNulls();
             result.append("INSERT INTO " + TableDataUtil.getSqlColumnQuotedString(tableName) + " ("
-                    + StringUtil.join(nameColumns, ",") + ") VALUES (" + StringUtil.join(valueColumns, ",") + ");\n");
+                    + joiner.join(nameColumns) + ") VALUES (" + joiner.join(valueColumns) + ");"
+                    + NEWLINE_CHAR);
         }
 
-        result.append("\n\n");
+        result.append(NEWLINE_CHAR + NEWLINE_CHAR);
         return result;
     }
 
@@ -230,9 +242,9 @@ class DbDumpTable {
      */
     private StringBuffer formatDumpedDataHeader() {
         StringBuffer dumpedDataHeader = new StringBuffer();
-        dumpedDataHeader.append("--\n");
-        dumpedDataHeader.append("-- Dumping data for table '" + tableName + "'\n");
-        dumpedDataHeader.append("--\n\n");
+        dumpedDataHeader.append("--" + NEWLINE_CHAR);
+        dumpedDataHeader.append("-- Dumping data for table '" + tableName + "'" + NEWLINE_CHAR);
+        dumpedDataHeader.append("--" + NEWLINE_CHAR + NEWLINE_CHAR);
         return dumpedDataHeader;
     }
 
@@ -243,9 +255,11 @@ class DbDumpTable {
      */
     private StringBuffer formatStructureHeader() {
         StringBuffer structureHeader = new StringBuffer();
-        structureHeader.append("--\n");
-        structureHeader.append("-- Table structure for table '" + tableName + "'\n");
-        structureHeader.append("--\n\n");
+        structureHeader.append("--" + NEWLINE_CHAR);
+        structureHeader.append("-- Table structure for table '" + tableName + "'" + NEWLINE_CHAR);
+        structureHeader.append("--" + NEWLINE_CHAR + NEWLINE_CHAR);
         return structureHeader;
     }
+
+    private static String NEWLINE_CHAR = "\n";
 }
