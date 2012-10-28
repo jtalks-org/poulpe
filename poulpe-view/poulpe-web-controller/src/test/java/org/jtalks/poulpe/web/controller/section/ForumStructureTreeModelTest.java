@@ -43,6 +43,8 @@ public class ForumStructureTreeModelTest {
         sut.getRoot().add(createSectionNode());
         sut.getRoot().add(createSectionNodeWithBranches());
         sut.getRoot().add(createSectionNodeWithBranches());
+        sut.addOpenObject(sut.getChild(1));
+        sut.addOpenObject(sut.getChild(2));
     }
 
     @Test
@@ -284,6 +286,34 @@ public class ForumStructureTreeModelTest {
         List<PoulpeSection> sections = sut.getSections();
         sut.addIfAbsent(present);
         assertEquals(sut.getSections(), sections);
+    }
+
+    @Test
+    public void moveBranchIfSectionChanged() {
+    	TreeNode<ForumStructureItem> branchNode = sut.getChild(1, 0);
+    	TreeNode<ForumStructureItem> sectionNode = sut.getChild(0);
+    	PoulpeBranch branch = branchNode.getData().getBranchItem();
+    	PoulpeSection section = sectionNode.getData().getSectionItem();
+    	branch.setSection(section);
+    	sut.moveBranchIfSectionChanged(branch);
+    	assertTrue(sut.getChild(0).getChildren().contains(branchNode));
+    	assertFalse(sut.getChild(1).getChildren().contains(branchNode));
+    	assertEquals(sut.getSelectedData(1), branchNode.getData());
+    	assertTrue(sut.getOpenObjects().contains(sectionNode));
+    }
+
+    @Test
+    public void moveBranchIfSectionChanged_whenAbsentInTree() {
+    	PoulpeSection section = sut.getSections().get(0);
+    	PoulpeBranch branch = new PoulpeBranch("absent in tree branch");
+    	branch.setSection(section);
+    	sut.moveBranchIfSectionChanged(branch);
+    	TreeNode<ForumStructureItem> branchNode = sut.getChild(0, 0);
+    	assertNotNull(branchNode);
+    	ForumStructureItem branchItem = branchNode.getData();
+    	assertNotNull(branchItem);
+    	assertTrue(branchItem.isBranch());
+    	assertEquals(branchItem.getBranchItem(), branch);
     }
 
     private ZkTreeNode<ForumStructureItem> createBranchNode() {
