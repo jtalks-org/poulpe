@@ -30,7 +30,7 @@
       <button label="${labels.groups.search}" onClick="@command('searchGroup')"/>
       <button label="${labels.groups.button.add}" onClick="@command('showNewGroupDialog')"/>
     </hbox>
-    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@save(vm.selectedGroup)"
+    <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
              mold="paging" pageSize="50" pagingPosition="both" height="500px">
       <listhead>
         <listheader align="left" label="${labels.groups.name}" sort="auto(name)"/>
