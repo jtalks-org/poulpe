@@ -90,6 +90,11 @@
         <artifactId>ehcache-jgroupsreplication</artifactId>
         <version>1.5</version>
       </dependency>
+      <dependency>
+        <groupId>org.terracotta</groupId>
+        <artifactId>ehcache-probe</artifactId>
+         <version>1.0.2</version>
+      </dependency>
       <!-- JDBC -->
       <dependency>
         <groupId>mysql</groupId>
