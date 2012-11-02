@@ -148,7 +148,7 @@ public class UserGroupVmTest {
         viewModel.setSelectedGroup(null);
         viewModel.showNewGroupDialog();
         assertTrue(viewModel.isShowGroupDialog());
-        assertNotNull(viewModel.getSelectedGroup());
+        assertNotNull(viewModel.getSelectedGroupForDialog());
     }
 
     @Test
@@ -212,7 +212,7 @@ public class UserGroupVmTest {
     @Test
     public void testSaveGroup() throws Exception {
         Group group = new Group();
-        viewModel.setSelectedGroup(group);
+        viewModel.setSelectedGroupForDialog(group);
         viewModel.saveGroup();
         verify(groupService).saveGroup(group);
         verify(viewModel).updateView();

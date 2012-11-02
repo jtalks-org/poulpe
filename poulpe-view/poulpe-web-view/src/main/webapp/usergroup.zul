@@ -79,9 +79,9 @@
     <window id="groupDialog" validationMessages="@id('vmsgs')" title="${labels.groups.newgroupdialog.title}"
             closable="true" border="normal" width="430px" mode="modal"
             onClose="self.visible=false; event.stopPropagation();" onCancel="self.visible=false"
-            onOK="@command('saveGroup', group=vm.selectedGroup)" visible="@load(vm.showGroupDialog)">
+            onOK="@command('saveGroup', group=vm.selectedGroupForDialog)" visible="@load(vm.showGroupDialog)">
       <label value="${labels.groups.title.properties}"/>
-      <vlayout form="@id('fx') @load(vm.selectedGroup) @save(vm.selectedGroup, before='saveGroup')">
+      <vlayout form="@id('fx') @load(vm.selectedGroupForDialog) @save(vm.selectedGroupForDialog, before='saveGroup')">
         <grid>
           <columns>
             <column label="${labels.field.description}" hflex="min"/>
@@ -90,7 +90,7 @@
           <rows>
             <row>
               <label value="${labels.groups.editdialog.name}"/>
-              <textbox id="newGroupNameBox" value="@bind(fx.name) @validator(vm.groupValidator, group=vm.selectedGroup)" hflex="1" focus="true"
+              <textbox id="newGroupNameBox" value="@bind(fx.name) @validator(vm.groupValidator, group=vm.selectedGroupForDialog)" hflex="1" focus="true"
                        errorMessage="@load(vmsgs[newGroupNameBox])"/>
             </row>
             <row>

@@ -28,7 +28,6 @@ import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
 import org.zkoss.zul.ListModelList;
-import org.zkoss.zul.Popup;
 
 import javax.annotation.Nonnull;
 import java.util.List;
@@ -44,6 +43,7 @@ public class UserGroupVm {
     private static final String SHOW_GROUP_DIALOG = "showGroupDialog";
     private static final String SHOW_MODERATOR_GROUP_SELECTION_PART = "showDeleteModeratorGroupDialog";
     private static final String MODERATING_BRANCHES = "branches";
+    private static final String SELECTED_GROUP_FOR_DIALOG = "selectedGroupForDialog";
     private static final String SELECTED_MODERATOR_GROUP = "selectedModeratorGroupForAllBranches";
     private static final String SELECTED_BRANCH = "selectedBranch";
     private static final String SELECTED_GROUP = "selectedGroup";
@@ -59,6 +59,7 @@ public class UserGroupVm {
     private ListModelList<Group> groups;
     private BranchGroupMap branches;
     private Group selectedGroup;
+    private Group selectedGroupForDialog;
     private Group selectedModeratorGroupForAllBranches;
     private SelectedEntity<Group> selectedEntity;
     private String searchString = "";
@@ -158,9 +159,9 @@ public class UserGroupVm {
      * Opens group adding dialog.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG, SHOW_DELETE_CONFIRM_DIALOG})
+    @NotifyChange({SELECTED_GROUP_FOR_DIALOG, SHOW_GROUP_DIALOG, SHOW_DELETE_CONFIRM_DIALOG})
     public void showNewGroupDialog() {
-        selectedGroup = new Group();
+        selectedGroupForDialog = new Group();
         showGroupDialog = true;
     }
 
@@ -168,8 +169,9 @@ public class UserGroupVm {
      * Opens group edit dialog.
      */
     @Command
-    @NotifyChange({SELECTED_GROUP, SHOW_GROUP_DIALOG})
+    @NotifyChange({SELECTED_GROUP_FOR_DIALOG, SHOW_GROUP_DIALOG})
     public void showEditDialog() {
+        selectedGroupForDialog = selectedGroup;
         showGroupDialog = true;
     }
 
@@ -179,7 +181,7 @@ public class UserGroupVm {
     @Command
     @NotifyChange({SHOW_GROUP_DIALOG})
     public void saveGroup() {
-        groupService.saveGroup(selectedGroup);
+        groupService.saveGroup(selectedGroupForDialog);
         closeDialog();
         updateView();
     }
@@ -305,12 +307,30 @@ public class UserGroupVm {
     }
 
     /**
+     * Gets {@link Group} for showing in window.
+     *
+     * @return Group selected at UI
+     */
+    public Group getSelectedGroupForDialog() {
+        return selectedGroupForDialog;
+    }
+
+    /**
      * Sets current selected {@link Group}.
      *
      * @param group selected at UI
      */
     public void setSelectedGroup(Group group) {
         this.selectedGroup = group;
+    }
+
+    /**
+     * Sets {@link Group} for showing in window.
+     *
+     * @param groupForDialog selected at UI
+     */
+    public void setSelectedGroupForDialog(Group groupForDialog) {
+        this.selectedGroupForDialog = groupForDialog;
     }
 
     /**
