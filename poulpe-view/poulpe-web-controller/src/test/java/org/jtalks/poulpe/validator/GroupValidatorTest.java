@@ -54,7 +54,7 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void duplicatedMailShouldFailValidation() throws Exception {
+    public void duplicatedNameShouldFailValidation() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
@@ -65,6 +65,36 @@ public class GroupValidatorTest {
         validator.validate(context);
         verify(context).setInvalid();
     }
+
+    @Test
+    public void duplicatedGroupNamesWithAnotherCaseShouldFailValidation() throws Exception {
+        Group group1 = createGroupWithId(1);
+        Group group2 = createGroupWithId(2);
+        group1.setName("group1");
+        group2.setName("GroUp1");
+
+        givenBindContextReturnsNameAndGroupId(group1.getName(), group2.getId());
+        storeGroupsInMockedDb(group1, group2);
+        validator.validate(context);
+        verify(context).setInvalid();
+    }
+
+
+    @Test
+    public void duplicatedGroupNamesWithAnotherCaseAndTwoWordsShouldFailValidation() throws Exception {
+        Group group1 = createGroupWithId(1);
+        Group group2 = createGroupWithId(2);
+        group1.setName("Group test");
+        group2.setName("Group Test");
+
+        givenBindContextReturnsNameAndGroupId(group1.getName(), group2.getId());
+        storeGroupsInMockedDb(group1, group2);
+        validator.validate(context);
+        verify(context).setInvalid();
+    }
+
+
+
 
 
     @Test

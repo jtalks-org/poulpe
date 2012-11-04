@@ -55,7 +55,7 @@ public class GroupValidator extends BeanValidator {
     private boolean isGroupWithThisNameExists(String groupName) {
         List<Group> groupList = groupService.getByName(groupName);
         for (Group group : groupList) {
-            if (group.getName().equals(groupName)) {
+            if (group.getName().equalsIgnoreCase(groupName)) {
                 return true;
             }
         }
