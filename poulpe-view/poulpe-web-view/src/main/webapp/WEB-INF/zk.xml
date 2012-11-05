@@ -27,4 +27,8 @@
     <name>org.zkoss.web.preferred.locale</name>
     <value>en</value>
   </library-property>
+  <error-page>
+    <exception-type>java.lang.Throwable</exception-type>
+    <location>/WEB-INF/pages/error.zul</location>
+  </error-page>
 </zk>
