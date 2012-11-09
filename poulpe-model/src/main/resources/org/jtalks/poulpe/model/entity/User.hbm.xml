@@ -57,19 +57,20 @@
 
         <property column="SALT" name="salt" not-null="true"/>
 
+        <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
+            <cache usage="nonstrict-read-write" region="org.jtalks.common.model.entity.User.groups"/>
+            <key column="USER_ID" not-null="true"/>
+            <many-to-many class="org.jtalks.common.model.entity.Group">
+                <column name="GROUP_ID" not-null="true"/>
+            </many-to-many>
+        </bag>
+
         <!--
               we specify here a strange discriminator value in order the query be like: "select from.. where 'USER'='USER'"
               which won't have any effect on the query, but the whole table content will be actually instances of this subclass,
               not the abstract class. See mapping of abstract class for other details.
             -->
         <subclass name="org.jtalks.poulpe.model.entity.PoulpeUser" discriminator-value="USER">
-            <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
-                <cache usage="nonstrict-read-write" region="org.jtalks.common.model.entity.User.groups"/>
-                <key column="USER_ID" not-null="true"/>
-                <many-to-many class="org.jtalks.common.model.entity.Group">
-                    <column name="GROUP_ID" not-null="true"/>
-                </many-to-many>
-            </bag>
         </subclass>
     </class>
 

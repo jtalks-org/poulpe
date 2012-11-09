@@ -24,7 +24,6 @@ import java.util.List;
  * Stores information about the user.
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
-    private List<Group> groups = new ArrayList<Group>();
 
     /**
      * Creates an empty and <i>not valid</i> instance without required fields, use {@link #PoulpeUser(String, String,
@@ -48,15 +47,6 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
     }
 
     /**
-     * Gets list of groups assigned to user.
-     *
-     * @return the list of groups assigned to user
-     */
-    public List<Group> getGroups() {
-        return groups;
-    }
-
-    /**
      * Defines whether user resides in a group with the specified ID.
      *
      * @param groupId an ID of the group to find from the list of group user is in
@@ -69,16 +59,6 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
             }
         }
         return false;
-    }
-
-    /**
-     * Sets list of groups assigned to user.
-     *
-     * @param groups the new list of groups to set
-     */
-
-    public void setGroups(List<Group> groups) {
-        this.groups = groups;
     }
 
     /**

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.UiPagination;
@@ -207,9 +208,32 @@ public class EditGroupMembersVm extends TwoSideListWithFilterVm<PoulpeUser> {
      */
     @Command
     public void save() {
+        List<User> users = groupToEdit.getUsers();
         groupToEdit.setUsers(new ArrayList<org.jtalks.common.model.entity.User>(getStateAfterEdit()));
+        updateUsers(users,groupToEdit);
+        updateUsers(groupToEdit.getUsers(),groupToEdit);
         groupService.saveGroup(groupToEdit);
         switchToGroupsWindow();
+    }
+
+    /**
+     * Update users in group. For proper operation of the replication
+     * @param users users for update
+     * @param group group with users
+     */
+    private void updateUsers(List<User> users, Group group){ //TODO This logic is proposed to move to the UserService
+        for(User u :users){
+            if(group.getUsers().contains(u)){
+                if(!u.getGroups().contains(group)){
+                    u.getGroups().add(group);
+                }
+            }else{
+                if(u.getGroups().contains(group)){
+                    u.getGroups().remove(group);
+                }
+            }
+            userService.updateUser((PoulpeUser)u);
+        }
     }
 
     /**
