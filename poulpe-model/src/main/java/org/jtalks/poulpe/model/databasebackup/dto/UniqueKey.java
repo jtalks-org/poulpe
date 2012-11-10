@@ -12,26 +12,28 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.dto;
+package org.jtalks.poulpe.model.databasebackup.dto;
 
 /**
- * The class represent a Primary key description data object. The class is immutable.
+ * The class represent a Primary or Unique key description data object. The class is immutable.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public final class TablePrimaryKey {
+public final class UniqueKey implements TableKey {
     /**
      * Initiate an instance of the class with a given Primary Key value.
      * 
-     * @param pkColumnName
+     * @param columnName
      *            A String that represents Primary Key value.
+     * @throws NullPointerException
+     *             If pkColumnName is null.
      */
-    public TablePrimaryKey(final String pkColumnName) {
-        if (pkColumnName == null) {
-            throw new NullPointerException("pkColumnName parameter cannot be null.");
+    public UniqueKey(final String columnName) {
+        if (columnName == null) {
+            throw new NullPointerException("columnName parameter cannot be null.");
         }
-        this.pkColumnName = pkColumnName;
+        this.columnName = columnName;
     }
 
     /**
@@ -39,28 +41,28 @@ public final class TablePrimaryKey {
      * 
      * @return Primary key.
      */
-    public String getPkColumnName() {
-        return pkColumnName;
+    public String getColumnName() {
+        return columnName;
     }
 
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + ((pkColumnName == null) ? 0 : pkColumnName.hashCode());
+        result = 31 * result + ((columnName == null) ? 0 : columnName.hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "TablePrimaryKey=" + pkColumnName;
+        return "UniqueKey=" + columnName;
     }
 
     @Override
     public boolean equals(final Object obj) {
         return (this == obj)
-                || (pkColumnName != null
-                        && obj instanceof TablePrimaryKey && pkColumnName.equals(((TablePrimaryKey) obj).pkColumnName));
+                || (columnName != null
+                        && obj instanceof UniqueKey && columnName.equals(((UniqueKey) obj).columnName));
     }
 
-    private final String pkColumnName;
+    private final String columnName;
 }

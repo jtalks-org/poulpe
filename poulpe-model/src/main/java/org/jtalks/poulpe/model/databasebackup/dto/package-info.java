@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 /**
- * The package contains classes which are used for keeping and passing database entitites (data transfer objects).
+ * The package contains classes which are used for keeping and passing database entities (data transfer objects).
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.dto;
+package org.jtalks.poulpe.model.databasebackup.dto;
 

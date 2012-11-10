@@ -29,7 +29,7 @@ import org.jtalks.poulpe.logic.databasebackup.exceptions.DataBaseDoesntContainTa
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
-import org.jtalks.poulpe.logic.databasebackup.impl.jdbc.DbTableNameList;
+import org.jtalks.poulpe.model.databasebackup.jdbc.DbTableNameList;
 
 /**
  * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
@@ -45,8 +45,13 @@ public class DbDumpContentProvider implements ContentProvider {
      * 
      * @param dataSource
      *            A DataSource object points to the data base to export.
+     * @throws NullPointerException
+     *             If dataSource is null.
      */
     DbDumpContentProvider(final DataSource dataSource) {
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource cannot be null.");
+        }
         this.dataSource = dataSource;
     }
 
@@ -55,7 +60,7 @@ public class DbDumpContentProvider implements ContentProvider {
      */
     @Override
     public InputStream getContent() throws FileDownloadException {
-        StringBuffer result = new StringBuffer(getHeaderInfo());
+        StringBuilder result = new StringBuilder(getHeaderInfo());
 
         try {
             List<String> tableNames = DbTableNameList.getIndependentList(getDataSource());
@@ -71,7 +76,6 @@ public class DbDumpContentProvider implements ContentProvider {
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
         }
-        System.out.println(result);
         InputStream inputStream = null;
         try {
             inputStream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
@@ -86,8 +90,8 @@ public class DbDumpContentProvider implements ContentProvider {
      * 
      * @return A text formated header for the dump file.
      */
-    private StringBuffer getHeaderInfo() {
-        StringBuffer headerInfo = new StringBuffer();
+    private StringBuilder getHeaderInfo() {
+        StringBuilder headerInfo = new StringBuilder();
 
         headerInfo.append("--\n");
         headerInfo.append("-- Copyright (C) 2011  JTalks.org Team\n");
@@ -143,8 +147,13 @@ public class DbDumpContentProvider implements ContentProvider {
      * 
      * @param dataSource
      *            a DataSource instance which will be used to work with database.
+     * @throws NullPointerException
+     *             If dataSource is null.
      */
     public void setDataSource(final DataSource dataSource) {
+        if (dataSource == null) {
+            throw new NullPointerException("dataSource cannot be null.");
+        }
         this.dataSource = dataSource;
     }
 

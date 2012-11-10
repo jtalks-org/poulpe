@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.jdbc;
+package org.jtalks.poulpe.model.databasebackup.jdbc;
 
 /**
  * Table Data Utility class performs different operations for preparing SQL statement strings.
@@ -33,8 +33,13 @@ public final class TableDataUtil {
      * @param value
      *            A value which will be quoted.
      * @return Already quoted value.
+     * @throws NullPointerException
+     *             If value is null.
      */
     public static String getSqlValueQuotedString(final String value) {
+        if (value == null) {
+            throw new NullPointerException("value cannot be null.");
+        }
         return getSqlQuotedString(value, VALUE_QUOTE_SIGN);
     }
 
@@ -44,8 +49,13 @@ public final class TableDataUtil {
      * @param value
      *            A value which will be quoted.
      * @return Already quoted value.
+     * @throws NullPointerException
+     *             If value is null.
      */
     public static String getSqlColumnQuotedString(final String value) {
+        if (value == null) {
+            throw new NullPointerException("value cannot be null.");
+        }
         return getSqlQuotedString(value, FIELD_QUOTE_SIGN);
     }
 
@@ -59,10 +69,13 @@ public final class TableDataUtil {
      *            A quote symbol which will be used for quoting process.
      * @return Already quoted value.
      */
-    public static String getSqlQuotedString(final String value, final String quote) {
+    private static String getSqlQuotedString(final String value, final String quote) {
+        assert (value != null) : "value cannot be null.";
+        assert (quote != null) : "quote cannot be null.";
+
         String s = value;
         if (quote.length() > 0) {
-            s = value.replaceAll(quote, "\\" + quote);
+            s = value.replaceAll(quote, quote + quote);
         }
 
         return quote + s + quote;

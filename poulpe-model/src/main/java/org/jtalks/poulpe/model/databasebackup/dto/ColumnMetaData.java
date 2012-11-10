@@ -12,29 +12,37 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.dto;
+package org.jtalks.poulpe.model.databasebackup.dto;
+
+import org.jtalks.poulpe.model.databasebackup.SqlTypes;
 
 /**
- * The class represent a Table's Data Column description data object. The class is immutable.
+ * The class describes structure of one table's Column. So every table has a number of columns and each column is
+ * described by a particular ColumnMetaData object.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public final class TableColumn {
+public final class ColumnMetaData {
     /**
-     * Construct Table Data Column object based on given Builder.
+     * Constructs a new Column meta data object with two given obligatory parameters: table column's name and type.
+     * Other parameters should be set via setters.
      * 
-     * @param name
+     * @param columnName
      *            The name of the table column.
-     * @param type
+     * @param columnType
      *            The type of the table column.
      */
-    public TableColumn(final String name, final SqlTypes type) {
-        if (name == null || type == null) {
-            throw new NullPointerException("Fields should be initialized: name=" + name + " type=" + type);
+    public ColumnMetaData(final String columnName, final SqlTypes columnType) {
+        if (columnName == null) {
+            throw new NullPointerException("columnName cannot be null.");
         }
-        this.name = name;
-        this.type = type;
+        if (columnType == null) {
+            throw new NullPointerException("columnType cannot be null.");
+        }
+
+        this.name = columnName;
+        this.type = columnType;
     }
 
     /**
@@ -100,24 +108,25 @@ public final class TableColumn {
     @Override
     public boolean equals(final Object obj) {
         return (this == obj)
-                || (obj instanceof TableColumn
+                || (obj instanceof ColumnMetaData
                         && name != null
                         && type != null
 
-                        && autoincrement == ((TableColumn) obj).autoincrement
-                        && hasSize == ((TableColumn) obj).hasSize
-                        && nullable == ((TableColumn) obj).nullable
-                        && hasDefaultValue == ((TableColumn) obj).hasDefaultValue
-                        && size == ((TableColumn) obj).size
-                        && type == ((TableColumn) obj).type
-                        && name.equals(((TableColumn) obj).name)
-                        && ((defaultValue != null) ? defaultValue.equals(((TableColumn) obj).defaultValue) : true)
+                        && autoincrement == ((ColumnMetaData) obj).autoincrement
+                        && hasSize == ((ColumnMetaData) obj).hasSize
+                        && nullable == ((ColumnMetaData) obj).nullable
+                        && hasDefaultValue == ((ColumnMetaData) obj).hasDefaultValue
+                        && size == ((ColumnMetaData) obj).size
+                        && type == ((ColumnMetaData) obj).type
+                        && name.equals(((ColumnMetaData) obj).name)
+                        && ((defaultValue != null) ? defaultValue.equals(((ColumnMetaData) obj).defaultValue)
+                            : true)
                 );
     }
 
     @Override
     public String toString() {
-        return "TableColumn [nullable=" + nullable + ", autoincrement=" + autoincrement + ", hasDefaultValue="
+        return "ColumnMetaData [nullable=" + nullable + ", autoincrement=" + autoincrement + ", hasDefaultValue="
                 + hasDefaultValue + ", defaultValue=" + defaultValue + ", name=" + name + ", size=" + size
                 + ", hasSize=" + hasSize + ", type=" + type + "]";
     }
@@ -156,7 +165,7 @@ public final class TableColumn {
      *            Defines if column can keep null values.
      * @return The object itself.
      */
-    public TableColumn setNullable(final boolean nullable) {
+    public ColumnMetaData setNullable(final boolean nullable) {
         this.nullable = nullable;
         return this;
     }
@@ -168,7 +177,7 @@ public final class TableColumn {
      *            Column's size.
      * @return The object itself.
      */
-    public TableColumn setSize(final int size) {
+    public ColumnMetaData setSize(final int size) {
         this.size = size;
         this.hasSize = size > 0;
         return this;
@@ -178,10 +187,10 @@ public final class TableColumn {
      * Sets default value parameter for the column.
      * 
      * @param defaultValue
-     *            Default's value for the column.
+     *            Default's value for the column. Null means the column has no default value.
      * @return The object itself.
      */
-    public TableColumn setDefaultValue(final String defaultValue) {
+    public ColumnMetaData setDefaultValue(final String defaultValue) {
         this.defaultValue = defaultValue;
         this.hasDefaultValue = defaultValue != null;
         return this;
@@ -194,7 +203,7 @@ public final class TableColumn {
      *            Defines if column is auto incremental.
      * @return The object itself.
      */
-    public TableColumn setAutoincrement(final boolean autoincrement) {
+    public ColumnMetaData setAutoincrement(final boolean autoincrement) {
         this.autoincrement = autoincrement;
         return this;
     }

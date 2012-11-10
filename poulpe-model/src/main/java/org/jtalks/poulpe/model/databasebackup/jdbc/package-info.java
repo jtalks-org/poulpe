@@ -15,5 +15,5 @@
 /**
  * The package contains classes that provide information from the database.
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.jdbc;
+package org.jtalks.poulpe.model.databasebackup.jdbc;
 

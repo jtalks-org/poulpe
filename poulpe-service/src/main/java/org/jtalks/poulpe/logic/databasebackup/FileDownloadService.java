@@ -46,9 +46,20 @@ public class FileDownloadService {
      *            An instance of FileDownloader.
      * @param contentFileNameWithoutExt
      *            Filename without extension which will be used for suggesting browser.
+     * @throws NullPointerException
+     *             If any of contentProvider or fileDownloader or contentFileNameWithoutExt is null.
      */
     FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
             final String contentFileNameWithoutExt) {
+        if (contentProvider == null) {
+            throw new NullPointerException("contentProvider cannot be null.");
+        }
+        if (fileDownloader == null) {
+            throw new NullPointerException("fileDownloader cannot be null.");
+        }
+        if (contentFileNameWithoutExt == null) {
+            throw new NullPointerException("contentFileNameWithoutExt cannot be null.");
+        }
         this.contentProvider = contentProvider;
         this.fileDownloader = fileDownloader;
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
@@ -60,8 +71,19 @@ public class FileDownloadService {
      * 
      * @throws FileDownloadException
      *             is thrown in case of any errors during file preparing or sending it to the browser.
+     * @throws NullPointerException
+     *             If any of contentProvider or fileDownloader or contentFileNameWithoutExt is not defined.
      */
     public final void performFileDownload() throws FileDownloadException {
+        if (contentProvider == null) {
+            throw new NullPointerException("contentProvider is not defined.");
+        }
+        if (fileDownloader == null) {
+            throw new NullPointerException("fileDownloader is not defined.");
+        }
+        if (contentFileNameWithoutExt == null) {
+            throw new NullPointerException("contentFileNameWithoutExt is not defined.");
+        }
         try {
             InputStream content = contentProvider.getContent();
 
@@ -78,8 +100,13 @@ public class FileDownloadService {
      * 
      * @param contentProvider
      *            An instance of a Content Provider
+     * @throws NullPointerException
+     *             If contentProvider is null.
      */
     public final void setContentProvider(final ContentProvider contentProvider) {
+        if (contentProvider == null) {
+            throw new NullPointerException("contentProvider cannot be null.");
+        }
         this.contentProvider = contentProvider;
     }
 
@@ -88,8 +115,13 @@ public class FileDownloadService {
      * 
      * @param fileDownloader
      *            The instance of the FileDownloader
+     * @throws NullPointerException
+     *             If fileDownloader is null.
      */
     public final void setFileDownloader(final FileDownloader fileDownloader) {
+        if (fileDownloader == null) {
+            throw new NullPointerException("fileDownloader cannot be null.");
+        }
         this.fileDownloader = fileDownloader;
     }
 
@@ -98,8 +130,13 @@ public class FileDownloadService {
      * 
      * @param contentFileNameWithoutExt
      *            String which represents the filename without extension.
+     * @throws NullPointerException
+     *             If contentFileNameWithoutExt is null.
      */
     public final void setContentFileNameWithoutExt(final String contentFileNameWithoutExt) {
+        if (contentFileNameWithoutExt == null) {
+            throw new NullPointerException("contentFileNameWithoutExt cannot be null.");
+        }
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
     }
 

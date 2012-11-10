@@ -1,6 +1,5 @@
-package org.jtalks.poulpe.logic.databasebackup.impl.jdbc;
+package org.jtalks.poulpe.model.databasebackup.jdbc;
 
-import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,7 +12,10 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
-import org.jtalks.poulpe.logic.databasebackup.impl.dto.TableForeignKey;
+import org.jtalks.poulpe.model.databasebackup.dto.ForeignKey;
+import org.springframework.jdbc.support.DatabaseMetaDataCallback;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
 
 import com.google.common.collect.Lists;
 
@@ -48,26 +50,31 @@ public final class DbTableNameList {
      * @return a List of Strings where every String instance represents a table name from the database.
      * @throws SQLException
      *             is thrown if there is an error during collaborating with the database.
+     * @throws NullPointerException
+     *             If dataSource is null.
      */
+    @SuppressWarnings("unchecked")
     public static List<String> getPlainList(final DataSource dataSource) throws SQLException {
-        Connection connection = null;
-        ResultSet tablesResultSet = null;
-        List<String> tableNames = new ArrayList<String>();
-        try {
-            connection = dataSource.getConnection();
-            DatabaseMetaData dbMetaData = connection.getMetaData();
-            tablesResultSet = dbMetaData.getTables(null, null, null, new String[] { "TABLE" });
-            while (tablesResultSet.next()) {
-                tableNames.add(tablesResultSet.getString("TABLE_NAME"));
-            }
-        } finally {
-            if (tablesResultSet != null) {
-                tablesResultSet.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+        if (dataSource == null) {
+            throw new NullPointerException("DataSource parameter is null");
         }
+        List<String> tableNames = null;
+        try {
+            tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
+                @Override
+                public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
+                    ResultSet rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
+                    List<String> tableList = Lists.newArrayList();
+                    while (rs.next()) {
+                        tableList.add(rs.getString("TABLE_NAME"));
+                    }
+                    return tableList;
+                }
+            });
+        } catch (MetaDataAccessException e) {
+            throw new SQLException(e);
+        }
+
         return tableNames;
     }
 
@@ -80,15 +87,20 @@ public final class DbTableNameList {
      * @return A sorted list of table names where less dependent table are at a top of the list.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
+     * @throws NullPointerException
+     *             If dataSource is null.
      */
     public static List<String> getIndependentList(final DataSource dataSource) throws SQLException {
+        if (dataSource == null) {
+            throw new NullPointerException("DataSource parameter is null");
+        }
         final List<String> tableNames = getPlainList(dataSource);
+        Collections.sort(tableNames);
 
         List<TableDependencies> tablesAndTheirDependencies = Lists.newArrayList();
         for (String tableName : tableNames) {
             TableDependencies tableDependencies = new TableDependencies(tableName);
-            List<TableForeignKey> foreignKeyList = getForeignKeyList(dataSource, tableName);
-            for (TableForeignKey foreignKey : foreignKeyList) {
+            for (ForeignKey foreignKey : new DbTable(dataSource, tableName).getForeignKeyList()) {
                 tableDependencies.addDependency(foreignKey.getPkTableName());
             }
             tablesAndTheirDependencies.add(tableDependencies);
@@ -100,8 +112,8 @@ public final class DbTableNameList {
                 Set<String> o2Dependencies = o2.getDependencies();
 
                 if (o1Dependencies.contains(o2.getTableName()) && o2Dependencies.contains(o1.getTableName())) {
-                    // cross dependency - this should never happen!
-                    return 0;
+                    assert (false) : "Tables " + o1.getTableName() + " and " + o2.getTableName()
+                            + " have cross dependency to each other!";
                 } else if (o1Dependencies.contains(o2.getTableName())
                         || (o1Dependencies.size() > 0 && o2Dependencies.size() == 0)) {
                     return 1;
@@ -121,84 +133,53 @@ public final class DbTableNameList {
         return tables;
     }
 
-    // TODO: remove the function
-    public static List<TableForeignKey> getForeignKeyList(final DataSource dataSource, final String tableName)
-            throws SQLException {
-
-        List<TableForeignKey> tableForeignKeyList = new ArrayList<TableForeignKey>();
-        Connection connection = null;
-        ResultSet foreignKeys = null;
-        try {
-            connection = dataSource.getConnection();
-            DatabaseMetaData dbMetaData = connection.getMetaData();
-            foreignKeys = dbMetaData.getImportedKeys(null, null, tableName);
-            while (foreignKeys.next()) {
-                if (foreignKeys.getString("FK_NAME") != null) {
-                    tableForeignKeyList.add(new TableForeignKey(
-                            foreignKeys.getString("FK_NAME"),
-                            foreignKeys.getString("FKCOLUMN_NAME"),
-                            foreignKeys.getString("PKTABLE_NAME"),
-                            foreignKeys.getString("PKCOLUMN_NAME")));
-                }
-            }
-        } finally {
-            if (foreignKeys != null) {
-                foreignKeys.close();
-            }
-            if (connection != null) {
-                connection.close();
-            }
+    /**
+     * The class is used as a container for keeping information about database table dependencies.
+     * 
+     * @author Evgeny Surovtsev
+     * 
+     */
+    private static final class TableDependencies {
+        /**
+         * Constructor creates a new instance of Table Dependencies object for a givenTable Name.
+         * 
+         * @param tableName
+         *            Specifies a Table Name which a Table Dependencies will be stored for.
+         */
+        TableDependencies(final String tableName) {
+            this.tableName = tableName;
         }
 
-        return tableForeignKeyList;
-    }
-}
+        /**
+         * Returns Database table name for the current Dependency Table object.
+         * 
+         * @return Database Table Name
+         */
+        String getTableName() {
+            return tableName;
+        }
 
-/**
- * The class is used as a container for keeping information about database table dependencies.
- * 
- * @author Evgeny Surovtsev
- * 
- */
-final class TableDependencies {
-    /**
-     * Constructor creates a new instance of Table Dependencies object for a givenTable Name.
-     * 
-     * @param tableName
-     *            Specifies a Table Name which a Table Dependencies will be stored for.
-     */
-    TableDependencies(final String tableName) {
-        this.tableName = tableName;
-    }
+        /**
+         * Returns Dependencies (table names) for the current Table object.
+         * 
+         * @return Set of the table names which the current table is dependent on.
+         */
+        Set<String> getDependencies() {
+            return new HashSet<String>(dependencies);
+        }
 
-    /**
-     * Returns Database table name for the current Dependency Table object.
-     * 
-     * @return Database Table Name
-     */
-    String getTableName() {
-        return tableName;
-    }
+        /**
+         * Adds a new table name which the current table is dependent on.
+         * 
+         * @param dependency
+         *            Table name which the current table is dependent on.
+         */
+        void addDependency(final String dependency) {
+            dependencies.add(dependency);
+        }
 
-    /**
-     * Returns Dependencies (table names) for the current Table object.
-     * 
-     * @return Set of the table names which the current table is dependent on.
-     */
-    Set<String> getDependencies() {
-        return new HashSet<String>(dependencies);
+        private final String tableName;
+        private final Set<String> dependencies = new HashSet<String>();
     }
 
-    /**
-     * Adds a new table name which the current table is dependent on.
-     * 
-     * @param dependency
-     *            Table name which the current table is dependent on.
-     */
-    void addDependency(final String dependency) {
-        dependencies.add(dependency);
-    }
-
-    private final String tableName;
-    private final Set<String> dependencies = new HashSet<String>();
 }

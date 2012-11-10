@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.dto;
+package org.jtalks.poulpe.model.databasebackup.dto;
 
 /**
  * The class represent a Foreign key description data object. The class is immutable.
@@ -20,7 +20,7 @@ package org.jtalks.poulpe.logic.databasebackup.impl.dto;
  * @author Evgeny Surovtsev
  * 
  */
-public final class TableForeignKey {
+public final class ForeignKey implements TableKey {
 
     /**
      * Initiate an instance of the class with a given Foreign Key information.
@@ -33,8 +33,10 @@ public final class TableForeignKey {
      *            A Table which contain Primary key.
      * @param pkColumnName
      *            A Primary Key value.
+     * @throws NullPointerException
+     *             If any of fkTableName, fkColumnName, pkTableName, pkColumnName is null.
      */
-    public TableForeignKey(final String fkTableName, final String fkColumnName, final String pkTableName,
+    public ForeignKey(final String fkTableName, final String fkColumnName, final String pkTableName,
             final String pkColumnName) {
         if (fkTableName == null || fkColumnName == null || pkTableName == null || pkColumnName == null) {
             throw new NullPointerException("Fields should be initialized: fkTableName=" + fkTableName
@@ -48,8 +50,8 @@ public final class TableForeignKey {
 
     @Override
     public String toString() {
-        return "fkTableName=" + fkTableName + ", fkColumnName=" + fkColumnName + ", pkTableName="
-                + pkTableName + ", pkColumnName=" + pkColumnName;
+        return "[fkTableName=" + fkTableName + ", fkColumnName=" + fkColumnName + ", pkTableName="
+                + pkTableName + ", pkColumnName=" + pkColumnName + "]";
     }
 
     @Override
@@ -66,16 +68,16 @@ public final class TableForeignKey {
     @Override
     public boolean equals(final Object obj) {
         return (this == obj)
-                || (obj instanceof TableForeignKey
+                || (obj instanceof ForeignKey
                         && fkColumnName != null
                         && fkTableName != null
                         && pkColumnName != null
                         && pkTableName != null
 
-                        && fkColumnName.equals(((TableForeignKey) obj).fkColumnName)
-                        && fkTableName.equals(((TableForeignKey) obj).fkTableName)
-                        && pkColumnName.equals(((TableForeignKey) obj).pkColumnName)
-                        && pkTableName.equals(((TableForeignKey) obj).pkTableName));
+                        && fkColumnName.equals(((ForeignKey) obj).fkColumnName)
+                        && fkTableName.equals(((ForeignKey) obj).fkTableName)
+                        && pkColumnName.equals(((ForeignKey) obj).pkColumnName)
+                        && pkTableName.equals(((ForeignKey) obj).pkTableName));
     }
 
     /**

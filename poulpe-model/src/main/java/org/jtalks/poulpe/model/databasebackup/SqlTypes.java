@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.logic.databasebackup.impl.dto;
+package org.jtalks.poulpe.model.databasebackup;
 
 import java.util.Arrays;
 
@@ -209,7 +209,7 @@ public enum SqlTypes {
      * @param textBased
      *            Should be set to true if a value for this type must be quoted in the SQL INSERT statement.
      */
-    SqlTypes(final int jdbcSqlType, final boolean hasSize, final boolean textBased) {
+    private SqlTypes(final int jdbcSqlType, final boolean hasSize, final boolean textBased) {
         this(new int[] { jdbcSqlType }, hasSize, textBased);
     }
 
@@ -226,7 +226,8 @@ public enum SqlTypes {
      * @param textBased
      *            Should be set to true if a value for this type must be quoted in the SQL INSERT statement.
      */
-    SqlTypes(final int[] jdbcSqlTypeArray, final boolean hasSize, final boolean textBased) {
+    private SqlTypes(final int[] jdbcSqlTypeArray, final boolean hasSize, final boolean textBased) {
+        assert (jdbcSqlTypeArray != null) : "jdbcSqlTypeArray cannot be null.";
         this.jdbcSqlType = jdbcSqlTypeArray;
         this.hasSize = hasSize;
         this.textBased = textBased;
@@ -260,6 +261,8 @@ public enum SqlTypes {
      * @param jdbcSqlType
      *            A value represents JDBC SQL Type (should be matched to {@link java.sql.Types}).
      * @return A SqlTypes value associated with the given JDBC SQL Type.
+     * @throws IllegalArgumentException
+     *             If jdbcSqlType is incorrect.
      */
     public static SqlTypes getSqlTypeByJdbcSqlType(final int jdbcSqlType) {
         for (SqlTypes typeToCheck : SqlTypes.values()) {

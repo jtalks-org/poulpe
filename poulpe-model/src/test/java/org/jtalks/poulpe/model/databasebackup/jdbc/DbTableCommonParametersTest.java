@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.logic.databasebackup.impl.jdbc;
+package org.jtalks.poulpe.model.databasebackup.jdbc;
 
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
@@ -97,7 +97,7 @@ public class DbTableCommonParametersTest {
     @Test
     public void getCommonParameterMapTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "tableName");
-        assertEquals(expectedCommonParameterMap, testObject.getCommonParameterMap());
+        assertEquals(testObject.getCommonParameterMap(), expectedCommonParameterMap);
         verify(statement).close();
         verify(resultSet).close();
         verify(connection).close();
