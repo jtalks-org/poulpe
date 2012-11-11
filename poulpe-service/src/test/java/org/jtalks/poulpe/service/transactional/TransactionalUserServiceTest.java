@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -212,6 +213,32 @@ public class TransactionalUserServiceTest {
         when(groupAce.isGranting()).thenReturn(true);
 
         assertTrue(userService.accessAllowedToComponentType(username, componentType));
+    }
+
+    @Test
+    public void testUpdateUsers(){
+        doNothing().when(userDao).update((PoulpeUser)any());
+        Group group = createGroupWithId(1);
+        List<User> users = new ArrayList<User>();
+        for(int i=0; i<5; i++){
+            users.add(user());
+        }
+        group.setUsers(users);
+        userService.updateUsersAtGroup(users, group);
+        for(User u :users){
+            assertEquals(u.getGroups().get(0),group);
+        }
+
+        users = new ArrayList<User>();
+        for(int i=0; i<5; i++){
+            users.add(user());
+            users.get(i).getGroups().add(group);
+        }
+        group.setUsers(new ArrayList<User>());
+        userService.updateUsersAtGroup(users, group);
+        for(User u :users){
+            assertTrue(u.getGroups().isEmpty());
+        }
     }
 
     private Group createGroupWithId(long groupId) {

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -169,4 +170,11 @@ public interface UserService {
      *         restricted or there is no granting access or the component does not exist
      */
     boolean accessAllowedToComponentType(String username, ComponentType componentType);
+
+    /**
+     * Update users at group. For proper operation of the replication
+     * @param users users for update
+     * @param group group with users
+     */
+    void updateUsersAtGroup(List<User> users, Group group);
 }

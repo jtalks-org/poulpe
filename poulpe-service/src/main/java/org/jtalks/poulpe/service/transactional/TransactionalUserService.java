@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.poulpe.model.dao.ComponentDao;
@@ -28,6 +29,8 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.service.UserService;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -165,6 +168,7 @@ public class TransactionalUserService implements UserService {
     @Override
     public void banUsers(PoulpeUser... usersToBan) {
         userBanner.banUsers(new UserList(usersToBan));
+        updateUsersAtGroup(new ArrayList<User>(Arrays.asList(usersToBan)), userBanner.getBannedUsersGroups().get(0));
     }
 
     /**
@@ -173,6 +177,7 @@ public class TransactionalUserService implements UserService {
     @Override
     public void revokeBan(PoulpeUser... bannedUsersToRevoke) {
         userBanner.revokeBan(new UserList(bannedUsersToRevoke));
+        updateUsersAtGroup(new ArrayList<User>(Arrays.asList(bannedUsersToRevoke)), userBanner.getBannedUsersGroups().get(0));
     }
 
     /**
@@ -203,5 +208,22 @@ public class TransactionalUserService implements UserService {
         return granting;
     }
 
-
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void updateUsersAtGroup(List<User> users, Group group) {
+        for(User u :users){
+            if(group.getUsers().contains(u)){
+                if(!u.getGroups().contains(group)){
+                    u.getGroups().add(group);
+                }
+            }else{
+                if(u.getGroups().contains(group)){
+                    u.getGroups().remove(group);
+                }
+            }
+            updateUser((PoulpeUser) u); //TODO What is the performance?
+        }
+    }
 }
