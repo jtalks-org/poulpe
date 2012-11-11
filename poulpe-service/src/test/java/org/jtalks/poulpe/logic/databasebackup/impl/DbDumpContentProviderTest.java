@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.logic.databasebackup.impl;
 
-import javax.sql.DataSource;
-
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 import org.testng.annotations.Test;
 
@@ -32,10 +30,6 @@ public class DbDumpContentProviderTest {
 
     @Test(enabled = false)
     public final void performFileDownloadTest() throws FileDownloadException {
-        DataSource dataSource = new org.springframework.jdbc.datasource.DriverManagerDataSource(
-                "com.mysql.jdbc.Driver", "jdbc:mysql://localhost/p_poulpe?characterEncoding=UTF-8", "root", "root");
-        DbDumpContentProvider contentProvider = new DbDumpContentProvider(dataSource);
-        System.out.print(contentProvider.getContent());
     }
 
 }

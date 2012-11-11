@@ -34,15 +34,6 @@ import javax.sql.DataSource;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 import org.testng.annotations.Test;
 
-/**
- * FileDownloadService.performFileDownload() method during its running should:
- * <ol>
- * <li>Get a content by calling ContentProvider.getContent();</li>
- * <li>Push browser to download prepared content by calling FileDownloader.download().</li>
- * </ol>
- * 
- * @author Evgeny Surovtsev
- */
 public class GzipContentProviderTest {
 
     @Test
@@ -56,20 +47,6 @@ public class GzipContentProviderTest {
         GzipContentProvider testObject = new GzipContentProvider(contentProvider);
         InputStream input = testObject.getContent();
 
-        // BufferedReader in = new BufferedReader(new StringReader(expected));
-        // ByteArrayOutputStream result = new ByteArrayOutputStream();
-        // BufferedOutputStream out = new BufferedOutputStream(new GZIPOutputStream(result));
-        // int c;
-        // while ((c = in.read()) != -1) {
-        // out.write(c);
-        // }
-        // in.close();
-        // out.close();
-        //
-        // // read
-        // InputStream input = new ByteArrayInputStream(result.toByteArray());
-
-        // decompress
         BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(input)));
         String actual = in2.readLine();
         in2.close();
