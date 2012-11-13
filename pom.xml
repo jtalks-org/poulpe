@@ -36,6 +36,11 @@
       <id>ZK CE</id>
       <url>http://mavensync.zkoss.org/maven2</url>
     </repository>
+    <repository>  
+      <id>maven-restlet</id>  
+      <name>Public online Restlet repository</name>  
+      <url>http://maven.restlet.org</url>  
+    </repository>
   </repositories>
 
   <dependencyManagement>

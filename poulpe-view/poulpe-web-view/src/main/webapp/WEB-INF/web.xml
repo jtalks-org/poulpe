@@ -79,6 +79,15 @@
     <load-on-startup>1</load-on-startup>
   </servlet>
 
+  <servlet>
+    <servlet-name>LoginServerApplication</servlet-name>
+    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>org.jtalks.poulpe.web.controller.LoginServerApplication</param-value>
+    </init-param>
+  </servlet>
+
   <servlet-mapping>
     <servlet-name>zkLoader</servlet-name>
     <url-pattern>*.zul</url-pattern>
@@ -86,6 +95,10 @@
   <servlet-mapping>
     <servlet-name>zkLoader</servlet-name>
     <url-pattern>*.zhtml</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>LoginServerApplication</servlet-name>
+    <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
 
   <filter>

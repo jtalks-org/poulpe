@@ -73,6 +73,11 @@
       <groupId>org.zkoss.zk</groupId>
       <artifactId>zk</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.restlet.jee</groupId>
+      <artifactId>org.restlet.ext.servlet</artifactId>
+      <version>2.1.0</version>
+    </dependency>
 
     <dependency>
       <groupId>org.jtalks.common</groupId>
