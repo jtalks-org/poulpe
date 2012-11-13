@@ -6,7 +6,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +14,12 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
-import org.jtalks.poulpe.model.databasebackup.dto.ColumnMetaData;
 import org.jtalks.poulpe.model.databasebackup.dto.Cell;
+import org.jtalks.poulpe.model.databasebackup.dto.ColumnMetaData;
 import org.jtalks.poulpe.model.databasebackup.dto.ForeignKey;
+import org.jtalks.poulpe.model.databasebackup.dto.Row;
 import org.jtalks.poulpe.model.databasebackup.dto.TableKey;
 import org.jtalks.poulpe.model.databasebackup.dto.UniqueKey;
-import org.jtalks.poulpe.model.databasebackup.dto.Row;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
@@ -58,6 +57,15 @@ public class DbTable {
         this.tableName = tableName;
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    /**
+     * Returns table name for the instance.
+     * 
+     * @return Table name
+     */
+    public String getTableName() {
+        return tableName;
     }
 
     /**

@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
 import static org.testng.Assert.assertFalse;
@@ -7,15 +21,14 @@ import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
 
 /**
- * TableForeignKey container is used in the Collections so each object of TableForeignKey should support comparing
- * operations under itself.
+ * ForeignKey is mainly used in Collections so first of all we need to test it's comparison abilities.
  * 
  * @author Evgeny Surovtsev
  * 
  */
 public class ForeignKeyTest {
     /**
-     * Two different instances of TableForeignKey should not be equal.
+     * Two different instances of ForeignKey should not be equal.
      */
     @Test
     public void twoNotEqualTableForeignKeyAreNotEquals() {
@@ -25,7 +38,7 @@ public class ForeignKeyTest {
     }
 
     /**
-     * Two the same instances of TableForeignKey should be equal.
+     * Two the same instances of ForeignKey should be equal.
      */
     @Test
     public void twoEqualTableForeignKeyAreEquals() {

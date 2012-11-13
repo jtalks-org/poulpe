@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
 import static org.testng.Assert.assertEquals;
@@ -6,14 +20,11 @@ import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * TableColumn container is used in the Collections so each object of TableRow should support comparing operations under
- * itself.
+ * Cell is mainly used in Collections so first of all we need to test it's comparison abilities.
  * 
  * @author Evgeny Surovtsev
  * 
@@ -22,6 +33,9 @@ public class CellTest {
     private ColumnMetaData columnMetaData;
     private ColumnMetaData differentColumnMetaData;
 
+    /**
+     * Sets up a ColumnMetaData which is used in most of the tests and a different ColumnMetaData.
+     */
     @BeforeClass
     private void setUp() {
         columnMetaData = new ColumnMetaData("columnName", SqlTypes.VARCHAR);
@@ -29,7 +43,7 @@ public class CellTest {
     }
 
     /**
-     * Two different instances of TableColumnData should not be equal.
+     * Two different instances of Cell should not be equal.
      */
     @Test
     public void twoNotEqualCellsAreNotEqual() {
@@ -50,6 +64,9 @@ public class CellTest {
         assertFalse(testObject1.equals(testObject2), "only one field differs");
     }
 
+    /**
+     * Checks if two equal Cell with null as their values are still equal.
+     */
     @Test
     public void twoEqualCellWithNullValueAreEqual() {
         Cell testObject1 = new Cell(columnMetaData, null);
@@ -58,7 +75,7 @@ public class CellTest {
     }
 
     /**
-     * Two the same instances of TableColumnData should be equal.
+     * Two the same instances of Cell should be equal.
      */
     @Test
     public void twoEqualCellsAreEqual() {
@@ -68,7 +85,7 @@ public class CellTest {
     }
 
     /**
-     * Check if creating instance with null parameters is forbiden.
+     * Checks if creating instance with null parameters is forbidden.
      */
     @Test
     @SuppressWarnings("unused")
@@ -88,7 +105,7 @@ public class CellTest {
     }
 
     /**
-     * Tests Java Equals Contract.
+     * Checks if a Tests Java Equals Contract is valid.
      */
     @Test
     public void equalsContractTest() {

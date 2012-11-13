@@ -29,6 +29,7 @@ import org.jtalks.poulpe.logic.databasebackup.exceptions.DataBaseDoesntContainTa
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.model.databasebackup.jdbc.DbTable;
 import org.jtalks.poulpe.model.databasebackup.jdbc.DbTableNameList;
 
 /**
@@ -69,8 +70,8 @@ public class DbDumpContentProvider implements ContentProvider {
             }
 
             for (String tableName : tableNames) {
-                SqlTableDump tableDump = new SqlTableDump(getDataSource(), tableName);
-                result.append(tableDump);
+                SqlTableDump tableDump = new SqlTableDump(new DbTable(getDataSource(), tableName));
+                result.append(tableDump.getFullDump());
             }
 
         } catch (SQLException e) {

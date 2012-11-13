@@ -16,8 +16,6 @@ package org.jtalks.poulpe.model.databasebackup.dto;
 
 import java.util.List;
 
-import org.jtalks.poulpe.model.databasebackup.SqlTypes;
-
 import com.google.common.collect.Lists;
 
 /**
@@ -32,7 +30,7 @@ public final class Row {
      * 
      * @param cellData
      *            a new Cell object to add
-     * @return itself
+     * @return this
      */
     public Row addCell(final Cell cellData) {
         if (cellData == null) {

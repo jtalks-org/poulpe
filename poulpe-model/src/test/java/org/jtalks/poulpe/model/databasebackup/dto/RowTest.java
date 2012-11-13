@@ -1,20 +1,30 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
-
-import java.util.Arrays;
+import static org.testng.Assert.fail;
 
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
-import org.jtalks.poulpe.model.databasebackup.dto.Row;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * TableRow container is used in the Collections so each object of TableRow should support comparing operations under
- * itself.
+ * Row is mainly used in Collections so first of all we need to test it's comparison abilities.
  * 
  * @author Evgeny Surovtsev
  * 
@@ -23,6 +33,9 @@ public class RowTest {
     private ColumnMetaData idColumn;
     private ColumnMetaData nameColumn;
 
+    /**
+     * Sets up 2 wildly used in the tests variables: a sample of id column and a sample of name column.
+     */
     @BeforeClass
     private void setUp() {
         idColumn = new ColumnMetaData("id", SqlTypes.INT);
@@ -30,7 +43,7 @@ public class RowTest {
     }
 
     /**
-     * Two different instances of TableRow should not be equal.
+     * Two different instances of Row should not be equal.
      */
     @Test
     public void twoNotEqualTableRowAreNotEqual() {
@@ -44,7 +57,7 @@ public class RowTest {
     }
 
     /**
-     * Two the same instances of TableRow should be equal.
+     * Two the same instances of Row should be equal.
      */
     @Test
     public void twoEqualTableRowAreEqual() {
@@ -58,7 +71,7 @@ public class RowTest {
     }
 
     /**
-     * Two the same instances of TableRow should be equal.
+     * Two the same instances of Row should be equal.
      */
     @Test
     public void twoEqualTableRowWithDifferentColumnsOrderAreEqual() {
@@ -72,7 +85,7 @@ public class RowTest {
     }
 
     /**
-     * Two the same instances of TableRow should be equal.
+     * Two the same instances of Row should be equal.
      */
     @Test
     public void addingTwoColumnsWithTheSamenameIsForbidden() {
@@ -86,7 +99,7 @@ public class RowTest {
     }
 
     /**
-     * Two the same instances of TableRow should be equal.
+     * Two the same instances of Row should be equal.
      */
     @Test
     public void addingTwoColumnsWithTheSamenameIsForbidden2() {
@@ -131,8 +144,11 @@ public class RowTest {
         assertFalse(testObject1.equals(null), "Null value should return false");
     }
 
+    /**
+     * Checking if setters and getters for the Row are working.
+     */
     @Test
-    public void setAndGetTableRowData() {
+    public void setAndGetRowData() {
         Row testObject = new Row().addCell(new Cell(idColumn, "A"));
         Cell data = testObject.getCellList().get(0);
         assertEquals(data.getColumnName(), "id");
