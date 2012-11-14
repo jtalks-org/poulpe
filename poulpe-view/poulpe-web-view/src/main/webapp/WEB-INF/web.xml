@@ -84,7 +84,7 @@
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
     <init-param>
       <param-name>org.restlet.application</param-name>
-      <param-value>org.jtalks.poulpe.web.controller.LoginServerApplication</param-value>
+      <param-value>org.jtalks.poulpe.web.controller.rest.LoginServerApplication</param-value>
     </init-param>
   </servlet>
 

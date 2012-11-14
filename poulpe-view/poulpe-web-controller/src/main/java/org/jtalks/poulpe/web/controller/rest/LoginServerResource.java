@@ -12,19 +12,17 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller;
+package org.jtalks.poulpe.web.controller.rest;
 
-import org.jtalks.poulpe.service.transactional.LoginServerResource;
-import org.restlet.Application;
-import org.restlet.Restlet;
-import org.restlet.routing.Router;
+import org.restlet.resource.ServerResource;
 
-public class LoginServerApplication extends Application {
+public class LoginServerResource extends ServerResource implements
+        LoginResource {
 
     @Override
-    public Restlet createInboundRoot() {
-        Router router = new Router(getContext());
-        router.attach("/authenticate", LoginServerResource.class);
-        return router;
+    public String authenticate(String credintals) {
+        String[] splitted = credintals.split(":");
+        return "username: " + splitted[0] + ", passwordHash: " + splitted[1];
     }
+
 }
