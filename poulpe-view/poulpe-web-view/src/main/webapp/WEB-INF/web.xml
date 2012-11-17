@@ -80,11 +80,12 @@
   </servlet>
 
   <servlet>
-    <servlet-name>LoginServerApplication</servlet-name>
+    <description>RESTful services</description>
+    <servlet-name>restServices</servlet-name>
     <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
     <init-param>
       <param-name>org.restlet.application</param-name>
-      <param-value>org.jtalks.poulpe.web.controller.rest.LoginServerApplication</param-value>
+      <param-value>org.jtalks.poulpe.web.controller.rest.RestServer</param-value>
     </init-param>
   </servlet>
 
@@ -97,7 +98,7 @@
     <url-pattern>*.zhtml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>LoginServerApplication</servlet-name>
+    <servlet-name>restServices</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
 

@@ -16,6 +16,11 @@ package org.jtalks.poulpe.web.controller.rest;
 
 import org.restlet.resource.Post;
 
+/**
+ * Login RESTful service resource interface.
+ * 
+ * @author Guram Savinov
+ */
 public interface LoginResource {
 
     @Post("txt")

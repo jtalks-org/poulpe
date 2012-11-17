@@ -16,6 +16,11 @@ package org.jtalks.poulpe.web.controller.rest;
 
 import org.restlet.resource.ServerResource;
 
+/**
+ * RESTful server resource for the {@code LoginResource} interface.
+ * 
+ * @author Guram Savinov
+ */
 public class LoginServerResource extends ServerResource implements
         LoginResource {
 
