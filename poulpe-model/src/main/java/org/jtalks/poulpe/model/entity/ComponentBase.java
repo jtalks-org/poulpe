@@ -25,12 +25,11 @@ import java.util.List;
 
 /**
  * "Template" for producing components. It stores default properties and, when creating a component, copies all of them
- * to a new component. For each {@link ComponentType} there must be only one {@link ComponentType}.<br>
- * <br>
+ * to a new component. For each {@link ComponentType} there must be only one {@link ComponentType}.<br> <br>
  * <p/>
  * If adding a new value to {@link ComponentType} enum, make sure that corresponding {@link ComponentBase} entity is
  * created.
- * 
+ *
  * @author Alexey Grigorev
  * @see ComponentType
  * @see Component
@@ -48,36 +47,32 @@ public class ComponentBase {
     /**
      * Constructs {@link ComponentBase} with given {@link ComponentType}. Typically shouldn't be invoked manually -
      * because all {@link ComponentBase} entities should in the database already.
-     * 
-     * @param componentType
-     *            type for the component
+     *
+     * @param componentType type for the component
      */
-    public ComponentBase(@Nonnull final ComponentType componentType) {
+    public ComponentBase(@Nonnull ComponentType componentType) {
         this.componentType = componentType;
     }
 
     /**
      * Based on current component type, creates a component of this type and fills it with default properties.
-     * 
-     * @param name
-     *            of the component
-     * @param description
-     *            its description
+     *
+     * @param name        of the component
+     * @param description its description
      * @return component of needed type
      */
-    public Component newComponent(final String name, final String description) {
+    public Component newComponent(String name, String description) {
         Validate.validState(componentType != null, "componentType must be set");
         return componentType.newComponent(name, description, copyAll(defaultProperties));
     }
 
     /**
      * Ensures that properties are cloned, not used by reference
-     * 
-     * @param defaults
-     *            properties
+     *
+     * @param defaults properties
      * @return list of cloned properties
      */
-    private static List<Property> copyAll(final Iterable<Property> defaults) {
+    private static List<Property> copyAll(Iterable<Property> defaults) {
         List<Property> result = Lists.newArrayList();
         for (Property property : defaults) {
             result.add(copy(property));
@@ -87,12 +82,11 @@ public class ComponentBase {
 
     /**
      * Creates a copy of the specified property.
-     * 
-     * @param property
-     *            a property to copy from, can't be null
+     *
+     * @param property a property to copy from, can't be null
      * @return a copy of the specified property
      */
-    private static Property copy(@Nonnull final Property property) {
+    private static Property copy(@Nonnull Property property) {
         Property copy = new Property(property.getName(), property.getValue());
         copy.setValidationRule(property.getValidationRule());
         return copy;
@@ -107,11 +101,10 @@ public class ComponentBase {
 
     /**
      * Visible for hibernate
-     * 
-     * @param componentType
-     *            type of the component
+     *
+     * @param componentType type of the component
      */
-    protected void setComponentType(final ComponentType componentType) {
+    protected void setComponentType(ComponentType componentType) {
         this.componentType = componentType;
     }
 
@@ -124,11 +117,10 @@ public class ComponentBase {
 
     /**
      * Visible for hibernate
-     * 
-     * @param defaultProperties
-     *            collection of default properties
+     *
+     * @param defaultProperties collection of default properties
      */
-    protected void setDefaultProperties(final Collection<Property> defaultProperties) {
+    protected void setDefaultProperties(Collection<Property> defaultProperties) {
         this.defaultProperties = defaultProperties;
     }
 }
