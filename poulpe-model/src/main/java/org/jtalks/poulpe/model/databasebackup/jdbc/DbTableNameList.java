@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.dto.ForeignKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.JdbcUtils;
@@ -55,27 +56,32 @@ public final class DbTableNameList {
      */
     @SuppressWarnings("unchecked")
     public static List<String> getPlainList(final DataSource dataSource) throws SQLException {
-        if (dataSource == null) {
-            throw new NullPointerException("DataSource parameter is null");
-        }
+        Validate.notNull(dataSource, "dataSource must not be null");
         List<String> tableNames = null;
         try {
             tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
                 @Override
                 public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-                    ResultSet rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
-                    List<String> tableList = Lists.newArrayList();
-                    while (rs.next()) {
-                        tableList.add(rs.getString("TABLE_NAME"));
+                    final List<String> tableList = Lists.newArrayList();
+                    ResultSet rs = null;
+                    try {
+                        rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
+                        while (rs.next()) {
+                            tableList.add(rs.getString("TABLE_NAME"));
+                        }
+                    } finally {
+                        if (rs != null) {
+                            rs.close();
+                        }
                     }
                     return tableList;
                 }
             });
-        } catch (MetaDataAccessException e) {
+        } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
 
-        return tableNames;
+        return Collections.unmodifiableList(tableNames);
     }
 
     /**
@@ -91,16 +97,14 @@ public final class DbTableNameList {
      *             If dataSource is null.
      */
     public static List<String> getIndependentList(final DataSource dataSource) throws SQLException {
-        if (dataSource == null) {
-            throw new NullPointerException("DataSource parameter is null");
-        }
-        final List<String> tableNames = getPlainList(dataSource);
+        Validate.notNull(dataSource, "dataSource must not be null");
+        final List<String> tableNames = Lists.newArrayList(getPlainList(dataSource));
         Collections.sort(tableNames);
 
-        List<TableDependencies> tablesAndTheirDependencies = Lists.newArrayList();
-        for (String tableName : tableNames) {
-            TableDependencies tableDependencies = new TableDependencies(tableName);
-            for (ForeignKey foreignKey : new DbTable(dataSource, tableName).getForeignKeyList()) {
+        final List<TableDependencies> tablesAndTheirDependencies = Lists.newArrayList();
+        for (final String tableName : tableNames) {
+            final TableDependencies tableDependencies = new TableDependencies(tableName);
+            for (final ForeignKey foreignKey : new DbTable(dataSource, tableName).getForeignKeyList()) {
                 tableDependencies.addDependency(foreignKey.getPkTableName());
             }
             tablesAndTheirDependencies.add(tableDependencies);
@@ -108,17 +112,17 @@ public final class DbTableNameList {
         Collections.sort(tablesAndTheirDependencies, new Comparator<TableDependencies>() {
             @Override
             public int compare(final TableDependencies o1, final TableDependencies o2) {
-                Set<String> o1Dependencies = o1.getDependencies();
-                Set<String> o2Dependencies = o2.getDependencies();
+                final Set<String> o1Dependencies = o1.getDependencies();
+                final Set<String> o2Dependencies = o2.getDependencies();
 
                 if (o1Dependencies.contains(o2.getTableName()) && o2Dependencies.contains(o1.getTableName())) {
-                    assert (false) : "Tables " + o1.getTableName() + " and " + o2.getTableName()
+                    assert false : "Tables " + o1.getTableName() + " and " + o2.getTableName()
                             + " have cross dependency to each other!";
-                } else if (o1Dependencies.contains(o2.getTableName())
-                        || (o1Dependencies.size() > 0 && o2Dependencies.size() == 0)) {
+                } else if (o1Dependencies.contains(o2.getTableName()) || o1Dependencies.size() > 0
+                        && o2Dependencies.size() == 0) {
                     return 1;
-                } else if (o2Dependencies.contains(o1.getTableName())
-                        || (o1Dependencies.size() == 0 && o2Dependencies.size() > 0)) {
+                } else if (o2Dependencies.contains(o1.getTableName()) || o1Dependencies.size() == 0
+                        && o2Dependencies.size() > 0) {
                     return -1;
                 }
 
@@ -126,11 +130,11 @@ public final class DbTableNameList {
             }
         });
 
-        List<String> tables = new ArrayList<String>();
-        for (TableDependencies dependencies : tablesAndTheirDependencies) {
+        final List<String> tables = new ArrayList<String>();
+        for (final TableDependencies dependencies : tablesAndTheirDependencies) {
             tables.add(dependencies.getTableName());
         }
-        return tables;
+        return Collections.unmodifiableList(tables);
     }
 
     /**
@@ -147,6 +151,7 @@ public final class DbTableNameList {
          *            Specifies a Table Name which a Table Dependencies will be stored for.
          */
         TableDependencies(final String tableName) {
+            assert tableName != null : "tableName must not be null";
             this.tableName = tableName;
         }
 
@@ -175,11 +180,11 @@ public final class DbTableNameList {
          *            Table name which the current table is dependent on.
          */
         void addDependency(final String dependency) {
+            assert dependency != null : "dependency must not be null";
             dependencies.add(dependency);
         }
 
         private final String tableName;
         private final Set<String> dependencies = new HashSet<String>();
     }
-
 }

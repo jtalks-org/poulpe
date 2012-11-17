@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.logic.databasebackup.exceptions;
 
+import org.apache.commons.lang3.Validate;
 
 /**
  * The Exception is thrown when any error occurs while preparing content or sending file to downloading.
- *
+ * 
  * @author Evgeny Surovtsev
- *
+ * 
  */
 public class FileDownloadException extends Exception {
     /**
@@ -31,8 +32,9 @@ public class FileDownloadException extends Exception {
 
     /**
      * Constructor with predefined error message.
-     *
-     * @param msg Predefined error message.
+     * 
+     * @param msg
+     *            Predefined error message.
      */
     public FileDownloadException(final String msg) {
         super(msg);
@@ -40,8 +42,9 @@ public class FileDownloadException extends Exception {
 
     /**
      * Constructor creates an instance and uses error message from given Exception.
-     *
-     * @param e An exception which is used to construct FileDownloadException.
+     * 
+     * @param e
+     *            An exception which is used to construct FileDownloadException.
      */
     public FileDownloadException(final Exception e) {
         super(e);

@@ -18,17 +18,29 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.dto.Cell;
 import org.jtalks.poulpe.model.databasebackup.dto.Row;
 import org.jtalks.poulpe.model.databasebackup.jdbc.DbTable;
 import org.jtalks.poulpe.model.databasebackup.jdbc.TableDataUtil;
 
+/**
+ * Provides a table data in a shape of SQL statements for given DbTable instance.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class SqlTableDataDump {
-
+    /**
+     * Initializes an instance of the class with provided source of data (dbTable) object.
+     * 
+     * @param dbTable
+     *            A source of data to dump table data from.
+     * @throws NullPointerException
+     *             if dbTable is null.
+     */
     public SqlTableDataDump(final DbTable dbTable) {
-        if (dbTable == null) {
-            throw new NullPointerException("dbTable cannot be null.");
-        }
+        Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
@@ -59,6 +71,13 @@ public class SqlTableDataDump {
                 .append("--" + SqlTableDumpUtil.LINEFEED + SqlTableDumpUtil.LINEFEED);
     }
 
+    /**
+     * gets a list of row with data from table and then formats SQL INSERT statements for each obtained row.
+     * 
+     * @return all SQL INSERT statements for given table.
+     * @throws SQLException
+     *             if any of dataSource or tableName is null.
+     */
     private StringBuilder getTableDataText() throws SQLException {
         StringBuilder result = new StringBuilder();
         for (Row dataDump : dbTable.getData()) {
@@ -68,11 +87,19 @@ public class SqlTableDataDump {
 
     }
 
-    private StringBuilder getRowDataText(final Row dataDump) {
+    /**
+     * Formats and returns a SQL statement for inserting into a table given Row object.
+     * 
+     * @param row
+     *            A Row based on which a new INSERT statement will be constructed.
+     * @return A SQL valid INSERT statement.
+     */
+    private StringBuilder getRowDataText(final Row row) {
+        assert (row != null) : "dataDump must not be null";
         List<String> nameColumns = new ArrayList<String>();
         List<String> valueColumns = new ArrayList<String>();
 
-        for (Cell columnData : dataDump.getCellList()) {
+        for (Cell columnData : row.getCellList()) {
             String value = (columnData.getColumnData() != null) ? columnData.getColumnData().toString() : "NULL";
             if (columnData.getColumnData() != null && columnData.getSqlType().isTextBased()) {
                 value = TableDataUtil.getSqlValueQuotedString(value);

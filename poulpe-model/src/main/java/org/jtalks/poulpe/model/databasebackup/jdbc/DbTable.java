@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
 import org.jtalks.poulpe.model.databasebackup.dto.Cell;
 import org.jtalks.poulpe.model.databasebackup.dto.ColumnMetaData;
@@ -48,12 +49,8 @@ public class DbTable {
      *             if any of dataSource or tableName is null.
      */
     public DbTable(final DataSource dataSource, final String tableName) {
-        if (dataSource == null) {
-            throw new NullPointerException("dataSource parameter is null");
-        }
-        if (tableName == null) {
-            throw new NullPointerException("tableName parameter is null");
-        }
+        Validate.notNull(dataSource, "dataSource must not be null");
+        Validate.notNull(tableName, "tableName must not be null");
         this.tableName = tableName;
         this.dataSource = dataSource;
         this.jdbcTemplate = new JdbcTemplate(dataSource);
@@ -79,7 +76,7 @@ public class DbTable {
         if (tableDataList == null) {
             tableDataList = obtainTableDataList();
         }
-        return tableDataList;
+        return Collections.unmodifiableList(tableDataList);
     }
 
     /**
@@ -94,7 +91,7 @@ public class DbTable {
         if (tableStructureList == null) {
             tableStructureList = obtainTableStructureList();
         }
-        return Lists.newArrayList(tableStructureList);
+        return Collections.unmodifiableList(tableStructureList);
     }
 
     /**
@@ -109,7 +106,7 @@ public class DbTable {
         if (commonParameterMap == null) {
             commonParameterMap = obtainCommonParameterMap();
         }
-        return Maps.newHashMap(commonParameterMap);
+        return Collections.unmodifiableMap(commonParameterMap);
     }
 
     /**
@@ -123,7 +120,7 @@ public class DbTable {
         if (primaryKeyList == null) {
             primaryKeyList = obtainPrimaryKeyList();
         }
-        return Lists.newArrayList(primaryKeyList);
+        return Collections.unmodifiableList(primaryKeyList);
     }
 
     /**
@@ -137,7 +134,7 @@ public class DbTable {
         if (uniqueKeyList == null) {
             uniqueKeyList = obtainUniqueKeyList();
         }
-        return Lists.newArrayList(uniqueKeyList);
+        return Collections.unmodifiableList(uniqueKeyList);
     }
 
     /**
@@ -151,7 +148,7 @@ public class DbTable {
         if (foreignKeyList == null) {
             foreignKeyList = obtainForeignKeyList();
         }
-        return Lists.newArrayList(foreignKeyList);
+        return Collections.unmodifiableList(foreignKeyList);
     }
 
     /**
@@ -164,22 +161,21 @@ public class DbTable {
     private List<Row> obtainTableDataList() throws SQLException {
         List<Row> dataDumpList = Collections.emptyList();
         try {
-            dataDumpList = jdbcTemplate.query("select * from " + tableName,
-                    new RowMapper<Row>() {
-                        @Override
-                        public Row mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-                            ResultSetMetaData metaData = rs.getMetaData();
-                            int columnCount = metaData.getColumnCount();
+            dataDumpList = jdbcTemplate.query("select * from " + tableName, new RowMapper<Row>() {
+                @Override
+                public Row mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+                    final ResultSetMetaData metaData = rs.getMetaData();
+                    final int columnCount = metaData.getColumnCount();
 
-                            Row row = new Row();
-                            for (int i = 1; i <= columnCount; i++) {
-                                row.addCell(new Cell(new ColumnMetaData(metaData.getColumnName(i), SqlTypes
-                                        .getSqlTypeByJdbcSqlType(metaData.getColumnType(i))), rs.getObject(i)));
-                            }
-                            return row;
-                        }
-                    });
-        } catch (DataAccessException e) {
+                    final Row row = new Row();
+                    for (int i = 1; i <= columnCount; i++) {
+                        row.addCell(new Cell(new ColumnMetaData(metaData.getColumnName(i), SqlTypes
+                                .getSqlTypeByJdbcSqlType(metaData.getColumnType(i))), rs.getObject(i)));
+                    }
+                    return row;
+                }
+            });
+        } catch (final DataAccessException e) {
             throw new SQLException(e);
         }
 
@@ -194,7 +190,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private List<ColumnMetaData> obtainTableStructureList() throws SQLException {
-        List<ColumnMetaData> tableColumnList = Lists.newArrayList();
+        final List<ColumnMetaData> tableColumnList = Lists.newArrayList();
         Statement stmt = null;
         ResultSet rs = null;
         ResultSetMetaData rsmd = null;
@@ -203,15 +199,15 @@ public class DbTable {
             // Get a list of defaults for the column
             // this cannot be done via ResultSetMetaData, so doing this via tableMetaData instead
             connection = dataSource.getConnection();
-            DatabaseMetaData dbMetaData = connection.getMetaData();
-            Map<String, String> columnDefaultValues = getColumnDefaults(dbMetaData);
+            final DatabaseMetaData dbMetaData = connection.getMetaData();
+            final Map<String, String> columnDefaultValues = getColumnDefaults(dbMetaData);
 
             // Taking the rest of information from ResultSetMetaData object
             stmt = connection.createStatement();
             // WHERE 1 = 0 -- we don't need actual data, just a table structure, so lets make the query's result empty.
             rs = stmt.executeQuery("SELECT * FROM " + tableName + " WHERE 1 = 0");
             rsmd = rs.getMetaData();
-            int numberOfColumns = rsmd.getColumnCount();
+            final int numberOfColumns = rsmd.getColumnCount();
 
             for (int i = 1; i <= numberOfColumns; i++) {
                 tableColumnList.add(getColumnMetaData(rsmd, columnDefaultValues, i));
@@ -247,13 +243,11 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private ColumnMetaData getColumnMetaData(final ResultSetMetaData rsmd,
-            final Map<String, String> columnDefaultValues, final int i)
-            throws SQLException {
-        SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(rsmd.getColumnType(i));
+            final Map<String, String> columnDefaultValues, final int i) throws SQLException {
+        final SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(rsmd.getColumnType(i));
 
-        ColumnMetaData column = new ColumnMetaData(rsmd.getColumnName(i), columnType)
-                .setNullable(rsmd.isNullable(i) == ResultSetMetaData.columnNullable)
-                .setAutoincrement(rsmd.isAutoIncrement(i));
+        final ColumnMetaData column = new ColumnMetaData(rsmd.getColumnName(i), columnType).setNullable(
+                rsmd.isNullable(i) == ResultSetMetaData.columnNullable).setAutoincrement(rsmd.isAutoIncrement(i));
         if (columnDefaultValues.containsKey(rsmd.getColumnName(i))) {
             column.setDefaultValue(columnDefaultValues.get(rsmd.getColumnName(i)));
         }
@@ -273,13 +267,13 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private Map<String, String> getColumnDefaults(final DatabaseMetaData dbMetaData) throws SQLException {
-        Map<String, String> columnDefaultValues = Maps.newHashMap();
+        final Map<String, String> columnDefaultValues = Maps.newHashMap();
         ResultSet tableMetaData = null;
         try {
             tableMetaData = dbMetaData.getColumns(null, null, tableName, "%");
 
             while (tableMetaData.next()) {
-                String defaultValue = tableMetaData.getString("COLUMN_DEF");
+                final String defaultValue = tableMetaData.getString("COLUMN_DEF");
                 if (defaultValue != null && defaultValue.length() > 0) {
                     columnDefaultValues.put(tableMetaData.getString("COLUMN_NAME"), defaultValue);
                 }
@@ -301,18 +295,17 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     private Map<String, String> obtainCommonParameterMap() throws SQLException {
-        Map<String, String> parameters = Maps.newHashMap();
+        final Map<String, String> parameters = Maps.newHashMap();
         Connection connection = null;
         ResultSet rs = null;
         Statement stmt = null;
         try {
             connection = dataSource.getConnection();
             stmt = connection.createStatement();
-            rs = stmt.executeQuery("SHOW TABLE STATUS WHERE Name="
-                    + TableDataUtil.getSqlValueQuotedString(tableName));
+            rs = stmt.executeQuery("SHOW TABLE STATUS WHERE Name=" + TableDataUtil.getSqlValueQuotedString(tableName));
             if (rs.next()) {
-                for (String column : OTHER_PARAMETER_MAP.keySet()) {
-                    String value = rs.getString(column);
+                for (final String column : OTHER_PARAMETER_MAP.keySet()) {
+                    final String value = rs.getString(column);
                     if (value != null) {
                         parameters.put(OTHER_PARAMETER_MAP.get(column), value);
                     }
@@ -350,8 +343,8 @@ public class DbTable {
 
         List<UniqueKey> tableUniqueKeyList = null;
         try {
-            tableUniqueKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource,
-                    new KeyListProcessor(tableName, new TableKeyPerformer() {
+            tableUniqueKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
+                    tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
                                 throws SQLException {
@@ -367,7 +360,7 @@ public class DbTable {
 
                         }
                     }));
-        } catch (MetaDataAccessException e) {
+        } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
         return tableUniqueKeyList;
@@ -384,8 +377,8 @@ public class DbTable {
     private List<UniqueKey> obtainPrimaryKeyList() throws SQLException {
         List<UniqueKey> tablePrimaryKeyList = null;
         try {
-            tablePrimaryKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource,
-                    new KeyListProcessor(tableName, new TableKeyPerformer() {
+            tablePrimaryKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
+                    tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
                                 throws SQLException {
@@ -400,7 +393,7 @@ public class DbTable {
 
                         }
                     }));
-        } catch (MetaDataAccessException e) {
+        } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
         return tablePrimaryKeyList;
@@ -428,13 +421,13 @@ public class DbTable {
                         @Override
                         public void addKeyToList(final ResultSet rs, final List<TableKey> keyList) throws SQLException {
                             if (rs.getString("FK_NAME") != null) {
-                                keyList.add(new ForeignKey(rs.getString("FK_NAME"), rs.getString("FKCOLUMN_NAME"),
-                                        rs.getString("PKTABLE_NAME"), rs.getString("PKCOLUMN_NAME")));
+                                keyList.add(new ForeignKey(rs.getString("FK_NAME"), rs.getString("FKCOLUMN_NAME"), rs
+                                        .getString("PKTABLE_NAME"), rs.getString("PKCOLUMN_NAME")));
                             }
 
                         }
                     }));
-        } catch (MetaDataAccessException e) {
+        } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
         return tableForeignKeyList;
@@ -476,16 +469,16 @@ public class DbTable {
          */
         public KeyListProcessor(final String tableName, final TableKeyPerformer tableKeyPerformer) {
             super();
-            assert (tableKeyPerformer != null);
-            assert (tableName != null);
+            assert tableKeyPerformer != null;
+            assert tableName != null;
             this.tableKeyPerformer = tableKeyPerformer;
             this.tableName = tableName;
         }
 
         @Override
         public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-            List<TableKey> tableKeyList = Lists.newArrayList();
-            ResultSet rs = tableKeyPerformer.getResultSet(dmd, tableName);
+            final List<TableKey> tableKeyList = Lists.newArrayList();
+            final ResultSet rs = tableKeyPerformer.getResultSet(dmd, tableName);
             while (rs.next()) {
                 tableKeyPerformer.addKeyToList(rs, tableKeyList);
             }

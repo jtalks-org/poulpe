@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
 
 /**
@@ -34,13 +35,8 @@ public final class ColumnMetaData {
      *            The type of the table column.
      */
     public ColumnMetaData(final String columnName, final SqlTypes columnType) {
-        if (columnName == null) {
-            throw new NullPointerException("columnName cannot be null.");
-        }
-        if (columnType == null) {
-            throw new NullPointerException("columnType cannot be null.");
-        }
-
+        Validate.notNull(columnName, "columnName must not be null");
+        Validate.notNull(columnType, "columnType must not be null");
         this.name = columnName;
         this.type = columnType;
     }
@@ -95,33 +91,42 @@ public final class ColumnMetaData {
         final int prime = 31;
         int result = 17;
         result = prime * result + (autoincrement ? 1231 : 1237);
-        result = prime * result + ((defaultValue == null) ? 0 : defaultValue.hashCode());
+        result = prime * result + (defaultValue == null ? 0 : defaultValue.hashCode());
         result = prime * result + (hasDefaultValue ? 1231 : 1237);
         result = prime * result + (hasSize ? 1231 : 1237);
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
+        result = prime * result + (name == null ? 0 : name.hashCode());
         result = prime * result + (nullable ? 1231 : 1237);
         result = prime * result + size;
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        result = prime * result + (type == null ? 0 : type.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return (this == obj)
-                || (obj instanceof ColumnMetaData
-                        && name != null
-                        && type != null
+        return this == obj || obj instanceof ColumnMetaData && areNameAndTypeDefined()
+                && areColumnParametersEqual((ColumnMetaData) obj);
+    }
 
-                        && autoincrement == ((ColumnMetaData) obj).autoincrement
-                        && hasSize == ((ColumnMetaData) obj).hasSize
-                        && nullable == ((ColumnMetaData) obj).nullable
-                        && hasDefaultValue == ((ColumnMetaData) obj).hasDefaultValue
-                        && size == ((ColumnMetaData) obj).size
-                        && type == ((ColumnMetaData) obj).type
-                        && name.equals(((ColumnMetaData) obj).name)
-                        && ((defaultValue != null) ? defaultValue.equals(((ColumnMetaData) obj).defaultValue)
-                            : true)
-                );
+    /**
+     * Checks if name and type for the instance are defined.
+     * 
+     * @return true if name and type are not null or false otherwise.
+     */
+    private boolean areNameAndTypeDefined() {
+        return name != null && type != null;
+    }
+
+    /**
+     * Checks if column parameters equal for this and given obj.
+     * 
+     * @param obj
+     *            an instance of ColumnMetaData which parameters will be compared to parameters of this
+     * @return true if parameters equal or false otherwise.
+     */
+    private boolean areColumnParametersEqual(final ColumnMetaData obj) {
+        return autoincrement == obj.autoincrement && hasSize == obj.hasSize && nullable == obj.nullable
+                && hasDefaultValue == obj.hasDefaultValue && size == obj.size && type == obj.type
+                && name.equals(obj.name) && (defaultValue == null || defaultValue.equals(obj.defaultValue));
     }
 
     @Override

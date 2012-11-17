@@ -227,7 +227,7 @@ public enum SqlTypes {
      *            Should be set to true if a value for this type must be quoted in the SQL INSERT statement.
      */
     private SqlTypes(final int[] jdbcSqlTypeArray, final boolean hasSize, final boolean textBased) {
-        assert (jdbcSqlTypeArray != null) : "jdbcSqlTypeArray cannot be null.";
+        assert (jdbcSqlTypeArray != null) : "jdbcSqlTypeArray must not be null.";
         this.jdbcSqlType = jdbcSqlTypeArray;
         this.hasSize = hasSize;
         this.textBased = textBased;

@@ -24,6 +24,7 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.logic.databasebackup.ContentProvider;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DataBaseDoesntContainTablesException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
@@ -50,9 +51,7 @@ public class DbDumpContentProvider implements ContentProvider {
      *             If dataSource is null.
      */
     DbDumpContentProvider(final DataSource dataSource) {
-        if (dataSource == null) {
-            throw new NullPointerException("dataSource cannot be null.");
-        }
+        Validate.notNull(dataSource, "dataSource must not be null");
         this.dataSource = dataSource;
     }
 
@@ -152,9 +151,7 @@ public class DbDumpContentProvider implements ContentProvider {
      *             If dataSource is null.
      */
     public void setDataSource(final DataSource dataSource) {
-        if (dataSource == null) {
-            throw new NullPointerException("dataSource cannot be null.");
-        }
+        Validate.notNull(dataSource, "dataSource must not be null");
         this.dataSource = dataSource;
     }
 

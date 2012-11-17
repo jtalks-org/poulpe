@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.zip.GZIPOutputStream;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.logic.databasebackup.ContentProvider;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
@@ -43,9 +44,7 @@ public class GzipContentProvider implements ContentProvider {
      *             If contentProvider is null.
      */
     GzipContentProvider(final ContentProvider contentProvider) {
-        if (contentProvider == null) {
-            throw new NullPointerException("contentProvider cannot be null.");
-        }
+        Validate.notNull(contentProvider, "contentProvider must not be null");
         this.contentProvider = contentProvider;
     }
 

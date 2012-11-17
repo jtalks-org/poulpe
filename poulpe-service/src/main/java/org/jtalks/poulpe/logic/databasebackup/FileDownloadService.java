@@ -16,6 +16,7 @@ package org.jtalks.poulpe.logic.databasebackup;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 
 /**
@@ -51,15 +52,9 @@ public class FileDownloadService {
      */
     FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
             final String contentFileNameWithoutExt) {
-        if (contentProvider == null) {
-            throw new NullPointerException("contentProvider cannot be null.");
-        }
-        if (fileDownloader == null) {
-            throw new NullPointerException("fileDownloader cannot be null.");
-        }
-        if (contentFileNameWithoutExt == null) {
-            throw new NullPointerException("contentFileNameWithoutExt cannot be null.");
-        }
+        Validate.notNull(contentProvider, "contentProvider must not be null");
+        Validate.notNull(fileDownloader, "fileDownloader must not be null");
+        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
         this.contentProvider = contentProvider;
         this.fileDownloader = fileDownloader;
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
@@ -75,15 +70,9 @@ public class FileDownloadService {
      *             If any of contentProvider or fileDownloader or contentFileNameWithoutExt is not defined.
      */
     public final void performFileDownload() throws FileDownloadException {
-        if (contentProvider == null) {
-            throw new NullPointerException("contentProvider is not defined.");
-        }
-        if (fileDownloader == null) {
-            throw new NullPointerException("fileDownloader is not defined.");
-        }
-        if (contentFileNameWithoutExt == null) {
-            throw new NullPointerException("contentFileNameWithoutExt is not defined.");
-        }
+        Validate.notNull(contentProvider, "contentProvider is not defined");
+        Validate.notNull(fileDownloader, "fileDownloader is not defined");
+        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt is not defined");
         try {
             InputStream content = contentProvider.getContent();
 
@@ -104,9 +93,7 @@ public class FileDownloadService {
      *             If contentProvider is null.
      */
     public final void setContentProvider(final ContentProvider contentProvider) {
-        if (contentProvider == null) {
-            throw new NullPointerException("contentProvider cannot be null.");
-        }
+        Validate.notNull(contentProvider, "contentProvider must not be null");
         this.contentProvider = contentProvider;
     }
 
@@ -119,9 +106,7 @@ public class FileDownloadService {
      *             If fileDownloader is null.
      */
     public final void setFileDownloader(final FileDownloader fileDownloader) {
-        if (fileDownloader == null) {
-            throw new NullPointerException("fileDownloader cannot be null.");
-        }
+        Validate.notNull(fileDownloader, "fileDownloader must not be null");
         this.fileDownloader = fileDownloader;
     }
 
@@ -134,9 +119,7 @@ public class FileDownloadService {
      *             If contentFileNameWithoutExt is null.
      */
     public final void setContentFileNameWithoutExt(final String contentFileNameWithoutExt) {
-        if (contentFileNameWithoutExt == null) {
-            throw new NullPointerException("contentFileNameWithoutExt cannot be null.");
-        }
+        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
     }
 

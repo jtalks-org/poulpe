@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * The class represent a Foreign key description data object. The class is immutable.
  * 
@@ -38,10 +40,10 @@ public final class ForeignKey implements TableKey {
      */
     public ForeignKey(final String fkTableName, final String fkColumnName, final String pkTableName,
             final String pkColumnName) {
-        if (fkTableName == null || fkColumnName == null || pkTableName == null || pkColumnName == null) {
-            throw new NullPointerException("Fields should be initialized: fkTableName=" + fkTableName
-                    + " fkColumnName=" + fkColumnName + "pkTableName=" + pkTableName + " pkColumnName=" + pkColumnName);
-        }
+        Validate.notNull(fkTableName, "fkTableName must not be null");
+        Validate.notNull(fkColumnName, "fkColumnName must not be null");
+        Validate.notNull(pkTableName, "pkTableName must not be null");
+        Validate.notNull(pkColumnName, "pkColumnName must not be null");
         this.fkTableName = fkTableName;
         this.fkColumnName = fkColumnName;
         this.pkTableName = pkTableName;
@@ -50,34 +52,37 @@ public final class ForeignKey implements TableKey {
 
     @Override
     public String toString() {
-        return "[fkTableName=" + fkTableName + ", fkColumnName=" + fkColumnName + ", pkTableName="
-                + pkTableName + ", pkColumnName=" + pkColumnName + "]";
+        return "[fkTableName=" + fkTableName + ", fkColumnName=" + fkColumnName + ", pkTableName=" + pkTableName
+                + ", pkColumnName=" + pkColumnName + "]";
     }
 
     @Override
     public int hashCode() {
         final int prime = 31;
         int result = 17;
-        result = prime * result + ((fkColumnName == null) ? 0 : fkColumnName.hashCode());
-        result = prime * result + ((fkTableName == null) ? 0 : fkTableName.hashCode());
-        result = prime * result + ((pkColumnName == null) ? 0 : pkColumnName.hashCode());
-        result = prime * result + ((pkTableName == null) ? 0 : pkTableName.hashCode());
+        result = prime * result + (fkColumnName == null ? 0 : fkColumnName.hashCode());
+        result = prime * result + (fkTableName == null ? 0 : fkTableName.hashCode());
+        result = prime * result + (pkColumnName == null ? 0 : pkColumnName.hashCode());
+        result = prime * result + (pkTableName == null ? 0 : pkTableName.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return (this == obj)
-                || (obj instanceof ForeignKey
-                        && fkColumnName != null
-                        && fkTableName != null
-                        && pkColumnName != null
-                        && pkTableName != null
+        return this == obj || obj instanceof ForeignKey && areKeysNotNullAndEqual((ForeignKey) obj);
+    }
 
-                        && fkColumnName.equals(((ForeignKey) obj).fkColumnName)
-                        && fkTableName.equals(((ForeignKey) obj).fkTableName)
-                        && pkColumnName.equals(((ForeignKey) obj).pkColumnName)
-                        && pkTableName.equals(((ForeignKey) obj).pkTableName));
+    /**
+     * Checks if primary and foreign keys for this and given object are not null and equal.
+     * 
+     * @param obj
+     *            an instance of Foreign key which keys will be compared to keys of this
+     * @return true if keys are not null and equal or false otherwise.
+     */
+    private boolean areKeysNotNullAndEqual(final ForeignKey obj) {
+        return fkColumnName != null && fkTableName != null && pkColumnName != null && pkTableName != null
+                && fkColumnName.equals(obj.fkColumnName) && fkTableName.equals(obj.fkTableName)
+                && pkColumnName.equals(obj.pkColumnName) && pkTableName.equals(obj.pkTableName);
     }
 
     /**

@@ -16,6 +16,7 @@ package org.jtalks.poulpe.logic.databasebackup.impl;
 
 import java.sql.SQLException;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.jdbc.DbTable;
 
 /**
@@ -29,21 +30,25 @@ class SqlTableDump {
     private final DbTable dbTable;
 
     /**
-     * The constructor creates a text based representation of the table with the same name as the name given in the
-     * constructor's parameters. For that constructor successively calls Create Table Structure (see
-     * {@link #getTableStructure()}) and Export data (see {@link #getDumpedData()}) methods.
+     * Creates a new SqlDumpObject with provided source point - DbTable.
      * 
      * @param dbTable
+     *            A source of database data.
      * @throws NullPointerException
      *             if any of dataSource or tableName is null.
      */
     public SqlTableDump(final DbTable dbTable) {
-        if (dbTable == null) {
-            throw new NullPointerException("dbTable cannot be null.");
-        }
+        Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
+    /**
+     * Returns a full dump of the table including table structure and table data in the shape of SQL statements.
+     * 
+     * @return SQL statements for creating a table and inserting data into it.
+     * @throws SQLException
+     *             if any of dataSource or tableName is null.
+     */
     public String getFullDump() throws SQLException {
         return new StringBuilder()
                 .append(new SqlTableStructureDump(dbTable).dumpStructure())

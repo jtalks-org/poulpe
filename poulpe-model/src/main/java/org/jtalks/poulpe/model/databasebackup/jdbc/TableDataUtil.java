@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.model.databasebackup.jdbc;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * Table Data Utility class performs different operations for preparing SQL statement strings.
  * 
@@ -37,9 +39,7 @@ public final class TableDataUtil {
      *             If value is null.
      */
     public static String getSqlValueQuotedString(final String value) {
-        if (value == null) {
-            throw new NullPointerException("value cannot be null.");
-        }
+        Validate.notNull(value, "value must not be null");
         return getSqlQuotedString(value, VALUE_QUOTE_SIGN);
     }
 
@@ -53,9 +53,7 @@ public final class TableDataUtil {
      *             If value is null.
      */
     public static String getSqlColumnQuotedString(final String value) {
-        if (value == null) {
-            throw new NullPointerException("value cannot be null.");
-        }
+        Validate.notNull(value, "value must not be null");
         return getSqlQuotedString(value, FIELD_QUOTE_SIGN);
     }
 
@@ -70,8 +68,8 @@ public final class TableDataUtil {
      * @return Already quoted value.
      */
     private static String getSqlQuotedString(final String value, final String quote) {
-        assert (value != null) : "value cannot be null.";
-        assert (quote != null) : "quote cannot be null.";
+        assert (value != null) : "value must not be null.";
+        assert (quote != null) : "quote must not be null.";
 
         String s = value;
         if (quote.length() > 0) {

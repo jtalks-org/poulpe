@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
+import org.apache.commons.lang3.Validate;
+
 /**
  * The class represent a Primary or Unique key description data object. The class is immutable.
  * 
@@ -30,9 +32,7 @@ public final class UniqueKey implements TableKey {
      *             If pkColumnName is null.
      */
     public UniqueKey(final String columnName) {
-        if (columnName == null) {
-            throw new NullPointerException("columnName parameter cannot be null.");
-        }
+        Validate.notNull(columnName, "columnName must not be null");
         this.columnName = columnName;
     }
 
@@ -48,7 +48,7 @@ public final class UniqueKey implements TableKey {
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + ((columnName == null) ? 0 : columnName.hashCode());
+        result = 31 * result + (columnName == null ? 0 : columnName.hashCode());
         return result;
     }
 
@@ -59,9 +59,8 @@ public final class UniqueKey implements TableKey {
 
     @Override
     public boolean equals(final Object obj) {
-        return (this == obj)
-                || (columnName != null
-                        && obj instanceof UniqueKey && columnName.equals(((UniqueKey) obj).columnName));
+        return this == obj || columnName != null && obj instanceof UniqueKey
+                && columnName.equals(((UniqueKey) obj).columnName);
     }
 
     private final String columnName;

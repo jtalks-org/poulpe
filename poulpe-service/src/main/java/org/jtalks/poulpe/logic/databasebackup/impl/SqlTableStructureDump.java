@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.dto.ColumnMetaData;
 import org.jtalks.poulpe.model.databasebackup.dto.ForeignKey;
 import org.jtalks.poulpe.model.databasebackup.dto.UniqueKey;
@@ -31,6 +32,7 @@ import com.google.common.collect.Lists;
 public class SqlTableStructureDump {
 
     public SqlTableStructureDump(final DbTable dbTable) {
+        Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
@@ -78,6 +80,7 @@ public class SqlTableStructureDump {
      */
     private StringBuilder getColumnsDefinitionText(final List<ColumnMetaData> columnDescriptionList)
             throws SQLException {
+        assert (columnDescriptionList != null) : "columnDescriptionList must not be null";
         List<String> tableColumnDescriptionList = new ArrayList<String>();
 
         for (ColumnMetaData column : columnDescriptionList) {
@@ -165,6 +168,7 @@ public class SqlTableStructureDump {
     }
 
     private String getColumnDescription(final ColumnMetaData column) {
+        assert (column != null) : "column must not be null";
         StringBuilder columnDescription = new StringBuilder("    ");
         columnDescription.append(TableDataUtil.getSqlColumnQuotedString(column.getName()) + " " + column.getType());
 
@@ -189,6 +193,7 @@ public class SqlTableStructureDump {
     }
 
     private StringBuilder performKeyProcessor(final TableKeyProcessor processor) throws SQLException {
+        assert (processor != null) : "processor must not be null";
         StringBuilder result = new StringBuilder();
         if (processor.hasKeys()) {
             result.append("," + SqlTableDumpUtil.LINEFEED);
@@ -211,6 +216,7 @@ public class SqlTableStructureDump {
      *             Is thrown in case any errors during work with database occur.
      */
     private String getOtherTableParameters(final Map<String, String> parameters) throws SQLException {
+        assert (parameters != null) : "parameters must not be null";
         StringBuilder otherTableParameters = new StringBuilder();
         for (String key : parameters.keySet()) {
             otherTableParameters.append(key + "=" + parameters.get(key) + " ");

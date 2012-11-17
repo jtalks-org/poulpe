@@ -14,7 +14,10 @@
  */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
+import java.util.Collections;
 import java.util.List;
+
+import org.apache.commons.lang3.Validate;
 
 import com.google.common.collect.Lists;
 
@@ -33,13 +36,11 @@ public final class Row {
      * @return this
      */
     public Row addCell(final Cell cellData) {
-        if (cellData == null) {
-            throw new NullPointerException("cellData cannot be null.");
-        }
-        for (Cell existColumnData : cellList) {
+        Validate.notNull(cellData, "cellData must not be null");
+        for (final Cell existColumnData : cellList) {
             if (existColumnData.getColumnName().equalsIgnoreCase(cellData.getColumnName())) {
-                throw new IllegalArgumentException("TableColumnData " + cellData
-                        + " is already exist in the row " + cellList);
+                throw new IllegalArgumentException("TableColumnData " + cellData + " is already exist in the row "
+                        + cellList);
             }
         }
 
@@ -53,7 +54,7 @@ public final class Row {
      * @return A List of Cells stored in the Row.
      */
     public List<Cell> getCellList() {
-        return Lists.newArrayList(cellList);
+        return Collections.unmodifiableList(cellList);
     }
 
     /**
@@ -69,15 +70,26 @@ public final class Row {
     public int hashCode() {
         final int prime = 31;
         int result = 17;
-        result = prime * result + ((cellList == null) ? 0 : cellList.hashCode());
+        result = prime * result + (cellList == null ? 0 : cellList.hashCode());
         return result;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return (this == obj) || (obj instanceof Row
-                && cellList.size() == ((Row) obj).cellList.size()
-                && cellList.containsAll(((Row) obj).cellList));
+        return this == obj || obj instanceof Row && areCellListsEqual((Row) obj);
+    }
+
+    /**
+     * Checks if cell list for given Row object equals to cell list of instance itself. We cannot just compare two Lists
+     * because if two lists have the same elements but in different order we still consider them as equal while with
+     * standard List.equals the order matters.
+     * 
+     * @param obj
+     *            an instance of Row which cellList will be compared to value of this
+     * @return true if cellLists are equal or false otherwise.
+     */
+    private boolean areCellListsEqual(final Row obj) {
+        return cellList.size() == obj.cellList.size() && cellList.containsAll(obj.cellList);
     }
 
     @Override

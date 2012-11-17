@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.databasebackup.dto;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.model.databasebackup.SqlTypes;
 
 /**
@@ -34,10 +35,7 @@ public final class Cell {
      *             If columnMetaInfo is null.
      */
     public Cell(final ColumnMetaData columnMetaInfo, final Object cellData) {
-        super();
-        if (columnMetaInfo == null) {
-            throw new NullPointerException("columnMetaInfo cannot be null");
-        }
+        Validate.notNull(columnMetaInfo, "columnMetaInfo must not be null");
         this.columnMetaInfo = columnMetaInfo;
         this.cellData = cellData;
     }
@@ -46,23 +44,40 @@ public final class Cell {
     public int hashCode() {
         final int prime = 31;
         int result = 17;
-        result = prime * result + ((cellData == null) ? 0 : cellData.hashCode());
-        result = prime * result + ((columnMetaInfo.getName() == null) ? 0 : columnMetaInfo.getName().hashCode());
-        result = prime * result + ((columnMetaInfo.getType() == null) ? 0 : columnMetaInfo.getType().hashCode());
+        result = prime * result + (cellData == null ? 0 : cellData.hashCode());
+        result = prime * result + (columnMetaInfo.getName() == null ? 0 : columnMetaInfo.getName().hashCode());
+        result = prime * result + (columnMetaInfo.getType() == null ? 0 : columnMetaInfo.getType().hashCode());
         return result;
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return (this == obj)
-                || (obj instanceof Cell
-                        && columnMetaInfo.getName() != null
-                        && columnMetaInfo.getType() != null
-                        && columnMetaInfo.getName().equals(((Cell) obj).columnMetaInfo.getName())
-                        && columnMetaInfo.getType() == ((Cell) obj).columnMetaInfo.getType()
+        return this == obj || obj instanceof Cell && hasEqualColumnMetaInfo((Cell) obj)
+                && hasEqualCellValue((Cell) obj);
+    }
 
-                        && ((cellData != null && cellData.equals(((Cell) obj).cellData))
-                        || (cellData == ((Cell) obj).cellData)));
+    /**
+     * Checks if ColumnMetaInformation for given Cell object equals to ColumnMetaInformation of instance itself.
+     * 
+     * @param obj
+     *            an instance of Cell which ColumnMetaInformation will be compared to this.ColumnMetaInformation
+     * @return true if obj.ColumnMetaInformation == this.ColumnMetaInformation or false otherwise.
+     */
+    private boolean hasEqualColumnMetaInfo(final Cell obj) {
+        return columnMetaInfo.getName() != null && columnMetaInfo.getType() != null
+                && columnMetaInfo.getName().equals(obj.columnMetaInfo.getName())
+                && columnMetaInfo.getType() == obj.columnMetaInfo.getType();
+    }
+
+    /**
+     * Checks if value for given Cell object equals to value of instance itself.
+     * 
+     * @param obj
+     *            an instance of Cell which value will be compared to value of this
+     * @return true if obj.value == this.value or false otherwise.
+     */
+    private boolean hasEqualCellValue(final Cell obj) {
+        return cellData != null && cellData.equals(obj.cellData) || cellData == obj.cellData;
     }
 
     @Override
