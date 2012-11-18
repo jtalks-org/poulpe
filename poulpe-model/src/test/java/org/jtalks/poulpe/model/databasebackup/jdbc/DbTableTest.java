@@ -115,7 +115,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(enabled = true)
+    @Test(enabled = false)
     public void getDataTest() throws SQLException {
         // Define expected table structure.
         Map<String, ColumnMetaData> metaColumnInfoMap = Maps.newHashMap();
