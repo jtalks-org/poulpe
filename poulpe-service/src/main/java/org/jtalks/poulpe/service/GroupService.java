@@ -16,6 +16,7 @@ package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.service.EntityService;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
@@ -46,8 +47,9 @@ public interface GroupService extends EntityService<Group> {
      *
      * @param group to be delete
      * @throws IllegalArgumentException if group is null
+     * @throws NotFoundException if current user have no sid(not activated)
      */
-    void deleteGroup(Group group);
+    void deleteGroup(Group group) throws NotFoundException;
 
     /**
      * Save or update group.

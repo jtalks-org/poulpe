@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -27,6 +28,7 @@ import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.bind.annotation.Init;
 import org.zkoss.bind.annotation.NotifyChange;
+import org.zkoss.util.resource.Labels;
 import org.zkoss.zul.ListModelList;
 
 import javax.annotation.Nonnull;
@@ -142,12 +144,18 @@ public class UserGroupVm {
 
     /**
      * Deletes selected group if it hasn't moderated comboboxList.
+     * @throws NotFoundException if current user have no sid(not activated)
      */
     @Command
     @NotifyChange({SELECTED_GROUP, MODERATING_BRANCHES})
-    public void deleteGroup() {
+    public void deleteGroup() throws NotFoundException {
         if (!isModeratingGroup()) {
+            try{
             groupService.deleteGroup(selectedGroup);
+            }
+            catch (NotFoundException exception){
+                throw new NotFoundException(Labels.getLabel("error.userHaveNoSid"));
+            }
             selectedGroup = null;
             updateView();
             closeDialog();

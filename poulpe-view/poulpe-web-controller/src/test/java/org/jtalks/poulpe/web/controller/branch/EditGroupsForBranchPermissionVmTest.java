@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
@@ -61,7 +62,7 @@ public class EditGroupsForBranchPermissionVmTest {
     }
 
     @Test(dataProvider = "dataProvider")
-    public void cancel(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) {
+    public void cancel(PermissionForEntity permissionForEntity, GroupsPermissions<BranchPermission> groupsPermissions) throws NotFoundException {
         initTest(permissionForEntity, groupsPermissions);
         viewModel.cancel();
         vefiryNothingChanges();
@@ -121,7 +122,7 @@ public class EditGroupsForBranchPermissionVmTest {
         return result;
     }
 
-    private void vefiryNothingChanges() {
+    private void vefiryNothingChanges() throws NotFoundException {
         verify(permissionsService, never()).changeGrants(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(permissionsService, never()).changeRestrictions(any(PoulpeBranch.class), any(PermissionChanges.class));
         verify(branchService, never()).saveBranch(any(PoulpeBranch.class));

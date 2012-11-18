@@ -138,7 +138,7 @@ public class EditGroupMembersVmTest {
     }
 
     @Test
-    public void testCancel() {
+    public void testCancel() throws NotFoundException {
         viewModel.cancel();
 
         vefiryNothingChanges();
@@ -173,7 +173,7 @@ public class EditGroupMembersVmTest {
         assertTrue(viewModel.getItemsAvailPerPage()==100);
     }
 
-    private void vefiryNothingChanges() {
+    private void vefiryNothingChanges() throws NotFoundException {
         verify(userService, never()).updateUser(any(PoulpeUser.class));
 
         verify(groupService, never()).saveGroup(any(Group.class));

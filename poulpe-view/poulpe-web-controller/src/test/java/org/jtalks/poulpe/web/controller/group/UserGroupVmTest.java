@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.group;
 
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
 import org.jtalks.poulpe.service.GroupService;
@@ -103,7 +104,7 @@ public class UserGroupVmTest {
     }
 
     @Test
-    public void testDeleteNotModeratorGroup() throws NoSuchFieldException, IllegalAccessException {
+    public void testDeleteNotModeratorGroup() throws NoSuchFieldException, IllegalAccessException, NotFoundException {
         givenBindWrapper();
         viewModel = spy(userGroupVm);
         doNothing().when(groupService).deleteGroup(any(Group.class));
@@ -117,7 +118,7 @@ public class UserGroupVmTest {
     }
 
     @Test(dataProvider = "provideRandomGroupsList")
-    public void testDeleteModeratorGroup(List notEmptyList) {
+    public void testDeleteModeratorGroup(List notEmptyList) throws NotFoundException {
         doReturn(notEmptyList).when(groupService).getModeratedBranches(selectedGroup);
         viewModel.deleteGroup();
         verify(groupService, times(0)).deleteGroup(selectedGroup);

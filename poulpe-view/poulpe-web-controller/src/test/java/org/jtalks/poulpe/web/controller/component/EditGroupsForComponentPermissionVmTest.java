@@ -18,6 +18,7 @@ import com.google.common.collect.Lists;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.GeneralPermission;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.PermissionForEntity;
@@ -67,7 +68,7 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testCancelWithoutChanges(PermissionForEntity permissionForEntity,
-            GroupsPermissions<GeneralPermission> groupsPermissions) {
+            GroupsPermissions<GeneralPermission> groupsPermissions) throws NotFoundException {
         initTest(permissionForEntity, groupsPermissions);
 
         viewModel.cancel();
@@ -77,7 +78,7 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testCancelWithChanges(PermissionForEntity permissionForEntity,
-            GroupsPermissions<GeneralPermission> groupsPermissions) {
+            GroupsPermissions<GeneralPermission> groupsPermissions) throws NotFoundException {
         initTest(permissionForEntity, groupsPermissions);
 
         viewModel.addAll();
@@ -88,7 +89,7 @@ public class EditGroupsForComponentPermissionVmTest {
 
     @Test(dataProvider = "dataProvider")
     public void testSaveWithoutChanges(PermissionForEntity permissionForEntity,
-            GroupsPermissions<GeneralPermission> groupsPermissions) {
+            GroupsPermissions<GeneralPermission> groupsPermissions) throws NotFoundException {
         initTest(permissionForEntity, groupsPermissions);
 
         viewModel.save();
@@ -163,7 +164,7 @@ public class EditGroupsForComponentPermissionVmTest {
         }
     }
 
-    private void vefiryNothingChanges() {
+    private void vefiryNothingChanges() throws NotFoundException {
         verify(permissionsService, never()).changeGrants(any(Component.class), any(PermissionChanges.class));
         verify(permissionsService, never()).changeRestrictions(any(Component.class), any(PermissionChanges.class));
         verify(componentService, never()).saveComponent(any(Component.class));
