@@ -177,4 +177,14 @@ public interface UserService {
      * @param group group with users
      */
     void updateUsersAtGroup(List<User> users, Group group);
+
+    /**
+     * Authenticates user by username and password hash.
+     * 
+     * @param username the username
+     * @param password the hashed password
+     * @return the {@code PoulpeUser} instance
+     * @throws {@link org.jtalks.common.service.exceptions.NotFoundException} if user not found or password not match
+     */
+    PoulpeUser authenticate(String username, String password) throws NotFoundException;
 }

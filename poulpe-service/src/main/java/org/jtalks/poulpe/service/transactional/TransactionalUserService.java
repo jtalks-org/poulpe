@@ -18,6 +18,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.Component;
@@ -224,6 +225,23 @@ public class TransactionalUserService implements UserService {
                 }
             }
             updateUser((PoulpeUser) u); //TODO What is the performance?
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public PoulpeUser authenticate(String username, String password)
+            throws NotFoundException {
+        PoulpeUser user = userDao.getByUsername(username);
+        if (user == null) {
+            throw new NotFoundException();
+        }
+        if (user.getPassword().equals(password)) {
+            return user;
+        } else {
+            throw new NotFoundException();
         }
     }
 }
