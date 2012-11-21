@@ -53,7 +53,7 @@
     <listbox id="userList" model="@bind(userBanningVm.bannedUsers)" selectedItem="@bind(userBanningVm.selectedUser)"
              mold="paging" pageSize="50" pagingPosition="both" vflex="true"
              context="contextMenu_user">
-      <listhead>
+      <listhead sizable="true">
         <listheader label="${labels.users.username}"/>
         <listheader label="${labels.users.firstname}"/>
         <listheader label="${labels.users.lastname}"/>

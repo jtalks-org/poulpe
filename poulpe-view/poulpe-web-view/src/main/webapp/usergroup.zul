@@ -32,7 +32,7 @@
     </hbox>
     <listbox id="groupsListbox" model="@bind(vm.groups)" vflex="true" selectedItem="@bind(vm.selectedGroup)"
              mold="paging" pageSize="50" pagingPosition="both" height="500px">
-      <listhead>
+      <listhead sizable="true">
         <listheader align="left" label="${labels.groups.name}" sort="auto(name)"/>
         <listheader align="left" label="${labels.groups.memberCount}"/>
       </listhead>

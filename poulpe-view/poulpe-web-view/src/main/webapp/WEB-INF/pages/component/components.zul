@@ -20,7 +20,7 @@
         </menubar>
       </div>
       <listbox selectedItem="@save(vm.selected)">
-        <listhead>
+        <listhead sizable="true">
           <listheader align="center" label="${labels.component.title}" sclass="boldstyle"/>
           <listheader align="center" label="${labels.component.description}"/>
           <listheader align="center" label="${labels.component.type}"/>
