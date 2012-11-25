@@ -32,6 +32,12 @@
     </param-value>
   </context-param>
 
+  <!-- Restlet application bean name -->
+  <context-param>
+    <param-name>org.restlet.application</param-name>
+    <param-value>restApplication</param-value>
+  </context-param>
+
     <!-- Filter -->
   <filter>
       <filter-name>CharacterEncoding</filter-name>
@@ -82,11 +88,8 @@
   <servlet>
     <description>RESTful services</description>
     <servlet-name>restServices</servlet-name>
-    <servlet-class>org.restlet.ext.servlet.ServerServlet</servlet-class>
-    <init-param>
-      <param-name>org.restlet.application</param-name>
-      <param-value>org.jtalks.poulpe.web.controller.rest.RestServer</param-value>
-    </init-param>
+    <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
   </servlet>
 
   <servlet-mapping>

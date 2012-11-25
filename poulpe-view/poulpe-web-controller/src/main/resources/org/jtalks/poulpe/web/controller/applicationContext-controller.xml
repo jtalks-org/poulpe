@@ -182,4 +182,16 @@
     <constructor-arg ref="sessionFactory"/>
   </bean>
 
+  <bean id="restApplication" class="org.restlet.Application">
+    <property name="inboundRoot" ref="restRouter" />
+  </bean>
+
+  <!--  Define the router -->
+  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" />
+
+  <!-- Define all the routes -->
+  <bean id="loginServerResource" name="/authenticate" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
+    <constructor-arg ref="userService"/>
+  </bean>
+
 </beans>

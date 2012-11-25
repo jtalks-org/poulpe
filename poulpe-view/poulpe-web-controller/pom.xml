@@ -92,6 +92,18 @@
       <artifactId>org.restlet</artifactId>
       <version>2.1.0</version>
     </dependency>
+    
+    <dependency>
+      <groupId>org.restlet.jee</groupId>
+      <artifactId>org.restlet.ext.spring</artifactId>
+      <version>2.1.0</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework</groupId>
+          <artifactId>*</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
   </dependencies>
 
 </project>
