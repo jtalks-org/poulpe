@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.rest;
 import javax.annotation.Nonnull;
 
 import org.jtalks.poulpe.service.UserService;
+import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
 
 /**
@@ -42,9 +43,8 @@ public class LoginServerResource extends ServerResource implements
      * {@inheritDoc}
      */
     @Override
-    public String authenticate(String credintals) {
-        String[] splitted = credintals.split(":");
-        return "username: " + splitted[0] + ", passwordHash: " + splitted[1] + ", userService: " + userService;
+    public Representation authenticate(Representation rep) {
+        return rep;
     }
 
 }

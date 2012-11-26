@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.jtalks.org/namespaces/1.0"
+  xmlns:jt="http://www.jtalks.org/namespaces/1.0" elementFormDefault="qualified">
+
+  <element name="authentication" type="jt:authentication" />
+
+  <complexType name="credintals">
+    <sequence>
+      <element name="username" type="string" minOccurs="1" maxOccurs="1" />
+      <element name="passwordHash" type="string" minOccurs="0"
+        maxOccurs="1" />
+    </sequence>
+  </complexType>
+
+  <complexType name="profile">
+    <sequence>
+      <element name="firstName" type="string" minOccurs="1" maxOccurs="1" />
+      <element name="lastName" type="string" minOccurs="1" maxOccurs="1" />
+    </sequence>
+  </complexType>
+
+  <complexType name="authentication">
+    <sequence>
+      <element name="credintals" type="jt:credintals" minOccurs="1"
+        maxOccurs="1" />
+      <element name="status" type="string" minOccurs="0" maxOccurs="1" />
+      <element name="statusInfo" type="string" minOccurs="0" maxOccurs="1" />
+      <element name="profile" type="jt:profile" minOccurs="0" maxOccurs="1" />
+    </sequence>
+  </complexType>
+
+</schema>

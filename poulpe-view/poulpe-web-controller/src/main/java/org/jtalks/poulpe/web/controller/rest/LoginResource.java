@@ -14,6 +14,9 @@
  */
 package org.jtalks.poulpe.web.controller.rest;
 
+import java.io.IOException;
+
+import org.restlet.representation.Representation;
 import org.restlet.resource.Post;
 
 /**
@@ -23,7 +26,7 @@ import org.restlet.resource.Post;
  */
 public interface LoginResource {
 
-    @Post("txt")
-    public String authenticate(String credintals);
+    @Post
+    public Representation authenticate(Representation rep) throws IOException;
 
 }

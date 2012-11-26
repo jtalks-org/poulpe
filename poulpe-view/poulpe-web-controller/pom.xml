@@ -92,7 +92,6 @@
       <artifactId>org.restlet</artifactId>
       <version>2.1.0</version>
     </dependency>
-    
     <dependency>
       <groupId>org.restlet.jee</groupId>
       <artifactId>org.restlet.ext.spring</artifactId>
@@ -103,6 +102,11 @@
           <artifactId>*</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.restlet.jee</groupId>
+      <artifactId>org.restlet.ext.jaxb</artifactId>
+      <version>2.1.0</version>
     </dependency>
   </dependencies>
 
