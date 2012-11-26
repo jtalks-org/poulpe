@@ -56,6 +56,13 @@ public class Authentication {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
     protected Profile profile;
 
+    public Authentication() {
+    }
+    
+    public Authentication(String username) {
+        setCredintals(new Credintals(username));
+    }
+
     /**
      * Gets the value of the credintals property.
      * 

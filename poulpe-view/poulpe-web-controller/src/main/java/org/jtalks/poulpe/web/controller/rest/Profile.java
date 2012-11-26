@@ -46,6 +46,14 @@ public class Profile {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
     protected String lastName;
 
+    public Profile() {
+    }
+    
+    public Profile(String firstName, String lastName) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
+
     /**
      * Gets the value of the firstName property.
      * 

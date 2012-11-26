@@ -14,9 +14,14 @@
  */
 package org.jtalks.poulpe.web.controller.rest;
 
+import java.io.IOException;
+
 import javax.annotation.Nonnull;
 
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
 
@@ -27,6 +32,10 @@ import org.restlet.resource.ServerResource;
  */
 public class LoginServerResource extends ServerResource implements
         LoginResource {
+
+    private static final String STATUS_SUCCESS = "success";
+    private static final String STATUS_FAIL = "fail";
+    private static final String STATUS_FAIL_INFO = "Incorrect username or password";
 
     private UserService userService;
 
@@ -41,10 +50,28 @@ public class LoginServerResource extends ServerResource implements
 
     /**
      * {@inheritDoc}
+     * @throws IOException 
      */
     @Override
-    public Representation authenticate(Representation rep) {
-        return rep;
+    public Representation authenticate(Representation rep) throws IOException {
+        JaxbRepresentation<Authentication> authRep = new JaxbRepresentation<Authentication>(rep,
+                Authentication.class);
+        Authentication auth = authRep.getObject();
+        Credintals cred = auth.getCredintals();
+
+        Authentication result = new Authentication(cred.getUsername());
+        try {
+            PoulpeUser user = userService.authenticate(cred.getUsername(), cred.getPasswordHash());
+            result.setStatus(STATUS_SUCCESS);
+            result.setProfile(new Profile(user.getFirstName(), user.getLastName()));
+        } catch (NotFoundException e) {
+            result.setStatus(STATUS_FAIL);
+            result.setStatusInfo(STATUS_FAIL_INFO);
+        }
+        
+        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(result);
+        resultRep.setFormattedOutput(true);
+        return resultRep;
     }
 
 }

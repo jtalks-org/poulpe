@@ -46,6 +46,13 @@ public class Credintals {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
     protected String passwordHash;
 
+    public Credintals() {
+    }
+
+    public Credintals(String username) {
+        this.username = username;
+    }
+
     /**
      * Gets the value of the username property.
      * 
