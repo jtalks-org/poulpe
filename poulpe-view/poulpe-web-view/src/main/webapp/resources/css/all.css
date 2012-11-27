@@ -89,6 +89,14 @@
     font-family: sans-serif;
 }
 
+.info-label {
+    font-weight: bold;
+    font-size: 14px;
+    font-family: sans-serif;
+    color: Blue;
+    padding: 10px;
+}
+
 .popup-notification{
     background:#F5C1C9 url(/poulpe/resources/img/notification16.png) 6px center no-repeat;
     color:#222222;

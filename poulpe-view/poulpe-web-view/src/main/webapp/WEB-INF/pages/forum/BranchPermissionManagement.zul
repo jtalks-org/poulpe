@@ -17,6 +17,7 @@
 -->
 <?page id="BranchPermissionManagement" title="Branch Permission Management" contentType="text/html;charset=UTF-8"?>
 <?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<?taglib uri="http://www.zkoss.org/dsp/web/core" prefix="c"?>
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
     <window id="branchPermissionManagementWindow" apply="org.zkoss.bind.BindComposer"
@@ -24,6 +25,10 @@
             border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
         <label value="${labels.branches.label.branch}" sclass="caption-label"/>
         <label value="@bind(branchPermissionManagementVm.branch.name)" sclass="caption-label"/>
+		<html><![CDATA[<br/>]]></html>
+		<div sclass="info-label">
+			<label value="@load(c:cat5(labels.branches.label.moderatorsgroup.moderators,': [&quot;',branchPermissionManagementVm.branch.moderatorsGroup.name, '&quot;] ', labels.branches.label.moderatorsgroup.group))"/>
+		</div>
         <style src="/resources/css/all.css"/>
         <vlayout children="@load(branchPermissionManagementVm.blocks) @template('blockTemplate')">
             <template name="blockTemplate" var="bt">
