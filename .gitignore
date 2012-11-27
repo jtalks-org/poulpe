@@ -36,3 +36,6 @@ pom.xml.releaseBackup
 test-output
 
 /poulpe-view/poulpe-web-controller/.springBeans
+
+# Mac OS X system files
+.DS_Store
