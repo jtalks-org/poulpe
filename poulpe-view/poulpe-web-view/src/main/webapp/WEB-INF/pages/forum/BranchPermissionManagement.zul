@@ -25,10 +25,9 @@
             border="normal" contentStyle="overflow: auto" mode="embedded" height="100%" >
         <label value="${labels.branches.label.branch}" sclass="caption-label"/>
         <label value="@bind(branchPermissionManagementVm.branch.name)" sclass="caption-label"/>
-		<html><![CDATA[<br/>]]></html>
-		<div sclass="info-label">
-			<label value="@load(c:cat5(labels.branches.label.moderatorsgroup.moderators,': [&quot;',branchPermissionManagementVm.branch.moderatorsGroup.name, '&quot;] ', labels.branches.label.moderatorsgroup.group))"/>
-		</div>
+		<box pack="center" height="40px">
+			<label value="@load(c:cat5(labels.branches.label.moderatorsgroup.moderators,': [&quot;',branchPermissionManagementVm.branch.moderatorsGroup.name, '&quot;] ', labels.branches.label.moderatorsgroup.group))" sclass="info-label"/>
+		</box>	
         <style src="/resources/css/all.css"/>
         <vlayout children="@load(branchPermissionManagementVm.blocks) @template('blockTemplate')">
             <template name="blockTemplate" var="bt">
