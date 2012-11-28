@@ -132,7 +132,7 @@
       <!-- Spring -->
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-orm</artifactId>
+        <artifactId>spring-context</artifactId>
         <version>${springVersion}</version>
       </dependency>
       <dependency>
@@ -142,12 +142,17 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
         <artifactId>spring-aop</artifactId>
         <version>${springVersion}</version>
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-context</artifactId>
+        <artifactId>spring-orm</artifactId>
         <version>${springVersion}</version>
       </dependency>
       <dependency>
@@ -480,7 +485,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <commonVersion>0.40-SNAPSHOT</commonVersion>
+    <commonVersion>0.41</commonVersion>
   </properties>
 
   <distributionManagement>
