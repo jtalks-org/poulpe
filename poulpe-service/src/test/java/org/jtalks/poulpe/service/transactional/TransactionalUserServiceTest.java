@@ -19,6 +19,7 @@ import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
 import org.jtalks.common.security.acl.GroupAce;
+import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.Component;
@@ -48,7 +49,11 @@ import static org.testng.Assert.*;
  * @author maxim reshetov
  */
 public class TransactionalUserServiceTest {
-    private static final String username = "username";
+    private static final String USERNAME = "username";
+    private static final String HASED_PASSWORD = "password";
+    private static final PoulpeUser POULPE_USER = new PoulpeUser(
+            USERNAME, "email", HASED_PASSWORD, "salt");
+
     // sut
     private TransactionalUserService userService;
 
@@ -127,7 +132,7 @@ public class TransactionalUserServiceTest {
 
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(null);
 
-        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+        assertFalse(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -138,7 +143,7 @@ public class TransactionalUserServiceTest {
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
 
-        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+        assertFalse(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -146,11 +151,11 @@ public class TransactionalUserServiceTest {
         ComponentType componentType = mock(ComponentType.class);
         Component component = mock(Component.class);
 
-        when(userDao.getByUsername(eq(username))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(Collections.<Group>emptyList()));
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(Collections.<Group>emptyList()));
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(Collections.<GroupAce>emptyList());
 
-        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+        assertFalse(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -164,12 +169,12 @@ public class TransactionalUserServiceTest {
         Group group = createGroupWithId(groupId);
         when(groupAce.getGroupId()).thenReturn(groupId);
 
-        when(userDao.getByUsername(eq(username))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(singletonList(group)));
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(singletonList(group)));
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(singletonList(groupAce));
         when(groupAce.isGranting()).thenReturn(false);
 
-        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+        assertFalse(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -188,13 +193,13 @@ public class TransactionalUserServiceTest {
         when(groupAce.getGroupId()).thenReturn(groupId);
         when(groupAce2.getGroupId()).thenReturn(groupId2);
 
-        when(userDao.getByUsername(eq(username))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(asList(group, group2)));
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(asList(group, group2)));
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(asList(groupAce, groupAce2));
         when(groupAce.isGranting()).thenReturn(true);
         when(groupAce2.isGranting()).thenReturn(false);
 
-        assertFalse(userService.accessAllowedToComponentType(username, componentType));
+        assertFalse(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -207,12 +212,12 @@ public class TransactionalUserServiceTest {
         Group group = createGroupWithId(groupId);
 
         when(groupAce.getGroupId()).thenReturn(groupId);
-        when(userDao.getByUsername(eq(username))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(singletonList(group)));
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(singletonList(group)));
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
         when(aclManagerMock.getGroupPermissionsOn(eq(component))).thenReturn(singletonList(groupAce));
         when(groupAce.isGranting()).thenReturn(true);
 
-        assertTrue(userService.accessAllowedToComponentType(username, componentType));
+        assertTrue(userService.accessAllowedToComponentType(USERNAME, componentType));
     }
 
     @Test
@@ -240,6 +245,24 @@ public class TransactionalUserServiceTest {
             assertTrue(u.getGroups().isEmpty());
         }
     }
+    
+    @Test
+    public void authenticate() throws NotFoundException {
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(POULPE_USER);
+        assertEquals(userService.authenticate(USERNAME, HASED_PASSWORD), POULPE_USER);
+    }
+
+    @Test(expectedExceptions = {NotFoundException.class})
+    public void authenticate_whenUsernameNotFound() throws NotFoundException {
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(null);
+        userService.authenticate(USERNAME, HASED_PASSWORD);
+    }
+
+    @Test(expectedExceptions = {NotFoundException.class})
+    public void authenticate_whenPasswordNotMatch() throws NotFoundException {
+        when(userDao.getByUsername(eq(USERNAME))).thenReturn(POULPE_USER);
+        userService.authenticate(USERNAME, "notMatchPassword");
+    }
 
     private Group createGroupWithId(long groupId) {
         Group group = new Group();
@@ -249,14 +272,14 @@ public class TransactionalUserServiceTest {
 
     private PoulpeUser createPoulpeUserWithPredefinedNameAndGroups(List<Group> groups) {
         PoulpeUser user = new PoulpeUser();
-        user.setUsername(username);
+        user.setUsername(USERNAME);
         user.setGroups(groups);
         return user;
     }
 
 
     private static PoulpeUser user() {
-        return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "username@mail.com", "PASSWORD", "salt");
+        return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "USERNAME@mail.com", "PASSWORD", "salt");
     }
 
 }

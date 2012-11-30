@@ -35,7 +35,7 @@ public interface LoginResource {
      *             service request arguments
      * @return operation status and {@code Profile} wrapped to {@code Authentication}
      *          representation
-     * @throws IOException when username or password hash is wrong
+     * @throws IOException when user not found or password not match
      */
     @Post
     public Representation authenticate(Representation rep) throws IOException;

@@ -244,4 +244,5 @@ public class TransactionalUserService implements UserService {
             throw new NotFoundException();
         }
     }
+
 }
