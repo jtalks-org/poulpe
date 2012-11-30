@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for authentication complex type.
  * 
@@ -42,7 +41,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  * 
- * 
+ * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "authentication", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
@@ -63,9 +62,18 @@ public class Authentication {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
     protected Profile profile;
 
+    /**
+     * Creates an {@code Authentication} instance.
+     */
     public Authentication() {
     }
-    
+
+    /**
+     * Creates an {@code Authentication} instance with specified username.
+     * Username will be set to the new {@code Credintals} instance.
+     * 
+     * @param username the username
+     */
     public Authentication(String username) {
         setCredintals(new Credintals(username));
     }

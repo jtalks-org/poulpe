@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for profile complex type.
  * 
@@ -39,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  * 
- * 
+ * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "profile", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
@@ -53,9 +52,18 @@ public class Profile {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
     protected String lastName;
 
+    /**
+     * Creates an {@code Profile} instance.
+     */
     public Profile() {
     }
-    
+
+    /**
+     * Creates an {@code Profile} instance with specified firstname and lastname.
+     * 
+     * @param firstName the firstname
+     * @param lastName the lastname
+     */
     public Profile(String firstName, String lastName) {
         this.firstName = firstName;
         this.lastName = lastName;

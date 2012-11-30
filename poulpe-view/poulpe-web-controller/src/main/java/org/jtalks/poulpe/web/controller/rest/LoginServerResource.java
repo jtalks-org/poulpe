@@ -12,6 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.jtalks.poulpe.web.controller.rest;
 
 import java.io.IOException;
@@ -42,7 +43,7 @@ public class LoginServerResource extends ServerResource implements
     /**
      * Creates the server login resource with specified {@code UserService}.
      * 
-     * @param userService
+     * @param userService the user service
      */
     public LoginServerResource(@Nonnull UserService userService) {
         this.userService = userService;

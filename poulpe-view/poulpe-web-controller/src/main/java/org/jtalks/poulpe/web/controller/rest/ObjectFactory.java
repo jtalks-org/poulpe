@@ -37,15 +37,7 @@ import javax.xml.bind.annotation.XmlRegistry;
 public class ObjectFactory {
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of
-     * schema derived classes for package: org.jtalks.poulpe.web.controller.rest
-     * 
-     */
-    public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link Credintals }
+     * Creates an instance of {@link Credintals }
      * 
      */
     public Credintals createCredintals() {
@@ -53,7 +45,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Profile }
+     * Creates an instance of {@link Profile }
      * 
      */
     public Profile createProfile() {
@@ -61,7 +53,7 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Authentication }
+     * Creates an instance of {@link Authentication }
      * 
      */
     public Authentication createAuthentication() {

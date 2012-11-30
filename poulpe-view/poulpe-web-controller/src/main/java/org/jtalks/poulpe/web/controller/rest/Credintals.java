@@ -20,7 +20,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
-
 /**
  * <p>Java class for credintals complex type.
  * 
@@ -39,7 +38,7 @@ import javax.xml.bind.annotation.XmlType;
  * &lt;/complexType>
  * </pre>
  * 
- * 
+ * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "credintals", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
@@ -53,9 +52,17 @@ public class Credintals {
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
     protected String passwordHash;
 
+    /**
+     * Creates an {@code Credintals} instance.
+     */
     public Credintals() {
     }
 
+    /**
+     * Creates an {@code Credintals} instance with specified username.
+     * 
+     * @param username the username
+     */
     public Credintals(String username) {
         this.username = username;
     }
