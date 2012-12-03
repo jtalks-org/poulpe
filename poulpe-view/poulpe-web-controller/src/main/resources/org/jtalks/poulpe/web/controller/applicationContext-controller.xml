@@ -70,6 +70,9 @@
     <property name="windowManager" ref="windowManager"/>
     <property name="componentService" ref="componentService"/>
   </bean>
+  <bean id="deploymentPropertiesVm" class="org.jtalks.poulpe.web.controller.DeploymentProperties" scope="singleton">
+    <constructor-arg index="0" ref="dataSource"/>  
+  </bean>
 
   <bean id="forumStructureBranchDialogVm" scope="desktop"
         class="org.jtalks.poulpe.web.controller.section.dialogs.BranchEditingDialog">
