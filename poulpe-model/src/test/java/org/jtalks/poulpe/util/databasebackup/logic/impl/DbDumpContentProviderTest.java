@@ -1,0 +1,47 @@
+/**
+ * Copyright (C) 2012  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
+package org.jtalks.poulpe.util.databasebackup.logic.impl;
+
+import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.testng.annotations.Test;
+
+/**
+ * FileDownloadService.performFileDownload() method during its running should:
+ * <ol>
+ * <li>Get a content by calling ContentProvider.getContent();</li>
+ * <li>Push browser to download prepared content by calling FileDownloader.download().</li>
+ * </ol>
+ * 
+ * @author Evgeny Surovtsev
+ */
+public class DbDumpContentProviderTest {
+
+    @Test(enabled = false)
+    public final void performFileDownloadTest() throws FileDownloadException {
+    }
+
+    @Test
+    public void getContentTest() {
+
+    }
+
+    @Test
+    public void exceptionsThrowingTest() {
+        // databaseExportingExceptionThrowingTest
+        // DataBaseDoesntContainTablesException
+        // EncodingToUtf8Exception
+    }
+
+}

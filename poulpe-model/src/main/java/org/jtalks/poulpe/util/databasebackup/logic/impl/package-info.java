@@ -12,24 +12,8 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
-
-import java.io.InputStream;
-
-import org.jtalks.poulpe.util.databasebackup.logic.FileDownloader;
-import org.zkoss.zul.Filedownload;
-
 /**
- * The class provides a download file functionality by using ZK's file downloader.
- * 
- * @author Evgeny Surovtsev
- * 
+ * The package contains implementations for the ContentProvider interface.
  */
-public class ZulFileDownloader extends FileDownloader {
+package org.jtalks.poulpe.util.databasebackup.logic.impl;
 
-    @Override
-    protected final void download(final InputStream content) {
-        Filedownload.save(content, getMimeContentType(), getContentFileName());
-    }
-
-}

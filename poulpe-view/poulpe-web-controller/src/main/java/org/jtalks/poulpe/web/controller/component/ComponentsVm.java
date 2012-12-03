@@ -15,8 +15,6 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.logic.databasebackup.FileDownloadService;
-import org.jtalks.poulpe.logic.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
@@ -24,6 +22,8 @@ import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.util.databasebackup.logic.FileDownloadService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.dialogs.AddComponentVm;
