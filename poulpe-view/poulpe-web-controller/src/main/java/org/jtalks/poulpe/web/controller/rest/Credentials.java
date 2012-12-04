@@ -21,12 +21,12 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 
 /**
- * <p>Java class for credintals complex type.
+ * <p>Java class for credentials complex type.
  * 
  * <p>The following schema fragment specifies the expected content contained within this class.
  * 
  * <pre>
- * &lt;complexType name="credintals">
+ * &lt;complexType name="credentials">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
@@ -41,11 +41,11 @@ import javax.xml.bind.annotation.XmlType;
  * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "credintals", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
+@XmlType(name = "credentials", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
     "username",
     "passwordHash"
 })
-public class Credintals {
+public class Credentials {
 
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
     protected String username;
@@ -53,17 +53,17 @@ public class Credintals {
     protected String passwordHash;
 
     /**
-     * Creates an {@code Credintals} instance.
+     * Creates an {@code Credentials} instance.
      */
-    public Credintals() {
+    public Credentials() {
     }
 
     /**
-     * Creates an {@code Credintals} instance with specified username.
+     * Creates an {@code Credentials} instance with specified username.
      * 
      * @param username the username
      */
-    public Credintals(String username) {
+    public Credentials(String username) {
         this.username = username;
     }
 

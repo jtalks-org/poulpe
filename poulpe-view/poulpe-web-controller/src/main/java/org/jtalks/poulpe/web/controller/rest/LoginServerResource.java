@@ -54,7 +54,7 @@ public class LoginServerResource extends ServerResource implements LoginResource
     public Representation authenticate(Representation rep) throws IOException {
         JaxbRepresentation<Authentication> authRep = new JaxbRepresentation<Authentication>(rep, Authentication.class);
         Authentication auth = authRep.getObject();
-        Credintals cred = auth.getCredintals();
+        Credentials cred = auth.getCredintals();
 
         Authentication result = new Authentication(cred.getUsername());
         try {

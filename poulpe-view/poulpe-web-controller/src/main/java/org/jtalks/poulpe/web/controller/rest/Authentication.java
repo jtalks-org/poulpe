@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="credintals" type="{http://www.jtalks.org/namespaces/1.0}credintals"/>
+ *         &lt;element name="credentials" type="{http://www.jtalks.org/namespaces/1.0}credentials"/>
  *         &lt;element name="status" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="statusInfo" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
  *         &lt;element name="profile" type="{http://www.jtalks.org/namespaces/1.0}profile" minOccurs="0"/>
@@ -45,7 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "authentication", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
-    "credintals",
+    "credentials",
     "status",
     "statusInfo",
     "profile"
@@ -54,7 +54,7 @@ import javax.xml.bind.annotation.XmlType;
 public class Authentication {
 
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
-    protected Credintals credintals;
+    protected Credentials credentials;
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
     protected String status;
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0")
@@ -70,36 +70,36 @@ public class Authentication {
 
     /**
      * Creates an {@code Authentication} instance with specified username.
-     * Username will be set to the new {@code Credintals} instance.
+     * Username will be set to the new {@code Credentials} instance.
      * 
      * @param username the username
      */
     public Authentication(String username) {
-        setCredintals(new Credintals(username));
+        setCredintals(new Credentials(username));
     }
 
     /**
-     * Gets the value of the credintals property.
+     * Gets the value of the credentials property.
      * 
      * @return
      *     possible object is
-     *     {@link Credintals }
+     *     {@link Credentials }
      *     
      */
-    public Credintals getCredintals() {
-        return credintals;
+    public Credentials getCredintals() {
+        return credentials;
     }
 
     /**
-     * Sets the value of the credintals property.
+     * Sets the value of the credentials property.
      * 
      * @param value
      *     allowed object is
-     *     {@link Credintals }
+     *     {@link Credentials }
      *     
      */
-    public void setCredintals(Credintals value) {
-        this.credintals = value;
+    public void setCredintals(Credentials value) {
+        this.credentials = value;
     }
 
     /**
