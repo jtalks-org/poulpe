@@ -27,7 +27,8 @@ import java.util.Date;
 import javax.sql.DataSource;
 
 /**
- * Auxiliary class for viewing server info. Created automatically by spring IoC (singleton scope).
+ * Auxiliary class for viewing server info. Created automatically by spring IoC (singleton scope). It provides the most
+ * important information about the last deployment like its time, database, server IP, etc.
  *
  * @author Evgeny Kapinos
  */
