@@ -99,7 +99,7 @@ public class AdminWindow {
         if (component.getComponentType().equals(ComponentType.FORUM)) {
             onShowForumStructure();
         } else {
-            onBlankPage();
+            onShowServerInfo();
         }
     }
 
@@ -207,13 +207,11 @@ public class AdminWindow {
     }
 
     /**
-     * Show blank page.
+     * Show server info (used instead of blank page).
      */
     @Command
-    public void onBlankPage() {
-        if (workArea.getLastChild() != null) {
-            workArea.getLastChild().detach();
-        }
+    public void onShowServerInfo() {
+        windowManager.open("WEB-INF/pages/server_info.zul");
     }
 
     /**
