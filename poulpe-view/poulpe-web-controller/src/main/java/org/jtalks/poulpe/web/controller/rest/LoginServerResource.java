@@ -15,10 +15,6 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
-import java.io.IOException;
-
-import javax.annotation.Nonnull;
-
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
@@ -26,14 +22,15 @@ import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+
 /**
  * RESTful server resource for the {@code LoginResource} interface.
  * 
  * @author Guram Savinov
  */
-public class LoginServerResource extends ServerResource implements
-        LoginResource {
-
+public class LoginServerResource extends ServerResource implements LoginResource {
     private static final String STATUS_SUCCESS = "success";
     private static final String STATUS_FAIL = "fail";
     private static final String STATUS_FAIL_INFO = "Incorrect username or password";
@@ -55,8 +52,7 @@ public class LoginServerResource extends ServerResource implements
      */
     @Override
     public Representation authenticate(Representation rep) throws IOException {
-        JaxbRepresentation<Authentication> authRep = new JaxbRepresentation<Authentication>(rep,
-                Authentication.class);
+        JaxbRepresentation<Authentication> authRep = new JaxbRepresentation<Authentication>(rep, Authentication.class);
         Authentication auth = authRep.getObject();
         Credintals cred = auth.getCredintals();
 

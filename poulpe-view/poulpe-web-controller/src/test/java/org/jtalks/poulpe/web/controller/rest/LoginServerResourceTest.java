@@ -15,47 +15,41 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.service.UserService;
+import org.restlet.ext.jaxb.JaxbRepresentation;
+import org.restlet.representation.Representation;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import java.io.IOException;
+
 import static org.mockito.AdditionalMatchers.not;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
-import java.io.IOException;
-
-import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.service.UserService;
-import org.restlet.ext.jaxb.JaxbRepresentation;
-import org.restlet.representation.Representation;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
-
 /**
  * @author Guram Savinov
  */
 public class LoginServerResourceTest {
-
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
 
-    private UserService userService;
     private LoginServerResource sut;
-    private PoulpeUser user;
 
-    @BeforeClass
+    @BeforeMethod
     public void setUp() throws NotFoundException {
-        userService = mock(UserService.class);
-        user = new PoulpeUser(USERNAME, "email", PASSWORD, "salt");
+        UserService userService = mock(UserService.class);
+        PoulpeUser user = new PoulpeUser(USERNAME, "email", PASSWORD, "salt");
         user.setFirstName(FIRSTNAME);
         user.setLastName(LASTNAME);
-        when(userService.authenticate(eq(USERNAME), eq(PASSWORD))).thenReturn(
-                user);
-        when(userService.authenticate(not((eq(USERNAME))), eq(PASSWORD)))
-                .thenThrow(new NotFoundException());
+        when(userService.authenticate(eq(USERNAME), eq(PASSWORD))).thenReturn(user);
+        when(userService.authenticate(not((eq(USERNAME))), eq(PASSWORD))).thenThrow(new NotFoundException());
         sut = new LoginServerResource(userService);
     }
 
@@ -73,8 +67,7 @@ public class LoginServerResourceTest {
     }
 
     @Test
-    public void authenticate_whenNotMatch() throws IOException,
-            NotFoundException {
+    public void authenticate_whenNotMatch() throws Exception {
         Authentication auth = new Authentication("notMatchUsername");
         auth.getCredintals().setPasswordHash(PASSWORD);
         Representation rep = new JaxbRepresentation<Authentication>(auth);
