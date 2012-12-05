@@ -157,6 +157,11 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
+        <artifactId>spring-expression</artifactId>
+        <version>${springVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
         <artifactId>spring-tx</artifactId>
         <version>${springVersion}</version>
       </dependency>
