@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.model.entity;
+package org.jtalks.poulpe.util.databasebackup.domain;
 
 /**
  * Common interface for all TableKeys classes.

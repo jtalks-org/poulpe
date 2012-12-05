@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.model.jdbc;
+package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
@@ -14,12 +14,12 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Cell;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ColumnMetaData;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Row;
-import org.jtalks.poulpe.util.databasebackup.model.entity.TableKey;
-import org.jtalks.poulpe.util.databasebackup.model.entity.UniqueKey;
+import org.jtalks.poulpe.util.databasebackup.domain.Cell;
+import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
+import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
+import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
+import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

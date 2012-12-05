@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.model.jdbc;
+package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
@@ -22,11 +22,11 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
 
-import org.jtalks.poulpe.util.databasebackup.model.entity.Cell;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ColumnMetaData;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Row;
-import org.jtalks.poulpe.util.databasebackup.model.entity.UniqueKey;
+import org.jtalks.poulpe.util.databasebackup.domain.Cell;
+import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
+import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
+import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -34,8 +34,8 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.beust.jcommander.internal.Lists;
-import com.beust.jcommander.internal.Maps;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Tests fetching information from database functionality for the DbTable class.
@@ -51,8 +51,11 @@ public class DbTableTest {
      */
     @BeforeClass
     protected void setUp() {
-        dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL)
-                .addScript("schema.sql").addScript("databasebackup_test_data.sql").build();
+        dataSource = new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("schema.sql")
+                .addScript("databasebackup_test_data.sql")
+                .build();
     }
 
     /**
@@ -65,9 +68,10 @@ public class DbTableTest {
      */
     @Test
     public void getPrimaryKeyListTest() throws SQLException {
-        List<UniqueKey> expectedPrimaryKeyList = Lists.newArrayList();
-        expectedPrimaryKeyList.add(new UniqueKey("VERSION"));
-        assertEquals(new DbTable(dataSource, "POULPE_SCHEMA_VERSION").getPrimaryKeyList(), expectedPrimaryKeyList);
+        List<UniqueKey> expectedPrimaryKeyList = Lists.newArrayList(new UniqueKey("VERSION"));
+        DbTable testObject = new DbTable(dataSource, "POULPE_SCHEMA_VERSION");
+
+        assertEquals(testObject.getPrimaryKeyList(), expectedPrimaryKeyList);
     }
 
     /**
@@ -80,11 +84,11 @@ public class DbTableTest {
      */
     @Test
     public void getUniqueKeyListTest() throws SQLException {
-        List<UniqueKey> expectedUniqueKeyList = Lists.newArrayList();
-        expectedUniqueKeyList.add(new UniqueKey("UUID"));
-        expectedUniqueKeyList.add(new UniqueKey("USERNAME"));
-        expectedUniqueKeyList.add(new UniqueKey("EMAIL"));
-        assertEquals(new DbTable(dataSource, "USERS").getUniqueKeyList(), expectedUniqueKeyList);
+        List<UniqueKey> expectedUniqueKeyList =
+                Lists.newArrayList(new UniqueKey("UUID"), new UniqueKey("USERNAME"), new UniqueKey("EMAIL"));
+        DbTable testObject = new DbTable(dataSource, "USERS");
+
+        assertEquals(testObject.getUniqueKeyList(), expectedUniqueKeyList);
     }
 
     /**
@@ -98,13 +102,13 @@ public class DbTableTest {
      */
     @Test
     public void getForeignKeyListTest() throws SQLException {
-        List<ForeignKey> expectedForeignKeyList = Lists.newArrayList();
-        expectedForeignKeyList.add(new ForeignKey("FK_ACL_OBJ_CLASS", "OBJECT_ID_CLASS", "ACL_CLASS", "ID"));
-        expectedForeignKeyList.add(
-                new ForeignKey("FK_ACL_OBJ_PARENT", "PARENT_OBJECT", "ACL_OBJECT_IDENTITY", "ID"));
-        expectedForeignKeyList.add(new ForeignKey("FK_ACL_OBJ_OWNER", "OWNER_SID", "ACL_SID", "ID"));
+        List<ForeignKey> expectedForeignKeyList = Lists.newArrayList(
+                new ForeignKey("FK_ACL_OBJ_CLASS", "OBJECT_ID_CLASS", "ACL_CLASS", "ID"),
+                new ForeignKey("FK_ACL_OBJ_PARENT", "PARENT_OBJECT", "ACL_OBJECT_IDENTITY", "ID"),
+                new ForeignKey("FK_ACL_OBJ_OWNER", "OWNER_SID", "ACL_SID", "ID"));
+        DbTable testObject = new DbTable(dataSource, "ACL_OBJECT_IDENTITY");
 
-        assertEquals(new DbTable(dataSource, "ACL_OBJECT_IDENTITY").getForeignKeyList(), expectedForeignKeyList);
+        assertEquals(testObject.getForeignKeyList(), expectedForeignKeyList);
     }
 
     /**
@@ -128,41 +132,44 @@ public class DbTableTest {
         metaColumnInfoMap.put("CHECKSUM", new ColumnMetaData("CHECKSUM", SqlTypes.INT));
         metaColumnInfoMap.put("TYPE", new ColumnMetaData("TYPE", SqlTypes.VARCHAR));
         metaColumnInfoMap.put("INSTALLED_BY", new ColumnMetaData("INSTALLED_BY", SqlTypes.VARCHAR));
+
         // Define expected table data
-        List<Row> expectedResult = Lists.newArrayList();
-        expectedResult.add(new Row()
-                .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(229)))
-                .addCell(new Cell(metaColumnInfoMap.get("SCRIPT"), "V12__Moderators_Group_Column_In_Branches.sql"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881441000L)))
-                .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
-                .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "12"))
-                .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Moderators Group Column In Branches"))
-                .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
-                .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), new Integer(140599915)))
-                .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")));
-        expectedResult.add(new Row()
-                .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(140)))
-                .addCell(new Cell(metaColumnInfoMap.get("SCRIPT"), "V13__Branch_Table_Column_Type_Change.sql"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881441000L)))
-                .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
-                .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "13"))
-                .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Branch Table Column Type Change"))
-                .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
-                .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), new Integer(1899329008)))
-                .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")));
-        expectedResult.add(new Row()
-                .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(232)))
-                .addCell(new Cell(metaColumnInfoMap.get("SCRIPT"), "V14__Users_Table_Unnecessary_columns.sql"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881442000L)))
-                .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
-                .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "14"))
-                .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Users Table' \"Unnecessary columns"))
-                .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
-                .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), null))
-                .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
-                .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")));
+        List<Row> expectedResult = Lists.newArrayList(
+                new Row()
+                        .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(229)))
+                        .addCell(
+                                new Cell(metaColumnInfoMap.get("SCRIPT"),
+                                        "V12__Moderators_Group_Column_In_Branches.sql"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881441000L)))
+                        .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
+                        .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "12"))
+                        .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Moderators Group Column In Branches"))
+                        .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
+                        .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), new Integer(140599915)))
+                        .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")),
+                new Row()
+                        .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(140)))
+                        .addCell(new Cell(metaColumnInfoMap.get("SCRIPT"), "V13__Branch_Table_Column_Type_Change.sql"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881441000L)))
+                        .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
+                        .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "13"))
+                        .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Branch Table Column Type Change"))
+                        .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
+                        .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), new Integer(1899329008)))
+                        .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")),
+                new Row()
+                        .addCell(new Cell(metaColumnInfoMap.get("EXECUTION_TIME"), new Integer(232)))
+                        .addCell(new Cell(metaColumnInfoMap.get("SCRIPT"), "V14__Users_Table_Unnecessary_columns.sql"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_ON"), new Timestamp(1349881442000L)))
+                        .addCell(new Cell(metaColumnInfoMap.get("STATE"), "SUCCESS"))
+                        .addCell(new Cell(metaColumnInfoMap.get("VERSION"), "14"))
+                        .addCell(new Cell(metaColumnInfoMap.get("DESCRIPTION"), "Users Table' \"Unnecessary columns"))
+                        .addCell(new Cell(metaColumnInfoMap.get("CURRENT_VERSION"), new Integer(0)))
+                        .addCell(new Cell(metaColumnInfoMap.get("CHECKSUM"), null))
+                        .addCell(new Cell(metaColumnInfoMap.get("TYPE"), "SQL"))
+                        .addCell(new Cell(metaColumnInfoMap.get("INSTALLED_BY"), "root")));
 
         List<Row> actualResult = new DbTable(dataSource, "common_schema_version").getData();
         assertEquals(actualResult.size(), expectedResult.size());
@@ -195,17 +202,17 @@ public class DbTableTest {
      */
     @Test
     public void getStructureTest() throws SQLException {
-        List<ColumnMetaData> expectedResult = Lists.newArrayList();
-        expectedResult.add(new ColumnMetaData("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11));
-        expectedResult.add(new ColumnMetaData("SCRIPT", SqlTypes.VARCHAR).setSize(200));
-        expectedResult.add(new ColumnMetaData("INSTALLED_ON", SqlTypes.TIMESTAMP));
-        expectedResult.add(new ColumnMetaData("STATE", SqlTypes.VARCHAR).setSize(15));
-        expectedResult.add(new ColumnMetaData("VERSION", SqlTypes.VARCHAR).setSize(20));
-        expectedResult.add(new ColumnMetaData("DESCRIPTION", SqlTypes.VARCHAR).setNullable(true).setSize(100));
-        expectedResult.add(new ColumnMetaData("CURRENT_VERSION", SqlTypes.TINYINT).setSize(4));
-        expectedResult.add(new ColumnMetaData("CHECKSUM", SqlTypes.INT).setNullable(true).setSize(11));
-        expectedResult.add(new ColumnMetaData("TYPE", SqlTypes.VARCHAR).setSize(10));
-        expectedResult.add(new ColumnMetaData("INSTALLED_BY", SqlTypes.VARCHAR).setSize(30));
+        List<ColumnMetaData> expectedResult = Lists.newArrayList(
+                new ColumnMetaData("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11),
+                new ColumnMetaData("SCRIPT", SqlTypes.VARCHAR).setSize(200),
+                new ColumnMetaData("INSTALLED_ON", SqlTypes.TIMESTAMP),
+                new ColumnMetaData("STATE", SqlTypes.VARCHAR).setSize(15),
+                new ColumnMetaData("VERSION", SqlTypes.VARCHAR).setSize(20),
+                new ColumnMetaData("DESCRIPTION", SqlTypes.VARCHAR).setNullable(true).setSize(100),
+                new ColumnMetaData("CURRENT_VERSION", SqlTypes.TINYINT).setSize(4),
+                new ColumnMetaData("CHECKSUM", SqlTypes.INT).setNullable(true).setSize(11),
+                new ColumnMetaData("TYPE", SqlTypes.VARCHAR).setSize(10),
+                new ColumnMetaData("INSTALLED_BY", SqlTypes.VARCHAR).setSize(30));
 
         DbTable testObject = new DbTable(dataSource, "common_schema_version");
         List<ColumnMetaData> actualResult = testObject.getStructure();

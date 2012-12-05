@@ -17,7 +17,7 @@ package org.jtalks.poulpe.util.databasebackup.logic.impl;
 import java.sql.SQLException;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 
 /**
  * The class represents a full table dump and is used to export all information (structure, data) about concrete table

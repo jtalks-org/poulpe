@@ -12,10 +12,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.model.entity;
+package org.jtalks.poulpe.util.databasebackup.domain;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.SqlTypes;
+import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 
 /**
  * A one cell in the table's row. Every table has a number of rows where each row contains a number of cells.

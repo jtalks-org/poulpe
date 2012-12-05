@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.model.jdbc;
+package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import static org.testng.Assert.assertEquals;
 
@@ -53,11 +53,29 @@ public class DbTableNameListTest {
      */
     @BeforeClass
     protected void setUp() {
-        dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).addScript("schema.sql").build();
-        expectedIndependentList = Arrays.asList("acl_class", "acl_sid", "base_components", "common_schema_version",
-                "components", "groups", "persistent_logins", "poulpe_schema_version", "ranks", "sections",
-                "topic_types", "users", "acl_object_identity", "acl_entry", "branches", "default_properties",
-                "group_user_ref", "properties");
+        dataSource = new EmbeddedDatabaseBuilder()
+                .setType(EmbeddedDatabaseType.HSQL)
+                .addScript("schema.sql")
+                .build();
+        expectedIndependentList = Arrays.asList(
+                "acl_class",
+                "acl_sid",
+                "base_components",
+                "common_schema_version",
+                "components",
+                "groups",
+                "persistent_logins",
+                "poulpe_schema_version",
+                "ranks",
+                "sections",
+                "topic_types",
+                "users",
+                "acl_object_identity",
+                "acl_entry",
+                "branches",
+                "default_properties",
+                "group_user_ref",
+                "properties");
     }
 
     /**
@@ -69,12 +87,12 @@ public class DbTableNameListTest {
      */
     @Test
     public void tableListReturnsAllTableNames() throws SQLException {
-        List<String> expectedList = Lists.newArrayList(
-                Lists.transform(expectedIndependentList, new UpperCaseFunction()));
+        List<String> expectedList =
+                Lists.newArrayList(Lists.transform(expectedIndependentList, new UpperCaseFunction()));
         Collections.sort(expectedList);
 
-        List<String> actualList = Lists.newArrayList(
-                Lists.transform(DbTableNameList.getPlainList(dataSource), new UpperCaseFunction()));
+        List<String> actualList =
+                Lists.newArrayList(Lists.transform(DbTableNameList.getPlainList(dataSource), new UpperCaseFunction()));
         Collections.sort(actualList);
 
         assertEquals(actualList, expectedList);
@@ -91,8 +109,8 @@ public class DbTableNameListTest {
     @Test
     public void tableListResolvesDependencies() throws SQLException {
         List<String> expectedList = Lists.transform(expectedIndependentList, new UpperCaseFunction());
-        List<String> actualList = Lists.transform(DbTableNameList.getIndependentList(dataSource),
-                new UpperCaseFunction());
+        List<String> actualList =
+                Lists.transform(DbTableNameList.getIndependentList(dataSource), new UpperCaseFunction());
 
         assertEquals(actualList, expectedList);
     }

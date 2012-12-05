@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.model.entity;
+package org.jtalks.poulpe.util.databasebackup.domain;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
@@ -21,40 +21,41 @@ import static org.testng.Assert.fail;
 import org.testng.annotations.Test;
 
 /**
- * ForeignKey is mainly used in Collections so first of all we need to test it's comparison abilities.
+ * UniqueKey is mainly used in Collections so first of all we need to test it's comparison abilities.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public class ForeignKeyTest {
+public class UniqueKeyTest {
+
     /**
-     * Two different instances of ForeignKey should not be equal.
+     * Two different instances of UniqueKey should not be equal.
      */
     @Test
-    public void twoNotEqualTableForeignKeyAreNotEquals() {
-        ForeignKey testObject1 = new ForeignKey("column1", "param1", "param2", "param3");
-        ForeignKey testObject2 = new ForeignKey("column2", "param1", "param2", "param3");
+    public void twoNotEqualUniqueKeyAreNotEquals() {
+        UniqueKey testObject1 = createUniqueKeyA();
+        UniqueKey testObject2 = createUniqueKeyB();
         assertFalse(testObject1.equals(testObject2));
     }
 
     /**
-     * Two the same instances of ForeignKey should be equal.
+     * Two the same instances of UniqueKey should be equal.
      */
     @Test
-    public void twoEqualTableForeignKeyAreEquals() {
-        ForeignKey testObject1 = new ForeignKey("column1", "param1", "param2", "param3");
-        ForeignKey testObject2 = new ForeignKey("column1", "param1", "param2", "param3");
+    public void twoEqualUniqueKeyAreEquals() {
+        UniqueKey testObject1 = createUniqueKeyA();
+        UniqueKey testObject2 = createUniqueKeyA();
         assertTrue(testObject1.equals(testObject2));
     }
 
     /**
-     * There should be no possibility to construct object without providing Primary Key Column.
+     * There should be no possibility to construct object without providing UniqueKey Column.
      */
     @Test
     @SuppressWarnings("unused")
-    public void tableForeignKeyShouldBeInitializedInConstructor() {
+    public void uniqueKeyShouldBeInitializedInConstructor() {
         try {
-            ForeignKey tableForeignKey = new ForeignKey(null, null, null, null);
+            UniqueKey tablePrimaryKey = new UniqueKey(null);
             fail("Exception expected");
         } catch (NullPointerException e) {
             // do nothing - the exception is expected.
@@ -67,22 +68,46 @@ public class ForeignKeyTest {
      */
     @Test
     public void equalsContractTest() {
-        ForeignKey testObject1 = new ForeignKey("column", "param1", "param2", "param3");
+        UniqueKey testObject1, testObject2, testObject3, differentTestObject;
+
+        testObject1 = createUniqueKeyA();
         assertTrue(testObject1.equals(testObject1), "Reflexive");
 
-        ForeignKey testObject2 = new ForeignKey("column", "param1", "param2", "param3");
+        testObject1 = createUniqueKeyA();
+        testObject2 = createUniqueKeyA();
         assertTrue(testObject1.equals(testObject2), "Equal Symmetric");
         assertTrue(testObject2.equals(testObject1), "Equal Symmetric");
 
-        ForeignKey differentTestObject = new ForeignKey("differentColumn", "param1", "param2", "param3");
+        testObject1 = createUniqueKeyA();
+        differentTestObject = createUniqueKeyB();
         assertFalse(testObject1.equals(differentTestObject), "Not Equal Symmetric");
         assertFalse(differentTestObject.equals(testObject1), "Not Equal Symmetric");
 
-        ForeignKey testObject3 = new ForeignKey("column", "param1", "param2", "param3");
+        testObject1 = createUniqueKeyA();
+        testObject2 = createUniqueKeyA();
+        testObject3 = createUniqueKeyA();
         assertTrue(testObject1.equals(testObject2), "Transitive");
         assertTrue(testObject1.equals(testObject3), "Transitive");
         assertTrue(testObject2.equals(testObject3), "Transitive");
 
         assertFalse(testObject1.equals(null), "Null value should return false");
+    }
+
+    /**
+     * Creates and returns an "UniqueKeyA" instance of UniqueKey. Method creates a new instance every time it is called.
+     * 
+     * @return a newly created "UniqueKeyA"
+     */
+    private UniqueKey createUniqueKeyA() {
+        return new UniqueKey("column1");
+    }
+
+    /**
+     * Creates and returns an "UniqueKeyB" instance of UniqueKey. Method creates a new instance every time it is called.
+     * 
+     * @return a newly created "UniqueKeyB"
+     */
+    private UniqueKey createUniqueKeyB() {
+        return new UniqueKey("column2");
     }
 }

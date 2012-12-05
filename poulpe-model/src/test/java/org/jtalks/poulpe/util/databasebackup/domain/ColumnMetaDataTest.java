@@ -12,13 +12,13 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.model.entity;
+package org.jtalks.poulpe.util.databasebackup.domain;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.fail;
 
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.SqlTypes;
+import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 import org.testng.annotations.Test;
 
 /**
@@ -33,10 +33,8 @@ public class ColumnMetaDataTest {
      */
     @Test
     public void twoNotEqualTableColumnAreNotEquals() {
-        ColumnMetaData testObject1 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
-        ColumnMetaData differentTestObject = new ColumnMetaData("columnTypeB", SqlTypes.VARCHAR)
-                .setSize(8).setAutoincrement(false).setDefaultValue("").setNullable(true);
+        ColumnMetaData testObject1 = createColumnTypeA();
+        ColumnMetaData differentTestObject = createColumnTypeB();
         assertFalse(testObject1.equals(differentTestObject));
     }
 
@@ -45,10 +43,8 @@ public class ColumnMetaDataTest {
      */
     @Test
     public void twoEqualTableColumnAreEquals() {
-        ColumnMetaData testObject1 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
-        ColumnMetaData testObject2 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
+        ColumnMetaData testObject1 = createColumnTypeA();
+        ColumnMetaData testObject2 = createColumnTypeA();
         assertTrue(testObject1.equals(testObject2));
     }
 
@@ -83,26 +79,56 @@ public class ColumnMetaDataTest {
      */
     @Test
     public void equalsContractTest() {
-        ColumnMetaData testObject1 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
+        ColumnMetaData testObject1, testObject2, testObject3, differentTestObject;
+
+        testObject1 = createColumnTypeA();
         assertTrue(testObject1.equals(testObject1), "Reflexive");
 
-        ColumnMetaData testObject2 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
+        testObject1 = createColumnTypeA();
+        testObject2 = createColumnTypeA();
         assertTrue(testObject1.equals(testObject2), "Equal Symmetric");
         assertTrue(testObject2.equals(testObject1), "Equal Symmetric");
 
-        ColumnMetaData differentTestObject = new ColumnMetaData("columnTypeB", SqlTypes.VARCHAR)
-                .setSize(8).setAutoincrement(false).setDefaultValue("").setNullable(true);
+        testObject1 = createColumnTypeA();
+        differentTestObject = createColumnTypeB();
         assertFalse(testObject1.equals(differentTestObject), "Not Equal Symmetric");
         assertFalse(differentTestObject.equals(testObject1), "Not Equal Symmetric");
 
-        ColumnMetaData testObject3 = new ColumnMetaData("columnTypeA", SqlTypes.INT)
-                .setSize(32).setAutoincrement(true).setDefaultValue("5").setNullable(false);
+        testObject1 = createColumnTypeA();
+        testObject2 = createColumnTypeA();
+        testObject3 = createColumnTypeA();
         assertTrue(testObject1.equals(testObject2), "Transitive");
         assertTrue(testObject1.equals(testObject3), "Transitive");
         assertTrue(testObject2.equals(testObject3), "Transitive");
 
         assertFalse(testObject1.equals(null), "Null value should return false");
+    }
+
+    /**
+     * Creates and returns an "ColumnTypeA" instance of ColumnmetaData. Method creates a new instance every time it is
+     * called.
+     * 
+     * @return a newly created "ColumnTypeA"
+     */
+    private ColumnMetaData createColumnTypeA() {
+        return new ColumnMetaData("columnTypeA", SqlTypes.INT)
+                .setSize(32)
+                .setAutoincrement(true)
+                .setDefaultValue("5")
+                .setNullable(false);
+    }
+
+    /**
+     * Creates and returns an "ColumnTypeB" instance of ColumnmetaData. Method creates a new instance every time it is
+     * called.
+     * 
+     * @return a newly created "ColumnTypeB"
+     */
+    private ColumnMetaData createColumnTypeB() {
+        return new ColumnMetaData("columnTypeB", SqlTypes.VARCHAR)
+                .setSize(8)
+                .setAutoincrement(false)
+                .setDefaultValue("")
+                .setNullable(true);
     }
 }

@@ -26,11 +26,11 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import org.jtalks.poulpe.util.databasebackup.model.entity.Cell;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ColumnMetaData;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Row;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTable;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.SqlTypes;
+import org.jtalks.poulpe.util.databasebackup.domain.Cell;
+import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
+import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 import org.testng.annotations.Test;
 
 import com.google.common.base.Predicate;

@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.model.jdbc;
+package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
@@ -13,7 +13,7 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ForeignKey;
+import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;

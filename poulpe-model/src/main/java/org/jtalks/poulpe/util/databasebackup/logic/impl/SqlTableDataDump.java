@@ -19,10 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Cell;
-import org.jtalks.poulpe.util.databasebackup.model.entity.Row;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTable;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.TableDataUtil;
+import org.jtalks.poulpe.util.databasebackup.domain.Cell;
+import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 /**
  * Provides a table data in a shape of SQL statements for given DbTable instance.

@@ -21,11 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ColumnMetaData;
-import org.jtalks.poulpe.util.databasebackup.model.entity.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.model.entity.UniqueKey;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTable;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.TableDataUtil;
+import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
+import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
+import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 import com.google.common.collect.Lists;
 
