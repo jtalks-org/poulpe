@@ -15,6 +15,8 @@
 package org.jtalks.poulpe.util.databasebackup.logic;
 
 import java.io.InputStream;
+import java.util.Calendar;
+import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
@@ -77,7 +79,7 @@ public class FileDownloadService {
             InputStream content = contentProvider.getContent();
 
             fileDownloader.setMimeContentType(contentProvider.getMimeContentType());
-            fileDownloader.setContentFileName(contentFileNameWithoutExt + contentProvider.getContentFileNameExt());
+            fileDownloader.setContentFileName(getContentFileNameWithoutExt() + contentProvider.getContentFileNameExt());
             fileDownloader.download(content);
         } catch (Exception e) {
             throw new FileDownloadException(e);
@@ -121,6 +123,30 @@ public class FileDownloadService {
     public final void setContentFileNameWithoutExt(final String contentFileNameWithoutExt) {
         Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
+    }
+
+    /**
+     * Returns contentFileNameWithoutExt with current TimeStamp mark.
+     * 
+     * @return String which represents the filename without extension
+     */
+    protected String getContentFileNameWithoutExt() {
+        assert contentFileNameWithoutExt != null : "contentFileNameWithoutExt must be defined";
+        return new StringBuilder()
+                .append(getCurrentTimeStamp())
+                .append("_")
+                .append(contentFileNameWithoutExt)
+                .append("_backup")
+                .toString();
+    }
+
+    /**
+     * Formats current TimeStamp into format YYYY-MM-DD_HH-MM-SS and returns it.
+     * 
+     * @return String representation of formatted TimeStamp
+     */
+    private String getCurrentTimeStamp() {
+        return String.format("%1$tY-%1$tm-%1$td_%1$tH-%1$tM-%1$tS", new Date());
     }
 
     // injected

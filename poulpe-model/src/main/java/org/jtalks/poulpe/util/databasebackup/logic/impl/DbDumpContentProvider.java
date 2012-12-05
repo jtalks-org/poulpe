@@ -30,8 +30,8 @@ import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingExcepti
 import org.jtalks.poulpe.util.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.logic.ContentProvider;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTable;
-import org.jtalks.poulpe.util.databasebackup.model.jdbc.DbTableNameList;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameList;
 
 /**
  * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
