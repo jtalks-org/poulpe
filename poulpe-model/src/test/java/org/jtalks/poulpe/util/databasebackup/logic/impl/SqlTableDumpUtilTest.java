@@ -17,7 +17,6 @@ package org.jtalks.poulpe.util.databasebackup.logic.impl;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.fail;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,24 +25,38 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Test joining array of Strings into one String functionality.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class SqlTableDumpUtilTest {
-
+    /**
+     * Base testing - join plain array of Strings.
+     */
     @Test
-    public final void joiningListTest() throws SQLException {
+    public final void joiningListTest() {
         List<String> list = Arrays.asList("1", "2", "3");
         assertEquals(SqlTableDumpUtil.joinStrings(list, ",").toString(), "1,2,3");
         assertEquals(SqlTableDumpUtil.joinStrings(list, "").toString(), "123");
         assertEquals(SqlTableDumpUtil.joinStrings(list, "<separator>").toString(), "1<separator>2<separator>3");
     }
 
+    /**
+     * Joining of empty array must return empty String.
+     */
     @Test
-    public final void emptyListReturnsEmptyStringTest() throws SQLException {
+    public final void emptyListReturnsEmptyStringTest() {
         List<String> list = Lists.newArrayList();
         assertEquals(SqlTableDumpUtil.joinStrings(list, ",").toString().length(), 0);
     }
 
+    /**
+     * Joining of null array or joining with null separator must throw an Exception.
+     */
     @Test
-    public final void nullListOrSeparatorGenerateExceptionTest() throws SQLException {
+    public final void nullListOrSeparatorGenerateExceptionTest() {
         try {
             SqlTableDumpUtil.joinStrings(null, ",");
             fail("Null list must throws NullPointerException.");

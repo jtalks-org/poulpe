@@ -36,11 +36,13 @@ import com.google.common.collect.Lists;
  * @author Evgeny Surovtsev
  * 
  */
-public final class DbTableNameList {
-    /**
-     * Disable creation objects of the class.
-     */
-    private DbTableNameList() {
+public class DbTableNameLister {
+    public DbTableNameLister(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
     }
 
     /**
@@ -55,7 +57,7 @@ public final class DbTableNameList {
      *             If dataSource is null.
      */
     @SuppressWarnings("unchecked")
-    public static List<String> getPlainList(final DataSource dataSource) throws SQLException {
+    public List<String> getPlainList() throws SQLException {
         Validate.notNull(dataSource, "dataSource must not be null");
         List<String> tableNames = null;
         try {
@@ -96,9 +98,9 @@ public final class DbTableNameList {
      * @throws NullPointerException
      *             If dataSource is null.
      */
-    public static List<String> getIndependentList(final DataSource dataSource) throws SQLException {
+    public List<String> getIndependentList() throws SQLException {
         Validate.notNull(dataSource, "dataSource must not be null");
-        final List<String> tableNames = Lists.newArrayList(getPlainList(dataSource));
+        final List<String> tableNames = Lists.newArrayList(getPlainList());
         Collections.sort(tableNames);
 
         final List<TableDependencies> tablesAndTheirDependencies = Lists.newArrayList();
@@ -187,4 +189,6 @@ public final class DbTableNameList {
         private final String tableName;
         private final Set<String> dependencies = new HashSet<String>();
     }
+
+    private final DataSource dataSource;
 }

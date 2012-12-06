@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
@@ -29,8 +30,19 @@ import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Generates a SQL CREATE TABLE statement with all table structure inside.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class SqlTableStructureDump {
-
+    /**
+     * Initializes a new instance of the class with given DbTable which will be used for generate SQL statement.
+     * 
+     * @param dbTable
+     *            an instance of DbTable which will be used for generating SQL Statement
+     */
     public SqlTableStructureDump(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
@@ -65,6 +77,11 @@ public class SqlTableStructureDump {
                 .append("--" + SqlTableDumpUtil.LINEFEED + SqlTableDumpUtil.LINEFEED);
     }
 
+    /**
+     * Returns a first part of SQL CREATE TABLE statement.
+     * 
+     * @return "CREATE TABLE 'tableName' ("
+     */
     private StringBuilder getOpenCreateTableStatementText() {
         return new StringBuilder(String.format("CREATE TABLE %s (" + SqlTableDumpUtil.LINEFEED,
                 TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName())));
@@ -74,6 +91,8 @@ public class SqlTableStructureDump {
      * Returns the list of table's columns description. For each column information about column's name, type and other
      * parameters returns. The information is provided in the form ready to be inserted into SQL CREATE TABLE statement.
      * 
+     * @param columnDescriptionList
+     *            a list of ColumnMetaData each of which describes and represents one column in the database.
      * @return A list of strings where each string represents description of one column.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -90,6 +109,14 @@ public class SqlTableStructureDump {
         return SqlTableDumpUtil.joinStrings(tableColumnDescriptionList, "," + SqlTableDumpUtil.LINEFEED);
     }
 
+    /**
+     * Formats string representation of the table keys (Primary, foreign and unique) so it can be used in the SQL CREATE
+     * TABLE statement.
+     * 
+     * @return a string representation of the table keys
+     * @throws SQLException
+     *             if any error with database occurs
+     */
     private StringBuilder getTableKeysText() throws SQLException {
         StringBuilder result = new StringBuilder();
 
@@ -160,6 +187,13 @@ public class SqlTableStructureDump {
         return result;
     }
 
+    /**
+     * Returns a closing part of SQL CREATE TABLE statement with common parameters for the table.
+     * 
+     * @return a closing part of SQL CREATE TABLE statement with common parameters for the table.
+     * @throws SQLException
+     *             if any database related error occurs.
+     */
     private StringBuilder getCloseCreateStatementWithTableParamstext() throws SQLException {
         return new StringBuilder(SqlTableDumpUtil.LINEFEED
                 + ") " + getOtherTableParameters(dbTable.getCommonParameterMap()) + ";"
@@ -167,6 +201,13 @@ public class SqlTableStructureDump {
                 + SqlTableDumpUtil.LINEFEED);
     }
 
+    /**
+     * Formats and returns a SQL representation of column based on given ColumnMetaData object.
+     * 
+     * @param column
+     *            a description of column based on which an SQL representation will be built.
+     * @return SQL representation of the column.
+     */
     private String getColumnDescription(final ColumnMetaData column) {
         assert (column != null) : "column must not be null";
         StringBuilder columnDescription = new StringBuilder("    ");
@@ -192,6 +233,16 @@ public class SqlTableStructureDump {
         return columnDescription.toString();
     }
 
+    /**
+     * Formats information about table key into SQL statement compatible shape with help of given
+     * strategy-tableKeyProcessor.
+     * 
+     * @param processor
+     *            an instance of Strategy object which can perform information about specific table key's type
+     * @return a string representation of keys with certain type
+     * @throws SQLException
+     *             if any error occurs
+     */
     private StringBuilder performKeyProcessor(final TableKeyProcessor processor) throws SQLException {
         assert (processor != null) : "processor must not be null";
         StringBuilder result = new StringBuilder();
@@ -211,6 +262,8 @@ public class SqlTableStructureDump {
      * {@link #getTableStructure()}). Currently the method returns ENGINE, COLLATE and AUTO_INCREMENT keys for the
      * CREATE TABLE statement. The method returns only those key which defined for the table.
      * 
+     * @param parameters
+     *            a parameters map where key is a parameter's name and value is a parameter's value.
      * @return A string which contains additional parameters for the table creating and their values.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -224,11 +277,37 @@ public class SqlTableStructureDump {
         return otherTableParameters.toString();
     }
 
+    /**
+     * A strategy for performing information about different types of table keys.
+     * 
+     * @author Evgeny Surovtsev
+     * 
+     */
     private interface TableKeyProcessor {
+        /**
+         * Checks if current TableKeyProcessor has any keys to process.
+         * 
+         * @return true if there are keys in the list to process or false otherwise
+         * @throws SQLException
+         *             is any error with regard to databse occurs
+         */
         boolean hasKeys() throws SQLException;
 
+        /**
+         * Returns true if the iteration has more keys. (In other words, returns true if next would return a key rather
+         * than throwing an exception.)
+         * 
+         * @return if the iterator has more keys to process of false otherwise.
+         */
         boolean hasNext();
 
+        /**
+         * Returns the next key in the iteration.
+         * 
+         * @return the next key's value in iteration.
+         * @throws NoSuchElementException
+         *             iteration has no more elements.
+         */
         String next();
     }
 

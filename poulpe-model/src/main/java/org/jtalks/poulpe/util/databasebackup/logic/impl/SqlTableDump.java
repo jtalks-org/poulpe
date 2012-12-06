@@ -27,17 +27,15 @@ import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
  * 
  */
 class SqlTableDump {
-    private final DbTable dbTable;
+    private DbTable dbTable;
 
     /**
-     * Creates a new SqlDumpObject with provided source point - DbTable.
+     * Define a source point - DbTable.
      * 
      * @param dbTable
      *            A source of database data.
-     * @throws NullPointerException
-     *             if any of dataSource or tableName is null.
      */
-    public SqlTableDump(final DbTable dbTable) {
+    public void setDbTable(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
@@ -50,6 +48,7 @@ class SqlTableDump {
      *             if any of dataSource or tableName is null.
      */
     public String getFullDump() throws SQLException {
+        Validate.notNull(dbTable, "dbTable must be defined");
         return new StringBuilder()
                 .append(new SqlTableStructureDump(dbTable).dumpStructure())
                 .append(new SqlTableDataDump(dbTable).dumpData())

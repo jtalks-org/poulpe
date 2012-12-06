@@ -38,8 +38,20 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+/**
+ * Tests that SqlTableDataDump returns correct SQL statements with given database information.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class SqlTableDataDumpTest {
-
+    /**
+     * Passes a certain Row set to the SqlTableDataDump object and checks that it generates correct SQL statement on top
+     * of it.
+     * 
+     * @throws SQLException
+     *             Must never happen
+     */
     @Test
     public final void dumpDataTest() throws SQLException {
         String expectedStatement = "INSERT INTO `tableName` "
@@ -65,6 +77,14 @@ public class SqlTableDataDumpTest {
         assertFalse(actualIterator.hasNext());
     }
 
+    /**
+     * SqlTableDataDump generates many comments in the resulting SQL which can be unpredictable and we don't want to
+     * test them. So before checking the result we're removing all comments and empty lines from the result SQL.
+     * 
+     * @param actualOutput
+     *            a raw SQL statement before cleaning it up
+     * @return pure SQL statement without comments or empty lines
+     */
     private Iterator<String> removeEmptyStringsAndSqlComments(final String actualOutput) {
         return Iterables.filter(
                 Splitter.on(SqlTableDumpUtil.LINEFEED).omitEmptyStrings().trimResults().split(actualOutput),

@@ -28,8 +28,22 @@ import java.util.zip.GZIPInputStream;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.testng.annotations.Test;
 
+/**
+ * Tests that GZipContentProvider correctly performs gzipping on the giving content.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class GzipContentProviderTest {
-
+    /**
+     * Passes a string as an input for DbContentProvider, gets the gzipped content from GzipContentProvider, unzips it
+     * and checks that result is the same as initial String.
+     * 
+     * @throws FileDownloadException
+     *             Must never happen
+     * @throws IOException
+     *             Must never happen
+     */
     @Test
     public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
         String expected = "Test string for checking GzipContentProvider class";

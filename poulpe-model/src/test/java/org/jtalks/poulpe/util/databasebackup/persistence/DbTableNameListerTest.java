@@ -32,14 +32,14 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 
 /**
- * The class tests {@link DbTableNameList} by performing tests: (1) if a list returned from
+ * The class tests {@link DbTableNameLister} by performing tests: (1) if a list returned from
  * DatabaseTableList.getPlainList contains all entries; (2) if method DatabaseTableList.getIndependentList resolves
  * table dependencies.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public class DbTableNameListTest {
+public class DbTableNameListerTest {
     private EmbeddedDatabase dataSource;
     private List<String> expectedIndependentList;
 
@@ -91,8 +91,8 @@ public class DbTableNameListTest {
                 Lists.newArrayList(Lists.transform(expectedIndependentList, new UpperCaseFunction()));
         Collections.sort(expectedList);
 
-        List<String> actualList =
-                Lists.newArrayList(Lists.transform(DbTableNameList.getPlainList(dataSource), new UpperCaseFunction()));
+        DbTableNameLister lister = new DbTableNameLister(dataSource);
+        List<String> actualList = Lists.newArrayList(Lists.transform(lister.getPlainList(), new UpperCaseFunction()));
         Collections.sort(actualList);
 
         assertEquals(actualList, expectedList);
@@ -109,8 +109,8 @@ public class DbTableNameListTest {
     @Test
     public void tableListResolvesDependencies() throws SQLException {
         List<String> expectedList = Lists.transform(expectedIndependentList, new UpperCaseFunction());
-        List<String> actualList =
-                Lists.transform(DbTableNameList.getIndependentList(dataSource), new UpperCaseFunction());
+        DbTableNameLister lister = new DbTableNameLister(dataSource);
+        List<String> actualList = Lists.transform(lister.getIndependentList(), new UpperCaseFunction());
 
         assertEquals(actualList, expectedList);
     }

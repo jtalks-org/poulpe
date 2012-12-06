@@ -31,7 +31,7 @@ import org.jtalks.poulpe.util.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.logic.ContentProvider;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameList;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameLister;
 
 /**
  * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
@@ -50,9 +50,13 @@ public class DbDumpContentProvider implements ContentProvider {
      * @throws NullPointerException
      *             If dataSource is null.
      */
-    DbDumpContentProvider(final DataSource dataSource) {
-        Validate.notNull(dataSource, "dataSource must not be null");
-        this.dataSource = dataSource;
+    DbDumpContentProvider(final DbTableNameLister dbTableNameLister, final SqlTableDump sqlTableDump) {
+        Validate.notNull(dbTableNameLister, "dbTableNameLister must not be null");
+        Validate.notNull(sqlTableDump, "sqlTableDump must not be null");
+
+        this.dataSource = dbTableNameLister.getDataSource();
+        this.dbTableNameLister = dbTableNameLister;
+        this.sqlTableDump = sqlTableDump;
     }
 
     /**
@@ -63,14 +67,14 @@ public class DbDumpContentProvider implements ContentProvider {
         StringBuilder result = new StringBuilder(getHeaderInfo());
 
         try {
-            List<String> tableNames = DbTableNameList.getIndependentList(getDataSource());
+            List<String> tableNames = dbTableNameLister.getIndependentList();
             if (tableNames.size() == 0) {
                 throw new DataBaseDoesntContainTablesException();
             }
 
             for (String tableName : tableNames) {
-                SqlTableDump tableDump = new SqlTableDump(new DbTable(getDataSource(), tableName));
-                result.append(tableDump.getFullDump());
+                sqlTableDump.setDbTable(new DbTable(dataSource, tableName));
+                result.append(sqlTableDump.getFullDump());
             }
 
         } catch (SQLException e) {
@@ -138,9 +142,9 @@ public class DbDumpContentProvider implements ContentProvider {
      * 
      * @return A previously set DataSource instance.
      */
-    private DataSource getDataSource() {
-        return dataSource;
-    }
+    // private DataSource getDataSource() {
+    // return dataSource;
+    // }
 
     /**
      * Setter for data source instance.
@@ -150,12 +154,14 @@ public class DbDumpContentProvider implements ContentProvider {
      * @throws NullPointerException
      *             If dataSource is null.
      */
-    public void setDataSource(final DataSource dataSource) {
-        Validate.notNull(dataSource, "dataSource must not be null");
-        this.dataSource = dataSource;
-    }
+    // public void setDataSource(final DataSource dataSource) {
+    // Validate.notNull(dataSource, "dataSource must not be null");
+    // this.dataSource = dataSource;
+    // }
 
-    private DataSource dataSource;
+    private final DataSource dataSource;
+    private final DbTableNameLister dbTableNameLister;
+    private final SqlTableDump sqlTableDump;
 
     private static final String MIME_CONTENT_TYPE = "text/plain";
     private static final String FILE_NAME_EXT = ".sql";

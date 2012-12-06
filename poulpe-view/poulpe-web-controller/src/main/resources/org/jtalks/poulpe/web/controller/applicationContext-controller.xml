@@ -151,7 +151,14 @@
           <bean class="org.jtalks.poulpe.util.databasebackup.logic.impl.GzipContentProvider">
             <constructor-arg>
                 <bean class="org.jtalks.poulpe.util.databasebackup.logic.impl.DbDumpContentProvider">
-                    <constructor-arg ref="dataSource" />
+                    <constructor-arg index="0">
+                        <bean class="org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameLister">
+                            <constructor-arg ref="dataSource" />
+                        </bean>
+                    </constructor-arg>
+                    <constructor-arg index="1">
+                        <bean class="org.jtalks.poulpe.util.databasebackup.logic.impl.SqlTableDump" />
+                    </constructor-arg>
                 </bean>
             </constructor-arg>
           </bean>
