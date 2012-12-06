@@ -1,0 +1,35 @@
+<?page title="Users" contentType="text/html;charset=UTF-8"?>
+<?variable-resolver class="org.zkoss.zkplus.spring.DelegatingVariableResolver"?>
+<zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
+  <window id="serverInfo" title="${labels.admin.server_info.title}" border="normal" width="100%" height="100%"
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(deploymentPropertiesVm)" >
+
+	<grid style="border:none">
+	  <rows>
+	    <row>
+	    	<label value="${labels.admin.server_info.application_version}"/>
+	    	<!-- Don't use [at] symbol odd number of times per tag. Maven filter (war plugin) works incorrect-->
+	    	<label value="${'@project.version@'.indexOf('project.version') le 0 ? '@project.version@' : labels.admin.server_info.unknown_application_version }"/>
+	    </row>
+	    <row>
+	    	<label value="${labels.admin.server_info.deployment_date}"/>
+	    	<label value="@load(vm.deploymentDate)"/>
+	    </row>
+	    <row>
+	    	<label value="${labels.admin.server_info.DB_name}"/>
+	    	<label value="@load(vm.databaseName ne null ? vm.databaseName : labels.admin.server_info.unknown_info)"/>
+	    </row>
+	    <row>
+	    	<label value="${labels.admin.server_info.DB_user}"/>
+	    	<label value="@load(vm.databaseUser ne null ? vm.databaseUser : labels.admin.server_info.unknown_info)"/>
+	    </row>
+	    <row>
+	    	<label value="${labels.admin.server_info.server_ip}"/>
+	    	<label value="@load(vm.serverIP ne null ? vm.serverIP : labels.admin.server_info.unknown_info)"/>
+	    </row>
+	  </rows>
+	</grid>
+	
+  </window>
+</zk>

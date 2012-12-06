@@ -38,6 +38,6 @@ public interface LoginResource {
      * @throws IOException when user not found or password not match
      */
     @Post
-    public Representation authenticate(Representation rep) throws IOException;
+    Representation authenticate(Representation rep) throws IOException;
 
 }

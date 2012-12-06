@@ -4,7 +4,7 @@
 
   <element name="authentication" type="jt:authentication" />
 
-  <complexType name="credintals">
+  <complexType name="credentials">
     <sequence>
       <element name="username" type="string" minOccurs="1" maxOccurs="1" />
       <element name="passwordHash" type="string" minOccurs="0"
@@ -21,7 +21,7 @@
 
   <complexType name="authentication">
     <sequence>
-      <element name="credintals" type="jt:credintals" minOccurs="1"
+      <element name="credentials" type="jt:credentials" minOccurs="1"
         maxOccurs="1" />
       <element name="status" type="string" minOccurs="0" maxOccurs="1" />
       <element name="statusInfo" type="string" minOccurs="0" maxOccurs="1" />
