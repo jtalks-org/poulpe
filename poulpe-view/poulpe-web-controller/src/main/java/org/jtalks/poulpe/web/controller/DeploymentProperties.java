@@ -19,7 +19,6 @@ import java.net.URI;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,26 +33,46 @@ import javax.sql.DataSource;
  */
 public class DeploymentProperties {
     
-    String deploymentDate;
-    String databaseName;
-    String databaseUser;
-    String serverIP;
-    
+    private DataSource dataSource;
+    private String deploymentDate;
+    private String databaseServer;
+    private String databaseName;
+    private String databaseUser;
+    private String serverIP;  
     
     /** 
      * Constructor for initialization variables
      */
     DeploymentProperties(DataSource dataSource){
         
+        this.dataSource = dataSource;
+ 
+    }
+    
+    /** 
+     * Initialization of calculated variables 
+     * 
+     */
+    void init(){
+        
         this.deploymentDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         
         try {
+            
             Connection connection = dataSource.getConnection();
             databaseName = connection.getCatalog();
             DatabaseMetaData connectionMetadata = connection.getMetaData();
             databaseUser = connectionMetadata.getUserName();
+                      
+            String url = connectionMetadata.getURL();
+            String cleanURI = url.substring(5); // subtarct "jdbc:"
+            URI uri = URI.create(cleanURI);
+            databaseServer = uri.getHost() + (uri.getPort() == -1 ? "" : String.valueOf(uri.getPort()));
+            
             connection.close();
+            
         } catch (SQLException e) {
+            databaseServer = null;
             databaseName = null;
             databaseUser = null;
         }
@@ -74,6 +93,15 @@ public class DeploymentProperties {
         return deploymentDate;
     }    
     
+    /**
+     * Returns database server for view
+     *
+     * @return database server 
+     */
+    public String getDatabaseServer() {
+        return databaseServer;
+    }
+
     /**
      * Returns database name for view 
      *

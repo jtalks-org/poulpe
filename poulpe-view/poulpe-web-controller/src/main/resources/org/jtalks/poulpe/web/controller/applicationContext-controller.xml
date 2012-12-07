@@ -69,7 +69,8 @@
  	    <property name="windowManager" ref="windowManager"/>
  	    <property name="componentService" ref="componentService"/>
 	</bean>
-	<bean id="deploymentPropertiesVm" class="org.jtalks.poulpe.web.controller.DeploymentProperties" scope="singleton">
+	<bean id="deploymentPropertiesVm" class="org.jtalks.poulpe.web.controller.DeploymentProperties"
+	      scope="singleton" init-method="init">
  	    <constructor-arg index="0" ref="dataSource"/>  
 	</bean>
  	

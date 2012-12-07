@@ -17,6 +17,10 @@
 	    	<label value="@load(vm.deploymentDate)"/>
 	    </row>
 	    <row>
+	    	<label value="${labels.admin.server_info.DB_server}"/>
+	    	<label value="@load(vm.databaseServer ne null ? vm.databaseServer : labels.admin.server_info.unknown_info)"/>
+	    </row>
+	    <row>
 	    	<label value="${labels.admin.server_info.DB_name}"/>
 	    	<label value="@load(vm.databaseName ne null ? vm.databaseName : labels.admin.server_info.unknown_info)"/>
 	    </row>
