@@ -61,6 +61,25 @@ public class DeploymentProperties {
         
         this.deploymentDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         
+        DatabaseInfo databaseInfo = databaseInfo();
+        this.databaseServer = databaseInfo.getDatabaseServer();
+        this.databaseName   = databaseInfo.getDatabaseName();
+        this.databaseUser   = databaseInfo.getDatabaseUser();
+             
+        this.serverIP = serverIP();
+    }
+    
+    /** 
+     * Method collect information about database connection 
+     * 
+     * @return Nested class with server info
+     */
+    private DatabaseInfo databaseInfo(){ 
+        
+        String databaseName   = null;
+        String databaseUser   = null;
+        String databaseServer = null;
+        
         try {
             
             Connection connection = dataSource.getConnection();
@@ -76,11 +95,22 @@ public class DeploymentProperties {
             connection.close();
             
         } catch (SQLException e) {
-            databaseServer = null;
-            databaseName = null;
-            databaseUser = null;
+            // No info data
         }
-           
+        
+        return new DatabaseInfo(databaseServer, databaseName, databaseUser);
+    }
+    
+    /** 
+     * Method collect information about used server IP. If sever has
+     * global Internet addresses, they return. If no global dresses, 
+     * method returns all found Intranet addresses. If sever hasn't
+     * any IP loopback returns.    
+     * 
+     * @return web server IP
+     */
+    private String serverIP(){
+        
         StringBuilder globalAddressesSB = new StringBuilder();
         StringBuilder localAddressesSB = new StringBuilder();
         
@@ -115,18 +145,20 @@ public class DeploymentProperties {
                 }
             }
             if(globalAddressesSB.length() > 0){
-                this.serverIP = globalAddressesSB.toString();
+                return globalAddressesSB.toString();
             } else if (localAddressesSB.length() > 0){
-                this.serverIP = localAddressesSB.toString();
+                return localAddressesSB.toString();
             } else {
                 // Nothing found. So we'll show default (loopback)
-                this.serverIP = InetAddress.getLocalHost().getHostAddress();
+                return InetAddress.getLocalHost().getHostAddress();
             }
         } catch (SocketException e) {
-            this.serverIP = null;
+            // No info data
         } catch (UnknownHostException e) {
-            this.serverIP = null;
+            // No info data
         }
+        
+        return null;
     }
 
     /**
@@ -172,6 +204,34 @@ public class DeploymentProperties {
      */
     public String getServerIP() {
         return serverIP;
+    }
+    
+    /**
+     * Auxiliary nested class, which contain all necessary info about database    
+     *
+     */
+    private class DatabaseInfo {
+        private String databaseServer;
+        private String databaseName;
+        private String databaseUser;
+
+        public DatabaseInfo(String databaseServer, String databaseName, String databaseUser) {
+            this.databaseServer = databaseServer;
+            this.databaseName = databaseName;
+            this.databaseUser = databaseUser;
+        }
+
+        public String getDatabaseServer() {
+            return databaseServer;
+        }
+
+        public String getDatabaseName() {
+            return databaseName;
+        }
+        
+        public String getDatabaseUser() {
+            return databaseUser;
+        }
     }
 
 }
