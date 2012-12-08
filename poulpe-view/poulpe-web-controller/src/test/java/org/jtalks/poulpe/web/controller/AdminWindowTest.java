@@ -141,4 +141,11 @@ public class AdminWindowTest {
         adminWindow.onComponentClick(TestFixtures.component(ComponentType.FORUM));
         verify(windowManager).open("WEB-INF/pages/forum/structure/ForumStructure.zul");
     }
+    
+    @Test
+    public void testOnShowServerInfo() {
+        adminWindow.onShowServerInfo();       
+        testOnShow("WEB-INF/pages/server_info.zul");
+    }
+
 }

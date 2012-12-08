@@ -15,6 +15,9 @@
 package org.jtalks.poulpe.web.controller;
 
 import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.URI;
 import java.net.UnknownHostException;
 import java.sql.Connection;
@@ -22,6 +25,7 @@ import java.sql.DatabaseMetaData;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 
 import javax.sql.DataSource;
 
@@ -53,7 +57,7 @@ public class DeploymentProperties {
      * Initialization of calculated variables 
      * 
      */
-    void init(){
+    public void init(){
         
         this.deploymentDate = new SimpleDateFormat("dd.MM.yyyy HH:mm").format(new Date());
         
@@ -67,7 +71,7 @@ public class DeploymentProperties {
             String url = connectionMetadata.getURL();
             String cleanURI = url.substring(5); // subtarct "jdbc:"
             URI uri = URI.create(cleanURI);
-            databaseServer = uri.getHost() + (uri.getPort() == -1 ? "" : String.valueOf(uri.getPort()));
+            databaseServer = (uri.getHost() != null ? uri.getHost() : "N/A")  + (uri.getPort() == -1 ? "" : String.valueOf(uri.getPort()));
             
             connection.close();
             
@@ -76,9 +80,50 @@ public class DeploymentProperties {
             databaseName = null;
             databaseUser = null;
         }
-         
+           
+        StringBuilder globalAddressesSB = new StringBuilder();
+        StringBuilder localAddressesSB = new StringBuilder();
+        
         try {
-            this.serverIP = InetAddress.getLocalHost().getHostAddress();
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();) {               
+                
+                NetworkInterface networkInterface = en.nextElement();
+
+                // Also we should skip loopback address, if we didn't find anything better.
+                if (!networkInterface.isUp() || networkInterface.isVirtual() || networkInterface.isLoopback()) {
+                    continue;
+                }
+
+                for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+
+                    InetAddress inetAddress = interfaceAddress.getAddress();
+                    if (inetAddress.isLinkLocalAddress()) {
+                        continue;
+                    }
+
+                    if (!inetAddress.isSiteLocalAddress()) {
+                        if (globalAddressesSB.length() > 0) {
+                            globalAddressesSB.append(", ");
+                        }
+                        globalAddressesSB.append(inetAddress.getHostAddress());
+                    } else {
+                        if (localAddressesSB.length() > 0) {
+                            localAddressesSB.append(", ");
+                        }
+                        localAddressesSB.append(inetAddress.getHostAddress());
+                    }
+                }
+            }
+            if(globalAddressesSB.length() > 0){
+                this.serverIP = globalAddressesSB.toString();
+            } else if (localAddressesSB.length() > 0){
+                this.serverIP = localAddressesSB.toString();
+            } else {
+                // Nothing found. So we'll show default (loopback)
+                this.serverIP = InetAddress.getLocalHost().getHostAddress();
+            }
+        } catch (SocketException e) {
+            this.serverIP = null;
         } catch (UnknownHostException e) {
             this.serverIP = null;
         }
