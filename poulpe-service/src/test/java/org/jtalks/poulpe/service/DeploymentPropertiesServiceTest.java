@@ -12,10 +12,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller;
+package org.jtalks.poulpe.service;
 
 import static org.testng.Assert.*;
 
+import org.jtalks.poulpe.service.DeploymentPropertiesService;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -30,17 +31,17 @@ import org.testng.annotations.Test;
  * @author Evgeny Kapinos
  * 
  */
-public class DeploymentPropertiesTest {
-    private DeploymentProperties deploymentProperties; 
+public class DeploymentPropertiesServiceTest {
+    private DeploymentPropertiesService deploymentProperties; 
     private EmbeddedDatabase dataSource;
 
     /**
-     * The method setups an in-memory database and initialize empty db schema.
+     * The method setups an in-memory database and initialize empty database schema.
      */
     @BeforeClass
     private void setUp() {
-        dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).build();
-        deploymentProperties = new DeploymentProperties(dataSource);
+        dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).setName("PUBLIC").build();
+        deploymentProperties = new DeploymentPropertiesService(dataSource);
     }
 
     /**
@@ -48,12 +49,20 @@ public class DeploymentPropertiesTest {
      */
     @Test
     public void initTest() {       
-         deploymentProperties.init();       
-         assertNotNull(deploymentProperties.getDeploymentDate());
-         assertNotNull(deploymentProperties.getDatabaseServer());
-         assertEquals(deploymentProperties.getDatabaseUser(), "SA");
-         assertNotNull(deploymentProperties.getDatabaseName(), "PUBLIC");
-         assertNotNull(deploymentProperties.getServerIP());
+        
+        deploymentProperties.init();
+           
+        // If initialization completed successfully, deployment date will be filled with some String.   
+        assertNotNull(deploymentProperties.getDeploymentDate());
+        
+        // In-memory DB always hasn't info about server host name. So we got "N/A"
+        assertEquals(deploymentProperties.getDatabaseServer(), "N/A"); 
+        assertEquals(deploymentProperties.getDatabaseUser(),   "SA");
+        assertEquals(deploymentProperties.getDatabaseName(),   "PUBLIC");
+        
+        // If initialization completed successfully, server IP will be filled with some String 
+        // In worse case it will "127.0.0.1", but not empty    
+        assertNotNull(deploymentProperties.getServerIP());
     }
         
     /**

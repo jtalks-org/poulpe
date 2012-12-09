@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller;
+package org.jtalks.poulpe.service;
 
 import javax.sql.DataSource;
 import java.net.*;
@@ -30,14 +30,14 @@ import java.util.Enumeration;
  * @author Evgeny Kapinos
  * @see <a href="http://jira.jtalks.org/browse/POULPE-405">JIRA</a>
  */
-public class DeploymentProperties {
+public class DeploymentPropertiesService {
     private final DataSource dataSource;
     private String deploymentDate;
     private DatabaseInfo dbInfo;
     private String serverIP;
 
     /** Constructor for initialization variables */
-    DeploymentProperties(DataSource dataSource) {
+    DeploymentPropertiesService(DataSource dataSource) {
 
         this.dataSource = dataSource;
 
@@ -55,7 +55,7 @@ public class DeploymentProperties {
      * Method collect information about used server IP. If sever has global Internet addresses, they return. If no
      * global dresses, method returns all found Intranet addresses. If sever hasn't any IP loopback returns.
      *
-     * @return web server IP
+     * @return Server IP
      */
     private String serverIP() {
         StringBuilder globalAddressesSB = new StringBuilder();
@@ -164,7 +164,7 @@ public class DeploymentProperties {
         /**
          * Collects the information about the database and puts it into the {@link DatabaseInfo} instance.
          *
-         * @return db info
+         * @return database info
          */
         public static DatabaseInfo databaseInfo(DataSource dataSource) {
             String databaseName = "";
