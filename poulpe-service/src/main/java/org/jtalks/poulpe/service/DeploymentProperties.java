@@ -30,14 +30,14 @@ import java.util.Enumeration;
  * @author Evgeny Kapinos
  * @see <a href="http://jira.jtalks.org/browse/POULPE-405">JIRA</a>
  */
-public class DeploymentPropertiesService {
+public class DeploymentProperties {
     private final DataSource dataSource;
     private String deploymentDate;
     private DatabaseInfo dbInfo;
     private String serverIP;
 
     /** Constructor for initialization variables */
-    DeploymentPropertiesService(DataSource dataSource) {
+    DeploymentProperties(DataSource dataSource) {
 
         this.dataSource = dataSource;
 

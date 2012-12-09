@@ -16,7 +16,7 @@ package org.jtalks.poulpe.service;
 
 import static org.testng.Assert.*;
 
-import org.jtalks.poulpe.service.DeploymentPropertiesService;
+import org.jtalks.poulpe.service.DeploymentProperties;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -32,7 +32,7 @@ import org.testng.annotations.Test;
  * 
  */
 public class DeploymentPropertiesServiceTest {
-    private DeploymentPropertiesService deploymentProperties; 
+    private DeploymentProperties deploymentProperties; 
     private EmbeddedDatabase dataSource;
 
     /**
@@ -41,7 +41,7 @@ public class DeploymentPropertiesServiceTest {
     @BeforeClass
     private void setUp() {
         dataSource = new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.HSQL).setName("PUBLIC").build();
-        deploymentProperties = new DeploymentPropertiesService(dataSource);
+        deploymentProperties = new DeploymentProperties(dataSource);
     }
 
     /**
