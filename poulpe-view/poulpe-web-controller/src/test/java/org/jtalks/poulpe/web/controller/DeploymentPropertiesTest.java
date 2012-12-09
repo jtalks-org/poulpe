@@ -24,13 +24,13 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 /**
- * Tests that DeploymentProperties correctly initialized in startup.
+ * Tests that DeploymentProperties correctly initialized in startup, uses embedded database to make things more real.
+ * It's actually a bit more than unit test because it uses real network and database resources.
  * 
  * @author Evgeny Kapinos
  * 
  */
 public class DeploymentPropertiesTest {
-
     private DeploymentProperties deploymentProperties; 
     private EmbeddedDatabase dataSource;
 
@@ -51,8 +51,8 @@ public class DeploymentPropertiesTest {
          deploymentProperties.init();       
          assertNotNull(deploymentProperties.getDeploymentDate());
          assertNotNull(deploymentProperties.getDatabaseServer());
-         assertNotNull(deploymentProperties.getDatabaseUser());
-         assertNotNull(deploymentProperties.getDatabaseName());
+         assertEquals(deploymentProperties.getDatabaseUser(), "SA");
+         assertNotNull(deploymentProperties.getDatabaseName(), "PUBLIC");
          assertNotNull(deploymentProperties.getServerIP());
     }
         
