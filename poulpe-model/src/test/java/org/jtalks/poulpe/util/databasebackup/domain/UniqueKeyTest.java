@@ -55,7 +55,7 @@ public class UniqueKeyTest {
     @SuppressWarnings("unused")
     public void uniqueKeyShouldBeInitializedInConstructor() {
         try {
-            UniqueKey tablePrimaryKey = new UniqueKey(null);
+            UniqueKey tablePrimaryKey = new UniqueKey(null, "column");
             fail("Exception expected");
         } catch (NullPointerException e) {
             // do nothing - the exception is expected.
@@ -99,7 +99,7 @@ public class UniqueKeyTest {
      * @return a newly created "UniqueKeyA"
      */
     private UniqueKey createUniqueKeyA() {
-        return new UniqueKey("column1");
+        return new UniqueKey("indexName1", "column1");
     }
 
     /**
@@ -108,6 +108,6 @@ public class UniqueKeyTest {
      * @return a newly created "UniqueKeyB"
      */
     private UniqueKey createUniqueKeyB() {
-        return new UniqueKey("column2");
+        return new UniqueKey("indexName2", "column2");
     }
 }

@@ -15,6 +15,10 @@
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+import com.google.common.collect.Lists;
 
 /**
  * The enumeration represents table column's type in database. The enumeration is used to map the JDBC's column type
@@ -88,17 +92,32 @@ public enum SqlTypes {
     /**
      * DATE type is converted from java.sql.Types.DATE. The type has NO predefined length.
      */
-    DATE(java.sql.Types.DATE, false, true),
+    DATE(java.sql.Types.DATE, false, true) {
+        @Override
+        public List<String> getKeyWordList() {
+            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+        }
+    },
 
     /**
      * TIME type is converted from java.sql.Types.TIME. The type has NO predefined length.
      */
-    TIME(java.sql.Types.TIME, false, true),
+    TIME(java.sql.Types.TIME, false, true) {
+        @Override
+        public List<String> getKeyWordList() {
+            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+        }
+    },
 
     /**
      * TIMESTAMP type is converted from java.sql.Types.TIMESTAMP. The type has NO predefined length.
      */
-    TIMESTAMP(java.sql.Types.TIMESTAMP, false, true),
+    TIMESTAMP(java.sql.Types.TIMESTAMP, false, true) {
+        @Override
+        public List<String> getKeyWordList() {
+            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+        }
+    },
 
     /**
      * BINARY type is converted from java.sql.Types.BINARY. The type has predefined length.
@@ -280,6 +299,17 @@ public enum SqlTypes {
      */
     public boolean isTextBased() {
         return textBased;
+    }
+
+    /**
+     * Returns the list of key words which must not be quoted. For example CURRENT_TIMESTAMP is a keyword for TIMESTAMP
+     * type, so it must not be quoted in SQL statements, i.e. "fieldName TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP"
+     * but not "fieldName TIMESTAMP NOT NULL DEFAULT 'CURRENT_TIMESTAMP'".
+     * 
+     * @return list of keyword for the type.
+     */
+    public List<String> getKeyWordList() {
+        return Collections.emptyList();
     }
 
     private int[] jdbcSqlType;

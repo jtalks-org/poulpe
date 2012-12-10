@@ -14,7 +14,12 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
+import java.util.Collections;
+import java.util.Set;
+
 import org.apache.commons.lang3.Validate;
+
+import com.google.common.collect.Sets;
 
 /**
  * The class represent a Primary or Unique key description data object. The class is immutable.
@@ -31,37 +36,64 @@ public final class UniqueKey implements TableKey {
      * @throws NullPointerException
      *             If pkColumnName is null.
      */
-    public UniqueKey(final String columnName) {
+    public UniqueKey(final String indexName, final String columnName) {
+        Validate.notNull(indexName, "indexName must not be null");
         Validate.notNull(columnName, "columnName must not be null");
-        this.columnName = columnName;
+        this.indexName = indexName;
+        this.columnNameSet = Sets.newHashSet(columnName);
     }
 
     /**
-     * Returns a primary key value.
+     * Initiate an instance of the class with a given Primary Key value.
      * 
-     * @return Primary key.
+     * @param columnName
+     *            A String that represents Primary Key value.
+     * @throws NullPointerException
+     *             If pkColumnName is null.
      */
-    public String getColumnName() {
-        return columnName;
+    public UniqueKey(final String indexName, final Set<String> columnNameSet) {
+        Validate.notNull(indexName, "indexName must not be null");
+        Validate.notNull(columnNameSet, "columnNameSet must not be null");
+        Validate.notEmpty(columnNameSet, "columnNameSet must have at least 1 element");
+
+        this.indexName = indexName;
+        this.columnNameSet = Sets.newHashSet(columnNameSet);
+    }
+
+    /**
+     * @return column name.
+     */
+    public Set<String> getColumnNameSet() {
+        return Collections.unmodifiableSet(columnNameSet);
+    }
+
+    /**
+     * @return index name.
+     */
+    public String getIndexName() {
+        return indexName;
     }
 
     @Override
     public int hashCode() {
         int result = 17;
-        result = 31 * result + (columnName == null ? 0 : columnName.hashCode());
+        result = 31 * result + (columnNameSet == null ? 0 : columnNameSet.hashCode());
+        result = 31 * result + (indexName == null ? 0 : indexName.hashCode());
         return result;
     }
 
     @Override
     public String toString() {
-        return "UniqueKey=" + columnName;
+        return "UniqueKey [indexName=" + indexName + ", columnNameSet=" + columnNameSet + "]";
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || columnName != null && obj instanceof UniqueKey
-                && columnName.equals(((UniqueKey) obj).columnName);
+        return this == obj || columnNameSet != null && indexName != null && obj instanceof UniqueKey
+                && columnNameSet.equals(((UniqueKey) obj).columnNameSet)
+                && indexName.equals(((UniqueKey) obj).indexName);
     }
 
-    private final String columnName;
+    private final String indexName;
+    private final Set<String> columnNameSet;
 }

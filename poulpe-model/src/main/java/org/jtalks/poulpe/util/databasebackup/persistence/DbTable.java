@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.sql.DataSource;
 
@@ -29,6 +30,7 @@ import org.springframework.jdbc.support.MetaDataAccessException;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * The class represents a database table and provides specific table's information like table's structure and data.
@@ -115,11 +117,11 @@ public class DbTable {
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    public List<UniqueKey> getPrimaryKeyList() throws SQLException {
-        if (primaryKeyList == null) {
-            primaryKeyList = obtainPrimaryKeyList();
+    public Set<UniqueKey> getPrimaryKeySet() throws SQLException {
+        if (primaryKeySet == null) {
+            primaryKeySet = obtainPrimaryKeySet();
         }
-        return Collections.unmodifiableList(primaryKeyList);
+        return Collections.unmodifiableSet(primaryKeySet);
     }
 
     /**
@@ -129,11 +131,11 @@ public class DbTable {
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    public List<UniqueKey> getUniqueKeyList() throws SQLException {
-        if (uniqueKeyList == null) {
-            uniqueKeyList = obtainUniqueKeyList();
+    public Set<UniqueKey> getUniqueKeySet() throws SQLException {
+        if (uniqueKeySet == null) {
+            uniqueKeySet = obtainUniqueKeySet();
         }
-        return Collections.unmodifiableList(uniqueKeyList);
+        return Collections.unmodifiableSet(uniqueKeySet);
     }
 
     /**
@@ -143,11 +145,11 @@ public class DbTable {
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    public List<ForeignKey> getForeignKeyList() throws SQLException {
-        if (foreignKeyList == null) {
-            foreignKeyList = obtainForeignKeyList();
+    public Set<ForeignKey> getForeignKeySet() throws SQLException {
+        if (foreignKeySet == null) {
+            foreignKeySet = obtainForeignKeySet();
         }
-        return Collections.unmodifiableList(foreignKeyList);
+        return Collections.unmodifiableSet(foreignKeySet);
     }
 
     /**
@@ -333,16 +335,10 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     @SuppressWarnings("unchecked")
-    private List<UniqueKey> obtainUniqueKeyList() throws SQLException {
-        // we need primaryKeyList loaded before we get list of unique keys.
-        // because primary key is a unique key as well and we need a way to sort it out.
-        if (primaryKeyList == null) {
-            primaryKeyList = obtainPrimaryKeyList();
-        }
-
-        List<UniqueKey> tableUniqueKeyList = null;
+    private Set<UniqueKey> obtainUniqueKeySet() throws SQLException {
+        Set<UniqueKey> tableUniqueKeySet = null;
         try {
-            tableUniqueKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
+            tableUniqueKeySet = (Set<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
@@ -351,18 +347,52 @@ public class DbTable {
                         }
 
                         @Override
-                        public void addKeyToList(final ResultSet rs, final List<TableKey> keyList) throws SQLException {
-                            if (rs.getString("INDEX_NAME") != null
-                                    && !primaryKeyList.contains(new UniqueKey(rs.getString("COLUMN_NAME")))) {
-                                keyList.add(new UniqueKey(rs.getString("COLUMN_NAME")));
+                        public void addKeyToSet(final ResultSet rs, final Set<TableKey> keySet) throws SQLException {
+                            if (rs.getString("INDEX_NAME") != null && rs.getString("COLUMN_NAME") != null) {
+                                UniqueKey key = new UniqueKey(rs.getString("INDEX_NAME"), rs.getString("COLUMN_NAME"));
+                                if (!isPrimaryKey(key)) {
+                                    keySet.add(key);
+                                }
                             }
 
                         }
                     }));
+
+            Map<String, UniqueKey> resultMap = Maps.newHashMap();
+            for (UniqueKey uniqueKey : tableUniqueKeySet) {
+                if (resultMap.containsKey(uniqueKey.getIndexName())) {
+                    Set<String> existingColumns =
+                            Sets.newHashSet(resultMap.get(uniqueKey.getIndexName()).getColumnNameSet());
+                    existingColumns.addAll(uniqueKey.getColumnNameSet());
+                    resultMap.put(uniqueKey.getIndexName(), new UniqueKey(uniqueKey.getIndexName(), existingColumns));
+                } else {
+                    resultMap.put(uniqueKey.getIndexName(), uniqueKey);
+                }
+            }
+            tableUniqueKeySet.clear();
+            for (String key : resultMap.keySet()) {
+                tableUniqueKeySet.add(resultMap.get(key));
+            }
+
         } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
-        return tableUniqueKeyList;
+        return tableUniqueKeySet;
+    }
+
+    private boolean isPrimaryKey(final UniqueKey key) throws SQLException {
+        // we need primaryKeyList loaded before we get list of unique keys.
+        // because primary key is a unique key as well and we need a way to sort it out.
+        if (primaryKeySet == null) {
+            primaryKeySet = obtainPrimaryKeySet();
+        }
+
+        for (UniqueKey primaryKey : primaryKeySet) {
+            if (primaryKey.getIndexName().equals(key.getIndexName())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -373,10 +403,10 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     @SuppressWarnings("unchecked")
-    private List<UniqueKey> obtainPrimaryKeyList() throws SQLException {
-        List<UniqueKey> tablePrimaryKeyList = null;
+    private Set<UniqueKey> obtainPrimaryKeySet() throws SQLException {
+        Set<UniqueKey> tablePrimaryKeySet = null;
         try {
-            tablePrimaryKeyList = (List<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
+            tablePrimaryKeySet = (Set<UniqueKey>) JdbcUtils.extractDatabaseMetaData(dataSource, new KeyListProcessor(
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
@@ -385,9 +415,9 @@ public class DbTable {
                         }
 
                         @Override
-                        public void addKeyToList(final ResultSet rs, final List<TableKey> keyList) throws SQLException {
-                            if (rs.getString("PK_NAME") != null) {
-                                keyList.add(new UniqueKey(rs.getString("COLUMN_NAME")));
+                        public void addKeyToSet(final ResultSet rs, final Set<TableKey> keySet) throws SQLException {
+                            if (rs.getString("PK_NAME") != null && rs.getString("COLUMN_NAME") != null) {
+                                keySet.add(new UniqueKey(rs.getString("PK_NAME"), rs.getString("COLUMN_NAME")));
                             }
 
                         }
@@ -395,7 +425,7 @@ public class DbTable {
         } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
-        return tablePrimaryKeyList;
+        return tablePrimaryKeySet;
     }
 
     /**
@@ -406,10 +436,10 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     @SuppressWarnings("unchecked")
-    private List<ForeignKey> obtainForeignKeyList() throws SQLException {
-        List<ForeignKey> tableForeignKeyList = null;
+    private Set<ForeignKey> obtainForeignKeySet() throws SQLException {
+        Set<ForeignKey> tableForeignKeySet = null;
         try {
-            tableForeignKeyList = (List<ForeignKey>) JdbcUtils.extractDatabaseMetaData(dataSource,
+            tableForeignKeySet = (Set<ForeignKey>) JdbcUtils.extractDatabaseMetaData(dataSource,
                     new KeyListProcessor(tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
@@ -418,9 +448,9 @@ public class DbTable {
                         }
 
                         @Override
-                        public void addKeyToList(final ResultSet rs, final List<TableKey> keyList) throws SQLException {
+                        public void addKeyToSet(final ResultSet rs, final Set<TableKey> keySet) throws SQLException {
                             if (rs.getString("FK_NAME") != null) {
-                                keyList.add(new ForeignKey(rs.getString("FK_NAME"), rs.getString("FKCOLUMN_NAME"), rs
+                                keySet.add(new ForeignKey(rs.getString("FK_NAME"), rs.getString("FKCOLUMN_NAME"), rs
                                         .getString("PKTABLE_NAME"), rs.getString("PKCOLUMN_NAME")));
                             }
 
@@ -429,7 +459,7 @@ public class DbTable {
         } catch (final MetaDataAccessException e) {
             throw new SQLException(e);
         }
-        return tableForeignKeyList;
+        return tableForeignKeySet;
     }
 
     private final String tableName;
@@ -437,9 +467,9 @@ public class DbTable {
     private final JdbcTemplate jdbcTemplate;
 
     private Map<String, String> commonParameterMap;
-    private List<UniqueKey> primaryKeyList;
-    private List<UniqueKey> uniqueKeyList;
-    private List<ForeignKey> foreignKeyList;
+    private Set<UniqueKey> primaryKeySet;
+    private Set<UniqueKey> uniqueKeySet;
+    private Set<ForeignKey> foreignKeySet;
     private List<ColumnMetaData> tableStructureList;
     private List<Row> tableDataList;
 
@@ -476,12 +506,12 @@ public class DbTable {
 
         @Override
         public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-            final List<TableKey> tableKeyList = Lists.newArrayList();
+            final Set<TableKey> tableKeySet = Sets.newHashSet();
             final ResultSet rs = tableKeyPerformer.getResultSet(dmd, tableName);
             while (rs.next()) {
-                tableKeyPerformer.addKeyToList(rs, tableKeyList);
+                tableKeyPerformer.addKeyToSet(rs, tableKeySet);
             }
-            return tableKeyList;
+            return tableKeySet;
         }
 
         private final TableKeyPerformer tableKeyPerformer;
@@ -520,6 +550,6 @@ public class DbTable {
          * @throws SQLException
          *             Is thrown in case any errors during work with database occur.
          */
-        void addKeyToList(ResultSet rs, List<TableKey> keyList) throws SQLException;
+        void addKeyToSet(ResultSet rs, Set<TableKey> keyList) throws SQLException;
     }
 }

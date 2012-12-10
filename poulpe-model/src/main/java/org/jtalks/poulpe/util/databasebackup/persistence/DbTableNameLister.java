@@ -106,7 +106,7 @@ public class DbTableNameLister {
         final List<TableDependencies> tablesAndTheirDependencies = Lists.newArrayList();
         for (final String tableName : tableNames) {
             final TableDependencies tableDependencies = new TableDependencies(tableName);
-            for (final ForeignKey foreignKey : new DbTable(dataSource, tableName).getForeignKeyList()) {
+            for (final ForeignKey foreignKey : new DbTable(dataSource, tableName).getForeignKeySet()) {
                 tableDependencies.addDependency(foreignKey.getPkTableName());
             }
             tablesAndTheirDependencies.add(tableDependencies);

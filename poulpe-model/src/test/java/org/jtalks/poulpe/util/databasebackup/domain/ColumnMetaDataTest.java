@@ -115,7 +115,8 @@ public class ColumnMetaDataTest {
                 .setSize(32)
                 .setAutoincrement(true)
                 .setDefaultValue("5")
-                .setNullable(false);
+                .setNullable(false)
+                .setComment("true - sid is user, false - sid is a granted authority");
     }
 
     /**

@@ -1,12 +1,10 @@
 package org.jtalks.poulpe.util.databasebackup.logic.impl;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -25,6 +23,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * Tests that SqlTableStructureDump provides correct table structure.
@@ -44,22 +43,66 @@ public class SqlTableStructureDumpTest {
      */
     @Test
     public void tableStructureTest() throws SQLException {
-        List<ColumnMetaData> tableStructure = Lists.newArrayList(new ColumnMetaData("id", SqlTypes.INT));
-        List<UniqueKey> uniqueKeyList = Lists.newArrayList(new UniqueKey("column"));
-        List<ForeignKey> foreignKeyList =
-                Lists.newArrayList(new ForeignKey("fkTable", "fkColumn", "pkTable", "pkColumn"));
+        List<ColumnMetaData> tableStructure =
+                Lists.newArrayList(new ColumnMetaData("id", SqlTypes.INT).setComment("comment for the column"));
+        Set<UniqueKey> uniqueKeySet = Sets.newHashSet(new UniqueKey("column", "column"));
+        Set<ForeignKey> foreignKeySet =
+                Sets.newHashSet(new ForeignKey("fkTable", "fkColumn", "pkTable", "pkColumn"));
         Map<String, String> commonParams = Maps.newHashMap();
         commonParams.put("Collation", "UTF-8");
 
         DbTable dbTable = Mockito.mock(DbTable.class);
         Mockito.when(dbTable.getTableName()).thenReturn("tableName");
         Mockito.when(dbTable.getStructure()).thenReturn(tableStructure);
-        Mockito.when(dbTable.getPrimaryKeyList()).thenReturn(uniqueKeyList);
-        Mockito.when(dbTable.getUniqueKeyList()).thenReturn(uniqueKeyList);
-        Mockito.when(dbTable.getForeignKeyList()).thenReturn(foreignKeyList);
+        Mockito.when(dbTable.getPrimaryKeySet()).thenReturn(uniqueKeySet);
+        Mockito.when(dbTable.getUniqueKeySet()).thenReturn(uniqueKeySet);
+        Mockito.when(dbTable.getForeignKeySet()).thenReturn(foreignKeySet);
         Mockito.when(dbTable.getCommonParameterMap()).thenReturn(commonParams);
 
-        String expectedSql = "CREATE TABLE `tableName` (`id` INT NOT NULL, PRIMARY KEY (`column`), "
+        String expectedSql = "CREATE TABLE `tableName` ("
+                + "`id` INT NOT NULL  COMMENT 'comment for the column', "
+                + "PRIMARY KEY (`column`), "
+                + "CONSTRAINT `column` UNIQUE (`column`), KEY `fkTable`(`fkColumn`), "
+                + "CONSTRAINT `fkTable` FOREIGN KEY (`fkColumn`) REFERENCES `pkTable`(`pkColumn`)) "
+                + "Collation=UTF-8;";
+
+        SqlTableStructureDump testObject = new SqlTableStructureDump(dbTable);
+        Assert.assertEquals(expectedSql.replaceAll(" ", ""),
+                removeGapsAndEmptyStringsAndSqlComments(testObject.dumpStructure().toString()).replaceAll(" ", ""));
+    }
+
+    /**
+     * Checks that if column has a defaultValue and type of the column is text based then the default value will be
+     * quoted.
+     * 
+     * @throws SQLException
+     *             must never happen.
+     */
+    @Test
+    public void defaultValuesShouldBeQuotedForStrings() throws SQLException {
+        List<ColumnMetaData> tableStructure = Lists.newArrayList(
+                new ColumnMetaData("id", SqlTypes.INT).setDefaultValue("5"),
+                new ColumnMetaData("name", SqlTypes.VARCHAR).setSize(32).setDefaultValue("defaultValue"),
+                new ColumnMetaData("time", SqlTypes.TIMESTAMP).setDefaultValue("CURRENT_TIMESTAMP"));
+        Set<UniqueKey> uniqueKeySet = Sets.newHashSet(new UniqueKey("column", "column"));
+        Set<ForeignKey> foreignKeySet =
+                Sets.newHashSet(new ForeignKey("fkTable", "fkColumn", "pkTable", "pkColumn"));
+        Map<String, String> commonParams = Maps.newHashMap();
+        commonParams.put("Collation", "UTF-8");
+
+        DbTable dbTable = Mockito.mock(DbTable.class);
+        Mockito.when(dbTable.getTableName()).thenReturn("tableName");
+        Mockito.when(dbTable.getStructure()).thenReturn(tableStructure);
+        Mockito.when(dbTable.getPrimaryKeySet()).thenReturn(uniqueKeySet);
+        Mockito.when(dbTable.getUniqueKeySet()).thenReturn(uniqueKeySet);
+        Mockito.when(dbTable.getForeignKeySet()).thenReturn(foreignKeySet);
+        Mockito.when(dbTable.getCommonParameterMap()).thenReturn(commonParams);
+
+        String expectedSql = "CREATE TABLE `tableName` ("
+                + "`id` INT NOT NULL DEFAULT 5, "
+                + "`name` VARCHAR (32) NOT NULL DEFAULT 'defaultValue', "
+                + "`time` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, "
+                + "PRIMARY KEY (`column`), "
                 + "CONSTRAINT `column` UNIQUE (`column`), KEY `fkTable`(`fkColumn`), "
                 + "CONSTRAINT `fkTable` FOREIGN KEY (`fkColumn`) REFERENCES `pkTable`(`pkColumn`)) "
                 + "Collation=UTF-8;";

@@ -21,6 +21,9 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
+import junit.framework.Assert;
 
 import org.jtalks.poulpe.util.databasebackup.domain.Cell;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
@@ -36,6 +39,7 @@ import org.testng.annotations.Test;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 /**
  * Tests fetching information from database functionality for the DbTable class.
@@ -67,11 +71,12 @@ public class DbTableTest {
      *             never happen.
      */
     @Test
-    public void getPrimaryKeyListTest() throws SQLException {
-        List<UniqueKey> expectedPrimaryKeyList = Lists.newArrayList(new UniqueKey("VERSION"));
+    public void getPrimaryKeySetTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "POULPE_SCHEMA_VERSION");
 
-        assertEquals(testObject.getPrimaryKeyList(), expectedPrimaryKeyList);
+        Assert.assertEquals(1, testObject.getPrimaryKeySet().size());
+        Assert.assertEquals(1, testObject.getPrimaryKeySet().iterator().next().getColumnNameSet().size());
+        assertTrue(testObject.getPrimaryKeySet().iterator().next().getColumnNameSet().contains("VERSION"));
     }
 
     /**
@@ -82,14 +87,34 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
-    public void getUniqueKeyListTest() throws SQLException {
-        List<UniqueKey> expectedUniqueKeyList =
-                Lists.newArrayList(new UniqueKey("UUID"), new UniqueKey("USERNAME"), new UniqueKey("EMAIL"));
-        DbTable testObject = new DbTable(dataSource, "USERS");
+    // @Test
+    // public void getUniqueKeyListTest() throws SQLException {
+    // Set<UniqueKey> expectedUniqueKeySet =
+    // Sets.newHashSet(
+    // new UniqueKey("UUID", "UUID"),
+    // new UniqueKey("USERNAME", "USERNAME"),
+    // new UniqueKey("EMAIL", "EMAIL"));
+    // DbTable testObject = new DbTable(dataSource, "USERS");
+    //
+    // Assert.assertEquals(3, testObject.getUniqueKeySet().size());
+    // // assertEquals(testObject.getUniqueKeySet(), expectedUniqueKeySet);
+    // }
 
-        assertEquals(testObject.getUniqueKeyList(), expectedUniqueKeyList);
-    }
+    /**
+     * Composite unique key (like CONSTRAINT uk_acl_sid UNIQUE (sid, principal)) must be composed into one constraint
+     * (as in the example).
+     * 
+     * @throws SQLException
+     *             must never happen.
+     */
+    // @Test
+    // public void compositeUniqueKeysShouldBeCollectedIntoOneConstraint() throws SQLException {
+    // Set<UniqueKey> expectedUniqueKeySet =
+    // Sets.newHashSet(new UniqueKey("uk_acl_sid", Sets.newHashSet("sid", "principal")));
+    // DbTable testObject = new DbTable(dataSource, "ACL_SID");
+    //
+    // assertEquals(testObject.getUniqueKeySet(), expectedUniqueKeySet);
+    // }
 
     /**
      * Tests a DbTable.getForeignKeyList returns valid Foreign Keys List. For selecting a table name and foreign keys
@@ -101,14 +126,14 @@ public class DbTableTest {
      *             never happen.
      */
     @Test
-    public void getForeignKeyListTest() throws SQLException {
-        List<ForeignKey> expectedForeignKeyList = Lists.newArrayList(
+    public void getForeignKeySetTest() throws SQLException {
+        Set<ForeignKey> expectedForeignKeySet = Sets.newHashSet(
                 new ForeignKey("FK_ACL_OBJ_CLASS", "OBJECT_ID_CLASS", "ACL_CLASS", "ID"),
                 new ForeignKey("FK_ACL_OBJ_PARENT", "PARENT_OBJECT", "ACL_OBJECT_IDENTITY", "ID"),
                 new ForeignKey("FK_ACL_OBJ_OWNER", "OWNER_SID", "ACL_SID", "ID"));
         DbTable testObject = new DbTable(dataSource, "ACL_OBJECT_IDENTITY");
 
-        assertEquals(testObject.getForeignKeyList(), expectedForeignKeyList);
+        assertEquals(testObject.getForeignKeySet(), expectedForeignKeySet);
     }
 
     /**

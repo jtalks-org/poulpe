@@ -121,11 +121,11 @@ public class SqlTableStructureDump {
         StringBuilder result = new StringBuilder();
 
         result.append(performKeyProcessor(new TableKeyProcessor() {
-            private final Iterator<UniqueKey> iterator = dbTable.getPrimaryKeyList().iterator();
+            private final Iterator<UniqueKey> iterator = dbTable.getPrimaryKeySet().iterator();
 
             @Override
             public boolean hasKeys() throws SQLException {
-                return dbTable.getPrimaryKeyList().size() > 0;
+                return dbTable.getPrimaryKeySet().size() > 0;
             }
 
             @Override
@@ -135,17 +135,21 @@ public class SqlTableStructureDump {
 
             @Override
             public String next() {
+                List<String> keys = Lists.newArrayList();
+                for (String key : iterator.next().getColumnNameSet()) {
+                    keys.add(TableDataUtil.getSqlColumnQuotedString(key));
+                }
                 return String.format(PRIMARY_KEY_TEMPLATE,
-                        TableDataUtil.getSqlColumnQuotedString(iterator.next().getColumnName()));
+                        SqlTableDumpUtil.joinStrings(keys, ", "));
             }
         }));
 
         result.append(performKeyProcessor(new TableKeyProcessor() {
-            private final Iterator<UniqueKey> iterator = dbTable.getUniqueKeyList().iterator();
+            private final Iterator<UniqueKey> iterator = dbTable.getUniqueKeySet().iterator();
 
             @Override
             public boolean hasKeys() throws SQLException {
-                return dbTable.getUniqueKeyList().size() > 0;
+                return dbTable.getUniqueKeySet().size() > 0;
             }
 
             @Override
@@ -155,17 +159,22 @@ public class SqlTableStructureDump {
 
             @Override
             public String next() {
-                return String.format(UNIQUE_KEY_TEMPLATE,
-                        TableDataUtil.getSqlColumnQuotedString(iterator.next().getColumnName()));
+                List<String> keys = Lists.newArrayList();
+                UniqueKey uniqueKey = iterator.next();
+                for (String key : uniqueKey.getColumnNameSet()) {
+                    keys.add(TableDataUtil.getSqlColumnQuotedString(key));
+                }
+                return String.format(UNIQUE_KEY_TEMPLATE, uniqueKey.getIndexName(),
+                        SqlTableDumpUtil.joinStrings(keys, ", "));
             }
         }));
 
         result.append(performKeyProcessor(new TableKeyProcessor() {
-            private final Iterator<ForeignKey> iterator = dbTable.getForeignKeyList().iterator();
+            private final Iterator<ForeignKey> iterator = dbTable.getForeignKeySet().iterator();
 
             @Override
             public boolean hasKeys() throws SQLException {
-                return dbTable.getForeignKeyList().size() > 0;
+                return dbTable.getForeignKeySet().size() > 0;
             }
 
             @Override
@@ -224,12 +233,23 @@ public class SqlTableStructureDump {
         }
 
         if (column.isHasDefaultValue()) {
-            columnDescription.append(" DEFAULT " + column.getDefaultValue());
+            columnDescription.append(" DEFAULT ");
+            String defaultValue = column.getDefaultValue();
+            if (column.getType().isTextBased() && !column.getType().getKeyWordList().contains(defaultValue)) {
+                defaultValue = TableDataUtil.getSqlValueQuotedString(defaultValue);
+            }
+            columnDescription.append(defaultValue);
         }
 
         if (column.isAutoincrement()) {
             columnDescription.append(" AUTO_INCREMENT");
         }
+
+        if (column.hasComment()) {
+            columnDescription.append(" COMMENT ");
+            columnDescription.append(TableDataUtil.getSqlValueQuotedString(column.getComment()));
+        }
+
         return columnDescription.toString();
     }
 
@@ -320,7 +340,7 @@ public class SqlTableStructureDump {
     /**
      * %1 - uniqueKey.getColumnName().
      */
-    private static final String UNIQUE_KEY_TEMPLATE = "    CONSTRAINT %1s UNIQUE (%1$s)";
+    private static final String UNIQUE_KEY_TEMPLATE = "    CONSTRAINT %1s UNIQUE (%2$s)";
     /**
      * %1 - getFkTableName %2 - getFkColumnName %3 - getPkTableName %4 - getPkColumnName.
      */

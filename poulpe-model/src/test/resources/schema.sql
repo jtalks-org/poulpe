@@ -1,3 +1,5 @@
+SET DATABASE SQL SYNTAX MYS TRUE;
+
 CREATE TABLE acl_class
 ( 
     id BIGINT NOT NULL IDENTITY,
@@ -9,6 +11,7 @@ CREATE TABLE acl_sid
     id BIGINT NOT NULL IDENTITY,
     principal TINYINT NOT NULL,
     sid VARCHAR(100) NOT NULL,
+    CONSTRAINT uk_acl_sid UNIQUE (sid, principal)
 );
 
 CREATE TABLE base_components 

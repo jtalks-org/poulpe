@@ -126,14 +126,15 @@ public final class ColumnMetaData {
     private boolean areColumnParametersEqual(final ColumnMetaData obj) {
         return autoincrement == obj.autoincrement && hasSize == obj.hasSize && nullable == obj.nullable
                 && hasDefaultValue == obj.hasDefaultValue && size == obj.size && type == obj.type
-                && name.equals(obj.name) && (defaultValue == null || defaultValue.equals(obj.defaultValue));
+                && name.equals(obj.name) && (defaultValue == null || defaultValue.equals(obj.defaultValue))
+                && (comment == null || comment.equals(obj.comment));
     }
 
     @Override
     public String toString() {
         return "ColumnMetaData [nullable=" + nullable + ", autoincrement=" + autoincrement + ", hasDefaultValue="
                 + hasDefaultValue + ", defaultValue=" + defaultValue + ", name=" + name + ", size=" + size
-                + ", hasSize=" + hasSize + ", type=" + type + "]";
+                + ", hasSize=" + hasSize + ", type=" + type + ", comment=" + comment + "]";
     }
 
     /**
@@ -213,6 +214,36 @@ public final class ColumnMetaData {
         return this;
     }
 
+    /**
+     * Sets the comment for the column.
+     * 
+     * @param comment
+     *            a comment for the column.
+     * @return this.
+     */
+    public ColumnMetaData setComment(final String comment) {
+        this.comment = comment;
+        return this;
+    }
+
+    /**
+     * Returns the comment for the column.
+     * 
+     * @return a comment for the column.
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * Checks if the column has a comment.
+     * 
+     * @return true if the column has a comment of false otherwise.
+     */
+    public boolean hasComment() {
+        return (comment != null && comment.length() > 0);
+    }
+
     private boolean nullable;
     private boolean autoincrement;
     private boolean hasDefaultValue;
@@ -221,5 +252,5 @@ public final class ColumnMetaData {
     private int size;
     private boolean hasSize;
     private final SqlTypes type;
-
+    private String comment;
 }
