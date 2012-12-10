@@ -3,7 +3,7 @@
 <zk xmlns="http://www.zkoss.org/2005/zul" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <window id="serverInfo" title="${labels.admin.server_info.title}" border="normal" width="100%" height="100%"
-    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(deploymentPropertiesVm)" >
+    apply="org.zkoss.bind.BindComposer" viewModel="@id('vm') @init(deploymentProperties)" >
 
 	<grid style="border:none">
 	  <rows>
@@ -15,6 +15,10 @@
 	    <row>
 	    	<label value="${labels.admin.server_info.deployment_date}"/>
 	    	<label value="@load(vm.deploymentDate)"/>
+	    </row>
+	    <row>
+	    	<label value="${labels.admin.server_info.DB_server}"/>
+	    	<label value="@load(vm.databaseServer ne null ? vm.databaseServer : labels.admin.server_info.unknown_info)"/>
 	    </row>
 	    <row>
 	    	<label value="${labels.admin.server_info.DB_name}"/>

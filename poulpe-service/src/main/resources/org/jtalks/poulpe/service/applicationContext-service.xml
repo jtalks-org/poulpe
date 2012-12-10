@@ -119,4 +119,9 @@
     <constructor-arg ref="branchPermissionManager"/>
   </bean>
   
+  <bean id="deploymentProperties" class="org.jtalks.poulpe.service.DeploymentProperties"
+        scope="singleton" init-method="init" lazy-init="false">
+    <constructor-arg index="0" ref="dataSource"/>
+  </bean>
+  
 </beans>
