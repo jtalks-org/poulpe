@@ -74,5 +74,13 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
     </dependency>
+   
+	<!-- REST dependencies -->
+    <dependency>
+      <groupId>org.restlet.jee</groupId>
+      <artifactId>org.restlet</artifactId>
+      <version>2.1.0</version>
+    </dependency>
+    
   </dependencies>
 </project>
