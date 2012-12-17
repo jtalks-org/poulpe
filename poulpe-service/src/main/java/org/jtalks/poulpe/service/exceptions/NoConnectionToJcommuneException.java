@@ -14,8 +14,6 @@
  */
 package org.jtalks.poulpe.service.exceptions;
 
-import java.io.IOException;
-
 /**
  * Exception, which to be thrown, when some problems happend, while sending notification. For example JCommune server
  * was not started. Or it dropped. And so on.
@@ -28,7 +26,7 @@ public class NoConnectionToJcommuneException extends Exception {
         super();
     }
 
-    public NoConnectionToJcommuneException(IOException ex){
+    public NoConnectionToJcommuneException(Exception ex){
         super(ex);
     }
 }

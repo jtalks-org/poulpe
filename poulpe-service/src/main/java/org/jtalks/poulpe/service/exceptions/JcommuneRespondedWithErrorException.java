@@ -27,4 +27,8 @@ public class JcommuneRespondedWithErrorException extends Exception {
     public JcommuneRespondedWithErrorException(String s) {
         super(s);
     }
+    
+    public JcommuneRespondedWithErrorException(Exception e) {
+        super(e);
+    }
 }
