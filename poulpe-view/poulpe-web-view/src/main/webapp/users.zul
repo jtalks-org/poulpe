@@ -42,6 +42,9 @@
     <menupopup id="popupMenu">
       <menuitem image="/resources/img/edit16.png" label="${labels.users.edituserdialog.title}" onClick="@command('editUser')"/>
       <menuitem image="/resources/img/changepass16.png" label="${labels.users.changePasswordDialog.title}" onClick="@command('showChangePasswordWindow')"/>
+      <menuitem image="/resources/img/groupsedit16.png" label="${labels.users.grouplist.menulabel}" onClick="@global-command('editGroups')"/>
     </menupopup>
+
+      <include src="/WEB-INF/pages/users/edit_groups.zul"/>
   </window>
 </zk>

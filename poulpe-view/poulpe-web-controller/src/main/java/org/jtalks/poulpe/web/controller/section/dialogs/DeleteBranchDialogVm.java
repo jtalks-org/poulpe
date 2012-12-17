@@ -34,7 +34,6 @@ import static org.zkoss.util.resource.Labels.getLabel;
  * @author stanislav bashkirtsev
  */
 public class DeleteBranchDialogVm extends AbstractDialogVm {
-    private static final String SHOW_DIALOG = "showDialog";
     private static final String JCOMMUNE_CONNECTION_FAILED = "branches.error.jcommune_no_connection";
     private static final String JCOMMUNE_RESPONSE_FAILED = "branches.error.jcommune_no_response";
     private static final String JCOMMUNE_URL_FAILED = "branches.error.jcommune_no_url";

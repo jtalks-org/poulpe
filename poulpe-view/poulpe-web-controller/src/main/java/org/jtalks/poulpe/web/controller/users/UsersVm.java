@@ -16,9 +16,11 @@ package org.jtalks.poulpe.web.controller.users;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -38,8 +40,8 @@ import java.util.List;
 public class UsersVm {
     /** Number of items per page  */
     private static final int ITEMS_PER_PAGE = 50;
-    private static final String SELECTED_ITEM_PROP = "selectedUser";
-    private static final String VIEW_DATA_PROP = "viewData";
+    protected static final String SELECTED_ITEM_PROP = "selectedUser";
+    protected static final String VIEW_DATA_PROP = "viewData";
     private static final String ACTIVE_PAGE = "activePage";
     private static final String USERS = "users";
     private static final String TOTAL_SIZE = "totalSize";
@@ -47,6 +49,8 @@ public class UsersVm {
     static final String NO_FILTER_SEARCH_STRING = "";
     /** Url to zul page for user editing*/
     static final String EDIT_USER_URL = "/WEB-INF/pages/users/edit_user.zul";
+    /** Url to zul page for user groups editing*/
+    static final String EDIT_GROUPS_URL = "/WEB-INF/pages/users/edit_groups.zul";
     /** Url to zul file for changing password*/
     static final String CHANGE_PASSWORD_URL = "/WEB-INF/pages/users/change_password.zul";
     /** Component's id for edit user dialog */
@@ -195,8 +199,6 @@ public class UsersVm {
             prepareForListing();
         }
     }
-
-    // === editing & saving ===
 
     /**
      * Opens edit user dialog.

@@ -25,6 +25,7 @@ import java.util.List;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -46,6 +47,7 @@ public class UsersVmTest {
     @Mock Component component;
     @Mock Textbox searchTextBox;
     @Mock PoulpeUser selectedUser;
+    @Mock SelectedEntity selectedEntity;
 
     final String searchString = "searchString";
     final int ITEMS_PER_PAGE = 50;

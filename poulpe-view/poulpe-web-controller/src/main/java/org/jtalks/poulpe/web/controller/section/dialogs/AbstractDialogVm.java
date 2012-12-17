@@ -21,6 +21,7 @@ package org.jtalks.poulpe.web.controller.section.dialogs;
  * @author stanislav bashkirtsev
  */
 public class AbstractDialogVm {
+    protected static final String SHOW_DIALOG = "showDialog";
     private boolean showDialog = false;
 
     /**
