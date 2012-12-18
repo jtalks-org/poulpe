@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import java.io.InputStream;
 
-import org.jtalks.poulpe.util.databasebackup.logic.FileDownloader;
+import org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloader;
 import org.zkoss.zul.Filedownload;
 
 /**
