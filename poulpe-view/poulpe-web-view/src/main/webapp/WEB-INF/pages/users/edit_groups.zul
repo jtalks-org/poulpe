@@ -19,7 +19,7 @@
                 <checkbox label="Not chosen" checked="@bind(editGroupsVm.notChosen)" onCheck="@global-command('filterGroups')"/>
             </hbox>
             <hbox>
-                <listbox id="listbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true" height="500px">
+                <listbox id="listbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true" height="auto" width="auto">
                     <listhead sizable="true">
                         <listheader label="Groups"/>
                     </listhead>
