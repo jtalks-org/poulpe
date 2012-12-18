@@ -145,12 +145,12 @@
     <constructor-arg index="3" ref="componentListInMenu"/>
 
     <property name="fileDownloadService">
-      <bean id="fileDownloadService" class="org.jtalks.poulpe.logic.databasebackup.FileDownloadService">
+      <bean id="fileDownloadService" class="org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloadService">
         <property name="contentFileNameWithoutExt" value="jtalks" />
         <property name="contentProvider">
-          <bean class="org.jtalks.poulpe.logic.databasebackup.impl.GzipContentProvider">
+          <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.GzipContentProvider">
             <constructor-arg>
-                <bean class="org.jtalks.poulpe.logic.databasebackup.impl.DbDumpContentProvider">
+                <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider">
                     <constructor-arg ref="dataSource" />
                 </bean>
             </constructor-arg>
