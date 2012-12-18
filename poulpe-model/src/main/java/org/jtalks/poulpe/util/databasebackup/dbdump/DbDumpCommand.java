@@ -12,24 +12,22 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.component;
+package org.jtalks.poulpe.util.databasebackup.dbdump;
 
-import java.io.InputStream;
-
-import org.jtalks.poulpe.util.databasebackup.logic.FileDownloader;
-import org.zkoss.zul.Filedownload;
+import java.sql.SQLException;
 
 /**
- * The class provides a download file functionality by using ZK's file downloader.
+ * Interface for a TableDumpCommand. A command is supposed to be providing a piece of certain table's dump data, such as
+ * table's CREATE statement, table's data, etc. So each command must override 2 methods:
+ * <ul>
+ * <li><strong>{@link #getHeader()}</strong> - should return a descriptive header for the providing data.</li>
+ * <li><strong>{@link #getData()}</strong> - should return a dumping data.</li>
+ * </ul>
+ * The information provided by the command will be packed and send to the content provider.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public class ZulFileDownloader extends FileDownloader {
-
-    @Override
-    protected final void download(final InputStream content) {
-        Filedownload.save(content, getMimeContentType(), getContentFileName());
-    }
-
+public interface DbDumpCommand {
+    StringBuilder execute() throws SQLException;
 }

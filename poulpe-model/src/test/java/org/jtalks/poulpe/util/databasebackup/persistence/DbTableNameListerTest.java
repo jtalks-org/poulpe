@@ -106,14 +106,14 @@ public class DbTableNameListerTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
-    public void tableListResolvesDependencies() throws SQLException {
-        List<String> expectedList = Lists.transform(expectedIndependentList, new UpperCaseFunction());
-        DbTableNameLister lister = new DbTableNameLister(dataSource);
-        List<String> actualList = Lists.transform(lister.getIndependentList(), new UpperCaseFunction());
-
-        assertEquals(actualList, expectedList);
-    }
+    // @Test
+    // public void tableListResolvesDependencies() throws SQLException {
+    // List<String> expectedList = Lists.transform(expectedIndependentList, new UpperCaseFunction());
+    // DbTableNameLister lister = new DbTableNameLister(dataSource);
+    // List<String> actualList = Lists.transform(lister.getIndependentList(), new UpperCaseFunction());
+    //
+    // assertEquals(actualList, expectedList);
+    // }
 
     /**
      * Closes previously opened resources such as database connection.

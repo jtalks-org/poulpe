@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.logic;
+package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -6,8 +6,10 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 
+import org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloadService;
+import org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloader;
+import org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
-import org.jtalks.poulpe.util.databasebackup.logic.impl.DbDumpContentProvider;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.Test;
