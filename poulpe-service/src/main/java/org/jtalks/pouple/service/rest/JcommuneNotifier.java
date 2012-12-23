@@ -16,29 +16,33 @@ package org.jtalks.pouple.service.rest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.restlet.Context;
+import org.restlet.data.Method;
+import org.restlet.representation.EmptyRepresentation;
 import org.restlet.resource.ClientResource;
 import org.restlet.resource.ResourceException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * // TODO: write header, update methods comments, delete commented code and dead code, check efficiency
+ * Notifier to notify JCommune component about elements deleting. It is useful to help forum keep such information, as
+ * user's messages count, up to date.
  * @author Evgeny Kapinos
  */
 public class JcommuneNotifier {
-//    /**
-//     * A link which means 'delete the whole component' which will cause all the topics from all the branches to be
-//     * removed by JCommune.
-//     */
-//    private static final String WHOLEFORUM_URL_PART = "/component";
-//    /** A URL to trigger re-indexing of forum search engine. */
-//    private static final String REINDEX_URL_PART = "/search/index/rebuild";
-//    /** URL to ask JCommune to remove content of the specific section. */
-//    private static final String SECTIONS_URL_PART = "/sections/";
+    /**
+     * A link which means 'delete the whole component' which will cause all the topics from all the branches to be
+     * removed by JCommune.
+     */
+    private static final String WHOLEFORUM_URL_PART = "/component";
+    /** A URL to trigger re-indexing of forum search engine. */
+    private static final String REINDEX_URL_PART = "/search/index/rebuild";
+    /** URL to ask JCommune to remove content of the specific section. */
+    private static final String SECTIONS_URL_PART = "/sections/";
     /** URL to ask JCommune to remove content of the specific branch. */
     private static final String BRANCH_URL_PART = "/branches/";
     
@@ -49,31 +53,22 @@ public class JcommuneNotifier {
     private static final int CONNECTION_TIMEOUT = 5000;
     
     private final Logger logger = LoggerFactory.getLogger(getClass());
-//    private final UserDao userDao;
-//
-//    public JcommuneNotifier(UserDao userDao) {
-//        this.userDao = userDao;
-//    }
 
-//    /**
-//     * Notifies delete the section
-//     *
-//     * @param jCommuneUrl JCommune Url
-//     * @param section     which will be deleted
-//     * @throws NoConnectionToJcommuneException
-//     *          some connection problems happened, while trying to notify Jcommune
-//     * @throws JcommuneRespondedWithErrorException
-//     *          occurs when the response status is not in the interval {@link #MIN_HTTP_STATUS} and {@link
-//     *          #MAX_HTTP_STATUS}
-//     * @throws JcommuneUrlNotConfiguredException
-//     *          occurs when the {@code jCommuneUrl} is incorrect
-//     */
-//    public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section)
-//            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
-//            JcommuneUrlNotConfiguredException {
-//        long id = section.getId();
-//        notifyAboutDeleteElement(jCommuneUrl + SECTIONS_URL_PART + id);
-//    }
+    /**
+     * Notifies delete the section
+     *
+     * @param jCommuneUrl JCommune URL
+     * @param section which will be deleted
+     * @throws NoConnectionToJcommuneException some connection problems happened, while trying to notify JCommune
+     * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
+     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
+     */
+    public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section) throws NoConnectionToJcommuneException, 
+                                                                                           JcommuneRespondedWithErrorException,
+                                                                                           JcommuneUrlNotConfiguredException {       
+        checkUrlIsConfigured(jCommuneUrl);
+        notify(jCommuneUrl + SECTIONS_URL_PART + section.getId(), Method.DELETE);
+    }
 
     /**
      * Notifies delete the branch
@@ -85,56 +80,53 @@ public class JcommuneNotifier {
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
     public void notifyAboutBranchDelete(String jCommuneUrl, PoulpeBranch branch) throws NoConnectionToJcommuneException,
-            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {        
+                                                                                        JcommuneRespondedWithErrorException, 
+                                                                                        JcommuneUrlNotConfiguredException {        
         checkUrlIsConfigured(jCommuneUrl);
-        notifyAboutDeleteElement(jCommuneUrl + BRANCH_URL_PART + branch.getId());
+        notify(jCommuneUrl + BRANCH_URL_PART + branch.getId(), Method.DELETE);
     }
 
-//    /**
-//     * Notifies delete the component
-//     *
-//     * @param jCommuneUrl JCommune Url
-//     * @throws NoConnectionToJcommuneException
-//     *          some connection problems happend, while trying to notify Jcommune
-//     * @throws JcommuneRespondedWithErrorException
-//     *          occurs when the response status is not in the interval {@code MIN_HTTP_STATUS} and {@code
-//     *          MAX_HTTP_STATUS}
-//     * @throws JcommuneUrlNotConfiguredException
-//     *          occurs when the {@code jCommuneUrl} is incorrect
-//     */
-//    public void notifyAboutComponentDelete(String jCommuneUrl) throws NoConnectionToJcommuneException,
-//            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
-//        notifyAboutDeleteElement(jCommuneUrl + WHOLEFORUM_URL_PART);
-//    }
-//
-//    /**
-//     * Notifies reindex сomponent
-//     *
-//     * @param jCommuneUrl JCommune Url
-//     * @throws NoConnectionToJcommuneException
-//     *          some connection problems happened, while trying to notify Jcommune
-//     * @throws JcommuneRespondedWithErrorException
-//     *          occurs when the response status is not in the interval {@code MIN_HTTP_STATUS} and {@code
-//     *          MAX_HTTP_STATUS}
-//     * @throws org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException
-//     *          occurs when the {@code jCommuneUrl} is incorrect
-//     */
-//    public void notifyAboutReindexComponent(String jCommuneUrl) throws NoConnectionToJcommuneException,
-//            JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException {
-//        checkUrlIsConfigured(jCommuneUrl);
-//        createAndSendRequest(jCommuneUrl + REINDEX_URL_PART, HttpPost.METHOD_NAME);
-//    }
-//
     /**
-     * Notifies JCommune that an element is about to be deleted (for instance Component, Branch, Section).
+     * Notifies delete the component
      *
-     * @param url full URL for REST request  
+     * @param jCommuneUrl JCommune URL
      * @throws NoConnectionToJcommuneException some connection problems happened, while trying to notify JCommune
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
-    protected void notifyAboutDeleteElement(String url) throws NoConnectionToJcommuneException,
-            JcommuneRespondedWithErrorException {
+    public void notifyAboutComponentDelete(String jCommuneUrl) throws NoConnectionToJcommuneException,
+                                                                      JcommuneRespondedWithErrorException, 
+                                                                      JcommuneUrlNotConfiguredException {        
+        checkUrlIsConfigured(jCommuneUrl);
+        notify(jCommuneUrl + WHOLEFORUM_URL_PART, Method.DELETE);
+    }
+
+    /**
+     * Notifies reindex component
+     *
+     * @param jCommuneUrl JCommune URL
+     * @throws NoConnectionToJcommuneException some connection problems happened, while trying to notify JCommune
+     * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
+     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
+     */
+    public void notifyAboutReindexComponent(String jCommuneUrl) throws NoConnectionToJcommuneException,
+                                                                       JcommuneRespondedWithErrorException, 
+                                                                       JcommuneUrlNotConfiguredException {        
+        checkUrlIsConfigured(jCommuneUrl);
+        notify(jCommuneUrl + REINDEX_URL_PART, Method.POST);
+    }
+
+    /**
+     * Notifies JCommune that an element is about to be deleted (for instance Component, Branch, Section).
+     *
+     * @param url full URL for REST request  
+     * @param delete or post method, see {@link Method}
+     * @throws NoConnectionToJcommuneException some connection problems happened, while trying to notify JCommune
+     * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
+     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
+     */
+    protected void notify(String url, Method method) throws NoConnectionToJcommuneException, 
+                                                            JcommuneRespondedWithErrorException {
         
         ClientResource clientResource = new ClientResource(new Context(), url);
         
@@ -142,22 +134,27 @@ public class JcommuneNotifier {
         // http://wiki.restlet.org/docs_2.0/13-restlet/27-restlet/325-restlet/37-restlet.html
         clientResource.getContext().getParameters().add("socketTimeout", String.valueOf(CONNECTION_TIMEOUT));
         
-        logger.info("Sending DELETE request to JCommune: [{}]", url);
+        logger.info("Sending {} request to JCommune: [{}]", method, url);
         
-        try{
-            clientResource.delete();            
+        try{            
+            
+            if (method.equals(Method.DELETE)){
+                clientResource.delete(); 
+            } else {
+                clientResource.post(new EmptyRepresentation());      
+            }
+            
+            logger.info("OK");            
         } catch (ResourceException e){
             processResourceException(e);
-        }
-        
-        logger.info("OK");       
+        }              
     }
-
+    
     /**     
-     * Checks the URL
+     * Checks URL
      *
-     * @param jCommuneUrl JCommune Url
-     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl is incorrect
+     * @param jCommuneUrl JCommune URL
+     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
     protected void checkUrlIsConfigured(String jCommuneUrl) throws JcommuneUrlNotConfiguredException {
         if (StringUtils.isBlank(jCommuneUrl)) {
@@ -166,7 +163,7 @@ public class JcommuneNotifier {
     }
 
     /**
-     * Logs an error that was received from JCommune in the REST response. 
+     * Logs an error that was receive from JCommune in the REST response. 
      *
      * @param e exception from REST framework
      * @throws JcommuneRespondedWithErrorException
@@ -180,8 +177,9 @@ public class JcommuneNotifier {
      *          request will be fine or {@link JcommuneRespondedWithErrorException} might be thrown in case if some
      *          other site was specified and it returned 404
      */
-    private void processResourceException(ResourceException e) throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {
-        logger.error("JCommune error response due to exception.", e);
+    private void processResourceException(ResourceException e) throws NoConnectionToJcommuneException, 
+                                                                      JcommuneRespondedWithErrorException {
+        logger.error("JCommune error: {}", e.getStatus());
         if (e.getStatus().isConnectorError()){
             throw new NoConnectionToJcommuneException(e);
         } else{

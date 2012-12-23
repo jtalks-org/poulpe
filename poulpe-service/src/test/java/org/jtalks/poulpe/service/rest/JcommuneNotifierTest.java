@@ -14,150 +14,138 @@
  */
 package org.jtalks.poulpe.service.rest;
 
+import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
+import static com.xebialabs.restito.semantics.Action.status;
+import static com.xebialabs.restito.semantics.Condition.delete;
+import static com.xebialabs.restito.semantics.Condition.post;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.testng.Assert.assertFalse;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.ServerSocket;
 
+import org.glassfish.grizzly.http.util.HttpStatus;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 import org.jtalks.pouple.service.rest.JcommuneNotifier;
-import org.restlet.Component;
-import org.restlet.data.Protocol;
-import org.restlet.data.Status;
-import org.restlet.resource.Delete;
-import org.restlet.resource.ServerResource;
-import org.restlet.routing.Template;
-import org.restlet.routing.TemplateRoute;
-import org.restlet.routing.Variable;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
+import com.xebialabs.restito.server.StubServer;
+
 /**
- * Tests that JcommuneNotifier response on commands. It's actually a bit more than unit
+ * Tests that JcommuneNotifier response on commands correctly. It's actually a bit more than unit
  * test because it uses real REST server and real HTTP connections.
  * 
  * @author Evgeny Kapinos
- * 
+ * @see <a href="https://github.com/mkotsur/restito/blob/master/README.md">Restito</a> 
  */
-public class JcommuneNotifierTest extends ServerResource {
+public class JcommuneNotifierTest {
     
-    private Component component;    
-    private static List<Integer> availableBrancheId; // Only for one thread testing
+    private final String JCOMMUNE_URL = "http://localhost";
     
+    private final String WHOLEFORUM_URL_PART = "/component";
+    private final String REINDEX_URL_PART = "/search/index/rebuild";
+    private final String SECTIONS_URL_PART = "/sections/";
+    private final String BRANCH_URL_PART = "/branches/";
+    
+    private final long BRANCH_ID = 1L;
+    private final long SECTION_ID = 1L;
+    
+    private StubServer server;
+    private PoulpeBranch branchMock;
+    private PoulpeSection sectionMock;
+    private JcommuneNotifier notifier;
+   
     /**
-     * Method run simulated JCommune (HTTP server and fill start branch state) .
-     * @throws Exception 
+     * Start JCommune server mock (Restito framework).
      */
     @BeforeClass
-    private void setUpTest() throws Exception {
-        
-        // Start HTTP server
-        component = SetupServer();
-        
-        // Setup simulated JCommume state  
-        availableBrancheId = new ArrayList<Integer>();
-        availableBrancheId.add(1);
-        availableBrancheId.add(2);
-        availableBrancheId.add(20);               
+    private void BeforeTest() {      
+        server = new StubServer().run();                   
 
-    }
-    
-    /**
-     * Method runs JCommuneNotifier and check results.
-     */
-    @Test
-    public void test()  throws Exception {       
+        branchMock = mock(PoulpeBranch.class);         
+        doReturn(BRANCH_ID).when(branchMock).getId();
+         
+        sectionMock = mock(PoulpeSection.class);
+        doReturn(SECTION_ID).when(sectionMock).getId();
         
-        JcommuneNotifier sut = spy(new JcommuneNotifier());
-
-        String jCommuneUrl = "http://localhost:"+String.valueOf(component.getServers().get(0).getActualPort());
-        
-        PoulpeBranch branch = mock(PoulpeBranch.class);
-        
-        doReturn(1L).when(branch).getId();        
-        sut.notifyAboutBranchDelete(jCommuneUrl, branch);        
-        assertFalse(availableBrancheId.contains(Integer.valueOf(1)));
-        
-        doThrow(JcommuneRespondedWithErrorException.class).when(sut).notifyAboutBranchDelete(jCommuneUrl, branch);
-        
-        component.stop();
-        doThrow(NoConnectionToJcommuneException.class).when(sut).notifyAboutBranchDelete(jCommuneUrl, branch);
+        notifier = new JcommuneNotifier();
     }
         
     /**
-     * Tear down test HTTP server (via Restlet framework).
-     * @throws Exception 
+     * Shutdown server mock.
      */
     @AfterClass
-    public void tearDownTest() throws Exception {
-        if (component.isStarted()){
-            component.stop();
-        }
+    public void AfterTest() {
+        server.stop(); // It works without exceptions even if server already stopped
     }
     
     /**
-     * Setup and run test HTTP server (via Restlet framework).
-     * @throws Exception 
+     * Delete exist branch.
      */
-    private Component SetupServer() throws Exception{
-        
-        // Create a new Restlet component and add a HTTP server connector to it 
-        Component component = new Component();  
-        
-        // Zero port - mean any available port. We'll get it after start
-        component.getServers().add(Protocol.HTTP, 0);
-        
-        // Then attach it to the local host. 
-        // We will use URL's like "/branches/asd123" available. Not "/branches/asd123/123" nor "/branches/asd123?q=1"
-        // This class will be used for processing HTTP requests. So we use Restlet annotations like @Delete
-        TemplateRoute route = component.getDefaultHost().attach("/branches/{branchId}", JcommuneNotifierTest.class, Template.MODE_EQUALS);  
-        
-        // decrease the URL freedom. Disallow alphabetical. Allow digits only, somthing like "/branches/123"
-        Map<String, Variable> routeVariables = route.getTemplate().getVariables();
-        routeVariables.put("branchId", new Variable(Variable.TYPE_DIGIT));
-        
-        // Now, let's start the component! 
-        // Note that the HTTP server connector is also automatically started. 
-        component.start();  
-        
-        return component;
-    }
-    
-    @Delete  
-    public void DeleteBranch() {
-        String branchIdAsString = (String) getRequest().getAttributes().get("branchId");
-        Integer branchId;
-        try {
-            branchId = Integer.valueOf(branchIdAsString);
-        } catch (NumberFormatException e){
-            setStatus(Status.CLIENT_ERROR_BAD_REQUEST); // 400
-            return;
-        }
-        
-        if(!availableBrancheId.remove(branchId)){
-            setStatus(Status.CLIENT_ERROR_NOT_FOUND); // 404
-            return;
-        }
-        
-        // return 200. Default Restlet behavior
+    @Test
+    public void testSuccessBranchDelete() throws Exception {                      
+        whenHttp(server).match(delete(BRANCH_URL_PART+BRANCH_ID)).then(status(HttpStatus.OK_200));               
+        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), branchMock);
+    }    
+
+    /**
+     * Delete nonexistent branch.
+     */
+    @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
+    public void testUnsuccessfulBranchDelete() throws Exception {                     
+        whenHttp(server).match(delete(BRANCH_URL_PART+BRANCH_ID)).then(status(HttpStatus.NOT_FOUND_404));               
+        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), branchMock);    
+    }    
+
+    /**
+     * Delete exist section.
+     */
+    @Test
+    public void testSuccessSectionDelete() throws Exception {                      
+        whenHttp(server).match(delete(SECTIONS_URL_PART+SECTION_ID)).then(status(HttpStatus.OK_200));               
+        notifier.notifyAboutSectionDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), sectionMock);
+    }    
+
+    /**
+     * Delete nonexistent section.
+     */
+    @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
+    public void testUnsuccessfulSectionDelete() throws Exception {                     
+        whenHttp(server).match(delete(SECTIONS_URL_PART+SECTION_ID)).then(status(HttpStatus.NOT_FOUND_404));               
+        notifier.notifyAboutSectionDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), sectionMock);    
     }
     
     /**
-     * Auxiliary method for local debugging.
-     * Server stopped by terminating VM process
-     * 
-     * @throws Exception 
+     * Delete component.
      */
-    public static void main(String[] args) throws Exception {
-        JcommuneNotifierTest jcommuneNotifierTest = new JcommuneNotifierTest();
-        jcommuneNotifierTest.SetupServer();
+    @Test
+    public void testComponentDelete() throws Exception {                     
+        whenHttp(server).match(delete(WHOLEFORUM_URL_PART)).then(status(HttpStatus.OK_200));               
+        notifier.notifyAboutComponentDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()));    
     }
+    
+    /**
+     * Reindex component.
+     */
+    @Test
+    public void testComponentReindex() throws Exception {                     
+        whenHttp(server).match(post(REINDEX_URL_PART)).then(status(HttpStatus.OK_200));               
+        notifier.notifyAboutReindexComponent(JCOMMUNE_URL+":"+String.valueOf(server.getPort()));    
+    }    
+
+    /**
+     * JCommune doesn't response.
+     */
+    @Test(expectedExceptions = NoConnectionToJcommuneException.class)
+    public void testConnectionError() throws Exception {        
+        // Find free port
+        ServerSocket socket = new ServerSocket(0);
+        socket.close();          
+        // Try connect to nonexistent server
+        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(socket.getLocalPort()), branchMock);
+   }
 }
