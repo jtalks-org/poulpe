@@ -1,0 +1,19 @@
+\documentclass[11pt,a4paper,oneside]{article}
+\usepackage{hyperref}
+\begin{document}
+\section{User Instruction}
+Here is the software you'll need:
+\begin{enumerate}
+ \item Java \textgreater= 1.6
+ \item MySQL 5.5 (even though it might be possible to work with 5.1). 
+ \item Tomcat \textgreater= 6
+\end{enumerate}
+After everything is installed, you can download the latest war file from our Maven repository:
+\begin{itemize}
+ \item \href{http://repo.jtalks.org/content/repositories/releases/org/jtalks/poulpe/poulpe-web-view}{Stable versions}
+ \item \href{http://repo.jtalks.org/content/repositories/deployment-pipeline/deployment-pipeline/poulpe}{In active development}
+\end{itemize}
+When you downloaded the war file, rename it to 'poulpe.war' and put it into the webapps directory, but before starting Tomcat, you probably would need to configure Poulpe. 
+
+So first create such a file: \emph{\$TOMCAT\_HOME/conf/Catalina/localhost/poulpe.xml}, and it should look similar to \href{run:./poulpe.xml}{this}
+\end{document}

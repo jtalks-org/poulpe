@@ -2,6 +2,12 @@
 # - If you need to ignore files on your local machine only, please use .git/info/exclude instead .gitignore
 # - Project specified ignore rules must be located in project directory only
 
+# LaTex
+*.pdf
+*.dvi
+*.log
+*.out
+*.aux
 # Eclipse project files
 .settings
 .classpath

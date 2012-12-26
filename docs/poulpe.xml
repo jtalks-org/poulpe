@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Context>
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+    <Environment name="EH_CACHE_CONFIG" value="/home/ctapobep/soft/apache/apache-tomcat-7.0.32/conf/poulpe.ehcache.xml" type="java.lang.String" />
+    <Environment name="POULPE_DB_USER" value="root" type="java.lang.String" />
+    <Environment name="POULPE_DB_PASSWORD" value="root" type="java.lang.String" />
+    <Environment name="POULPE_DB_URL" type="java.lang.String" 
+                 value="jdbc:mysql://localhost/jtalks?characterEncoding=UTF-8" />
+</Context>
