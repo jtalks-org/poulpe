@@ -28,24 +28,28 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
+
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.model.fixtures.TestFixtures;
+import org.jtalks.poulpe.service.JCommuneNotifier;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
-import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 
 /**
@@ -58,7 +62,7 @@ public class TransactionalComponentServiceTest {
     @Mock
     private ComponentDao componentDao;
     @Mock
-    private JcommuneHttpNotifier jcommuneHttpNotifier;
+    private JCommuneNotifier jCommuneNotifier;
 
     private Component component = TestFixtures.randomComponent();
     private Jcommune jcommune = spy((Jcommune) TestFixtures.component(ComponentType.FORUM));
@@ -67,7 +71,7 @@ public class TransactionalComponentServiceTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         componentService = new TransactionalComponentService(componentDao);
-        componentService.setjCommuneNotifier(jcommuneHttpNotifier);
+        componentService.setjCommuneNotifier(jCommuneNotifier);
     }
 
     @Test
@@ -86,7 +90,7 @@ public class TransactionalComponentServiceTest {
     @Test
     public void testDeleteComponent() throws NoConnectionToJcommuneException,
             JcommuneUrlNotConfiguredException, JcommuneRespondedWithErrorException, EntityIsRemovedException {
-        doNothing().when(jcommuneHttpNotifier).notifyAboutComponentDelete(anyString());
+        doNothing().when(jCommuneNotifier).notifyAboutComponentDelete(anyString());
         when(componentService.getByType(jcommune.getComponentType())).thenReturn(jcommune);
         doNothing().when(componentDao).delete(jcommune);
         componentService.deleteComponent(jcommune);
@@ -115,7 +119,7 @@ public class TransactionalComponentServiceTest {
     @Test
     public void reindexComponent() throws JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException,
             NoConnectionToJcommuneException {
-        componentService.setjCommuneNotifier(jcommuneHttpNotifier);
+        componentService.setjCommuneNotifier(jCommuneNotifier);
         doReturn("").when(jcommune).getUrl();
         componentService.reindexComponent(jcommune);
         verify(componentService.getjCommuneNotifier()).notifyAboutReindexComponent(jcommune.getUrl());

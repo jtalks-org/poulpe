@@ -14,6 +14,9 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import java.util.List;
+import java.util.Set;
+
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.Component;
@@ -21,15 +24,12 @@ import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.JCommuneNotifier;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
-
-import java.util.List;
-import java.util.Set;
 
 /**
  * Transactional implementation of {@link ComponentService}. Transactions are provided by AOP.
@@ -42,9 +42,9 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
         implements ComponentService {
 
     /**
-     * Jcommune HTTP notifier
+     * JCommune notifier
      */
-    private JcommuneHttpNotifier jCommuneNotifier;
+    private JCommuneNotifier jCommuneNotifier;
 
     /**
      * Creates new instance of the service
@@ -121,16 +121,16 @@ public class TransactionalComponentService extends AbstractTransactionalEntitySe
     }
 
     /**
-     * @return Jcommune HTTP notifier
+     * @return JCommune notifier
      */
-    public JcommuneHttpNotifier getjCommuneNotifier() {
+    public JCommuneNotifier getjCommuneNotifier() {
         return jCommuneNotifier;
     }
 
     /**
-     * @param jCommuneNotifier Jcommune HTTP notifier
+     * @param jCommuneNotifier JCommune notifier
      */
-    public void setjCommuneNotifier(JcommuneHttpNotifier jCommuneNotifier) {
+    public void setjCommuneNotifier(JCommuneNotifier jCommuneNotifier) {
         this.jCommuneNotifier = jCommuneNotifier;
     }
 

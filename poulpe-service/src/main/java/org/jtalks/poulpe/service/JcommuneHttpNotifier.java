@@ -42,7 +42,7 @@ import java.io.IOException;
  * @author Nickolay Polyarniy
  * @author Mikhail Zaitsev
  */
-public class JcommuneHttpNotifier {
+public class JcommuneHttpNotifier implements JCommuneNotifier {
     /** Minimum value of a successful status, less than that is an error HTTP response. */
     private static final int MIN_HTTP_STATUS = 200;
     /** Maximum value of a successful status, starting from 300 means an error response. */
