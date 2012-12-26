@@ -14,7 +14,10 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
@@ -29,8 +32,8 @@ import org.jtalks.poulpe.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
+import org.jtalks.poulpe.service.JCommuneNotifier;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -44,7 +47,7 @@ public class TransactionalForumStructureServiceTest {
     private SectionDao sectionDao;
     private BranchDao branchDao;
     private ComponentDao componentDao;
-    private JcommuneHttpNotifier notifier;
+    private JCommuneNotifier notifier;
 
 
     @BeforeMethod
@@ -52,7 +55,7 @@ public class TransactionalForumStructureServiceTest {
         componentDao = mock(ComponentDao.class);
         sectionDao = mock(SectionDao.class);
         branchDao = mock(BranchDao.class);
-        notifier = mock(JcommuneHttpNotifier.class);
+        notifier = mock(JCommuneNotifier.class);
         sut = new TransactionalForumStructureService(sectionDao, branchDao, componentDao, notifier);
     }
 

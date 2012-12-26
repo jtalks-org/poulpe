@@ -16,4 +16,4 @@
  * Package contains RESTful services for communication with JCommune and other JTalks modules via HTTPS.
  *
  */
-package org.jtalks.pouple.service.rest;
+package org.jtalks.poulpe.service.rest;

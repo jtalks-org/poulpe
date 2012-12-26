@@ -24,7 +24,7 @@ import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
-import org.jtalks.poulpe.service.JcommuneHttpNotifier;
+import org.jtalks.poulpe.service.JCommuneNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
@@ -37,9 +37,9 @@ public class TransactionalForumStructureService implements ForumStructureService
     private final SectionDao sectionDao;
     private final BranchDao branchDao;
     private final ComponentDao componentDao;
-    private final JcommuneHttpNotifier jCommuneNotifier;
+    private final JCommuneNotifier jCommuneNotifier;
 
-    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao, JcommuneHttpNotifier jCommuneNotifier) {
+    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao, JCommuneNotifier jCommuneNotifier) {
         this.sectionDao = sectionDao;
         this.branchDao = branchDao;
         this.componentDao = componentDao;
