@@ -61,7 +61,7 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
      */
     @Override
     public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section) 
-            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException, 
+            throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
                    JcommuneUrlNotConfiguredException {      
         checkUrlIsConfigured(jCommuneUrl);
         notifyJCommune(jCommuneUrl + SECTIONS_URL_PART + section.getId(), Method.DELETE);
@@ -114,17 +114,17 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {               
         logSendRequest(url, method);             
         ClientResource clientResource = new ClientResource(new Context(), url);                
-        /* 
-         * How to set parameters described here: 
+        /*
+         * How to set parameters described here:
          * http://wiki.restlet.org/docs_2.1/13-restlet/27-restlet/325-restlet/37-restlet.html
          * Which parameters described here:
-         * org.restlet.engine.connector.ClientConnectionHelper, string "socket.setSoTimeout(getMaxIoIdleTimeMs());" 
+         * org.restlet.engine.connector.ClientConnectionHelper, string "socket.setSoTimeout(getMaxIoIdleTimeMs());"
          */
-        clientResource.getContext().getParameters().add("socketConnectTimeoutMs", String.valueOf(CONNECTION_TIMEOUT));       
-        clientResource.getContext().getParameters().add("maxIoIdleTimeMs", String.valueOf(CONNECTION_TIMEOUT));       
-        try{                       
+        clientResource.getContext().getParameters().add("socketConnectTimeoutMs", String.valueOf(CONNECTION_TIMEOUT));
+        clientResource.getContext().getParameters().add("maxIoIdleTimeMs", String.valueOf(CONNECTION_TIMEOUT));
+        try{
             if (method.equals(Method.DELETE)){
-                clientResource.delete(); 
+                clientResource.delete();
             } else {
                 clientResource.post(new EmptyRepresentation());      
             }
