@@ -15,5 +15,7 @@ After everything is installed, you can download the latest war file from our Mav
 \end{itemize}
 When you downloaded the war file, rename it to 'poulpe.war' and put it into the webapps directory, but before starting Tomcat, you probably would need to configure Poulpe. 
 
-So first create such a file: \emph{\$TOMCAT\_HOME/conf/Catalina/localhost/poulpe.xml}, and it should look similar to \href{run:./poulpe.xml}{this}
+As a first step you should create a database for it: \emph{create database poulpe character set = utf8;}
+
+Then create such a file: \emph{\$TOMCAT\_HOME/conf/Catalina/localhost/poulpe.xml}, it should look similar to \href{run:./poulpe.xml}{this sample}, just put there your connection details and pay attention to comments. Then start the Tomcat and everything should start working.
 \end{document}

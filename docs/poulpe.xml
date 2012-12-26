@@ -1,7 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
 <Context>
     <WatchedResource>WEB-INF/web.xml</WatchedResource>
-    <Environment name="EH_CACHE_CONFIG" value="/home/ctapobep/soft/apache/apache-tomcat-7.0.32/conf/poulpe.ehcache.xml" type="java.lang.String" />
+    <!--This is a cache configuration file, it's required because JCommune and Poulpe are using shared distributed cache to communicate with updates
+        Thus, uncomment it if you need both Poulpe and JCommune running together at the same time. It should be similar to this config:
+         https://github.com/jtalks-org/poulpe/blob/master/poulpe-model/src/main/resources/org/jtalks/poulpe/model/entity/ehcache.xml
+        The port inside of this file might require changing to the same as JCommune uses. Or vice versa-->
+ <!--   <Environment name="EH_CACHE_CONFIG" value="/home/someuser/soft/apache-tomcat/conf/poulpe.ehcache.xml" type="java.lang.String" /> -->
     <Environment name="POULPE_DB_USER" value="root" type="java.lang.String" />
     <Environment name="POULPE_DB_PASSWORD" value="root" type="java.lang.String" />
     <Environment name="POULPE_DB_URL" type="java.lang.String" 
