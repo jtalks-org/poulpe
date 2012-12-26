@@ -54,9 +54,9 @@
     <property name="targetDataSource">
       <bean class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
         <property name="driverClass" value="${jdbc.driverClassName}"/>
-        <property name="jdbcUrl" value="${JTALKS_DB_URL:jdbc:mysql://localhost/p_poulpe?characterEncoding=UTF-8}"/>
-        <property name="user" value="${JTALKS_DB_USER:root}"/>
-        <property name="password" value="${JTALKS_DB_PASSWORD:root}"/>
+        <property name="jdbcUrl" value="${POULPE_DB_URL}"/>
+        <property name="user" value="${POULPE_DB_USER:root}"/>
+        <property name="password" value="${POULPE_DB_PASSWORD:root}"/>
         <!--Every hour we'll be hitting DB to make sure MySQL doesn't kill the connection. By default if connection
         is idle for 8 hrs, MySQL kills it-->
         <property name="idleConnectionTestPeriod" value="3600"/>
@@ -90,12 +90,12 @@
         <prop key="hibernate.connection.release_mode">auto</prop>
         <prop key="hibernate.cache.use_query_cache">${hibernate.use_query_cache}</prop>
         <prop key="current_session_context_class">thread</prop>
-        <prop key="hibernate.cache.use_second_level_cache">${JTALKS_USE_SECOND_LEVEL_CACHE:true}</prop>
+        <prop key="hibernate.cache.use_second_level_cache">${POULPE_USE_SECOND_LEVEL_CACHE:true}</prop>
         <prop key="hibernate.cache.region.factory_class">
-          ${JTALKS_CACHE_FACTORY:net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory}
+          ${POULPE_CACHE_FACTORY:net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory}
         </prop>
         <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-        <prop key="net.sf.ehcache.configurationResourceName">/org/jtalks/poulpe/model/entity/ehcache.xml</prop>
+        <prop key="net.sf.ehcache.configurationResourceName">${EH_CACHE_CONFIG:/org/jtalks/poulpe/model/entity/ehcache.xml}</prop>
       </props>
     </property>
   </bean>
@@ -105,7 +105,7 @@
     <property name="dataSource" ref="dataSource"/>
   </bean>
 
-  <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+  <bean class="org.jtalks.poulpe.model.utils.JndiAwarePropertyPlaceholderConfigurer">
     <property name="location" value="classpath:/datasource.properties"/>
   </bean>
 

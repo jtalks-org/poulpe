@@ -63,6 +63,10 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.mockejb</groupId>
+      <artifactId>mockejb</artifactId>
+    </dependency>
+    <dependency>
       <groupId>joda-time</groupId>
       <artifactId>joda-time-hibernate</artifactId>
       <exclusions>
