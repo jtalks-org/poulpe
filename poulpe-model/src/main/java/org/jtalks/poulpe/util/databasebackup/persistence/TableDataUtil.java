@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.Validate;
 
 /**
@@ -68,15 +69,9 @@ public final class TableDataUtil {
      * @return Already quoted value.
      */
     private static String getSqlQuotedString(final String value, final String quote) {
-        assert (value != null) : "value must not be null.";
-        assert (quote != null) : "quote must not be null.";
-
-        String s = value;
-        if (quote.length() > 0) {
-            s = value.replaceAll(quote, quote + quote);
-        }
-
-        return quote + s + quote;
+        assert value != null : "value must not be null.";
+        assert quote != null : "quote must not be null.";
+        return quote + StringEscapeUtils.escapeSql(value).replace("\\", "\\\\") + quote;
     }
 
     private static final String VALUE_QUOTE_SIGN = "'";
