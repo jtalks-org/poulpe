@@ -15,6 +15,9 @@
 package org.jtalks.poulpe.util.databasebackup.domain;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 /**
  * The class represent a Foreign key description data object. The class is immutable.
@@ -52,37 +55,34 @@ public final class ForeignKey implements TableKey {
 
     @Override
     public String toString() {
-        return "[fkTableName=" + fkTableName + ", fkColumnName=" + fkColumnName + ", pkTableName=" + pkTableName
-                + ", pkColumnName=" + pkColumnName + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 17;
-        result = prime * result + (fkColumnName == null ? 0 : fkColumnName.hashCode());
-        result = prime * result + (fkTableName == null ? 0 : fkTableName.hashCode());
-        result = prime * result + (pkColumnName == null ? 0 : pkColumnName.hashCode());
-        result = prime * result + (pkTableName == null ? 0 : pkTableName.hashCode());
-        return result;
+        return new HashCodeBuilder(31, 17)
+                .append(fkColumnName)
+                .append(fkTableName)
+                .append(pkColumnName)
+                .append(pkTableName)
+                .toHashCode();
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || obj instanceof ForeignKey && areKeysNotNullAndEqual((ForeignKey) obj);
-    }
-
-    /**
-     * Checks if primary and foreign keys for this and given object are not null and equal.
-     * 
-     * @param obj
-     *            an instance of Foreign key which keys will be compared to keys of this
-     * @return true if keys are not null and equal or false otherwise.
-     */
-    private boolean areKeysNotNullAndEqual(final ForeignKey obj) {
-        return fkColumnName != null && fkTableName != null && pkColumnName != null && pkTableName != null
-                && fkColumnName.equals(obj.fkColumnName) && fkTableName.equals(obj.fkTableName)
-                && pkColumnName.equals(obj.pkColumnName) && pkTableName.equals(obj.pkTableName);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        ForeignKey other = (ForeignKey) obj;
+        return new EqualsBuilder()
+                .append(this.fkColumnName, other.fkColumnName)
+                .append(this.fkTableName, other.fkTableName)
+                .append(this.pkColumnName, other.pkColumnName)
+                .append(this.pkTableName, other.pkTableName)
+                .build();
     }
 
     /**

@@ -15,6 +15,9 @@
 package org.jtalks.poulpe.util.databasebackup.domain;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 
 /**
@@ -42,47 +45,27 @@ public final class Cell {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 17;
-        result = prime * result + (cellData == null ? 0 : cellData.hashCode());
-        result = prime * result + (columnMetaInfo.getName() == null ? 0 : columnMetaInfo.getName().hashCode());
-        result = prime * result + (columnMetaInfo.getType() == null ? 0 : columnMetaInfo.getType().hashCode());
-        return result;
+        return new HashCodeBuilder(31, 17).append(cellData).append(columnMetaInfo).toHashCode();
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || obj instanceof Cell && hasEqualColumnMetaInfo((Cell) obj)
-                && hasEqualCellValue((Cell) obj);
-    }
-
-    /**
-     * Checks if ColumnMetaInformation for given Cell object equals to ColumnMetaInformation of instance itself.
-     * 
-     * @param obj
-     *            an instance of Cell which ColumnMetaInformation will be compared to this.ColumnMetaInformation
-     * @return true if obj.ColumnMetaInformation == this.ColumnMetaInformation or false otherwise.
-     */
-    private boolean hasEqualColumnMetaInfo(final Cell obj) {
-        return columnMetaInfo.getName() != null && columnMetaInfo.getType() != null
-                && columnMetaInfo.getName().equals(obj.columnMetaInfo.getName())
-                && columnMetaInfo.getType() == obj.columnMetaInfo.getType();
-    }
-
-    /**
-     * Checks if value for given Cell object equals to value of instance itself.
-     * 
-     * @param obj
-     *            an instance of Cell which value will be compared to value of this
-     * @return true if obj.value == this.value or false otherwise.
-     */
-    private boolean hasEqualCellValue(final Cell obj) {
-        return cellData != null && cellData.equals(obj.cellData) || cellData == obj.cellData;
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Cell other = (Cell) obj;
+        return new EqualsBuilder()
+                .append(this.cellData, other.cellData)
+                .append(this.columnMetaInfo, other.columnMetaInfo)
+                .build();
     }
 
     @Override
     public String toString() {
-        return "Cell [ColumnMetaData=" + columnMetaInfo + ", cellData=" + cellData + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 
     /**

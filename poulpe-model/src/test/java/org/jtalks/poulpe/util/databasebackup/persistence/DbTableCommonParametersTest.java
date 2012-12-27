@@ -64,7 +64,7 @@ public class DbTableCommonParametersTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @BeforeClass
+    @BeforeClass(groups = { "databasebackup" })
     @SuppressWarnings("rawtypes")
     protected void setupStubData() throws SQLException {
         COMMON_PARAMETERS_DATA.put("Engine", "engineParameter");
@@ -108,7 +108,7 @@ public class DbTableCommonParametersTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void getCommonParameterMapTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "tableName");
         assertEquals(testObject.getCommonParameterMap(), expectedCommonParameterMap);

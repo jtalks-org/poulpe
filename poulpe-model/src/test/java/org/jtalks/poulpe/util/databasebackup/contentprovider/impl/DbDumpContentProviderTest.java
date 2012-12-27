@@ -14,20 +14,19 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-
 public class DbDumpContentProviderTest {
     // private DbTableNameLister dbTableNameLister;
     // private xX_SqlTableDump sqlTableDump;
     // private DataSource dataSource;
 
-    // @BeforeMethod
+    // @BeforeMethod(groups = {"databasebackup"})
     // private void setUp() {
     // dbTableNameLister = Mockito.mock(DbTableNameLister.class);
     // sqlTableDump = Mockito.mock(xX_SqlTableDump.class);
     // dataSource = Mockito.mock(DataSource.class);
     // }
 
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void getContentTest() throws FileDownloadException, IOException, SQLException {
     // String expected = "Test string for checking DbDumpContentProvider class";
     //
@@ -47,7 +46,7 @@ public class DbDumpContentProviderTest {
     // Assert.assertEquals(outputList.get(0), expected);
     // }
 
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void databaseDoesntContainTablesExceptionThrowingTest() throws SQLException {
     // Mockito.when(dbTableNameLister.getIndependentList()).thenReturn(new ArrayList<String>());
     // try {
@@ -61,7 +60,7 @@ public class DbDumpContentProviderTest {
     // }
     // }
 
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void databaseExportingExceptionThrowingTest() throws SQLException {
     // Mockito.when(dbTableNameLister.getIndependentList()).thenReturn(Arrays.asList("tableName"));
     // Mockito.when(dbTableNameLister.getDataSource()).thenReturn(dataSource);

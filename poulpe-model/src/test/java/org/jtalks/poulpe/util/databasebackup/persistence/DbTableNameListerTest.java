@@ -51,7 +51,7 @@ public class DbTableNameListerTest {
      * order, so tables at the top of the list don't depend on table on the bottom (this order is defined in the
      * schema.sql).
      */
-    @BeforeClass
+    @BeforeClass(groups = { "databasebackup" })
     protected void setUp() {
         dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.HSQL)
@@ -85,7 +85,7 @@ public class DbTableNameListerTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void tableListReturnsAllTableNames() throws SQLException {
         List<String> expectedList =
                 Lists.newArrayList(Lists.transform(expectedIndependentList, new UpperCaseFunction()));
@@ -106,7 +106,7 @@ public class DbTableNameListerTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void tableListResolvesDependencies() throws SQLException {
     // List<String> expectedList = Lists.transform(expectedIndependentList, new UpperCaseFunction());
     // DbTableNameLister lister = new DbTableNameLister(dataSource);
@@ -118,7 +118,7 @@ public class DbTableNameListerTest {
     /**
      * Closes previously opened resources such as database connection.
      */
-    @AfterClass
+    @AfterClass(groups = { "databasebackup" })
     public void tearDown() {
         dataSource.shutdown();
     }

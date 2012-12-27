@@ -17,7 +17,9 @@ package org.jtalks.poulpe.util.databasebackup.domain;
 import java.util.Collections;
 import java.util.List;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
 
 import com.google.common.collect.Lists;
 
@@ -68,10 +70,7 @@ public final class Row {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 17;
-        result = prime * result + (cellList == null ? 0 : cellList.hashCode());
-        return result;
+        return new HashCodeBuilder(31, 17).append(cellList).toHashCode();
     }
 
     @Override
@@ -94,7 +93,7 @@ public final class Row {
 
     @Override
     public String toString() {
-        return "Row [cellList=" + cellList + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 
     private final List<Cell> cellList = Lists.newArrayList();

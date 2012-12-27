@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-
 /**
  * Test joining array of Strings into one String functionality.
  * 
@@ -25,7 +24,7 @@ public class SqlTableDumpUtilTest {
     /**
      * Base testing - join plain array of Strings.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public final void joiningListTest() {
     // List<String> list = Arrays.asList("1", "2", "3");
     // assertEquals(DbDumpUtil.joinStrings(list, ",").toString(), "1,2,3");
@@ -36,7 +35,7 @@ public class SqlTableDumpUtilTest {
     /**
      * Joining of empty array must return empty String.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public final void emptyListReturnsEmptyStringTest() {
     // List<String> list = Lists.newArrayList();
     // assertEquals(DbDumpUtil.joinStrings(list, ",").toString().length(), 0);
@@ -45,7 +44,7 @@ public class SqlTableDumpUtilTest {
     /**
      * Joining of null array or joining with null separator must throw an Exception.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public final void nullListOrSeparatorGenerateExceptionTest() {
     // try {
     // DbDumpUtil.joinStrings(null, ",");

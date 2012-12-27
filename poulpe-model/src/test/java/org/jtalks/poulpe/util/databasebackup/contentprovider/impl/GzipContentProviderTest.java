@@ -25,8 +25,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.zip.GZIPInputStream;
 
-import org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider;
-import org.jtalks.poulpe.util.databasebackup.contentprovider.impl.GzipContentProvider;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.testng.annotations.Test;
 
@@ -46,7 +44,7 @@ public class GzipContentProviderTest {
      * @throws IOException
      *             Must never happen
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
         String expected = "Test string for checking GzipContentProvider class";
 

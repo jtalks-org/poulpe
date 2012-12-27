@@ -16,7 +16,7 @@ public class SqlTableStructureDumpTest {
      * @throws SQLException
      *             must never happen.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void tableStructureTest() throws SQLException {
     // List<ColumnMetaData> tableStructure =
     // Lists.newArrayList(new ColumnMetaData("id", SqlTypes.INT).setComment("comment for the column"));
@@ -53,7 +53,7 @@ public class SqlTableStructureDumpTest {
      * @throws SQLException
      *             must never happen.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void defaultValuesShouldBeQuotedForStrings() throws SQLException {
     // List<ColumnMetaData> tableStructure = Lists.newArrayList(
     // new ColumnMetaData("id", SqlTypes.INT).setDefaultValue("5"),

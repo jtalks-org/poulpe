@@ -14,10 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -27,87 +25,43 @@ import org.testng.annotations.Test;
  * 
  */
 public class UniqueKeyTest {
+    /**
+     * Prepares SUTs for testing.
+     */
+    @BeforeMethod
+    public void beforeMethod() {
+        sutA1 = new UniqueKey("indexName1", "column1");
+        sutA2 = new UniqueKey("indexName1", "column1");
+
+        sutB1 = new UniqueKey("indexName2", "column2");
+    }
 
     /**
      * Two different instances of UniqueKey should not be equal.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void twoNotEqualUniqueKeyAreNotEquals() {
-        UniqueKey testObject1 = createUniqueKeyA();
-        UniqueKey testObject2 = createUniqueKeyB();
-        assertFalse(testObject1.equals(testObject2));
+        Assert.assertFalse(sutA1.equals(sutB1));
+        Assert.assertFalse(sutA1.hashCode() == sutB1.hashCode());
     }
 
     /**
      * Two the same instances of UniqueKey should be equal.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void twoEqualUniqueKeyAreEquals() {
-        UniqueKey testObject1 = createUniqueKeyA();
-        UniqueKey testObject2 = createUniqueKeyA();
-        assertTrue(testObject1.equals(testObject2));
+        Assert.assertEquals(sutA1, sutA2);
+        Assert.assertEquals(sutA1.hashCode(), sutA2.hashCode());
     }
 
     /**
      * There should be no possibility to construct object without providing UniqueKey Column.
      */
-    @Test
-    @SuppressWarnings("unused")
+    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
     public void uniqueKeyShouldBeInitializedInConstructor() {
-        try {
-            UniqueKey tablePrimaryKey = new UniqueKey(null, "column");
-            fail("Exception expected");
-        } catch (NullPointerException e) {
-            // do nothing - the exception is expected.
-        }
-
+        @SuppressWarnings("unused")
+        UniqueKey tablePrimaryKey = new UniqueKey(null, "column");
     }
 
-    /**
-     * Tests Java Equals Contract.
-     */
-    @Test
-    public void equalsContractTest() {
-        UniqueKey testObject1, testObject2, testObject3, differentTestObject;
-
-        testObject1 = createUniqueKeyA();
-        assertTrue(testObject1.equals(testObject1), "Reflexive");
-
-        testObject1 = createUniqueKeyA();
-        testObject2 = createUniqueKeyA();
-        assertTrue(testObject1.equals(testObject2), "Equal Symmetric");
-        assertTrue(testObject2.equals(testObject1), "Equal Symmetric");
-
-        testObject1 = createUniqueKeyA();
-        differentTestObject = createUniqueKeyB();
-        assertFalse(testObject1.equals(differentTestObject), "Not Equal Symmetric");
-        assertFalse(differentTestObject.equals(testObject1), "Not Equal Symmetric");
-
-        testObject1 = createUniqueKeyA();
-        testObject2 = createUniqueKeyA();
-        testObject3 = createUniqueKeyA();
-        assertTrue(testObject1.equals(testObject2), "Transitive");
-        assertTrue(testObject1.equals(testObject3), "Transitive");
-        assertTrue(testObject2.equals(testObject3), "Transitive");
-
-        assertFalse(testObject1.equals(null), "Null value should return false");
-    }
-
-    /**
-     * Creates and returns an "UniqueKeyA" instance of UniqueKey. Method creates a new instance every time it is called.
-     * 
-     * @return a newly created "UniqueKeyA"
-     */
-    private UniqueKey createUniqueKeyA() {
-        return new UniqueKey("indexName1", "column1");
-    }
-
-    /**
-     * Creates and returns an "UniqueKeyB" instance of UniqueKey. Method creates a new instance every time it is called.
-     * 
-     * @return a newly created "UniqueKeyB"
-     */
-    private UniqueKey createUniqueKeyB() {
-        return new UniqueKey("indexName2", "column2");
-    }
+    private UniqueKey sutA1, sutA2, sutB1;
 }

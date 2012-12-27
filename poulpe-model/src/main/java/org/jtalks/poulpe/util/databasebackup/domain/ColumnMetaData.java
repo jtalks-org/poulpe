@@ -15,6 +15,9 @@
 package org.jtalks.poulpe.util.databasebackup.domain;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 
 /**
@@ -88,53 +91,44 @@ public final class ColumnMetaData {
 
     @Override
     public int hashCode() {
-        final int prime = 31;
-        int result = 17;
-        result = prime * result + (autoincrement ? 1231 : 1237);
-        result = prime * result + (defaultValue == null ? 0 : defaultValue.hashCode());
-        result = prime * result + (hasDefaultValue ? 1231 : 1237);
-        result = prime * result + (hasSize ? 1231 : 1237);
-        result = prime * result + (name == null ? 0 : name.hashCode());
-        result = prime * result + (nullable ? 1231 : 1237);
-        result = prime * result + size;
-        result = prime * result + (type == null ? 0 : type.hashCode());
-        return result;
+        return new HashCodeBuilder(31, 17)
+                .append(autoincrement)
+                .append(defaultValue)
+                .append(hasDefaultValue)
+                .append(hasSize)
+                .append(name)
+                .append(nullable)
+                .append(size)
+                .append(type)
+                .append(comment)
+                .toHashCode();
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || obj instanceof ColumnMetaData && areNameAndTypeDefined()
-                && areColumnParametersEqual((ColumnMetaData) obj);
-    }
-
-    /**
-     * Checks if name and type for the instance are defined.
-     * 
-     * @return true if name and type are not null or false otherwise.
-     */
-    private boolean areNameAndTypeDefined() {
-        return name != null && type != null;
-    }
-
-    /**
-     * Checks if column parameters equal for this and given obj.
-     * 
-     * @param obj
-     *            an instance of ColumnMetaData which parameters will be compared to parameters of this
-     * @return true if parameters equal or false otherwise.
-     */
-    private boolean areColumnParametersEqual(final ColumnMetaData obj) {
-        return autoincrement == obj.autoincrement && hasSize == obj.hasSize && nullable == obj.nullable
-                && hasDefaultValue == obj.hasDefaultValue && size == obj.size && type == obj.type
-                && name.equals(obj.name) && (defaultValue == null || defaultValue.equals(obj.defaultValue))
-                && (comment == null || comment.equals(obj.comment));
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        ColumnMetaData other = (ColumnMetaData) obj;
+        return new EqualsBuilder()
+                .append(this.autoincrement, other.autoincrement)
+                .append(this.defaultValue, other.defaultValue)
+                .append(this.hasDefaultValue, other.hasDefaultValue)
+                .append(this.hasSize, other.hasSize)
+                .append(this.name, other.name)
+                .append(this.nullable, other.nullable)
+                .append(this.size, other.size)
+                .append(this.type, other.type)
+                .append(this.comment, other.comment)
+                .isEquals();
     }
 
     @Override
     public String toString() {
-        return "ColumnMetaData [nullable=" + nullable + ", autoincrement=" + autoincrement + ", hasDefaultValue="
-                + hasDefaultValue + ", defaultValue=" + defaultValue + ", name=" + name + ", size=" + size
-                + ", hasSize=" + hasSize + ", type=" + type + ", comment=" + comment + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 
     /**
@@ -241,7 +235,7 @@ public final class ColumnMetaData {
      * @return true if the column has a comment of false otherwise.
      */
     public boolean hasComment() {
-        return (comment != null && comment.length() > 0);
+        return comment != null && comment.length() > 0;
     }
 
     private boolean nullable;

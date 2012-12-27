@@ -14,13 +14,10 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
+import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -31,148 +28,60 @@ import org.testng.annotations.Test;
  */
 public class CellTest {
     private ColumnMetaData columnMetaData;
-    private ColumnMetaData differentColumnMetaData;
 
     /**
      * Sets up a ColumnMetaData which is used in most of the tests and a different ColumnMetaData.
      */
-    @BeforeClass
-    protected void setUp() {
+    @BeforeClass(groups = { "databasebackup" })
+    protected void beforeClass() {
         columnMetaData = new ColumnMetaData("columnName", SqlTypes.VARCHAR);
-        differentColumnMetaData = new ColumnMetaData("columnName", SqlTypes.INT);
     }
 
     /**
-     * Two different instances of Cell should not be equal.
+     * Prepares SUTs for testing.
      */
-    @Test
-    public void twoNotEqualCellsAreNotEqual() {
-        Cell testObject1, testObject2;
-
-        testObject1 = createCell();
-        testObject2 = createCellWithDifferentColumnNameAndDifferentColumnValue();
-        assertFalse(testObject1.equals(testObject2), "totally diferent objects");
-
-        testObject1 = createCell();
-        testObject2 = createCellWithDifferentColumnMetaData();
-        assertFalse(testObject1.equals(testObject2), "only one field differs");
-
-        testObject1 = createCell();
-        testObject2 = createCellWithDifferentColumnMetaData();
-        assertFalse(testObject1.equals(testObject2), "only one field differs");
-
-        testObject1 = createCell();
-        testObject2 = createCellWithDifferentColumnValue();
-        assertFalse(testObject1.equals(testObject2), "only one field differs");
+    @BeforeMethod
+    public void beforeMethod() {
+        sut1 = new Cell(columnMetaData, "columnValue");
+        sut2 = new Cell(columnMetaData, "columnValue");
+        differentSut = new Cell(columnMetaData, "differentColumnValue");
     }
 
     /**
-     * Checks if two equal Cell with null as their values are still equal.
+     * Two different instances must be not equal and should have different hash codes.
      */
-    @Test
-    public void twoEqualCellWithNullValueAreEqual() {
-        Cell testObject1 = new Cell(columnMetaData, null);
-        Cell testObject2 = new Cell(columnMetaData, null);
-        assertEquals(testObject1, testObject2);
+    @Test(groups = { "databasebackup" })
+    public void twoNotEqualCellsAreNotEqualAndShouldHaveDifferentHashCodes() {
+        Assert.assertFalse(sut1.equals(differentSut));
+        Assert.assertTrue(sut1.hashCode() != differentSut.hashCode());
     }
 
     /**
-     * Two the same instances of Cell should be equal.
+     * Two the same instances must be equal and must have equal hash codes.
      */
-    @Test
-    public void twoEqualCellsAreEqual() {
-        Cell testObject1 = createCell();
-        Cell testObject2 = createCell();
-        assertEquals(testObject1, testObject2);
+    @Test(groups = { "databasebackup" })
+    public void twoEqualCellsAreEqualAndHaveEqualHashCode() {
+        Assert.assertEquals(sut1, sut2);
+        Assert.assertEquals(sut1.hashCode(), sut2.hashCode());
     }
 
     /**
-     * Checks if creating instance with null parameters is forbidden.
+     * Creation new Cell with null ColumnMetaInfo is forbidden.
      */
-    @Test
-    @SuppressWarnings("unused")
-    public void instanceShouldBeInitializedWithNonNulls() {
-        try {
-            Cell testObject1 = new Cell(null, "columnValue");
-            fail("columnName cannot be null.");
-        } catch (NullPointerException e) {
-            // do nothing - the exception is expected
-        }
-        try {
-            Cell testObject1 = new Cell(null, null);
-            fail("columnValue cannot be null.");
-        } catch (NullPointerException e) {
-            // do nothing - the exception is expected
-        }
+    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    public void nullColumnMetaDataThrowsException() {
+        @SuppressWarnings("unused")
+        Cell sut = new Cell(null, "columnValue");
     }
 
     /**
-     * Checks if a Tests Java Equals Contract is valid.
+     * Creation new Cell with null value is forbidden.
      */
-    @Test
-    public void equalsContractTest() {
-        Cell testObject1, testObject2, testObject3, diferentTestObject;
-
-        testObject1 = createCell();
-        assertTrue(testObject1.equals(testObject1), "Reflexive");
-
-        testObject1 = createCell();
-        testObject2 = createCell();
-        assertTrue(testObject1.equals(testObject2), "Equal Symmetric");
-        assertTrue(testObject2.equals(testObject1), "Equal Symmetric");
-
-        testObject1 = createCell();
-        diferentTestObject = createCellWithDifferentColumnMetaData();
-        assertFalse(testObject1.equals(diferentTestObject), "Not Equal Symmetric");
-        assertFalse(diferentTestObject.equals(testObject1), "Not Equal Symmetric");
-
-        testObject1 = createCell();
-        testObject2 = createCell();
-        testObject3 = createCell();
-        assertTrue(testObject1.equals(testObject2), "Transitive");
-        assertTrue(testObject1.equals(testObject3), "Transitive");
-        assertTrue(testObject2.equals(testObject3), "Transitive");
-
-        assertFalse(testObject2.equals(null), "Null value should return false");
+    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    public void nullColumnValueThrowsException() {
+        @SuppressWarnings("unused")
+        Cell sut = new Cell(null, null);
     }
 
-    /**
-     * Creates and returns "standard" cell with columnMetaData and columnValue. Method creates a new instance every time
-     * it is called.
-     * 
-     * @return a newly created Cell
-     */
-    private Cell createCell() {
-        return new Cell(columnMetaData, "columnValue");
-    }
-
-    /**
-     * Creates and returns cell which differs from "standard" one (see {@link #createCell()}) by different
-     * ColumnMetaData. Method creates a new instance every time it is called.
-     * 
-     * @return a newly created Cell
-     */
-    private Cell createCellWithDifferentColumnMetaData() {
-        return new Cell(differentColumnMetaData, "columnValue");
-    }
-
-    /**
-     * Creates and returns cell which differs from "standard" one (see {@link #createCell()}) by different ColumnValue.
-     * Method creates a new instance every time it is called.
-     * 
-     * @return a newly created Cell
-     */
-    private Cell createCellWithDifferentColumnValue() {
-        return new Cell(columnMetaData, "differentColumnValue");
-    }
-
-    /**
-     * Creates and returns cell which differs from "standard" one (see {@link #createCell()}) by different
-     * ColumnMetaData and ColumnValue. Method creates a new instance every time it is called.
-     * 
-     * @return a newly created Cell
-     */
-    private Cell createCellWithDifferentColumnNameAndDifferentColumnValue() {
-        return new Cell(differentColumnMetaData, "differentColumnValue");
-    }
+    private Cell sut1, sut2, differentSut;
 }

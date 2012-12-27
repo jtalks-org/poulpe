@@ -5,9 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpUtil;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
@@ -26,12 +26,12 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
     protected StringBuilder getHeader() {
         StringBuilder header = new StringBuilder();
         header.append("--");
-        header.append(DbDumpUtil.LINEFEED);
+        header.append(LINEFEED);
         header.append("-- Table structure for table ");
         header.append(TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()));
-        header.append(DbDumpUtil.LINEFEED);
+        header.append(LINEFEED);
         header.append("--");
-        header.append(DbDumpUtil.LINEFEED);
+        header.append(LINEFEED);
 
         return header;
     }
@@ -43,13 +43,13 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         data.append("CREATE TABLE ");
         data.append(TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()));
         data.append(" (");
-        data.append(DbDumpUtil.LINEFEED);
+        data.append(LINEFEED);
 
         data.append(getColumns());
         data.append(getKeys(dbTable.getPrimaryKeySet(), PRIMARY_KEY_TEMPLATE));
         data.append(getKeys(dbTable.getUniqueKeySet(), UNIQUE_KEY_TEMPLATE));
 
-        data.append(DbDumpUtil.LINEFEED);
+        data.append(LINEFEED);
         data.append(") ");
         data.append(getCommonParameters());
         data.append(";");
@@ -87,14 +87,13 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    private StringBuilder getColumns() throws SQLException {
+    private String getColumns() throws SQLException {
         List<String> tableColumnDescriptionList = Lists.newArrayList();
         for (ColumnMetaData column : dbTable.getStructure()) {
             tableColumnDescriptionList.add(getColumnDescription(column));
         }
 
-        return DbDumpUtil.joinStrings(tableColumnDescriptionList, ","
-                + DbDumpUtil.LINEFEED);
+        return StringUtils.join(tableColumnDescriptionList, "," + LINEFEED);
     }
 
     /**
@@ -160,7 +159,7 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
 
         if (keySet.size() > 0) {
             result.append(", ");
-            result.append(DbDumpUtil.LINEFEED);
+            result.append(LINEFEED);
 
             List<String> tableKeyList = Lists.newArrayList();
             for (UniqueKey key : keySet) {
@@ -168,11 +167,9 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
                 for (String unquotedKey : key.getColumnNameSet()) {
                     quotedKeys.add(TableDataUtil.getSqlColumnQuotedString(unquotedKey));
                 }
-                tableKeyList.add(String.format(template, key.getIndexName(),
-                        DbDumpUtil.joinStrings(quotedKeys, ", ")));
+                tableKeyList.add(String.format(template, key.getIndexName(), StringUtils.join(quotedKeys, ", ")));
             }
-            result.append(DbDumpUtil.joinStrings(tableKeyList,
-                    ", " + DbDumpUtil.LINEFEED));
+            result.append(StringUtils.join(tableKeyList, ", " + LINEFEED));
         }
 
         return result;

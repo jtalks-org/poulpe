@@ -6,8 +6,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.InputStream;
 
-import org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloadService;
-import org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloader;
 import org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.mockito.Mockito;
@@ -24,7 +22,7 @@ public class FileDownloadServiceTest {
     /**
      * Test if formatted filename math certain timestamp format.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void filenameIsFormedWithTimestampAndBackupWord() {
         FileDownloadService testObject = new FileDownloadService();
         testObject.setContentFileNameWithoutExt("jtalks");
@@ -40,7 +38,7 @@ public class FileDownloadServiceTest {
      * @throws FileDownloadException
      *             Must never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void performFileDownloadTest() throws FileDownloadException {
         DbDumpContentProvider contentProvider = mock(DbDumpContentProvider.class);
         when(contentProvider.getContentFileNameExt()).thenReturn(".sql");

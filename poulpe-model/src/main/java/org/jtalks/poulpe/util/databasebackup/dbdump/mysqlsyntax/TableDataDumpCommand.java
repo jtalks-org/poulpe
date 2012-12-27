@@ -1,13 +1,11 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
-import static org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpUtil.LINEFEED;
-
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpUtil;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.Cell;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
@@ -65,9 +63,9 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
         return new StringBuilder()
                 .append(String.format(INSERT_ROW_TEMPLATE,
                         TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()),
-                        DbDumpUtil.joinStrings(nameColumns, ","),
-                        DbDumpUtil.joinStrings(valueColumns, ",")))
-                .append(DbDumpUtil.LINEFEED);
+                        StringUtils.join(nameColumns, ","),
+                        StringUtils.join(valueColumns, ",")))
+                .append(LINEFEED);
     }
 
     private final DbTable dbTable;

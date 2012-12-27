@@ -1,10 +1,8 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
-import static org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpUtil.LINEFEED;
-
 import java.sql.SQLException;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;

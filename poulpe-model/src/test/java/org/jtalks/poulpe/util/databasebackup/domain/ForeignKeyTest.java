@@ -14,10 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
-import static org.testng.Assert.fail;
-
+import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -28,87 +26,41 @@ import org.testng.annotations.Test;
  */
 public class ForeignKeyTest {
     /**
+     * Prepare SUTs for test.
+     */
+    @BeforeMethod
+    public void beforeMethod() {
+        sut1 = new ForeignKey("column1", "param1", "param2", "param3");
+        sut2 = new ForeignKey("column1", "param1", "param2", "param3");
+        differentSut = new ForeignKey("column2", "param1", "param2", "param3");
+    }
+
+    /**
      * Two different instances of ForeignKey should not be equal.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void twoNotEqualTableForeignKeyAreNotEquals() {
-        ForeignKey testObject1 = createForeignKeyA();
-        ForeignKey testObject2 = createForeignKeyB();
-        assertFalse(testObject1.equals(testObject2));
+        Assert.assertFalse(sut1.equals(differentSut));
+        Assert.assertFalse(sut1.hashCode() == differentSut.hashCode());
     }
 
     /**
      * Two the same instances of ForeignKey should be equal.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void twoEqualTableForeignKeyAreEquals() {
-        ForeignKey testObject1 = createForeignKeyA();
-        ForeignKey testObject2 = createForeignKeyA();
-        assertTrue(testObject1.equals(testObject2));
+        Assert.assertEquals(sut1, sut2);
+        Assert.assertEquals(sut1.hashCode(), sut2.hashCode());
     }
 
     /**
      * There should be no possibility to construct object without providing Primary Key Column.
      */
-    @Test
-    @SuppressWarnings("unused")
+    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
     public void tableForeignKeyShouldBeInitializedInConstructor() {
-        try {
-            ForeignKey tableForeignKey = new ForeignKey(null, null, null, null);
-            fail("Exception expected");
-        } catch (NullPointerException e) {
-            // do nothing - the exception is expected.
-        }
-
+        @SuppressWarnings("unused")
+        ForeignKey tableForeignKey = new ForeignKey(null, null, null, null);
     }
 
-    /**
-     * Tests Java Equals Contract.
-     */
-    @Test
-    public void equalsContractTest() {
-        ForeignKey testObject1, testObject2, testObject3, differentTestObject;
-
-        testObject1 = createForeignKeyA();
-        assertTrue(testObject1.equals(testObject1), "Reflexive");
-
-        testObject1 = createForeignKeyA();
-        testObject2 = createForeignKeyA();
-        assertTrue(testObject1.equals(testObject2), "Equal Symmetric");
-        assertTrue(testObject2.equals(testObject1), "Equal Symmetric");
-
-        testObject1 = createForeignKeyA();
-        differentTestObject = createForeignKeyB();
-        assertFalse(testObject1.equals(differentTestObject), "Not Equal Symmetric");
-        assertFalse(differentTestObject.equals(testObject1), "Not Equal Symmetric");
-
-        testObject1 = createForeignKeyA();
-        testObject2 = createForeignKeyA();
-        testObject3 = createForeignKeyA();
-        assertTrue(testObject1.equals(testObject2), "Transitive");
-        assertTrue(testObject1.equals(testObject3), "Transitive");
-        assertTrue(testObject2.equals(testObject3), "Transitive");
-
-        assertFalse(testObject1.equals(null), "Null value should return false");
-    }
-
-    /**
-     * Creates and returns an "ForeignKeyA" instance of ForeignKey. Method creates a new instance every time it is
-     * called.
-     * 
-     * @return a newly created "ForeignKeyA"
-     */
-    private ForeignKey createForeignKeyA() {
-        return new ForeignKey("column1", "param1", "param2", "param3");
-    }
-
-    /**
-     * Creates and returns an "ForeignKeyB" instance of ForeignKey. Method creates a new instance every time it is
-     * called.
-     * 
-     * @return a newly created "ForeignKeyB"
-     */
-    private ForeignKey createForeignKeyB() {
-        return new ForeignKey("column2", "param1", "param2", "param3");
-    }
+    private ForeignKey sut1, sut2, differentSut;
 }

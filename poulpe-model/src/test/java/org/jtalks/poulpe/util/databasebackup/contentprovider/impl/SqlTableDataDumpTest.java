@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-
 /**
  * Tests that SqlTableDataDump returns correct SQL statements with given database information.
  * 
@@ -29,7 +28,7 @@ public class SqlTableDataDumpTest {
      * @throws SQLException
      *             Must never happen
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public final void dumpDataTest() throws SQLException {
     // String expectedStatement = "INSERT INTO `tableName` "
     // + "(stringColumn,intColumn,nullStringColumn,nullIntColumn,stringWithQuoteColumn) "

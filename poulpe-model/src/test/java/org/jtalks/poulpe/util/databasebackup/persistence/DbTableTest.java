@@ -29,7 +29,6 @@ import org.jtalks.poulpe.util.databasebackup.domain.Cell;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
-import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
@@ -53,7 +52,7 @@ public class DbTableTest {
     /**
      * Sets up an in-memory database and initialize db schema by applying poulpe-model/src/test/resources/schema.sql.
      */
-    @BeforeClass
+    @BeforeClass(groups = { "databasebackup" })
     protected void setUp() {
         dataSource = new EmbeddedDatabaseBuilder()
                 .setType(EmbeddedDatabaseType.HSQL)
@@ -70,7 +69,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void getPrimaryKeySetTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "POULPE_SCHEMA_VERSION");
 
@@ -87,7 +86,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void getUniqueKeyListTest() throws SQLException {
     // Set<UniqueKey> expectedUniqueKeySet =
     // Sets.newHashSet(
@@ -107,7 +106,7 @@ public class DbTableTest {
      * @throws SQLException
      *             must never happen.
      */
-    // @Test
+    // @Test(groups = {"databasebackup"})
     // public void compositeUniqueKeysShouldBeCollectedIntoOneConstraint() throws SQLException {
     // Set<UniqueKey> expectedUniqueKeySet =
     // Sets.newHashSet(new UniqueKey("uk_acl_sid", Sets.newHashSet("sid", "principal")));
@@ -125,7 +124,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void getForeignKeySetTest() throws SQLException {
         Set<ForeignKey> expectedForeignKeySet = Sets.newHashSet(
                 new ForeignKey("FK_ACL_OBJ_CLASS", "OBJECT_ID_CLASS", "ACL_CLASS", "ID"),
@@ -143,7 +142,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(enabled = false)
+    @Test(enabled = false, groups = { "databasebackup" })
     public void getDataTest() throws SQLException {
         // Define expected table structure.
         Map<String, ColumnMetaData> metaColumnInfoMap = Maps.newHashMap();
@@ -225,7 +224,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test
+    @Test(groups = { "databasebackup" })
     public void getStructureTest() throws SQLException {
         List<ColumnMetaData> expectedResult = Lists.newArrayList(
                 new ColumnMetaData("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11),
@@ -252,7 +251,7 @@ public class DbTableTest {
     /**
      * Closes previously opened resources such as database connection.
      */
-    @AfterClass
+    @AfterClass(groups = { "databasebackup" })
     public void tearDown() {
         dataSource.shutdown();
     }

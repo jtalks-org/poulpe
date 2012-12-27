@@ -1,7 +1,5 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
-import static org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpUtil.LINEFEED;
-
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,4 +41,6 @@ public class CommonHeaderCommand implements DbDumpCommand {
 
         return header;
     }
+
+    private static final String LINEFEED = "\n";
 }

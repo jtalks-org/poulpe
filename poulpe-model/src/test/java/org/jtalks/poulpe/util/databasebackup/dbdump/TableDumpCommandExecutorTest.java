@@ -1,4 +1,5 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump;
+
 //package org.jtalks.poulpe.util.databasebackup.dbdump;
 //
 //import java.util.LinkedList;
@@ -24,7 +25,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 //    /**
 //     * When given a null instead of command Queue the class must throw an IllegalArgumentException.
 //     */
-//    @Test(expectedExceptions = IllegalArgumentException.class)
+//    @Test(expectedExceptions = IllegalArgumentException.class, groups = {"databasebackup"})
 //    public void nullCommandListGeneratesException() {
 //        @SuppressWarnings("unused")
 //        x_TableDumpCommandExecutor testObject = new x_TableDumpCommandExecutor(null);
@@ -33,7 +34,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 //    /**
 //     * When given an empty list of commands the class must return an Empty result.
 //     */
-//    @Test
+//    @Test(groups = {"databasebackup"})
 //    public void emptyCommandListReturnsEmptyResult() {
 //        x_TableDumpCommandExecutor testObject = new x_TableDumpCommandExecutor(new LinkedList<DbDumpCommand>());
 //        Assert.assertEquals("", testObject.execute().toString());
@@ -42,7 +43,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 //    /**
 //     * When given a command the class must return expected result.
 //     */
-//    @Test
+//    @Test(groups = {"databasebackup"})
 //    public void returnsExpectedResultForOneCommand() {
 //        Queue<DbDumpCommand> commandList = Lists.newLinkedList();
 //        DbDumpCommand simpleCommand = createTableDumpCommand("simpleCommand");
@@ -60,7 +61,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 //    /**
 //     * When given commands in certain order the result must be arranged in the same order of command execution.
 //     */
-//    @Test
+//    @Test(groups = {"databasebackup"})
 //    public void commandExecutorKeepsCorrectOrder() {
 //        Queue<DbDumpCommand> commandList = Lists.newLinkedList();
 //        DbDumpCommand firstCommand = createTableDumpCommand("firstCommand");

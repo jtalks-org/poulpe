@@ -18,6 +18,9 @@ import java.util.Collections;
 import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import com.google.common.collect.Sets;
 
@@ -76,22 +79,27 @@ public final class UniqueKey implements TableKey {
 
     @Override
     public int hashCode() {
-        int result = 17;
-        result = 31 * result + (columnNameSet == null ? 0 : columnNameSet.hashCode());
-        result = 31 * result + (indexName == null ? 0 : indexName.hashCode());
-        return result;
+        return new HashCodeBuilder(17, 31).append(columnNameSet).append(indexName).toHashCode();
     }
 
     @Override
     public String toString() {
-        return "UniqueKey [indexName=" + indexName + ", columnNameSet=" + columnNameSet + "]";
+        return ToStringBuilder.reflectionToString(this);
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || columnNameSet != null && indexName != null && obj instanceof UniqueKey
-                && columnNameSet.equals(((UniqueKey) obj).columnNameSet)
-                && indexName.equals(((UniqueKey) obj).indexName);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        UniqueKey other = (UniqueKey) obj;
+        return new EqualsBuilder()
+                .append(this.columnNameSet, other.columnNameSet)
+                .append(this.indexName, other.indexName)
+                .isEquals();
     }
 
     private final String indexName;

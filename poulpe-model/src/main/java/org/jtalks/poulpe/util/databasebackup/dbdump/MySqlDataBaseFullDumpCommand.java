@@ -4,7 +4,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Queue;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.AddForeignKeysCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CommonHeaderCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CreateTableCommand;

@@ -8,10 +8,10 @@ public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
     public final StringBuilder execute() throws SQLException {
         return new StringBuilder()
                 .append(getHeader())
-                .append(DbDumpUtil.LINEFEED)
+                .append(LINEFEED)
                 .append(getData())
-                .append(DbDumpUtil.LINEFEED)
-                .append(DbDumpUtil.LINEFEED);
+                .append(LINEFEED)
+                .append(LINEFEED);
     }
 
     /**
@@ -30,4 +30,5 @@ public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
      */
     protected abstract StringBuilder getData() throws SQLException;
 
+    protected static final String LINEFEED = "\n";
 }

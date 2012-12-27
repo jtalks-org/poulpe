@@ -6,7 +6,7 @@ import org.testng.Assert;
 import org.testng.annotations.Test;
 
 public class HeaderAndDataAwareCommandTest {
-    @Test
+    @Test(groups = { "databasebackup" })
     public void executeMethodCallsForHeaderAndData() throws SQLException {
         final String getHeaderReturn = "getHeader method";
         final String getDataReturn = "getData method";
@@ -25,8 +25,8 @@ public class HeaderAndDataAwareCommandTest {
 
         };
 
-        String expectedOutput = getHeaderReturn + DbDumpUtil.LINEFEED + getDataReturn + DbDumpUtil.LINEFEED
-                + DbDumpUtil.LINEFEED;
+        String expectedOutput = getHeaderReturn + HeaderAndDataAwareCommand.LINEFEED + getDataReturn
+                + HeaderAndDataAwareCommand.LINEFEED + HeaderAndDataAwareCommand.LINEFEED;
 
         Assert.assertEquals(expectedOutput, testObject.execute().toString());
     }
