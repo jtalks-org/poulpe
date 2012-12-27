@@ -14,7 +14,7 @@
  */
 /**
  * The package contains classes and interfaces for dumping different elements (such as table structure, table data, 
- * keys, etc.) from a table to a readable form which can be exported via content providers. 
+ * keys, etc.) from a table to a readable form which can be exported via content providers.
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
