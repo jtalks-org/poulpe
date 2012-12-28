@@ -14,15 +14,7 @@
  */
 package org.jtalks.poulpe.service.rest;
 
-import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
-import static com.xebialabs.restito.semantics.Action.status;
-import static com.xebialabs.restito.semantics.Condition.*;
-import static org.jtalks.poulpe.model.fixtures.TestFixtures.user;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-
-import java.net.ServerSocket;
-
+import com.xebialabs.restito.server.StubServer;
 import org.glassfish.grizzly.http.util.HttpStatus;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
@@ -33,7 +25,14 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
-import com.xebialabs.restito.server.StubServer;
+import java.net.ServerSocket;
+
+import static com.xebialabs.restito.builder.stub.StubHttp.whenHttp;
+import static com.xebialabs.restito.semantics.Action.status;
+import static com.xebialabs.restito.semantics.Condition.*;
+import static org.jtalks.poulpe.model.fixtures.TestFixtures.user;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
 
 /**
  * Integration tests that JCommuneNotifierImpl response on commands correctly. It's actually a bit more than unit
@@ -55,8 +54,6 @@ public class JCommuneNotifierImplIntegrationTest {
     private final long SECTION_ID = 1L;
     
     private StubServer server;
-    private PoulpeBranch branch;
-    private PoulpeSection section;
     // We don't use interface, because this test 
     // intended for this implementation only
     private JCommuneNotifierImpl notifier;  
@@ -66,13 +63,7 @@ public class JCommuneNotifierImplIntegrationTest {
      */
     @BeforeClass
     private void beforeTestCase() {      
-        server = new StubServer().run();                   
-
-        branch = new PoulpeBranch(); 
-        branch.setId(BRANCH_ID);
-         
-        section = new PoulpeSection();
-        section.setId(SECTION_ID);
+        server = new StubServer().run();
         
         //user dao always returns same admin user with same password
         UserDao userDao = mock(UserDao.class);
@@ -90,47 +81,70 @@ public class JCommuneNotifierImplIntegrationTest {
     }
     
    @Test
-    public void deleteExistBranch() throws Exception {                      
-        whenHttp(server).match(delete(BRANCH_URL_PART+BRANCH_ID), parameter("password", "password")).then(status(HttpStatus.OK_200));               
-        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), branch);
-    }    
+   public void deleteExistBranch() throws Exception {
+       whenHttp(server)
+               .match(delete(BRANCH_URL_PART + BRANCH_ID), parameter("password", "password"))
+               .then(status(HttpStatus.OK_200));
+       notifier.notifyAboutBranchDelete(JCOMMUNE_URL + ":" + String.valueOf(server.getPort()), createBranch());
+   }
 
     @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
-    public void deleteNonexistBranch() throws Exception {                     
-        whenHttp(server).match(delete(BRANCH_URL_PART+BRANCH_ID), parameter("password", "password")).then(status(HttpStatus.NOT_FOUND_404));               
-        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), branch);    
+    public void deleteNonexistBranch() throws Exception {
+        whenHttp(server)
+                .match(delete(BRANCH_URL_PART + BRANCH_ID), parameter("password", "password"))
+                .then(status(HttpStatus.NOT_FOUND_404));
+        notifier.notifyAboutBranchDelete(JCOMMUNE_URL + ":" + String.valueOf(server.getPort()), createBranch());
     }    
 
     @Test
-    public void deleteExistSection() throws Exception {                      
-        whenHttp(server).match(delete(SECTIONS_URL_PART+SECTION_ID), parameter("password", "password")).then(status(HttpStatus.OK_200));               
-        notifier.notifyAboutSectionDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), section);
+    public void deleteExistSection() throws Exception {
+        whenHttp(server)
+                .match(delete(SECTIONS_URL_PART + SECTION_ID), parameter("password", "password"))
+                .then(status(HttpStatus.OK_200));
+        notifier.notifyAboutSectionDelete(JCOMMUNE_URL + ":" + String.valueOf(server.getPort()), createSection());
     }    
 
     @Test(expectedExceptions = JcommuneRespondedWithErrorException.class)
-    public void deleteNonexistSection() throws Exception {                     
-        whenHttp(server).match(delete(SECTIONS_URL_PART+SECTION_ID), parameter("password", "password")).then(status(HttpStatus.NOT_FOUND_404));               
-        notifier.notifyAboutSectionDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()), section);    
+    public void deleteNonexistSection() throws Exception {
+        whenHttp(server)
+                .match(delete(SECTIONS_URL_PART + SECTION_ID), parameter("password", "password"))
+                .then(status(HttpStatus.NOT_FOUND_404));
+        notifier.notifyAboutSectionDelete(JCOMMUNE_URL + ":" + String.valueOf(server.getPort()), createSection());
     }
     
     @Test
-    public void deleteComponent() throws Exception {                     
-        whenHttp(server).match(delete(WHOLEFORUM_URL_PART), parameter("password", "password")).then(status(HttpStatus.OK_200));               
+    public void deleteComponent() throws Exception {
+        whenHttp(server)
+                .match(delete(WHOLEFORUM_URL_PART), parameter("password", "password"))
+                .then(status(HttpStatus.OK_200));
         notifier.notifyAboutComponentDelete(JCOMMUNE_URL+":"+String.valueOf(server.getPort()));    
     }
     
     @Test
-    public void reindexComponent() throws Exception {                     
-        whenHttp(server).match(post(REINDEX_URL_PART), parameter("password", "password")).then(status(HttpStatus.OK_200));               
+    public void reindexComponent() throws Exception {
+        whenHttp(server)
+                .match(post(REINDEX_URL_PART), parameter("password", "password"))
+                .then(status(HttpStatus.OK_200));
         notifier.notifyAboutReindexComponent(JCOMMUNE_URL+":"+String.valueOf(server.getPort()));    
     }    
 
     @Test(expectedExceptions = NoConnectionToJcommuneException.class)
     public void connectWhenJCommuneOffline() throws Exception {        
-        // Find free port
-        ServerSocket socket = new ServerSocket(0);
+        ServerSocket socket = new ServerSocket(0);// Find free port
         socket.close();          
         // Try connect to nonexistent server
-        notifier.notifyAboutBranchDelete(JCOMMUNE_URL+":"+String.valueOf(socket.getLocalPort()), branch);
-   }
+        notifier.notifyAboutBranchDelete(JCOMMUNE_URL + ":" + String.valueOf(socket.getLocalPort()), createBranch());
+    }
+
+    private PoulpeBranch createBranch() {
+        PoulpeBranch branch = new PoulpeBranch();
+        branch.setId(BRANCH_ID);
+        return branch;
+    }
+
+    private PoulpeSection createSection() {
+        PoulpeSection section = new PoulpeSection();
+        section.setId(SECTION_ID);
+        return section;
+    }
 }
