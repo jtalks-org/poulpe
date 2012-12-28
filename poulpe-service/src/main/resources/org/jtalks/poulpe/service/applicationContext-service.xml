@@ -73,11 +73,11 @@
     <constructor-arg index="0" ref="sectionDao"/>
     <constructor-arg index="1" ref="branchDao"/>
     <constructor-arg index="2" ref="componentDao"/>
-    <constructor-arg index="3" ref="jcommuneHttpNotifier"/>
+    <constructor-arg index="3" ref="jcommuneNotifier"/>
   </bean>
   <bean id="componentService" class="org.jtalks.poulpe.service.transactional.TransactionalComponentService">
     <constructor-arg index="0" ref="componentDao"/>
-    <property name="jCommuneNotifier" ref="jcommuneHttpNotifier"/>
+    <property name="jCommuneNotifier" ref="jcommuneNotifier"/>
   </bean>
   <bean id="sectionService" class="org.jtalks.poulpe.service.transactional.TransactionalSectionService">
     <constructor-arg index="0" ref="sectionDao"/>
@@ -111,7 +111,7 @@
     <constructor-arg index="1" ref="userDao"/>
   </bean>
 
-  <bean id="jcommuneHttpNotifier" class="org.jtalks.poulpe.service.JcommuneHttpNotifier">
+  <bean id="jcommuneNotifier" class="org.jtalks.poulpe.service.rest.JCommuneNotifierImpl">
     <constructor-arg index="0" ref="userDao"/>
   </bean>
 

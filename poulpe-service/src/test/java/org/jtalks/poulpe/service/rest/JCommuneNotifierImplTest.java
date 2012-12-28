@@ -35,7 +35,7 @@ public class JCommuneNotifierImplTest {
    
     @BeforeClass
     private void beforeTestCase() throws Exception { 
-        sut = spy(new JCommuneNotifierImpl());
+        sut = spy(new JCommuneNotifierImpl(null));
         doNothing().when(sut).notifyJCommune(any(String.class), any(Method.class));
     }
            

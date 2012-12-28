@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service.rest;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.JCommuneNotifier;
@@ -55,7 +56,11 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
      */
     private static final int CONNECTION_TIMEOUT = 5000;   
     private final Logger logger = LoggerFactory.getLogger(getClass());
+    private final UserDao userDao;
 
+    public JCommuneNotifierImpl(UserDao userDao) {
+        this.userDao = userDao;
+    }
     /**
      * {@inheritDoc}
      */
@@ -112,8 +117,11 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
     @VisibleForTesting
     protected void notifyJCommune(String url, Method method) 
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException {               
-        logSendRequest(url, method);             
-        ClientResource clientResource = new ClientResource(new Context(), url);                
+        logSendRequest(url, method);
+        
+        String adminPassword = userDao.getByUsername("admin").getPassword();
+        
+        ClientResource clientResource = new ClientResource(new Context(), url + "?password=" + adminPassword);                
         /*
          * How to set parameters described here:
          * http://wiki.restlet.org/docs_2.1/13-restlet/27-restlet/325-restlet/37-restlet.html
