@@ -58,6 +58,9 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserDao userDao;
 
+    /**
+     * {@inheritDoc}
+     */
     public JCommuneNotifierImpl(UserDao userDao) {
         this.userDao = userDao;
     }
@@ -121,7 +124,7 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
         
         String adminPassword = userDao.getByUsername("admin").getPassword();
         
-        ClientResource clientResource = new ClientResource(new Context(), url + "?password=" + adminPassword);                
+        ClientResource clientResource = new ClientResource(new Context(), url + "?password=" + adminPassword);
         /*
          * How to set parameters described here:
          * http://wiki.restlet.org/docs_2.1/13-restlet/27-restlet/325-restlet/37-restlet.html
