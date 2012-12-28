@@ -14,25 +14,22 @@
  */
 package org.jtalks.poulpe.service.rest;
 
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.spy;
-
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.restlet.data.Method;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.spy;
 /**
  * Functional tests for JCommuneNotifierImpl class
  * 
  * @author Evgeny Kapinos
  */
 public class JCommuneNotifierImplTest {
-        
-    // We don't use interface, because this test 
-    // intended for this implementation only
-    private JCommuneNotifierImpl sut;  
-   
+    private JCommuneNotifierImpl sut;
+
     @BeforeClass
     private void beforeTestCase() throws Exception { 
         sut = spy(new JCommuneNotifierImpl(null));
@@ -40,12 +37,12 @@ public class JCommuneNotifierImplTest {
     }
            
     @Test
-    public void checkCorrectURL() throws Exception { 
+    public void shouldNotifyIfUrlIsSet() throws Exception {
         sut.notifyAboutReindexComponent("http://localhost/jcommune");
     }
     
     @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
-    public void checkIncorrectURL() throws Exception {                      
+    public void shouldThrowIfUrlIsNotSet() throws Exception {
         sut.notifyAboutReindexComponent("");
     }
     
