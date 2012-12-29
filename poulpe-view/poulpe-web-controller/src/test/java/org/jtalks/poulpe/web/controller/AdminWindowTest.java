@@ -148,4 +148,10 @@ public class AdminWindowTest {
         testOnShow("WEB-INF/pages/server_info.zul");
     }
 
+    @Test
+    public void onShowJcommuneMockSettingsOpensCorrectZul(){
+        adminWindow.onShowJcommuneMockSettings();
+        testOnShow("WEB-INF/pages/forum/JcommuneMockSettings.zul");
+    }
+
 }

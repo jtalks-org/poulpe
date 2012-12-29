@@ -5,75 +5,80 @@
     xsi:schemaLocation="http://www.zkoss.org/2005/zul http://www.zkoss.org/2005/zul/zul.xsd">
   <?link rel="stylesheet" type="text/css" href="/resources/css/all.css"?>
   <zscript language="Java">
-	void open() {
-		Treeitem it = self;
-		if (it.isOpen()) {
-			it.setOpen(false);
-		} else {
-			it.setOpen(true);
-		}
-	}
+    void open() {
+    Treeitem it = self;
+    if (it.isOpen()) {
+    it.setOpen(false);
+    } else {
+    it.setOpen(true);
+    }
+    }
   </zscript>
   <window id="adminWindow" viewModel="@id('vm') @init(adminWindowVm)" apply="org.zkoss.bind.BindComposer" width="100%"
           height="100%" onCreate="@command('onShowServerInfo')">
     <borderlayout>
       <north>
         <groupbox>
-          <a style="font-size=30px" label="${labels.admin.title}" onClick="@command('onShowServerInfo')" tooltiptext="${labels.admin.server_info}"/>
+          <a style="font-size=30px" label="${labels.admin.title}" onClick="@command('onShowServerInfo')"
+             tooltiptext="${labels.admin.server_info}"/>
           <!--<a href="#" onClick="@command('onChangeLocaleToRu')" image="/resources/img/russia.png"-->
-             <!--sclass="top-right-system-menu"/>-->
+          <!--sclass="top-right-system-menu"/>-->
           <!--<a href="#" onClick="@command('onChangeLocaleToEn')" image="/resources/img/great britain.png"-->
-             <!--sclass="top-right-system-menu"/>-->
+          <!--sclass="top-right-system-menu"/>-->
           <a href="/logout" label="Log Out" sclass="top-right-system-menu"/>
         </groupbox>
       </north>
       <west splittable="true" collapsible="true" flex="true" minsize="150" maxsize="300">
         <tree width="200px">
-            <treecols/>
-            <treechildren>
-              <treeitem open="false" label="Components" onClick="@command('onShowServerInfo')" >
-				<attribute name="onClick">open();</attribute>
-                <treechildren>
-                  <treeitem open="false" label="${labels.admin.components}" onClick="@command('onShowComponents')">
-					<attribute name="onClick">open();</attribute>
-                    <treechildren children="@load(vm.components) @template('componentsModel')">
-                      <template name="componentsModel" var="component">
-                        <treeitem label="${component.name}" onClick="@command('onComponentClick',component = component)"
-                                  if="${component.componentType != vm.adminPanelType}" >
-						  <attribute name="onClick">open();</attribute>	
-						</treeitem>
-                      </template>
-                    </treechildren>
-                  </treeitem>        
-                  <treeitem label="${labels.admin.component_permissions}" onClick="@command('onShowGroupsPermissions')" >
-					<attribute name="onClick">open();</attribute>
-				  </treeitem>  	
-                </treechildren>
-              </treeitem>
-              <treeitem open="false" label="Users" onClick="@command('onShowServerInfo')" >
-				<attribute name="onClick">open();</attribute>
-                <treechildren>
-                  <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')" >
-					<attribute name="onClick">open();</attribute>
-				  </treeitem>
-                  <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')" >
-					<attribute name="onClick">open();</attribute>
-				  </treeitem>
-                  <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')" >
-					<attribute name="onClick">open();</attribute>
-				  </treeitem>
-                  <treeitem label="${labels.admin.user.personal_permissions}"
-                            onClick="@command('onShowPersonalPermissions')" >
-					<attribute name="onClick">open();</attribute>
-				  </treeitem>
-                </treechildren>
-              </treeitem>
-              <treeitem open="false" label="Experimental Features" visible="@load(vm.experimentalFeatureItemVisible)" onClick="@command('onShowServerInfo')">
-				<attribute name="onClick">open();</attribute>
-			  </treeitem>        
-              <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
-            </treechildren>
-          </tree>
+          <treecols/>
+          <treechildren>
+            <treeitem open="false" label="Components" onClick="@command('onShowServerInfo')">
+              <attribute name="onClick">open();</attribute>
+              <treechildren>
+                <treeitem open="false" label="${labels.admin.components}" onClick="@command('onShowComponents')">
+                  <attribute name="onClick">open();</attribute>
+                  <treechildren children="@load(vm.components) @template('componentsModel')">
+                    <template name="componentsModel" var="component">
+                      <treeitem label="${component.name}" onClick="@command('onComponentClick',component = component)"
+                                if="${component.componentType != vm.adminPanelType}">
+                        <attribute name="onClick">open();</attribute>
+                      </treeitem>
+                    </template>
+                  </treechildren>
+                </treeitem>
+                <treeitem label="${labels.admin.component_permissions}" onClick="@command('onShowGroupsPermissions')">
+                  <attribute name="onClick">open();</attribute>
+                </treeitem>
+              </treechildren>
+            </treeitem>
+            <treeitem open="false" label="Users" onClick="@command('onShowServerInfo')">
+              <attribute name="onClick">open();</attribute>
+              <treechildren>
+                <treeitem label="${labels.admin.users}" onClick="@command('onShowUsers')">
+                  <attribute name="onClick">open();</attribute>
+                </treeitem>
+                <treeitem label="${labels.admin.ban.users}" onClick="@command('onShowUserBanning')">
+                  <attribute name="onClick">open();</attribute>
+                </treeitem>
+                <treeitem label="${labels.admin.user.groups}" onClick="@command('onShowUserGroups')">
+                  <attribute name="onClick">open();</attribute>
+                </treeitem>
+                <treeitem label="${labels.admin.user.personal_permissions}"
+                          onClick="@command('onShowPersonalPermissions')">
+                  <attribute name="onClick">open();</attribute>
+                </treeitem>
+              </treechildren>
+            </treeitem>
+            <treeitem open="false" label="Experimental Features" visible="@load(vm.experimentalFeatureItemVisible)"
+                      onClick="@command('onShowServerInfo')">
+              <attribute name="onClick">open();</attribute>
+              <treechildren>
+                <treeitem label="JCommune Mock Settings" onClick="@command('onShowJcommuneMockSettings')"/>
+              </treechildren>
+            </treeitem>
+            <!--<treeitem open="false" label="${labels.admin.topic.types}" onClick="@command('onShowTopicTypes')" />-->
+          </treechildren>
+        </tree>
       </west>
       <center id="workArea" border="0"/>
     </borderlayout>

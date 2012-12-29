@@ -215,6 +215,15 @@ public class AdminWindow {
     }
 
     /**
+     * Shows the page where user can configure JCommune Mock and how it reacts.
+     * @see JcommuneMockSettingsVm
+     */
+    @Command
+    public void onShowJcommuneMockSettings() {
+        windowManager.open("WEB-INF/pages/forum/JcommuneMockSettings.zul");
+    }
+
+    /**
      * @param windowManager the new window manager
      */
     public void setWindowManager(WindowManager windowManager) {
