@@ -111,7 +111,7 @@ public class DbTableCommonParametersTest {
     @Test(groups = { "databasebackup" })
     public void getCommonParameterMapTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "tableName");
-        assertEquals(testObject.getCommonParameterMap(), expectedCommonParameterMap);
+        assertEquals(testObject.getCommonParameters(), expectedCommonParameterMap);
         verify(statement).close();
         verify(resultSet).close();
         verify(connection).close();

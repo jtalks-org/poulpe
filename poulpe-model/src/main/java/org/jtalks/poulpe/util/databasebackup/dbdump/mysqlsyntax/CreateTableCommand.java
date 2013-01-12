@@ -83,7 +83,7 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      *             Is thrown in case any errors during work with database occur.
      */
     private StringBuilder getCommonParameters() throws SQLException {
-        Map<String, String> parameters = dbTable.getCommonParameterMap();
+        Map<String, String> parameters = dbTable.getCommonParameters();
         StringBuilder otherTableParameters = new StringBuilder();
         for (String key : parameters.keySet()) {
             otherTableParameters.append(" " + key + "=" + parameters.get(key));
