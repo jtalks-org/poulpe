@@ -247,7 +247,7 @@ public enum SqlTypes {
      */
     private SqlTypes(final int[] jdbcSqlTypeArray, final boolean hasSize, final boolean textBased) {
         assert (jdbcSqlTypeArray != null) : "jdbcSqlTypeArray must not be null.";
-        this.jdbcSqlType = jdbcSqlTypeArray;
+        this.jdbcSqlType = jdbcSqlTypeArray.clone();
         this.hasSize = hasSize;
         this.textBased = textBased;
 

@@ -1,3 +1,17 @@
+/**
+ * Copyright (C) 2011  JTalks.org Team
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 2.1 of the License, or (at your option) any later version.
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this library; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+ */
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.DatabaseMetaData;
@@ -35,7 +49,7 @@ public class DbTableKeys {
      *            a name of the table to be dumped.
      */
     public DbTableKeys(final DataSource dataSource, final String tableName) {
-        Validate.notNull(dataSource, "dataSource parameter mustnot be null.");
+        Validate.notNull(dataSource, "dataSource parameter must not be null.");
         Validate.notEmpty(tableName, "tableName parameter must not be empty.");
         this.dataSource = dataSource;
         this.tableName = tableName;
@@ -56,14 +70,15 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                                throws SQLException {
+                        	throws SQLException {
                             return dmd.getIndexInfo(null, null, tableName, true, true);
                         }
 
                         @Override
                         public void addKeyToSet(final ResultSet rs, final Set<TableKey> keySet) throws SQLException {
                             if (rs.getString(INDEX_NAME) != null && rs.getString(COLUMN_NAME) != null) {
-                                final UniqueKey key = new UniqueKey(rs.getString(INDEX_NAME), rs.getString(COLUMN_NAME));
+                                final UniqueKey key = 
+                                		new UniqueKey(rs.getString(INDEX_NAME), rs.getString(COLUMN_NAME));
                                 if (!isPrimaryKey(key)) {
                                     keySet.add(key);
                                 }
@@ -112,7 +127,7 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                                throws SQLException {
+                            throws SQLException {
                             return dmd.getPrimaryKeys(null, null, tableName);
                         }
 
@@ -146,7 +161,7 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                                throws SQLException {
+                            throws SQLException {
                             return dmd.getImportedKeys(null, null, tableName);
                         }
 
