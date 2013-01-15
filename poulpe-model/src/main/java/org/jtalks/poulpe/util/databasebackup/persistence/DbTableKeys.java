@@ -70,15 +70,15 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                        	throws SQLException {
+                                throws SQLException {
                             return dmd.getIndexInfo(null, null, tableName, true, true);
                         }
 
                         @Override
                         public void addKeyToSet(final ResultSet rs, final Set<TableKey> keySet) throws SQLException {
                             if (rs.getString(INDEX_NAME) != null && rs.getString(COLUMN_NAME) != null) {
-                                final UniqueKey key = 
-                                		new UniqueKey(rs.getString(INDEX_NAME), rs.getString(COLUMN_NAME));
+                                final UniqueKey key =
+                                        new UniqueKey(rs.getString(INDEX_NAME), rs.getString(COLUMN_NAME));
                                 if (!isPrimaryKey(key)) {
                                     keySet.add(key);
                                 }
@@ -127,7 +127,7 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                            throws SQLException {
+                                throws SQLException {
                             return dmd.getPrimaryKeys(null, null, tableName);
                         }
 
@@ -161,7 +161,7 @@ public class DbTableKeys {
                     tableName, new TableKeyPerformer() {
                         @Override
                         public ResultSet getResultSet(final DatabaseMetaData dmd, final String tableName)
-                            throws SQLException {
+                                throws SQLException {
                             return dmd.getImportedKeys(null, null, tableName);
                         }
 

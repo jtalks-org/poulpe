@@ -12,6 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.DatabaseMetaData;
@@ -21,7 +22,6 @@ import java.util.Set;
 
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
-import org.springframework.jdbc.support.MetaDataAccessException;
 
 import com.google.common.collect.Sets;
 
@@ -30,9 +30,9 @@ import com.google.common.collect.Sets;
  * rid of duplication while obtaining different types of keys (generally Primary, Foreign and Unique).
  * 
  * @author Evgeny Surovtsev
- * 
  */
 final class KeyListProcessor implements DatabaseMetaDataCallback {
+
     /**
      * Initializes KeyListProcessor with given table name and TableKeyPerformer.
      * 
@@ -41,7 +41,9 @@ final class KeyListProcessor implements DatabaseMetaDataCallback {
      * @param tableKeyPerformer
      *            An instance of specific Key Performer (Strategy).
      */
-    public KeyListProcessor(final String tableName, final TableKeyPerformer tableKeyPerformer) {
+    public KeyListProcessor(
+            final String tableName, final TableKeyPerformer tableKeyPerformer) {
+
         super();
         assert tableKeyPerformer != null;
         assert tableName != null;
@@ -50,21 +52,23 @@ final class KeyListProcessor implements DatabaseMetaDataCallback {
     }
 
     @Override
-    public Object processMetaData(final DatabaseMetaData dmd) throws SQLException {
+    public Object processMetaData(final DatabaseMetaData dmd)
+            throws SQLException {
+
         final Set<TableKey> tableKeySet = Sets.newHashSet();
         ResultSet rs = null;
-		try {
-			rs = tableKeyPerformer.getResultSet(dmd, tableName);
-			while (rs.next()) {
-				tableKeyPerformer.addKeyToSet(rs, tableKeySet);
-			}
-		} catch (SQLException e) {
-			throw new SQLException(e);
-		} finally {
-			if (rs != null) {
-				rs.close();
-			}
-		}
+        try {
+            rs = tableKeyPerformer.getResultSet(dmd, tableName);
+            while (rs.next()) {
+                tableKeyPerformer.addKeyToSet(rs, tableKeySet);
+            }
+        } catch (SQLException e) {
+            throw new SQLException(e);
+        } finally {
+            if (rs != null) {
+                rs.close();
+            }
+        }
         return tableKeySet;
     }
 
