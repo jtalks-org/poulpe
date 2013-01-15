@@ -97,7 +97,7 @@ public class Jcommune extends Component {
      */
     public String getUrl() {
         String url = getProperty(URL_PROPERTY);
-        if(url != null && !url.startsWith(URL_PROTOCOL)){
+        if(!StringUtils.isBlank(url) && !url.startsWith(URL_PROTOCOL)){
             url = URL_PROTOCOL + url;
         }
         return StringUtils.removeEnd(url, URL_SUFFIX);
