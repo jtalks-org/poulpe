@@ -42,8 +42,62 @@ public class JCommuneNotifierImplTest {
     }
     
     @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
-    public void shouldThrowIfUrlIsNotSet() throws Exception {
+    public void notifyAboutReindexNoUrl() throws Exception {
         sut.notifyAboutReindexComponent("");
     }
-    
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutReindexUrlIsIsNull() throws Exception {
+        sut.notifyAboutReindexComponent(null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutReindexUrlOnlySpaces() throws Exception {
+        sut.notifyAboutReindexComponent("   ");
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutSectionNoUrl() throws Exception {
+        sut.notifyAboutSectionDelete("", null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutSectionUrlIsNull() throws Exception {
+        sut.notifyAboutSectionDelete(null, null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutSectionUrlOnlySpaces() throws Exception {
+        sut.notifyAboutSectionDelete("   ", null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutBranchNoUrl() throws Exception {
+        sut.notifyAboutBranchDelete("", null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutBranchUrlIsNull() throws Exception {
+        sut.notifyAboutBranchDelete(null, null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutBranchUrlOnlySpaces() throws Exception {
+        sut.notifyAboutBranchDelete("   ", null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutComponentNoUrl() throws Exception {
+        sut.notifyAboutComponentDelete("");
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutComponentUrlIsNull() throws Exception {
+        sut.notifyAboutComponentDelete(null);
+    }
+
+    @Test(expectedExceptions = JcommuneUrlNotConfiguredException.class)
+    public void notifyAboutComponentUrlOnlySpaces() throws Exception {
+        sut.notifyAboutComponentDelete("   ");
+    }
 }

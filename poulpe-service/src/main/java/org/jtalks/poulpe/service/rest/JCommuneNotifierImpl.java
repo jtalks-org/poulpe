@@ -112,10 +112,9 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
      * Notifies JCommune that an element is about to be deleted (for instance Component, Branch, Section).
      *
      * @param url full URL for REST request  
-     * @param delete or post method, see {@link Method}
+     * @param method delete or post method, see {@link Method}
      * @throws NoConnectionToJcommuneException some connection problems happened, while trying to notify JCommune
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
-     * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
     @VisibleForTesting
     protected void notifyJCommune(String url, Method method) 

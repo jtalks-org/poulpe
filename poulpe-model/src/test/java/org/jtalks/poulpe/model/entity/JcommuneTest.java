@@ -21,6 +21,7 @@ import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.assertNull;
 
 /**
  * @author Guram Savinov
@@ -28,6 +29,7 @@ import static org.testng.Assert.assertFalse;
 public class JcommuneTest {
     private static final String URL_WITH_SUFFIX = "http://javatalks.ru/";
     private static final String URL_WITHOUT_SUFFIX = "http://javatalks.ru";
+    private static final String URL_WITHOUT_PROTOCOL = "javatalks.ru";
 
     @Test(dataProvider = "provideFilledJcommune")
     public void testMoveSection(Jcommune jcommune) {
@@ -69,6 +71,30 @@ public class JcommuneTest {
     public void testGetUrlWithoutSuffix(Jcommune jcommune) {
         jcommune.setProperty(Jcommune.URL_PROPERTY, URL_WITHOUT_SUFFIX);
         assertEquals(jcommune.getUrl(), URL_WITHOUT_SUFFIX);
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetUrlWithoutProtocol(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, URL_WITHOUT_PROTOCOL);
+        assertEquals(jcommune.getUrl(), Jcommune.URL_PROTOCOL + URL_WITHOUT_PROTOCOL);
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetNullUrl(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, null);
+        assertNull(jcommune.getUrl());
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetEmptyUrl(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, "");
+        assertEquals(jcommune.getUrl(), "");
+    }
+
+    @Test(dataProvider = "provideFilledJcommune")
+    public void testGetUrlWithOnlySpaces(Jcommune jcommune) {
+        jcommune.setProperty(Jcommune.URL_PROPERTY, "   ");
+        assertEquals(jcommune.getUrl(), "   ");
     }
 
     @DataProvider
