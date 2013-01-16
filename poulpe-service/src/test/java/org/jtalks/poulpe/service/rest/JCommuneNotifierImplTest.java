@@ -23,7 +23,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.spy;
 /**
- * Functional tests for JCommuneNotifierImpl class
+ * Unit tests for JCommuneNotifierImpl class
  * 
  * @author Evgeny Kapinos
  */

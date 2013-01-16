@@ -183,7 +183,7 @@ public class JCommuneNotifierImpl implements JCommuneNotifier {
     /**
      * Logs all JCommune in the requests. 
      * @param url full URL for REST request  
-     * @param delete or post method, see {@link Method}
+     * @param method delete or post method, see {@link Method}
      */
     private void logSendRequest(String url, Method method){
         logger.info("Sending {} request to JCommune: [{}]", method, url);         
