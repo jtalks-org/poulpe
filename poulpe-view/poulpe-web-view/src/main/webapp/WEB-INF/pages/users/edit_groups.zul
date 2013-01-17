@@ -9,43 +9,45 @@
             border="normal" onCancel="self.visible=false" onClose="self.visible=false;event.stopPropagation();"
             forward="onOK=confirmSaveButton.onClick" closable="true" mode="modal"
             visible="@load(editGroupsVm.showDialog)" width="386px" height="auto">
-        <vbox>
-            <hbox>
-                <label value="${labels.users.grouplist.user}"/>
-                <label value="@load(editGroupsVm.userToEdit.username)"/>
-            </hbox>
+        <hbox>
+            <label value="${labels.users.grouplist.user}"/>
+            <label value="@load(editGroupsVm.userToEdit.username)"/>
+        </hbox>
 
-            <hbox>
-                <checkbox label="${labels.users.grouplist.table.filter.chosen}" checked="@bind(editGroupsVm.chosen)" onCheck="@global-command('filterGroups')"/>
-                <checkbox label="${labels.users.grouplist.table.filter.notChosen}" checked="@bind(editGroupsVm.notChosen)" onCheck="@global-command('filterGroups')"/>
-            </hbox>
-            <hbox>
-                <listbox id="groupsListbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true" height="auto" width="auto">
-                    <listhead sizable="true">
-                        <listheader width="80%" label="${labels.users.grouplist.table.header.groups}"/>
-                        <listheader width="20%" label="${labels.users.grouplist.table.header.status}"/>
-                    </listhead>
-                    <template name="model" var="groupBooleanPair">
-                        <listitem class="changedListItem" if="${groupBooleanPair.changed == true}">
-                            <listcell label="@load(groupBooleanPair.group.name)"/>
-                            <listcell >
-                                <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
-                            </listcell>
-                        </listitem>
-                        <listitem if="${groupBooleanPair.changed == false}">
-                            <listcell label="@load(groupBooleanPair.group.name)"/>
-                            <listcell>
-                                <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
-                            </listcell>
-                        </listitem>
-                    </template>
-                </listbox>
-            </hbox>
-        </vbox>
+        <hbox>
+            <checkbox label="${labels.users.grouplist.table.filter.chosen}" checked="@bind(editGroupsVm.chosen)"
+                      onCheck="@global-command('filterGroups')"/>
+            <checkbox label="${labels.users.grouplist.table.filter.notChosen}" checked="@bind(editGroupsVm.notChosen)"
+                      onCheck="@global-command('filterGroups')"/>
+        </hbox>
+
+        <listbox id="groupsListbox" model="@bind(editGroupsVm.groupsToShow)" vflex="true"  height="400px">
+            <listhead sizable="true">
+                <listheader width="80%" label="${labels.users.grouplist.table.header.groups}"/>
+                <listheader width="20%" label="${labels.users.grouplist.table.header.status}"/>
+            </listhead>
+            <template name="model" var="groupBooleanPair">
+                <listitem class="changedListItem" if="${groupBooleanPair.changed == true}">
+                    <listcell label="@load(groupBooleanPair.group.name)"/>
+                    <listcell>
+                        <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
+                    </listcell>
+                </listitem>
+                <listitem if="${groupBooleanPair.changed == false}">
+                    <listcell label="@load(groupBooleanPair.group.name)"/>
+                    <listcell>
+                        <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
+                    </listcell>
+                </listitem>
+            </template>
+        </listbox>
+
         <hbox align="end">
-            <button id="confirmSaveButton" label="${labels.item.save}" onClick="@global-command('saveUserGroupsChanges')"
+            <button id="confirmSaveButton" label="${labels.item.save}"
+                    onClick="@global-command('saveUserGroupsChanges')"
                     sclass="edit.user.saveButton"/>
-            <button label="${labels.window.cancel}" onClick="editGroupsDialog.visible=false;" sclass="edit.user.cancelButton"/>
+            <button label="${labels.window.cancel}" onClick="editGroupsDialog.visible=false;"
+                    sclass="edit.user.cancelButton"/>
         </hbox>
     </window>
 </zk>

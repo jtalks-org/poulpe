@@ -98,7 +98,7 @@ public class EditGroupsVm extends AbstractDialogVm {
      * Save changes command.
      */
     @GlobalCommand(SAVE_CHANGES)
-    @NotifyChange({SHOW_DIALOG})
+    @NotifyChange(SHOW_DIALOG)
     public void saveChanges() {
         List<Group> userGroups = userToEdit.getGroups();
         boolean changed = false;
@@ -137,12 +137,10 @@ public class EditGroupsVm extends AbstractDialogVm {
     }
 
     private void doFilter() {
-        groups.removeAll(groupsToShow);
-        groups.addAll(groupsToShow);
         groupsToShow = new ArrayList<GroupBooleanPair>(groups.size());
         for (GroupBooleanPair group : groups) {
             boolean isMember = group.isEnable();
-            if (chosen && isMember == chosen || notChosen && !isMember == notChosen) {
+            if ((chosen && isMember)|| (notChosen && !isMember)) {
                 groupsToShow.add(group);
             }
         }

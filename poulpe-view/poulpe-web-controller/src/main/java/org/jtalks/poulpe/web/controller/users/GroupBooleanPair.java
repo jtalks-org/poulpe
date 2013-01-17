@@ -73,17 +73,11 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
 
     @Override
     public int compareTo(GroupBooleanPair pair) {
-        String name1 = group.getName();
-        String name2 = pair.getGroup().getName();
-
-        Boolean isEnable1 = enable;
-        Boolean isEnable2 = pair.isEnable();
-
-        if (!isEnable1.equals(isEnable2)) {
-            return isEnable2.compareTo(isEnable1);
+        if (enable != pair.isEnable()) {
+            return ((Boolean)pair.isEnable()).compareTo(enable);
         } else {
             Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
-            return russianCollator.compare(name1, name2);
+            return russianCollator.compare(group.getName(), pair.getGroup().getName());
         }
     }
 }
