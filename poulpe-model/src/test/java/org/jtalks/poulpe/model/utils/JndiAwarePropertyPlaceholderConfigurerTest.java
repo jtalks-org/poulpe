@@ -38,10 +38,10 @@ public class JndiAwarePropertyPlaceholderConfigurerTest {
         //because we need to change System var which a baaad thing, we'll need to make sure that this variable is not
         //used by other tests and thus we name it this way.
         String propName = "JndiAwarePropertyPlaceholderConfigurerTest-TestPlaceholder1";
-        Properties properties = new Properties();//properties
-        properties.put(propName, "properties");//properties
-        System.setProperty(propName, "system");//system
-        givenTomcatContextWithProps(propName, "jndi");//jndi
+        Properties properties = new Properties();
+        properties.put(propName, "properties");
+        System.setProperty(propName, "system");
+        givenTomcatContextWithProps(propName, "jndi");
 
         assertEquals(sut.resolvePlaceholder(propName, properties, 0), "jndi");
     }
@@ -54,8 +54,8 @@ public class JndiAwarePropertyPlaceholderConfigurerTest {
     @Test
     public void looksInUsualPropertiesIfNotFoundInJndi() throws Exception {
         String propName = "JndiAwarePropertyPlaceholderConfigurerTest-TestPlaceholder2";
-        Properties properties = new Properties();//properties
-        properties.put(propName, "properties");//properties
+        Properties properties = new Properties();
+        properties.put(propName, "properties");
 
         assertEquals(sut.resolvePlaceholder(propName, properties, 0), "properties");
     }
