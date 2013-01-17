@@ -26,13 +26,28 @@ import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
+/**
+ * Class is a command (see {@link org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand} for details) which
+ * generates INSERT statements for table using MySQL syntax.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
-
+    /**
+     * Initializes a TableDataDump command with given DbTable as a data provider.
+     * 
+     * @param dbTable
+     *            a data provider for generating command's results.
+     */
     public TableDataDumpCommand(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected StringBuilder getHeader() {
         StringBuilder header = new StringBuilder();
@@ -44,6 +59,9 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
         return header;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected StringBuilder getData() throws SQLException {
         StringBuilder data = new StringBuilder();
