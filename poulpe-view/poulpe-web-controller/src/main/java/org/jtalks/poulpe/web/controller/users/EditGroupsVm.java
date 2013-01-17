@@ -21,7 +21,6 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.GroupService;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.section.dialogs.AbstractDialogVm;
-import org.zkoss.bind.annotation.BindingParam;
 import org.zkoss.bind.annotation.GlobalCommand;
 import org.zkoss.bind.annotation.NotifyChange;
 
@@ -41,7 +40,7 @@ public class EditGroupsVm extends AbstractDialogVm {
     private boolean notChosen = true;
     protected static final String GROUPS = "groupsToShow";
     private static final String EDIT_GROUPS = "editGroups";
-    private static final String FILTER_GROUPS="filterGroups";
+    private static final String FILTER_GROUPS = "filterGroups";
     private static final String SAVE_CHANGES = "saveUserGroupsChanges";
     private static final String USER_TO_EDIT = "userToEdit";
 
@@ -57,10 +56,13 @@ public class EditGroupsVm extends AbstractDialogVm {
     private final UsersVm usersVm;
 
     /**
-     * @param usersVm view model of parent window
+     * @param usersVm     view model of parent window
      * @param userService service instance to save changes
+     * @param groupService service instance to save changes
      */
-    public EditGroupsVm(@Nonnull UsersVm usersVm, @Nonnull UserService userService, @Nonnull GroupService groupService) {
+    public EditGroupsVm(@Nonnull UsersVm usersVm,
+                        @Nonnull UserService userService,
+                        @Nonnull GroupService groupService) {
         this.userService = userService;
         this.groupService = groupService;
         this.usersVm = usersVm;
@@ -68,6 +70,7 @@ public class EditGroupsVm extends AbstractDialogVm {
 
     /**
      * Dialog opening command.
+     * @throws NotFoundException on user not found
      */
     @GlobalCommand(EDIT_GROUPS)
     @NotifyChange({SHOW_DIALOG, GROUPS, USER_TO_EDIT})
@@ -122,6 +125,9 @@ public class EditGroupsVm extends AbstractDialogVm {
         closeDialog();
     }
 
+    /**
+     * Initialization method, data loading.
+     */
     private void init() {
         List<Group> allGroups = groupService.getAll();
         List<Group> userGroupList = userToEdit.getGroups();
@@ -136,17 +142,23 @@ public class EditGroupsVm extends AbstractDialogVm {
         Collections.sort(groupsToShow);
     }
 
+    /**
+     * Filter groups according to checkboxes state.
+     */
     private void doFilter() {
         groupsToShow = new ArrayList<GroupBooleanPair>(groups.size());
         for (GroupBooleanPair group : groups) {
             boolean isMember = group.isEnable();
-            if ((chosen && isMember)|| (notChosen && !isMember)) {
+            if ((chosen && isMember) || (notChosen && !isMember)) {
                 groupsToShow.add(group);
             }
         }
         Collections.sort(groupsToShow);
     }
 
+    /**
+     * Close dialog.
+     */
     private void closeDialog() {
         isShowDialog();
     }
@@ -159,7 +171,7 @@ public class EditGroupsVm extends AbstractDialogVm {
     }
 
     /**
-     * @param  chosen filter status to set
+     * @param chosen filter status to set
      */
     public void setChosen(boolean chosen) {
         this.chosen = chosen;
@@ -173,7 +185,7 @@ public class EditGroupsVm extends AbstractDialogVm {
     }
 
     /**
-     * @param  notChosen filter status to set
+     * @param notChosen filter status to set
      */
     public void setNotChosen(boolean notChosen) {
         this.notChosen = notChosen;

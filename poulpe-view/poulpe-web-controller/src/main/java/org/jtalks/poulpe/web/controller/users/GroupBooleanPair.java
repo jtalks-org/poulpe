@@ -71,6 +71,7 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
         return group;
     }
 
+    /* Sonar is fool */
     @Override
     public int compareTo(GroupBooleanPair pair) {
         if (enable != pair.isEnable()) {
