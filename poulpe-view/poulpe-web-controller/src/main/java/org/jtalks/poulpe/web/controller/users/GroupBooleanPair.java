@@ -71,7 +71,6 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
         return group;
     }
 
-    /* Sonar is fool */
     @Override
     public int compareTo(GroupBooleanPair pair) {
         if (enable != pair.isEnable()) {
@@ -80,5 +79,33 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
             Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
             return russianCollator.compare(group.getName(), pair.getGroup().getName());
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        GroupBooleanPair that = (GroupBooleanPair) o;
+
+        if (enable != that.enable) return false;
+        Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
+        if ((russianCollator.compare(group.getName(), that.getGroup().getName())) != 0) {
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = (enable ? 1 : 0);
+        result = 31 * result + (changed ? 1 : 0);
+        result = 31 * result + (group != null ? group.hashCode() : 0);
+        return result;
     }
 }
