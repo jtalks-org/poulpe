@@ -23,11 +23,13 @@ import org.zkoss.util.resource.Labels;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 /**
  * @author Leonid Kazancev
+ * @author Andrei Alikov
  */
 public class GroupValidator extends BeanValidator {
     private static final String DUPLICATED_GROUP_MESSAGE = "err.usergroups.name.same_name_violation";
@@ -36,7 +38,7 @@ public class GroupValidator extends BeanValidator {
     private final GroupService groupService;
 
     /**
-     * @param groupService to have access to database and check whether a mail already exists in DB
+     * @param groupService to have access to database and check whether a group already exists in DB
      */
     public GroupValidator(GroupService groupService) {
         this.groupService = groupService;
@@ -49,44 +51,34 @@ public class GroupValidator extends BeanValidator {
     public void validate(ValidationContext validationContext) {
         Group group = (Group) validationContext.getBindContext().getValidatorArg("group");
         String oldName = group.getName();
-        String name = (String) validationContext.getProperty().getValue();
-        group.setName(name);
-        boolean beanValidationFailed = beanValidationFails(validationContext, group);
+        String newName = (String) validationContext.getProperty().getValue();
+        boolean beanValidationFailed = beanValidationFails(validationContext, new Group(newName));
         if (!beanValidationFailed) {
-            checkForUniqueness(validationContext, name, group);
+            checkForUniqueness(validationContext, newName, oldName);
         }
-        group.setName(oldName);
     }
 
-    private void checkForUniqueness(ValidationContext validationContext, String name, Group group) {
-        long groupId = group.getId();
-        if (((groupId == 0) && isGroupWithThisNameExists(name))
-                || (!(groupId == 0) && isExistingGroupAreAnotherGroup(name, groupId))) {
+    private void checkForUniqueness(ValidationContext validationContext, String newName, String oldName) {
+        // if user didn't change the group name - nothing to validate
+        String trimmedNewName = newName.trim();
+        if (oldName != null && trimmedNewName.equals(oldName.trim())) {
+            return;
+        }
+
+        // in case of new group or changed name - try to find already existing group with the same name
+        List<Group> sameNameGroups = groupService.getExactlyByName(trimmedNewName);
+        if (sameNameGroups.size() > 0) {
             addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_GROUP_MESSAGE));
         }
     }
 
-    private boolean isGroupWithThisNameExists(String groupName) {
-        List<Group> groupList = groupService.getByName(groupName);
-        for (Group group : groupList) {
-            if (group.getName().equalsIgnoreCase(groupName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isExistingGroupAreAnotherGroup(String groupName, long id) {
-        return isGroupWithThisNameExists(groupName) && groupService.getByName(groupName).get(0).getId() != id;
-    }
-
     private boolean beanValidationFails(ValidationContext validationContext, Group group) {
-        Set<ConstraintViolation<Group>> set = validator.validateProperty(group, "name");
-        if (!set.isEmpty()) {
-            addInvalidMessage(validationContext, set.iterator().next().getMessage());
-            return true;
-        }
-        return false;
+        Set<ConstraintViolation<?>> violations =
+                new HashSet<ConstraintViolation<?>>(validator.validateProperty(group, "name"));
+
+        handleConstraintViolation(validationContext, violations);
+
+        return !violations.isEmpty();
     }
 
 }

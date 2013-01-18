@@ -38,9 +38,15 @@ public interface GroupService extends EntityService<Group> {
 
     /**
      * @param name to look up
-     * @return list of groups that names match the given name
+     * @return list of groups which names contains given name
      */
     List<Group> getByName(String name);
+
+    /**
+     * @param name to look up
+     * @return list of groups which names exactly match the given name
+     */
+    List<Group> getExactlyByName(String name);
 
     /**
      * Delete group

@@ -35,6 +35,7 @@ import java.util.List;
 public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
     private static final String FIND_BRANCHES_MODERATED_BY_GROUP = "findBranchesModeratedByGroup";
     private static final String FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS = "findAllGroups";
+    private static final String FIND_EXACTLY_BY_NAME = "findGroupExactlyByName";
 
     /**
      * {@inheritDoc}
@@ -56,6 +57,21 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
             return this.getAll();
         }
         Query query = getSession().getNamedQuery(FIND_GROUP_BY_NAME);
+        query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
+        return query.list();
+    }
+
+    /**
+     * Get the list of all groups which names exactly matches the specified name.
+     *
+     * @param name group name
+     * @return list of groups
+     * @throws IllegalArgumentException if name is null
+     */
+    @Override
+    public List<Group> getExactlyByName(String name) {
+        Assert.throwIfNull(name, "name");
+        Query query = getSession().getNamedQuery(FIND_EXACTLY_BY_NAME);
         query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
         return query.list();
     }

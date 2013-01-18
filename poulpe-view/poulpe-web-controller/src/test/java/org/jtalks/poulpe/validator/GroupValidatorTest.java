@@ -3,6 +3,7 @@ package org.jtalks.poulpe.validator;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.service.GroupService;
+import org.mockito.ArgumentMatcher;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -20,6 +21,7 @@ import static org.mockito.Mockito.*;
 
 /**
  * @author Leonid Kazancev
+ * @author Andrei Alikov
  */
 public class GroupValidatorTest {
     GroupValidator validator;
@@ -35,72 +37,95 @@ public class GroupValidatorTest {
         validator = new GroupValidator(groupService);
     }
 
-    private void givenBindContextReturnsNameAndGroupId(String name, long groupId) {
+    private void givenBindContextReturnsGroupAndNewName(String newName, Group group) {
         BinderImpl binder = mock(BinderImpl.class);
         BindContext bindContext = mock(BindContext.class);
-        Property property = new PropertyImpl("", "name", name);
+        Property property = new PropertyImpl("", "name", newName);
 
         when(context.getProperty()).thenReturn(property);
         when(context.getBindContext()).thenReturn(bindContext);
-        when(bindContext.getValidatorArg("group")).thenReturn(createGroupWithId(groupId));
+        when(bindContext.getValidatorArg("group")).thenReturn(group);
         when(bindContext.getBinder()).thenReturn(binder);
     }
 
     @Test
-    public void tooLongNameShouldFailValidation() {
-        givenBindContextReturnsNameAndGroupId(RandomStringUtils.randomAlphanumeric(255) + "name", 1);
+    public void tooLongNameTest() {
+        String longName = RandomStringUtils.randomAlphanumeric(255) + "name";
+        givenBindContextReturnsGroupAndNewName(longName, createGroupWithIdAndName(0, ""));
         validator.validate(context);
         verify(context).setInvalid();
     }
 
     @Test
-    public void duplicatedNameShouldFailValidation() throws Exception {
+    public void emptyGroupNameTest() {
+        givenBindContextReturnsGroupAndNewName("", createGroupWithIdAndName(0, ""));
+        validator.validate(context);
+        verify(context).setInvalid();
+    }
+
+    @Test
+    public void duplicatedNameTest() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
         group2.setName("someGroup");
 
-        givenBindContextReturnsNameAndGroupId(group1.getName(), group2.getId());
-        storeGroupsInMockedDb(group1, group2);
+        givenBindContextReturnsGroupAndNewName(group1.getName(), group2);
+        storeGroupsInMockedDb(group1);
         validator.validate(context);
         verify(context).setInvalid();
     }
 
     @Test
-    public void duplicatedGroupNamesWithAnotherCaseShouldFailValidation() throws Exception {
+    public void duplicatedGroupNamesWithAnotherCaseTest() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
-        group2.setName("GroUp1");
 
-        givenBindContextReturnsNameAndGroupId(group1.getName(), group2.getId());
-        storeGroupsInMockedDb(group1, group2);
+        givenBindContextReturnsGroupAndNewName("GroUp1", group2);
+        storeGroupsInMockedDb(group1);
         validator.validate(context);
         verify(context).setInvalid();
     }
 
 
     @Test
-    public void duplicatedGroupNamesWithAnotherCaseAndTwoWordsShouldFailValidation() throws Exception {
-        Group group1 = createGroupWithId(1);
-        Group group2 = createGroupWithId(2);
-        group1.setName("Group test");
-        group2.setName("Group Test");
+    public void duplicatedGroupNamesWithAnotherCaseAndTwoWordsTest() throws Exception {
+        Group group1 = createGroupWithIdAndName(1, "Group test");
+        Group group2 = createGroupWithIdAndName(2, "Some name");
 
-        givenBindContextReturnsNameAndGroupId(group1.getName(), group2.getId());
-        storeGroupsInMockedDb(group1, group2);
+        givenBindContextReturnsGroupAndNewName(group1.getName().toLowerCase(), group2);
+        storeGroupsInMockedDb(group1);
         validator.validate(context);
         verify(context).setInvalid();
     }
-
-
-
 
 
     @Test
     public void testTheSameNameValidation() throws Exception {
-        Group group = createGroupWithId(1);
-        givenBindContextReturnsNameAndGroupId(group.getName(), group.getId());
+        Group group = createGroupWithIdAndName(1, "myGroup");
+
+        givenBindContextReturnsGroupAndNewName(group.getName(), group);
+        storeGroupsInMockedDb(group);
+        validator.validate(context);
+        verify(context, never()).setInvalid();
+    }
+
+    @Test
+    public void testNullOldNameValidation() throws Exception {
+        Group group = createGroupWithIdAndName(1, null);
+
+        givenBindContextReturnsGroupAndNewName("new group", group);
+
+        validator.validate(context);
+        verify(context, never()).setInvalid();
+    }
+
+    @Test
+    public void nameWithSpacesTest() throws Exception {
+        Group group = createGroupWithIdAndName(1, "myGroup");
+
+        givenBindContextReturnsGroupAndNewName(" " + group.getName() + " ", group);
         storeGroupsInMockedDb(group);
         validator.validate(context);
         verify(context, never()).setInvalid();
@@ -111,9 +136,9 @@ public class GroupValidatorTest {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
-        group2.setName("group2");
-        givenBindContextReturnsNameAndGroupId("group3", group2.getId());
-        storeGroupsInMockedDb(group1, group2);
+
+        givenBindContextReturnsGroupAndNewName("group2", group2);
+        storeGroupsInMockedDb(group1);
         validator.validate(context);
         verify(context, never()).setInvalid();
     }
@@ -122,13 +147,33 @@ public class GroupValidatorTest {
         for (Group group : groups) {
             List<Group> groupList = new ArrayList<Group>();
             groupList.add(group);
-            when(groupService.getByName(group.getName())).thenReturn(groupList);
+            StringIgnoreCaseMatcher matcher = new StringIgnoreCaseMatcher(group.getName());
+            when(groupService.getExactlyByName(argThat(matcher))).thenReturn(groupList);
         }
     }
 
-    private Group createGroupWithId(long id) {
-        Group group = new Group("groupName", "");
+    private Group createGroupWithIdAndName(long id, String name) {
+        Group group = new Group(name, "");
         group.setId(id);
         return group;
+    }
+
+    private Group createGroupWithId(long id) {
+        return createGroupWithIdAndName(id, "groupName");
+    }
+
+    private final static class StringIgnoreCaseMatcher extends ArgumentMatcher<String> {
+        private String string;
+
+        StringIgnoreCaseMatcher(String string) {
+            this.string = string;
+        }
+
+        public boolean matches(Object string) {
+            if (string instanceof String) {
+                return this.string.equalsIgnoreCase((String) string);
+            }
+            return  false;
+        }
     }
 }

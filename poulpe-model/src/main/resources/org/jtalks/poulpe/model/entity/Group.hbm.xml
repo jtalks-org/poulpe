@@ -47,6 +47,10 @@
         <![CDATA[from Group g where g.name like concat ('%', :name, '%')]]>
     </query>
 
+    <query name="findGroupExactlyByName">
+        <![CDATA[from Group g where g.name = :name]]>
+    </query>
+
     <query name="findAllGroups">
         <![CDATA[from Group]]>
     </query>

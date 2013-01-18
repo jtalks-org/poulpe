@@ -80,6 +80,14 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
+    public List<Group> getExactlyByName(String name) {
+        return dao.getExactlyByName(name);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public void deleteGroup(Group group) throws NotFoundException {
         Assert.throwIfNull(group, "group");
         dao.delete(group);
@@ -101,6 +109,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public void saveGroup(Group group) {
         Assert.throwIfNull(group, "group");
+        group.setName(group.getName().trim());
         dao.saveOrUpdate(group);
     }
 
