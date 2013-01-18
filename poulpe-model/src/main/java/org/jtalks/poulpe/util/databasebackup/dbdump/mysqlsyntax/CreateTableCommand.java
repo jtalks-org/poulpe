@@ -29,13 +29,28 @@ import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 import com.google.common.collect.Lists;
 
+/**
+ * Class is a command (see {@link org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand} for details) which
+ * generates a CREATE TABLE statement using MySQL syntax.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class CreateTableCommand extends HeaderAndDataAwareCommand {
-
+    /**
+     * Initializes a CreateTable command with given DbTable as a data provider.
+     * 
+     * @param dbTable
+     *            a data provider for generating command's results.
+     */
     public CreateTableCommand(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected StringBuilder getHeader() {
         StringBuilder header = new StringBuilder();
@@ -50,6 +65,9 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         return header;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected StringBuilder getData() throws SQLException {
         StringBuilder data = new StringBuilder();
@@ -76,8 +94,6 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * {@link #getTableStructure()}). Currently the method returns ENGINE, COLLATE and AUTO_INCREMENT keys for the
      * CREATE TABLE statement. The method returns only those key which defined for the table.
      * 
-     * @param parameters
-     *            a parameters map where key is a parameter's name and value is a parameter's value.
      * @return A string which contains additional parameters for the table creating and their values.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -95,8 +111,6 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * Returns the list of table's columns description. For each column information about column's name, type and other
      * parameters returns. The information is provided in the form ready to be inserted into SQL CREATE TABLE statement.
      * 
-     * @param columnDescriptionList
-     *            a list of ColumnMetaData each of which describes and represents one column in the database.
      * @return A list of strings where each string represents description of one column.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
@@ -160,9 +174,14 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
     }
 
     /**
-     * Formats string representation of the table keys (Primary, foreign and unique) so it can be used in the SQL CREATE
-     * TABLE statement.
+     * Create string representation of the table keys (Primary and unique) based on provided template. This
+     * representation later will be used in the SQL CREATE TABLE statement.
      * 
+     * @param keySet
+     *            a set of unique keys for which a representation will be created.
+     * @param template
+     *            a format string which can have 2 place holders: First one is used for key name, second one is used for
+     *            column name which value is used as a key. For example of template see UNIQUE_KEY_TEMPLATE constant.
      * @return a string representation of the table keys
      * @throws SQLException
      *             if any error with database occurs
@@ -191,12 +210,6 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
 
     private final DbTable dbTable;
 
-    /**
-     * %1 - primaryKey.getColumnName().
-     */
     private static final String PRIMARY_KEY_TEMPLATE = "    PRIMARY KEY (%2$s)";
-    /**
-     * %1 - uniqueKey.getColumnName().
-     */
     private static final String UNIQUE_KEY_TEMPLATE = "    CONSTRAINT %1$s UNIQUE (%2$s)";
 }

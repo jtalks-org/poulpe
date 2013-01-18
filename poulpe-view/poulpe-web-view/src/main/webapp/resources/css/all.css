@@ -114,11 +114,8 @@
 }
 
 /* Edit user groups */
-#groupsListbox {
-    max-height: 450px;
-}
-
-.changedListItem {
-    background: #EFDCE4
+.changedListItem{
+    color: #EFDCE4 !important;
+    background: #EFDCE4 !important;
 }
 
