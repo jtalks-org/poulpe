@@ -3,15 +3,13 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 import java.sql.SQLException;
 
 import org.testng.Assert;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 public class HeaderAndDataAwareCommandTest {
-    @Test(groups = { "databasebackup" })
-    public void executeMethodCallsForHeaderAndData() throws SQLException {
-        final String getHeaderReturn = "getHeader method";
-        final String getDataReturn = "getData method";
-
-        HeaderAndDataAwareCommand testObject = new HeaderAndDataAwareCommand() {
+    @BeforeMethod
+    public void beforeMethod() {
+        sut = new HeaderAndDataAwareCommand() {
 
             @Override
             protected StringBuilder getHeader() {
@@ -24,10 +22,19 @@ public class HeaderAndDataAwareCommandTest {
             }
 
         };
-
-        String expectedOutput = getHeaderReturn + HeaderAndDataAwareCommand.LINEFEED + getDataReturn
-                + HeaderAndDataAwareCommand.LINEFEED + HeaderAndDataAwareCommand.LINEFEED;
-
-        Assert.assertEquals(expectedOutput, testObject.execute().toString());
     }
+
+    @Test(groups = { "databasebackup" })
+    public void executeHeaderAndDataAwareCommand() throws SQLException {
+        String expectedOutput = getHeaderReturn
+                + HeaderAndDataAwareCommand.LINEFEED
+                + getDataReturn
+                + HeaderAndDataAwareCommand.LINEFEED
+                + HeaderAndDataAwareCommand.LINEFEED;
+        Assert.assertEquals(expectedOutput, sut.execute().toString());
+    }
+
+    private HeaderAndDataAwareCommand sut;
+    private final String getHeaderReturn = "getHeader method";
+    private final String getDataReturn = "getData method";
 }

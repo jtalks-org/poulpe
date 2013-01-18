@@ -8,6 +8,7 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import org.jtalks.poulpe.util.databasebackup.TestUtil;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
@@ -19,6 +20,7 @@ import org.testng.annotations.BeforeMethod;
 
 import com.google.common.base.Predicate;
 import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
@@ -32,9 +34,10 @@ public class CreateTableCommandTest {
         dbTable = Mockito.mock(DbTable.class);
         Mockito.when(dbTable.getTableName()).thenReturn("tableName");
 
-        List<ColumnMetaData> tableStructure = Lists.newArrayList(
-                new ColumnMetaData("id", SqlTypes.INT),
-                new ColumnMetaData("name", SqlTypes.VARCHAR));
+        List<ColumnMetaData> tableStructure = ImmutableList.of(
+                new ColumnMetaData("id", SqlTypes.INT).setAutoincrement(true).setComment("comment"),
+                new ColumnMetaData("name", SqlTypes.VARCHAR).setSize(32).setNullable(true)
+                        .setDefaultValue("defaultValue"));
         Mockito.when(dbTable.getStructure()).thenReturn(tableStructure);
 
         Set<UniqueKey> primaryKeys = ImmutableSet.of(new UniqueKey("IDKEY", "id"));
@@ -50,40 +53,20 @@ public class CreateTableCommandTest {
     }
 
     @Test
-    public void CreateTableCommandExecuteTest() throws SQLException {
+    public void executeCreateTableCommand() throws SQLException {
         CreateTableCommand sut = new CreateTableCommand(dbTable);
         String expectedCreateTableStatement = "CREATE TABLE `tableName` ("
-                + "`id` INT NOT NULL,"
-                + "`name` VARCHAR NOT NULL,"
+                + "`id` INT NOT NULL AUTO_INCREMENT COMMENT 'comment',"
+                + "`name` VARCHAR(32) NULL DEFAULT 'defaultValue',"
                 + "PRIMARY KEY (`id`),"
                 + "CONSTRAINT KEY_NAME UNIQUE (`name`)"
                 + ") COLLATE=utf-8 AUTO_INCREMENT=5;";
 
-        Assert.assertEquals(makeLowerAndRemoveSpaces(removeEmptyStringsAndSqlComments(sut.execute().toString())),
-                makeLowerAndRemoveSpaces(expectedCreateTableStatement));
+        Assert.assertEquals(
+                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(sut.execute().toString())),
+                TestUtil.makeLowerAndRemoveSpaces(expectedCreateTableStatement));
     }
 
-    private String makeLowerAndRemoveSpaces(final String str) {
-        return str.toLowerCase().replaceAll("\\s", "");
-    }
-
-    private String removeEmptyStringsAndSqlComments(final String actualOutput) {
-        Iterator<String> iterator = Iterables.filter(
-                Splitter.on(LINEFEED).omitEmptyStrings().trimResults().split(actualOutput),
-                new Predicate<String>() {
-                    @Override
-                    public boolean apply(@Nullable final String arg) {
-                        return arg != null && !"--".equals(arg.substring(0, 2));
-                    }
-                }).iterator();
-
-        StringBuilder result = new StringBuilder();
-        while (iterator.hasNext()) {
-            result.append(iterator.next());
-        }
-        return result.toString();
-    }
-
-    private DbTable dbTable = null;
+    private DbTable dbTable;
     private static final String LINEFEED = "\n";
 }
