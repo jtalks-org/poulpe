@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
@@ -52,7 +53,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @SuppressWarnings("unchecked")
     @Override
     public List<Group> getByName(String name) {
-        Assert.throwIfNull(name, "name");
+        Validate.notNull(name, "User Group name can't be null");
         if (StringUtils.isBlank(name)) {
             return this.getAll();
         }
@@ -62,17 +63,14 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     }
 
     /**
-     * Get the list of all groups which names exactly matches the specified name.
-     *
-     * @param name group name
-     * @return list of groups
-     * @throws IllegalArgumentException if name is null
+     * {@inheritDoc}
      */
     @Override
     public List<Group> getExactlyByName(String name) {
-        Assert.throwIfNull(name, "name");
+        Validate.notNull(name, "User Group name can't be null");
         Query query = getSession().getNamedQuery(FIND_EXACTLY_BY_NAME);
-        query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
+        // we should use lower case to search ignoring case
+        query.setString("name", SqlLikeEscaper.escapeControlCharacters(name.toLowerCase()));
         return query.list();
     }
 

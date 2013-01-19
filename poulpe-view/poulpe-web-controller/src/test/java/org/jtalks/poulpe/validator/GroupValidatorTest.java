@@ -49,7 +49,7 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void tooLongNameTest() {
+    public void tooLongNameIsInvalid() {
         String longName = RandomStringUtils.randomAlphanumeric(255) + "name";
         givenBindContextReturnsGroupAndNewName(longName, createGroupWithIdAndName(0, ""));
         validator.validate(context);
@@ -57,14 +57,14 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void emptyGroupNameTest() {
+    public void emptyGroupNameIsInvalid() {
         givenBindContextReturnsGroupAndNewName("", createGroupWithIdAndName(0, ""));
         validator.validate(context);
         verify(context).setInvalid();
     }
 
     @Test
-    public void duplicatedNameTest() throws Exception {
+    public void duplicatedNameIsInvalid() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
@@ -77,7 +77,7 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void duplicatedGroupNamesWithAnotherCaseTest() throws Exception {
+    public void duplicatedGroupNameWithAnotherCaseIsInvalid() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
@@ -90,7 +90,7 @@ public class GroupValidatorTest {
 
 
     @Test
-    public void duplicatedGroupNamesWithAnotherCaseAndTwoWordsTest() throws Exception {
+    public void duplicatedGroupNamesWithAnotherCaseAndTwoWordsIsInvalid() throws Exception {
         Group group1 = createGroupWithIdAndName(1, "Group test");
         Group group2 = createGroupWithIdAndName(2, "Some name");
 
@@ -102,7 +102,7 @@ public class GroupValidatorTest {
 
 
     @Test
-    public void testTheSameNameValidation() throws Exception {
+    public void changeGroupNameToTheSameIsValid() throws Exception {
         Group group = createGroupWithIdAndName(1, "myGroup");
 
         givenBindContextReturnsGroupAndNewName(group.getName(), group);
@@ -112,7 +112,7 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void testNullOldNameValidation() throws Exception {
+    public void changeGroupNameFromNullIsValid() throws Exception {
         Group group = createGroupWithIdAndName(1, null);
 
         givenBindContextReturnsGroupAndNewName("new group", group);
@@ -122,7 +122,18 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void nameWithSpacesTest() throws Exception {
+    public void changeGroupNameFromNullToDuplicatedIsInvalid() throws Exception {
+        Group group = createGroupWithIdAndName(1, null);
+        Group group2 = createGroupWithIdAndName(2, "myGroup");
+
+        givenBindContextReturnsGroupAndNewName(group2.getName(), group);
+        storeGroupsInMockedDb(group2);
+        validator.validate(context);
+        verify(context).setInvalid();
+    }
+
+    @Test
+    public void changeGroupNameToTheSameWithSpacesIsValid() throws Exception {
         Group group = createGroupWithIdAndName(1, "myGroup");
 
         givenBindContextReturnsGroupAndNewName(" " + group.getName() + " ", group);
@@ -132,7 +143,7 @@ public class GroupValidatorTest {
     }
 
     @Test
-    public void testTwoUniqueNames() throws Exception {
+    public void twoUniqueNamesAreValid() throws Exception {
         Group group1 = createGroupWithId(1);
         Group group2 = createGroupWithId(2);
         group1.setName("group1");
@@ -162,6 +173,9 @@ public class GroupValidatorTest {
         return createGroupWithIdAndName(id, "groupName");
     }
 
+    /**
+     * Argument matcher that matches String object with specified string ignoring case
+     */
     private final static class StringIgnoreCaseMatcher extends ArgumentMatcher<String> {
         private String string;
 

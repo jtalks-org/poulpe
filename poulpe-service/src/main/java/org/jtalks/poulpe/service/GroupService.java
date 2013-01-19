@@ -43,6 +43,7 @@ public interface GroupService extends EntityService<Group> {
     List<Group> getByName(String name);
 
     /**
+     * Returns list of group which name is equal ignoring case with given name
      * @param name to look up
      * @return list of groups which names exactly match the given name
      */

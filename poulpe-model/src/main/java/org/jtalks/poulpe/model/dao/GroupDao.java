@@ -44,7 +44,7 @@ public interface GroupDao extends ParentRepository<Group> {
     List<Group> getByName(String name);
 
     /**
-     * Get the list of all groups which names exactly matches the specified name.
+     * Get the list of all groups which name matches ignoring case the specified name.
      *
      * @param name group name
      * @return list of groups

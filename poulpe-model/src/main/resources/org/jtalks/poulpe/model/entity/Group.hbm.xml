@@ -48,7 +48,7 @@
     </query>
 
     <query name="findGroupExactlyByName">
-        <![CDATA[from Group g where g.name = :name]]>
+        <![CDATA[from Group g where lower(g.name) = :name]]>
     </query>
 
     <query name="findAllGroups">
