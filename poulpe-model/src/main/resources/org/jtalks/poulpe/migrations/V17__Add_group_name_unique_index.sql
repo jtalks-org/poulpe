@@ -1,1 +1,1 @@
-alter table `GROUPS` ADD CONSTRAINT UNIQUE INDEX `group_name_u_ind`(`name`)
+alter table `GROUPS` ADD CONSTRAINT UNIQUE INDEX `group_name_u_ind`(`name`);
