@@ -58,6 +58,12 @@ public class GroupValidator extends BeanValidator {
         }
     }
 
+    /**
+     * Checks if group renaming is valid
+     * @param validationContext validation context
+     * @param newName old name of the group
+     * @param oldName new name of the group
+     */
     private void checkForUniqueness(ValidationContext validationContext, String newName, String oldName) {
         // if user didn't change the group name - nothing to validate
         String trimmedNewName = newName.trim();
@@ -72,6 +78,12 @@ public class GroupValidator extends BeanValidator {
         }
     }
 
+    /**
+     * Checks if new group name is valid with default bean validator
+     * @param validationContext validation context
+     * @param group group object with new group name
+     * @return
+     */
     private boolean beanValidationFails(ValidationContext validationContext, Group group) {
         Set<ConstraintViolation<?>> violations =
                 new HashSet<ConstraintViolation<?>>(validator.validateProperty(group, "name"));
