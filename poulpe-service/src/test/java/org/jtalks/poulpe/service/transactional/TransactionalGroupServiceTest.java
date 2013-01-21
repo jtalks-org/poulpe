@@ -54,9 +54,9 @@
 //	}
 //
 //	@Test
-//	public void getByName() {
-//		service.getByName("name");
-//		verify(dao).getByName("name");
+//	public void getByNameContains() {
+//		service.getByNameContains("name");
+//		verify(dao).getByNameContains("name");
 //	}
 //
 //}

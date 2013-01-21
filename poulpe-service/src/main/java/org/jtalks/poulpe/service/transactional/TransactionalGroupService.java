@@ -72,16 +72,16 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getByName(String name) {
-        return dao.getByName(name);
+    public List<Group> getByNameContains(String name) {
+        return dao.getByNameContains(name);
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getExactlyByName(String name) {
-        return dao.getExactlyByName(name);
+    public List<Group> getByName(String name) {
+        return dao.getByName(name);
     }
 
     /**

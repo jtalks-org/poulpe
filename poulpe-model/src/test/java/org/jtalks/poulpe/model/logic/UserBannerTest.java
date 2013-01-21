@@ -37,21 +37,21 @@ public class UserBannerTest {
 
 	@Test
 	public void testGetBannedUsersGroup_withoutGroups() throws Exception {
-		doReturn(new ArrayList<Group>()).when(groupDao).getByName("Banned Users");
+		doReturn(new ArrayList<Group>()).when(groupDao).getByNameContains("Banned Users");
 		List<Group> bannedUsersGroupsActual = sut.getBannedUsersGroups();
 		assertEquals(bannedUsersGroupsActual.get(0).getName(), "Banned Users");
 	}
 
 	@Test
 	public void testGetBannedUsersGroup_withoutExistGroups() throws Exception {
-		doReturn(Arrays.asList(new Group("Banned Users"))).when(groupDao).getByName("Banned Users");
+		doReturn(Arrays.asList(new Group("Banned Users"))).when(groupDao).getByNameContains("Banned Users");
 		List<Group> bannedUsersGroupsActual = sut.getBannedUsersGroups();
 		assertEquals(bannedUsersGroupsActual.get(0).getName(), "Banned Users");
 	}
 
 	@Test(dataProvider = "provideGroupWithUsers")
 	public void testBanUsers(Group bannedUsersGroup) throws Exception {
-		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByName("Banned Users");
+		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByNameContains("Banned Users");
 		PoulpeUser bannedUser = new PoulpeUser("c", "c", "c", "c");
 		sut.banUsers(new UserList(Arrays.asList(bannedUser)));
 		assertTrue(bannedUsersGroup.getUsers().contains(bannedUser));
@@ -60,7 +60,7 @@ public class UserBannerTest {
 
 	@Test(dataProvider = "provideGroupWithUsers")
 	public void testRevokeBan(Group bannedUsersGroup) throws Exception {
-		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByName("Banned Users");
+		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByNameContains("Banned Users");
 		PoulpeUser userToRevokeBan = new PoulpeUser("a", "b", "c", "d");
 		sut.revokeBan(new UserList(Arrays.asList(userToRevokeBan)));
 		bannedUsersGroup.getUsers().removeAll(Arrays.asList(userToRevokeBan));
@@ -70,7 +70,7 @@ public class UserBannerTest {
 
 	@Test(dataProvider = "provideGroupWithUsers")
 	public void getAllBannedUsers(Group bannedUsersGroup) throws Exception {
-		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByName("Banned Users");
+		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByNameContains("Banned Users");
 		doReturn(bannedUsersGroup.getUsers()).when(userDao).getUsersInGroups(Arrays.asList(bannedUsersGroup));
 		assertEquals(bannedUsersGroup.getUsers(), userDao.getUsersInGroups(Arrays.asList(bannedUsersGroup)));
 	}

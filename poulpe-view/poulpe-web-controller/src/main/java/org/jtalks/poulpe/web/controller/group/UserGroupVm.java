@@ -112,7 +112,7 @@ public class UserGroupVm {
     @Command
     public void searchGroup() {
         groups.clear();
-        groups.addAll(groupService.getByName(searchString));
+        groups.addAll(groupService.getByNameContains(searchString));
     }
 
     /**

@@ -159,7 +159,7 @@ public class GroupValidatorTest {
             List<Group> groupList = new ArrayList<Group>();
             groupList.add(group);
             StringIgnoreCaseMatcher matcher = new StringIgnoreCaseMatcher(group.getName());
-            when(groupService.getExactlyByName(argThat(matcher))).thenReturn(groupList);
+            when(groupService.getByName(argThat(matcher))).thenReturn(groupList);
         }
     }
 

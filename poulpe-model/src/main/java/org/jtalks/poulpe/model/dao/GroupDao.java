@@ -41,7 +41,7 @@ public interface GroupDao extends ParentRepository<Group> {
      * @return list of groups
      * @throws IllegalArgumentException if name is null
      */
-    List<Group> getByName(String name);
+    List<Group> getByNameContains(String name);
 
     /**
      * Get the list of all groups which name matches ignoring case the specified name.
@@ -50,7 +50,7 @@ public interface GroupDao extends ParentRepository<Group> {
      * @return list of groups
      * @throws IllegalArgumentException if name is null
      */
-    List<Group> getExactlyByName(String name);
+    List<Group> getByName(String name);
 
     /**
      * Get the list of branches moderated by specified group.

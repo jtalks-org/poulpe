@@ -52,7 +52,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<Group> getByName(String name) {
+    public List<Group> getByNameContains(String name) {
         Validate.notNull(name, "User Group name can't be null");
         if (StringUtils.isBlank(name)) {
             return this.getAll();
@@ -66,7 +66,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
      * {@inheritDoc}
      */
     @Override
-    public List<Group> getExactlyByName(String name) {
+    public List<Group> getByName(String name) {
         Validate.notNull(name, "User Group name can't be null");
         Query query = getSession().getNamedQuery(FIND_EXACTLY_BY_NAME);
         // we should use lower case to search ignoring case

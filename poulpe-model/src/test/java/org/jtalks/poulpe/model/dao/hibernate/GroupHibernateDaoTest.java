@@ -90,69 +90,69 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
     }
 
     @Test
-    public void testGetByName() {
+    public void testGetByNameContains() {
         Group group = TestFixtures.group();
 
         saveAndEvict(group);
 
-        List<Group> actual = dao.getByName(group.getName());
+        List<Group> actual = dao.getByNameContains(group.getName());
         assertTrue(actual.size() == 1);
         assertReflectionEquals(actual.get(0), group);
     }
 
     @Test
-    public void testGetByEmptyName() {
+    public void testGetByNameContainsWithEmptyName() {
         Group group = TestFixtures.group();
         saveAndEvict(group);
 
         group = TestFixtures.group();
         saveAndEvict(group);
 
-        List<Group> actual = dao.getByName(NO_FILTER);
+        List<Group> actual = dao.getByNameContains(NO_FILTER);
         List<Group> all = dao.getAll();
         assertEquals(actual, all);
     }
 
     @Test
-    public void testGetExactlyByName() {
+    public void testGetByName() {
         Group group = TestFixtures.group();
 
         saveAndEvict(group);
 
-        List<Group> actual = dao.getExactlyByName(group.getName());
-        assertTrue(actual.size() == 1);
+        List<Group> actual = dao.getByName(group.getName());
+        assertEquals(actual.size(), 1);
         assertReflectionEquals(actual.get(0), group);
     }
 
     @Test
-    public void testGetExactlyByNameFailWithEmptyString() {
+    public void testGetByNameFailWithEmptyString() {
         Group group = TestFixtures.group();
 
         saveAndEvict(group);
 
-        List<Group> actual = dao.getExactlyByName(NO_FILTER);
-        assertTrue(actual.size() == 0);
+        List<Group> actual = dao.getByName(NO_FILTER);
+        assertEquals(actual.size(), 0);
     }
 
     @Test
-    public void testGetExactlyByNameLowerCase() {
+    public void testGetByNameLowerCase() {
         Group group = TestFixtures.group();
 
         saveAndEvict(group);
 
-        List<Group> actual = dao.getExactlyByName(group.getName().toLowerCase());
-        assertTrue(actual.size() == 1);
+        List<Group> actual = dao.getByName(group.getName().toLowerCase());
+        assertEquals(actual.size(), 1);
         assertReflectionEquals(actual.get(0), group);
     }
 
     @Test
-    public void testGetExactlyByNameUpperCase() {
+    public void testGetByNameUpperCase() {
         Group group = TestFixtures.group();
 
         saveAndEvict(group);
 
-        List<Group> actual = dao.getExactlyByName(group.getName().toUpperCase());
-        assertTrue(actual.size() == 1);
+        List<Group> actual = dao.getByName(group.getName().toUpperCase());
+        assertEquals(actual.size(), 1);
         assertReflectionEquals(actual.get(0), group);
     }
 

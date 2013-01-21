@@ -94,7 +94,7 @@ public class UserGroupVmTest {
     public void testSearchGroup() {
         viewModel.setSearchString(SEARCH_STRING);
         viewModel.searchGroup();
-        verify(groupService).getByName(SEARCH_STRING);
+        verify(groupService).getByNameContains(SEARCH_STRING);
     }
 
     @Test

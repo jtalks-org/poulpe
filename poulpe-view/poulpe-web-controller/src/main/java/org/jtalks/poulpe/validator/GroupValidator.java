@@ -72,7 +72,7 @@ public class GroupValidator extends BeanValidator {
         }
 
         // in case of new group or changed name - try to find already existing group with the same name
-        List<Group> sameNameGroups = groupService.getExactlyByName(trimmedNewName);
+        List<Group> sameNameGroups = groupService.getByName(trimmedNewName);
         if (sameNameGroups.size() > 0) {
             addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_GROUP_MESSAGE));
         }
