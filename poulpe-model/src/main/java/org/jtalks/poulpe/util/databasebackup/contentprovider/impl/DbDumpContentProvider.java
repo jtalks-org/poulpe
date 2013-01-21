@@ -26,7 +26,7 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.MySqlDataBaseFullDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.exceptions.DataBaseDoesntContainTablesException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseDoesntContainTablesException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
@@ -67,7 +67,7 @@ public class DbDumpContentProvider implements ContentProvider {
         try {
             List<String> tableNames = getDbTableNameLister().getPlainList();
             if (tableNames.size() == 0) {
-                throw new DataBaseDoesntContainTablesException();
+                throw new DatabaseDoesntContainTablesException();
             }
 
             result.append(getDbDumpCommand(getDbTableList(tableNames)).execute());

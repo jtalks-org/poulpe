@@ -29,6 +29,8 @@ import java.util.zip.GZIPInputStream;
 import junit.framework.Assert;
 
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
+import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -43,7 +45,7 @@ public class GzipContentProviderTest {
     public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
         content = "Test string for checking GzipContentProvider class";
 
-        DbDumpContentProvider contentProvider = mock(DbDumpContentProvider.class);
+        contentProvider = mock(DbDumpContentProvider.class);
         when(contentProvider.getContentFileNameExt()).thenReturn(".sql");
         when(contentProvider.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
 
@@ -62,6 +64,7 @@ public class GzipContentProviderTest {
     @Test
     public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
         BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(sut.getContent())));
+
         String actual = in2.readLine();
         in2.close();
 
@@ -78,6 +81,26 @@ public class GzipContentProviderTest {
         Assert.assertEquals(".sql.gz", sut.getContentFileNameExt());
     }
 
+    @SuppressWarnings("unchecked")
+    @Test(expectedExceptions = GzipPackingException.class)
+    public void errorsInChildProviderThrowException() throws FileDownloadException, IOException {
+        InputStream mockIOExceptionThrower = Mockito.mock(InputStream.class);
+        Mockito.when(mockIOExceptionThrower.read()).thenThrow(IOException.class);
+        when(contentProvider.getContent()).thenReturn(mockIOExceptionThrower);
+        sut.getContent();
+    }
+
+    @SuppressWarnings("unchecked")
+    @Test(expectedExceptions = GzipPackingException.class)
+    public void errorsWhenCloseResourcesThrowException() throws FileDownloadException, IOException {
+        InputStream mockIOExceptionThrower = Mockito.mock(InputStream.class);
+        Mockito.when(mockIOExceptionThrower.read()).thenReturn(-1);
+        Mockito.doThrow(IOException.class).when(mockIOExceptionThrower).close();
+        when(contentProvider.getContent()).thenReturn(mockIOExceptionThrower);
+        sut.getContent();
+    }
+
     private GzipContentProvider sut;
     private String content;
+    DbDumpContentProvider contentProvider;
 }
