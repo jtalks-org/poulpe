@@ -84,7 +84,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
         saveAndEvict(group1);
 
         List<Group> actual = dao.getAll();
-        assertTrue(actual.size()==2);
+        assertEquals(actual.size(), 2);
         assertReflectionEquals(actual.get(0), group0);
         assertReflectionEquals(actual.get(1), group1);
     }
@@ -96,7 +96,7 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
         saveAndEvict(group);
 
         List<Group> actual = dao.getByNameContains(group.getName());
-        assertTrue(actual.size() == 1);
+        assertEquals(actual.size(), 1);
         assertReflectionEquals(actual.get(0), group);
     }
 

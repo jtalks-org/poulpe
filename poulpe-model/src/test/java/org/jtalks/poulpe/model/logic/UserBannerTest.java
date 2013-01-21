@@ -51,7 +51,7 @@ public class UserBannerTest {
 
 	@Test(dataProvider = "provideGroupWithUsers")
 	public void testBanUsers(Group bannedUsersGroup) throws Exception {
-		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByNameContains("Banned Users");
+		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByName("Banned Users");
 		PoulpeUser bannedUser = new PoulpeUser("c", "c", "c", "c");
 		sut.banUsers(new UserList(Arrays.asList(bannedUser)));
 		assertTrue(bannedUsersGroup.getUsers().contains(bannedUser));
@@ -60,7 +60,7 @@ public class UserBannerTest {
 
 	@Test(dataProvider = "provideGroupWithUsers")
 	public void testRevokeBan(Group bannedUsersGroup) throws Exception {
-		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByNameContains("Banned Users");
+		doReturn(Arrays.asList(bannedUsersGroup)).when(groupDao).getByName("Banned Users");
 		PoulpeUser userToRevokeBan = new PoulpeUser("a", "b", "c", "d");
 		sut.revokeBan(new UserList(Arrays.asList(userToRevokeBan)));
 		bannedUsersGroup.getUsers().removeAll(Arrays.asList(userToRevokeBan));
