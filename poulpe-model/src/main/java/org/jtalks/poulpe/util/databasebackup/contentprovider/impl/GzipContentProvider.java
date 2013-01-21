@@ -23,8 +23,8 @@ import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
-import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
 
 /**
  * Compresses (gzip) any content provided by given ContentProvider.
@@ -40,8 +40,6 @@ public class GzipContentProvider implements ContentProvider {
      * @param contentProvider
      *            A content, provided by contentProvider.getContent() will be gzipped and returned via
      *            GzipContentProvider.getContent().
-     * @throws NullPointerException
-     *             If contentProvider is null.
      */
     GzipContentProvider(final ContentProvider contentProvider) {
         Validate.notNull(contentProvider, "contentProvider must not be null");
@@ -66,7 +64,7 @@ public class GzipContentProvider implements ContentProvider {
             }
             out.flush();
         } catch (IOException e) {
-            throw new DatabaseExportingException(e);
+            throw new GzipPackingException(e);
         } finally {
             try {
                 if (in != null) {
@@ -76,7 +74,7 @@ public class GzipContentProvider implements ContentProvider {
                     out.close();
                 }
             } catch (IOException e) {
-                throw new DatabaseExportingException(e);
+                throw new GzipPackingException(e);
             }
         }
 

@@ -15,38 +15,12 @@
 package org.jtalks.poulpe.util.databasebackup.exceptions;
 
 /**
- * The Exception is thrown when any error occurs while preparing content or sending file to downloading.
+ * The exception is throws when data base does not contain any table, so there is nothing to export. in the case of
+ * working system the situation is unreal and usually tells about critical errors during working with database.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public class FileDownloadException extends Exception {
-    private static final long serialVersionUID = -8562621852309532555L;
-
-    /**
-     * Default constructor for the FileDownloadException.
-     */
-    public FileDownloadException() {
-        super();
-    }
-
-    /**
-     * Constructor with predefined error message.
-     * 
-     * @param msg
-     *            Predefined error message.
-     */
-    public FileDownloadException(final String msg) {
-        super(msg);
-    }
-
-    /**
-     * Constructor creates an instance and uses error message from given Exception.
-     * 
-     * @param e
-     *            An exception which is used to construct FileDownloadException.
-     */
-    public FileDownloadException(final Exception e) {
-        super(e);
-    }
+public class DatabaseDoesntContainTablesException extends FileDownloadException {
+    private static final long serialVersionUID = 6267383481430935182L;
 }

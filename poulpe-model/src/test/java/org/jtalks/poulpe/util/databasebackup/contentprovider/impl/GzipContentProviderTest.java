@@ -23,9 +23,13 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
 
+import junit.framework.Assert;
+
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 /**
@@ -35,6 +39,17 @@ import org.testng.annotations.Test;
  * 
  */
 public class GzipContentProviderTest {
+    @BeforeMethod
+    public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
+        content = "Test string for checking GzipContentProvider class";
+
+        DbDumpContentProvider contentProvider = mock(DbDumpContentProvider.class);
+        when(contentProvider.getContentFileNameExt()).thenReturn(".sql");
+        when(contentProvider.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+
+        sut = new GzipContentProvider(contentProvider);
+    }
+
     /**
      * Passes a string as an input for DbContentProvider, gets the gzipped content from GzipContentProvider, unzips it
      * and checks that result is the same as initial String.
@@ -44,21 +59,25 @@ public class GzipContentProviderTest {
      * @throws IOException
      *             Must never happen
      */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
-        String expected = "Test string for checking GzipContentProvider class";
-
-        DbDumpContentProvider contentProvider = mock(DbDumpContentProvider.class);
-        when(contentProvider.getContentFileNameExt()).thenReturn(".sql");
-        when(contentProvider.getContent()).thenReturn(new ByteArrayInputStream(expected.getBytes("UTF-8")));
-
-        GzipContentProvider testObject = new GzipContentProvider(contentProvider);
-        InputStream input = testObject.getContent();
-
-        BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(input)));
+        BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(sut.getContent())));
         String actual = in2.readLine();
         in2.close();
 
-        assertEquals(actual, expected);
+        assertEquals(actual, content);
     }
+
+    @Test
+    public void getMimeContentTypeTest() {
+        Assert.assertEquals("application/x-gzip", sut.getMimeContentType());
+    }
+
+    @Test
+    public void getContentFileNameExtTest() {
+        Assert.assertEquals(".sql.gz", sut.getContentFileNameExt());
+    }
+
+    private GzipContentProvider sut;
+    private String content;
 }

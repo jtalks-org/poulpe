@@ -22,6 +22,7 @@ package org.jtalks.poulpe.util.databasebackup.exceptions;
  * 
  */
 public class EncodingToUtf8Exception extends FileDownloadException {
+    private static final long serialVersionUID = 8451212878325765803L;
 
     /**
      * Constructor creates an instance and uses error message from given Exception.
@@ -32,7 +33,4 @@ public class EncodingToUtf8Exception extends FileDownloadException {
     public EncodingToUtf8Exception(final Exception e) {
         super(e);
     }
-
-    private static final long serialVersionUID = 1L;
-
 }
