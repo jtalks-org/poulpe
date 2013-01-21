@@ -26,7 +26,6 @@ import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.component.ComponentList;
 import org.jtalks.poulpe.web.controller.component.ComponentsVm;
-import org.jtalks.poulpe.web.controller.zkutils.BooleanStringConverter;
 import org.zkoss.bind.annotation.Command;
 import org.zkoss.zul.Messagebox;
 

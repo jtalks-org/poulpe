@@ -34,6 +34,9 @@ import java.util.List;
 public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
     private static final long serialVersionUID = 20110138264143L;
 
+    /** Creates tree model with root item
+     * @param root top item {@link ZkTreeNode} for forum structure model
+     */
     public ForumStructureTreeModel(@Nonnull ZkTreeNode<ForumStructureItem> root) {
         super(root);
     }
@@ -112,7 +115,8 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * Removes a branch from the tree or does nothing if the branch wasn't found.
      *
      * @param branch a branch to remove from the tree
-     * @return a node that was containing that branch or {@code null} if no such node found and thus branch wasn't removed
+     * @return a node that was containing that branch or {@code null} if no such node found and thus branch wasn't
+     * removed
      */
     public ZkTreeNode<ForumStructureItem> removeBranch(@Nullable PoulpeBranch branch) {
         ForumStructureItem itemToRemove = new ForumStructureItem(branch);
@@ -130,6 +134,11 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return removeItem(nodeData);
     }
 
+    /**
+     * Deletes a {@link ForumStructureItem} from the tree or does nothing if the item can't be found.
+     * @param itemToRemove
+     * @return deleted {@link ForumStructureItem} or {@code null}
+     */
     private ZkTreeNode<ForumStructureItem> removeItem(ForumStructureItem itemToRemove) {
         ZkTreeNode<ForumStructureItem> nodeToRemove = (ZkTreeNode<ForumStructureItem>) find(itemToRemove);
         if (nodeToRemove != null) {
@@ -155,6 +164,11 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
         return sections;
     }
 
+    /**
+     * Add new section to tree model 
+     * @param section {@link PoulpeSection}
+     * @return created {@link ZkTreeNode}
+     */
     private ZkTreeNode<ForumStructureItem> createSectionNode(PoulpeSection section) {
         ForumStructureItem sectionItem = new ForumStructureItem(section);
         return new ZkTreeNode<ForumStructureItem>(sectionItem, new ArrayList<TreeNode<ForumStructureItem>>());
@@ -191,7 +205,9 @@ public class ForumStructureTreeModel extends ZkTreeModel<ForumStructureItem> {
      * @param targetNode the target node
      * @return {@code true} if dropping has no effect, otherwise return {@code false}
      */
-    public boolean noEffectAfterDropNode(TreeNode<ForumStructureItem> draggedNode, TreeNode<ForumStructureItem> targetNode) {
+    public boolean noEffectAfterDropNode(TreeNode<ForumStructureItem> draggedNode, 
+            TreeNode<ForumStructureItem> targetNode) {
+        
         ForumStructureItem draggedItem = draggedNode.getData();
         if (draggedItem.isBranch()) {
             TreeNode<ForumStructureItem> draggedParentNode = draggedNode.getParent();

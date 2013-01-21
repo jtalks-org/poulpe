@@ -17,14 +17,12 @@ package org.jtalks.poulpe.web.controller.section;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
-import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
 import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
-import org.zkoss.zk.ui.event.OpenEvent;
 import org.zkoss.zul.TreeNode;
 import org.zkoss.zul.Treeitem;
 
@@ -35,7 +33,8 @@ import static org.jtalks.poulpe.web.controller.section.TreeNodeFactory.buildForu
 /**
  * Is used in order to work with page that allows admin to manage sections and branches (moving them, reordering,
  * removing, editing, etc.). Note, that this class is responsible for back-end of the operations (presenter,
- * controller), so it stores all the changes to the database using {@link ComponentService}.
+ * controller), so it stores all the changes to the database using {@link org.jtalks.poulpe.service.ComponentService 
+ * ComponentService}.
  *
  * @author stanislav bashkirtsev
  * @author Guram Savinov
@@ -48,6 +47,9 @@ public class ForumStructureVm {
     private SelectedEntity<PoulpeBranch> selectedBranchForPermissions;
     private ForumStructureTreeModel treeModel;
 
+    /** 
+     * Constructor for initialization variables
+     */
     public ForumStructureVm(@Nonnull ForumStructureService forumStructureService, @Nonnull WindowManager windowManager,
                             @Nonnull SelectedEntity<PoulpeBranch> selectedBranchForPermissions) {
         this.forumStructureService = forumStructureService;
@@ -65,8 +67,9 @@ public class ForumStructureVm {
     }
 
     /**
-     * Global command to update tree on events from different view models. <a href="http://books.zkoss.org/wiki/ZK%20Developer's%20Reference/MVVM/Data%20Binding/Global%20Command%20Binding">More
-     * information about global commands</a>.
+     * Global command to update tree on events from different view models. <a href="http://books.zkoss.org/wiki/
+     * ZK%20Developer's%20Reference/MVVM/Data%20Binding/Global%20Command%20Binding">More information about global
+     * commands</a>.
      */
     @GlobalCommand
     @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
@@ -83,24 +86,29 @@ public class ForumStructureVm {
         BranchPermissionManagementVm.showPage(windowManager);
     }
 
+    /** Removes selected {@link PoulpeBranch} from tree model.*/
     public void removeBranchFromTree(PoulpeBranch branch) {
         treeModel.removeBranch(branch);
     }
 
+    /** Removes selected {@link PoulpeSection} from tree model.*/
     public void removeSectionFromTree(PoulpeSection section) {
         treeModel.removeSection(section);
     }
 
+    /** Updates selected {@link PoulpeBranch} in tree model and activate it.*/
     public void updateBranchInTree(PoulpeBranch branch) {
         treeModel.moveBranchIfSectionChanged(branch);
         selectedItemInTree = new ForumStructureItem(branch);
     }
 
+    /** Updates selected {@link PoulpeSection} in tree model and activate it.*/
     public void updateSectionInTree(PoulpeSection section) {
         treeModel.addIfAbsent(section);
         selectedItemInTree = new ForumStructureItem(section);
     }
 
+    /** Returns selected leaf in tree */
     public ForumStructureItem getSelectedItemInTree() {
         return selectedItemInTree;
     }
@@ -160,19 +168,29 @@ public class ForumStructureVm {
         }
     }
 
+    /**
+     * Returns current forum model
+     *  @return {@link ForumStructureTreeModel} 
+     */
     public ForumStructureTreeModel getTreeModel() {
         return treeModel;
     }
 
+    /** 
+     * Sets forum model
+     * @param treeModel {@link ForumStructureTreeModel} 
+     * */
     public void setTreeModel(ForumStructureTreeModel treeModel) {
         this.treeModel = treeModel;
     }
 
+    /** Expands selected node (process command from ZK) */
     @Command
     public void expandTree() {
         treeModel.expandTree();
     }
 
+    /** Collapses selected node (process command from ZK) */
     @Command
     public void collapseTree() {
         treeModel.collapseTree();

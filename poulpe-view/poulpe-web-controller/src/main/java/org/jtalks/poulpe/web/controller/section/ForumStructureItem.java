@@ -32,6 +32,7 @@ import javax.annotation.Nullable;
 public class ForumStructureItem {
     private final Entity item;
 
+    /** Initialize object without wrapped item ({@code null} value used) */
     public ForumStructureItem() {
         this(null);
     }

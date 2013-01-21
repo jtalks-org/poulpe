@@ -28,12 +28,18 @@ import java.util.List;
 public class GroupList {
     private final List<Group> groups = new ArrayList<Group>();
 
+    /**
+     * Clear current list and fill anew with received list 
+     * @param groups new list of groups
+     * @return {@code this}
+     */
     public GroupList setGroups(List<Group> groups) {
         this.groups.clear();
         this.groups.addAll(groups);
         return this;
     }
 
+    /** @return current groups */
     public List<Group> getGroups() {
         return groups;
     }

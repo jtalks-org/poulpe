@@ -32,11 +32,13 @@ public class SectionEditingDialog {
     private boolean showDialog;
     private PoulpeSection editedSection;
 
+    /** Constructor for initialization variables */
     public SectionEditingDialog(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
         this.forumStructureService = forumStructureService;
     }
 
+    /** Creates and opens new section dialog */
     @GlobalCommand
     @NotifyChange({EDITED_SECTION, SHOW_DIALOG})
     public void showNewSectionDialog() {
@@ -44,6 +46,7 @@ public class SectionEditingDialog {
         showDialog = true;
     }
 
+    /** Opens current section dialog */
     @GlobalCommand
     @NotifyChange({EDITED_SECTION, SHOW_DIALOG})
     public void showEditSectionDialog() {
@@ -51,6 +54,7 @@ public class SectionEditingDialog {
         showDialog = true;
     }
 
+    /** Updates current section in model and store it */
     @Command
     @NotifyChange(SHOW_DIALOG)
     public void save() {
@@ -58,6 +62,9 @@ public class SectionEditingDialog {
         storeNewSection(editedSection);
     }
 
+    /** Saves section through {@link jcommune} 
+     * @param section new {@link PoulpeSection} object 
+     */
     void storeNewSection(PoulpeSection section) {
         Jcommune jcommune = (Jcommune) (Object) forumStructureVm.getTreeModel().getRoot().getData();
         jcommune.addOrUpdateSection(section);
@@ -75,6 +82,7 @@ public class SectionEditingDialog {
         return result;
     }
 
+    /** @return {@link PoulpeSection} current edited section instance */
     public PoulpeSection getEditedSection() {
         return editedSection;
     }

@@ -23,17 +23,31 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * This is utility class. It implements only one static method {@link #main(String[])}
+ * with used by developers. During call {@code Launcher} starts built-in Jetty 
+ * {@link Server}, opens port {@value #CONNECTOR_PORT} and deploy this application. 
  * @author dionis
  *         7/6/12 2:49 AM
+ * @see <a href="http://habrahabr.ru/post/126066/">how to use it</a>
  */
 public class Launcher {
+    
     private static final Logger LOGGER = LoggerFactory.getLogger(Launcher.class);
-
+    private static final int CONNECTOR_PORT = 8888; 
+    
+    /** No need to create instances. Class implements only one static method {@link #main(String[])}  */
+    private Launcher(){}
+   
+    /** 
+     * Application entry point
+     * @param args the command line arguments (not used) 
+     * @throws Exception if server start failed 
+     */
     public static void main(String[] args) throws Exception {
         long start = System.currentTimeMillis();
         Server server = new Server();
         Connector connector = new SelectChannelConnector();
-        connector.setPort(8888);
+        connector.setPort(CONNECTOR_PORT);
 
         server.addConnector(connector);
         WebAppContext webAppContext = new WebAppContext();

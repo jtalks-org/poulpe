@@ -41,11 +41,13 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
     private final ForumStructureVm forumStructureVm;
     private final ForumStructureService forumStructureService;
 
+    /** Constructor for initialization variables */
     public DeleteSectionDialogVm(ForumStructureVm forumStructureVm, ForumStructureService forumStructureService) {
         this.forumStructureVm = forumStructureVm;
         this.forumStructureService = forumStructureService;
     }
 
+    /** Process delete section command from ZUL */
     @Command
     @NotifyChange(SHOW_DIALOG)
     public void confirmDeleteSectionWithContent() {
@@ -62,10 +64,15 @@ public class DeleteSectionDialogVm extends AbstractDialogVm {
         }
     }
 
+    /** 
+     * Shows error message box 
+     * @param message
+     */
     private void showError(String message) {
         Messagebox.show(getLabel(message), getLabel(DELETION_FAILED_DIALOG_TITLE), Messagebox.OK, Messagebox.ERROR);
     }
 
+    /** Sets flag of showing dialog, used by ZUL */
     @GlobalCommand
     @NotifyChange(SHOW_DIALOG)
     public void deleteSection() {
