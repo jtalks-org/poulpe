@@ -53,26 +53,34 @@ public class GroupValidator extends BeanValidator {
         String oldName = group.getName();
         String newName = (String) validationContext.getProperty().getValue();
         boolean beanValidationFailed = beanValidationFails(validationContext, new Group(newName));
-        if (!beanValidationFailed) {
+        if (!beanValidationFailed && nameWasChanged(newName, oldName)) {
             checkForUniqueness(validationContext, newName, oldName);
         }
     }
 
     /**
-     * Checks if group renaming is valid
+     * Checks if name of the group was changed
+     * @param newName new group name
+     * @param oldName old group name
+     * @return true and false otherwise
+     */
+    private boolean nameWasChanged(String newName, String oldName) {
+        String trimmedNewName = newName.trim();
+        if (oldName != null && trimmedNewName.equals(oldName.trim())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if group is unique
      * @param validationContext validation context
      * @param newName old name of the group
      * @param oldName new name of the group
      */
     private void checkForUniqueness(ValidationContext validationContext, String newName, String oldName) {
-        // if user didn't change the group name - nothing to validate
-        String trimmedNewName = newName.trim();
-        if (oldName != null && trimmedNewName.equals(oldName.trim())) {
-            return;
-        }
-
-        // in case of new group or changed name - try to find already existing group with the same name
-        List<Group> sameNameGroups = groupService.getByName(trimmedNewName);
+        List<Group> sameNameGroups = groupService.getByName(newName.trim());
         if (sameNameGroups.size() > 0) {
             addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_GROUP_MESSAGE));
         }
