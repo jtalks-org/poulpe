@@ -73,6 +73,20 @@ public class EmailValidatorTest {
     }
 
     @Test
+    public void blankEmailPatternShouldFailValidation() {
+        givenBindContextReturnsMailAndUserId("", 1);
+        validator.validate(context);
+        verify(context).setInvalid();
+    }
+
+    @Test
+    public void validEmailShouldPassValidation() {
+        givenBindContextReturnsMailAndUserId("some_email@somedomain.com", 1);
+        validator.validate(context);
+        verify(context, never()).setInvalid();
+    }
+
+    @Test
     public void duplicatedMailShouldFailValidation() throws Exception {
         PoulpeUser user1 = PoulpeUser.withId(1);
         PoulpeUser user2 = PoulpeUser.withId(2);

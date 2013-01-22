@@ -76,6 +76,7 @@ public class ValidationFailureHandler implements ValidationFailure {
      * Looks through a collection of saved ui elements with input data, and if
      * found one, which is violated according to gived {@link ValidationResult},
      * alerts a message near this element
+     * @param result validation result for ui elements
      */
     @Override
     public void validationFailure(ValidationResult result) {

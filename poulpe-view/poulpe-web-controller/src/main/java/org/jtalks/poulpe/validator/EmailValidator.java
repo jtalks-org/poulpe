@@ -18,11 +18,13 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.zkoss.bind.ValidationContext;
 import org.zkoss.bind.validator.AbstractValidator;
+import org.zkoss.bind.validator.BeanValidator;
 import org.zkoss.util.resource.Labels;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -32,12 +34,13 @@ import java.util.Set;
  *
  * @author Nickolay Polyarniy
  */
-public class EmailValidator extends AbstractValidator {
+public class EmailValidator extends BeanValidator {
     private static final String DUPLICATED_MAIL_MESSAGE = "err.users.edit.dublicate_email";
     private final Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
     private final UserService userService;
 
     /**
+     * Constructor
      * @param userService to have access to database and check whether a mail already exists in DB
      */
     public EmailValidator(UserService userService) {
@@ -51,15 +54,20 @@ public class EmailValidator extends AbstractValidator {
     public void validate(ValidationContext validationContext) {
         String email = (String) validationContext.getProperty().getValue();
         PoulpeUser user = (PoulpeUser) validationContext.getBindContext().getValidatorArg("user");
-        String oldEmail = user.getEmail();
-        user.setEmail(email);
-        boolean beanValidationFailed = beanValidationFails(validationContext, user);
-        user.setEmail(oldEmail);
+
+        boolean beanValidationFailed = beanValidationFails(validationContext, new PoulpeUser(user.getUsername(), email, "", ""));
+
         if (!beanValidationFailed) {
             checkForUniqueness(validationContext, email, user);
         }
     }
 
+    /**
+     * Checks if new user e-mail is unique
+     * @param validationContext the validation context
+     * @param email new e-mail of the existing user of e-mail of newly created user
+     * @param user changed/newly created user
+     */
     private void checkForUniqueness(ValidationContext validationContext, String email, PoulpeUser user) {
         PoulpeUser userWithSuchEmail = userService.getByEmail(email);
         if (userWithSuchEmail != null && userWithSuchEmail.getId() != user.getId()) {
@@ -69,13 +77,19 @@ public class EmailValidator extends AbstractValidator {
         }
     }
 
+    /**
+     * Checks if new user e-mail is valid with default bean validator
+     * @param validationContext validation context
+     * @param user user object with new e-mail
+     * @return true if validation failed, false otherwise
+     */
     private boolean beanValidationFails(ValidationContext validationContext, PoulpeUser user) {
-        Set<ConstraintViolation<PoulpeUser>> set = validator.validateProperty(user, "email");
-        if (!set.isEmpty()) {
-            addInvalidMessage(validationContext, set.iterator().next().getMessage());
-            return true;
-        }
-        return false;
+        Set<ConstraintViolation<?>> violations =
+                new HashSet<ConstraintViolation<?>>(validator.validateProperty(user, "email"));
+
+        handleConstraintViolation(validationContext, violations);
+
+        return !violations.isEmpty();
     }
 
 }

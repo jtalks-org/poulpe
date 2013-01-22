@@ -54,7 +54,7 @@ public class GroupValidator extends BeanValidator {
         String newName = (String) validationContext.getProperty().getValue();
         boolean beanValidationFailed = beanValidationFails(validationContext, new Group(newName));
         if (!beanValidationFailed && nameWasChanged(newName, oldName)) {
-            checkForUniqueness(validationContext, newName, oldName);
+            checkForUniqueness(validationContext, newName);
         }
     }
 
@@ -77,9 +77,8 @@ public class GroupValidator extends BeanValidator {
      * Checks if group is unique
      * @param validationContext validation context
      * @param newName old name of the group
-     * @param oldName new name of the group
      */
-    private void checkForUniqueness(ValidationContext validationContext, String newName, String oldName) {
+    private void checkForUniqueness(ValidationContext validationContext, String newName) {
         List<Group> sameNameGroups = groupService.getByName(newName.trim());
         if (sameNameGroups.size() > 0) {
             addInvalidMessage(validationContext, Labels.getLabel(DUPLICATED_GROUP_MESSAGE));
@@ -90,7 +89,7 @@ public class GroupValidator extends BeanValidator {
      * Checks if new group name is valid with default bean validator
      * @param validationContext validation context
      * @param group group object with new group name
-     * @return
+     * @return true if validation failed, false otherwise
      */
     private boolean beanValidationFails(ValidationContext validationContext, Group group) {
         Set<ConstraintViolation<?>> violations =
