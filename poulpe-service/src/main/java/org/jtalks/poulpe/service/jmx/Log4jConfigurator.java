@@ -28,6 +28,9 @@ import java.util.List;
  * from <a href="http://www.sureshpw.com/2012/04/dynamic-logging-with-log4j.html">here</a>.
  */
 public class Log4jConfigurator implements Log4jConfiguratorMXBean {
+    
+    /** {@inheritDoc} */
+    @Override
     public List<String> getLoggers() {
         List<String> list = new ArrayList<String>();
         for (Enumeration e = LogManager.getCurrentLoggers(); e.hasMoreElements(); ) {
@@ -39,6 +42,8 @@ public class Log4jConfigurator implements Log4jConfiguratorMXBean {
         return list;
     }
 
+    /** {@inheritDoc} */
+    @Override
     public String getLogLevel(String logger) {
         String level = "unavailable";
         if (StringUtils.isNotBlank(logger)) {
@@ -50,6 +55,8 @@ public class Log4jConfigurator implements Log4jConfiguratorMXBean {
         return level;
     }
 
+    /** {@inheritDoc} */
+    @Override
     public void setLogLevel(String logger, String level) {
         if (StringUtils.isNotBlank(logger) && StringUtils.isNotBlank(level)) {
             Logger log = Logger.getLogger(logger);

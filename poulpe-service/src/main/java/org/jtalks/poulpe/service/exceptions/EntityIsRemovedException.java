@@ -23,6 +23,9 @@ package org.jtalks.poulpe.service.exceptions;
  */
 public class EntityIsRemovedException extends Exception {
     
+    /**
+     * Constructs a new exception similar to the {@link Exception#Exception()} constructor.
+     */
     public EntityIsRemovedException() {
         super();
     }

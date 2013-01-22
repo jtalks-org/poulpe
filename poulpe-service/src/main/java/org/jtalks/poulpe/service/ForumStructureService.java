@@ -48,9 +48,9 @@ public interface ForumStructureService {
      * remove it from section
      *
      * @param branch a branch to be removed from database
-     * @throws {@link NoConnectionToJcommuneException}
-     * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
+     * @throws NoConnectionToJcommuneException
+     * @throws JcommuneRespondedWithErrorException
+     * @throws JcommuneUrlNotConfiguredException
      */
     void removeBranch(PoulpeBranch branch)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException;
@@ -70,15 +70,27 @@ public interface ForumStructureService {
      *
      * @param section a section to be removed from the database
      * @return the updated JCommune
-     * @throws {@link NoConnectionToJcommuneException}
-     * @throws {@link JcommuneRespondedWithErrorException}
-     * @throws {@link org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException}
+     * @throws NoConnectionToJcommuneException
+     * @throws JcommuneRespondedWithErrorException
+     * @throws JcommuneUrlNotConfiguredException
      */
     Jcommune deleteSectionWithBranches(PoulpeSection section)
         throws NoConnectionToJcommuneException,JcommuneRespondedWithErrorException,JcommuneUrlNotConfiguredException;
 
+    /**
+     * Deletes the specified section from its JCommune instance and move branches to anoter section.
+     *
+     * @param toRemove a section to be removed from the database
+     * @param toReceiveBranches a section which adopt branches from {@code toRemove} section 
+     */
     void deleteSectionAndMoveBranches(PoulpeSection toRemove, PoulpeSection toReceiveBranches);
 
+    /**
+     * Adds not persisted branch to specified section.
+     *
+     * @param inSection a section which adopt specified branch
+     * @param notYetSavedBranch non persisted branch 
+     */
     PoulpeBranch saveBranch(PoulpeSection inSection, PoulpeBranch notYetSavedBranch);
 
     /**
@@ -90,7 +102,8 @@ public interface ForumStructureService {
     void moveBranch(PoulpeBranch branch, PoulpeBranch target);
 
     /**
-     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the right. 
+     * Moves the section to the target section place. Shifts the target section and any subsequent sections to the
+     * right.
      * 
      * @param section a section to move
      * @param target a target section that will be shifted

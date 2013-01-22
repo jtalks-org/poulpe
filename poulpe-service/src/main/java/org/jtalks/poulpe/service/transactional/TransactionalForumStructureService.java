@@ -39,7 +39,9 @@ public class TransactionalForumStructureService implements ForumStructureService
     private final ComponentDao componentDao;
     private final JCommuneNotifier jCommuneNotifier;
 
-    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao, JCommuneNotifier jCommuneNotifier) {
+    /** Constructor for initialization variables */
+    public TransactionalForumStructureService(SectionDao sectionDao, BranchDao branchDao, ComponentDao componentDao,
+            JCommuneNotifier jCommuneNotifier) {
         this.sectionDao = sectionDao;
         this.branchDao = branchDao;
         this.componentDao = componentDao;

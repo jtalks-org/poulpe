@@ -28,6 +28,9 @@ import org.jtalks.poulpe.service.PermissionsService;
 
 import java.util.List;
 
+/**
+ * Service for dealing with {@link PermissionChanges} objects
+ */
 public class TransactionalPermissionsService implements PermissionsService {
 
     private PermissionManager permissionManager;

@@ -26,6 +26,9 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
 
+/**
+ * Service for dealing with {@link PermissionChanges} objects
+ */
 public interface PermissionsService {
 
     /**

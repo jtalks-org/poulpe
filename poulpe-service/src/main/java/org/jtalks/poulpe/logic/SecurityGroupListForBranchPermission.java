@@ -28,6 +28,8 @@ import java.util.List;
  * @author Evgeny Surovtsev
  */
 public class SecurityGroupListForBranchPermission {
+
+    /** Constructor for initialization variables */
     public SecurityGroupListForBranchPermission(GroupService groupService) {
         this.groupService = groupService;
     }
@@ -51,7 +53,7 @@ public class SecurityGroupListForBranchPermission {
 
     /**
      * Checks if a given Brand Permission is allowed for the Anonymous user.
-     *
+     * @param branchPermission The Branch Permission which checks.
      * @return true if a given BranchPermission is allowed for Anonymous or false otherwise
      */
     private boolean isAnonymousAllowed(BranchPermission branchPermission) {

@@ -41,7 +41,8 @@ import java.io.IOException;
  *
  * @author Nickolay Polyarniy
  * @author Mikhail Zaitsev
- */
+ */  
+@Deprecated
 public class JcommuneHttpNotifier implements JCommuneNotifier {
     /** Minimum value of a successful status, less than that is an error HTTP response. */
     private static final int MIN_HTTP_STATUS = 200;
@@ -66,6 +67,7 @@ public class JcommuneHttpNotifier implements JCommuneNotifier {
     private final Logger logger = LoggerFactory.getLogger(getClass());
     private final UserDao userDao;
 
+    /** Constructor for initialization variables */
     public JcommuneHttpNotifier(UserDao userDao) {
         this.userDao = userDao;
     }

@@ -22,10 +22,18 @@ package org.jtalks.poulpe.service.exceptions;
  */
 public class NoConnectionToJcommuneException extends Exception {
 
+    /**
+     * Constructs a new exception similar to the {@link Exception#Exception()} constructor.
+     */
     public NoConnectionToJcommuneException() {
         super();
     }
 
+    /**
+     * Constructs a new exception similar to the {@link Exception#Exception(Throwable)} constructor.
+     *
+     * @param ex parent exception
+     */
     public NoConnectionToJcommuneException(Exception ex){
         super(ex);
     }

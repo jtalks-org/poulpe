@@ -20,6 +20,11 @@ import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
 
+/**
+ * Notifier to notify JCommune component about elements deleting. It is useful to help forum keep such information, as
+ * user's messages count, up to date.
+ * @author Evgeny Kapinos
+ */
 public interface JCommuneNotifier {
 
     /**
@@ -31,7 +36,7 @@ public interface JCommuneNotifier {
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
-    public void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section)
+    void notifyAboutSectionDelete(String jCommuneUrl, PoulpeSection section)
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
             JcommuneUrlNotConfiguredException;
 
@@ -44,7 +49,7 @@ public interface JCommuneNotifier {
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
-    public void notifyAboutBranchDelete(String jCommuneUrl, PoulpeBranch branch)
+    void notifyAboutBranchDelete(String jCommuneUrl, PoulpeBranch branch)
             throws NoConnectionToJcommuneException, JcommuneRespondedWithErrorException,
             JcommuneUrlNotConfiguredException;
 
@@ -56,7 +61,7 @@ public interface JCommuneNotifier {
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
-    public void notifyAboutComponentDelete(String jCommuneUrl) throws NoConnectionToJcommuneException,
+    void notifyAboutComponentDelete(String jCommuneUrl) throws NoConnectionToJcommuneException,
             JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException;
 
     /**
@@ -67,7 +72,7 @@ public interface JCommuneNotifier {
      * @throws JcommuneRespondedWithErrorException occurs when the response status is not {@code OK 200}
      * @throws JcommuneUrlNotConfiguredException occurs when the {@code jCommuneUrl} is incorrect
      */
-    public void notifyAboutReindexComponent(String jCommuneUrl) throws NoConnectionToJcommuneException,
+    void notifyAboutReindexComponent(String jCommuneUrl) throws NoConnectionToJcommuneException,
             JcommuneRespondedWithErrorException, JcommuneUrlNotConfiguredException;
 
 }

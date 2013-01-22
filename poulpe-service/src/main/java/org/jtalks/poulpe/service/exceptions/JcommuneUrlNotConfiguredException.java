@@ -20,6 +20,9 @@ package org.jtalks.poulpe.service.exceptions;
  */
 public class JcommuneUrlNotConfiguredException extends Exception {
 
+    /**
+     * Constructs a new exception similar to the {@link Exception#Exception()} constructor.
+     */
     public JcommuneUrlNotConfiguredException(){
         super();
     }

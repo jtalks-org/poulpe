@@ -49,16 +49,19 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
     private final AccessDecisionVoter baseVoter;
     private final UserService userService;
 
+    /** Constructor used for initialization from Spring IoC */
     public AclAwareDecisionVoter(UserService userService) {
         this(new WebExpressionVoter(), userService);
     }
 
+    /** Constructor used for initialization from JUnit */
     @VisibleForTesting
     AclAwareDecisionVoter(AccessDecisionVoter baseVoter, UserService userService) {
         this.baseVoter = baseVoter;
         this.userService = userService;
     }
 
+    /** {@inheritDoc} */
     @Override
     public int vote(Authentication authentication, Object object, Collection<ConfigAttribute> attributes) {
         int baseVoterVoteResult = baseVoter.vote(authentication, object, attributes);
@@ -69,6 +72,7 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         }
     }
 
+    /** Authorize and save result in session attributes */
     private int authorizeAndSaveDecisionIntoSession(Authentication authentication) {
         if (alreadyAuthorized()) {
             return ACCESS_GRANTED;
@@ -88,6 +92,7 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         return authorized != null && authorized;
     }
 
+    /** @return user name from {@link Authentication} token credentials*/
     private String usernameOf(Authentication authentication) {
         return ((UserDetails) authentication.getPrincipal()).getUsername();
     }
@@ -105,16 +110,20 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
         return authentication.isAuthenticated() && authentication.getPrincipal() instanceof UserDetails;
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean supports(ConfigAttribute attribute) {
         return baseVoter.supports(attribute);
     }
 
+    /** {@inheritDoc} */
     @Override
     public boolean supports(Class<?> clazz) {
         return baseVoter.supports(clazz);
     }
 
+    /**
+     * @return current request attributes*/
     @VisibleForTesting
     RequestAttributes getRequestAttributes() {
         return RequestContextHolder.currentRequestAttributes();

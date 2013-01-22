@@ -34,6 +34,9 @@ public interface GroupService extends EntityService<Group> {
      */
     List<Group> getAll();
 
+    /** 
+     * @return {@link SecurityGroupList} with all {@link Group} objects
+     */
     SecurityGroupList getSecurityGroups();
 
     /**
