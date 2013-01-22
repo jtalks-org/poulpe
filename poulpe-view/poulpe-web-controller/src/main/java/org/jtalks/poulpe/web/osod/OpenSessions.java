@@ -39,6 +39,7 @@ public class OpenSessions {
     private final ConcurrentMap<String, Session> sessions = new ConcurrentHashMap<String, Session>();
     private final SessionFactory sessionFactory;
 
+    /** Constructor for initialization variables */
     public OpenSessions(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
@@ -103,16 +104,21 @@ public class OpenSessions {
         return session;
     }
 
+    /** Creates new hibernate session */
     @VisibleForTesting
     Session createSession() {
         return SessionFactoryUtils.getSession(sessionFactory, true);
     }
 
+    /** Binds hibernate session to current thread  
+     * @param session for binding 
+     */
     @VisibleForTesting
     void bindToThread(Session session) {
         TransactionSynchronizationManager.bindResource(sessionFactory, new SessionHolder(session));
     }
 
+    /** Checks in current thread binded hibernate session */
     @VisibleForTesting
     boolean noSessionBoundToThread() {
         return !TransactionSynchronizationManager.hasResource(sessionFactory);

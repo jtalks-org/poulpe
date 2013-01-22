@@ -44,16 +44,18 @@ public class AdminWindow {
     @Wire
     private Center workArea;
     @Wire
-    private Window adminWindow;
+    private Window adminWindow = null;
     private WindowManager windowManager;
     private ZkHelper zkHelper = new ZkHelper(adminWindow);
     private ComponentService componentService;
     private final ComponentList components;
 
+    /** Constructor for initialization variables */
     public AdminWindow(ComponentList components) {
         this.components = components;
     }
 
+    /** Initialize {@code this} controller with current view by ZK */
     @Init
     public void init(@ContextParam(ContextType.VIEW) org.zkoss.zk.ui.Component view) {
         zkHelper.wireComponents(view, this);
@@ -119,11 +121,19 @@ public class AdminWindow {
         changeLocaleAndReload(EN_LOCALE_LANG);
     }
 
+    /**
+     * Save new locale in cookies and reloads page on client side
+     * @param localeLanguage new locale as {@link String}
+     */
     private void changeLocaleAndReload(String localeLanguage) {
         saveLocaleInCookie(localeLanguage);
         zkHelper.reloadPage();
     }
 
+    /**
+     * Add new locale cookie to current {@link HttpServletResponse}
+     * @param localeLanguage new locale as {@link String}
+     */
     private void saveLocaleInCookie(String localeLanguage) {
         HttpServletResponse response = zkHelper.getResponse();
         response.addCookie(zkHelper.createCookie(USER_LOCALE, localeLanguage));
@@ -201,6 +211,9 @@ public class AdminWindow {
         windowManager.open("groups/GroupsPermissions.zul");
     }
 
+    /**
+     * Show Personal Permissions page.
+     */
     @Command
     public void onShowPersonalPermissions() {
         windowManager.open("WEB-INF/pages/users/PersonalPermissions.zul");

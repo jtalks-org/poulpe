@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import com.google.common.annotations.VisibleForTesting;
+
 import org.jtalks.poulpe.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
@@ -47,6 +48,7 @@ public class DeleteComponentDialog implements EventListener<Event> {
     private final ComponentList componentsToUpdate;
     private Component toDelete;
 
+    /** Constructor for initialization variables */
     public DeleteComponentDialog(ComponentService componentService, ComponentList componentsToUpdate) {
         this.componentService = componentService;
         this.componentsToUpdate = componentsToUpdate;
@@ -88,6 +90,10 @@ public class DeleteComponentDialog implements EventListener<Event> {
         }
     }
 
+    /**
+     * Shows error message box with ZUL
+     * @param errorCode error message
+     */
     @VisibleForTesting
     void showDialog(String errorCode) {
         Messagebox.show(getLabel(errorCode),
@@ -98,7 +104,7 @@ public class DeleteComponentDialog implements EventListener<Event> {
      * Is invoked by message box when button is pressed. <br/>{@inheritDoc}
      */
     @Override
-    public void onEvent(Event event) throws Exception {
+    public void onEvent(Event event) {
         if ((Integer) event.getData() == Messagebox.YES) {
             deleteComponent();
         }
