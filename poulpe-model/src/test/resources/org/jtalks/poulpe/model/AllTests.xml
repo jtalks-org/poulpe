@@ -19,6 +19,7 @@
   <test name="model">
     <packages>
       <package name="org.jtalks.poulpe.model.*" />
+      <package name="org.jtalks.poulpe.util.*" />
     </packages>
   </test>
 </suite>
