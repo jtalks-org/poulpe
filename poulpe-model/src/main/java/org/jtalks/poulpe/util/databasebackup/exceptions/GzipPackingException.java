@@ -15,12 +15,22 @@
 package org.jtalks.poulpe.util.databasebackup.exceptions;
 
 /**
- * The exception is throws when data base does not contain any table, so there is nothing to export. in the case of
- * working system the situation is unreal and usually tells about critical errors during working with database.
+ * The Exception is thrown when a error happens during gzipping previously prepared content.
  * 
  * @author Evgeny Surovtsev
  * 
  */
-public class DataBaseDoesntContainTablesException extends FileDownloadException {
-    private static final long serialVersionUID = 1L;
+public class GzipPackingException extends FileDownloadException {
+    /**
+     * Initializes an instance of Exception with given Exception as a cause.
+     * 
+     * @param e
+     *            a cause exception.
+     */
+    public GzipPackingException(final Exception e) {
+        super(e);
+    }
+
+    private static final long serialVersionUID = -8578677100750727015L;
+
 }

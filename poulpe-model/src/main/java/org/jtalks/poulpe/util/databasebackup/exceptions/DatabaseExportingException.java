@@ -21,6 +21,8 @@ package org.jtalks.poulpe.util.databasebackup.exceptions;
  * 
  */
 public class DatabaseExportingException extends FileDownloadException {
+    private static final long serialVersionUID = 8529340313779351496L;
+
     /**
      * Constructor creates an instance and uses error message from given Exception.
      * 
@@ -30,6 +32,4 @@ public class DatabaseExportingException extends FileDownloadException {
     public DatabaseExportingException(final Exception e) {
         super(e);
     }
-
-    private static final long serialVersionUID = 1L;
 }
