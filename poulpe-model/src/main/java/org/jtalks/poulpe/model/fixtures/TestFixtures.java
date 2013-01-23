@@ -42,6 +42,10 @@ public final class TestFixtures {
     //private static final int POST_LIMIT_COUNT = 1000;
     private static final int LENGTH = 10;
 
+    /** No need to create instance, only static methods used */
+    private TestFixtures() {
+    }
+    
     /** @return branch with random name and description beloning to random section with moderators group */
     public static PoulpeBranch branch() {
         PoulpeBranch newBranch = new PoulpeBranch(random(), random());
@@ -183,6 +187,12 @@ public final class TestFixtures {
         return new PoulpeUser(username, email, random(), "");
     }
 
+    /**
+     * @param username user's name
+     * @param password user's password
+     * @param email    user's email
+     * @return user with the given username, email and generated empty salt
+     */
     public static PoulpeUser user(String username, String password, String email) {
         return new PoulpeUser(username, email, password, "");
     }
