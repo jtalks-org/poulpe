@@ -35,6 +35,11 @@ public class PermissionRow {
     private final String rowLabel;
     private final List<Group> groups;
 
+    /**
+     * Creates the new Permission Row object
+     * @param rowLabel label for the row
+     * @param groups list of groups in the row
+     */
     protected PermissionRow(String rowLabel, List<Group> groups) {
         this.groups = groups;
         this.rowLabel = rowLabel;

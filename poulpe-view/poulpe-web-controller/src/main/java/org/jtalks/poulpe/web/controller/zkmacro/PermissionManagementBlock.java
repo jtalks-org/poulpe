@@ -89,9 +89,10 @@ public final class PermissionManagementBlock {
      * @param groupsPermissions  the permissions map for building internal state
      * @param allowedRowLabel    the label for Allow row
      * @param restrictedRowLabel the label for Restrict row
+     * @param <T> permission type extends {@link org.jtalks.common.model.permissions.JtalksPermission}
      */
     public <T extends JtalksPermission> PermissionManagementBlock(T permission,
-                                                                  @Nonnull GroupsPermissions<T> groupsPermissions, String allowedRowLabel, String restrictedRowLabel) {
+                 @Nonnull GroupsPermissions<T> groupsPermissions, String allowedRowLabel, String restrictedRowLabel) {
         this.permission = permission;
         this.allowRow = new PermissionRow(allowedRowLabel, groupsPermissions.getAllowed(permission));
         this.restrictRow = new PermissionRow(restrictedRowLabel, groupsPermissions.getRestricted(permission));

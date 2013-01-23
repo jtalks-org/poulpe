@@ -41,12 +41,14 @@ import org.zkoss.zul.ListModelList;
  *        param rightList - aleready added grops for permission
  * 
  * get data from component:
- *      you need to send component as arg (component = dualLBox) into some method. ex: <button id="savePermissionsButton" label="save" onClick="@command('save', component = dualLBox)"/>
+ *      you need to send component as arg (component = dualLBox) into some method.
+ *      ex: <button id="savePermissionsButton" label="save" onClick="@command('save', component = dualLBox)"/>
  *  in method:
  *      param DualListComponent - get as @BindingParam("component") AbstractComponent
  *      get data - ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight()  
  * ex.  public void save(@BindingParam("component") AbstractComponent DualListComponent) {
- *         List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();//getStateAfterEdit();
+ *        List<Group> addedGroups = ((DualListVm)DualListComponent.getFellow("DualList").getAttribute("vm")).getRight();
+ *        //getStateAfterEdit();
  *      } 
  * 
  * @author Enykey
@@ -96,7 +98,8 @@ public class DualListVm{
      * @param rightList list of groups already added to permissions
      */    
     @Init
-    public void initVm(@BindingParam("fullList") List<Group> fullList, @BindingParam("rightList") List<Group> rightList){
+    public void initVm(@BindingParam("fullList") List<Group> fullList,
+                       @BindingParam("rightList") List<Group> rightList) {
 
         this.fullList = fullList;
         
@@ -262,6 +265,10 @@ public class DualListVm{
     
     }
 
+    /**
+     * Set the list of items after editing
+     * @param stateAfterEdit list of groups after editing
+     */
     public void setStateAfterEdit(List<Group> stateAfterEdit) {
         this.stateAfterEdit = stateAfterEdit;
     }
