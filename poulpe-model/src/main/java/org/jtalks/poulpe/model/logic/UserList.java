@@ -31,10 +31,12 @@ import java.util.List;
 public class UserList {
     private final List<PoulpeUser> users = new LinkedList<PoulpeUser>();
 
+    /** Constructor for initialization variables with array*/
     public UserList(PoulpeUser... users) {
         this.users.addAll(Arrays.asList(users));
     }
 
+    /** Constructor for initialization variables with {@link List}*/
     public UserList(List<PoulpeUser> users) {
         this.users.addAll(users);
     }
@@ -45,6 +47,7 @@ public class UserList {
      *
      * @param users the list of {@link PoulpeUser}s to be casted
      * @throws ClassCastException if the specified users are not of type {@link PoulpeUser}
+     * @return list of {@link PoulpeUser}s
      */
     public static UserList ofCommonUsers(List<User> users) {
         List<PoulpeUser> poulpeUsers = new ArrayList<PoulpeUser>();

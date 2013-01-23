@@ -3,6 +3,9 @@ package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Temporary-file creator (something like factory pattern). 
+ */
 public class FileWrapper {
     /**
      * Creates an empty file in the default temporary-file directory, using the given prefix and suffix to generate its

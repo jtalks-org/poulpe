@@ -33,6 +33,7 @@ public class UserBanner {
     private final GroupDao groupDao;
     private final UserDao userDao;
 
+    /** Constructor for initialization variables */
     public UserBanner(GroupDao groupDao, UserDao userDao) {
         this.groupDao = groupDao;
         this.userDao = userDao;

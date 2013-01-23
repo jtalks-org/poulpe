@@ -22,13 +22,24 @@ import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
+/** 
+ * Command analyzing table foreign keys and push this info into {@link java.io.OutputStream OutputStream} 
+ */
 public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
 
+    /** 
+     * Constructor for initialization variables
+     * @param dbTable target table 
+     */
     public AddForeignKeysCommand(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
+    /**
+     * Returns {@link StringBuilder} filled with canonical description about foreign keys 
+     * @return foreign keys description 
+     */
     @Override
     protected StringBuilder getHeader() {
         StringBuilder header = new StringBuilder();
@@ -39,6 +50,10 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
         return header;
     }
 
+    /**
+     * Returns {@link StringBuilder} filled with foreign keys data 
+     * @return foreign keys data 
+     */
     @Override
     protected StringBuilder getData() throws SQLException {
         StringBuilder data = new StringBuilder();

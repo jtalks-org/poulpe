@@ -39,11 +39,8 @@ public final class TestFixtures {
     private static final int BRANCH_COUNT_MIN = 5;
     private static final int BRANCH_COUNT_MAX = 15;
     private static final int USERS_COUNT = 5;
-    private static final int POST_LIMIT_COUNT = 1000;
+    //private static final int POST_LIMIT_COUNT = 1000;
     private static final int LENGTH = 10;
-
-    private TestFixtures() {
-    }
 
     /** @return branch with random name and description beloning to random section with moderators group */
     public static PoulpeBranch branch() {

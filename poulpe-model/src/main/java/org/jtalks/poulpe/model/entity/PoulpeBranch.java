@@ -42,6 +42,12 @@ public class PoulpeBranch extends Branch {
         super(name, "");
     }
 
+    /**
+     * Create PoulpeBranch with name and empty description
+     *
+     * @param name - name for new PoulpeBranch
+     * @param description - description for new PoulpeBranch
+     */
     public PoulpeBranch(String name, String description) {
         super(name, description);
     }
