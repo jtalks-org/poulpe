@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 /**
@@ -29,5 +31,5 @@ import java.sql.SQLException;
  * 
  */
 public interface DbDumpCommand {
-    StringBuilder execute() throws SQLException;
+    void execute(OutputStream output) throws SQLException, IOException;
 }

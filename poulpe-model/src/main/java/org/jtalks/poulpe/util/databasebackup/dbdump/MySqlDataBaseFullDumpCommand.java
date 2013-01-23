@@ -14,6 +14,10 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Queue;
@@ -44,14 +48,11 @@ public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
     }
 
     @Override
-    public StringBuilder execute() throws SQLException {
-        StringBuilder result = new StringBuilder();
+    public void execute(OutputStream output) throws SQLException, IOException {
         DbDumpCommand oneCommand = null;
         while ((oneCommand = dumpCommandQueue.poll()) != null) {
-            result.append(oneCommand.execute());
+            oneCommand.execute(output);
         }
-
-        return result;
     }
 
     private final Queue<DbDumpCommand> dumpCommandQueue;

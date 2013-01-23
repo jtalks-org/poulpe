@@ -17,12 +17,17 @@ package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
 
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
+import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
 
@@ -51,34 +56,78 @@ public class GzipContentProvider implements ContentProvider {
      */
     @Override
     public InputStream getContent() throws FileDownloadException {
-        InputStream in = contentProvider.getContent();
-
-        ByteArrayOutputStream result = null;
-        BufferedOutputStream out = null;
+        File outFile;
         try {
-            result = new ByteArrayOutputStream();
-            out = new BufferedOutputStream(new GZIPOutputStream(result));
-            int c;
-            while ((c = in.read()) != -1) {
-                out.write(c);
-            }
-            out.flush();
+            outFile = getFile().createTempFile("dbdump", getContentFileNameExt());
+            gzipStream(contentProvider.getContent(), outFile);
+
         } catch (IOException e) {
             throw new GzipPackingException(e);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                throw new GzipPackingException(e);
-            }
         }
 
-        return new ByteArrayInputStream(result.toByteArray());
+        InputStream inputStream = null;
+        try {
+            inputStream = new DisposableFileInputStream(outFile);
+
+        } catch (FileNotFoundException e) {
+            throw new GzipPackingException(e);
+        }
+        return inputStream;
+    }
+
+    protected FileWrapper getFile() {
+        if (fileWrapper == null) {
+            fileWrapper = new FileWrapper();
+        }
+        return fileWrapper;
+    }
+
+    private FileWrapper fileWrapper;
+
+    /**
+     * Gzipping content of input File and saves it into output File.
+     * 
+     * @param inFile
+     *            a file which content must be gzipped.
+     * @param outFile
+     *            a resulting file which contains gzipped content of inFile.
+     * @throws IOException
+     *             if any errors with input/output operations arrise.
+     */
+    private void gzipStream(InputStream input, File outFile) throws IOException {
+        OutputStream output = null;
+
+        try {
+            output = new BufferedOutputStream(new GZIPOutputStream(getFileOutputStream(outFile)));
+            int read = 0;
+            byte[] bytes = new byte[1024];
+            while ((read = input.read(bytes)) != -1) {
+                output.write(bytes, 0, read);
+            }
+
+        } finally {
+            if (input != null) {
+                input.close();
+            }
+            if (output != null) {
+                output.flush();
+                output.close();
+            }
+        }
+    }
+
+    /**
+     * Creates and returns a new OutputStream connected with given File. Method is open for overriding in tests for the
+     * class.
+     * 
+     * @param outputFile
+     *            a file to use for writing as an output point.
+     * @return a newly created OutputStream.
+     * @throws FileNotFoundException
+     *             if provided File is not found.
+     */
+    protected OutputStream getFileOutputStream(File outputFile) throws FileNotFoundException {
+        return new FileOutputStream(outputFile);
     }
 
     /**

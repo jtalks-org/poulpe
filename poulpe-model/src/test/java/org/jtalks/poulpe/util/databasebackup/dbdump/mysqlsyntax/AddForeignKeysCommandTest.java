@@ -1,5 +1,8 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -25,13 +28,16 @@ public class AddForeignKeysCommandTest {
     }
 
     @Test
-    public void executeAddForeignKeysCommand() throws SQLException {
+    public void executeAddForeignKeysCommand() throws SQLException, IOException {
         AddForeignKeysCommand sut = new AddForeignKeysCommand(dbTable);
         String expectedAlterTableStatement = "ALTER TABLE `tableName` "
                 + "ADD FOREIGN KEY (`fkColumnName`) REFERENCES `pkTableName`(`pkColumnName`);";
+        OutputStream output = new ByteArrayOutputStream();
+
+        sut.execute(output);
 
         Assert.assertEquals(
-                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(sut.execute().toString())),
+                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(output.toString())),
                 TestUtil.makeLowerAndRemoveSpaces(expectedAlterTableStatement));
     }
 

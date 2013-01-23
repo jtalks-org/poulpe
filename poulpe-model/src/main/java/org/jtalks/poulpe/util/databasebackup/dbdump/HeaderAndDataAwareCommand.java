@@ -14,18 +14,26 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.sql.SQLException;
 
 public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
 
     @Override
-    public final StringBuilder execute() throws SQLException {
-        return new StringBuilder()
+    public void execute(OutputStream output) throws SQLException, IOException {
+        StringBuilder result = new StringBuilder()
                 .append(getHeader())
                 .append(LINEFEED)
                 .append(getData())
                 .append(LINEFEED)
                 .append(LINEFEED);
+
+        Writer writer = new PrintWriter(output);
+        writer.write(result.toString());
+        writer.flush();
     }
 
     /**

@@ -1,5 +1,8 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.Iterator;
 import java.util.List;
@@ -53,7 +56,7 @@ public class CreateTableCommandTest {
     }
 
     @Test
-    public void executeCreateTableCommand() throws SQLException {
+    public void executeCreateTableCommand() throws SQLException, IOException {
         CreateTableCommand sut = new CreateTableCommand(dbTable);
         String expectedCreateTableStatement = "CREATE TABLE `tableName` ("
                 + "`id` INT NOT NULL AUTO_INCREMENT COMMENT 'comment',"
@@ -61,9 +64,12 @@ public class CreateTableCommandTest {
                 + "PRIMARY KEY (`id`),"
                 + "CONSTRAINT KEY_NAME UNIQUE (`name`)"
                 + ") COLLATE=utf-8 AUTO_INCREMENT=5;";
+        OutputStream output = new ByteArrayOutputStream();
+
+        sut.execute(output);
 
         Assert.assertEquals(
-                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(sut.execute().toString())),
+                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(output.toString())),
                 TestUtil.makeLowerAndRemoveSpaces(expectedCreateTableStatement));
     }
 

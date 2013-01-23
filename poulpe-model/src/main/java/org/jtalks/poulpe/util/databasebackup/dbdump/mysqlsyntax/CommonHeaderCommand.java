@@ -14,6 +14,10 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -28,7 +32,7 @@ import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 public class CommonHeaderCommand implements DbDumpCommand {
 
     @Override
-    public StringBuilder execute() {
+    public void execute(OutputStream output) throws IOException {
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Copyright (C) 2011  JTalks.org Team").append(LINEFEED);
@@ -53,7 +57,9 @@ public class CommonHeaderCommand implements DbDumpCommand {
         header.append("-- --------------------------------------------------------");
         header.append(LINEFEED).append(LINEFEED);
 
-        return header;
+        Writer writer = new PrintWriter(output);
+        writer.write(header.toString());
+        writer.flush();
     }
 
     private static final String LINEFEED = "\n";

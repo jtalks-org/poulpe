@@ -1,5 +1,10 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.Writer;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.List;
@@ -45,10 +50,14 @@ public class MySqlDataBaseFullDumpCommandTest {
     }
 
     @Test
-    public void executeRunsAllCommandsInCorrectOrder() throws IllegalAccessException, NoSuchFieldException,
-            SQLException {
+    public void executeRunsAllCommandsInCorrectOrder() throws IllegalArgumentException, IllegalAccessException,
+            NoSuchFieldException, SQLException, IOException {
         getAccessibleDumpCommandQueueField().set(sut, getFakeCommandQueue());
-        Assert.assertEquals("123", sut.execute().toString());
+        OutputStream output = new ByteArrayOutputStream();
+
+        sut.execute(output);
+
+        Assert.assertEquals("123", output.toString());
     }
 
     /**
@@ -69,22 +78,28 @@ public class MySqlDataBaseFullDumpCommandTest {
         dumpCommandQueue.add(new DbDumpCommand() {
 
             @Override
-            public StringBuilder execute() throws SQLException {
-                return new StringBuilder("1");
+            public void execute(OutputStream output) throws SQLException, IOException {
+                Writer writer = new PrintWriter(output);
+                writer.write("1");
+                writer.flush();
             }
         });
         dumpCommandQueue.add(new DbDumpCommand() {
 
             @Override
-            public StringBuilder execute() throws SQLException {
-                return new StringBuilder("2");
+            public void execute(OutputStream output) throws SQLException, IOException {
+                Writer writer = new PrintWriter(output);
+                writer.write("2");
+                writer.flush();
             }
         });
         dumpCommandQueue.add(new DbDumpCommand() {
 
             @Override
-            public StringBuilder execute() throws SQLException {
-                return new StringBuilder("3");
+            public void execute(OutputStream output) throws SQLException, IOException {
+                Writer writer = new PrintWriter(output);
+                writer.write("3");
+                writer.flush();
             }
         });
         return dumpCommandQueue;

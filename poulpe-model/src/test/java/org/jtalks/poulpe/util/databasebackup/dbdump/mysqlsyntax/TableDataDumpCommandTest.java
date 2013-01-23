@@ -1,5 +1,8 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -31,13 +34,16 @@ public class TableDataDumpCommandTest {
     }
 
     @Test
-    public void executeTableDataDumpCommand() throws SQLException {
+    public void executeTableDataDumpCommand() throws SQLException, IOException {
         String expectedDataDump = "INSERT INTO `tableName` (id) VALUES (1);"
                 + "INSERT INTO `tableName` (name) VALUES ('value');"
                 + "INSERT INTO `tableName` (nullColumn) VALUES (NULL);";
+        OutputStream output = new ByteArrayOutputStream();
+
+        sut.execute(output);
 
         Assert.assertEquals(TestUtil.makeLowerAndRemoveSpaces(expectedDataDump),
-                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(sut.execute().toString())));
+                TestUtil.makeLowerAndRemoveSpaces(TestUtil.removeEmptyStringsAndSqlComments(output.toString())));
     }
 
     private DbTable dbTable;

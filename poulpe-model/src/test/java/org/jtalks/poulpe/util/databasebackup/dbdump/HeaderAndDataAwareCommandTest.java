@@ -1,5 +1,8 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 
 import org.testng.Assert;
@@ -24,14 +27,18 @@ public class HeaderAndDataAwareCommandTest {
         };
     }
 
-    @Test(groups = { "databasebackup" })
-    public void executeHeaderAndDataAwareCommand() throws SQLException {
+    @Test
+    public void executeHeaderAndDataAwareCommand() throws SQLException, IOException {
         String expectedOutput = getHeaderReturn
                 + HeaderAndDataAwareCommand.LINEFEED
                 + getDataReturn
                 + HeaderAndDataAwareCommand.LINEFEED
                 + HeaderAndDataAwareCommand.LINEFEED;
-        Assert.assertEquals(expectedOutput, sut.execute().toString());
+        OutputStream output = new ByteArrayOutputStream();
+
+        sut.execute(output);
+
+        Assert.assertEquals(expectedOutput, output.toString());
     }
 
     private HeaderAndDataAwareCommand sut;

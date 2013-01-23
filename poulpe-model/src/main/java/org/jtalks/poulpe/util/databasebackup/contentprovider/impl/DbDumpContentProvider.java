@@ -14,9 +14,13 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import java.io.ByteArrayInputStream;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
+import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -28,7 +32,6 @@ import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.MySqlDataBaseFullDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseDoesntContainTablesException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
-import org.jtalks.poulpe.util.databasebackup.exceptions.EncodingToUtf8Exception;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameLister;
@@ -62,7 +65,7 @@ public class DbDumpContentProvider implements ContentProvider {
      */
     @Override
     public InputStream getContent() throws FileDownloadException {
-        StringBuilder result = new StringBuilder();
+        File contentFile = null;
 
         try {
             List<String> tableNames = getDbTableNameLister().getPlainList();
@@ -70,18 +73,37 @@ public class DbDumpContentProvider implements ContentProvider {
                 throw new DatabaseDoesntContainTablesException();
             }
 
-            result.append(getDbDumpCommand(getDbTableList(tableNames)).execute());
+            contentFile = getFile().createTempFile("dbdump", getContentFileNameExt());
+            OutputStream output = new BufferedOutputStream(new FileOutputStream(contentFile));
+            getDbDumpCommand(getDbTableList(tableNames)).execute(output);
+            output.flush();
+            output.close();
+
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
+        } catch (IOException e) {
+            throw new DatabaseExportingException(e);
         }
+
         InputStream inputStream = null;
         try {
-            inputStream = new ByteArrayInputStream(result.toString().getBytes("UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new EncodingToUtf8Exception(e);
+            inputStream = new DisposableFileInputStream(contentFile);
+
+        } catch (FileNotFoundException e) {
+            throw new DatabaseExportingException(e);
         }
+
         return inputStream;
     }
+
+    protected FileWrapper getFile() {
+        if (fileWrapper == null) {
+            fileWrapper = new FileWrapper();
+        }
+        return fileWrapper;
+    }
+
+    private FileWrapper fileWrapper;
 
     protected DbTableNameLister getDbTableNameLister() {
         return new DbTableNameLister(dataSource);
