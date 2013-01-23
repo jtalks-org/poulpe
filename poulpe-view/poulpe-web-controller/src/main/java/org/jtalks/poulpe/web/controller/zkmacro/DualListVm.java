@@ -92,7 +92,7 @@ public class DualListVm{
     /**
      * Fill ModelLists for component 
      * 
-     * @param leftList list of groups that not added to permissions
+     * @param fullList full list of groups that not added to permissions
      * @param rightList list of groups already added to permissions
      */    
     @Init
