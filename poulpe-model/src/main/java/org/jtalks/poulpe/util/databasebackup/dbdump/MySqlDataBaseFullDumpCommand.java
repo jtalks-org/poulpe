@@ -30,8 +30,13 @@ import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.TableDataDumpCom
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 
 import com.google.common.collect.Lists;
-
+/**
+ * Full backup command which can pick MySQL data from selected tables and push it to {@link OutputStream}  
+ */
 public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
+    
+    /** Construct required ordered list of commands  
+     * @param dbTableList list of tables for full backup */
     public MySqlDataBaseFullDumpCommand(final List<DbTable> dbTableList) {
         Validate.notNull(dbTableList, "dbTableList must not be null");
         dumpCommandQueue = Lists.newLinkedList();
@@ -47,6 +52,8 @@ public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
         }
     }
 
+    /** Execute whole needed commands and push full backup into {@link OutputStream}
+     * @param output stream receiver */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {
         DbDumpCommand oneCommand = null;

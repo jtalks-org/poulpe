@@ -31,14 +31,21 @@ import java.util.List;
 public class SecurityGroupList {
     private final List<Group> allGroups;
 
+    /** Creates empty group list */
     public SecurityGroupList() {
         this(new ArrayList<Group>());
     }
 
+    /** Creates and fill group list another {@link List} 
+     * @param allGroups list of groups
+     */
     public SecurityGroupList(List<Group> allGroups) {
         this.allGroups = new ArrayList<Group>(allGroups);
     }
 
+    /** Adds predefined {@link AnonymousGroup} to this list
+     * @return {@code this} 
+     */
     public SecurityGroupList withAnonymousGroup() {
         if (!containsAnonymousGroup()) {
             allGroups.add(AnonymousGroup.ANONYMOUS_GROUP);
@@ -46,6 +53,9 @@ public class SecurityGroupList {
         return this;
     }
 
+    /** Removes predefined {@link AnonymousGroup} from this list
+     * @return {@link AnonymousGroup} - if group was removed, {@code null} - otherwise
+     */
     public Group removeAnonymousGroup() {
         if (allGroups.remove(AnonymousGroup.ANONYMOUS_GROUP)) {
             return AnonymousGroup.ANONYMOUS_GROUP;
@@ -53,17 +63,24 @@ public class SecurityGroupList {
         return null;
     }
 
-    public Group getAnonymousGroup() {
+    /** Checks predefined {@link AnonymousGroup} in this list
+     * @return {@link AnonymousGroup} - if group included in the list, {@code null} - otherwise
+     */
+     public Group getAnonymousGroup() {
         if (containsAnonymousGroup()) {
             return AnonymousGroup.ANONYMOUS_GROUP;
         }
         return null;
     }
 
+    /** @return current group list as {@link List} */
     public List<Group> getAllGroups() {
         return allGroups;
     }
 
+    /** Checks predefined {@link AnonymousGroup} in this list
+     * @return {@code true} - if list contains {@link AnonymousGroup}, {@code false} - otherwise  
+     */
     public boolean containsAnonymousGroup() {
         return allGroups.contains(AnonymousGroup.ANONYMOUS_GROUP);
     }

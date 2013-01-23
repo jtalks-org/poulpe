@@ -31,5 +31,7 @@ import java.sql.SQLException;
  * 
  */
 public interface DbDumpCommand {
+    /** Executes command and push result into {@link OutputStream}
+     * @param output stream receiver */
     void execute(OutputStream output) throws SQLException, IOException;
 }

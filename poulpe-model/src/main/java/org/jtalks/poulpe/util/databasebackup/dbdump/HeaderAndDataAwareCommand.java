@@ -20,8 +20,15 @@ import java.io.PrintWriter;
 import java.io.Writer;
 import java.sql.SQLException;
 
+/**
+ * Pack description and data, push to {@link OutputStream}.
+ * Resulted sequence is reversible and ready for unpacking  
+ */
 public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
 
+    /**
+     * Pack description and data with delimiters and push it to {@link OutputStream}  
+     */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {
         StringBuilder result = new StringBuilder()
