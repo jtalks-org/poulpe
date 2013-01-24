@@ -181,7 +181,7 @@ public class UsersVm {
     @Command
     @NotifyChange({USERS, TOTAL_SIZE, ACTIVE_PAGE, "filteredUsers"})
     public void filterUsers(@BindingParam(value = "searchString") String searchString) {
-        this.searchString = searchString;
+        displayFirstPage(searchString);
         selectedUser = null;
         this.filteredUsers = usersOf(activePage);
     }
