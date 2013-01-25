@@ -183,7 +183,8 @@ public class UsersVm {
     public void filterUsers(@BindingParam(value = "searchString") String searchString) {
         displayFirstPage(searchString);
         selectedUser = null;
-        this.filteredUsers = usersOf(activePage);
+        filteredUsers = getUsers();
+        //this.filteredUsers = usersOf(activePage);
     }
 
     /**

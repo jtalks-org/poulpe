@@ -165,7 +165,7 @@ public class UsersVmTest {
 
     @Test
     public void filterUsersTestForSearching() {
-        usersVm.setActivePage(0);
+        //usersVm.setActivePage(0);
         usersVm.filterUsers(searchString);
         verify(userService).findUsersPaginated(eq(searchString), eq(0), eq(ITEMS_PER_PAGE));
     }
