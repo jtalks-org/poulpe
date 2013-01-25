@@ -12,9 +12,11 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
+
 /**
- * The package contains classes and interfaces for supporting the database backup and pushing the resulting dump file
- * to the browser to download functionality.
+ * Common functionality for generating content and provide it so it can be downloaded by user. Here 
+ * FileDownloadService is a main class that uses ContentProvider to generate and provide content and FileDownloader 
+ * for sending previously prepared content to the browser.  
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 

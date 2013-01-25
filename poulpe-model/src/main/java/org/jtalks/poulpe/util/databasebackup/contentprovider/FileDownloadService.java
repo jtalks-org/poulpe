@@ -14,11 +14,18 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.Calendar;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
+import org.jtalks.poulpe.util.databasebackup.contentprovider.util.DisposableFileInputStream;
+import org.jtalks.poulpe.util.databasebackup.contentprovider.util.FileWrapper;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
 /**
@@ -35,12 +42,6 @@ import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
  */
 public class FileDownloadService {
     /**
-     * By default constructor. ContentProvider, FileDownloader and ContentFilenameWithoutExt should be set via setters.
-     */
-    FileDownloadService() {
-    }
-
-    /**
      * Constructor which sets ContentProvider, FileDownloader and ContentFilenameWithoutExt via its parameters.
      * 
      * @param contentProvider
@@ -49,11 +50,9 @@ public class FileDownloadService {
      *            An instance of FileDownloader.
      * @param contentFileNameWithoutExt
      *            Filename without extension which will be used for suggesting browser.
-     * @throws NullPointerException
-     *             If any of contentProvider or fileDownloader or contentFileNameWithoutExt is null.
      */
-    FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
-            final String contentFileNameWithoutExt) {
+    FileDownloadService(ContentProvider contentProvider, FileDownloader fileDownloader,
+            String contentFileNameWithoutExt) {
         Validate.notNull(contentProvider, "contentProvider must not be null");
         Validate.notNull(fileDownloader, "fileDownloader must not be null");
         Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
@@ -68,61 +67,64 @@ public class FileDownloadService {
      * 
      * @throws FileDownloadException
      *             is thrown in case of any errors during file preparing or sending it to the browser.
-     * @throws NullPointerException
-     *             If any of contentProvider or fileDownloader or contentFileNameWithoutExt is not defined.
      */
-    public final void performFileDownload() throws FileDownloadException {
-        Validate.notNull(contentProvider, "contentProvider is not defined");
-        Validate.notNull(fileDownloader, "fileDownloader is not defined");
-        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt is not defined");
+    public void performFileDownload() throws FileDownloadException {
         try {
-            InputStream content = contentProvider.getContent();
+            File contentFile = getFile().createTempFile("dbdump", contentProvider.getContentFileNameExt());
+            OutputStream output = getFileOutputStream(contentFile);
+            contentProvider.writeContent(output);
+            output.flush();
+            output.close();
 
+            InputStream input = getFileInputStream(contentFile);
             fileDownloader.setMimeContentType(contentProvider.getMimeContentType());
             fileDownloader.setContentFileName(getContentFileNameWithoutExt() + contentProvider.getContentFileNameExt());
-            fileDownloader.download(content);
-        } catch (Exception e) {
+            fileDownloader.download(input);
+
+        } catch (IOException e) {
             throw new FileDownloadException(e);
         }
     }
 
     /**
-     * Injects a Content provider object which will be used for creating content which later will be send to a browser.
+     * Create and return new input stream for a given File.
      * 
-     * @param contentProvider
-     *            An instance of a Content Provider
-     * @throws NullPointerException
-     *             If contentProvider is null.
+     * @param contentFile
+     *            the file to be opened for reading.
+     * @return an input stream to read.
+     * @throws FileNotFoundException
+     *             if the file does not exist, is a directory rather than a regular file, or for some other reason
+     *             cannot be opened for reading.
      */
-    public final void setContentProvider(final ContentProvider contentProvider) {
-        Validate.notNull(contentProvider, "contentProvider must not be null");
-        this.contentProvider = contentProvider;
+    protected InputStream getFileInputStream(File contentFile) throws FileNotFoundException {
+        return new DisposableFileInputStream(contentFile);
     }
 
     /**
-     * Injects a File Downloader object which "knows" how to send previously prepared content to a user's browser.
+     * Create and return new output stream based on given File.
      * 
-     * @param fileDownloader
-     *            The instance of the FileDownloader
-     * @throws NullPointerException
-     *             If fileDownloader is null.
+     * @param contentFile
+     *            the file to be opened for writing.
+     * @return an output stream to write.
+     * @throws FileNotFoundException
+     *             if the file exists but is a directory rather than a regular file, does not exist but cannot be
+     *             created, or cannot be opened for any other reason.
      */
-    public final void setFileDownloader(final FileDownloader fileDownloader) {
-        Validate.notNull(fileDownloader, "fileDownloader must not be null");
-        this.fileDownloader = fileDownloader;
+    protected OutputStream getFileOutputStream(File contentFile) throws FileNotFoundException {
+        return new BufferedOutputStream(new FileOutputStream(contentFile));
     }
 
     /**
-     * Injects a local filename for prepared content in the shape without filename extension (Ex. "jtalks").
+     * Return a FileWrapper object which is used for calling static methods on {@code java.io.File}. Method is marked as
+     * protected so it can be substitute in unit tests.
      * 
-     * @param contentFileNameWithoutExt
-     *            String which represents the filename without extension.
-     * @throws NullPointerException
-     *             If contentFileNameWithoutExt is null.
+     * @return an instance of FileWrapper.
      */
-    public final void setContentFileNameWithoutExt(final String contentFileNameWithoutExt) {
-        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
-        this.contentFileNameWithoutExt = contentFileNameWithoutExt;
+    protected FileWrapper getFile() {
+        if (fileWrapper == null) {
+            fileWrapper = new FileWrapper();
+        }
+        return fileWrapper;
     }
 
     /**
@@ -133,10 +135,7 @@ public class FileDownloadService {
     protected String getContentFileNameWithoutExt() {
         assert contentFileNameWithoutExt != null : "contentFileNameWithoutExt must be defined";
         return new StringBuilder()
-                .append(getCurrentTimeStamp())
-                .append("_")
-                .append(contentFileNameWithoutExt)
-                .append("_backup")
+                .append(getCurrentTimeStamp()).append("_").append(contentFileNameWithoutExt).append("_backup")
                 .toString();
     }
 
@@ -149,10 +148,8 @@ public class FileDownloadService {
         return String.format("%1$tY-%1$tm-%1$td_%1$tH-%1$tM-%1$tS", new Date());
     }
 
-    // injected
     private ContentProvider contentProvider;
-    // injected
     private FileDownloader fileDownloader;
-    // injected
     private String contentFileNameWithoutExt;
+    private FileWrapper fileWrapper;
 }

@@ -14,85 +14,101 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.sql.DataSource;
+
+import junit.framework.Assert;
+
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.MySqlDataBaseFullDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseDoesntContainTablesException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameLister;
+import org.mockito.Mockito;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
+
+import com.google.common.collect.ImmutableList;
+
 public class DbDumpContentProviderTest {
-    // private DbTableNameLister dbTableNameLister;
-    // private xX_SqlTableDump sqlTableDump;
-    // private DataSource dataSource;
+    @BeforeMethod
+    public void beforeMethod() throws SQLException {
+        mockDataSource = Mockito.mock(DataSource.class);
 
-    // @BeforeMethod(groups = {"databasebackup"})
-    // private void setUp() {
-    // dbTableNameLister = Mockito.mock(DbTableNameLister.class);
-    // sqlTableDump = Mockito.mock(xX_SqlTableDump.class);
-    // dataSource = Mockito.mock(DataSource.class);
-    // }
+        mockOutput = Mockito.mock(OutputStream.class);
 
-    // @Test(groups = {"databasebackup"})
-    // public void getContentTest() throws FileDownloadException, IOException, SQLException {
-    // String expected = "Test string for checking DbDumpContentProvider class";
-    //
-    // Mockito.when(dbTableNameLister.getIndependentList()).thenReturn(Arrays.asList("tableName"));
-    // Mockito.when(dbTableNameLister.getDataSource()).thenReturn(dataSource);
-    // Mockito.when(sqlTableDump.getFullDump()).thenReturn(expected);
-    //
-    // DbDumpContentProvider testObject = new DbDumpContentProvider(dbTableNameLister, sqlTableDump);
-    // List<String> outputList =
-    // removeEmptyStringsAndSqlComments(new BufferedReader(new InputStreamReader(testObject.getContent())));
-    //
-    // Mockito.verify(dbTableNameLister).getIndependentList();
-    // Mockito.verify(sqlTableDump).setDbTable(Mockito.any(DbTable.class));
-    // Mockito.verify(sqlTableDump).getFullDump();
-    //
-    // Assert.assertEquals(outputList.size(), 1);
-    // Assert.assertEquals(outputList.get(0), expected);
-    // }
+        mockDbDumpCommand = Mockito.mock(DbDumpCommand.class);
 
-    // @Test(groups = {"databasebackup"})
-    // public void databaseDoesntContainTablesExceptionThrowingTest() throws SQLException {
-    // Mockito.when(dbTableNameLister.getIndependentList()).thenReturn(new ArrayList<String>());
-    // try {
-    // DbDumpContentProvider testObject = new DbDumpContentProvider(dbTableNameLister, sqlTableDump);
-    // testObject.getContent();
-    // Assert.fail("DataBaseDoesntContainTablesException was not thrown");
-    // } catch (DataBaseDoesntContainTablesException e) {
-    // // doing nothing - exception is expected
-    // } catch (FileDownloadException e) {
-    // Assert.fail("a " + e.getClass().getName() + " was thrown instead of DataBaseDoesntContainTablesException");
-    // }
-    // }
+        final List<String> tables = ImmutableList.of("tableName");
+        mockDbTableNameLister = Mockito.mock(DbTableNameLister.class);
+        Mockito.when(mockDbTableNameLister.getPlainList()).thenReturn(tables);
 
-    // @Test(groups = {"databasebackup"})
-    // public void databaseExportingExceptionThrowingTest() throws SQLException {
-    // Mockito.when(dbTableNameLister.getIndependentList()).thenReturn(Arrays.asList("tableName"));
-    // Mockito.when(dbTableNameLister.getDataSource()).thenReturn(dataSource);
-    // Mockito.when(sqlTableDump.getFullDump()).thenThrow(new SQLException());
-    // try {
-    // DbDumpContentProvider testObject = new DbDumpContentProvider(dbTableNameLister, sqlTableDump);
-    // testObject.getContent();
-    // Assert.fail("DataBaseDoesntContainTablesException was not thrown");
-    // } catch (DatabaseExportingException e) {
-    // // doing nothing - exception is expected
-    // } catch (FileDownloadException e) {
-    // Assert.fail("a " + e.getClass().getName() + " was thrown instead of DatabaseExportingException");
-    // }
-    // }
+        sut = new DbDumpContentProvider(mockDataSource) {
+            @Override
+            protected DbDumpCommand getDbDumpCommand(final List<DbTable> tablesToDump) {
+                return mockDbDumpCommand;
+            }
 
-    /**
-     * 
-     * @param reader
-     *            raw input.
-     * @return cleared output without empty strings and SQL comments.
-     * @throws IOException
-     *             Must never happen.
-     */
-    // private List<String> removeEmptyStringsAndSqlComments(final BufferedReader reader) throws IOException {
-    // List<String> outputList = Lists.newArrayList();
-    // String line;
-    // while ((line = reader.readLine()) != null) {
-    // if (line.trim().length() > 0 && !"--".equals(line.substring(0, 2))) {
-    // outputList.add(line);
-    // }
-    // }
-    // reader.close();
-    // return outputList;
-    // }
+            @Override
+            protected DbTableNameLister getDbTableNameLister() {
+                return mockDbTableNameLister;
+            }
+        };
+    }
+
+    @Test
+    public void getMimeContentTypeTest() {
+        Assert.assertEquals("text/plain", sut.getMimeContentType());
+    }
+
+    @Test
+    public void getContentFileNameExtTest() {
+        Assert.assertEquals(".sql", sut.getContentFileNameExt());
+    }
+
+    @Test
+    public void checkDbDumpCommandType() {
+        DbTable mockDbTable = Mockito.mock(DbTable.class);
+        List<DbTable> tablesToDump = ImmutableList.of(mockDbTable);
+
+        sut = new DbDumpContentProvider(mockDataSource);
+        Assert.assertTrue(sut.getDbDumpCommand(tablesToDump) instanceof MySqlDataBaseFullDumpCommand);
+    }
+
+    @Test
+    public void writeContentTest() throws FileDownloadException, SQLException, IOException {
+        sut.writeContent(mockOutput);
+        Mockito.verify(mockDbDumpCommand).execute(mockOutput);
+    }
+
+    @Test(expectedExceptions = DatabaseDoesntContainTablesException.class)
+    public void emptyDatabaseThrowsException() throws SQLException, FileDownloadException {
+        Mockito.when(mockDbTableNameLister.getPlainList()).thenReturn(new ArrayList<String>());
+        sut.writeContent(mockOutput);
+    }
+
+    @Test(expectedExceptions = DatabaseExportingException.class)
+    public void IOErrorsThrowException() throws SQLException, IOException, FileDownloadException {
+        Mockito.doThrow(IOException.class).when(mockDbDumpCommand).execute(mockOutput);
+        sut.writeContent(mockOutput);
+    }
+
+    @Test(expectedExceptions = DatabaseExportingException.class)
+    public void SQLErrorsThrowException() throws SQLException, IOException, FileDownloadException {
+        Mockito.doThrow(SQLException.class).when(mockDbDumpCommand).execute(mockOutput);
+        sut.writeContent(mockOutput);
+    }
+
+    private DbDumpContentProvider sut;
+    private DataSource mockDataSource;
+    private OutputStream mockOutput;
+    private DbDumpCommand mockDbDumpCommand;
+    private DbTableNameLister mockDbTableNameLister;
 }

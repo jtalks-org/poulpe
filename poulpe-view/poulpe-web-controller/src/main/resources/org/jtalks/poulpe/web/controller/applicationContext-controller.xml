@@ -146,8 +146,7 @@
 
     <property name="fileDownloadService">
       <bean id="fileDownloadService" class="org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloadService">
-        <property name="contentFileNameWithoutExt" value="jtalks" />
-        <property name="contentProvider">
+        <constructor-arg index="0">
           <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.GzipContentProvider">
             <constructor-arg>
                 <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider">
@@ -155,10 +154,11 @@
                 </bean>
             </constructor-arg>
           </bean>
-        </property>
-        <property name="fileDownloader">
+        </constructor-arg>
+        <constructor-arg index="1">
           <bean class="org.jtalks.poulpe.web.controller.component.ZulFileDownloader" />
-        </property>
+        </constructor-arg>
+        <constructor-arg index="2" value="jtalks" />
       </bean>
     </property>
   </bean>

@@ -14,7 +14,8 @@
  */
 
 /**
- * Contains different implementations of ContentProvider interface.
+ * Keeps different classes-helpers which are used by "core" ContentProvider classes but in general don't do any 
+ * specific work related to providing content.     
  */
-package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
+package org.jtalks.poulpe.util.databasebackup.contentprovider.util;
 

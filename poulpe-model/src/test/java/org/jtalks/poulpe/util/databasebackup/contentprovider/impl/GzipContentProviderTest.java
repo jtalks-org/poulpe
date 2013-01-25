@@ -20,14 +20,18 @@ import static org.testng.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 
 import junit.framework.Assert;
 
+import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
 import org.mockito.Mockito;
@@ -45,30 +49,59 @@ public class GzipContentProviderTest {
     public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
         content = "Test string for checking GzipContentProvider class";
 
-        contentProvider = mock(DbDumpContentProvider.class);
-        when(contentProvider.getContentFileNameExt()).thenReturn(".sql");
-        when(contentProvider.getContent()).thenReturn(new ByteArrayInputStream(content.getBytes("UTF-8")));
+        contentProvider = new ContentProvider() {
+
+            @Override
+            public void writeContent(OutputStream output) throws FileDownloadException {
+                try {
+                    output.write(content.getBytes());
+                } catch (IOException e) {
+                    throw new FileDownloadException();
+                }
+            }
+
+            @Override
+            public String getMimeContentType() {
+                return "MIME_TYPE";
+            }
+
+            @Override
+            public String getContentFileNameExt() {
+                return ".sql";
+            }
+
+        };
 
         sut = new GzipContentProvider(contentProvider);
     }
 
-    /**
-     * Passes a string as an input for DbContentProvider, gets the gzipped content from GzipContentProvider, unzips it
-     * and checks that result is the same as initial String.
-     * 
-     * @throws FileDownloadException
-     *             Must never happen
-     * @throws IOException
-     *             Must never happen
-     */
-    @Test(enabled = false)
+    @Test
     public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
-        BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(sut.getContent())));
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        sut.writeContent(output);
 
+        BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(
+                new ByteArrayInputStream(output.toByteArray()))));
         String actual = in2.readLine();
         in2.close();
 
         assertEquals(actual, content);
+    }
+
+    @Test(expectedExceptions = GzipPackingException.class)
+    public void IOErrorsWhenGzipThrowsException() throws IOException, FileDownloadException {
+        final GZIPOutputStream gzipOutput = Mockito.mock(GZIPOutputStream.class);
+        Mockito.doThrow(IOException.class).when(gzipOutput).finish();
+
+        sut = new GzipContentProvider(contentProvider) {
+            @Override
+            protected GZIPOutputStream getGZIPOutputStream(OutputStream output) throws IOException {
+                return gzipOutput;
+            }
+        };
+
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        sut.writeContent(output);
     }
 
     @Test
@@ -81,26 +114,7 @@ public class GzipContentProviderTest {
         Assert.assertEquals(".sql.gz", sut.getContentFileNameExt());
     }
 
-    @SuppressWarnings("unchecked")
-    @Test(expectedExceptions = GzipPackingException.class, enabled = false)
-    public void errorsInChildProviderThrowException() throws FileDownloadException, IOException {
-        InputStream mockIOExceptionThrower = Mockito.mock(InputStream.class);
-        Mockito.when(mockIOExceptionThrower.read()).thenThrow(IOException.class);
-        when(contentProvider.getContent()).thenReturn(mockIOExceptionThrower);
-        sut.getContent();
-    }
-
-    @SuppressWarnings("unchecked")
-    @Test(expectedExceptions = GzipPackingException.class, enabled = false)
-    public void errorsWhenCloseResourcesThrowException() throws FileDownloadException, IOException {
-        InputStream mockIOExceptionThrower = Mockito.mock(InputStream.class);
-        Mockito.when(mockIOExceptionThrower.read()).thenReturn(-1);
-        Mockito.doThrow(IOException.class).when(mockIOExceptionThrower).close();
-        when(contentProvider.getContent()).thenReturn(mockIOExceptionThrower);
-        sut.getContent();
-    }
-
     private GzipContentProvider sut;
     private String content;
-    DbDumpContentProvider contentProvider;
+    private ContentProvider contentProvider;
 }

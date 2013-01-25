@@ -14,42 +14,40 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
-import java.io.InputStream;
+import java.io.OutputStream;
 
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
 /**
- * This is an interface for providing content which later will be shipped to a user as a file via standard browser's
- * download functionality. The interface defines common methods such as get a content or return MIME type or file based
- * extension for provided content.
+ * This interface describes a way information about content must be provided for {@link FileDownloadService}.
+ * FileDownloadService needs to know MIME type of the content, extension of a file the content can be saved under and
+ * content data itself.
  * 
  * @author Evgeny Surovtsev
  * 
  */
 public interface ContentProvider {
     /**
-     * The "main" method which prepares content for downloading. Besides of actual preparing also a post processing
-     * under the content like compressing it before sending to the browser and other such activities can be performed
-     * here.
+     * Prepare or process content and save it into provided OutputStream.
      * 
-     * @return Content for sending to a user's browser as a file to download.
+     * @param output
+     *            prepared content is stored into provided OutputStream.
      * @throws FileDownloadException
-     *             is thrown in case of any errors during content preparing.
+     *             if a error during content preparing occurs.
      */
-    InputStream getContent() throws FileDownloadException;
+    void writeContent(OutputStream output) throws FileDownloadException;
 
     /**
-     * The method returns a MIME type for the content which was/will be provided by {@link #getContent()} method. This
-     * method is used for setting MIME type in browser's response.
+     * Return a MIME type for the content. The MIME type will be send to browser as a suggestion for type of downloading
+     * file.
      * 
-     * @return String which represents the defined MIME content type.
+     * @return content's MIME type, such as "text/plain".
      */
     String getMimeContentType();
 
     /**
-     * The method returns file extension for the content which was/will be provided by {@link #getContent()} method.
-     * This needs for forming final filename which will be passed to the browser so browser will be adviced under which
-     * name downloaded file should be saved.
+     * Returns filename's extension for the content. The provided extension is used for generating final filename which
+     * will be passed to the browser as a suggestion of name file should be saved under.
      * 
      * @return Filename extension like ".html" with the dot prefixed.
      */

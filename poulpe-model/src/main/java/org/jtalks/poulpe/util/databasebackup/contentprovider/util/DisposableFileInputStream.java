@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
+package org.jtalks.poulpe.util.databasebackup.contentprovider.util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -18,7 +18,7 @@ import java.io.IOException;
  * @author Evgeny Surovtsev
  * 
  */
-class DisposableFileInputStream extends FileInputStream {
+public class DisposableFileInputStream extends FileInputStream {
     /**
      * Only one constructor with File is available. Creates a FileInputStream by opening a connection to an actual file,
      * the file named by the File object file in the file system.

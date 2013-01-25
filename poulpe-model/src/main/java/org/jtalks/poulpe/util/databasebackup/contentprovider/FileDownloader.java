@@ -19,25 +19,25 @@ import java.io.InputStream;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
 /**
- * An abstract class which performs file downloading process by forcing a browser to start getting the file.
+ * Performs file downloading in the browser with given content's data, MIME type and filename.
  * 
  * @author Evgeny Surovtsev
  * 
  */
 public abstract class FileDownloader {
     /**
-     * The method performs pushing input stream as a file to a browser's download process using predefined MIME Content
-     * Type (see {@link #setMimeContentType(String)}) and Content Filename (see {@link #setContentFileName(String)}).
+     * Pushes input stream as a file to a browser's download process using predefined MIME Content Type (see
+     * {@link #setMimeContentType(String)}) and Content Filename (see {@link #setContentFileName(String)}).
      * 
      * @param content
      *            InputStream object which will be pushed to downloading.
      * @throws FileDownloadException
-     *             throws and exception in case any errors occur during file downloading process.
+     *             if a error occurs during file downloading process.
      */
     protected abstract void download(InputStream content) throws FileDownloadException;
 
     /**
-     * The method sets a MIME type for the content (Ex. "text/plain").
+     * Sets a MIME type for the content, such as "text/plain".
      * 
      * @param mimeContentType
      *            String representation of the MIME content type.
@@ -47,7 +47,7 @@ public abstract class FileDownloader {
     }
 
     /**
-     * The method gets a MIME type for the content (Ex. "text/plain").
+     * Gets a MIME type for the content.
      * 
      * @return A string representation of the MIME content type.
      */
@@ -56,19 +56,19 @@ public abstract class FileDownloader {
     }
 
     /**
-     * Set the Content filename which will be used for storing content on the local disk for a user (ex. "jtalks.sql").
+     * Sets the Content filename which will be suggested to browser as a filename for the downloaded file.
      * 
      * @param contentFileName
-     *            The filename to set.
+     *            The filename to set, such as "jtalks.sql".
      */
     public void setContentFileName(final String contentFileName) {
         this.contentFileName = contentFileName;
     }
 
     /**
-     * Get the Content filename which will be used for storing content on the local disk for a user (ex. "jtalks.sql").
+     * Gets the Content filename.
      * 
-     * @return The filename to get.
+     * @return The suggested filename of the content.
      */
     protected String getContentFileName() {
         return contentFileName;

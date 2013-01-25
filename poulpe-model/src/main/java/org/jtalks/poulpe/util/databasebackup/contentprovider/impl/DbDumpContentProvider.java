@@ -14,12 +14,7 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.List;
@@ -52,8 +47,6 @@ public class DbDumpContentProvider implements ContentProvider {
      * 
      * @param dataSource
      *            A DataSource object points to the data base to export.
-     * @throws NullPointerException
-     *             If dataSource is null.
      */
     DbDumpContentProvider(final DataSource dataSource) {
         Validate.notNull(dataSource, "dataSource must not be null");
@@ -64,55 +57,50 @@ public class DbDumpContentProvider implements ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public InputStream getContent() throws FileDownloadException {
-        File contentFile = null;
-
+    public void writeContent(OutputStream output) throws FileDownloadException {
         try {
             List<String> tableNames = getDbTableNameLister().getPlainList();
             if (tableNames.size() == 0) {
                 throw new DatabaseDoesntContainTablesException();
             }
-
-            contentFile = getFile().createTempFile("dbdump", getContentFileNameExt());
-            OutputStream output = new BufferedOutputStream(new FileOutputStream(contentFile));
             getDbDumpCommand(getDbTableList(tableNames)).execute(output);
-            output.flush();
-            output.close();
 
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
         } catch (IOException e) {
             throw new DatabaseExportingException(e);
         }
-
-        InputStream inputStream = null;
-        try {
-            inputStream = new DisposableFileInputStream(contentFile);
-
-        } catch (FileNotFoundException e) {
-            throw new DatabaseExportingException(e);
-        }
-
-        return inputStream;
     }
 
-    protected FileWrapper getFile() {
-        if (fileWrapper == null) {
-            fileWrapper = new FileWrapper();
-        }
-        return fileWrapper;
-    }
-
-    private FileWrapper fileWrapper;
-
+    /**
+     * Returns a DbTableLister object which can enumerate all table names which database has. The method is marked as
+     * protected so it can be substitute in the unit test class.
+     * 
+     * @return a DbTableNameLister object.
+     */
     protected DbTableNameLister getDbTableNameLister() {
         return new DbTableNameLister(dataSource);
     }
 
+    /**
+     * Returns an instance of {@link DbDumpCommand} which generate full database dump during its execution. The method
+     * is marked as protected so it can be substitute in the unit test class.
+     * 
+     * @param tablesToDump
+     *            a list of {@link DbTable} objects which are used as a source of database dump information.
+     * @return an instance of DbDumpCommand for generating dump of database.
+     */
     protected DbDumpCommand getDbDumpCommand(final List<DbTable> tablesToDump) {
         return new MySqlDataBaseFullDumpCommand(tablesToDump);
     }
 
+    /**
+     * Converts a list of table names into list of {@link DbTable} objects.
+     * 
+     * @param tableNames
+     *            a list of table names.
+     * @return a list of DbTable objects.
+     */
     private List<DbTable> getDbTableList(final List<String> tableNames) {
         List<DbTable> dbTableList = Lists.newArrayList();
         for (String tableName : tableNames) {
