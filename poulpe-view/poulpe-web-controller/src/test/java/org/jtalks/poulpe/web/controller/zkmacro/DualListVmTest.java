@@ -27,10 +27,18 @@ import static org.testng.Assert.*;
 
 public class DualListVmTest {
     DualListVm list;
+    List<Group> leftGroups;
+    List<Group> rightGroups;
+    List<Group> fullList;
 
     @BeforeMethod
     public void setUp() throws Exception {
         list = new DualListVm();
+        leftGroups = Arrays.asList(new Group("first"), new Group("Second"));
+        rightGroups = Arrays.asList(new Group("third"), new Group("4th"));
+        fullList = new ArrayList<Group>();
+        fullList.addAll(leftGroups);
+        fullList.addAll(rightGroups);
     }
 
     @Test
@@ -47,16 +55,62 @@ public class DualListVmTest {
 
     @Test
     public void testInitVm() {
-        List<Group> leftGroups = Arrays.asList(new Group("first"), new Group("Second"));
-        List<Group> rightGroups = Arrays.asList(new Group("third"), new Group("4th"));
-        List<Group> fullList = new ArrayList<Group>();
-        fullList.addAll(leftGroups);
-        fullList.addAll(rightGroups);
-
         list.initVm(fullList, rightGroups);
 
         assertEquals(list.getLeft(), leftGroups);
         assertEquals(list.getRight(), rightGroups);
         assertEquals(list.getStateAfterEdit(), rightGroups);
+    }
+
+    @Test
+    public void testAvailFilterTxt() {
+        list.setAvailFilterTxt("New Text");
+
+        assertEquals(list.getAvailFilterTxt(), "New Text");
+    }
+
+    @Test
+    public void testExistFilterTxt() {
+        list.setExistFilterTxt("My Filter Text");
+
+        assertEquals(list.getExistFilterTxt(), "My Filter Text");
+    }
+
+    @Test
+    public void testAdd() {
+        list.initVm(fullList, rightGroups);
+        list.getLeft().addToSelection(leftGroups.get(0));
+        list.add();
+
+        assertTrue(list.getRight().contains(leftGroups.get(0)));
+        assertTrue(!list.getLeft().contains(leftGroups.get(0)));
+    }
+
+    @Test
+    public void testAddAll() {
+        list.initVm(fullList, rightGroups);
+        list.addAll();
+
+        assertTrue(list.getRight().containsAll(leftGroups));
+        assertEquals(list.getLeft().size(), 0);
+    }
+
+    @Test
+    public void testRemove() {
+        list.initVm(fullList, rightGroups);
+        list.getRight().addToSelection(rightGroups.get(0));
+        list.remove();
+
+        assertTrue(!list.getRight().contains(rightGroups.get(0)));
+        assertTrue(list.getLeft().contains(rightGroups.get(0)));
+    }
+
+    @Test
+    public void testRemoveAll() {
+        list.initVm(fullList, rightGroups);
+        list.removeAll();
+
+        assertTrue(list.getLeft().containsAll(rightGroups));
+        assertEquals(list.getRight().size(), 0);
     }
 }
