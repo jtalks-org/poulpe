@@ -90,14 +90,6 @@ public class EditGroupsVm extends AbstractDialogVm {
     }
 
     /**
-     * Marker method, used to force group list refresh on group selection.
-     */
-    @GlobalCommand
-    @NotifyChange(GROUPS)
-    public void colorChange() {
-    }
-
-    /**
      * Save changes command.
      */
     @GlobalCommand(SAVE_CHANGES)

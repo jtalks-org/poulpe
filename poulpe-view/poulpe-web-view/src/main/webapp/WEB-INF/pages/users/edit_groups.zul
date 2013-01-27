@@ -27,16 +27,10 @@
                 <listheader width="20%" label="${labels.users.grouplist.table.header.status}"/>
             </listhead>
             <template name="model" var="groupBooleanPair">
-                <listitem class="changedListItem" if="${groupBooleanPair.changed == true}">
+                <listitem sclass="@load(groupBooleanPair.listitemClass)">
                     <listcell label="@load(groupBooleanPair.group.name)"/>
                     <listcell>
-                        <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
-                    </listcell>
-                </listitem>
-                <listitem if="${groupBooleanPair.changed == false}">
-                    <listcell label="@load(groupBooleanPair.group.name)"/>
-                    <listcell>
-                        <checkbox checked="@bind(groupBooleanPair.enable)" onCheck="@global-command('colorChange')"/>
+                        <checkbox checked="@bind(groupBooleanPair.enable)"/>
                     </listcell>
                 </listitem>
             </template>

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import org.jtalks.common.model.entity.Group;
+import org.zkoss.bind.annotation.NotifyChange;
 
 import java.text.Collator;
 import java.util.Locale;
@@ -25,6 +26,9 @@ import java.util.Locale;
  * @author Leonid Kazancev
  */
 public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
+    public static final String LIST_ITEM_CLASS = "listitemClass";
+    public static final String CHANGED_LIST_ITEM_CLASS = "changedListItem";
+    public static final String NOT_CHANGED_LIST_ITEM_CLASS = "";
     private boolean enable;
     private boolean changed;
     private Group group;
@@ -50,6 +54,7 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
      * Sets group enable status, also keep actual state of changed status by changing it on enable change.
      * @param enable status to set
      */
+    @NotifyChange(LIST_ITEM_CLASS)
     public void setEnable(boolean enable) {
         if (this.enable != enable) {
             changed = !changed;
@@ -69,6 +74,16 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
      */
     public Group getGroup() {
         return group;
+    }
+
+    /**
+     * @return current style class of listitem, marked by color when changed
+     */
+    public String getListitemClass() {
+        if(changed){
+            return CHANGED_LIST_ITEM_CLASS;
+        }
+        return NOT_CHANGED_LIST_ITEM_CLASS;
     }
 
     @Override

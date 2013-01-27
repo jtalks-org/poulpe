@@ -174,7 +174,6 @@ public class EditGroupsVmTest {
 
     @Test
     public void executeMethodsWithoutLogic() {
-        vm.colorChange();
         vm.isChosen();
         vm.isNotChosen();
     }
