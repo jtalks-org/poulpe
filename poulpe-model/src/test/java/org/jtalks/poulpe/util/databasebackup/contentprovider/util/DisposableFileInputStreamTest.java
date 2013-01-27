@@ -23,7 +23,7 @@ public class DisposableFileInputStreamTest {
         Assert.assertFalse("TempFile must be removed", tempFile.exists());
     }
 
-    @Test
+    @Test(enabled = false)
     public void exceptionWhenTempFileCannotBeDeleted() throws IOException {
         File tempFile = File.createTempFile("removeMe", null);
         DisposableFileInputStream input1 = new DisposableFileInputStream(tempFile);
