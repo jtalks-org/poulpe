@@ -34,7 +34,22 @@ import java.util.Enumeration;
  * @see <a href="https://issues.apache.org/jira/browse/DBCP-332">Apache.org</a>
  */
 public class JdbcDriverUnregisteringListener implements ServletContextListener {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    /** 
+     * Instance of this class created like any other {@link ServletContextListener} on application startup.
+     * We can manage order of call {@link #contextInitialized(ServletContextEvent)} and 
+     * {@link #contextDestroyed(ServletContextEvent)} via {@code web.xml}. But servlet container (like Tomcat) creates
+     * all instances of listeners together. 
+     * 
+     * <p>So, if we initialize logger field ordinary (by class field in listener),
+     * then it will be initialized before first {@link #contextInitialized(ServletContextEvent)} and we lose
+     * opportunity to initialize system properties (like {@code LOG_FILE}) via 
+     * {@link org.jtalks.poulpe.web.controller.LoggerInitializationListener LoggerInitializationListener}</p>
+     * 
+     * <p><b>Best practices is</b>: Do not directly initialize fields of servlet listeners. Use 
+     * {@link #contextInitialized(ServletContextEvent)} and {@link #contextDestroyed(ServletContextEvent)} methods</p> 
+     */
+    private Logger logger;
 
     /**
      * {@inheritDoc}
@@ -48,6 +63,7 @@ public class JdbcDriverUnregisteringListener implements ServletContextListener {
      */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
+        logger = LoggerFactory.getLogger(getClass());
         deregisterDrivers(getDrivers());
     }
 

@@ -37,7 +37,12 @@ import java.util.Properties;
 public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderConfigurer {
     /** Tomcat places its own JNDI context into {@link InitialContext} with this key. So we can look it up. */
     private static final String TOMCAT_CONTEXT_NAME = "java:/comp/env";
-    /** Intentionally didn't want to use Spring's logger from super class, slf4j is more powerful. */
+    
+    /** 
+     * Intentionally didn't want to use Spring's logger from super class, slf4j is more powerful. 
+     * <p><b>Caution!</b> If it will be necessary add "static" attribute, then initialize this field in constructor.
+     * This instant "static" methods and field used for initializing logger on startup</p>
+     */
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     /**
@@ -46,7 +51,7 @@ public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderC
      */
     @Override
     protected String resolvePlaceholder(String placeholder, Properties props, int systemPropertiesMode) {
-        String propValue = resolveJndiProperty(placeholder);
+        String propValue = resolveJndiPropertyAndLog(placeholder);
         if (propValue == null) {
             propValue = super.resolvePlaceholder(placeholder, props, systemPropertiesMode);
         }
@@ -55,23 +60,41 @@ public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderC
 
     /**
      * Takes a look at Tomcat JNDI environment ({@code java:/comp/env}) and tries to find the placeholder there. Returns
-     * {@code null} if nothing found there, otherwise found value is returned as a string.
+     * {@code null} if nothing found there, otherwise found value is returned as a string. 
+     * 
+     * <p>Additionally method logging result of processing JNDI.</p>
      *
      * @param placeholder the property key to find its values
      * @return the value of the property from Tomcat JNDI or {@code null} if nothing found there
      */
-    private String resolveJndiProperty(String placeholder) {
-        String propValue = null;
-        try {
-            Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup(TOMCAT_CONTEXT_NAME);
-            propValue = (String) envContext.lookup(placeholder);
+    private String resolveJndiPropertyAndLog(String placeholder) {
+        String propValue = resolveJndiProperty(placeholder);
+        if (propValue == null){
             logger.info("Property {} taken from JNDI.", placeholder, propValue);
-        } catch (NamingException e) {
+        } else {
             logger.info("Could not resolve JNDI property [{}]. Will be trying file properties, then System ones and " +
                     "if not found anywhere, then defaults will be taken", placeholder);
         }
         return propValue;
+    }
+    
+    /**
+     * Takes a look at Tomcat JNDI environment ({@code java:/comp/env}) and tries to find the placeholder there. Returns
+     * {@code null} if nothing found there, otherwise found value is returned as a string.
+     * 
+     * <p>Method doesn't use logging and public, so it can be used in initialization logger phase</p>
+     *
+     * @param placeholder the property key to find its values
+     * @return the value of the property from Tomcat JNDI or {@code null} if nothing found there
+     */
+    public static String resolveJndiProperty(String placeholder) {
+        try {
+            Context initContext = new InitialContext();
+            Context envContext = (Context) initContext.lookup(TOMCAT_CONTEXT_NAME);
+            return (String) envContext.lookup(placeholder);
+        } catch (NamingException e) {
+            return null;
+        }
     }
 
 }

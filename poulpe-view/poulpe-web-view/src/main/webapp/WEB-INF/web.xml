@@ -58,6 +58,9 @@
 
   <!-- Servlets -->
   <listener>
+    <listener-class>org.jtalks.poulpe.web.controller.LoggerInitializationListener</listener-class>
+  </listener>
+  <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
   <listener>

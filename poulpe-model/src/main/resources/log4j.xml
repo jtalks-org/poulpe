@@ -26,7 +26,8 @@
   </appender>
 
   <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="../logs/poulpe.log"/>
+    <!-- This system property initialized in org.jtalks.poulpe.web.controller.LoggerInitializationListener -->
+    <param name="File" value="${LOG_FILE_POULPE}"/>
     <param name="MaxFileSize" value="5MB"/>
     <param name="MaxBackupIndex" value="2"/>
     <param name="Append" value="true"/>
