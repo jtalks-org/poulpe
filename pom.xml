@@ -463,7 +463,7 @@
 	        <systemPropertyVariables>
 	            <!-- Log file path used for tests, for more info please look at 
 	                 org.jtalks.poulpe.web.controller.LoggerInitializationListener -->
-	            <LOG_FILE_POULPE>../logs/p3oulpe.log</LOG_FILE_POULPE>
+	            <LOG_FILE_POULPE>../logs/poulpe.log</LOG_FILE_POULPE>
 	        </systemPropertyVariables>
 	      </configuration>
         </plugin>
