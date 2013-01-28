@@ -168,6 +168,10 @@ public class LoggerInitializationListener implements ServletContextListener {
         return new logFileInfo("\""+PROPERTIES_FILE+"\" file", logFileName);
     }
     
+    /**
+     * Opens file with properties and return stream
+     * @return {@link InputStream}
+     */
     @VisibleForTesting
     protected InputStream getPropertiesFileStream(){
         return getClass().getResourceAsStream(PROPERTIES_FILE);
