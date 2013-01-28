@@ -23,6 +23,8 @@ import javax.servlet.ServletContextListener;
 
 import org.jtalks.poulpe.model.utils.JndiAwarePropertyPlaceholderConfigurer;
 
+import com.google.common.annotations.VisibleForTesting;
+
 /**
  * Application startup listener which initialize logger properties which used during standard logger initialization 
  * (reading {@code log4j.xml}). 
@@ -146,7 +148,7 @@ public class LoggerInitializationListener implements ServletContextListener {
         InputStream propertiesFileStream = null;
         String logFileName = null;
         try {
-            propertiesFileStream = getClass().getResourceAsStream(PROPERTIES_FILE);
+            propertiesFileStream = getPropertiesFileStream();
             prop.load(propertiesFileStream);
             logFileName = prop.getProperty(LOG_FILE_USER_PROPERTY);
         } catch (IOException e) {
@@ -156,7 +158,7 @@ public class LoggerInitializationListener implements ServletContextListener {
                 try {
                     propertiesFileStream.close();
                 } catch (IOException e) {
-                    logToConsole("Error during closing \""+PROPERTIES_FILE+"\" stream: "+e.toString());                     
+                    logToConsole("Error during closing \""+PROPERTIES_FILE+"\" stream: "+e.toString());
                 }
             }
         }        
@@ -164,6 +166,11 @@ public class LoggerInitializationListener implements ServletContextListener {
             return null;
         }       
         return new logFileInfo("\""+PROPERTIES_FILE+"\" file", logFileName);
+    }
+    
+    @VisibleForTesting
+    protected InputStream getPropertiesFileStream(){
+        return getClass().getResourceAsStream(PROPERTIES_FILE);
     }
 
     /**
