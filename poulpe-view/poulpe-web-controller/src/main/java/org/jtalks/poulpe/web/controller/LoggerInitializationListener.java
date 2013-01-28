@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 import javax.servlet.ServletContextEvent;
@@ -54,7 +55,7 @@ public class LoggerInitializationListener implements ServletContextListener {
      * This property name used as real placeholder in logger configuration file  
      * For usage placeholder in log4j.xml we should set system properties. But system properties have JVM
      * scope. After first setting, we share these properties for all applications until server restart. To prevent 
-     * ambiguity we should use unique and seldom name. All JTalks modules should use separated logs too.
+     * ambiguity we should use unique and seldom name. All JTalks modules should use separated placeholders too.
      * 
      * So we expect {@value #LOG_FILE_USER_PROPERTY} property form user and use it value to set 
      * real placeholder {@value #LOG_FILE_SYSTEM_PROPERTY}    
@@ -75,37 +76,28 @@ public class LoggerInitializationListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent event){
         
-        String sourceDescriptor = null;
-        String logFile = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOG_FILE_USER_PROPERTY);
+        logFileInfo logFileInfo = getLogFileNameFromJNDI();       
         
-        if (logFile != null) {
-            sourceDescriptor = "JNDI";
-        } else {
-            Properties prop = new Properties();
-            try {
-                prop.load(getClass().getResourceAsStream(PROPERTIES_FILE));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            logFile = prop.getProperty(LOG_FILE_USER_PROPERTY);
-
-            if (logFile != null) {
-                sourceDescriptor = "\""+PROPERTIES_FILE+"\" file";
-            } else {
-                logFile = System.getProperty(LOG_FILE_USER_PROPERTY);
-
-                if (logFile != null) {
-                    sourceDescriptor = "system properties";
-                } else {
-                    logFile = LOG_FILE_VALUE_DEFAULT;
-                    sourceDescriptor = "default value";
-                }
-            }
+        if (logFileInfo == null) {
+            logFileInfo = getLogFileNameFromDatasourcePropertiesFile();
         }
-        // Console output. It's not mistake. No sense to put information about log file path in the same log file 
-        System.out.println("Log file path taken from "+sourceDescriptor+" and set to \""+logFile+"\"");
         
-        System.setProperty(LOG_FILE_SYSTEM_PROPERTY, logFile);             
+        if (logFileInfo == null) {
+            logFileInfo = getLogFileNameFromDatasourcePropertiesFile();
+        } 
+        
+        if (logFileInfo == null) {
+            logFileInfo = getLogFileNameFromSystemProperties();
+        }
+       
+        if (logFileInfo == null) {
+            logFileInfo = getDefaultLogFileName();
+        }
+         
+        logToConsole("Log file name taken from "+logFileInfo.getSourceDescriptor()+" and set to \""
+                     + logFileInfo.getLogFileName()+"\"");
+        
+        System.setProperty(LOG_FILE_SYSTEM_PROPERTY, logFileInfo.getLogFileName());             
     }
 
     /**
@@ -115,5 +107,113 @@ public class LoggerInitializationListener implements ServletContextListener {
     @Override
     public void contextDestroyed(ServletContextEvent event) {
         System.clearProperty(LOG_FILE_SYSTEM_PROPERTY);
+    }
+    
+    /**
+     * Console output. It's not mistake. No sense to put information about:
+     * <ol>
+     * <li>logger initialization fails without log file</li> 
+     * <li>log file destination in same log</li>
+     * </ol>
+     * 
+     * <p>By default Tomcat redirects console (out and err streams) to <b>catalina.out</b> file</p>
+     * 
+     * @see <a href="http://wiki.apache.org/tomcat/FAQ/Logging#Q6">About standard streams at Tomcat FAQ</a>  
+     * @param message for logging
+     */
+    private void logToConsole(String message){
+        System.out.println(message); //NOSONAR
+    }
+    
+    /**
+     * Check {@value #LOG_FILE_USER_PROPERTY} property from JNDI
+     * @return {@link logFileInfo} or {@code null}
+     */
+    private logFileInfo getLogFileNameFromJNDI(){      
+        String logFileName = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOG_FILE_USER_PROPERTY);      
+        if (logFileName == null) {
+            return null;
+        }
+        return new logFileInfo("JNDI", logFileName);
+    }
+    
+    /**
+     * Check {@value #LOG_FILE_USER_PROPERTY} property from {@value #PROPERTIES_FILE} file 
+     * @return {@link logFileInfo} or {@code null}
+     */
+    private logFileInfo getLogFileNameFromDatasourcePropertiesFile(){        
+        Properties prop = new Properties();
+        InputStream propertiesFileStream = null;
+        String logFileName = null;
+        try {
+            propertiesFileStream = getClass().getResourceAsStream(PROPERTIES_FILE);
+            prop.load(propertiesFileStream);
+            logFileName = prop.getProperty(LOG_FILE_USER_PROPERTY);
+        } catch (IOException e) {
+            logToConsole("Error during reading \""+PROPERTIES_FILE+"\" stream: "+e.toString());                   
+        } finally {
+            if (propertiesFileStream != null) {
+                try {
+                    propertiesFileStream.close();
+                } catch (IOException e) {
+                    logToConsole("Error during closing \""+PROPERTIES_FILE+"\" stream: "+e.toString());                     
+                }
+            }
+        }        
+        if (logFileName == null) {
+            return null;
+        }       
+        return new logFileInfo("\""+PROPERTIES_FILE+"\" file", logFileName);
+    }
+
+    /**
+     * Check {@value #LOG_FILE_USER_PROPERTY} property from system properties 
+     * @return {@link logFileInfo} or {@code null}
+     */
+    private logFileInfo getLogFileNameFromSystemProperties(){
+        String logFileName = System.getProperty(LOG_FILE_USER_PROPERTY);        
+        if (logFileName == null) {
+            return null;
+        }        
+        return new logFileInfo("system properties", logFileName);       
+    }
+    
+    /**
+     * @return {@link logFileInfo} with default value {@value #LOG_FILE_VALUE_DEFAULT}
+     */
+    private logFileInfo getDefaultLogFileName(){       
+        return new logFileInfo("default value", LOG_FILE_VALUE_DEFAULT);       
+    }
+
+    /**
+     *  Auxiliary class which contains all necessary information about log file and its source 
+     */
+    private static class logFileInfo {
+        private final String sourceDescriptor;
+        private final String logFileName;
+
+        /**
+         * Creates new instance log file information container
+         * @param sourceDescriptor user friendly descriptor about its log file source 
+         * @param logFileName path to log file
+         */
+        public logFileInfo(String sourceDescriptor, String logFileName) {
+            this.sourceDescriptor = sourceDescriptor;
+            this.logFileName = logFileName;
+        }
+
+        /**
+         * @return descriptor of log file
+         */
+        public String getSourceDescriptor() {
+            return sourceDescriptor;
+        }
+
+        /**
+         * @return path to log file 
+         */
+        public String getLogFileName() {
+            return logFileName;
+        }      
     }
 }
