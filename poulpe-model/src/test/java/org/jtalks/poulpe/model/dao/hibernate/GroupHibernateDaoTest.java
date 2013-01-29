@@ -156,6 +156,17 @@ public class GroupHibernateDaoTest extends AbstractTransactionalTestNGSpringCont
         assertReflectionEquals(actual.get(0), group);
     }
 
+    @Test
+    public void testGetByNameWithSpecialChars() {
+        Group group = TestFixtures.group();
+        group.setName("!@#$%^&*()\"\'\\/");
+        saveAndEvict(group);
+
+        List<Group> actual = dao.getByName(group.getName());
+        assertEquals(actual.size(), 1);
+        assertReflectionEquals(actual.get(0), group);
+    }
+
 
     @Test
     public void getGetUsersCount() {

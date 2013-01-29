@@ -70,7 +70,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
         Validate.notNull(name, "User Group name can't be null");
         Query query = getSession().getNamedQuery(FIND_EXACTLY_BY_NAME);
         // we should use lower case to search ignoring case
-        query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
+        query.setString("name", name);
         return query.list();
     }
 
