@@ -31,16 +31,6 @@ public class FileDownloadException extends Exception {
     }
 
     /**
-     * Constructor with predefined error message.
-     * 
-     * @param msg
-     *            Predefined error message.
-     */
-    public FileDownloadException(final String msg) {
-        super(msg);
-    }
-
-    /**
      * Constructor creates an instance and uses error message from given Exception.
      * 
      * @param e

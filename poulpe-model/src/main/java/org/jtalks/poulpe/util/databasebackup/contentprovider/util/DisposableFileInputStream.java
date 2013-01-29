@@ -37,9 +37,19 @@ public class DisposableFileInputStream extends FileInputStream {
     @Override
     public void close() throws IOException {
         super.close();
-        if (!file.delete()) {
+        if (!getFile().delete()) {
             throw new IOException("File " + file.getAbsolutePath() + " cannot be deleted.");
         }
+    }
+
+    /**
+     * Returns a file associated with current InputStream. The method is marked as protected so it can be substitute by
+     * test class later.
+     * 
+     * @return a file associated with current InputStream.
+     */
+    protected File getFile() {
+        return file;
     }
 
     private File file;

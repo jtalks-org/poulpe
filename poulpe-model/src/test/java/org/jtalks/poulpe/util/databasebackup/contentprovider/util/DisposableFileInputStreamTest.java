@@ -5,37 +5,45 @@ import java.io.IOException;
 
 import junit.framework.Assert;
 
+import org.mockito.Mockito;
+import org.testng.annotations.AfterMethod;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 
 public class DisposableFileInputStreamTest {
 
     @BeforeMethod
-    public void beforeMethod() {
+    public void beforeMethod() throws IOException {
+        tempFile = File.createTempFile("removeMe", null);
     }
 
     @Test
     public void removeTempFileAfterClosing() throws IOException {
-        File tempFile = File.createTempFile("removeMe", null);
         DisposableFileInputStream input = new DisposableFileInputStream(tempFile);
-        Assert.assertTrue("TempFile must exist and be a file", tempFile.exists() && tempFile.isFile());
         input.close();
+
         Assert.assertFalse("TempFile must be removed", tempFile.exists());
     }
 
-    @Test(enabled = false)
+    @Test(expectedExceptions = IOException.class)
     public void exceptionWhenTempFileCannotBeDeleted() throws IOException {
-        File tempFile = File.createTempFile("removeMe", null);
-        DisposableFileInputStream input1 = new DisposableFileInputStream(tempFile);
-        DisposableFileInputStream input2 = new DisposableFileInputStream(tempFile);
+        final File mockFile = Mockito.mock(File.class);
+        Mockito.when(mockFile.delete()).thenReturn(false);
 
-        try {
-            input1.close();
-            Assert.fail(tempFile.getAbsolutePath() + " must be blocked.");
-        } catch (IOException e) {
-            // doing nothing
-        }
-        input2.close();
-        Assert.assertFalse("TempFile must be removed", tempFile.exists());
+        DisposableFileInputStream input = new DisposableFileInputStream(tempFile) {
+            @Override
+            protected File getFile() {
+                return mockFile;
+            }
+        };
+
+        input.close();
     }
+
+    @AfterMethod
+    public void afterMethod() {
+        tempFile.delete();
+    }
+
+    private File tempFile;
 }
