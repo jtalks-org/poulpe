@@ -40,8 +40,8 @@ public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderC
     
     /** 
      * Intentionally didn't want to use Spring's logger from super class, slf4j is more powerful. 
-     * <p><b>Caution!</b> If it will be necessary add "static" attribute, then initialize this field in constructor.
-     * This instant "static" methods and field used for initializing logger on startup</p>
+     * <p><b>Caution!</b> Do not make it "static", because the class is used to configure logger on startup and thus
+     * it will initialize a logger instance before we actually configured it.</p>
      */
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -60,9 +60,7 @@ public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderC
 
     /**
      * Takes a look at Tomcat JNDI environment ({@code java:/comp/env}) and tries to find the placeholder there. Returns
-     * {@code null} if nothing found there, otherwise found value is returned as a string. 
-     * 
-     * <p>Additionally method logging result of processing JNDI.</p>
+     * {@code null} if nothing found there, otherwise found value is returned as a string.
      *
      * @param placeholder the property key to find its values
      * @return the value of the property from Tomcat JNDI or {@code null} if nothing found there
@@ -81,8 +79,9 @@ public class JndiAwarePropertyPlaceholderConfigurer extends PropertyPlaceholderC
     /**
      * Takes a look at Tomcat JNDI environment ({@code java:/comp/env}) and tries to find the placeholder there. Returns
      * {@code null} if nothing found there, otherwise found value is returned as a string.
-     * 
-     * <p>Method doesn't use logging and public, so it can be used in initialization logger phase</p>
+     *
+     * <p>Method is public, so that it can be used in initialization phase of web app out of Spring IoC. Also it also
+     * doesn't use any logging, which is particularly useful when it comes to initializing of the logger itself.</p>
      *
      * @param placeholder the property key to find its values
      * @return the value of the property from Tomcat JNDI or {@code null} if nothing found there
