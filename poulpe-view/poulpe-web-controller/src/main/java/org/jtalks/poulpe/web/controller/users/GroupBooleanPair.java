@@ -21,38 +21,38 @@ import java.text.Collator;
 import java.util.Locale;
 
 /**
- * Wires {@link Group} and {@link Boolean} by enable selected status for group, allows to make interface with
- * list of groups wired with checkboxes.
+ * Wires {@link Group} and {@link Boolean} value to show whether user is inside of the group or not. If it's the boolean
+ * is false, then user is not in the group.
+ *
  * @author Leonid Kazancev
  */
 public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
-    public static final String LIST_ITEM_CLASS = "listitemClass";
-    public static final String CHANGED_LIST_ITEM_CLASS = "changedListItem";
-    public static final String NOT_CHANGED_LIST_ITEM_CLASS = "";
+    private static final String LIST_ITEM_CLASS = "listitemClass";
+    private static final String CHANGED_LIST_ITEM_CLASS = "changedListItem";
+    private static final String NOT_CHANGED_LIST_ITEM_CLASS = "";
     private boolean enable;
     private boolean changed;
     private Group group;
 
     /**
-     * Construction method.
-     * @param group to hold
-     * @param enable status of group
+     * @param group  the group to show whether user is part of it
+     * @param enable whether the user is inside of the group or not
      */
     public GroupBooleanPair(Group group, boolean enable) {
         this.enable = enable;
         this.group = group;
     }
 
-    /**
-     * @return enable status
-     */
+    /** @return true if user is in the group */
     public boolean isEnable() {
         return enable;
     }
 
     /**
-     * Sets group enable status, also keep actual state of changed status by changing it on enable change.
-     * @param enable status to set
+     * Says to UI that user is a part of that group or vice versa. Besides this, it keeps track whether this row was
+     * changed or not (on UI we mark the row in different color if the row was changed).
+     *
+     * @param enable false if user now shouldn't be the part of the group
      */
     @NotifyChange(LIST_ITEM_CLASS)
     public void setEnable(boolean enable) {
@@ -63,24 +63,20 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     }
 
     /**
-     * @return changed status(holds group color)
+     * @return whether the state actually has been changed (user was added to the group while it wasn't on the start, or
+     *         vice versa - user was removed)
      */
     public boolean isChanged() {
         return changed;
     }
 
-    /**
-     * @return {@link Group}
-     */
     public Group getGroup() {
         return group;
     }
 
-    /**
-     * @return current style class of listitem, marked by color when changed
-     */
+    /** @return current style class of listitem, marked by color when changed */
     public String getListitemClass() {
-        if(changed){
+        if (changed) {
             return CHANGED_LIST_ITEM_CLASS;
         }
         return NOT_CHANGED_LIST_ITEM_CLASS;
@@ -89,7 +85,7 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     @Override
     public int compareTo(GroupBooleanPair pair) {
         if (enable != pair.isEnable()) {
-            return ((Boolean)pair.isEnable()).compareTo(enable);
+            return ((Boolean) pair.isEnable()).compareTo(enable);
         } else {
             Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
             return russianCollator.compare(group.getName(), pair.getGroup().getName());
@@ -107,7 +103,9 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
 
         GroupBooleanPair that = (GroupBooleanPair) o;
 
-        if (enable != that.enable) return false;
+        if (enable != that.enable) {
+            return false;
+        }
         Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
         if ((russianCollator.compare(group.getName(), that.getGroup().getName())) != 0) {
             return false;
