@@ -1,0 +1,19 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!-- The file should be used to configure the app, like its database access, mail passwords, etc. -->
+<!-- It should be placed into $TOMCAT_HOME/conf/Catalina/localhost folder and its name should be the same -->
+<!-- as the name of war file. E.g. if the war file is 'poulpe.war', then this file should be 'poulpe.xml' -->
+<Context>
+  <WatchedResource>WEB-INF/web.xml</WatchedResource>
+  <!--database configuration, change user, password and database name if you need-->
+  <Environment name="POULPE_DB_USER" value="root" type="java.lang.String"/>
+  <Environment name="POULPE_DB_PASSWORD" value="root" type="java.lang.String"/>
+  <Environment name="POULPE_DB_URL" type="java.lang.String"
+               value="jdbc:mysql://localhost/jtalks?characterEncoding=UTF-8"/>
+
+  <!--This is a cache configuration file, it's required because JCommune and Poulpe are using shared distributed cache
+    to communicate with updates. Thus, uncomment it if you need both Poulpe and JCommune running together at the same
+    time. It should be similar to this config:
+    https://github.com/jtalks-org/poulpe/blob/master/poulpe-model/src/main/resources/org/jtalks/poulpe/model/entity/ehcache.xml
+    The port inside of this file might require changing to the same as JCommune uses. Or vice versa-->
+  <!--   <Environment name="EH_CACHE_CONFIG" value="/home/someuser/soft/apache-tomcat/conf/poulpe.ehcache.xml" type="java.lang.String" /> -->
+</Context>

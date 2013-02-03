@@ -1,12 +1,10 @@
 JTalks Poulpe
 ---
-### Description
-Poulpe is a part of JTalks ecosystem that represents administration panel for other components like JCommune (forum engine) and Antarcticle (article/blog engine).
+Poulpe is a part of [JTalks](http://jtalks.org) ecosystem of projects which represents admin panel for user management that is under active development.
 
+* [Installation Guide](docs/installation/general-installation-guide.md) is to be read if you want just to try the app or you want to install it locally
 
-### License
-
-JTalks.org project developed under Lesser General Public Licence 2.1 - [LGPL 2.1](http://www.gnu.org/licenses/lgpl-2.1.html)
-JTalks.org project developed under Lesser General Public Licence 2.1 - [LGPL 2.1](http://www.gnu.org/licenses/lgpl-2.1.html)
-test1
- 
+For developers/QA/PMs/Leads:
+* [How to join us](http://jtalks.org/display/jtalks/How+to+join+us)
+* [Stack of Technologies](http://jtalks.org/display/jtalks/Stack+of+technologies)
+* [Code Conventions](http://jtalks.org/display/jtalks/Code+Conventions)
