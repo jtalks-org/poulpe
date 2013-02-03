@@ -101,7 +101,7 @@
     </query>
 
     <query name="findUnbannedUsersByLikeUsername">
-        <![CDATA[from PoulpeUser u where u.username like :username and not exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
+        <![CDATA[from PoulpeUser u where u.username like :username and u.enabled = 1 and not exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
     </query>
 
     <query name="findEnabledUsersByLikeUsernameNotInList">

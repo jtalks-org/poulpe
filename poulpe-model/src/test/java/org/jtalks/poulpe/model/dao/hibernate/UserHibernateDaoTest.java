@@ -230,25 +230,23 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
     @Test
     public void testFindUsersNotInList(){
         List<PoulpeUser> allUsers = TestFixtures.usersListOf(6);
-        allUsers.get(4).setEnabled(true);
+        allUsers.get(4).setEnabled(false);
 
         List<PoulpeUser> usersInGroup = allUsers.subList(0,3);
-        usersInGroup.get(0).setEnabled(true);
-        usersInGroup.get(1).setEnabled(true);
-        usersInGroup.get(2).setEnabled(true);
 
         saveAndEvict(allUsers);
         int limit = 5;
 
         List<PoulpeUser> actual = dao.findUsersNotInList(NO_FILTER, usersInGroup, Pages.paginate(0, limit));
-        int expectedUserCount = 1;
+        int expectedUserCount = 2;
         assertEquals(actual.size(), expectedUserCount);
     }
 
     @Test
     public void testFindUsersNotInList_EmptyGroup(){
         List<PoulpeUser> allUsers = TestFixtures.usersListOf(6);
-        allUsers.get(4).setEnabled(true);
+        allUsers.get(4).setEnabled(false);
+        allUsers.get(3).setEnabled(false);
 
         List<PoulpeUser> usersInGroup = new ArrayList<PoulpeUser>();
 
@@ -257,7 +255,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
         List<PoulpeUser> actual = dao.findUsersNotInList(NO_FILTER, usersInGroup, Pages.paginate(0, limit));
 
-        int expectedUsersCount = 1;
+        int expectedUsersCount = 4;
         assertEquals(actual.size(), expectedUsersCount);
     }
 

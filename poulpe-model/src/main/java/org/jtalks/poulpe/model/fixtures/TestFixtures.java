@@ -199,7 +199,9 @@ public final class TestFixtures {
 
     /** @return user with random name, email, password and empty salt */
     public static PoulpeUser user() {
-        return user(random());
+        PoulpeUser user = user(random());
+        user.setEnabled(true);
+        return user;
     }
 
     /** @return group with randoms users */
