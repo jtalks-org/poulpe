@@ -6,6 +6,8 @@ Poulpe is a part of [JTalks](http://jtalks.org) ecosystem of projects which repr
 
 For developers/QA/PMs/Leads:
 * [How to join us](http://jtalks.org/display/jtalks/How+to+join+us)
+* [Sonar](http://sonar.jtalks.org/dashboard/index/534)
+* [Deployment Pipeline](http://ci.jtalks.org/view/Poulpe.%20Pipeline)
 * [Stack of Technologies](http://jtalks.org/display/jtalks/Stack+of+technologies)
 * [Code Conventions](http://jtalks.org/display/jtalks/Code+Conventions)
 
