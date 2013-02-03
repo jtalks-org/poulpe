@@ -137,9 +137,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         }
         Query query=null;
         if(ids.size()==0){
-            query = getSession().getNamedQuery("findUsersByLikeUsername");
+            query = getSession().getNamedQuery("findEnabledUsersByLikeUsername");
         }else{
-            query = getSession().getNamedQuery("findUsersByLikeUsernameNotInList");
+            query = getSession().getNamedQuery("findEnabledUsersByLikeUsernameNotInList");
             query.setParameterList("listUsers", ids);
         }
 

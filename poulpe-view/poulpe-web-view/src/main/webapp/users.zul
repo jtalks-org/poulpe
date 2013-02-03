@@ -29,7 +29,7 @@
         <listheader label="${labels.users.role}" sort="auto(role)" />
       </listhead>
       <template name="model" var="user">
-        <listitem context="popupMenu">
+        <listitem context="@load((user.enabled) ? 'popupMenuForEnabledUsers':'popupMenuForDisabledUsers'))">
           <listcell label="@load(user.username)" />
           <listcell label="@load(user.email)" />
           <listcell label="@load(user.firstName)" />
@@ -39,10 +39,16 @@
       </template>
     </listbox>
 
-    <menupopup id="popupMenu">
+    <menupopup id="popupMenuForEnabledUsers">
       <menuitem image="/resources/img/edit16.png" label="${labels.users.edituserdialog.title}" onClick="@command('editUser')"/>
       <menuitem image="/resources/img/changepass16.png" label="${labels.users.changePasswordDialog.title}" onClick="@command('showChangePasswordWindow')"/>
       <menuitem image="/resources/img/groupsedit16.png" label="${labels.users.grouplist.menulabel}" onClick="@global-command('editGroups')"/>
+    </menupopup>
+
+    <menupopup id="popupMenuForDisabledUsers">
+      <menuitem image="/resources/img/edit16.png" label="${labels.users.edituserdialog.title}" onClick="@command('editUser')"/>
+      <menuitem image="/resources/img/changepass16.png" label="${labels.users.changePasswordDialog.title}" onClick="@command('showChangePasswordWindow')"/>
+      <menuitem image="/resources/img/groupsedit16.png" label="${labels.users.grouplist.menulabel}" onClick="@global-command('editGroups')" disabled="true"/>
     </menupopup>
 
       <include src="/WEB-INF/pages/users/edit_groups.zul"/>

@@ -57,6 +57,8 @@
 
         <property column="SALT" name="salt" not-null="true"/>
 
+        <property column="ENABLED" name="enabled" not-null="true"/>
+
         <bag name="groups" table="GROUP_USER_REF" inverse="true" lazy="true" fetch="select">
             <cache usage="nonstrict-read-write" region="org.jtalks.common.model.entity.User.groups"/>
             <key column="USER_ID" not-null="true"/>
@@ -76,6 +78,10 @@
 
     <query name="findUsersByLikeUsername">
         <![CDATA[from PoulpeUser u where u.username like :username order by u.username]]>
+    </query>
+
+    <query name="findEnabledUsersByLikeUsername">
+        <![CDATA[from PoulpeUser u where u.username like :username and u.enabled = 1 order by u.username]]>
     </query>
 
     <query name="countUsersByLikeUsername">
@@ -98,8 +104,8 @@
         <![CDATA[from PoulpeUser u where u.username like :username and not exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
     </query>
 
-    <query name="findUsersByLikeUsernameNotInList">
-        <![CDATA[from PoulpeUser u where  u.username like :username and not u.id in (:listUsers) ]]>
+    <query name="findEnabledUsersByLikeUsernameNotInList">
+        <![CDATA[from PoulpeUser u where  u.username like :username and not u.id in (:listUsers) and u.enabled = 1 ]]>
     </query>
 
 </hibernate-mapping>
