@@ -29,9 +29,9 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     public static final String LIST_ITEM_CLASS = "listitemClass";
     public static final String CHANGED_LIST_ITEM_CLASS = "changedListItem";
     public static final String NOT_CHANGED_LIST_ITEM_CLASS = "";
+    private final Group group;
     private boolean enable;
     private boolean changed;
-    private Group group;
 
     /**
      * Construction method.
