@@ -39,6 +39,8 @@ public class EditGroupsVm extends AbstractDialogVm {
     private boolean chosen = true;
     private boolean notChosen = true;
     protected static final String GROUPS = "groupsToShow";
+    public static final String CHOSEN = "chosen";
+    public static final String NOT_CHOSEN = "notChosen";
     private static final String EDIT_GROUPS = "editGroups";
     private static final String FILTER_GROUPS = "filterGroups";
     private static final String SAVE_CHANGES = "saveUserGroupsChanges";
@@ -73,7 +75,7 @@ public class EditGroupsVm extends AbstractDialogVm {
      * @throws NotFoundException on user not found
      */
     @GlobalCommand(EDIT_GROUPS)
-    @NotifyChange({SHOW_DIALOG, GROUPS, USER_TO_EDIT})
+    @NotifyChange({SHOW_DIALOG, GROUPS, USER_TO_EDIT, CHOSEN, NOT_CHOSEN})
     public void editGroups() throws NotFoundException {
         userToEdit = usersVm.getSelectedUser();
         init();
