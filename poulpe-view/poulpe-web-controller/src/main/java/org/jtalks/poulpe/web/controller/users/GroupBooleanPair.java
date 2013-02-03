@@ -77,6 +77,8 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     }
 
     /**
+     * This method used by ZK.
+     *
      * @return current style class of listitem, marked by color when changed
      */
     public String getListitemClass() {
