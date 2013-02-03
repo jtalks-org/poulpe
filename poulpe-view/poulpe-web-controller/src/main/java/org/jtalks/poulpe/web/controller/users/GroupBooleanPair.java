@@ -113,7 +113,9 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
 
         GroupBooleanPair that = (GroupBooleanPair) o;
 
-        if (enable != that.enable) return false;
+        if (enable != that.enable) {
+            return false;
+        }
         //TODO Implement multilang solution of equals.
         Collator russianCollator = Collator.getInstance(new Locale("ru", "RU"));
         if ((russianCollator.compare(group.getName(), that.getGroup().getName())) != 0) {
@@ -129,8 +131,9 @@ public class GroupBooleanPair implements Comparable<GroupBooleanPair> {
     @Override
     public int hashCode() {
         int result = (enable ? 1 : 0);
-        result = 31 * result + (changed ? 1 : 0);
-        result = 31 * result + (group != null ? group.hashCode() : 0);
+        int constant = 31;
+        result = constant * result + (changed ? 1 : 0);
+        result = constant * result + (group != null ? group.hashCode() : 0);
         return result;
     }
 }
