@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.mockito.Matchers.any;
@@ -50,7 +51,6 @@ public class EditGroupsVmTest {
         allGroups.add(group4);
         allGroups.add(group5);
         when(groupService.getAll()).thenReturn(allGroups);
-
         userGroups = new ArrayList<Group>(2);
         userGroups.add(group1);
         userGroups.add(group3);
@@ -63,6 +63,8 @@ public class EditGroupsVmTest {
     public void editGroupsTest() throws NotFoundException {
         int expectedSizeGroupsToShow = allGroups.size();
         vm.editGroups();
+        Assert.assertTrue(vm.isChosen());
+        Assert.assertTrue(vm.isNotChosen());
         Assert.assertTrue(vm.isShowDialog());
         Assert.assertEquals(expectedSizeGroupsToShow, vm.getGroups().size());
         for (GroupBooleanPair groupPair : vm.getGroups()) {
@@ -141,6 +143,8 @@ public class EditGroupsVmTest {
 
         vm.saveChanges();
 
+        Assert.assertTrue(vm.isChosen());
+        Assert.assertTrue(vm.isNotChosen());
         Assert.assertEquals(expectedSizeUserGroups, userGroups.size());
         Assert.assertEquals(expectedSizeAllGroups, allGroups.size());
         Assert.assertNotSame("A", userGroups.get(0).getName());

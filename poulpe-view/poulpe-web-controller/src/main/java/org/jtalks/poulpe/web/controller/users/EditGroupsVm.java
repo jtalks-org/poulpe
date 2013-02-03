@@ -121,6 +121,8 @@ public class EditGroupsVm extends AbstractDialogVm {
      * Initialization method, data loading.
      */
     private void init() {
+        chosen = true;
+        notChosen = true;
         List<Group> allGroups = groupService.getAll();
         List<Group> userGroupList = userToEdit.getGroups();
         groups = new ArrayList<GroupBooleanPair>(allGroups.size());
