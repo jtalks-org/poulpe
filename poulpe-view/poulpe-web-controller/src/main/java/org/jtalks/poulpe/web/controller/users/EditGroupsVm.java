@@ -36,16 +36,14 @@ import java.util.List;
  * @author Leonid Kazancev
  */
 public class EditGroupsVm extends AbstractDialogVm {
+    /**
+     * Property names to be used in ZK MVVM annotations.
+     */
+    private static final String GROUPS = "groupsToShow", CHOSEN = "chosen", NOT_CHOSEN = "notChosen",
+            EDIT_GROUPS = "editGroups", FILTER_GROUPS = "filterGroups", SAVE_CHANGES = "saveUserGroupsChanges",
+            USER_TO_EDIT = "userToEdit";
     private boolean chosen = true;
     private boolean notChosen = true;
-    protected static final String GROUPS = "groupsToShow";
-    public static final String CHOSEN = "chosen";
-    public static final String NOT_CHOSEN = "notChosen";
-    private static final String EDIT_GROUPS = "editGroups";
-    private static final String FILTER_GROUPS = "filterGroups";
-    private static final String SAVE_CHANGES = "saveUserGroupsChanges";
-    private static final String USER_TO_EDIT = "userToEdit";
-
     private List<GroupBooleanPair> groupsToShow;
     private List<GroupBooleanPair> groups;
 
@@ -62,9 +60,7 @@ public class EditGroupsVm extends AbstractDialogVm {
      * @param userService service instance to save changes
      * @param groupService service instance to save changes
      */
-    public EditGroupsVm(@Nonnull UsersVm usersVm,
-                        @Nonnull UserService userService,
-                        @Nonnull GroupService groupService) {
+    public EditGroupsVm(UsersVm usersVm, UserService userService, GroupService groupService) {
         this.userService = userService;
         this.groupService = groupService;
         this.usersVm = usersVm;
