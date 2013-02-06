@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +54,8 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * {@inheritDoc}
      */
     @Override
-    protected StringBuilder getHeader() {
+    protected void putHeader(Writer writer) throws IOException {
+        assert writer != null : "writer must not be null";
         StringBuilder header = new StringBuilder();
         header.append("--");
         header.append(LINEFEED);
@@ -62,14 +65,17 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         header.append("--");
         header.append(LINEFEED);
 
-        return header;
+        writer.write(header.toString());
     }
 
     /**
      * {@inheritDoc}
+     * 
+     * @throws IOException
      */
     @Override
-    protected StringBuilder getData() throws SQLException {
+    protected void putData(Writer writer) throws SQLException, IOException {
+        assert writer != null : "writer must not be null";
         StringBuilder data = new StringBuilder();
 
         data.append("CREATE TABLE ");
@@ -86,7 +92,7 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         data.append(getCommonParameters());
         data.append(";");
 
-        return data;
+        writer.write(data.toString());
     }
 
     /**

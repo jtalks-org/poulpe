@@ -3,6 +3,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.Writer;
 import java.sql.SQLException;
 
 import org.testng.Assert;
@@ -15,13 +16,13 @@ public class HeaderAndDataAwareCommandTest {
         sut = new HeaderAndDataAwareCommand() {
 
             @Override
-            protected StringBuilder getHeader() {
-                return new StringBuilder(getHeaderReturn);
+            protected void putHeader(Writer writer) throws IOException {
+                writer.write(getHeaderReturn);
             }
 
             @Override
-            protected StringBuilder getData() {
-                return new StringBuilder(getDataReturn);
+            protected void putData(Writer writer) throws IOException {
+                writer.write(getDataReturn);
             }
 
         };

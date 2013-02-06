@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,26 +51,27 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      * {@inheritDoc}
      */
     @Override
-    protected StringBuilder getHeader() {
+    protected void putHeader(Writer writer) throws IOException {
+        assert writer != null : "writer must not be null";
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Dumping data for table ");
         header.append(TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()));
         header.append(LINEFEED);
         header.append("--").append(LINEFEED).append(LINEFEED);
-        return header;
+
+        writer.write(header.toString());
     }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    protected StringBuilder getData() throws SQLException {
-        StringBuilder data = new StringBuilder();
+    protected void putData(Writer writer) throws SQLException, IOException {
+        assert writer != null : "writer must not be null";
         for (Row dataDump : dbTable.getData()) {
-            data.append(getRowDataText(dataDump));
+            writer.write(getRowDataText(dataDump));
         }
-        return data;
     }
 
     /**
@@ -78,7 +81,7 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      *            A Row based on which a new INSERT statement will be constructed.
      * @return A SQL valid INSERT statement.
      */
-    private StringBuilder getRowDataText(final Row row) {
+    private String getRowDataText(final Row row) {
         assert row != null : "row must not be null";
         List<String> nameColumns = new ArrayList<String>();
         List<String> valueColumns = new ArrayList<String>();
@@ -92,12 +95,10 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
             nameColumns.add(columnData.getColumnName());
         }
 
-        return new StringBuilder()
-                .append(String.format(INSERT_ROW_TEMPLATE,
-                        TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()),
-                        StringUtils.join(nameColumns, ","),
-                        StringUtils.join(valueColumns, ",")))
-                .append(LINEFEED);
+        return String.format(INSERT_ROW_TEMPLATE,
+                TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()),
+                StringUtils.join(nameColumns, ","),
+                StringUtils.join(valueColumns, ","));
     }
 
     private final DbTable dbTable;
@@ -105,5 +106,5 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
     /**
      * %1 - tablename %2 - nameColumns %3 - valueColumns.
      */
-    private static final String INSERT_ROW_TEMPLATE = "INSERT INTO %1$s (%2$s) VALUES (%3$s);";
+    private static final String INSERT_ROW_TEMPLATE = "INSERT INTO %1$s (%2$s) VALUES (%3$s);" + LINEFEED;
 }

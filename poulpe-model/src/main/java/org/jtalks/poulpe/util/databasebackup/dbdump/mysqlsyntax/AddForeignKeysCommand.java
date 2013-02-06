@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 
+import java.io.IOException;
+import java.io.Writer;
 import java.sql.SQLException;
 
 import org.apache.commons.lang3.Validate;
@@ -22,14 +24,16 @@ import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
-/** 
- * Command analyzing table foreign keys and push this info into {@link java.io.OutputStream OutputStream} 
+/**
+ * Command analyzing table foreign keys and push this info into {@link java.io.OutputStream OutputStream}
  */
 public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
 
-    /** 
+    /**
      * Constructor for initialization variables
-     * @param dbTable target table 
+     * 
+     * @param dbTable
+     *            target table
      */
     public AddForeignKeysCommand(final DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
@@ -37,28 +41,27 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
     }
 
     /**
-     * Returns {@link StringBuilder} filled with canonical description about foreign keys 
-     * @return foreign keys description 
+     * {@inheritDoc}
      */
     @Override
-    protected StringBuilder getHeader() {
+    protected void putHeader(Writer writer) throws IOException {
+        assert writer != null : "writer must not be null";
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Foreign keys definition for table ");
         header.append(TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName())).append(LINEFEED);
         header.append("--").append(LINEFEED);
-        return header;
+
+        writer.write(header.toString());
     }
 
     /**
-     * Returns {@link StringBuilder} filled with foreign keys data 
-     * @return foreign keys data 
+     * {@inheritDoc}
      */
     @Override
-    protected StringBuilder getData() throws SQLException {
-        StringBuilder data = new StringBuilder();
-        data.append(getKeys());
-        return data;
+    protected void putData(Writer writer) throws SQLException, IOException {
+        assert writer != null : "writer must not be null";
+        writer.write(getKeys());
     }
 
     /**
@@ -69,7 +72,7 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
      * @throws SQLException
      *             if any error with database occurs
      */
-    public StringBuilder getKeys() throws SQLException {
+    public String getKeys() throws SQLException {
         StringBuilder result = new StringBuilder();
 
         if (dbTable.getForeignKeySet().size() > 0) {
@@ -83,7 +86,7 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
             }
         }
 
-        return result;
+        return result.toString();
     }
 
     private final DbTable dbTable;

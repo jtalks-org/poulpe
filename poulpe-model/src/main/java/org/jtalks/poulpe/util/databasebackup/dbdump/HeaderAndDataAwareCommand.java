@@ -21,43 +21,47 @@ import java.io.Writer;
 import java.sql.SQLException;
 
 /**
- * Pack description and data, push to {@link OutputStream}.
- * Resulted sequence is reversible and ready for unpacking  
+ * Pack description and data, push to {@link OutputStream}. Resulted sequence is reversible and ready for unpacking
  */
 public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
 
     /**
-     * Pack description and data with delimiters and push it to {@link OutputStream}  
+     * Pack description and data with delimiters and push it to {@link OutputStream}
      */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {
-        StringBuilder result = new StringBuilder()
-                .append(getHeader())
-                .append(LINEFEED)
-                .append(getData())
-                .append(LINEFEED)
-                .append(LINEFEED);
-
         Writer writer = new PrintWriter(output);
-        writer.write(result.toString());
+        putHeader(writer);
+        writer.write(LINEFEED);
+        putData(writer);
+        writer.write(LINEFEED);
+        writer.write(LINEFEED);
         writer.flush();
     }
 
     /**
-     * Returns a description for the data which is provided by the command. The description will be used for formating
-     * the whole result from the command executing.
+     * Writes a description for the data which is provided by the command into given writer. The description will be
+     * used for formating the whole result from the command executing.
      * 
-     * @return text header for the provided data.
+     * @param writer
+     *            a Writer to write information into.
+     * @throws IOException
+     *             if an I/O error occurs.
      */
-    protected abstract StringBuilder getHeader();
+    protected abstract void putHeader(Writer writer) throws IOException;
 
     /**
-     * Returns data, provided by the command. The date should dump the peace of information about table which is
-     * provided (the peace of information) by the command.
+     * Writes data, provided by the command into given writer. The date should dump the peace of information about table
+     * which is provided (the peace of information) by the command.
      * 
-     * @return provided data in the text shape.
+     * @param writer
+     *            a Writer to write information into.
+     * @throws SQLException
+     *             if an SQL error occurs.
+     * @throws IOException
+     *             if an I/O error occurs.
      */
-    protected abstract StringBuilder getData() throws SQLException;
+    protected abstract void putData(Writer writer) throws SQLException, IOException;
 
     protected static final String LINEFEED = "\n";
 }
