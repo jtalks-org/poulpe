@@ -68,6 +68,9 @@ public class DeploymentProperties {
                     continue;
                 }
                 for (InterfaceAddress interfaceAddress : networkInterface.getInterfaceAddresses()) {
+                    if (interfaceAddress == null) {
+                        continue;
+                    }
                     InetAddress inetAddress = interfaceAddress.getAddress();
                     if (inetAddress.isLinkLocalAddress()) {
                         continue;

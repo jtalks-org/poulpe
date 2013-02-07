@@ -94,7 +94,8 @@
   <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
     <constructor-arg index="0" ref="groupDao"/>
     <constructor-arg index="1" ref="userBanner"/>
-      <constructor-arg index="2" ref="aclManager"/>
+    <constructor-arg index="2" ref="aclManager"/>
+    <constructor-arg index="3" ref="userDao"/>  
   </bean>
   <bean id="poulpeSecurityService" class="org.jtalks.poulpe.service.transactional.SecurityService">
     <constructor-arg index="0" ref="userDao"/>

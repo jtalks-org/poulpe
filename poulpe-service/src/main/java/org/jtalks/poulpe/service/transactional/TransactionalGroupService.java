@@ -22,8 +22,10 @@ import org.jtalks.common.security.acl.sids.UserSid;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.GroupDao;
+import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.dto.SecurityGroupList;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.service.GroupService;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,18 +43,26 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         implements GroupService {
     private final UserBanner userBanner;
     private final AclManager manager;
-
+    private final UserDao userDao;
+    
     /**
      * Create an instance of entity based service
      *
      * @param groupDao   - data access object, which should be able do all CRUD
      *                   operations.
      * @param userBanner - class for working with banning users instance
+     * @param manager - ACL manager to operate with sids
+     * @param userDao - to perform all CRUD operations with users
+     * 
      */
-    public TransactionalGroupService(GroupDao groupDao, UserBanner userBanner, AclManager manager) {
+    public TransactionalGroupService(GroupDao groupDao, 
+                                    UserBanner userBanner, 
+                                    AclManager manager,
+                                    UserDao userDao) {
         this.dao = groupDao;
         this.userBanner = userBanner;
         this.manager = manager;
+        this.userDao = userDao;
     }
 
     /**
@@ -90,6 +100,11 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
     @Override
     public void deleteGroup(Group group) throws NotFoundException {
         Assert.throwIfNull(group, "group");
+        
+        for (User user : group.getUsers()) {
+            user.getGroups().remove(group);
+            userDao.update((PoulpeUser) user);
+        }
         dao.delete(group);
 
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
