@@ -24,9 +24,9 @@ public class TableDataDumpCommandTest {
     public void beforeMethod() throws SQLException {
         dbTable = Mockito.mock(DbTable.class);
         List<Row> rows = ImmutableList.of(
-                new Row().addCell(new Cell(new ColumnMetaData("id", SqlTypes.INT), 1)),
-                new Row().addCell(new Cell(new ColumnMetaData("name", SqlTypes.VARCHAR), "value")),
-                new Row().addCell(new Cell(new ColumnMetaData("nullColumn", SqlTypes.VARCHAR), null)));
+                new Row().addCell(new Cell(ColumnMetaData.getInstance("id", SqlTypes.INT), 1)),
+                new Row().addCell(new Cell(ColumnMetaData.getInstance("name", SqlTypes.VARCHAR), "value")),
+                new Row().addCell(new Cell(ColumnMetaData.getInstance("nullColumn", SqlTypes.VARCHAR), null)));
         Mockito.when(dbTable.getData()).thenReturn(rows);
         Mockito.when(dbTable.getTableName()).thenReturn("tableName");
 

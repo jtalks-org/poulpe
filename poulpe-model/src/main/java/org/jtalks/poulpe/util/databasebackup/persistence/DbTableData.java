@@ -80,7 +80,7 @@ class DbTableData {
 
                     final Row row = new Row();
                     for (int i = 1; i <= columnCount; i++) {
-                        row.addCell(new Cell(new ColumnMetaData(metaData.getColumnName(i), SqlTypes
+                        row.addCell(new Cell(ColumnMetaData.getInstance(metaData.getColumnName(i), SqlTypes
                                 .getSqlTypeByJdbcSqlType(metaData.getColumnType(i))), rs.getObject(i)));
                     }
                     return row;
@@ -157,7 +157,7 @@ class DbTableData {
             final Map<String, String> columnDefaultValues, final int i) throws SQLException {
         final SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(rsmd.getColumnType(i));
 
-        final ColumnMetaData column = new ColumnMetaData(rsmd.getColumnName(i), columnType).setNullable(
+        final ColumnMetaData column = ColumnMetaData.getInstance(rsmd.getColumnName(i), columnType).setNullable(
                 rsmd.isNullable(i) == ResultSetMetaData.columnNullable).setAutoincrement(rsmd.isAutoIncrement(i));
         if (columnDefaultValues.containsKey(rsmd.getColumnName(i))) {
             column.setDefaultValue(columnDefaultValues.get(rsmd.getColumnName(i)));

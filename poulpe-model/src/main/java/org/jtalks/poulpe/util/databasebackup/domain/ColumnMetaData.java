@@ -14,11 +14,15 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
+import java.util.Map;
+
 import org.apache.commons.lang3.Validate;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
+
+import com.google.common.collect.Maps;
 
 /**
  * The class describes structure of one table's Column. So every table has a number of columns and each column is
@@ -29,6 +33,30 @@ import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
  */
 public final class ColumnMetaData {
     /**
+     * Returns an instance of ColumnMetaData for given columnName and columnType. This method controls of count of
+     * ColumnMetaData objects created.
+     * 
+     * @param columnName
+     *            The name of the table column.
+     * @param columnType
+     *            The type of the table column.
+     * @return an instance of ColumnMetaData
+     */
+    public static ColumnMetaData getInstance(String columnName, SqlTypes columnType) {
+        Validate.notBlank(columnName, "columnName must not be null");
+        Validate.notNull(columnType, "columnType must not be null");
+
+        String key = columnName + ":" + columnType.toString();
+        if (columnMetaDataMap.containsKey(key)) {
+            return columnMetaDataMap.get(key);
+        }
+
+        ColumnMetaData columnMetaData = new ColumnMetaData(columnName, columnType);
+        columnMetaDataMap.put(key, columnMetaData);
+        return columnMetaData;
+    }
+
+    /**
      * Constructs a new Column meta data object with two given obligatory parameters: table column's name and type.
      * Other parameters should be set via setters.
      * 
@@ -37,9 +65,11 @@ public final class ColumnMetaData {
      * @param columnType
      *            The type of the table column.
      */
-    public ColumnMetaData(final String columnName, final SqlTypes columnType) {
-        Validate.notNull(columnName, "columnName must not be null");
-        Validate.notNull(columnType, "columnType must not be null");
+    private ColumnMetaData(final String columnName, final SqlTypes columnType) {
+        assert columnName != null : "columnName must not be null";
+        assert columnName.length() > 0 : "columnName must not be empty";
+        assert columnType != null : "columnType must not be null";
+
         this.name = columnName;
         this.type = columnType;
     }
@@ -247,4 +277,6 @@ public final class ColumnMetaData {
     private boolean hasSize;
     private final SqlTypes type;
     private String comment;
+
+    private static Map<String, ColumnMetaData> columnMetaDataMap = Maps.newHashMap();
 }

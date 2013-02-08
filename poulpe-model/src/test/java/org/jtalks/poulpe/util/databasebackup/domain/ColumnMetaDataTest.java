@@ -31,11 +31,13 @@ public class ColumnMetaDataTest {
      */
     @BeforeMethod
     public void beforeMethod() {
-        sut1 = new ColumnMetaData("columnTypeA", SqlTypes.INT).setSize(32).setAutoincrement(true).setDefaultValue("5")
+        sut1 = ColumnMetaData.getInstance("columnTypeA", SqlTypes.INT).setSize(32).setAutoincrement(true)
+                .setDefaultValue("5")
                 .setNullable(false).setComment("true - sid is user, false - sid is a granted authority");
-        sut2 = new ColumnMetaData("columnTypeA", SqlTypes.INT).setSize(32).setAutoincrement(true).setDefaultValue("5")
+        sut2 = ColumnMetaData.getInstance("columnTypeA", SqlTypes.INT).setSize(32).setAutoincrement(true)
+                .setDefaultValue("5")
                 .setNullable(false).setComment("true - sid is user, false - sid is a granted authority");
-        differentSut = new ColumnMetaData("columnTypeB", SqlTypes.VARCHAR).setSize(8).setAutoincrement(false)
+        differentSut = ColumnMetaData.getInstance("columnTypeB", SqlTypes.VARCHAR).setSize(8).setAutoincrement(false)
                 .setDefaultValue("").setNullable(true);
     }
 
@@ -63,7 +65,7 @@ public class ColumnMetaDataTest {
     @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
     public void constructThrowsExceptionWhenColumnTypeIsNull() {
         @SuppressWarnings("unused")
-        ColumnMetaData tableColumn = new ColumnMetaData("columnTypeA", null);
+        ColumnMetaData tableColumn = ColumnMetaData.getInstance("columnTypeA", null);
     }
 
     /**
@@ -72,7 +74,7 @@ public class ColumnMetaDataTest {
     @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
     public void constructThrowsExceptionWhenColumnNaemIsNull() {
         @SuppressWarnings("unused")
-        ColumnMetaData tableColumn = new ColumnMetaData(null, SqlTypes.INT);
+        ColumnMetaData tableColumn = ColumnMetaData.getInstance(null, SqlTypes.INT);
     }
 
     private ColumnMetaData sut1, sut2, differentSut;

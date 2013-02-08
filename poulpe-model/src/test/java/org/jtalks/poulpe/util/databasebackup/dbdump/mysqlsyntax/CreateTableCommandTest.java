@@ -4,12 +4,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import javax.annotation.Nullable;
 
 import org.jtalks.poulpe.util.databasebackup.TestUtil;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
@@ -18,18 +15,12 @@ import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
 import org.mockito.Mockito;
 import org.testng.Assert;
-import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import com.google.common.base.Predicate;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 public class CreateTableCommandTest {
     @BeforeMethod
@@ -38,8 +29,8 @@ public class CreateTableCommandTest {
         Mockito.when(dbTable.getTableName()).thenReturn("tableName");
 
         List<ColumnMetaData> tableStructure = ImmutableList.of(
-                new ColumnMetaData("id", SqlTypes.INT).setAutoincrement(true).setComment("comment"),
-                new ColumnMetaData("name", SqlTypes.VARCHAR).setSize(32).setNullable(true)
+                ColumnMetaData.getInstance("id", SqlTypes.INT).setAutoincrement(true).setComment("comment"),
+                ColumnMetaData.getInstance("name", SqlTypes.VARCHAR).setSize(32).setNullable(true)
                         .setDefaultValue("defaultValue"));
         Mockito.when(dbTable.getStructure()).thenReturn(tableStructure);
 

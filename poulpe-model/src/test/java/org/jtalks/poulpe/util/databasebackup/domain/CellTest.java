@@ -34,7 +34,7 @@ public class CellTest {
      */
     @BeforeClass(groups = { "databasebackup" })
     protected void beforeClass() {
-        columnMetaData = new ColumnMetaData("columnName", SqlTypes.VARCHAR);
+        columnMetaData = ColumnMetaData.getInstance("columnName", SqlTypes.VARCHAR);
     }
 
     /**

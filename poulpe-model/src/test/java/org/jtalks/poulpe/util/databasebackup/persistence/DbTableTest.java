@@ -146,16 +146,16 @@ public class DbTableTest {
     public void getDataTest() throws SQLException {
         // Define expected table structure.
         Map<String, ColumnMetaData> metaColumnInfoMap = Maps.newHashMap();
-        metaColumnInfoMap.put("EXECUTION_TIME", new ColumnMetaData("EXECUTION_TIME", SqlTypes.INT));
-        metaColumnInfoMap.put("SCRIPT", new ColumnMetaData("SCRIPT", SqlTypes.VARCHAR));
-        metaColumnInfoMap.put("INSTALLED_ON", new ColumnMetaData("INSTALLED_ON", SqlTypes.TIMESTAMP));
-        metaColumnInfoMap.put("STATE", new ColumnMetaData("STATE", SqlTypes.VARCHAR));
-        metaColumnInfoMap.put("VERSION", new ColumnMetaData("VERSION", SqlTypes.VARCHAR));
-        metaColumnInfoMap.put("DESCRIPTION", new ColumnMetaData("DESCRIPTION", SqlTypes.VARCHAR));
-        metaColumnInfoMap.put("CURRENT_VERSION", new ColumnMetaData("CURRENT_VERSION", SqlTypes.TINYINT));
-        metaColumnInfoMap.put("CHECKSUM", new ColumnMetaData("CHECKSUM", SqlTypes.INT));
-        metaColumnInfoMap.put("TYPE", new ColumnMetaData("TYPE", SqlTypes.VARCHAR));
-        metaColumnInfoMap.put("INSTALLED_BY", new ColumnMetaData("INSTALLED_BY", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("EXECUTION_TIME", ColumnMetaData.getInstance("EXECUTION_TIME", SqlTypes.INT));
+        metaColumnInfoMap.put("SCRIPT", ColumnMetaData.getInstance("SCRIPT", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("INSTALLED_ON", ColumnMetaData.getInstance("INSTALLED_ON", SqlTypes.TIMESTAMP));
+        metaColumnInfoMap.put("STATE", ColumnMetaData.getInstance("STATE", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("VERSION", ColumnMetaData.getInstance("VERSION", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("DESCRIPTION", ColumnMetaData.getInstance("DESCRIPTION", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("CURRENT_VERSION", ColumnMetaData.getInstance("CURRENT_VERSION", SqlTypes.TINYINT));
+        metaColumnInfoMap.put("CHECKSUM", ColumnMetaData.getInstance("CHECKSUM", SqlTypes.INT));
+        metaColumnInfoMap.put("TYPE", ColumnMetaData.getInstance("TYPE", SqlTypes.VARCHAR));
+        metaColumnInfoMap.put("INSTALLED_BY", ColumnMetaData.getInstance("INSTALLED_BY", SqlTypes.VARCHAR));
 
         // Define expected table data
         List<Row> expectedResult = Lists.newArrayList(
@@ -227,16 +227,16 @@ public class DbTableTest {
     @Test(groups = { "databasebackup" })
     public void getStructureTest() throws SQLException {
         List<ColumnMetaData> expectedResult = Lists.newArrayList(
-                new ColumnMetaData("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11),
-                new ColumnMetaData("SCRIPT", SqlTypes.VARCHAR).setSize(200),
-                new ColumnMetaData("INSTALLED_ON", SqlTypes.TIMESTAMP),
-                new ColumnMetaData("STATE", SqlTypes.VARCHAR).setSize(15),
-                new ColumnMetaData("VERSION", SqlTypes.VARCHAR).setSize(20),
-                new ColumnMetaData("DESCRIPTION", SqlTypes.VARCHAR).setNullable(true).setSize(100),
-                new ColumnMetaData("CURRENT_VERSION", SqlTypes.TINYINT).setSize(4),
-                new ColumnMetaData("CHECKSUM", SqlTypes.INT).setNullable(true).setSize(11),
-                new ColumnMetaData("TYPE", SqlTypes.VARCHAR).setSize(10),
-                new ColumnMetaData("INSTALLED_BY", SqlTypes.VARCHAR).setSize(30));
+                ColumnMetaData.getInstance("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11),
+                ColumnMetaData.getInstance("SCRIPT", SqlTypes.VARCHAR).setSize(200),
+                ColumnMetaData.getInstance("INSTALLED_ON", SqlTypes.TIMESTAMP),
+                ColumnMetaData.getInstance("STATE", SqlTypes.VARCHAR).setSize(15),
+                ColumnMetaData.getInstance("VERSION", SqlTypes.VARCHAR).setSize(20),
+                ColumnMetaData.getInstance("DESCRIPTION", SqlTypes.VARCHAR).setNullable(true).setSize(100),
+                ColumnMetaData.getInstance("CURRENT_VERSION", SqlTypes.TINYINT).setSize(4),
+                ColumnMetaData.getInstance("CHECKSUM", SqlTypes.INT).setNullable(true).setSize(11),
+                ColumnMetaData.getInstance("TYPE", SqlTypes.VARCHAR).setSize(10),
+                ColumnMetaData.getInstance("INSTALLED_BY", SqlTypes.VARCHAR).setSize(30));
 
         DbTable testObject = new DbTable(dataSource, "common_schema_version");
         List<ColumnMetaData> actualResult = testObject.getStructure();

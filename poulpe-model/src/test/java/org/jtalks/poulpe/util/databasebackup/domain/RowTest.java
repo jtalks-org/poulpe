@@ -35,8 +35,8 @@ public class RowTest {
      */
     @BeforeClass(groups = { "databasebackup" })
     protected void setUp() {
-        idColumn = new ColumnMetaData("id", SqlTypes.INT);
-        nameColumn = new ColumnMetaData("name", SqlTypes.VARCHAR);
+        idColumn = ColumnMetaData.getInstance("id", SqlTypes.INT);
+        nameColumn = ColumnMetaData.getInstance("name", SqlTypes.VARCHAR);
     }
 
     /**
