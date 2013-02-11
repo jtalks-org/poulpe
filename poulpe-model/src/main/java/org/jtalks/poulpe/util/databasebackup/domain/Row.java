@@ -16,12 +16,16 @@ package org.jtalks.poulpe.util.databasebackup.domain;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang3.Validate;
+import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 /**
  * Represents a Table's row. Each row can contain many {@link Cell} objects.
@@ -33,31 +37,27 @@ public final class Row {
     /**
      * Adds a new column data to the current row.
      * 
+     * @param columnMetaInfo
+     *            a meta info of new cell to add.
      * @param cellData
-     *            a new Cell object to add
+     *            a data for new cell to add.
      * @return this
      */
-    public Row addCell(final Cell cellData) {
-        Validate.notNull(cellData, "cellData must not be null");
-        for (final Cell existColumnData : cellList) {
-            if (existColumnData.getColumnName().equalsIgnoreCase(cellData.getColumnName())) {
-                throw new IllegalArgumentException("TableColumnData " + cellData + " is already exist in the row "
-                        + cellList);
-            }
-        }
+    public Row addCell(final ColumnMetaData columnMetaInfo, final Object cellData) {
+        Validate.notNull(columnMetaInfo, "columnMetaInfo must not be null");
 
-        cellList.add(cellData);
+        cells.put(columnMetaInfo, cellData);
         return this;
     }
 
-    /**
-     * Return previously saved information about one row.
-     * 
-     * @return A List of Cells stored in the Row.
-     */
-    public List<Cell> getCellList() {
-        return Collections.unmodifiableList(cellList);
-    }
+    // /**
+    // * Return previously saved information about one row.
+    // *
+    // * @return A List of Cells stored in the Row.
+    // */
+    // public List<Cell> getCellList() {
+    // return Collections.unmodifiableList(cellList);
+    // }
 
     /**
      * Returns a count of cells in the current row.
@@ -65,36 +65,49 @@ public final class Row {
      * @return Cell count
      */
     public int getCellCount() {
-        return cellList.size();
+        return cells.size();
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(31, 17).append(cellList).toHashCode();
+        return new HashCodeBuilder(31, 17).append(cells).toHashCode();
     }
 
     @Override
     public boolean equals(final Object obj) {
-        return this == obj || obj instanceof Row && areCellListsEqual((Row) obj);
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Row other = (Row) obj;
+        return new EqualsBuilder().append(this.cells, other.cells).build();
+        // return this == obj || obj instanceof Row && areCellListsEqual((Row) obj);
     }
 
-    /**
-     * Checks if cell list for given Row object equals to cell list of instance itself. We cannot just compare two Lists
-     * because if two lists have the same elements but in different order we still consider them as equal while with
-     * standard List.equals the order matters.
-     * 
-     * @param obj
-     *            an instance of Row which cellList will be compared to value of this
-     * @return true if cellLists are equal or false otherwise.
-     */
-    private boolean areCellListsEqual(final Row obj) {
-        return cellList.size() == obj.cellList.size() && cellList.containsAll(obj.cellList);
-    }
+    // /**
+    // * Checks if cell list for given Row object equals to cell list of instance itself. We cannot just compare two
+    // Lists
+    // * because if two lists have the same elements but in different order we still consider them as equal while with
+    // * standard List.equals the order matters.
+    // *
+    // * @param obj
+    // * an instance of Row which cellList will be compared to value of this
+    // * @return true if cellLists are equal or false otherwise.
+    // */
+    // private boolean areCellListsEqual(final Row obj) {
+    // return cellList.size() == obj.cellList.size() && cellList.containsAll(obj.cellList);
+    // }
 
     @Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this);
     }
 
-    private final List<Cell> cellList = Lists.newArrayList();
+    private final Map<ColumnMetaData, Object> cells = Maps.newHashMap();
+
+    public Set<Entry<ColumnMetaData, Object>> getRowSet() {
+        return cells.entrySet();
+    }
 }

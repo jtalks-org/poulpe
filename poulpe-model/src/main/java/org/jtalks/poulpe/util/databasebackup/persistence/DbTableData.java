@@ -27,7 +27,6 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.domain.Cell;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.springframework.dao.DataAccessException;
@@ -80,8 +79,10 @@ class DbTableData {
 
                     final Row row = new Row();
                     for (int i = 1; i <= columnCount; i++) {
-                        row.addCell(new Cell(ColumnMetaData.getInstance(metaData.getColumnName(i), SqlTypes
-                                .getSqlTypeByJdbcSqlType(metaData.getColumnType(i))), rs.getObject(i)));
+                        ColumnMetaData columnMetaData = ColumnMetaData.getInstance(
+                                metaData.getColumnName(i),
+                                SqlTypes.getSqlTypeByJdbcSqlType(metaData.getColumnType(i)));
+                        row.addCell(columnMetaData, rs.getObject(i));
                     }
                     return row;
                 }

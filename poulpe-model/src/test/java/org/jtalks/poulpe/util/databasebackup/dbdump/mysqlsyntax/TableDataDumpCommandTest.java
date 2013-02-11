@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.jtalks.poulpe.util.databasebackup.TestUtil;
-import org.jtalks.poulpe.util.databasebackup.domain.Cell;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
@@ -24,9 +23,9 @@ public class TableDataDumpCommandTest {
     public void beforeMethod() throws SQLException {
         dbTable = Mockito.mock(DbTable.class);
         List<Row> rows = ImmutableList.of(
-                new Row().addCell(new Cell(ColumnMetaData.getInstance("id", SqlTypes.INT), 1)),
-                new Row().addCell(new Cell(ColumnMetaData.getInstance("name", SqlTypes.VARCHAR), "value")),
-                new Row().addCell(new Cell(ColumnMetaData.getInstance("nullColumn", SqlTypes.VARCHAR), null)));
+                new Row().addCell(ColumnMetaData.getInstance("id", SqlTypes.INT), 1),
+                new Row().addCell(ColumnMetaData.getInstance("name", SqlTypes.VARCHAR), "value"),
+                new Row().addCell(ColumnMetaData.getInstance("nullColumn", SqlTypes.VARCHAR), null));
         Mockito.when(dbTable.getData()).thenReturn(rows);
         Mockito.when(dbTable.getTableName()).thenReturn("tableName");
 

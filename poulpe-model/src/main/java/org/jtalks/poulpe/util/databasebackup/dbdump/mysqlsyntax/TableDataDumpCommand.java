@@ -17,16 +17,19 @@ package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map.Entry;
 
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
-import org.jtalks.poulpe.util.databasebackup.domain.Cell;
+import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
+
+import com.google.common.collect.Lists;
 
 /**
  * Class is a command (see {@link org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand} for details) which
@@ -83,16 +86,17 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      */
     private String getRowDataText(final Row row) {
         assert row != null : "row must not be null";
-        List<String> nameColumns = new ArrayList<String>();
-        List<String> valueColumns = new ArrayList<String>();
+        List<String> nameColumns = Lists.newLinkedList();
+        List<String> valueColumns = Lists.newLinkedList();
 
-        for (Cell columnData : row.getCellList()) {
-            String value = columnData.getColumnData() != null ? columnData.getColumnData().toString() : "NULL";
-            if (columnData.getColumnData() != null && columnData.getSqlType().isTextBased()) {
+        for (Entry<ColumnMetaData, Object> columnEntry : row.getRowSet()) {
+            ColumnMetaData columnMetaData = columnEntry.getKey();
+            String value = ObjectUtils.toString(columnEntry.getValue(), "NULL");
+            if (columnEntry.getValue() != null && columnMetaData.getType().isTextBased()) {
                 value = TableDataUtil.getSqlValueQuotedString(value);
             }
             valueColumns.add(value);
-            nameColumns.add(columnData.getColumnName());
+            nameColumns.add(columnMetaData.getName());
         }
 
         return String.format(INSERT_ROW_TEMPLATE,
