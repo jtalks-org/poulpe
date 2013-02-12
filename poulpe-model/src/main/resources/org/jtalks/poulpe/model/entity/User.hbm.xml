@@ -77,11 +77,11 @@
     </class>
 
     <query name="findUsersByLikeUsername">
-        <![CDATA[from PoulpeUser u where u.username like :username order by u.username]]>
+        <![CDATA[from PoulpeUser u where u.username like :username order by upper(u.username)]]>
     </query>
 
     <query name="findEnabledUsersByLikeUsername">
-        <![CDATA[from PoulpeUser u where u.username like :username and u.enabled = 1 order by u.username]]>
+        <![CDATA[from PoulpeUser u where u.username like :username and u.enabled = 1 order by upper(u.username)]]>
     </query>
 
     <query name="countUsersByLikeUsername">

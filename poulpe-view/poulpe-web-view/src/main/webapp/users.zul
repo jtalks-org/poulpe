@@ -22,7 +22,7 @@
     <paging id="paging" pageSize="@load(vm.itemsPerPage)" totalSize="@bind(vm.totalSize)" activePage="@bind(vm.activePage)" />
     <listbox id="listbox" model="@bind(vm.users)" selectedItem="@bind(vm.selectedUser)" vflex="true" height="500px">
        <listhead sizable="true">
-        <listheader label="${labels.users.username}" sort="auto(username)" />
+        <listheader label="${labels.users.username}" sort="auto(UPPER(username))" />
         <listheader label="${labels.users.email}" sort="auto(email)" />
         <listheader label="${labels.users.firstname}" sort="auto(firstName)" />
         <listheader label="${labels.users.lastname}" sort="auto(lastName)" />
