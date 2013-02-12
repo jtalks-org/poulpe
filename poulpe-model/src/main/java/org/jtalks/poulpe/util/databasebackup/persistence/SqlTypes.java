@@ -284,13 +284,15 @@ public enum SqlTypes {
      *             If jdbcSqlType is incorrect.
      */
     public static SqlTypes getSqlTypeByJdbcSqlType(final int jdbcSqlType) {
-        for (SqlTypes typeToCheck : SqlTypes.values()) {
+        for (SqlTypes typeToCheck : sqlTypesValues) {
             if (Arrays.binarySearch(typeToCheck.getJdbcSqlType(), jdbcSqlType) >= 0) {
                 return typeToCheck;
             }
         }
         throw new IllegalArgumentException("Given jdbcSqlType=" + jdbcSqlType + " is incorrect.");
     }
+
+    private static SqlTypes[] sqlTypesValues = SqlTypes.values();
 
     /**
      * Checks if the column's value needs to be quoted before putting it into SQL INSERT statement.
