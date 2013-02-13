@@ -14,138 +14,167 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.poulpe.model.utils.JndiAwarePropertyPlaceholderConfigurer;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.apache.log4j.xml.DOMConfigurator;
+import org.jtalks.poulpe.model.utils.JndiAwarePropertyPlaceholderConfigurer;
+
+import com.google.common.annotations.VisibleForTesting;
 
 /**
  * Application startup listener which initialize logger properties that are used during standard logger initialization
- * (reading {@code log4j.xml}). <p/> <p>This listener should be registered and started before any other servlet/listener
- * (which use logging). So it starts before usual logger initialization.</p> <p/> <p>Logger search for parameters in
- * common order: <ol> <li>JNDI</li> <li>datasource.properties file</li> <li>system properties</li> <li>default
- * value</li> </ol></p> <p/> <p>We can't use Spring IoC, because order of bean initialization is not managed and some
- * classes can start using logger which configured differently.</p>
+ * (reading {@code log4j.xml}). <p/> 
+ * <p>This listener should be registered and started before any other servlet/listener (which use logging). So it 
+ * starts before usual logger initialization.</p>
+ * <p>Logger search for parameters in common order: 
+ * <ol>
+ *  <li>JNDI</li>
+ *  <li>datasource.properties file</li>
+ *  <li>system properties</li>
+ *  <li>default value</li>
+ * </ol></p>
+ * <p>We can't use Spring IoC, because order of bean initialization is not managed and someclasses can start using 
+ * logger which configured differently.</p>
  *
  * @author Evgeny Kapinos
- * @see <a href="http://logging.apache.org/log4j/1.2/manual.html">Log4j - manual</a>, "<b>Initialization servlet</b>"
- *      paragraph
- * @see <a href="http://wiki.apache.org/logging-log4j/SystemPropertiesInConfiguration" >Log4j - how to set parameters
- *      using System Properties</a>
+ * @see <a href="http://logging.apache.org/log4j/1.2/manual.html#defaultInit"
+ * >Default Log4j initialization procedure</a>
+ * @see <a href="http://logging.apache.org/log4j/1.2/manual.html#Example_Configurations"
+ * >Example log4j configurations</a>
+ * @see <a href="http://wiki.apache.org/logging-log4j/SystemPropertiesInConfiguration" 
+ * >Log4j - how to set parameters using System Properties</a>
  */
 public class LoggerInitializationListener implements ServletContextListener {
+    
     /**  This property name is used to search in environment variables. */
-    private static final String LOG_FILE_USER_PROPERTY = "LOG_FILE";
-    /**
-     * This property name used as real placeholder in logger configuration file  
-     * To use placeholders in log4j.xml we should set system properties. But system properties have JVM
-     * scope. After first setting, we share these properties for all applications until server restart. To prevent 
-     * ambiguity we should use unique and seldom name. All JTalks modules should use separated placeholders too.
-     *
-     * So we expect {@value #LOG_FILE_USER_PROPERTY} property form user and use it value to set 
-     * real placeholder value {@code LOG_FILE_SYSTEM_PROPERTY}.
-     */
-    private static final String LOG_FILE_SYSTEM_PROPERTY = "LOG_FILE_POULPE";
+    @VisibleForTesting
+    protected static final String LOG4J_CONFIGURATION_FILE = "POULPE_LOG4J_CONFIGURATION_FILE";
 
-    /** Properties file to get logger configuration from.*/
+    /** Properties file where log4j configuration file info we should check */
     private static final String PROPERTIES_FILE = "/datasource.properties";
 
-    /** Default log file path. */
-    private static final String LOG_FILE_VALUE_DEFAULT = "../logs/poulpe.log";
+    /** Embedded log4j configuration file path in {@code war} */
+    private static final String LOG4J_EMBEDDED_CONFIGURATION_FILE = "/log4j.xml";
 
+    /** System property witch allows to skip standard and auto Log4j initialization */
+    private static final String LOG4J_INIT_OVERRIDE_PROPERTY = "log4j.defaultInitOverride";
+    
+    /** Prefix witch used when this class put messages into servlet container log stream */
+    private static final String CONTAINER_LOG_PREFIX = "[POULPE][log4j init] ";
+    
+    /** current servlet context for logging */
+    private ServletContext servletContext;
+    
     /**
-     * Initializing placeholders for logger configuration file.
+     * Initializing logger by configuration file
      * <p>{@inheritDoc}</p>
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
-        LogFileInfo logFileInfo = getLogFileNameFromJNDI();
-        if (logFileInfo == null) {
-            logFileInfo = getLogFileNameFromDatasourcePropertiesFile();
+        
+        // Save container context for logging before Log4j will be configured
+        servletContext = event.getServletContext(); 
+        
+        // Search external Log4j configuration file
+        FileInfo fileInfo = getConfigurationFileNameFromJNDI();
+        if (fileInfo == null) {
+            fileInfo = getConfigurationFileNameFromDatasourcePropertiesFile();
         }
-        if (logFileInfo == null) {
-            logFileInfo = getLogFileNameFromDatasourcePropertiesFile();
+        if (fileInfo == null) {
+            fileInfo = getConfigurationFileNameFromSystemProperties();
         }
-        if (logFileInfo == null) {
-            logFileInfo = getLogFileNameFromSystemProperties();
+        
+        // Skip standard Log4j auto configuration on first call
+        String previousLog4jInitOverrideValue = System.setProperty(LOG4J_INIT_OVERRIDE_PROPERTY, "true");
+        
+        // Manual Log4j configuration
+        if (!loadLog4jConfigurationFromExternalFile(fileInfo)){
+            loadEmbeddedLog4jConfiguration();            
         }
-        if (logFileInfo == null) {
-            logFileInfo = getDefaultLogFileName();
+        
+        // Return previous auto configuration property. It shared between all applications in Tomcat
+        if (previousLog4jInitOverrideValue == null){
+            System.clearProperty(LOG4J_INIT_OVERRIDE_PROPERTY);
+        } else {
+            System.setProperty(LOG4J_INIT_OVERRIDE_PROPERTY, previousLog4jInitOverrideValue);
         }
-        logToConsole("Log file name taken from " + logFileInfo.getSourceDescriptor() + " and set to \""
-                + logFileInfo.getLogFileName() + "\"");
 
-        System.setProperty(LOG_FILE_SYSTEM_PROPERTY, logFileInfo.getLogFileName());
     }
 
-    /**
-     * Clean JVM system properties which was used like placeholders.
-     * <p>{@inheritDoc}</p>
-     */
+    /** {@inheritDoc}  */
     @Override
     public void contextDestroyed(ServletContextEvent event) {
-        System.clearProperty(LOG_FILE_SYSTEM_PROPERTY);
+        // Nothing to do
     }
 
     /**
-     * Console output. It's not mistake. No sense to put information about:
-     * <ol>
-     * <li>logger initialization fails without log file</li> 
-     * <li>log file destination in same log</li>
-     * </ol>
-     *
-     * <p>By default Tomcat redirects console (out and err streams) to <b>catalina.out</b> file</p>
-     *
-     * @see <a href="http://wiki.apache.org/tomcat/FAQ/Logging#Q6">About standard streams at Tomcat FAQ</a>  
+     * Shows information about log4j configuration progress in standard servlet container log
      * @param message for logging
      */
     private void logToConsole(String message) {
-        System.out.println(message); //NOSONAR
+        servletContext.log(CONTAINER_LOG_PREFIX+message);
     }
 
     /**
-     * Check {@value #LOG_FILE_USER_PROPERTY} property from JNDI
-     * @return {@link LogFileInfo} or {@code null}
+     * Shows information about exceptions during log4j configuration progress in standard servlet container log
+     * @param message for logging
+     * @param e exception
      */
-    private LogFileInfo getLogFileNameFromJNDI() {
-        String logFileName = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOG_FILE_USER_PROPERTY);
+    private void servletContainerlog(String message, Throwable e) {
+        servletContext.log(CONTAINER_LOG_PREFIX+message, e);
+    }
+
+    /**
+     * Check {@value #LOG4J_CONFIGURATION_FILE} property from JNDI
+     * @return {@link FileInfo} or {@code null}
+     */
+    private FileInfo getConfigurationFileNameFromJNDI() {
+        String logFileName = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOG4J_CONFIGURATION_FILE);
         if (logFileName == null) {
             return null;
         }
-        return new LogFileInfo("JNDI", logFileName);
+        return new FileInfo("JNDI", logFileName);
     }
 
     /**
-     * Check {@value #LOG_FILE_USER_PROPERTY} property from {@value #PROPERTIES_FILE} file 
-     * @return {@link LogFileInfo} or {@code null}
+     * Check {@value #LOG4J_CONFIGURATION_FILE} property from {@value #PROPERTIES_FILE} file 
+     * @return {@link FileInfo} or {@code null}
      */
-    private LogFileInfo getLogFileNameFromDatasourcePropertiesFile() {
+    private FileInfo getConfigurationFileNameFromDatasourcePropertiesFile() {
         Properties prop = new Properties();
         InputStream propertiesFileStream = null;
         String logFileName = null;
         try {
             propertiesFileStream = getPropertiesFileStream();
             prop.load(propertiesFileStream);
-            logFileName = prop.getProperty(LOG_FILE_USER_PROPERTY);
+            logFileName = prop.getProperty(LOG4J_CONFIGURATION_FILE);
         } catch (IOException e) {
-            logToConsole("Error during reading \"" + PROPERTIES_FILE + "\" stream: " + e.toString());
+            servletContainerlog("Error during reading \"" + PROPERTIES_FILE + "\" stream: ", e);
         } finally {
             if (propertiesFileStream != null) {
                 try {
                     propertiesFileStream.close();
                 } catch (IOException e) {
-                    logToConsole("Error during closing \"" + PROPERTIES_FILE + "\" stream: " + e.toString());
+                    servletContainerlog("Error during closing \"" + PROPERTIES_FILE + "\" stream: ", e);
                 }
             }
         }
         if (logFileName == null) {
             return null;
         }
-        return new LogFileInfo("\"" + PROPERTIES_FILE + "\" file", logFileName);
+        return new FileInfo("\"" + PROPERTIES_FILE + "\" file", logFileName);
     }
 
     /**
@@ -158,50 +187,101 @@ public class LoggerInitializationListener implements ServletContextListener {
     }
 
     /**
-     * Check {@value #LOG_FILE_USER_PROPERTY} property from system properties 
-     * @return {@link LogFileInfo} or {@code null}
+     * Checks {@value #LOG4J_CONFIGURATION_FILE} property from system properties 
+     * @return {@link FileInfo} or {@code null}
      */
-    private LogFileInfo getLogFileNameFromSystemProperties() {
-        String logFileName = System.getProperty(LOG_FILE_USER_PROPERTY);
+    private FileInfo getConfigurationFileNameFromSystemProperties() {
+        String logFileName = System.getProperty(LOG4J_CONFIGURATION_FILE);
         if (logFileName == null) {
             return null;
         }
-        return new LogFileInfo("system properties", logFileName);
+        return new FileInfo("system properties", logFileName);
     }
-
+    
     /**
-     * @return {@link LogFileInfo} with default value {@value #LOG_FILE_VALUE_DEFAULT}
+     * Configures log4j from external file 
+     * @param fileInfo file description and path
      */
-    private LogFileInfo getDefaultLogFileName() {
-        return new LogFileInfo("default value", LOG_FILE_VALUE_DEFAULT);
+    private boolean loadLog4jConfigurationFromExternalFile(FileInfo fileInfo){
+     
+        if (fileInfo == null){
+            return false;
+        }
+        logToConsole("Log4j configuration file has been taken from " + fileInfo.getSourceDescriptor() + " and set to \""
+                + fileInfo.getLogFileName() + "\"");
+        
+        String log4jConfigurationFile = fileInfo.getLogFileName();
+        File file = new File(log4jConfigurationFile.trim());
+        URL url = null;
+        try {
+            url = file.toURI().toURL();
+        } catch (MalformedURLException e) {
+            return false;
+        }        
+        return configureLog4j(url);
     }
-
+    
     /**
-     *  Auxiliary class which contains all necessary information about log file and its source 
+     * Configures log4j with embedded configuration file 
      */
-    private static class LogFileInfo {
+    private void loadEmbeddedLog4jConfiguration(){
+        logToConsole("Log4j embedded configuration loded");            
+        URL url = getClass().getResource(LOG4J_EMBEDDED_CONFIGURATION_FILE);
+        configureLog4j(url); // always returns true        
+    }
+    
+    /**
+     * Configures log4j from {@link URL} and checks regular Log4j configure class by extension (like default log4j 
+     * loader)
+     * @param url to configuration file
+     * @return {@code true} if one or more appenders was added, {@code false} otherwise
+     */
+    @VisibleForTesting
+    protected boolean configureLog4j(URL url){
+        
+        if (url.getFile().toLowerCase().endsWith(".xml")){
+            DOMConfigurator.configure(url);
+        } else {
+            PropertyConfigurator.configure(url);
+        }
+
+        // Previous calls doesn't throw any exceptions and doesn't return fail state. 
+        // So we check appenders, as most representative error indicator   
+        Logger rootLogger = LogManager.getRootLogger();
+        if (!rootLogger.getAllAppenders().hasMoreElements()){
+            logToConsole("Log4j error during load configuraton file or no appenders presented");
+            LogManager.resetConfiguration();
+            return false;
+        }
+        return true;
+    }
+    
+    /**
+     *  Auxiliary class which contains all necessary information about file and its source 
+     */
+    private static class FileInfo {
         private final String sourceDescriptor;
         private final String logFileName;
 
         /**
-         * Creates new instance log file information container
-         * @param sourceDescriptor user friendly descriptor about its log file source 
-         * @param logFileName path to log file
+         * Creates new instance file information container
+         * @param sourceDescriptor user friendly descriptor about this file source 
+         * @param logFileName path to file
          */
-        public LogFileInfo(String sourceDescriptor, String logFileName) {
+        public FileInfo(String sourceDescriptor, String logFileName) {
             this.sourceDescriptor = sourceDescriptor;
             this.logFileName = logFileName;
         }
 
         /**
-         * @return descriptor of log file
+         * @return descriptor of file
          */
         public String getSourceDescriptor() {
             return sourceDescriptor;
         }
 
         /**
-         * @return path to log file 
+         * @return path to file 
          */
         public String getLogFileName() {
             return logFileName;
