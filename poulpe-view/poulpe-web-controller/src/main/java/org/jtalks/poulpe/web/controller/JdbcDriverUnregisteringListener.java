@@ -44,7 +44,7 @@ public class JdbcDriverUnregisteringListener implements ServletContextListener {
      * <p>So, if we initialize logger field ordinary (by class field in listener),
      * then it will be initialized before first {@link #contextInitialized(ServletContextEvent)} and we lose
      * opportunity to initialize system properties (like {@code LOG_FILE}) via 
-     * {@link org.jtalks.poulpe.web.controller.LoggerInitializationListener LoggerInitializationListener}</p>
+     * {@link org.jtalks.poulpe.web.listener.LoggerInitializationListener LoggerInitializationListener}</p>
      * 
      * <p><b>Best practices is</b>: Do not directly initialize fields of servlet listeners. Use 
      * {@link #contextInitialized(ServletContextEvent)} and {@link #contextDestroyed(ServletContextEvent)} methods</p> 

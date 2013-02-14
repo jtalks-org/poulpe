@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller;
+package org.jtalks.poulpe.web.listener;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,22 +30,30 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.jtalks.poulpe.model.utils.JndiAwarePropertyPlaceholderConfigurer;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 
 import com.google.common.annotations.VisibleForTesting;
 
+
 /**
- * Application startup listener which initialize logger properties that are used during standard logger initialization
- * (reading {@code log4j.xml}). <p/> 
+ * Application startup listener which initialize log4j from external or embedded configuration file. 
+ * <ol>
+ *  <li>It allows to configure our environments without unpacking and changing log4j inside of war file </li>
+ *  <li>It allows to change logs location as well as configuration depending on environment</li>
+ *  <li>It allows for instance on PROD disable default {@code DEBUG} level turned on</li>
+ * </ol>
  * <p>This listener should be registered and started before any other servlet/listener (which use logging). So it 
- * starts before usual logger initialization.</p>
- * <p>Logger search for parameters in common order: 
+ * should starts before usual logger initialization.</p>
+ * <p>Logger search configuration file in common order: 
  * <ol>
  *  <li>JNDI</li>
  *  <li>datasource.properties file</li>
  *  <li>system properties</li>
- *  <li>default value</li>
+ *  <li>embedded</li>
  * </ol></p>
- * <p>We can't use Spring IoC, because order of bean initialization is not managed and someclasses can start using 
+ * <p>We can't use Spring IoC, because order of bean initialization is not managed and some classes can start using 
  * logger which configured differently.</p>
  *
  * @author Evgeny Kapinos
@@ -59,8 +67,7 @@ import com.google.common.annotations.VisibleForTesting;
 public class LoggerInitializationListener implements ServletContextListener {
     
     /**  This property name is used to search in environment variables. */
-    @VisibleForTesting
-    protected static final String LOG4J_CONFIGURATION_FILE = "POULPE_LOG4J_CONFIGURATION_FILE";
+    private static final String LOGGING_CONFIG_FILE = "POULPE_LOGGING_CONFIG_FILE";
 
     /** Properties file where log4j configuration file info we should check */
     private static final String PROPERTIES_FILE = "/datasource.properties";
@@ -71,15 +78,16 @@ public class LoggerInitializationListener implements ServletContextListener {
     /** System property witch allows to skip standard and auto Log4j initialization */
     private static final String LOG4J_INIT_OVERRIDE_PROPERTY = "log4j.defaultInitOverride";
     
-    /** Prefix witch used when this class put messages into servlet container log stream */
+    /** Prefix witch is used when this class puts messages into servlet container log stream */
     private static final String CONTAINER_LOG_PREFIX = "[POULPE][log4j init] ";
     
     /** current servlet context for logging */
     private ServletContext servletContext;
     
     /**
-     * Initializing logger by configuration file
-     * <p>{@inheritDoc}</p>
+     * Initializing logger. For an idea how it looks configuration file, see class javadocs
+     * @param event standard listener servlet event
+     * @see <a href="http://wiki.apache.org/logging-log4j/Log4jXmlFormat">Log4j XML configuration apache tutorial</a>
      */
     @Override
     public void contextInitialized(ServletContextEvent event) {
@@ -88,7 +96,7 @@ public class LoggerInitializationListener implements ServletContextListener {
         servletContext = event.getServletContext(); 
         
         // Search external Log4j configuration file
-        FileInfo fileInfo = getConfigurationFileNameFromJNDI();
+        FileInfo fileInfo = getConfigurationFileNameFromJndi();
         if (fileInfo == null) {
             fileInfo = getConfigurationFileNameFromDatasourcePropertiesFile();
         }
@@ -137,65 +145,45 @@ public class LoggerInitializationListener implements ServletContextListener {
     }
 
     /**
-     * Check {@value #LOG4J_CONFIGURATION_FILE} property from JNDI
+     * Check {@value #LOGGING_CONFIG_FILE} property from JNDI
      * @return {@link FileInfo} or {@code null}
      */
-    private FileInfo getConfigurationFileNameFromJNDI() {
-        String logFileName = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOG4J_CONFIGURATION_FILE);
-        if (logFileName == null) {
-            return null;
-        }
-        return new FileInfo("JNDI", logFileName);
+    private FileInfo getConfigurationFileNameFromJndi() {
+        String logFileName = JndiAwarePropertyPlaceholderConfigurer.resolveJndiProperty(LOGGING_CONFIG_FILE);
+        return logFileName == null ? null: new FileInfo("JNDI", logFileName);
     }
 
     /**
-     * Check {@value #LOG4J_CONFIGURATION_FILE} property from {@value #PROPERTIES_FILE} file 
+     * Check {@value #LOGGING_CONFIG_FILE} property in {@value #PROPERTIES_FILE} file 
      * @return {@link FileInfo} or {@code null}
      */
     private FileInfo getConfigurationFileNameFromDatasourcePropertiesFile() {
-        Properties prop = new Properties();
-        InputStream propertiesFileStream = null;
-        String logFileName = null;
-        try {
-            propertiesFileStream = getPropertiesFileStream();
-            prop.load(propertiesFileStream);
-            logFileName = prop.getProperty(LOG4J_CONFIGURATION_FILE);
-        } catch (IOException e) {
-            servletContainerlog("Error during reading \"" + PROPERTIES_FILE + "\" stream: ", e);
-        } finally {
-            if (propertiesFileStream != null) {
-                try {
-                    propertiesFileStream.close();
-                } catch (IOException e) {
-                    servletContainerlog("Error during closing \"" + PROPERTIES_FILE + "\" stream: ", e);
-                }
-            }
-        }
-        if (logFileName == null) {
-            return null;
-        }
-        return new FileInfo("\"" + PROPERTIES_FILE + "\" file", logFileName);
+        String logFileName = loadDatasourcePropertiesFile().getProperty(LOGGING_CONFIG_FILE);
+        return logFileName == null ? null: new FileInfo("\"" + PROPERTIES_FILE + "\" file", logFileName);
     }
 
     /**
-     * Opens file with properties and return stream
+     * Returns properties from {@value #PROPERTIES_FILE} file
      * @return {@link InputStream}
      */
     @VisibleForTesting
-    protected InputStream getPropertiesFileStream() {
-        return getClass().getResourceAsStream(PROPERTIES_FILE);
+    protected Properties loadDatasourcePropertiesFile() {
+        Resource resource = new ClassPathResource(PROPERTIES_FILE);
+        try {
+            return PropertiesLoaderUtils.loadProperties(resource);
+        } catch (IOException e) {
+            servletContainerlog("Error during load \"" + PROPERTIES_FILE + "\" resource", e);
+            return new Properties();
+        }
     }
 
     /**
-     * Checks {@value #LOG4J_CONFIGURATION_FILE} property from system properties 
+     * Checks {@value #LOGGING_CONFIG_FILE} property from system properties 
      * @return {@link FileInfo} or {@code null}
      */
     private FileInfo getConfigurationFileNameFromSystemProperties() {
-        String logFileName = System.getProperty(LOG4J_CONFIGURATION_FILE);
-        if (logFileName == null) {
-            return null;
-        }
-        return new FileInfo("system properties", logFileName);
+        String logFileName = System.getProperty(LOGGING_CONFIG_FILE);
+        return logFileName == null ? null: new FileInfo("system properties", logFileName);
     }
     
     /**
