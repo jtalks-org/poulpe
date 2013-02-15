@@ -15,9 +15,9 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.service.EntityService;
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;

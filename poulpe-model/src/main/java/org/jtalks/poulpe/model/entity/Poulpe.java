@@ -16,6 +16,8 @@ package org.jtalks.poulpe.model.entity;
 
 import java.util.List;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Property;
 
 /**
@@ -29,7 +31,7 @@ public class Poulpe extends Component {
      * Creates Component with {@link ComponentType#ADMIN_PANEL}. Visible for hibernate
      */
     protected Poulpe() {
-        super(ComponentType.ADMIN_PANEL);
+        setComponentType(ComponentType.ADMIN_PANEL);
     }
 
     /**

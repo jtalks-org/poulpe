@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;

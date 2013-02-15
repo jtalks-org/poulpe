@@ -19,9 +19,9 @@
         "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
 <hibernate-mapping>
 
-  <class name="org.jtalks.poulpe.model.entity.Component" table="COMPONENTS">
+  <class name="org.jtalks.common.model.entity.Component" table="COMPONENTS">
   
-    <cache usage="nonstrict-read-write" />
+    <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
     
     <id column="CMP_ID" name="id" unsaved-value="0">
       <generator class="native" />
@@ -35,14 +35,14 @@
     <property column="DESCRIPTION" name="description" />
     
     <bag name="properties" cascade="all-delete-orphan" inverse="false" lazy="false">
-      <cache usage="nonstrict-read-write" />
+      <cache usage="nonstrict-read-write" region="org.jtalks.EHCOMMON"/>
       <key column="CMP_ID" foreign-key="FK_COMPONENT" />
       <one-to-many class="org.jtalks.common.model.entity.Property" />
     </bag>
 
     <property name="componentType" column="COMPONENT_TYPE" unique="true">
       <type name="org.hibernate.type.EnumType">
-        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
         <!-- 12 means 'VARCHAR', see java.sql.Types.VARCHAR -->
         <param name="type">12</param>
       </type>
@@ -61,7 +61,7 @@
     <!-- discriminator - ComponentType.ADMIN_PANEL -->
     <subclass name="org.jtalks.poulpe.model.entity.Poulpe" discriminator-value="ADMIN_PANEL" />
     
-    <subclass name="org.jtalks.poulpe.model.entity.Component" entity-name="Antarticle" discriminator-value="ARTICLE" />
+    <subclass name="org.jtalks.common.model.entity.Component" entity-name="Antarticle" discriminator-value="ARTICLE" />
   </class>
   
   <query name="allComponents">

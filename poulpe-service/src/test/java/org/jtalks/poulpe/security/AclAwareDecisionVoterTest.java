@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.security;
 
 import org.jtalks.common.model.entity.User;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.mockito.Matchers;

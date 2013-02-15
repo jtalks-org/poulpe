@@ -25,7 +25,7 @@
     
     <id column="COMPONENT_TYPE" name="componentType">
       <type name="org.hibernate.type.EnumType">
-        <param name="enumClass">org.jtalks.poulpe.model.entity.ComponentType</param>
+        <param name="enumClass">org.jtalks.common.model.entity.ComponentType</param>
         <!-- 12 means 'VARCHAR', see java.sql.Types.VARCHAR -->
         <param name="type">12</param>
       </type>

@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.logic;
 
 import org.jtalks.common.model.entity.Branch;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.permissions.BranchPermission;
@@ -29,7 +30,6 @@ import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dto.AnonymousGroup;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.entity.Component;
 import org.springframework.security.acls.model.AccessControlEntry;
 import org.springframework.security.acls.model.Permission;
 import org.springframework.security.acls.model.Sid;

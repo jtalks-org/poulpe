@@ -86,7 +86,7 @@
         class="org.jtalks.common.security.acl.TypeConvertingObjectIdentityGenerator">
     <property name="additionalConversionRules">
       <map>
-        <entry key="org.jtalks.poulpe.model.entity.Component" value="COMPONENT"/>
+        <entry key="org.jtalks.common.model.entity.Component" value="COMPONENT"/>
       </map>
     </property>
   </bean>

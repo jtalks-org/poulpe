@@ -15,8 +15,8 @@
 package org.jtalks.poulpe.web.controller.component.dialogs;
 
 import com.google.common.collect.Lists;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.EntityUniqueConstraintException;
 import org.jtalks.poulpe.web.controller.SelectedEntity;

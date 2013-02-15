@@ -19,9 +19,9 @@ import java.util.Set;
 
 import org.jtalks.common.service.transactional.AbstractTransactionalEntityService;
 import org.jtalks.poulpe.model.dao.ComponentDao;
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.JCommuneNotifier;

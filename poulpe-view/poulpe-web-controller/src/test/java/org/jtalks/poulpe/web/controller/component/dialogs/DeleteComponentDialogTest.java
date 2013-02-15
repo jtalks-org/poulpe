@@ -1,6 +1,6 @@
 package org.jtalks.poulpe.web.controller.component.dialogs;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;

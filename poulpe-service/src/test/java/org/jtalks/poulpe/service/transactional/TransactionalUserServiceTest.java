@@ -22,8 +22,8 @@ import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.pages.Pages;
@@ -128,7 +128,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void accessNotAllowedBecauseNoComponentTypeRegistered() {
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
 
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(null);
 
@@ -137,7 +137,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void accessNotAllowedBecauseNoGroupPermissionsAssociatedWithComponent() {
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
         Component component = mock(Component.class);
 
         when(componentDaoMock.getByType(eq(componentType))).thenReturn(component);
@@ -148,7 +148,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void accessNotAllowedBecausePermissionNotFound() {
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
         Component component = mock(Component.class);
 
         when(userDao.getByUsername(eq(USERNAME))).thenReturn(createPoulpeUserWithPredefinedNameAndGroups(Collections.<Group>emptyList()));
@@ -162,7 +162,7 @@ public class TransactionalUserServiceTest {
     public void accessNotAllowedBecausePermissionIsNotGranting() {
         long groupId = 42L;
 
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
         Component component = mock(Component.class);
         GroupAce groupAce = mock(GroupAce.class);
 
@@ -182,7 +182,7 @@ public class TransactionalUserServiceTest {
         long groupId = 42L;
         long groupId2 = 666L;
 
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
         Component component = mock(Component.class);
         GroupAce groupAce = mock(GroupAce.class);
         GroupAce groupAce2 = mock(GroupAce.class);
@@ -206,7 +206,7 @@ public class TransactionalUserServiceTest {
     public void accessAllowed() {
         long groupId = 42L;
 
-        ComponentType componentType = mock(ComponentType.class);
+        ComponentType componentType = ComponentType.FORUM;
         Component component = mock(Component.class);
         GroupAce groupAce = mock(GroupAce.class);
         Group group = createGroupWithId(groupId);

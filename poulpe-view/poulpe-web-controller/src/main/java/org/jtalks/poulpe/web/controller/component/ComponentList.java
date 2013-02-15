@@ -16,7 +16,7 @@ package org.jtalks.poulpe.web.controller.component;
 
 import com.google.common.collect.ImmutableList;
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.web.controller.zkutils.BindUtilsWrapper;
 
 import javax.validation.constraints.NotNull;

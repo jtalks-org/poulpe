@@ -22,7 +22,7 @@ import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
 import org.jtalks.poulpe.model.dto.PermissionChanges;
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.PermissionsService;
 

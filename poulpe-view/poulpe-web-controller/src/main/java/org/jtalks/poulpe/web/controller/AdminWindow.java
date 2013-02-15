@@ -14,8 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller;
 
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Poulpe;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.web.controller.component.ComponentList;

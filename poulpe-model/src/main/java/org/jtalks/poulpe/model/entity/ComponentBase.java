@@ -17,6 +17,8 @@ package org.jtalks.poulpe.model.entity;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.Validate;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Property;
 
 import javax.annotation.Nonnull;
@@ -63,7 +65,13 @@ public class ComponentBase {
      */
     public Component newComponent(String name, String description) {
         Validate.validState(componentType != null, "componentType must be set");
-        return componentType.newComponent(name, description, copyAll(defaultProperties));
+        if (componentType == ComponentType.FORUM) {
+            return new Jcommune(name, description, copyAll(defaultProperties));
+        } else if (componentType == ComponentType.ADMIN_PANEL) {
+            return new Poulpe(name, description, copyAll(defaultProperties));
+        } else {
+            return new Component(name, description, componentType, copyAll(defaultProperties));
+        }
     }
 
     /**

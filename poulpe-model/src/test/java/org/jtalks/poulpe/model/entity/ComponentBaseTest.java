@@ -24,6 +24,8 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Property;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.testng.annotations.DataProvider;

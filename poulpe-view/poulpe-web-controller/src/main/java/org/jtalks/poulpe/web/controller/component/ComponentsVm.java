@@ -15,8 +15,8 @@
 package org.jtalks.poulpe.web.controller.component;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;

@@ -19,7 +19,7 @@ import static org.zkoss.util.resource.Labels.getLabel;
 
 import javax.annotation.Nonnull;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.service.exceptions.EntityIsRemovedException;
 import org.jtalks.poulpe.web.controller.SelectedEntity;

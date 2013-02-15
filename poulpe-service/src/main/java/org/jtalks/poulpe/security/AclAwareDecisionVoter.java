@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.security;
 
 import com.google.common.annotations.VisibleForTesting;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.service.UserService;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;

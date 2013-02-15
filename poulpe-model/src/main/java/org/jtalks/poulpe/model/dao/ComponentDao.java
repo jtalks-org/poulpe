@@ -15,9 +15,9 @@
 package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.poulpe.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentType;
+import org.jtalks.common.model.entity.ComponentType;
 
 import java.util.List;
 import java.util.Set;

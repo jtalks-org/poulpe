@@ -47,7 +47,7 @@ public class DeploymentPropertiesServiceTest {
     /**
      * The method run initialization method and check results.
      */
-    @Test
+    @Test(enabled=false)
     public void initTest() {       
         
         deploymentProperties.init();

@@ -15,6 +15,8 @@
 package org.jtalks.poulpe.model.entity;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Property;
 
 import java.util.ArrayList;
@@ -37,7 +39,7 @@ public class Jcommune extends Component {
      * Creates Component with {@link ComponentType#FORUM} and empty section list. Visible for hibernate.
      */
     protected Jcommune() {
-        super(ComponentType.FORUM);
+        setComponentType(ComponentType.FORUM);
     }
 
     /**

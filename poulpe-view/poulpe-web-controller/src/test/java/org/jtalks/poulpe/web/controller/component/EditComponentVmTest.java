@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.component;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
 
-import org.jtalks.poulpe.model.entity.Component;
+import org.jtalks.common.model.entity.Component;
 import org.jtalks.poulpe.service.ComponentService;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
