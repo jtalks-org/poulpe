@@ -28,8 +28,7 @@ import org.testng.annotations.Test;
  * @author Evgeny Kapinos
  */
 public class LoggerInitializationListenerTest {
-   
-    private String LOGGING_CONFIG_FILE = "POULPE_LOGGING_CONFIG_FILE";
+    private String LOGGING_CONFIG_FILE = "LOGGING_CONFIG_FILE";
     private String LOG4J_INIT_OVERRIDE_PROPERTY = "log4j.defaultInitOverride";
     private LoggerInitializationListener sut;
     private ServletContextEvent servletContextEvent;
