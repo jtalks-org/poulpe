@@ -67,7 +67,7 @@ import com.google.common.annotations.VisibleForTesting;
 public class LoggerInitializationListener implements ServletContextListener {
     
     /**  This property name is used to search in environment variables. */
-    private static final String LOGGING_CONFIG_FILE = "POULPE_LOGGING_CONFIG_FILE";
+    private static final String LOGGING_CONFIG_FILE = "LOGGING_CONFIG_FILE";
 
     /** Properties file where log4j configuration file info we should check */
     private static final String PROPERTIES_FILE = "/datasource.properties";
