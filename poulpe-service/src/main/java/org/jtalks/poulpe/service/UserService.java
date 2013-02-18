@@ -49,6 +49,14 @@ public interface UserService {
     List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
     /**
+     * @param searchString string for searching users, if empty - all users will be returned
+     * @param page         page number for retrieving
+     * @param itemsPerPage limit of items per page
+     * @return users matched given search string paginated, ordered by desc
+     */
+    List<PoulpeUser> findUsersPaginatedDesc(String searchString, int page, int itemsPerPage);
+
+    /**
      * Gets all users which excludes in groups with username like in parameter.
      *
      * @param availableFilterText some word which must be like username

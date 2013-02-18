@@ -16,11 +16,9 @@ package org.jtalks.poulpe.web.controller.users;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
-import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
-import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.ZkHelper;
 import org.springframework.security.authentication.encoding.Md5PasswordEncoder;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
@@ -67,6 +65,7 @@ public class UsersVm {
     private String searchString = NO_FILTER_SEARCH_STRING;
     private int activePage = 0;
     private PoulpeUser selectedUser;
+    private boolean ascendingSort = true;
 
     /**
      * @param userService the service to get access to users and to store changes to the database
@@ -122,7 +121,11 @@ public class UsersVm {
      * @return list containing users on page with number given as param
      */
     private List<PoulpeUser> usersOf(int page) {
-        return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
+        if(isAscendingSort()){
+            return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
+        }else{
+            return userService.findUsersPaginatedDesc(searchString, page, ITEMS_PER_PAGE);
+        }
     }
 
     /**
@@ -228,6 +231,33 @@ public class UsersVm {
     @NotifyChange({VIEW_DATA_PROP, SELECTED_ITEM_PROP})
     public void cancelEdit() {
         closeEditDialog();
+    }
+
+    /**
+     * When is command sorting by username
+     * @param ascending asc or desc
+     */
+    @Command
+    @NotifyChange({USERS})
+    public void sortByUsername(@BindingParam("ascending") boolean ascending){
+        setAscendingSort(ascending);
+        this.users = usersOf(activePage);
+    }
+
+    /**
+     * Gets ascending sort or not
+     * @return ascending sort or not
+     */
+    public boolean isAscendingSort() {
+        return ascendingSort;
+    }
+
+    /**
+     * Sets ascending sort or not
+     * @return ascending sort or not
+     */
+    public void setAscendingSort(boolean ascendingSort) {
+        this.ascendingSort = ascendingSort;
     }
 
     /**

@@ -56,6 +56,19 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
+    public List<PoulpeUser> findPoulpeUsersPaginatedDesc(String searchString, Pagination paginate) {
+        searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
+        Query query = getSession().getNamedQuery("findUsersByLikeUsernameDesc");
+        query.setString("username", MessageFormat.format(FORMAT, searchString));
+        paginate.addPagination(query);
+
+        return query.list();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int countUsernameMatches(String searchString) {
         searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
         Query query = getSession().getNamedQuery("countUsersByLikeUsername");

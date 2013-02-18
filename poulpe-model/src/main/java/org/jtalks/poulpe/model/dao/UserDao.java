@@ -42,6 +42,15 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination pagination);
 
     /**
+     * Looks for users whose nicknames matches the given string
+     *
+     * @param searchString string to search
+     * @param pagination   setting for pagination
+     * @return paginated result list? ordered by desc
+     */
+    List<PoulpeUser> findPoulpeUsersPaginatedDesc(String searchString, Pagination pagination);
+
+    /**
      * Counts how many usernames matches the given string
      *
      * @param searchString for matching with usernames

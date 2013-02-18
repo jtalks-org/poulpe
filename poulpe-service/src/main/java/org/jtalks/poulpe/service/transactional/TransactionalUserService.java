@@ -85,6 +85,14 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
+    public List<PoulpeUser> findUsersPaginatedDesc(String searchString, int page, int itemsPerPage) {
+        return userDao.findPoulpeUsersPaginatedDesc(searchString, Pages.paginate(page, itemsPerPage));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public int countUsernameMatches(String searchString) {
         return userDao.countUsernameMatches(searchString);
     }
