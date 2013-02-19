@@ -2,4 +2,4 @@
  * scope. This script modify this table to reconcile it columns with 
  * definitions from common.  
  */
-ALTER TABLE PROPERTIES MODIFY VALIDATION_RULE VARCHAR(64) NOT NULL DEFAULT '';
+ALTER TABLE PROPERTIES MODIFY VALIDATION_RULE VARCHAR(255) NOT NULL DEFAULT '';
