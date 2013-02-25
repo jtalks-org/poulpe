@@ -80,10 +80,6 @@
         <![CDATA[from PoulpeUser u where u.username like :username order by upper(u.username)]]>
     </query>
 
-    <query name="findUsersByLikeUsernameDesc">
-        <![CDATA[from PoulpeUser u where u.username like :username order by upper(u.username) desc ]]>
-    </query>
-
     <query name="findEnabledUsersByLikeUsername">
         <![CDATA[from PoulpeUser u where u.username like :username and u.enabled = 1 order by upper(u.username)]]>
     </query>

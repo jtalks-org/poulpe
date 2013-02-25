@@ -14,12 +14,13 @@
  */
 package org.jtalks.poulpe.service;
 
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
+import org.jtalks.poulpe.model.sorting.UserSortingRequest;
 
 import java.util.List;
 
@@ -49,12 +50,10 @@ public interface UserService {
     List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
     /**
-     * @param searchString string for searching users, if empty - all users will be returned
-     * @param page         page number for retrieving
-     * @param itemsPerPage limit of items per page
-     * @return users matched given search string paginated, ordered by desc
+     * @param sortingRequest sorting request
+     * @return users paginated
      */
-    List<PoulpeUser> findUsersPaginatedDesc(String searchString, int page, int itemsPerPage);
+    List<PoulpeUser> findUsersBySortingRequest(UserSortingRequest sortingRequest);
 
     /**
      * Gets all users which excludes in groups with username like in parameter.

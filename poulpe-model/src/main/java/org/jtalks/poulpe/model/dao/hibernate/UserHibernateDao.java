@@ -14,7 +14,10 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
+import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
@@ -22,6 +25,7 @@ import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
+import org.jtalks.poulpe.model.sorting.UserSortingRequest;
 
 import java.math.BigInteger;
 import java.text.MessageFormat;
@@ -56,13 +60,13 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findPoulpeUsersPaginatedDesc(String searchString, Pagination paginate) {
-        searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
-        Query query = getSession().getNamedQuery("findUsersByLikeUsernameDesc");
-        query.setString("username", MessageFormat.format(FORMAT, searchString));
-        paginate.addPagination(query);
-
-        return query.list();
+    public List<PoulpeUser> findPoulpeUsersBySortingRequest(UserSortingRequest sortingRequest) {
+        String searchString = SqlLikeEscaper.escapeControlCharacters(sortingRequest.getSearchString());
+        Criteria criteria = getSession().createCriteria(PoulpeUser.class)
+                .add(Restrictions.like("username", MessageFormat.format(FORMAT, searchString)))
+                .addOrder(getOrder(sortingRequest));
+        sortingRequest.getPagination().addPagination(criteria);
+        return criteria.list();
     }
 
     /**
@@ -160,6 +164,19 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         paginate.addPagination(query);
 
         return query.list();
+    }
+
+    /**
+     * Returns order of sorting by sorting request
+     * @param request sorting request
+     * @return order
+     */
+    private Order getOrder(UserSortingRequest request){
+        if(request.isAscending()){
+            return Order.asc(request.getColumn()).ignoreCase();
+        }else{
+            return Order.desc(request.getColumn()).ignoreCase();
+        }
     }
 
 

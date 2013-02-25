@@ -17,6 +17,7 @@ package org.jtalks.poulpe.web.controller.users;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.sorting.UserSortingRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -43,6 +44,7 @@ public class UsersVm {
     private static final String ACTIVE_PAGE = "activePage";
     private static final String USERS = "users";
     private static final String TOTAL_SIZE = "totalSize";
+    private static final String DEFAULT_COLUMN_OF_SORT = "username";
 
     static final String NO_FILTER_SEARCH_STRING = "";
     /** Url to zul page for user editing*/
@@ -66,6 +68,7 @@ public class UsersVm {
     private int activePage = 0;
     private PoulpeUser selectedUser;
     private boolean ascendingSort = true;
+    private String columnOfSorting = DEFAULT_COLUMN_OF_SORT;
 
     /**
      * @param userService the service to get access to users and to store changes to the database
@@ -121,11 +124,12 @@ public class UsersVm {
      * @return list containing users on page with number given as param
      */
     private List<PoulpeUser> usersOf(int page) {
-        if(isAscendingSort()){
-            return userService.findUsersPaginated(searchString, page, ITEMS_PER_PAGE);
-        }else{
-            return userService.findUsersPaginatedDesc(searchString, page, ITEMS_PER_PAGE);
-        }
+        return userService.findUsersBySortingRequest(
+                new UserSortingRequest(isAscendingSort(),
+                        page,
+                        ITEMS_PER_PAGE,
+                        getColumnOfSorting(),
+                        getSearchString()));
     }
 
     /**
@@ -239,9 +243,11 @@ public class UsersVm {
      */
     @Command
     @NotifyChange({USERS})
-    public void sortByUsername(@BindingParam("ascending") boolean ascending){
+    public void sortUsers(@BindingParam("ascending") boolean ascending,
+                          @BindingParam("column") String column){
         setAscendingSort(ascending);
-        this.users = usersOf(activePage);
+        setColumnOfSorting(column);
+        this.users = usersOf(getActivePage());
     }
 
     /**
@@ -258,6 +264,22 @@ public class UsersVm {
      */
     public void setAscendingSort(boolean ascendingSort) {
         this.ascendingSort = ascendingSort;
+    }
+
+    /**
+     * Returns column of sorting
+     * @return column of sorting
+     */
+    public String getColumnOfSorting() {
+        return columnOfSorting;
+    }
+
+    /**
+     * Sets column of sorting
+     * @param columnOfSorting column of sorting
+     */
+    public void setColumnOfSorting(String columnOfSorting) {
+        this.columnOfSorting = columnOfSorting;
     }
 
     /**

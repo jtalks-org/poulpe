@@ -23,6 +23,11 @@ public abstract class AbstractSortingRequest {
     private String column;
 
     /**
+     * String to search
+     */
+    private String searchString;
+
+    /**
      * @return sorting by ascending or not
      */
     public boolean isAscending() {
@@ -62,5 +67,19 @@ public abstract class AbstractSortingRequest {
      */
     public void setColumn(String column) {
         this.column = column;
+    }
+
+    /**
+     * @return string to search
+     */
+    public String getSearchString() {
+        return searchString;
+    }
+
+    /**
+     * @param searchString string to search
+     */
+    public void setSearchString(String searchString) {
+        this.searchString = searchString;
     }
 }

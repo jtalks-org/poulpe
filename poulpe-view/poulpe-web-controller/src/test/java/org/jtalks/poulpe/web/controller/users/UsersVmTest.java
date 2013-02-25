@@ -14,16 +14,8 @@
  */
 package org.jtalks.poulpe.web.controller.users;
 
-import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_DIALOG;
-import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_DIALOG;
-import static org.jtalks.poulpe.web.controller.users.UsersVm.EDIT_USER_URL;
-import static org.jtalks.poulpe.web.controller.users.UsersVm.CHANGE_PASSWORD_URL;
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
-import java.util.Arrays;
-import java.util.List;
-
 import org.jtalks.poulpe.model.entity.PoulpeUser;
+import org.jtalks.poulpe.model.sorting.UserSortingRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -35,6 +27,13 @@ import org.zkoss.zk.ui.Component;
 import org.zkoss.zk.ui.WrongValueException;
 import org.zkoss.zul.Textbox;
 import org.zkoss.zul.Window;
+
+import java.util.Arrays;
+import java.util.List;
+
+import static org.jtalks.poulpe.web.controller.users.UsersVm.*;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 public class UsersVmTest {
     // sut
@@ -93,7 +92,7 @@ public class UsersVmTest {
     
     @Test 
     public void init_usersFromFirstPageBound() {
-        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 0);
+        List<PoulpeUser> users = givenPageWithData();
         usersVm.init(component, zkHelper);
         assertUsersBound(users);
     }
@@ -105,6 +104,12 @@ public class UsersVmTest {
     private List<PoulpeUser> givenPageWithData(String searchString, int page) {
         List<PoulpeUser> result = Arrays.asList(new PoulpeUser(), new PoulpeUser());
         when(userService.findUsersPaginated(searchString, page, usersVm.getItemsPerPage())).thenReturn(result);
+        return result;
+    }
+
+    private List<PoulpeUser> givenPageWithData() {
+        List<PoulpeUser> result = Arrays.asList(new PoulpeUser(), new PoulpeUser());
+        when(userService.findUsersBySortingRequest(any(UserSortingRequest.class))).thenReturn(result);
         return result;
     }
     
@@ -143,7 +148,7 @@ public class UsersVmTest {
     @Test
     public void setActive_usersBound() {
         int activePage = 2; 
-        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, activePage);
+        List<PoulpeUser> users = givenPageWithData();
         
         usersVm.setActivePage(activePage);
         
@@ -167,7 +172,8 @@ public class UsersVmTest {
     public void filterUsersTestForSearching() {
         //usersVm.setActivePage(0);
         usersVm.filterUsers(searchString);
-        verify(userService).findUsersPaginated(eq(searchString), eq(0), eq(ITEMS_PER_PAGE));
+        verify(userService).findUsersBySortingRequest(any(UserSortingRequest.class));
+       // verify(userService).findUsersPaginated(eq(searchString), eq(0), eq(ITEMS_PER_PAGE));
     }
 
     @Test
@@ -198,7 +204,7 @@ public class UsersVmTest {
     @Test
     public void clearSearch_usersFromFirstPageBound() {
         givenSearchStringInSeachbox();
-        List<PoulpeUser> users = givenPageWithData(UsersVm.NO_FILTER_SEARCH_STRING, 0);
+        List<PoulpeUser> users = givenPageWithData();
         
         usersVm.clearSearch(searchTextBox);
         assertUsersBound(users);
