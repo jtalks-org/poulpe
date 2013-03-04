@@ -185,6 +185,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         List<PoulpeUser> actual = dao.findPoulpeUsersBySearchRequest(request);
 
         assertEquals(actual.size(), limit);
+
         assertTrue(actual.get(0).getUsername().toLowerCase().charAt(0)
                 <= actual.get(1).getUsername().toLowerCase().charAt(0));
     }
@@ -200,6 +201,7 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
         List<PoulpeUser> actual = dao.findPoulpeUsersBySearchRequest(request);
 
         assertEquals(actual.size(), limit);
+
         assertTrue(actual.get(0).getUsername().toLowerCase().charAt(0)
                 >= actual.get(1).getUsername().toLowerCase().charAt(0));
     }
