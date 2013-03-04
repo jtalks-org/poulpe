@@ -28,7 +28,7 @@ import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
 import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.pages.Pagination;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 
 import java.util.ArrayList;
@@ -86,8 +86,8 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findUsersBySortingRequest(UserSortingRequest sortingRequest) {
-        return userDao.findPoulpeUsersBySortingRequest(sortingRequest);
+    public List<PoulpeUser> findUsersBySearchRequest(UserSearchRequest searchRequest) {
+        return userDao.findPoulpeUsersBySearchRequest(searchRequest);
     }
 
     /**
