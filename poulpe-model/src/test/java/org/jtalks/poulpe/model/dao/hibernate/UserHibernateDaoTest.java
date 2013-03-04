@@ -23,6 +23,7 @@ import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
@@ -36,6 +37,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static org.jtalks.poulpe.model.sorting.UserSearchRequest.BY_USERNAME;
 import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
@@ -171,6 +173,34 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 
 		assertEquals(actual.size(), limit);
 	}
+
+    @Test
+    public void testFindPoulpeUsersBySearchRequestAsc(){
+        List<PoulpeUser> users = TestFixtures.usersListOf(23);
+        saveAndEvict(users);
+
+        int limit = 10;
+        int page = 1;
+        UserSearchRequest request = new UserSearchRequest(true,Pages.paginate(1, limit),BY_USERNAME,"");
+        List<PoulpeUser> actual = dao.findPoulpeUsersBySearchRequest(request);
+
+        assertEquals(actual.size(), limit);
+        assertTrue(actual.get(0).getUsername().charAt(0)<actual.get(1).getUsername().charAt(0));
+    }
+
+    @Test
+    public void testFindPoulpeUsersBySearchRequestDesc(){
+        List<PoulpeUser> users = TestFixtures.usersListOf(23);
+        saveAndEvict(users);
+
+        int limit = 10;
+        int page = 1;
+        UserSearchRequest request = new UserSearchRequest(false,Pages.paginate(1, limit),BY_USERNAME,"");
+        List<PoulpeUser> actual = dao.findPoulpeUsersBySearchRequest(request);
+
+        assertEquals(actual.size(), limit);
+        assertTrue(actual.get(0).getUsername().charAt(0)>actual.get(1).getUsername().charAt(0));
+    }
 
 	@Test
 	public void getAllUsersCount() {

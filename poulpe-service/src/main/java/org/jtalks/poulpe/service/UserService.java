@@ -20,7 +20,7 @@ import org.jtalks.common.model.entity.User;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 
 import java.util.List;
 
@@ -50,10 +50,10 @@ public interface UserService {
     List<PoulpeUser> findUsersPaginated(String searchString, int page, int itemsPerPage);
 
     /**
-     * @param sortingRequest sorting request
+     * @param searchRequest sorting request
      * @return users paginated
      */
-    List<PoulpeUser> findUsersBySortingRequest(UserSortingRequest sortingRequest);
+    List<PoulpeUser> findUsersBySearchRequest(UserSearchRequest searchRequest);
 
     /**
      * Gets all users which excludes in groups with username like in parameter.

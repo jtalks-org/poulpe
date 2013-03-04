@@ -18,7 +18,7 @@ import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 
 import java.util.List;
 
@@ -44,10 +44,10 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
 
     /**
      * Looks for users by sorting request
-     * @param sortingRequest sorting request
+     * @param searchRequest sorting request
      * @return paginated result list
      */
-    List<PoulpeUser> findPoulpeUsersBySortingRequest(UserSortingRequest sortingRequest);
+    List<PoulpeUser> findPoulpeUsersBySearchRequest(UserSearchRequest searchRequest);
 
     /**
      * Counts how many usernames matches the given string

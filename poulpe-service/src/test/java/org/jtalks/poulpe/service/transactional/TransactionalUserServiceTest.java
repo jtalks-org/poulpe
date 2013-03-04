@@ -27,6 +27,8 @@ import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.pages.Pages;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
+import static org.jtalks.poulpe.model.sorting.UserSearchRequest.*;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -91,6 +93,14 @@ public class TransactionalUserServiceTest {
         int page = 1, limit = 10;
         userService.findUsersPaginated(searchString, page, limit);
         verify(userDao).findPoulpeUsersPaginated(searchString, Pages.paginate(page, limit));
+    }
+
+    @Test
+    public void testFindUsersBySearchRequest(){
+        int page = 1, limit = 10;
+        UserSearchRequest request = new UserSearchRequest(true,Pages.paginate(page, limit),BY_USERNAME,"");
+        userService.findUsersBySearchRequest(request);
+        verify(userDao).findPoulpeUsersBySearchRequest(request);
     }
 
     @Test

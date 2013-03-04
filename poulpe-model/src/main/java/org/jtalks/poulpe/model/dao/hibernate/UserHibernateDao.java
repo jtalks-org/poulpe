@@ -25,7 +25,7 @@ import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 
 import java.math.BigInteger;
 import java.text.MessageFormat;
@@ -60,12 +60,12 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * {@inheritDoc}
      */
     @Override
-    public List<PoulpeUser> findPoulpeUsersBySortingRequest(UserSortingRequest sortingRequest) {
-        String searchString = SqlLikeEscaper.escapeControlCharacters(sortingRequest.getSearchString());
+    public List<PoulpeUser> findPoulpeUsersBySearchRequest(UserSearchRequest searchRequest) {
+        String searchString = SqlLikeEscaper.escapeControlCharacters(searchRequest.getSearchString());
         Criteria criteria = getSession().createCriteria(PoulpeUser.class)
                 .add(Restrictions.like("username", MessageFormat.format(FORMAT, searchString)))
-                .addOrder(getOrder(sortingRequest));
-        sortingRequest.getPagination().addPagination(criteria);
+                .addOrder(getOrder(searchRequest));
+        searchRequest.getPagination().addPagination(criteria);
         return criteria.list();
     }
 
@@ -171,7 +171,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      * @param request sorting request
      * @return order
      */
-    private Order getOrder(UserSortingRequest request){
+    private Order getOrder(UserSearchRequest request){
         if(request.isAscending()){
             return Order.asc(request.getColumn()).ignoreCase();
         }else{

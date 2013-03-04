@@ -17,7 +17,7 @@ package org.jtalks.poulpe.web.controller.users;
 import com.google.common.annotations.VisibleForTesting;
 import org.apache.commons.lang3.StringUtils;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.validator.EmailValidator;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -124,8 +124,8 @@ public class UsersVm {
      * @return list containing users on page with number given as param
      */
     private List<PoulpeUser> usersOf(int page) {
-        return userService.findUsersBySortingRequest(
-                new UserSortingRequest(isAscendingSort(),
+        return userService.findUsersBySearchRequest(
+                new UserSearchRequest(isAscendingSort(),
                         page,
                         ITEMS_PER_PAGE,
                         getColumnOfSorting(),

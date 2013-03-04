@@ -15,7 +15,7 @@
 package org.jtalks.poulpe.web.controller.users;
 
 import org.jtalks.poulpe.model.entity.PoulpeUser;
-import org.jtalks.poulpe.model.sorting.UserSortingRequest;
+import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.ZkHelper;
@@ -109,7 +109,7 @@ public class UsersVmTest {
 
     private List<PoulpeUser> givenPageWithData() {
         List<PoulpeUser> result = Arrays.asList(new PoulpeUser(), new PoulpeUser());
-        when(userService.findUsersBySortingRequest(any(UserSortingRequest.class))).thenReturn(result);
+        when(userService.findUsersBySearchRequest(any(UserSearchRequest.class))).thenReturn(result);
         return result;
     }
     
@@ -172,7 +172,7 @@ public class UsersVmTest {
     public void filterUsersTestForSearching() {
         //usersVm.setActivePage(0);
         usersVm.filterUsers(searchString);
-        verify(userService).findUsersBySortingRequest(any(UserSortingRequest.class));
+        verify(userService).findUsersBySearchRequest(any(UserSearchRequest.class));
        // verify(userService).findUsersPaginated(eq(searchString), eq(0), eq(ITEMS_PER_PAGE));
     }
 
