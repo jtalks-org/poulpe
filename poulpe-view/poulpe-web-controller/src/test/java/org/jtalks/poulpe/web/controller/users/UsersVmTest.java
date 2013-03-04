@@ -33,6 +33,7 @@ import java.util.List;
 
 import static org.jtalks.poulpe.web.controller.users.UsersVm.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
 import static org.testng.Assert.assertEquals;
 
 public class UsersVmTest {
@@ -221,7 +222,14 @@ public class UsersVmTest {
     private void givenNoSearchStringInSeachbox() {
         when(searchTextBox.getValue()).thenReturn(UsersVm.NO_FILTER_SEARCH_STRING);
     }
-    
+
+
+    @Test
+    public void testSortUsers(){
+        usersVm.sortUsers(true,UserSearchRequest.BY_EMAIL);
+        verify(userService).findUsersBySearchRequest(any(UserSearchRequest.class));
+    }
+
     @Test
     public void testEditUser() throws Exception {
         usersVm.setSelectedUser(new PoulpeUser());
