@@ -51,8 +51,8 @@ public class FileDownloadService {
      * @param contentFileNameWithoutExt
      *            Filename without extension which will be used for suggesting browser.
      */
-    FileDownloadService(ContentProvider contentProvider, FileDownloader fileDownloader,
-            String contentFileNameWithoutExt) {
+    public FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
+            final String contentFileNameWithoutExt) {
         Validate.notNull(contentProvider, "contentProvider must not be null");
         Validate.notNull(fileDownloader, "fileDownloader must not be null");
         Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
@@ -70,6 +70,7 @@ public class FileDownloadService {
      */
     public void performFileDownload() throws FileDownloadException {
         try {
+            // TODO: if possible refactor class to have less responsibilities
             File contentFile = getFile().createTempFile("dbdump", contentProvider.getContentFileNameExt());
             OutputStream output = getFileOutputStream(contentFile);
             contentProvider.writeContent(output);
@@ -96,7 +97,7 @@ public class FileDownloadService {
      *             if the file does not exist, is a directory rather than a regular file, or for some other reason
      *             cannot be opened for reading.
      */
-    protected InputStream getFileInputStream(File contentFile) throws FileNotFoundException {
+    protected InputStream getFileInputStream(final File contentFile) throws FileNotFoundException {
         return new DisposableFileInputStream(contentFile);
     }
 
@@ -110,7 +111,7 @@ public class FileDownloadService {
      *             if the file exists but is a directory rather than a regular file, does not exist but cannot be
      *             created, or cannot be opened for any other reason.
      */
-    protected OutputStream getFileOutputStream(File contentFile) throws FileNotFoundException {
+    protected OutputStream getFileOutputStream(final File contentFile) throws FileNotFoundException {
         return new BufferedOutputStream(new FileOutputStream(contentFile));
     }
 
@@ -121,6 +122,7 @@ public class FileDownloadService {
      * @return an instance of FileWrapper.
      */
     protected FileWrapper getFile() {
+        // TODO: make it thread-safe (e.g. make it private final and create in field declaration)
         if (fileWrapper == null) {
             fileWrapper = new FileWrapper();
         }
@@ -148,8 +150,8 @@ public class FileDownloadService {
         return String.format("%1$tY-%1$tm-%1$td_%1$tH-%1$tM-%1$tS", new Date());
     }
 
-    private ContentProvider contentProvider;
-    private FileDownloader fileDownloader;
-    private String contentFileNameWithoutExt;
+    private final ContentProvider contentProvider;
+    private final FileDownloader fileDownloader;
+    private final String contentFileNameWithoutExt;
     private FileWrapper fileWrapper;
 }

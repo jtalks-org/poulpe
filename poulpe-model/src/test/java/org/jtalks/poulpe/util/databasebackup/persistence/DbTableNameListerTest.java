@@ -92,7 +92,7 @@ public class DbTableNameListerTest {
         Collections.sort(expectedList);
 
         DbTableNameLister lister = new DbTableNameLister(dataSource);
-        List<String> actualList = Lists.newArrayList(Lists.transform(lister.getPlainList(), new UpperCaseFunction()));
+        List<String> actualList = Lists.newArrayList(Lists.transform(lister.getTableNames(), new UpperCaseFunction()));
         Collections.sort(actualList);
 
         assertEquals(actualList, expectedList);

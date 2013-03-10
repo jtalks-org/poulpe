@@ -22,6 +22,7 @@ import java.sql.SQLException;
  * Interface for a TableDumpCommand. A command is supposed to be providing a piece of certain table's dump data, such as
  * table's CREATE statement, table's data, etc. So each command must override 2 methods:
  * <ul>
+ * //TODO: move those methods description to HeaderAware..
  * <li><strong>{@link #getHeader()}</strong> - should return a descriptive header for the providing data.</li>
  * <li><strong>{@link #getData()}</strong> - should return a dumping data.</li>
  * </ul>
@@ -31,7 +32,11 @@ import java.sql.SQLException;
  * 
  */
 public interface DbDumpCommand {
-    /** Executes command and push result into {@link OutputStream}
-     * @param output stream receiver */
+    /**
+     * Executes command and push result into {@link OutputStream}
+     * 
+     * @param output
+     *            stream receiver
+     */
     void execute(OutputStream output) throws SQLException, IOException;
 }

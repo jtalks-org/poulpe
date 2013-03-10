@@ -34,7 +34,7 @@ import org.jtalks.poulpe.util.databasebackup.persistence.DbTableNameLister;
 import com.google.common.collect.Lists;
 
 /**
- * The class generates and provides a database dump for given data source in the shape of SQL commands which can be
+ * The class generates and provides a database dump for given data source in the form of SQL commands which can be
  * executed in the SQL console later.
  * 
  * @author Evgeny Surovtsev
@@ -48,7 +48,7 @@ public class DbDumpContentProvider implements ContentProvider {
      * @param dataSource
      *            A DataSource object points to the data base to export.
      */
-    DbDumpContentProvider(final DataSource dataSource) {
+    public DbDumpContentProvider(final DataSource dataSource) {
         Validate.notNull(dataSource, "dataSource must not be null");
         this.dataSource = dataSource;
     }
@@ -57,14 +57,13 @@ public class DbDumpContentProvider implements ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public void writeContent(OutputStream output) throws FileDownloadException {
+    public void writeContent(final OutputStream output) throws FileDownloadException {
         try {
-            List<String> tableNames = getDbTableNameLister().getPlainList();
-            if (tableNames.size() == 0) {
+            List<String> tableNames = getDbTableNameLister().getTableNames();
+            if (tableNames.isEmpty()) {
                 throw new DatabaseDoesntContainTablesException();
             }
             getDbDumpCommand(getDbTableList(tableNames)).execute(output);
-
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
         } catch (IOException e) {
@@ -83,14 +82,14 @@ public class DbDumpContentProvider implements ContentProvider {
     }
 
     /**
-     * Returns an instance of {@link DbDumpCommand} which generate full database dump during its execution. The method
+     * Returns an instance of {@link DbDumpCommand} which generates full database dump during its execution. The method
      * is marked as protected so it can be substitute in the unit test class.
      * 
      * @param tablesToDump
      *            a list of {@link DbTable} objects which are used as a source of database dump information.
      * @return an instance of DbDumpCommand for generating dump of database.
      */
-    protected DbDumpCommand getDbDumpCommand(final List<DbTable> tablesToDump) {
+    DbDumpCommand getDbDumpCommand(final List<DbTable> tablesToDump) {
         return new MySqlDataBaseFullDumpCommand(tablesToDump);
     }
 
@@ -101,6 +100,7 @@ public class DbDumpContentProvider implements ContentProvider {
      *            a list of table names.
      * @return a list of DbTable objects.
      */
+    // TODO: move to TableLister?
     private List<DbTable> getDbTableList(final List<String> tableNames) {
         List<DbTable> dbTableList = Lists.newArrayList();
         for (String tableName : tableNames) {

@@ -48,7 +48,7 @@ public class DbDumpContentProviderTest {
 
         final List<String> tables = ImmutableList.of("tableName");
         mockDbTableNameLister = Mockito.mock(DbTableNameLister.class);
-        Mockito.when(mockDbTableNameLister.getPlainList()).thenReturn(tables);
+        Mockito.when(mockDbTableNameLister.getTableNames()).thenReturn(tables);
 
         sut = new DbDumpContentProvider(mockDataSource) {
             @Override
@@ -90,7 +90,7 @@ public class DbDumpContentProviderTest {
 
     @Test(expectedExceptions = DatabaseDoesntContainTablesException.class)
     public void emptyDatabaseThrowsException() throws SQLException, FileDownloadException {
-        Mockito.when(mockDbTableNameLister.getPlainList()).thenReturn(new ArrayList<String>());
+        Mockito.when(mockDbTableNameLister.getTableNames()).thenReturn(new ArrayList<String>());
         sut.writeContent(mockOutput);
     }
 
