@@ -1,7 +1,7 @@
 package org.jtalks.poulpe.web.controller.users;
 
-import junit.framework.Assert;
 import org.jtalks.common.model.entity.Group;
+import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
