@@ -512,6 +512,10 @@
           <artifactId>pitest-maven</artifactId>
           <version>0.29</version>
           <configuration>
+            <excludedClasses>
+              <param>org.jtalks.poulpe.model.dao.hibernate*</param>
+              <param>org.jtalks.poulpe.model.dao.utils*</param>
+            </excludedClasses>
             <timestampedReports>false</timestampedReports>
             <verbose>true</verbose>
             <outputFormats>
