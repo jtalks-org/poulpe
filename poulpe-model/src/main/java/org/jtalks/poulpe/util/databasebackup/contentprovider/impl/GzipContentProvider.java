@@ -24,7 +24,8 @@ import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
 
 /**
- * This ContentProvider is a filter which copies and compresses (gzip) all content given by another ContentProvider.
+ * Decorates content provided by another content provider to compress it with GZIP. This ContentProvider is a filter
+ * which copies and compresses (gzip) all content given by another ContentProvider.
  * 
  * @author Evgeny Surovtsev
  * 
@@ -35,10 +36,10 @@ public class GzipContentProvider implements ContentProvider {
      * Construct GzipContentProvider instance with given ContentProvider-Source.
      * 
      * @param contentProvider
-     *            All content provided by contentProvider will be gzipped and send feather as a result of work of the
+     *            All content provided by contentProvider will be gzipped and send further as a result of work of the
      *            GzipContentProvider.
      */
-    GzipContentProvider(final ContentProvider contentProvider) {
+    public GzipContentProvider(final ContentProvider contentProvider) {
         Validate.notNull(contentProvider, "contentProvider must not be null");
         this.contentProvider = contentProvider;
     }
@@ -47,12 +48,11 @@ public class GzipContentProvider implements ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public void writeContent(OutputStream output) throws FileDownloadException {
+    public void writeContent(final OutputStream output) throws FileDownloadException {
         try {
             GZIPOutputStream gzipOutput = getGZIPOutputStream(output);
             contentProvider.writeContent(gzipOutput);
             gzipOutput.finish();
-
         } catch (IOException e) {
             throw new GzipPackingException(e);
         }
@@ -67,7 +67,7 @@ public class GzipContentProvider implements ContentProvider {
      * @throws IOException
      *             if an I/O error has occurred.
      */
-    protected GZIPOutputStream getGZIPOutputStream(OutputStream output) throws IOException {
+    protected GZIPOutputStream getGZIPOutputStream(final OutputStream output) throws IOException {
         return new GZIPOutputStream(output);
     }
 

@@ -17,6 +17,7 @@ package org.jtalks.poulpe.util.databasebackup.persistence;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class DbTableNameLister {
      * 
      * @return DataSource.
      */
-    public DataSource getDataSource() {
+    public DataSource getDataSource() {// TODO: check whether it's used anywhere
         return dataSource;
     }
 
@@ -63,14 +64,16 @@ public class DbTableNameLister {
      *             is thrown if there is an error during collaborating with the database.
      */
     @SuppressWarnings("unchecked")
-    public List<String> getPlainList() throws SQLException {
+    public List<String> getTableNames() throws SQLException {// TODO: think about exceptions here, we might want to
+                                                             // create our own exceptions
         Validate.notNull(dataSource, "dataSource must not be null");
         List<String> tableNames = null;
         try {
             tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
                 @Override
                 public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-                    final List<String> tableList = Lists.newArrayList();
+                    final List<String> tableList = new ArrayList<String>(); // TODO: change using guava to direct
+                                                                            // calling new ArrayList<String>()
                     ResultSet rs = null;
                     try {
                         rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
@@ -78,7 +81,7 @@ public class DbTableNameLister {
                             tableList.add(rs.getString("TABLE_NAME"));
                         }
                     } finally {
-                        if (rs != null) {
+                        if (rs != null) {// TODO: statement should close all realated ResultSets
                             rs.close();
                         }
                     }

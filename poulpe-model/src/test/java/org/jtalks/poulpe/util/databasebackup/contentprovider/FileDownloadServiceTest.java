@@ -53,7 +53,7 @@ public class FileDownloadServiceTest {
             }
 
             @Override
-            protected OutputStream getFileOutputStream(File contentFile) throws FileNotFoundException {
+            protected OutputStream getFileOutputStream(final File contentFile) throws FileNotFoundException {
                 if (contentFile == mockFile) {
                     return mockOutputStream;
                 } else {
@@ -62,7 +62,7 @@ public class FileDownloadServiceTest {
             }
 
             @Override
-            protected InputStream getFileInputStream(File contentFile) throws FileNotFoundException {
+            protected InputStream getFileInputStream(final File contentFile) throws FileNotFoundException {
                 if (contentFile == mockFile) {
                     return mockInputStream;
                 } else {
@@ -84,21 +84,22 @@ public class FileDownloadServiceTest {
     }
 
     @Test
-    public void performFileDownloadTest() throws FileDownloadException, IOException {
+    public void performFileDownloadTest() throws Exception {
+        // TODO: use private methods for constructing SUT and its DOCs
         String fullFileName = sut.getContentFileNameWithoutExt() + ".sql";
 
         sut.performFileDownload();
 
         Mockito.verify(mockContentProvider).writeContent(mockOutputStream);
         Mockito.verify(mockOutputStream).close();
-
+        // TODO: devide into 2 parts
         verify(mockFileDownloader).setMimeContentType("MIME_TYPE");
         verify(mockFileDownloader).setContentFileName(fullFileName);
         verify(mockFileDownloader).download(mockInputStream);
     }
 
     @Test(expectedExceptions = FileDownloadException.class)
-    public void whenIOErrorPerformFileDownloadThrowsException() throws FileDownloadException, IOException {
+    public void shouldRethrowExceptionIfIoErrorAppeared() throws Exception {
         Mockito.doThrow(IOException.class).when(mockOutputStream).close();
         sut.performFileDownload();
     }

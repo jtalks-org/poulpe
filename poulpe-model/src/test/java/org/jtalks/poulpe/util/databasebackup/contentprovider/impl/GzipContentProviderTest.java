@@ -14,15 +14,12 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
@@ -48,11 +45,11 @@ public class GzipContentProviderTest {
     @BeforeMethod
     public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
         content = "Test string for checking GzipContentProvider class";
-
-        contentProvider = new ContentProvider() {
+        contentProvider = new ContentProvider() {// TODO: check whether it's better to create a DummyContentProvider and
+                                                 // put it into sources
 
             @Override
-            public void writeContent(OutputStream output) throws FileDownloadException {
+            public void writeContent(final OutputStream output) throws FileDownloadException {
                 try {
                     output.write(content.getBytes());
                 } catch (IOException e) {
@@ -76,7 +73,7 @@ public class GzipContentProviderTest {
     }
 
     @Test
-    public void contentProviderGzipsCorrectly() throws FileDownloadException, IOException {
+    public void afterUncompressingMatchesOriginalString() throws Exception {
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         sut.writeContent(output);
 
@@ -93,9 +90,11 @@ public class GzipContentProviderTest {
         final GZIPOutputStream gzipOutput = Mockito.mock(GZIPOutputStream.class);
         Mockito.doThrow(IOException.class).when(gzipOutput).finish();
 
+        // sut = Mockito.spy(sut);// TODO: look at spy() more closely
+        // Mockito.doReturn(gzipOutput).when(sut).getGZIPOutputStream(gzipOutput);
         sut = new GzipContentProvider(contentProvider) {
             @Override
-            protected GZIPOutputStream getGZIPOutputStream(OutputStream output) throws IOException {
+            protected GZIPOutputStream getGZIPOutputStream(final OutputStream output) throws IOException {
                 return gzipOutput;
             }
         };
@@ -115,6 +114,6 @@ public class GzipContentProviderTest {
     }
 
     private GzipContentProvider sut;
-    private String content;
+    private String content;// TODO: move out into separate private method or create inside of test istelf
     private ContentProvider contentProvider;
 }
