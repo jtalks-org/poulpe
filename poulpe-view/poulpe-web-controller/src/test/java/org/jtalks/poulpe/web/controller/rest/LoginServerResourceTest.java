@@ -60,7 +60,7 @@ public class LoginServerResourceTest {
     }
 
     @Test
-    public void authenticate() throws IOException, NotFoundException {
+    public void authenticate() throws Exception {
         Authentication auth = new Authentication(USERNAME);
         auth.getCredintals().setPasswordHash(PASSWORD);
         Representation rep = new JaxbRepresentation<Authentication>(auth);
@@ -85,7 +85,7 @@ public class LoginServerResourceTest {
     }
 
     @Test
-    public void testAuthenticateImplementationForGetMethod() throws IOException {
+    public void testAuthenticateImplementationForGetMethod() throws Exception {
         Request req = new Request();
         req.setResourceRef("");
         sut.setRequest(req);

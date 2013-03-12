@@ -70,8 +70,7 @@ public class LoginServerResource extends ServerResource implements LoginResource
      * {@inheritDoc}
      */
     @Override
-    public Representation authenticate() throws IOException {
-
+    public Representation authenticate() {
         Credentials cred = getCredentialsFromQuery();
         Authentication result = getAuthentication(cred);
 
