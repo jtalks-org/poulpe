@@ -21,8 +21,6 @@ import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.restlet.Request;
 import org.restlet.Response;
-import org.restlet.data.Reference;
-import org.restlet.engine.adapter.HttpResponse;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.testng.annotations.BeforeMethod;
@@ -36,9 +34,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.testng.Assert.assertEquals;
 
-/**
- * @author Guram Savinov
- */
+/** @author Guram Savinov */
 public class LoginServerResourceTest {
     private static final String USERNAME = "username";
     private static final String PASSWORD = "password";
@@ -90,7 +86,7 @@ public class LoginServerResourceTest {
         req.setResourceRef("");
         sut.setRequest(req);
         sut.setQueryValue("username", USERNAME);
-        sut.setQueryValue("passwordHash",PASSWORD);
+        sut.setQueryValue("passwordHash", PASSWORD);
         JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
                 sut.authenticate(), Authentication.class);
         Authentication result = resultRep.getObject();
@@ -107,7 +103,7 @@ public class LoginServerResourceTest {
         req.setResourceRef("");
         sut.setRequest(req);
         sut.setQueryValue("username", "notMatchUsername");
-        sut.setQueryValue("passwordHash",PASSWORD);
+        sut.setQueryValue("passwordHash", PASSWORD);
         JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
                 sut.authenticate(), Authentication.class);
         Authentication result = resultRep.getObject();
