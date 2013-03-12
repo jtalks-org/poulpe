@@ -15,9 +15,14 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
+import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.restlet.Request;
+import org.restlet.Response;
+import org.restlet.data.Reference;
+import org.restlet.engine.adapter.HttpResponse;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.testng.annotations.BeforeMethod;
@@ -51,6 +56,7 @@ public class LoginServerResourceTest {
         when(userService.authenticate(eq(USERNAME), eq(PASSWORD))).thenReturn(user);
         when(userService.authenticate(not((eq(USERNAME))), eq(PASSWORD))).thenThrow(new NotFoundException());
         sut = new LoginServerResource(userService);
+        sut.setResponse(new Response(new Request()));
     }
 
     @Test
@@ -67,7 +73,7 @@ public class LoginServerResourceTest {
     }
 
     @Test
-    public void authenticate_whenNotMatch() throws Exception {
+    public void authenticate_whenUserNotFound() throws Exception {
         Authentication auth = new Authentication("notMatchUsername");
         auth.getCredintals().setPasswordHash(PASSWORD);
         Representation rep = new JaxbRepresentation<Authentication>(auth);
@@ -76,6 +82,39 @@ public class LoginServerResourceTest {
         Authentication result = resultRep.getObject();
         assertEquals(result.getStatus(), "fail");
         assertEquals(result.getStatusInfo(), "Incorrect username or password");
+    }
+
+    @Test
+    public void testAuthenticateImplementationForGetMethod() throws IOException {
+        Request req = new Request();
+        req.setResourceRef("");
+        sut.setRequest(req);
+        sut.setQueryValue("username", USERNAME);
+        sut.setQueryValue("passwordHash",PASSWORD);
+        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
+                sut.authenticate(), Authentication.class);
+        Authentication result = resultRep.getObject();
+        assertEquals(result.getStatus(), "success");
+        assertEquals(result.getProfile().getFirstName(), FIRSTNAME);
+        assertEquals(result.getProfile().getLastName(), LASTNAME);
+        assertEquals(sut.getResponse().getStatus().getCode(), HttpStatus.SC_OK);
+
+    }
+
+    @Test
+    public void testAuthenticateImplementationForGetMethod_whenUserNotFound() throws IOException {
+        Request req = new Request();
+        req.setResourceRef("");
+        sut.setRequest(req);
+        sut.setQueryValue("username", "notMatchUsername");
+        sut.setQueryValue("passwordHash",PASSWORD);
+        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
+                sut.authenticate(), Authentication.class);
+        Authentication result = resultRep.getObject();
+        assertEquals(result.getStatus(), "fail");
+        assertEquals(result.getStatusInfo(), "Incorrect username or password");
+        assertEquals(sut.getResponse().getStatus().getCode(), HttpStatus.SC_NOT_FOUND);
+
     }
 
 }

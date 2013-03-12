@@ -15,9 +15,11 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
+import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
@@ -34,6 +36,8 @@ public class LoginServerResource extends ServerResource implements LoginResource
     private static final String STATUS_SUCCESS = "success";
     private static final String STATUS_FAIL = "fail";
     private static final String STATUS_FAIL_INFO = "Incorrect username or password";
+    private static final String USERNAME_PARAM = "username";
+    private static final String HASH_PASS_PARAM = "passwordHash";
 
     private UserService userService;
 
@@ -48,7 +52,6 @@ public class LoginServerResource extends ServerResource implements LoginResource
 
     /**
      * {@inheritDoc}
-     * @throws IOException 
      */
     @Override
     public Representation authenticate(Representation rep) throws IOException {
@@ -56,19 +59,57 @@ public class LoginServerResource extends ServerResource implements LoginResource
         Authentication auth = authRep.getObject();
         Credentials cred = auth.getCredintals();
 
-        Authentication result = new Authentication(cred.getUsername());
-        try {
-            PoulpeUser user = userService.authenticate(cred.getUsername(), cred.getPasswordHash());
-            result.setStatus(STATUS_SUCCESS);
-            result.setProfile(new Profile(user.getFirstName(), user.getLastName()));
-        } catch (NotFoundException e) {
-            result.setStatus(STATUS_FAIL);
-            result.setStatusInfo(STATUS_FAIL_INFO);
-        }
-        
+        Authentication result = getAuthentication(cred);
+
         JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(result);
         resultRep.setFormattedOutput(true);
         return resultRep;
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public Representation authenticate() throws IOException {
+
+        Credentials cred = getCredentialsFromQuery();
+        Authentication result = getAuthentication(cred);
+
+        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(result);
+        resultRep.setFormattedOutput(true);
+        return resultRep;
+    }
+
+
+    /**
+     * Returns {@code Authentication} by {@code Credentials}
+     * @param credentials {@code Credentials}
+     * @return {@code Authentication}, If user not found, returns meets both HTTP status 404
+     */
+    private Authentication getAuthentication(Credentials credentials){
+        Authentication result = new Authentication(credentials.getUsername());
+        try {
+            PoulpeUser user = userService.authenticate(credentials.getUsername(), credentials.getPasswordHash());
+            result.setStatus(STATUS_SUCCESS);
+            result.setProfile(new Profile(user.getFirstName(), user.getLastName()));
+        } catch (NotFoundException e) {
+            getResponse().setStatus(new Status(HttpStatus.SC_NOT_FOUND));
+            result.setStatus(STATUS_FAIL);
+            result.setStatusInfo(STATUS_FAIL_INFO);
+        }
+        return result;
+    }
+
+    /**
+     * @return {@code Credentials} from query parameters: username & passwordHash
+     */
+    private Credentials getCredentialsFromQuery(){
+        Credentials result = new Credentials();
+        result.setUsername(getQuery().getValues(USERNAME_PARAM));
+        result.setPasswordHash(getQuery().getValues(HASH_PASS_PARAM));
+        return result;
+
+    }
+
 
 }
