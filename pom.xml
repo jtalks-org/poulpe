@@ -550,9 +550,9 @@
   </distributionManagement>
 
   <scm>
-    <connection>scm:git:git@jtalks.org:poulpe</connection>
-    <developerConnection>scm:git:git@jtalks.org:poulpe</developerConnection>
-    <url>scm:git:git@jtalks.org:poulpe</url>
+    <connection>scm:git:git@github.com:jtalks-org/poulpe.git</connection>
+    <developerConnection>scm:git:git@github.com:jtalks-org/poulpe.git</developerConnection>
+    <url>scm:git:git@github.com:jtalks-org/poulpe.git</url>
   </scm>
 
 </project>
