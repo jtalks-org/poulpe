@@ -14,49 +14,37 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.contentprovider.util.DisposableFileInputStream;
-import org.jtalks.poulpe.util.databasebackup.contentprovider.util.FileWrapper;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
 /**
- * The class is used to download a file in the browser. For performing this the class uses next objects which should be
- * set via setters:
- * <ul>
- * <li>{@link ContentProvider} - the interface gets content for the downloading file and probably performs an additional
- * transformation under it like compressing it and other such activities.
- * <li>{@link FileDownloader} - the class is responsible for sending the file to the browser.</li>
- * </ul>
+ * The class is responsible for controlling the whole process of download file in the browser which includes: preparing
+ * content, configuring parameters for the process of a file download and finally starting it.
  * 
  * @author Evgeny Surovtsev
  * 
  */
 public class FileDownloadService {
     /**
-     * Constructor which sets ContentProvider, FileDownloader and ContentFilenameWithoutExt via its parameters.
+     * Initializes an instance of the class with given parameters.
      * 
-     * @param contentProvider
-     *            An instance of ContentProvider.
+     * @param content
+     *            is responsible for obtaining a content (db dump) and keeping it somewhere so FileDownloadService can
+     *            access it later for sending back to the user.
      * @param fileDownloader
-     *            An instance of FileDownloader.
+     *            is responsible for sending a previously prepared and persistent content back to the browser in the
+     *            form of file for download.
      * @param contentFileNameWithoutExt
      *            Filename without extension which will be used for suggesting browser.
      */
-    public FileDownloadService(final ContentProvider contentProvider, final FileDownloader fileDownloader,
-            final String contentFileNameWithoutExt) {
-        Validate.notNull(contentProvider, "contentProvider must not be null");
+    public FileDownloadService(ContentKeeper content, FileDownloader fileDownloader, String contentFileNameWithoutExt) {
+        Validate.notNull(content, "content must not be null");
         Validate.notNull(fileDownloader, "fileDownloader must not be null");
         Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
-        this.contentProvider = contentProvider;
+        this.content = content;
         this.fileDownloader = fileDownloader;
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
     }
@@ -69,64 +57,9 @@ public class FileDownloadService {
      *             is thrown in case of any errors during file preparing or sending it to the browser.
      */
     public void performFileDownload() throws FileDownloadException {
-        try {
-            // TODO: if possible refactor class to have less responsibilities
-            File contentFile = getFile().createTempFile("dbdump", contentProvider.getContentFileNameExt());
-            OutputStream output = getFileOutputStream(contentFile);
-            contentProvider.writeContent(output);
-            output.flush();
-            output.close();
-
-            InputStream input = getFileInputStream(contentFile);
-            fileDownloader.setMimeContentType(contentProvider.getMimeContentType());
-            fileDownloader.setContentFileName(getContentFileNameWithoutExt() + contentProvider.getContentFileNameExt());
-            fileDownloader.download(input);
-
-        } catch (IOException e) {
-            throw new FileDownloadException(e);
-        }
-    }
-
-    /**
-     * Create and return new input stream for a given File.
-     * 
-     * @param contentFile
-     *            the file to be opened for reading.
-     * @return an input stream to read.
-     * @throws FileNotFoundException
-     *             if the file does not exist, is a directory rather than a regular file, or for some other reason
-     *             cannot be opened for reading.
-     */
-    protected InputStream getFileInputStream(final File contentFile) throws FileNotFoundException {
-        return new DisposableFileInputStream(contentFile);
-    }
-
-    /**
-     * Create and return new output stream based on given File.
-     * 
-     * @param contentFile
-     *            the file to be opened for writing.
-     * @return an output stream to write.
-     * @throws FileNotFoundException
-     *             if the file exists but is a directory rather than a regular file, does not exist but cannot be
-     *             created, or cannot be opened for any other reason.
-     */
-    protected OutputStream getFileOutputStream(final File contentFile) throws FileNotFoundException {
-        return new BufferedOutputStream(new FileOutputStream(contentFile));
-    }
-
-    /**
-     * Return a FileWrapper object which is used for calling static methods on {@code java.io.File}. Method is marked as
-     * protected so it can be substitute in unit tests.
-     * 
-     * @return an instance of FileWrapper.
-     */
-    protected FileWrapper getFile() {
-        // TODO: make it thread-safe (e.g. make it private final and create in field declaration)
-        if (fileWrapper == null) {
-            fileWrapper = new FileWrapper();
-        }
-        return fileWrapper;
+        fileDownloader.setMimeContentType(content.getMimeContentType());
+        fileDownloader.setContentFileName(getContentFileNameWithoutExt() + content.getContentFileNameExt());
+        fileDownloader.download(content.getInputStream());
     }
 
     /**
@@ -134,7 +67,7 @@ public class FileDownloadService {
      * 
      * @return String which represents the filename without extension
      */
-    protected String getContentFileNameWithoutExt() {
+    String getContentFileNameWithoutExt() {
         assert contentFileNameWithoutExt != null : "contentFileNameWithoutExt must be defined";
         return new StringBuilder()
                 .append(getCurrentTimeStamp()).append("_").append(contentFileNameWithoutExt).append("_backup")
@@ -150,8 +83,7 @@ public class FileDownloadService {
         return String.format("%1$tY-%1$tm-%1$td_%1$tH-%1$tM-%1$tS", new Date());
     }
 
-    private final ContentProvider contentProvider;
+    private final ContentKeeper content;
     private final FileDownloader fileDownloader;
     private final String contentFileNameWithoutExt;
-    private FileWrapper fileWrapper;
 }
