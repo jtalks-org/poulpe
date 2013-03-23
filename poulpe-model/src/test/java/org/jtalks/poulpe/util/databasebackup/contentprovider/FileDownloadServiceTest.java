@@ -3,13 +3,9 @@ package org.jtalks.poulpe.util.databasebackup.contentprovider;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 
-import org.jtalks.poulpe.util.databasebackup.contentprovider.util.FileWrapper;
-import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.mockito.Mockito;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
@@ -25,87 +21,52 @@ public class FileDownloadServiceTest {
     @BeforeMethod
     public void beforeMethod() throws IOException {
         mockContentKeeper = Mockito.mock(ContentKeeper.class);
-        when(mockContentKeeper.getContentFileNameExt()).thenReturn(".sql");
-        when(mockContentKeeper.getMimeContentType()).thenReturn("MIME_TYPE");
-
         mockFileDownloader = Mockito.mock(FileDownloader.class);
-        contentFileNameWithoutExt = "jtalks";
-
-        mockFile = Mockito.mock(File.class);
-
-        mockFileWrapper = Mockito.mock(FileWrapper.class);
-        Mockito.when(mockFileWrapper.createTempFile(Mockito.anyString(), Mockito.anyString())).thenReturn(mockFile);
-
-        mockOutputStream = Mockito.mock(OutputStream.class);
-
-        mockInputStream = Mockito.mock(InputStream.class);
-
-        sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, contentFileNameWithoutExt) {
-            // @Override
-            // protected FileWrapper getFile() {
-            // return mockFileWrapper;
-            // }
-
-            // @Override
-            // protected OutputStream getFileOutputStream(final File contentFile) throws FileNotFoundException {
-            // if (contentFile == mockFile) {
-            // return mockOutputStream;
-            // } else {
-            // return null;
-            // }
-            // }
-
-            // @Override
-            // protected InputStream getFileInputStream(final File contentFile) throws FileNotFoundException {
-            // if (contentFile == mockFile) {
-            // return mockInputStream;
-            // } else {
-            // return null;
-            // }
-            // }
-        };
     }
 
-    /**
-     * Test if formatted filename math certain timestamp format.
-     */
+    @Test(expectedExceptions = NullPointerException.class)
+    public void doesntInitializeClassWithNullContentKeeper() {
+        sut = new FileDownloadService(null, mockFileDownloader, "jtalks");
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void doesntInitializeClassWithNullFileDownloader() {
+        sut = new FileDownloadService(mockContentKeeper, null, "jtalks");
+    }
+
+    @Test(expectedExceptions = NullPointerException.class)
+    public void doesntInitializeClassWithNullContentFileNameWithoutExt() {
+        sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, null);
+    }
+
+    @Test(expectedExceptions = IllegalArgumentException.class)
+    public void doesntInitializeClassWithEmptyContentFileNameWithoutExt() {
+        sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, "");
+    }
+
     @Test
     public void filenameIsFormedWithTimestampAndBackupWord() {
+        sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, "jtalks");
         String actualFilename = sut.getContentFileNameWithoutExt();
 
         Assert.assertTrue(actualFilename.matches(getFileNameRegExp()), "Filename does not fit in the expected "
                 + "format: YYYY-MM-DD_HH-MM-SS_jtalks_backup. Actual filename: " + actualFilename + ".");
     }
 
-    @Test(enabled = false)
+    @Test
     public void performFileDownloadTest() throws Exception {
-        // TODO: use private methods for constructing SUT and its DOCs
-        String fullFileName = sut.getContentFileNameWithoutExt() + ".sql";
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+        when(mockContentKeeper.getContentFileNameExt()).thenReturn(".sql");
+        when(mockContentKeeper.getMimeContentType()).thenReturn("MIME_TYPE");
+        when(mockContentKeeper.getInputStream()).thenReturn(mockInputStream);
 
+        sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, "jtalks");
         sut.performFileDownload();
 
-        // Mockito.verify(mockContentProvider).writeContent(mockOutputStream);
-        Mockito.verify(mockOutputStream).close();
-        // TODO: devide into 2 parts
         verify(mockFileDownloader).setMimeContentType("MIME_TYPE");
-        verify(mockFileDownloader).setContentFileName(fullFileName);
+        verify(mockFileDownloader).setContentFileName(sut.getContentFileNameWithoutExt() + ".sql");
         verify(mockFileDownloader).download(mockInputStream);
     }
-
-    @Test(expectedExceptions = FileDownloadException.class, enabled = false)
-    public void shouldRethrowExceptionIfIoErrorAppeared() throws Exception {
-        Mockito.doThrow(IOException.class).when(mockOutputStream).close();
-        sut.performFileDownload();
-    }
-
-    // @Test
-    // public void getFileCachesReturnObject() {
-    // sut = new FileDownloadService(mockContentProvider, mockFileDownloader, contentFileNameWithoutExt);
-    // FileWrapper file1 = sut.fileWrapper();
-    // FileWrapper file2 = sut.fileWrapper();
-    //
-    // Assert.assertTrue(file1 == file2);
-    // }
 
     /**
      * Returns a regExp string for timestamp format: "YYYY-MM-DD_HH-MM-SS_jtalks_backup".
@@ -120,9 +81,4 @@ public class FileDownloadServiceTest {
     private FileDownloadService sut;
     private ContentKeeper mockContentKeeper;
     private FileDownloader mockFileDownloader;
-    private String contentFileNameWithoutExt;
-    private FileWrapper mockFileWrapper;
-    private OutputStream mockOutputStream;
-    private InputStream mockInputStream;
-    private File mockFile;
 }

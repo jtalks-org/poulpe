@@ -42,7 +42,7 @@ public class FileDownloadService {
     public FileDownloadService(ContentKeeper content, FileDownloader fileDownloader, String contentFileNameWithoutExt) {
         Validate.notNull(content, "content must not be null");
         Validate.notNull(fileDownloader, "fileDownloader must not be null");
-        Validate.notNull(contentFileNameWithoutExt, "contentFileNameWithoutExt must not be null");
+        Validate.notEmpty(contentFileNameWithoutExt, "contentFileNameWithoutExt must be neither null nor empty");
         this.content = content;
         this.fileDownloader = fileDownloader;
         this.contentFileNameWithoutExt = contentFileNameWithoutExt;
