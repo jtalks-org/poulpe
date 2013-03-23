@@ -16,8 +16,15 @@ import org.jtalks.poulpe.util.databasebackup.contentprovider.util.FileWrapper;
 import org.jtalks.poulpe.util.databasebackup.exceptions.ContentPersistenceException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
+/**
+ * An implementation of {@link ContentKeeper} which uses temporary file for keeping content.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public class TempFileContentKeeper implements ContentKeeper {
     /**
+     * Initializes an instance of the class with given {@link ContentProvider}.
      * 
      * @param contentProvider
      *            An instance of ContentProvider. the interface gets content for the downloading file and probably

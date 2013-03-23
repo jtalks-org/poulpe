@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
-import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.lang3.Validate;

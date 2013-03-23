@@ -1,6 +1,5 @@
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
-import java.io.IOException;
 import java.io.InputStream;
 
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
@@ -18,6 +17,7 @@ public interface ContentKeeper {
      * 
      * @return input stream for keeping content.
      * @throws FileDownloadException
+     *             if a error during preparing or providing previously stored content occurs.
      */
     InputStream getInputStream() throws FileDownloadException;
 
