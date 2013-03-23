@@ -16,6 +16,7 @@ package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
 import java.io.InputStream;
 
+import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
 /**
@@ -42,7 +43,8 @@ public abstract class FileDownloader {
      * @param mimeContentType
      *            String representation of the MIME content type.
      */
-    public void setMimeContentType(final String mimeContentType) {
+    public void setMimeContentType(String mimeContentType) {
+        Validate.notBlank(mimeContentType);
         this.mimeContentType = mimeContentType;
     }
 
@@ -61,7 +63,8 @@ public abstract class FileDownloader {
      * @param contentFileName
      *            The filename to set, such as "jtalks.sql".
      */
-    public void setContentFileName(final String contentFileName) {
+    public void setContentFileName(String contentFileName) {
+        Validate.notBlank(contentFileName);
         this.contentFileName = contentFileName;
     }
 
@@ -74,8 +77,6 @@ public abstract class FileDownloader {
         return contentFileName;
     }
 
-    // injected
     private String mimeContentType;
-    // injected
     private String contentFileName;
 }
