@@ -80,7 +80,7 @@ public class TempFileContentKeeper implements ContentKeeper {
      *             if the file exists but is a directory rather than a regular file, does not exist but cannot be
      *             created, or cannot be opened for any other reason.
      */
-    OutputStream getFileOutputStream(final File contentFile) throws FileNotFoundException {
+    OutputStream getFileOutputStream(File contentFile) throws FileNotFoundException {
         return new BufferedOutputStream(new FileOutputStream(contentFile));
     }
 
@@ -94,7 +94,7 @@ public class TempFileContentKeeper implements ContentKeeper {
      *             if the file does not exist, is a directory rather than a regular file, or for some other reason
      *             cannot be opened for reading.
      */
-    InputStream getFileInputStream(final File contentFile) throws FileNotFoundException {
+    InputStream getFileInputStream(File contentFile) throws FileNotFoundException {
         return new DisposableFileInputStream(contentFile);
     }
 

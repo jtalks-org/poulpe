@@ -48,7 +48,7 @@ public class DbDumpContentProvider implements ContentProvider {
      * @param dataSource
      *            A DataSource object points to the data base to export.
      */
-    public DbDumpContentProvider(final DataSource dataSource) {
+    public DbDumpContentProvider(DataSource dataSource) {
         Validate.notNull(dataSource, "dataSource must not be null");
         this.dataSource = dataSource;
     }
@@ -57,7 +57,7 @@ public class DbDumpContentProvider implements ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public void writeContent(final OutputStream output) throws FileDownloadException {
+    public void writeContent(OutputStream output) throws FileDownloadException {
         try {
             List<String> tableNames = getDbTableNameLister().getTableNames();
             if (tableNames.isEmpty()) {
@@ -89,7 +89,7 @@ public class DbDumpContentProvider implements ContentProvider {
      *            a list of {@link DbTable} objects which are used as a source of database dump information.
      * @return an instance of DbDumpCommand for generating dump of database.
      */
-    DbDumpCommand getDbDumpCommand(final List<DbTable> tablesToDump) {
+    DbDumpCommand getDbDumpCommand(List<DbTable> tablesToDump) {
         return new MySqlDataBaseFullDumpCommand(tablesToDump);
     }
 
@@ -101,7 +101,7 @@ public class DbDumpContentProvider implements ContentProvider {
      * @return a list of DbTable objects.
      */
     // TODO: move to TableLister?
-    private List<DbTable> getDbTableList(final List<String> tableNames) {
+    private List<DbTable> getDbTableList(List<String> tableNames) {
         List<DbTable> dbTableList = Lists.newArrayList();
         for (String tableName : tableNames) {
             dbTableList.add(new DbTable(dataSource, tableName));

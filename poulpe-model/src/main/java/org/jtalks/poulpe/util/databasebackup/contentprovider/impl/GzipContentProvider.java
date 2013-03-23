@@ -39,7 +39,7 @@ public class GzipContentProvider implements ContentProvider {
      *            All content provided by contentProvider will be gzipped and send further as a result of work of the
      *            GzipContentProvider.
      */
-    public GzipContentProvider(final ContentProvider contentProvider) {
+    public GzipContentProvider(ContentProvider contentProvider) {
         Validate.notNull(contentProvider, "contentProvider must not be null");
         this.contentProvider = contentProvider;
     }
@@ -48,7 +48,7 @@ public class GzipContentProvider implements ContentProvider {
      * {@inheritDoc}
      */
     @Override
-    public void writeContent(final OutputStream output) throws FileDownloadException {
+    public void writeContent(OutputStream output) throws FileDownloadException {
         try {
             GZIPOutputStream gzipOutput = getGZIPOutputStream(output);
             contentProvider.writeContent(gzipOutput);
@@ -67,7 +67,7 @@ public class GzipContentProvider implements ContentProvider {
      * @throws IOException
      *             if an I/O error has occurred.
      */
-    protected GZIPOutputStream getGZIPOutputStream(final OutputStream output) throws IOException {
+    protected GZIPOutputStream getGZIPOutputStream(OutputStream output) throws IOException {
         return new GZIPOutputStream(output);
     }
 
