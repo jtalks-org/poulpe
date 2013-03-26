@@ -204,4 +204,8 @@
     <constructor-arg ref="userService"/>
   </bean>
 
+  <bean id="userRegistrationResource" name="/user" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
+    <constructor-arg ref="userService"/>
+  </bean>
+
 </beans>

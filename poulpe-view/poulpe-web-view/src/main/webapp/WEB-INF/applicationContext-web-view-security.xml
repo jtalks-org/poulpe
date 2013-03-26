@@ -29,6 +29,7 @@
     <intercept-url pattern="/login.zul" access="isAnonymous()" />
     <intercept-url pattern="/favicon.ico" access="permitAll" />
     <intercept-url pattern="/rest/authenticate" access="permitAll" />
+    <intercept-url pattern="/rest/user" access="permitAll" />
     <intercept-url pattern="/**" access="isAuthenticated()" />
     <form-login login-page="/login.zul" default-target-url="/" authentication-failure-url="/login.zul?login_error=1" />
     <logout logout-url="/logout"/>
