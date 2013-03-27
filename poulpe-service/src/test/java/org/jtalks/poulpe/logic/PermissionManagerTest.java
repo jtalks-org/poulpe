@@ -173,7 +173,7 @@ public class PermissionManagerTest {
         verify(aclUtil, times(BranchPermission.values().length)).getAclFor(branch);
         assertTrue(groupsPermissions.getPermissions().containsAll(permissions));
         for (GroupAce groupAce : groupAces) {
-            List<Group> groups = groupsPermissions.get(groupAce.getBranchPermission(), groupAce.isGranting());
+            List<Group> groups = groupsPermissions.get((BranchPermission) groupAce.getPermission(), groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
             assertTrue(groups.contains(AnonymousGroup.ANONYMOUS_GROUP));
         }
@@ -188,7 +188,7 @@ public class PermissionManagerTest {
         verify(aclManager).getGroupPermissionsOn(eq(component));
         assertTrue(groupsPermissions.getPermissions().containsAll(permissions));
         for (GroupAce groupAce : groupAces) {
-            List<Group> groups = groupsPermissions.get(GeneralPermission.findByMask(groupAce.getBranchPermissionMask()),
+            List<Group> groups = groupsPermissions.get(GeneralPermission.findByMask(groupAce.getPermissionMask()),
                     groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }

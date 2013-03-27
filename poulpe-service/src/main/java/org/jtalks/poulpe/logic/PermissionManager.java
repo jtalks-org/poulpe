@@ -152,7 +152,7 @@ public class PermissionManager {
         List<GroupAce> groupAces = aclManager.getGroupPermissionsOn(entity);
         for (T permission : permissions) {
             for (GroupAce groupAce : groupAces) {
-                if (groupAce.getBranchPermissionMask() == permission.getMask()) {
+                if (groupAce.getPermissionMask() == permission.getMask()) {
                     groupsPermissions.add(permission, getGroup(groupAce), groupAce.isGranting());
                 }
             }
