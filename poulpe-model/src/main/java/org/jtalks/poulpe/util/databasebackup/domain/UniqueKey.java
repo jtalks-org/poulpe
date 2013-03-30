@@ -36,10 +36,8 @@ public final class UniqueKey implements TableKey {
      * 
      * @param columnName
      *            A String that represents Primary Key value.
-     * @throws NullPointerException
-     *             If pkColumnName is null.
      */
-    public UniqueKey(final String indexName, final String columnName) {
+    public UniqueKey(String indexName, String columnName) {
         Validate.notNull(indexName, "indexName must not be null");
         Validate.notNull(columnName, "columnName must not be null");
         this.indexName = indexName;
@@ -51,10 +49,8 @@ public final class UniqueKey implements TableKey {
      * 
      * @param columnName
      *            A String that represents Primary Key value.
-     * @throws NullPointerException
-     *             If pkColumnName is null.
      */
-    public UniqueKey(final String indexName, final Set<String> columnNameSet) {
+    public UniqueKey(String indexName, Set<String> columnNameSet) {
         Validate.notNull(indexName, "indexName must not be null");
         Validate.notNull(columnNameSet, "columnNameSet must not be null");
         Validate.notEmpty(columnNameSet, "columnNameSet must have at least 1 element");
@@ -79,7 +75,12 @@ public final class UniqueKey implements TableKey {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(17, 31).append(columnNameSet).append(indexName).toHashCode();
+        final int initialOddNum = 31;
+        final int multiplierOddNum = 17;
+        return new HashCodeBuilder(initialOddNum, multiplierOddNum)
+                .append(columnNameSet)
+                .append(indexName)
+                .toHashCode();
     }
 
     @Override
@@ -88,7 +89,7 @@ public final class UniqueKey implements TableKey {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }

@@ -14,34 +14,24 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
+import static org.testng.Assert.*;
+
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
-import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * Row is mainly used in Collections so first of all we need to test it's comparison abilities.
- * 
- * @author Evgeny Surovtsev
- * 
- */
 public class RowTest {
     private ColumnMetaData idColumn;
     private ColumnMetaData nameColumn;
+    private Row sutA1, sutA2, sutA3, sutB1, revertedSutA;
 
-    /**
-     * Sets up 2 wildly used in the tests variables: a sample of id column and a sample of name column.
-     */
-    @BeforeClass(groups = { "databasebackup" })
+    @BeforeClass
     protected void setUp() {
         idColumn = ColumnMetaData.getInstance("id", SqlTypes.INT);
         nameColumn = ColumnMetaData.getInstance("name", SqlTypes.VARCHAR);
     }
 
-    /**
-     * Prepares SUTs for testing.
-     */
     @BeforeMethod
     public void beforeMethod() {
         sutA1 = new Row().addCell(idColumn, "A").addCell(nameColumn, "nameA");
@@ -49,59 +39,43 @@ public class RowTest {
         sutA3 = new Row().addCell(idColumn, "A").addCell(nameColumn, "nameA");
 
         revertedSutA = new Row().addCell(nameColumn, "nameA").addCell(idColumn, "A");
-
         sutB1 = new Row().addCell(idColumn, "A").addCell(nameColumn, "nameB");
     }
 
-    /**
-     * Two different instances of Row should not be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoNotEqualTableRowAreNotEqual() {
-        Assert.assertFalse(sutA1.equals(sutB1));
-        Assert.assertFalse(sutA1.hashCode() == sutB1.hashCode());
+        assertFalse(sutA1.equals(sutB1));
+        assertFalse(sutA1.hashCode() == sutB1.hashCode());
     }
 
-    /**
-     * Two the same instances of Row should be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoEqualTableRowAreEqual() {
-        Assert.assertEquals(sutA1, sutA2);
-        Assert.assertEquals(sutA1.hashCode(), sutA2.hashCode());
+        assertEquals(sutA1, sutA2);
+        assertEquals(sutA1.hashCode(), sutA2.hashCode());
     }
 
-    /**
-     * Two the same instances of Row should be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoEqualTableRowWithDifferentColumnsOrderAreEqual() {
-        Assert.assertEquals(sutA1, revertedSutA);
+        assertEquals(sutA1, revertedSutA);
     }
 
-    /**
-     * Tests Java Equals Contract.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void equalsContractTest() {
-        Assert.assertEquals(sutA1, sutA1, "Reflexive");
+        assertEquals(sutA1, sutA1, "Reflexive");
 
-        Assert.assertEquals(sutA1, sutA2, "Equal Symmetric");
-        Assert.assertEquals(sutA2, sutA1, "Equal Symmetric");
+        assertEquals(sutA1, sutA2, "Equal Symmetric");
+        assertEquals(sutA2, sutA1, "Equal Symmetric");
 
-        Assert.assertFalse(sutA1.equals(sutB1), "Not Equal Symmetric");
-        Assert.assertFalse(sutB1.equals(sutA1), "Not Equal Symmetric");
+        assertFalse(sutA1.equals(sutB1), "Not Equal Symmetric");
+        assertFalse(sutB1.equals(sutA1), "Not Equal Symmetric");
 
-        Assert.assertEquals(sutA1, sutA2, "Transitive");
-        Assert.assertEquals(sutA1, sutA3, "Transitive");
-        Assert.assertEquals(sutA2, sutA3, "Transitive");
+        assertEquals(sutA1, sutA2, "Transitive");
+        assertEquals(sutA1, sutA3, "Transitive");
+        assertEquals(sutA2, sutA3, "Transitive");
 
-        Assert.assertFalse(sutA1.equals(null), "Null value should return false");
+        assertFalse(sutA1.equals(null), "Null value should return false");
     }
 
-    /**
-     * Checking if setters and getters for the Row are working.
-     */
     @Test
     public void setAndGetRowData() {
         // Cell data = sutA1.getCellList().get(0);
@@ -109,6 +83,4 @@ public class RowTest {
         // Assert.assertEquals(data.getSqlType(), idColumn.getType());
         // Assert.assertEquals(data.getColumnData(), "A");
     }
-
-    private Row sutA1, sutA2, sutA3, sutB1, revertedSutA;
 }

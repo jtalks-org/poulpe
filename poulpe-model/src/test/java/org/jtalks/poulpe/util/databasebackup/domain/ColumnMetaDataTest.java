@@ -14,21 +14,15 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
+import static org.testng.Assert.*;
+
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * ColumnMetaData is mainly used in Collections so first of all we need to test it's comparison abilities.
- * 
- * @author Evgeny Surovtsev
- * 
- */
 public class ColumnMetaDataTest {
-    /**
-     * Prepares SUTs for testing.
-     */
+    private ColumnMetaData sut1, sut2, differentSut;
+
     @BeforeMethod
     public void beforeMethod() {
         sut1 = ColumnMetaData.getInstance("columnTypeA", SqlTypes.INT).setSize(32).setAutoincrement(true)
@@ -41,41 +35,25 @@ public class ColumnMetaDataTest {
                 .setDefaultValue("").setNullable(true);
     }
 
-    /**
-     * Two different instances of ColumnMetaData should not be equal and should not have same hash code.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoNotEqualTableColumnAreNotEquals() {
-        Assert.assertFalse(sut1.equals(differentSut));
-        Assert.assertFalse(sut1.hashCode() == differentSut.hashCode());
+        assertFalse(sut1.equals(differentSut));
+        assertFalse(sut1.hashCode() == differentSut.hashCode());
     }
 
-    /**
-     * Two the same instances of ColumnMetaData should be equal and have same hash code.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoEqualTableColumnAreEquals() {
-        Assert.assertEquals(sut1, sut2);
-        Assert.assertEquals(sut1.hashCode(), sut2.hashCode());
+        assertEquals(sut1, sut2);
+        assertEquals(sut1.hashCode(), sut2.hashCode());
     }
 
-    /**
-     * There should be no possibility to construct object without providing Column Type.
-     */
-    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void constructThrowsExceptionWhenColumnTypeIsNull() {
-        @SuppressWarnings("unused")
         ColumnMetaData tableColumn = ColumnMetaData.getInstance("columnTypeA", null);
     }
 
-    /**
-     * There should be no possibility to construct object without providing Column Name.
-     */
-    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void constructThrowsExceptionWhenColumnNaemIsNull() {
-        @SuppressWarnings("unused")
         ColumnMetaData tableColumn = ColumnMetaData.getInstance(null, SqlTypes.INT);
     }
-
-    private ColumnMetaData sut1, sut2, differentSut;
 }

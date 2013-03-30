@@ -14,20 +14,14 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
-import org.testng.Assert;
+import static org.testng.Assert.*;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * UniqueKey is mainly used in Collections so first of all we need to test it's comparison abilities.
- * 
- * @author Evgeny Surovtsev
- * 
- */
 public class UniqueKeyTest {
-    /**
-     * Prepares SUTs for testing.
-     */
+    private UniqueKey sutA1, sutA2, sutB1;
+
     @BeforeMethod
     public void beforeMethod() {
         sutA1 = new UniqueKey("indexName1", "column1");
@@ -36,32 +30,20 @@ public class UniqueKeyTest {
         sutB1 = new UniqueKey("indexName2", "column2");
     }
 
-    /**
-     * Two different instances of UniqueKey should not be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoNotEqualUniqueKeyAreNotEquals() {
-        Assert.assertFalse(sutA1.equals(sutB1));
-        Assert.assertFalse(sutA1.hashCode() == sutB1.hashCode());
+        assertFalse(sutA1.equals(sutB1));
+        assertFalse(sutA1.hashCode() == sutB1.hashCode());
     }
 
-    /**
-     * Two the same instances of UniqueKey should be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoEqualUniqueKeyAreEquals() {
-        Assert.assertEquals(sutA1, sutA2);
-        Assert.assertEquals(sutA1.hashCode(), sutA2.hashCode());
+        assertEquals(sutA1, sutA2);
+        assertEquals(sutA1.hashCode(), sutA2.hashCode());
     }
 
-    /**
-     * There should be no possibility to construct object without providing UniqueKey Column.
-     */
-    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void uniqueKeyShouldBeInitializedInConstructor() {
-        @SuppressWarnings("unused")
         UniqueKey tablePrimaryKey = new UniqueKey(null, "column");
     }
-
-    private UniqueKey sutA1, sutA2, sutB1;
 }

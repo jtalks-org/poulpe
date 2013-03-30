@@ -38,11 +38,8 @@ public final class ForeignKey implements TableKey {
      *            A Table which contain Primary key.
      * @param pkColumnName
      *            A Primary Key value.
-     * @throws NullPointerException
-     *             If any of fkTableName, fkColumnName, pkTableName, pkColumnName is null.
      */
-    public ForeignKey(final String fkTableName, final String fkColumnName, final String pkTableName,
-            final String pkColumnName) {
+    public ForeignKey(String fkTableName, String fkColumnName, String pkTableName, String pkColumnName) {
         Validate.notNull(fkTableName, "fkTableName must not be null");
         Validate.notNull(fkColumnName, "fkColumnName must not be null");
         Validate.notNull(pkTableName, "pkTableName must not be null");
@@ -60,7 +57,9 @@ public final class ForeignKey implements TableKey {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(31, 17)
+        final int initialOddNum = 31;
+        final int multiplierOddNum = 17;
+        return new HashCodeBuilder(initialOddNum, multiplierOddNum)
                 .append(fkColumnName)
                 .append(fkTableName)
                 .append(pkColumnName)

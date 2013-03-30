@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.Validate;
@@ -21,8 +22,6 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.jtalks.poulpe.util.databasebackup.persistence.SqlTypes;
-
-import com.google.common.collect.Maps;
 
 /**
  * The class describes structure of one table's Column. So every table has a number of columns and each column is
@@ -65,10 +64,9 @@ public final class ColumnMetaData {
      * @param columnType
      *            The type of the table column.
      */
-    private ColumnMetaData(final String columnName, final SqlTypes columnType) {
-        assert columnName != null : "columnName must not be null";
-        assert columnName.length() > 0 : "columnName must not be empty";
-        assert columnType != null : "columnType must not be null";
+    private ColumnMetaData(String columnName, SqlTypes columnType) {
+        assert columnName != null && columnName.length() > 0;
+        assert columnType != null;
 
         this.name = columnName;
         this.type = columnType;
@@ -121,7 +119,9 @@ public final class ColumnMetaData {
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder(31, 17)
+        final int initialOddNum = 31;
+        final int multiplierOddNum = 17;
+        return new HashCodeBuilder(initialOddNum, multiplierOddNum)
                 .append(autoincrement)
                 .append(defaultValue)
                 .append(hasDefaultValue)
@@ -135,7 +135,7 @@ public final class ColumnMetaData {
     }
 
     @Override
-    public boolean equals(final Object obj) {
+    public boolean equals(Object obj) {
         if (this == obj) {
             return true;
         }
@@ -195,7 +195,7 @@ public final class ColumnMetaData {
      *            Defines if column can keep null values.
      * @return The object itself.
      */
-    public ColumnMetaData setNullable(final boolean nullable) {
+    public ColumnMetaData setNullable(boolean nullable) {
         this.nullable = nullable;
         return this;
     }
@@ -207,7 +207,7 @@ public final class ColumnMetaData {
      *            Column's size.
      * @return The object itself.
      */
-    public ColumnMetaData setSize(final int size) {
+    public ColumnMetaData setSize(int size) {
         this.size = size;
         this.hasSize = size > 0;
         return this;
@@ -220,7 +220,7 @@ public final class ColumnMetaData {
      *            Default's value for the column. Null means the column has no default value.
      * @return The object itself.
      */
-    public ColumnMetaData setDefaultValue(final String defaultValue) {
+    public ColumnMetaData setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         this.hasDefaultValue = defaultValue != null;
         return this;
@@ -233,7 +233,7 @@ public final class ColumnMetaData {
      *            Defines if column is auto incremental.
      * @return The object itself.
      */
-    public ColumnMetaData setAutoincrement(final boolean autoincrement) {
+    public ColumnMetaData setAutoincrement(boolean autoincrement) {
         this.autoincrement = autoincrement;
         return this;
     }
@@ -245,7 +245,7 @@ public final class ColumnMetaData {
      *            a comment for the column.
      * @return this.
      */
-    public ColumnMetaData setComment(final String comment) {
+    public ColumnMetaData setComment(String comment) {
         this.comment = comment;
         return this;
     }
@@ -278,5 +278,5 @@ public final class ColumnMetaData {
     private final SqlTypes type;
     private String comment;
 
-    private static Map<String, ColumnMetaData> columnMetaDataMap = Maps.newHashMap();
+    private static Map<String, ColumnMetaData> columnMetaDataMap = new HashMap<String, ColumnMetaData>();
 }

@@ -14,20 +14,14 @@
  */
 package org.jtalks.poulpe.util.databasebackup.domain;
 
-import org.testng.Assert;
+import static org.testng.Assert.*;
+
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-/**
- * ForeignKey is mainly used in Collections so first of all we need to test it's comparison abilities.
- * 
- * @author Evgeny Surovtsev
- * 
- */
 public class ForeignKeyTest {
-    /**
-     * Prepare SUTs for test.
-     */
+    private ForeignKey sut1, sut2, differentSut;
+
     @BeforeMethod
     public void beforeMethod() {
         sut1 = new ForeignKey("column1", "param1", "param2", "param3");
@@ -35,32 +29,20 @@ public class ForeignKeyTest {
         differentSut = new ForeignKey("column2", "param1", "param2", "param3");
     }
 
-    /**
-     * Two different instances of ForeignKey should not be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoNotEqualTableForeignKeyAreNotEquals() {
-        Assert.assertFalse(sut1.equals(differentSut));
-        Assert.assertFalse(sut1.hashCode() == differentSut.hashCode());
+        assertFalse(sut1.equals(differentSut));
+        assertFalse(sut1.hashCode() == differentSut.hashCode());
     }
 
-    /**
-     * Two the same instances of ForeignKey should be equal.
-     */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void twoEqualTableForeignKeyAreEquals() {
-        Assert.assertEquals(sut1, sut2);
-        Assert.assertEquals(sut1.hashCode(), sut2.hashCode());
+        assertEquals(sut1, sut2);
+        assertEquals(sut1.hashCode(), sut2.hashCode());
     }
 
-    /**
-     * There should be no possibility to construct object without providing Primary Key Column.
-     */
-    @Test(groups = { "databasebackup" }, expectedExceptions = NullPointerException.class)
+    @Test(expectedExceptions = NullPointerException.class)
     public void tableForeignKeyShouldBeInitializedInConstructor() {
-        @SuppressWarnings("unused")
         ForeignKey tableForeignKey = new ForeignKey(null, null, null, null);
     }
-
-    private ForeignKey sut1, sut2, differentSut;
 }
