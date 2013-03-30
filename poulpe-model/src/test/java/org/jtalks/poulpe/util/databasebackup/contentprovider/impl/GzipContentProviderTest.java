@@ -14,7 +14,8 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
@@ -26,12 +27,9 @@ import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import junit.framework.Assert;
-
 import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.GzipPackingException;
-import org.mockito.Mockito;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -42,6 +40,10 @@ import org.testng.annotations.Test;
  * 
  */
 public class GzipContentProviderTest {
+    private GzipContentProvider sut;
+    private String content;// TODO: move out into separate private method or create inside of test istelf
+    private ContentProvider contentProvider;
+
     @BeforeMethod
     public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
         content = "Test string for checking GzipContentProvider class";
@@ -87,8 +89,8 @@ public class GzipContentProviderTest {
 
     @Test(expectedExceptions = GzipPackingException.class)
     public void IOErrorsWhenGzipThrowsException() throws IOException, FileDownloadException {
-        final GZIPOutputStream gzipOutput = Mockito.mock(GZIPOutputStream.class);
-        Mockito.doThrow(IOException.class).when(gzipOutput).finish();
+        final GZIPOutputStream gzipOutput = mock(GZIPOutputStream.class);
+        doThrow(IOException.class).when(gzipOutput).finish();
 
         // sut = Mockito.spy(sut);// TODO: look at spy() more closely
         // Mockito.doReturn(gzipOutput).when(sut).getGZIPOutputStream(gzipOutput);
@@ -105,15 +107,11 @@ public class GzipContentProviderTest {
 
     @Test
     public void getMimeContentTypeTest() {
-        Assert.assertEquals("application/x-gzip", sut.getMimeContentType());
+        assertEquals("application/x-gzip", sut.getMimeContentType());
     }
 
     @Test
     public void getContentFileNameExtTest() {
-        Assert.assertEquals(".sql.gz", sut.getContentFileNameExt());
+        assertEquals(".sql.gz", sut.getContentFileNameExt());
     }
-
-    private GzipContentProvider sut;
-    private String content;// TODO: move out into separate private method or create inside of test istelf
-    private ContentProvider contentProvider;
 }
