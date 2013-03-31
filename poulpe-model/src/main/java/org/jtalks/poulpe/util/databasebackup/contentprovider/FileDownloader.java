@@ -44,7 +44,7 @@ public abstract class FileDownloader {
      *            String representation of the MIME content type.
      */
     public void setMimeContentType(String mimeContentType) {
-        Validate.notBlank(mimeContentType);
+        Validate.notBlank(mimeContentType, "mimeContentType must be neither null nor blank");
         this.mimeContentType = mimeContentType;
     }
 
@@ -64,7 +64,7 @@ public abstract class FileDownloader {
      *            The filename to set, such as "jtalks.sql".
      */
     public void setContentFileName(String contentFileName) {
-        Validate.notBlank(contentFileName);
+        Validate.notBlank(contentFileName, "contentFileName must be neither null nor blank");
         this.contentFileName = contentFileName;
     }
 

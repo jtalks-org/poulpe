@@ -12,7 +12,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.util.databasebackup.dbdump;
+package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -23,10 +23,7 @@ import java.util.List;
 import java.util.Queue;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.AddForeignKeysCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CommonHeaderCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CreateTableCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.TableDataDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 
 import com.google.common.collect.Lists;

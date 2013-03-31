@@ -44,15 +44,13 @@ public class GzipContentProvider implements ContentProvider {
         this.contentProvider = contentProvider;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void writeContent(OutputStream output) throws FileDownloadException {
         try {
             GZIPOutputStream gzipOutput = getGZIPOutputStream(output);
             contentProvider.writeContent(gzipOutput);
             gzipOutput.finish();
+
         } catch (IOException e) {
             throw new GzipPackingException(e);
         }
@@ -71,17 +69,11 @@ public class GzipContentProvider implements ContentProvider {
         return new GZIPOutputStream(output);
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getMimeContentType() {
         return MIME_CONTENT_TYPE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public String getContentFileNameExt() {
         return contentProvider.getContentFileNameExt() + FILE_NAME_EXT;

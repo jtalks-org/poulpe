@@ -14,7 +14,7 @@
  */
 
 /**
- * Contains different implementations of ContentProvider interface.
+ * Contains implementations of {@link ContentProvider} interface.
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 

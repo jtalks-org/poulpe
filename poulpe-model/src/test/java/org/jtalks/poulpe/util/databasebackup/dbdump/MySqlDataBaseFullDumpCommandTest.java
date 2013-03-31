@@ -12,10 +12,11 @@ import java.util.Queue;
 
 import junit.framework.Assert;
 
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.AddForeignKeysCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CommonHeaderCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.CreateTableCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax.TableDataDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.AddForeignKeysCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CommonHeaderCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CreateTableCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlDataBaseFullDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.TableDataDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.mockito.Mockito;
 import org.testng.annotations.Test;

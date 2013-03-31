@@ -31,7 +31,7 @@ public class TempFileContentKeeper implements ContentKeeper {
      *            performs an additional transformation under it like compressing it and other such activities.
      */
     public TempFileContentKeeper(ContentProvider contentProvider) {
-        Validate.notNull(contentProvider);
+        Validate.notNull(contentProvider, "contentProvider must not be null");
         this.contentProvider = contentProvider;
     }
 
@@ -39,11 +39,11 @@ public class TempFileContentKeeper implements ContentKeeper {
     public InputStream getInputStream() throws FileDownloadException {
         try {
             File contentFile = fileWrapper().createTempFile("dbdump", contentProvider.getContentFileNameExt());
-            OutputStream output = getFileOutputStream(contentFile);
+            OutputStream output = newFileOutputStream(contentFile);
             contentProvider.writeContent(output);
             output.flush();
             output.close();
-            return getFileInputStream(contentFile);
+            return newFileInputStream(contentFile);
 
         } catch (IOException e) {
             throw new ContentPersistenceException(e);
@@ -80,7 +80,7 @@ public class TempFileContentKeeper implements ContentKeeper {
      *             if the file exists but is a directory rather than a regular file, does not exist but cannot be
      *             created, or cannot be opened for any other reason.
      */
-    OutputStream getFileOutputStream(File contentFile) throws FileNotFoundException {
+    OutputStream newFileOutputStream(File contentFile) throws FileNotFoundException {
         return new BufferedOutputStream(new FileOutputStream(contentFile));
     }
 
@@ -94,7 +94,7 @@ public class TempFileContentKeeper implements ContentKeeper {
      *             if the file does not exist, is a directory rather than a regular file, or for some other reason
      *             cannot be opened for reading.
      */
-    InputStream getFileInputStream(File contentFile) throws FileNotFoundException {
+    InputStream newFileInputStream(File contentFile) throws FileNotFoundException {
         return new DisposableFileInputStream(contentFile);
     }
 

@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 import org.jtalks.poulpe.util.databasebackup.TestUtil;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.TableDataDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;

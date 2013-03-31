@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jtalks.poulpe.util.databasebackup.TestUtil;
+import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CreateTableCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;

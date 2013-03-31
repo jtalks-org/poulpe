@@ -36,24 +36,15 @@ import com.google.common.collect.Lists;
  * @author Evgeny Surovtsev
  * 
  */
-public class DbTableNameLister {
+public class DbTableLister {
     /**
      * Constructs a new instance of the class with given DataSource.
      * 
      * @param dataSource
      *            a DataSource object for accessing the table.
      */
-    public DbTableNameLister(final DataSource dataSource) {
+    public DbTableLister(DataSource dataSource) {
         this.dataSource = dataSource;
-    }
-
-    /**
-     * Returns currently set DataSource.
-     * 
-     * @return DataSource.
-     */
-    public DataSource getDataSource() {// TODO: check whether it's used anywhere
-        return dataSource;
     }
 
     /**
@@ -64,8 +55,8 @@ public class DbTableNameLister {
      *             is thrown if there is an error during collaborating with the database.
      */
     @SuppressWarnings("unchecked")
-    public List<String> getTableNames() throws SQLException {// TODO: think about exceptions here, we might want to
-                                                             // create our own exceptions
+    private List<String> getTableNames() throws SQLException {// TODO: think about exceptions here, we might want to
+                                                              // create our own exceptions
         Validate.notNull(dataSource, "dataSource must not be null");
         List<String> tableNames = null;
         try {
@@ -93,6 +84,22 @@ public class DbTableNameLister {
         }
 
         return Collections.unmodifiableList(tableNames);
+    }
+
+    /**
+     * Converts a list of table names into list of {@link DbTable} objects.
+     * 
+     * @param tableNames
+     *            a list of table names.
+     * @return a list of DbTable objects.
+     * @throws SQLException
+     */
+    public List<DbTable> getTables() throws SQLException {
+        List<DbTable> dbTableList = Lists.newArrayList();
+        for (String tableName : getTableNames()) {
+            dbTableList.add(new DbTable(dataSource, tableName));
+        }
+        return dbTableList;
     }
 
     private final DataSource dataSource;
