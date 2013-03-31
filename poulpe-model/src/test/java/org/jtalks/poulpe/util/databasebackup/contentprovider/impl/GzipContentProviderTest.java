@@ -23,7 +23,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -41,37 +40,12 @@ import org.testng.annotations.Test;
  */
 public class GzipContentProviderTest {
     private GzipContentProvider sut;
-    private String content;// TODO: move out into separate private method or create inside of test istelf
-    private ContentProvider contentProvider;
+    private ContentProvider dummyContentProvider;
 
     @BeforeMethod
-    public void beforeMethod() throws UnsupportedEncodingException, FileDownloadException {
-        content = "Test string for checking GzipContentProvider class";
-        contentProvider = new ContentProvider() {// TODO: check whether it's better to create a DummyContentProvider and
-                                                 // put it into sources
-
-            @Override
-            public void writeContent(final OutputStream output) throws FileDownloadException {
-                try {
-                    output.write(content.getBytes());
-                } catch (IOException e) {
-                    throw new FileDownloadException();
-                }
-            }
-
-            @Override
-            public String getMimeContentType() {
-                return "MIME_TYPE";
-            }
-
-            @Override
-            public String getContentFileNameExt() {
-                return ".sql";
-            }
-
-        };
-
-        sut = new GzipContentProvider(contentProvider);
+    public void beforeMethod() throws Exception {
+        dummyContentProvider = new DummyContentProvider(getContentExample());
+        sut = new GzipContentProvider(dummyContentProvider);
     }
 
     @Test
@@ -81,28 +55,22 @@ public class GzipContentProviderTest {
 
         BufferedReader in2 = new BufferedReader(new InputStreamReader(new GZIPInputStream(
                 new ByteArrayInputStream(output.toByteArray()))));
-        String actual = in2.readLine();
+        String contentAfterUngzipping = in2.readLine();
         in2.close();
 
-        assertEquals(actual, content);
+        assertEquals(contentAfterUngzipping, getContentExample());
     }
 
     @Test(expectedExceptions = GzipPackingException.class)
     public void IOErrorsWhenGzipThrowsException() throws IOException, FileDownloadException {
-        final GZIPOutputStream gzipOutput = mock(GZIPOutputStream.class);
+        GZIPOutputStream gzipOutput = mock(GZIPOutputStream.class);
         doThrow(IOException.class).when(gzipOutput).finish();
 
-        // sut = Mockito.spy(sut);// TODO: look at spy() more closely
-        // Mockito.doReturn(gzipOutput).when(sut).getGZIPOutputStream(gzipOutput);
-        sut = new GzipContentProvider(contentProvider) {
-            @Override
-            protected GZIPOutputStream getGZIPOutputStream(final OutputStream output) throws IOException {
-                return gzipOutput;
-            }
-        };
-
         ByteArrayOutputStream output = new ByteArrayOutputStream();
-        sut.writeContent(output);
+        GzipContentProvider spySut = spy(sut);
+        doReturn(gzipOutput).when(spySut).getGZIPOutputStream(output);
+
+        spySut.writeContent(output);
     }
 
     @Test
@@ -113,5 +81,37 @@ public class GzipContentProviderTest {
     @Test
     public void getContentFileNameExtTest() {
         assertEquals(".sql.gz", sut.getContentFileNameExt());
+    }
+
+    private String getContentExample() {
+        return "Test string for checking GzipContentProvider class";
+    }
+
+    private static class DummyContentProvider implements ContentProvider {
+        public DummyContentProvider(String contentExample) {
+            this.contentExample = contentExample;
+        }
+
+        @Override
+        public void writeContent(OutputStream output) throws FileDownloadException {
+            try {
+                output.write(contentExample.getBytes());
+
+            } catch (IOException e) {
+                throw new FileDownloadException();
+            }
+        }
+
+        @Override
+        public String getMimeContentType() {
+            return "MIME_TYPE";
+        }
+
+        @Override
+        public String getContentFileNameExt() {
+            return ".sql";
+        }
+
+        private String contentExample;
     }
 }
