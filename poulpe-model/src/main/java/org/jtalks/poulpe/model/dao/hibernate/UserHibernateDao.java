@@ -16,11 +16,13 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
+import org.hibernate.Session;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
 import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -164,6 +166,16 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         paginate.addPagination(query);
 
         return query.list();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void save(User user) {
+        Session session = getSession();
+        session.save(user);
+        session.flush();
     }
 
     /**

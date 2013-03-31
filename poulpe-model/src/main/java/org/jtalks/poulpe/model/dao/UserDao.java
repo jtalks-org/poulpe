@@ -16,6 +16,7 @@ package org.jtalks.poulpe.model.dao;
 
 import org.jtalks.common.model.dao.ParentRepository;
 import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
@@ -91,5 +92,11 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      * @return list of users with username like in parameter
      */
     List<PoulpeUser> findUsersNotInList(String availableFilterText, List<PoulpeUser> listUsers, Pagination paginate);
+
+    /**
+     * Save new user
+     * @param user the user
+     */
+    void save(User user);
 
 }

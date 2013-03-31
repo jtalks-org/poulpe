@@ -254,4 +254,20 @@ public class TransactionalUserService implements UserService {
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void registration(String username, String password, String firstName, String lastName, String email) {
+        //TODO Bean Validation for each new property of user (There are criteria in the http://jira.jtalks.org/browse/POULPE-503), and throw ether business exceptions
+        PoulpeUser user = new PoulpeUser();
+        user.setUsername(username);
+        user.setPassword(password);
+        user.setEmail(email);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setSalt("");
+        userDao.save(user); //TODO check, that such user don't exist. (Throw business exception)
+    }
+
 }

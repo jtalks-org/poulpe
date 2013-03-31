@@ -1,6 +1,8 @@
 package org.jtalks.poulpe.web.controller.rest;
 
+import org.apache.http.HttpStatus;
 import org.jtalks.poulpe.service.UserService;
+import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
@@ -26,13 +28,7 @@ public class UserRegistrationResource extends ServerResource implements Registra
      */
     @Override
     public Representation register(Representation represent) {
-        Authentication authentication = new Authentication();
-        Profile result = new Profile();
-        result.setFirstName("firstName");
-        result.setLastName("lastName");
-        authentication.setProfile(result);
-        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(authentication);
-        resultRep.setFormattedOutput(true);
-        return resultRep;
+
+        return null;
     }
 }

@@ -194,4 +194,16 @@ public interface UserService {
      * @throws {@link org.jtalks.common.service.exceptions.NotFoundException} if user not found or password not match
      */
     PoulpeUser authenticate(String username, String password) throws NotFoundException;
+
+
+    /**
+     * Registers new user
+     *
+     * @param username the username
+     * @param password the hashed password
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @param email the email
+     */
+    void registration(String username, String password, String firstName, String lastName, String email);
 }
