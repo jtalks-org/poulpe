@@ -25,6 +25,8 @@ import java.util.List;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlDataBaseFullDumpCommand;
@@ -40,23 +42,11 @@ import com.google.common.collect.ImmutableList;
 
 public class DbDumpContentProviderTest {
     private DbDumpContentProvider sut;
-    private DataSource mockDataSource;
-    private OutputStream mockOutput;
-    private DbDumpCommand mockDbDumpCommand;
-    private DbTableLister mockDbTableNameLister;
     private DatabaseDumpFactory mockDbDumpFactory;
 
     @BeforeMethod
     public void beforeMethod() throws SQLException {
-        mockDataSource = mock(DataSource.class);
-        mockOutput = mock(OutputStream.class);
-        mockDbDumpCommand = mock(DbDumpCommand.class);
         mockDbDumpFactory = mock(DatabaseDumpFactory.class);
-
-        final List<String> tables = ImmutableList.of("tableName");
-        // mockDbTableNameLister = mock(DbTableLister.class);
-        // when(mockDbTableNameLister.getTableNames()).thenReturn(tables);
-
         sut = new DbDumpContentProvider(mockDbDumpFactory);
     }
 
@@ -70,36 +60,41 @@ public class DbDumpContentProviderTest {
         assertEquals(".sql", sut.getContentFileNameExt());
     }
 
-    // @Test
-    // public void checkDbDumpCommandType() {
-    // DbTable mockDbTable = mock(DbTable.class);
-    // List<DbTable> tablesToDump = ImmutableList.of(mockDbTable);
-    //
-    // sut = new DbDumpContentProvider(mockDataSource);
-    // assertTrue(sut.newDbFullDumpCommand(tablesToDump) instanceof MySqlDataBaseFullDumpCommand);
-    // }
+    @Test
+    public void writeContentTest() throws Exception {
+        Pair<DbDumpCommand, OutputStream> pair = getDumpCommandAndOutput();
+        DbDumpCommand command = pair.getLeft();
+        OutputStream output = pair.getRight();
 
-    @Test(enabled = false)
-    public void writeContentTest() throws FileDownloadException, SQLException, IOException {
-        sut.writeContent(mockOutput);
-        verify(mockDbDumpCommand).execute(mockOutput);
+        sut.writeContent(output);
+        verify(command).execute(output);
     }
 
-    // @Test(expectedExceptions = DatabaseDoesntContainTablesException.class)
-    // public void emptyDatabaseThrowsException() throws SQLException, FileDownloadException {
-    // when(mockDbTableNameLister.getTableNames()).thenReturn(new ArrayList<String>());
-    // sut.writeContent(mockOutput);
-    // }
+    @Test(expectedExceptions = DatabaseExportingException.class)
+    public void IOErrorsThrowException() throws Exception {
+        Pair<DbDumpCommand, OutputStream> pair = getDumpCommandAndOutput();
+        DbDumpCommand command = pair.getLeft();
+        OutputStream output = pair.getRight();
 
-    @Test(expectedExceptions = DatabaseExportingException.class, enabled = false)
-    public void IOErrorsThrowException() throws SQLException, IOException, FileDownloadException {
-        doThrow(IOException.class).when(mockDbDumpCommand).execute(mockOutput);
-        sut.writeContent(mockOutput);
+        doThrow(IOException.class).when(command).execute(output);
+        sut.writeContent(output);
     }
 
-    @Test(expectedExceptions = DatabaseExportingException.class, enabled = false)
-    public void SQLErrorsThrowException() throws SQLException, IOException, FileDownloadException {
-        doThrow(SQLException.class).when(mockDbDumpCommand).execute(mockOutput);
-        sut.writeContent(mockOutput);
+    @Test(expectedExceptions = DatabaseExportingException.class)
+    public void SQLErrorsThrowException() throws Exception {
+        Pair<DbDumpCommand, OutputStream> pair = getDumpCommandAndOutput();
+        DbDumpCommand command = pair.getLeft();
+        OutputStream output = pair.getRight();
+
+        doThrow(SQLException.class).when(command).execute(output);
+        sut.writeContent(output);
+    }
+
+    private Pair<DbDumpCommand, OutputStream> getDumpCommandAndOutput() throws Exception {
+        OutputStream mockOutput = mock(OutputStream.class);
+        DbDumpCommand mockDbDumpCommand = mock(DbDumpCommand.class);
+        when(mockDbDumpFactory.newDbDumpCommand()).thenReturn(mockDbDumpCommand);
+
+        return new ImmutablePair<DbDumpCommand, OutputStream>(mockDbDumpCommand, mockOutput);
     }
 }
