@@ -1,13 +1,16 @@
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
+import static org.testng.Assert.*;
+
 import java.io.InputStream;
 
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
-import org.testng.Assert;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 
 public class FileDownloaderTest {
+    private FileDownloader sut;
+
     @BeforeMethod
     public void beforeMethod() {
         sut = new FileDownloader() {
@@ -20,13 +23,13 @@ public class FileDownloaderTest {
     @Test
     public void setsMimeContentType() {
         sut.setMimeContentType("MIME_CONTENT_TYPE");
-        Assert.assertEquals(sut.getMimeContentType(), "MIME_CONTENT_TYPE");
+        assertEquals(sut.getMimeContentType(), "MIME_CONTENT_TYPE");
     }
 
     @Test
     public void setsContentFileName() {
         sut.setContentFileName("CONTENT_FILENAME");
-        Assert.assertEquals(sut.getContentFileName(), "CONTENT_FILENAME");
+        assertEquals(sut.getContentFileName(), "CONTENT_FILENAME");
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -48,6 +51,4 @@ public class FileDownloaderTest {
     public void doesntAllowSetEmptyContentFileName() {
         sut.setContentFileName("");
     }
-
-    private FileDownloader sut;
 }

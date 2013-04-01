@@ -67,7 +67,7 @@ public class FileDownloadService {
      * @return String which represents the filename without extension
      */
     String getContentFileNameWithoutExt() {
-        assert contentFileNameWithoutExt != null : "contentFileNameWithoutExt must be defined";
+        assert contentFileNameWithoutExt != null;
         return new StringBuilder()
                 .append(getCurrentTimeStamp()).append("_").append(contentFileNameWithoutExt).append("_backup")
                 .toString();

@@ -1,13 +1,11 @@
 package org.jtalks.poulpe.util.databasebackup.contentprovider;
 
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.mockito.Mockito;
-import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -18,10 +16,14 @@ import org.testng.annotations.Test;
  * 
  */
 public class FileDownloadServiceTest {
+    private FileDownloadService sut;
+    private ContentKeeper mockContentKeeper;
+    private FileDownloader mockFileDownloader;
+
     @BeforeMethod
     public void beforeMethod() throws IOException {
-        mockContentKeeper = Mockito.mock(ContentKeeper.class);
-        mockFileDownloader = Mockito.mock(FileDownloader.class);
+        mockContentKeeper = mock(ContentKeeper.class);
+        mockFileDownloader = mock(FileDownloader.class);
     }
 
     @Test(expectedExceptions = NullPointerException.class)
@@ -49,13 +51,13 @@ public class FileDownloadServiceTest {
         sut = new FileDownloadService(mockContentKeeper, mockFileDownloader, "jtalks");
         String actualFilename = sut.getContentFileNameWithoutExt();
 
-        Assert.assertTrue(actualFilename.matches(getFileNameRegExp()), "Filename does not fit in the expected "
+        assertTrue(actualFilename.matches(getFileNameRegExp()), "Filename does not fit in the expected "
                 + "format: YYYY-MM-DD_HH-MM-SS_jtalks_backup. Actual filename: " + actualFilename + ".");
     }
 
     @Test
     public void performFileDownloadTest() throws Exception {
-        InputStream mockInputStream = Mockito.mock(InputStream.class);
+        InputStream mockInputStream = mock(InputStream.class);
         when(mockContentKeeper.getContentFileNameExt()).thenReturn(".sql");
         when(mockContentKeeper.getMimeContentType()).thenReturn("MIME_TYPE");
         when(mockContentKeeper.getInputStream()).thenReturn(mockInputStream);
@@ -77,8 +79,4 @@ public class FileDownloadServiceTest {
         return "^((19|20)\\d\\d)-(0[1-9]|1[012])-(0[1-9]|[12][0-9]|3[01])_([01][0-9]|2[0-3])-"
                 + "([0-5][0-9])-([0-5][0-9])_jtalks_backup$";
     }
-
-    private FileDownloadService sut;
-    private ContentKeeper mockContentKeeper;
-    private FileDownloader mockFileDownloader;
 }
