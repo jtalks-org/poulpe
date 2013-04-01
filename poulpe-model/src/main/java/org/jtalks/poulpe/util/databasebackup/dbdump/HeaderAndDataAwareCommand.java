@@ -26,7 +26,7 @@ import java.sql.SQLException;
 public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
 
     /**
-     * Pack description and data with delimiters and push it to {@link OutputStream}
+     * Pack description and data with delimiters and push it to {@link OutputStream}.
      */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {

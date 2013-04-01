@@ -21,6 +21,7 @@ import java.sql.SQLException;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.contentprovider.ContentProvider;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
+import org.jtalks.poulpe.util.databasebackup.exceptions.CreateDbDumpCommandException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
 import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
 
@@ -49,6 +50,8 @@ public class DbDumpContentProvider implements ContentProvider {
         try {
             dbDumpFactory.newDbDumpCommand().execute(output);
 
+        } catch (CreateDbDumpCommandException e) {
+            throw new DatabaseExportingException(e);
         } catch (SQLException e) {
             throw new DatabaseExportingException(e);
         } catch (IOException e) {

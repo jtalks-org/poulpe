@@ -1,26 +1,24 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump;
 
-import java.sql.SQLException;
+import org.jtalks.poulpe.util.databasebackup.exceptions.CreateDbDumpCommandException;
 
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTableLister;
-
+/**
+ * Constructs a specific DbDumpCommand object. Each implementation provides different DbDump commands for different
+ * database engines, different syntaxes. Also it's a responsibility of Factory to define what table will be put in the
+ * dump by providing specific DbDumpCommand.
+ * 
+ * @author Evgeny Surovtsev
+ * 
+ */
 public interface DatabaseDumpFactory {
-    // /**
-    // * Returns a DbTableLister object which can enumerate all table names which database has. The method is marked as
-    // * protected so it can be substitute in the unit test class.
-    // *
-    // * @return a DbTableNameLister object.
-    // */
-    // DbTableLister newDbTableLister();
-
     /**
-     * Returns an instance of {@link DbDumpCommand} which generates full database dump during its execution. The method
-     * is marked as protected so it can be substitute in the unit test class.
+     * Returns an instance of {@link DbDumpCommand} which generates full database dump during its execution. Also it is
+     * a responsibility of the method to define a list of tables for the dump and provide it to the newly created
+     * DbDumpCommand.
      * 
-     * @param tablesToDump
-     *            a list of {@link DbTable} objects which are used as a source of database dump information.
-     * @return an instance of DbDumpCommand for generating dump of database.
-     * @throws SQLException
+     * @return a specific instance of DbDumpCommand for generating dump of database.
+     * @throws CreateDbDumpCommandException
+     *             if a error occurs.
      */
-    DbDumpCommand newDbDumpCommand() throws SQLException;
+    DbDumpCommand newDbDumpCommand() throws CreateDbDumpCommandException;
 }
