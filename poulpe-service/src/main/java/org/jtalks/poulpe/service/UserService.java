@@ -21,6 +21,7 @@ import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
+import org.jtalks.poulpe.service.exceptions.UserExistException;
 
 import java.util.List;
 
@@ -197,13 +198,15 @@ public interface UserService {
 
 
     /**
-     * Registers new user
+     * Registers the new user
      *
      * @param username the username
      * @param password the hashed password
      * @param firstName the first name
      * @param lastName  the last name
      * @param email the email
+     * @throws {@link UserExistException} if user with given username already exist in DB
      */
-    void registration(String username, String password, String firstName, String lastName, String email);
+    void registration(String username, String password, String firstName, String lastName, String email)
+            throws UserExistException;
 }
