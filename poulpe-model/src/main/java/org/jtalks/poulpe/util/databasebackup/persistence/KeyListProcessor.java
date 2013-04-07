@@ -20,10 +20,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
+import org.jtalks.poulpe.util.databasebackup.common.collection.Sets;
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
-
-import com.google.common.collect.Sets;
 
 /**
  * Class reads information about table keys for given table Set and creates a list of TableKeys. Class is used to get

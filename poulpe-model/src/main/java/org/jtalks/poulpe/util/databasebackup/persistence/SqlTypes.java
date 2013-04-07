@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.google.common.collect.Lists;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
 
 /**
  * The enumeration represents table column's type in database. The enumeration is used to map the JDBC's column type
@@ -246,7 +246,7 @@ public enum SqlTypes {
      *            Should be set to true if a value for this type must be quoted in the SQL INSERT statement.
      */
     private SqlTypes(final int[] jdbcSqlTypeArray, final boolean hasSize, final boolean textBased) {
-        assert (jdbcSqlTypeArray != null) : "jdbcSqlTypeArray must not be null.";
+        assert jdbcSqlTypeArray != null : "jdbcSqlTypeArray must not be null.";
         this.jdbcSqlType = jdbcSqlTypeArray.clone();
         this.hasSize = hasSize;
         this.textBased = textBased;

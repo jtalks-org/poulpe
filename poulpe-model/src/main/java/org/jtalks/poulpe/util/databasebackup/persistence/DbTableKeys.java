@@ -23,14 +23,13 @@ import java.util.Set;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Sets;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
-
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 
 /**
  * The class is responsible for providing table's keys information.

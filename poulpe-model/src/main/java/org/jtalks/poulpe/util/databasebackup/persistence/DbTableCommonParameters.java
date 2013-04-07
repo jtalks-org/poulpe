@@ -23,8 +23,7 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-
-import com.google.common.collect.Maps;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
 
 /**
  * The class is responsible for providing table's common parameters such as database engine, collation etc.

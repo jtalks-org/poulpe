@@ -27,14 +27,13 @@ import java.util.Map;
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * The class is responsible for providing table structure and table data.
