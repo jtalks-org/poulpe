@@ -20,6 +20,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Set;
 
+import org.apache.commons.lang.Validate;
 import org.jtalks.poulpe.util.databasebackup.common.collection.Sets;
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
@@ -40,21 +41,16 @@ final class KeyListProcessor implements DatabaseMetaDataCallback {
      * @param tableKeyPerformer
      *            An instance of specific Key Performer (Strategy).
      */
-    public KeyListProcessor(
-            final String tableName, final TableKeyPerformer tableKeyPerformer) {
-
-        super();
-        assert tableKeyPerformer != null;
-        assert tableName != null;
+    public KeyListProcessor(String tableName, TableKeyPerformer tableKeyPerformer) {
+        Validate.notNull(tableKeyPerformer, "tableKeyPerformer must not be null");
+        Validate.notNull(tableName, "tableName must not be null");
         this.tableKeyPerformer = tableKeyPerformer;
         this.tableName = tableName;
     }
 
     @Override
-    public Object processMetaData(final DatabaseMetaData dmd)
-            throws SQLException {
-
-        final Set<TableKey> tableKeySet = Sets.newHashSet();
+    public Object processMetaData(DatabaseMetaData dmd) throws SQLException {
+        Set<TableKey> tableKeySet = Sets.newHashSet();
         ResultSet rs = null;
         try {
             rs = tableKeyPerformer.getResultSet(dmd, tableName);

@@ -41,7 +41,7 @@ class DbTableCommonParameters {
      * @param tableName
      *            a name of the table to be dumped.
      */
-    public DbTableCommonParameters(final DataSource dataSource, final String tableName) {
+    public DbTableCommonParameters(DataSource dataSource, String tableName) {
         Validate.notNull(dataSource, "dataSource parameter must not be null.");
         Validate.notEmpty(tableName, "tableName parameter must not be empty.");
         this.dataSource = dataSource;

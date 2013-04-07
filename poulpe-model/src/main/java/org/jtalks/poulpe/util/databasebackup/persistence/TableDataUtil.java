@@ -39,7 +39,7 @@ public final class TableDataUtil {
      * @throws NullPointerException
      *             If value is null.
      */
-    public static String getSqlValueQuotedString(final String value) {
+    public static String getSqlValueQuotedString(String value) {
         Validate.notNull(value, "value must not be null");
         return getSqlQuotedString(value, VALUE_QUOTE_SIGN);
     }
@@ -53,7 +53,7 @@ public final class TableDataUtil {
      * @throws NullPointerException
      *             If value is null.
      */
-    public static String getSqlColumnQuotedString(final String value) {
+    public static String getSqlColumnQuotedString(String value) {
         Validate.notNull(value, "value must not be null");
         return getSqlQuotedString(value, FIELD_QUOTE_SIGN);
     }
@@ -68,7 +68,7 @@ public final class TableDataUtil {
      *            A quote symbol which will be used for quoting process.
      * @return Already quoted value.
      */
-    private static String getSqlQuotedString(final String value, final String quote) {
+    private static String getSqlQuotedString(String value, String quote) {
         assert value != null : "value must not be null.";
         assert quote != null : "quote must not be null.";
         return quote + StringEscapeUtils.escapeSql(value).replace("\\", "\\\\") + quote;

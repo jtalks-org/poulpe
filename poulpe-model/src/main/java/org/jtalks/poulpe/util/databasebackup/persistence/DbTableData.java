@@ -51,7 +51,7 @@ class DbTableData {
      * @param tableName
      *            a name of the table to be dumped.
      */
-    public DbTableData(final DataSource dataSource, final String tableName) {
+    public DbTableData(DataSource dataSource, String tableName) {
         Validate.notNull(dataSource, "dataSource parameter must not be null.");
         Validate.notEmpty(tableName, "tableName parameter must not be empty.");
         this.dataSource = dataSource;
@@ -73,10 +73,10 @@ class DbTableData {
             dataDumpList = jdbcTemplate.query(SELECT_FROM + tableName, new RowMapper<Row>() {
                 @Override
                 public Row mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-                    final ResultSetMetaData metaData = rs.getMetaData();
-                    final int columnCount = metaData.getColumnCount();
+                    ResultSetMetaData metaData = rs.getMetaData();
+                    int columnCount = metaData.getColumnCount();
 
-                    final Row row = new Row();
+                    Row row = new Row();
                     for (int i = 1; i <= columnCount; i++) {
                         ColumnMetaData columnMetaData = ColumnMetaData.getInstance(
                                 metaData.getColumnName(i),
@@ -86,7 +86,7 @@ class DbTableData {
                     return row;
                 }
             });
-        } catch (final DataAccessException e) {
+        } catch (DataAccessException e) {
             throw new SQLException(e);
         }
 
@@ -110,15 +110,15 @@ class DbTableData {
             // Get a list of defaults for the column
             // this cannot be done via ResultSetMetaData, so doing this via tableMetaData instead
             connection = dataSource.getConnection();
-            final DatabaseMetaData dbMetaData = connection.getMetaData();
-            final Map<String, String> columnDefaultValues = getColumnDefaults(dbMetaData);
+            DatabaseMetaData dbMetaData = connection.getMetaData();
+            Map<String, String> columnDefaultValues = getColumnDefaults(dbMetaData);
 
             // Taking the rest of information from ResultSetMetaData object
             stmt = connection.createStatement();
             // WHERE 1 = 0 -- we don't need actual data, just a table structure, so lets make the query's result empty.
             rs = stmt.executeQuery(SELECT_FROM + tableName + " WHERE 1 = 0");
             rsmd = rs.getMetaData();
-            final int numberOfColumns = rsmd.getColumnCount();
+            int numberOfColumns = rsmd.getColumnCount();
 
             for (int i = 1; i <= numberOfColumns; i++) {
                 tableColumnList.add(getColumnMetaData(rsmd, columnDefaultValues, i));
@@ -153,11 +153,11 @@ class DbTableData {
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    private ColumnMetaData getColumnMetaData(final ResultSetMetaData rsmd,
-            final Map<String, String> columnDefaultValues, final int i) throws SQLException {
-        final SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(rsmd.getColumnType(i));
+    private ColumnMetaData getColumnMetaData(ResultSetMetaData rsmd, Map<String, String> columnDefaultValues, int i)
+            throws SQLException {
+        SqlTypes columnType = SqlTypes.getSqlTypeByJdbcSqlType(rsmd.getColumnType(i));
 
-        final ColumnMetaData column = ColumnMetaData.getInstance(rsmd.getColumnName(i), columnType).setNullable(
+        ColumnMetaData column = ColumnMetaData.getInstance(rsmd.getColumnName(i), columnType).setNullable(
                 rsmd.isNullable(i) == ResultSetMetaData.columnNullable).setAutoincrement(rsmd.isAutoIncrement(i));
         if (columnDefaultValues.containsKey(rsmd.getColumnName(i))) {
             column.setDefaultValue(columnDefaultValues.get(rsmd.getColumnName(i)));
@@ -178,13 +178,13 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     private Map<String, String> getColumnDefaults(final DatabaseMetaData dbMetaData) throws SQLException {
-        final Map<String, String> columnDefaultValues = Maps.newHashMap();
+        Map<String, String> columnDefaultValues = Maps.newHashMap();
         ResultSet tableMetaData = null;
         try {
             tableMetaData = dbMetaData.getColumns(null, null, tableName, "%");
 
             while (tableMetaData.next()) {
-                final String defaultValue = tableMetaData.getString("COLUMN_DEF");
+                String defaultValue = tableMetaData.getString("COLUMN_DEF");
                 if (defaultValue != null && defaultValue.length() > 0) {
                     columnDefaultValues.put(tableMetaData.getString("COLUMN_NAME"), defaultValue);
                 }

@@ -45,7 +45,7 @@ public class DbTable {
      * @throws NullPointerException
      *             if any of dataSource or tableName is null.
      */
-    public DbTable(final DataSource dataSource, final String tableName) {
+    public DbTable(DataSource dataSource, String tableName) {
         Validate.notNull(dataSource, "dataSource must not be null");
         Validate.notNull(tableName, "tableName must not be null");
         this.tableName = tableName;

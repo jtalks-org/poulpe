@@ -42,6 +42,7 @@ public class DbTableLister {
      *            a DataSource object for accessing the table.
      */
     public DbTableLister(DataSource dataSource) {
+        Validate.notNull(dataSource, "dataSource must not be null");
         this.dataSource = dataSource;
     }
 
@@ -60,7 +61,7 @@ public class DbTableLister {
         try {
             tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
                 @Override
-                public Object processMetaData(final DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
+                public Object processMetaData(DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
                     List<String> tableList = Lists.newArrayList();
                     ResultSet rs = null;
                     try {
@@ -76,7 +77,7 @@ public class DbTableLister {
                     return tableList;
                 }
             });
-        } catch (final MetaDataAccessException e) {
+        } catch (MetaDataAccessException e) {
             throw new SQLException(e);
         }
 
