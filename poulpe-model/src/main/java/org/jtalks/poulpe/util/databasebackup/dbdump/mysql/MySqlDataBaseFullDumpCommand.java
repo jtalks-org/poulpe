@@ -16,25 +16,27 @@ package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Queue;
 
 import org.apache.commons.lang3.Validate;
+import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 
-import com.google.common.collect.Lists;
 /**
- * Full backup command which can pick MySQL data from selected tables and push it to {@link OutputStream}  
+ * Full backup command which can pick MySQL data from selected tables and push it to {@link OutputStream}.
  */
 public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
-    
-    /** Construct required ordered list of commands  
-     * @param dbTableList list of tables for full backup */
-    public MySqlDataBaseFullDumpCommand(final List<DbTable> dbTableList) {
+
+    /**
+     * Construct required ordered list of commands.
+     * 
+     * @param dbTableList
+     *            list of tables for full backup
+     */
+    public MySqlDataBaseFullDumpCommand(List<DbTable> dbTableList) {
         Validate.notNull(dbTableList, "dbTableList must not be null");
         dumpCommandQueue = Lists.newLinkedList();
         dumpCommandQueue.add(new CommonHeaderCommand());
@@ -49,8 +51,12 @@ public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
         }
     }
 
-    /** Execute whole needed commands and push full backup into {@link OutputStream}
-     * @param output stream receiver */
+    /**
+     * Execute whole needed commands and push full backup into {@link OutputStream}.
+     * 
+     * @param output
+     *            stream receiver
+     */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {
         DbDumpCommand oneCommand = null;

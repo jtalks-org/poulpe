@@ -1,6 +1,7 @@
 package org.jtalks.poulpe.util.databasebackup.common.collection;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -39,5 +40,14 @@ public final class Lists {
             result.add(element);
         }
         return result;
+    }
+
+    /**
+     * Creates an empty LinkedList instance.
+     * 
+     * @return a new, empty LinkedList.
+     */
+    public static <T> LinkedList<T> newLinkedList() {
+        return new LinkedList<T>();
     }
 }
