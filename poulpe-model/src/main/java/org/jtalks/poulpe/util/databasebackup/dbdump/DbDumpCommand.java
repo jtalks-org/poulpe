@@ -19,14 +19,9 @@ import java.io.OutputStream;
 import java.sql.SQLException;
 
 /**
- * Interface for a TableDumpCommand. A command is supposed to be providing a piece of certain table's dump data, such as
- * table's CREATE statement, table's data, etc. So each command must override 2 methods:
- * <ul>
- * //TODO: move those methods description to HeaderAware..
- * <li><strong>{@link #getHeader()}</strong> - should return a descriptive header for the providing data.</li>
- * <li><strong>{@link #getData()}</strong> - should return a dumping data.</li>
- * </ul>
- * The information provided by the command will be packed and send to the content provider.
+ * A database dump command is responsible for provide a piece of certain dump information such as SQL CREATE statement,
+ * INSERT statement etc. A full database dump can be obtained by executing a set of DbDumpCommands where every command
+ * in the set is responsible for a certain piece of information.
  * 
  * @author Evgeny Surovtsev
  * 
@@ -36,7 +31,11 @@ public interface DbDumpCommand {
      * Executes command and push result into {@link OutputStream}.
      * 
      * @param output
-     *            stream receiver
+     *            the result of the command will be saved into the output stream.
+     * @throws SQLException
+     *             if a SQL error occurs.
+     * @throws IOException
+     *             if a I/O error occurs.
      */
     void execute(OutputStream output) throws SQLException, IOException;
 }

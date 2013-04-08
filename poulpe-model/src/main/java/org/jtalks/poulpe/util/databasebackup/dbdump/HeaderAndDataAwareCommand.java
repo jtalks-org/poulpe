@@ -21,13 +21,13 @@ import java.io.Writer;
 import java.sql.SQLException;
 
 /**
- * Pack description and data, push to {@link OutputStream}. Resulted sequence is reversible and ready for unpacking
+ * Provides command result dividing it into a header (a description of the providing information) and information itself
+ * (data part).
+ * 
+ * @author Evgeny Surovtsev
+ * 
  */
 public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
-
-    /**
-     * Pack description and data with delimiters and push it to {@link OutputStream}.
-     */
     @Override
     public void execute(OutputStream output) throws SQLException, IOException {
         Writer writer = new PrintWriter(output);
@@ -63,5 +63,8 @@ public abstract class HeaderAndDataAwareCommand implements DbDumpCommand {
      */
     protected abstract void putData(Writer writer) throws SQLException, IOException;
 
+    /**
+     * Represents a line feed character.
+     */
     protected static final String LINEFEED = "\n";
 }
