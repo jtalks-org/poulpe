@@ -1,9 +1,6 @@
 package org.jtalks.poulpe.web.controller.rest;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
+import javax.xml.bind.annotation.*;
 
 /**
  * Java class for registration complex type.
@@ -16,4 +13,17 @@ import javax.xml.bind.annotation.XmlType;
 @XmlRootElement(name = "registration", namespace = "http://www.jtalks.org/namespaces/1.0")
 public class Registration {
 
+    @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = false)
+    private String errorMessage;
+
+    public Registration() {
+    }
+
+    public String getErrorMessage() {
+        return errorMessage;
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 }
