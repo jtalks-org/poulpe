@@ -77,7 +77,7 @@ public class EditGroupsForPersonalPermissionVmTest {
         Group target = TestFixtures.group();
 
         permissionsForEntity.add(new PermissionForEntity(target, true, ProfilePermission.SEND_PRIVATE_MESSAGES));
-        permissionsForEntity.add(new PermissionForEntity(target, false, ProfilePermission.EDIT_PROFILE));
+        permissionsForEntity.add(new PermissionForEntity(target, false, ProfilePermission.EDIT_OWN_PROFILE));
 
         int permissionsCount = permissionsForEntity.size();
         Object[][] result = new Object[permissionsCount][2];

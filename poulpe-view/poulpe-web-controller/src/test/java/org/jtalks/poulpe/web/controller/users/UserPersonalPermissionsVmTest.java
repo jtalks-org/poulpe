@@ -97,7 +97,7 @@ public class UserPersonalPermissionsVmTest {
     @DataProvider
     public Object[][] provideTypeOfPermissionsToObjectsesGroup() {
         return new Object[][]{
-            { ProfilePermission.EDIT_PROFILE },
+            { ProfilePermission.EDIT_OWN_PROFILE },
             { ProfilePermission.SEND_PRIVATE_MESSAGES },
         };
     }
@@ -108,7 +108,7 @@ public class UserPersonalPermissionsVmTest {
         Group restrictedGroup = TestFixtures.group();
 
         List<PermissionManagementBlock> blocks = Lists.newArrayList();
-        ProfilePermission allowedPermission = ProfilePermission.EDIT_PROFILE;
+        ProfilePermission allowedPermission = ProfilePermission.EDIT_OWN_PROFILE;
         ProfilePermission restrictPermission = ProfilePermission.SEND_PRIVATE_MESSAGES;
 
         GroupsPermissions<ProfilePermission> groupsPermissions = new GroupsPermissions<ProfilePermission>();
