@@ -31,10 +31,14 @@ import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.UserExistException;
+import org.jtalks.poulpe.service.exceptions.ValidationException;
 
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -260,14 +264,13 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public void registration(String username, String password, String firstName, String lastName, String email)
-            throws UserExistException {
-        if (userDao.getByUsername(username) == null) {
+            throws ValidationException, UserExistException {
+        if (userDao.getByUsername(username) != null) {
             throw new UserExistException("User with username " + username + "already exist");
         }
-        if (userDao.getByEmail(email) == null) {
+        if (userDao.getByEmail(email) != null) {
             throw  new UserExistException("User with email " + email + "already exist");
         }
-        //TODO Bean Validation for each new property of user (There are criteria in the http://jira.jtalks.org/browse/POULPE-503), and throw ether business exceptions
         PoulpeUser user = new PoulpeUser();
         user.setUsername(username);
         user.setPassword(password);
@@ -275,7 +278,21 @@ public class TransactionalUserService implements UserService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setSalt("");
-        userDao.save(user);
+        try{
+            userDao.save(user);
+        }catch (ConstraintViolationException e){
+            List<String> messages = getConstraintViolationsMessages(e.getConstraintViolations());
+            throw new ValidationException(messages);
+        }
+    }
+
+    private List<String> getConstraintViolationsMessages(Set<ConstraintViolation<?>> violationSet){
+        List<String> res = new ArrayList<String>();
+        for(ConstraintViolation violation : violationSet){
+            res.add(violation.getMessageTemplate());
+        }
+        return res;
+
     }
 
 }
