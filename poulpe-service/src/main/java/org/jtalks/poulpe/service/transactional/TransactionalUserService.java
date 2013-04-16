@@ -266,10 +266,10 @@ public class TransactionalUserService implements UserService {
     public void registration(String username, String password, String firstName, String lastName, String email)
             throws ValidationException, UserExistException {
         if (userDao.getByUsername(username) != null) {
-            throw new UserExistException("User with username " + username + "already exist");
+            throw new UserExistException("User with username '" + username + "' already exist");
         }
         if (userDao.getByEmail(email) != null) {
-            throw  new UserExistException("User with email " + email + "already exist");
+            throw  new UserExistException("User with email '" + email + "' already exist");
         }
         PoulpeUser user = new PoulpeUser();
         user.setUsername(username);
@@ -278,9 +278,9 @@ public class TransactionalUserService implements UserService {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setSalt("");
-        try{
+        try {
             userDao.save(user);
-        }catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e){
             List<String> messages = getConstraintViolationsMessages(e.getConstraintViolations());
             throw new ValidationException(messages);
         }
@@ -288,7 +288,7 @@ public class TransactionalUserService implements UserService {
 
     private List<String> getConstraintViolationsMessages(Set<ConstraintViolation<?>> violationSet){
         List<String> res = new ArrayList<String>();
-        for(ConstraintViolation violation : violationSet){
+        for (ConstraintViolation violation : violationSet){
             res.add(violation.getMessageTemplate());
         }
         return res;
