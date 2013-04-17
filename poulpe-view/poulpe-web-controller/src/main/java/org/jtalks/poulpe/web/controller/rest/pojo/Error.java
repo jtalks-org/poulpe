@@ -40,7 +40,7 @@ import javax.xml.bind.annotation.*;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "error", namespace = "http://www.jtalks.org/namespaces/1.0")
-@XmlRootElement(name = "registration", namespace = "http://www.jtalks.org/namespaces/1.0")
+@XmlRootElement(name = "error", namespace = "http://www.jtalks.org/namespaces/1.0")
 public class Error {
 
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = false)

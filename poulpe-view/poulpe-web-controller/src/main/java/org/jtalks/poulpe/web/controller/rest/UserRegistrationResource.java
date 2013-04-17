@@ -22,6 +22,7 @@ import org.jtalks.poulpe.web.controller.rest.pojo.Error;
 import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
+import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ServerResource;
 
 import java.io.IOException;
@@ -54,23 +55,28 @@ public class UserRegistrationResource extends ServerResource implements Registra
      */
     @Override
     public Representation register(Representation represent) {
-        Error registration = new Error();
+        Error error = null;
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             User user = userRep.getObject();
             userService.registration(user.getUsername(), user.getPasswordHash(), user.getFirstName(), user.getLastName(), user.getEmail());
         } catch (ValidationException e) {
-            registration = ifValidationException(e);
+            error = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
         } catch (IOException e) {
-            registration = ifIOException();
+            error = ifIOException();
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
         } catch (Exception e) {
-            registration = ifOtherException(e);
+            error = ifOtherException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
         }
-        JaxbRepresentation resultRep = new JaxbRepresentation<Error>(registration);
-        resultRep.setFormattedOutput(true);
+        Representation resultRep = null;
+        if (error == null) {
+            resultRep = new StringRepresentation(" ");  //because must be an empty response
+        } else {
+            resultRep = new JaxbRepresentation<Error>(error);
+            ((JaxbRepresentation) resultRep).setFormattedOutput(true);
+        }
         return resultRep;
     }
 
@@ -118,10 +124,10 @@ public class UserRegistrationResource extends ServerResource implements Registra
      * @param strings code messages
      * @return code messages without '{' and '}'
      */
-    private List<String> formatsCodeErrors(List<String> strings){
+    private List<String> formatsCodeErrors(List<String> strings) {
         List<String> result = new ArrayList<String>();
-        for(String s :strings){
-            result.add(s.replaceAll("[{}]",""));
+        for (String s : strings) {
+            result.add(s.replaceAll("[{}]", ""));
         }
         return result;
     }
