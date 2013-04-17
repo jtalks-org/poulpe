@@ -21,7 +21,7 @@ import java.util.List;
  */
 public class ValidationException extends Exception{
 
-    private List<String> messages;
+    private List<String> templateMessages;
 
     /**
      * Construct
@@ -45,34 +45,34 @@ public class ValidationException extends Exception{
     /**
      * Construct
      *
-     * @param messages the list of messages
+     * @param messages the list of template messages
      */
     public ValidationException(List<String> messages){
-        this.messages = messages;
+        this.templateMessages = messages;
     }
 
     /**
      * Construct
      *
-     * @param messages the list of messages
+     * @param messages the list of template messages
      * @param cause the attached exception
      */
     public ValidationException(List<String> messages, Throwable cause) {
         super(cause);
-        this.messages = messages;
+        this.templateMessages = messages;
     }
 
     /**
-     * @return the list of messages of the exception
+     * @return the list of template messages of the exception
      */
-    public List<String> getMessages() {
-        return messages;
+    public List<String> getTemplateMessages() {
+        return templateMessages;
     }
 
     /**
-     * @param messages the list of messages of the exception
+     * @param templateMessages the list of template messages of the exception
      */
-    public void setMessages(List<String> messages) {
-        this.messages = messages;
+    public void setTemplateMessages(List<String> templateMessages) {
+        this.templateMessages = templateMessages;
     }
 }

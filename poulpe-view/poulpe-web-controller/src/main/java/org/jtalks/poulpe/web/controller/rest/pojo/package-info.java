@@ -12,24 +12,10 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package org.jtalks.poulpe.web.controller.rest;
-
-import org.restlet.representation.Representation;
-import org.restlet.resource.Post;
 
 /**
- * Error REST resource interface
  *
- * @author Mikhail Zaitsev
+ * This package contains objects of representation for RESTful service.
+ *
  */
-public interface RegistrationResource {
-
-    /**
-     * Registers
-     *
-     * @param represent request representation
-     * @return response representation
-     */
-    @Post
-    Representation register(Representation represent);
-}
+package org.jtalks.poulpe.web.controller.rest.pojo;

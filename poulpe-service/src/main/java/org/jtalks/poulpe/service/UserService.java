@@ -209,5 +209,5 @@ public interface UserService {
      * @throws {@link UserExistException} if user with given username or email already exist in DB
      */
     void registration(String username, String password, String firstName, String lastName, String email)
-            throws ValidationException, UserExistException;
+            throws ValidationException;
 }

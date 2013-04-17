@@ -17,17 +17,24 @@ package org.jtalks.poulpe.web.controller.rest;
 import org.apache.http.HttpStatus;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
+import org.jtalks.poulpe.web.controller.rest.pojo.*;
+import org.jtalks.poulpe.web.controller.rest.pojo.Error;
 import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * Implementation registration resource for users
  *
  * @author Mikhail Zaitsev
  */
-public class UserRegistrationResource extends ServerResource implements RegistrationResource{
+public class UserRegistrationResource extends ServerResource implements RegistrationResource {
 
     private UserService userService;
 
@@ -36,51 +43,86 @@ public class UserRegistrationResource extends ServerResource implements Registra
     }
 
     /**
-     * Registers user
+     * Registers user if the representation of the request is correct.
+     * Sets statuses of response as is following:
+     * 400 - if is some validation errors or if impossible to unmarshal request
+     * 500 - if is some errors when is handling request
+     * 200 - if user success registered
      *
-     * @param represent request representation
-     * @return response representation
+     * @param represent request representation {@code User}
+     * @return response representation {@code Error}
      */
     @Override
     public Representation register(Representation represent) {
-        Registration registration = new Registration();
+        Error registration = new Error();
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             User user = userRep.getObject();
-            userService.registration(user.getUsername(),user.getPasswordHash(),user.getFirstName(),user.getLastName(),user.getEmail());
-        }catch (ValidationException e) {
+            userService.registration(user.getUsername(), user.getPasswordHash(), user.getFirstName(), user.getLastName(), user.getEmail());
+        } catch (ValidationException e) {
             registration = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
-        }catch (Exception e) {
-            registration =ifOtherException(e);
+        } catch (IOException e) {
+            registration = ifIOException();
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+        } catch (Exception e) {
+            registration = ifOtherException(e);
+            getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
         }
-        JaxbRepresentation resultRep = new JaxbRepresentation<Registration>(registration);
+        JaxbRepresentation resultRep = new JaxbRepresentation<Error>(registration);
         resultRep.setFormattedOutput(true);
         return resultRep;
     }
 
     /**
-     * Creates {@code Registration} object if thrown the {@code ValidationException}
+     * Creates {@code Error} object if thrown the {@code ValidationException}
      *
-     * @param ex the {@code ValidationException
-     * @return the object {@code Registration}
+     * @param ex the {@code ValidationException}
+     * @return the object {@code Error}
      */
-    private Registration ifValidationException(ValidationException ex){
-        Registration result = new Registration();
-        result.setValidErrorMessage(ex.getMessages());
+    private Error ifValidationException(ValidationException ex) {
+        org.jtalks.poulpe.web.controller.rest.pojo.Error result = new Error();
+        result.setErrorMessage("There are validation errors");
+        CodeErrorMessages templateErrorMessages = new CodeErrorMessages();
+        templateErrorMessages.setCodeErrorMessage(formatsCodeErrors(ex.getTemplateMessages()));
+        result.setCodeErrorMessages(templateErrorMessages);
         return result;
     }
 
     /**
-     * Creates {@code Registration} object if thrown the {@code Exception}
+     * Creates {@code Error} object if thrown the {@code IOException}
+     *
+     * @return the object {@code Error}
+     */
+    private Error ifIOException() {
+        Error result = new Error();
+        result.setErrorMessage(" Impossible to unmarshal request");
+        return result;
+    }
+
+    /**
+     * Creates {@code Error} object if thrown the {@code Exception}
      *
      * @param ex the {@code Exception}
-     * @return the object {@code Registration}
+     * @return the object {@code Error}
      */
-    private Registration ifOtherException(Exception ex){
-        Registration result = new Registration();
+    private Error ifOtherException(Exception ex) {
+        Error result = new Error();
         result.setErrorMessage(ex.getMessage());
+        return result;
+    }
+
+    /**
+     * Removes '{' and '}' from code messages
+     *
+     * @param strings code messages
+     * @return code messages without '{' and '}'
+     */
+    private List<String> formatsCodeErrors(List<String> strings){
+        List<String> result = new ArrayList<String>();
+        for(String s :strings){
+            result.add(s.replaceAll("[{}]",""));
+        }
         return result;
     }
 }

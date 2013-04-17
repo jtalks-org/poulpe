@@ -19,6 +19,9 @@ import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.web.controller.rest.pojo.Authentication;
+import org.jtalks.poulpe.web.controller.rest.pojo.Credentials;
+import org.jtalks.poulpe.web.controller.rest.pojo.Profile;
 import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
@@ -29,7 +32,7 @@ import java.io.IOException;
 
 /**
  * RESTful server resource for the {@code LoginResource} interface.
- * 
+ *
  * @author Guram Savinov
  */
 public class LoginServerResource extends ServerResource implements LoginResource {
@@ -43,7 +46,7 @@ public class LoginServerResource extends ServerResource implements LoginResource
 
     /**
      * Creates the server login resource with specified {@code UserService}.
-     * 
+     *
      * @param userService the user service
      */
     public LoginServerResource(@Nonnull UserService userService) {
@@ -82,10 +85,11 @@ public class LoginServerResource extends ServerResource implements LoginResource
 
     /**
      * Returns {@code Authentication} by {@code Credentials}
+     *
      * @param credentials {@code Credentials}
      * @return {@code Authentication}, If user not found, returns meets both HTTP status 404
      */
-    private Authentication getAuthentication(Credentials credentials){
+    private Authentication getAuthentication(Credentials credentials) {
         Authentication result = new Authentication(credentials.getUsername());
         try {
             PoulpeUser user = userService.authenticate(credentials.getUsername(), credentials.getPasswordHash());
@@ -102,7 +106,7 @@ public class LoginServerResource extends ServerResource implements LoginResource
     /**
      * @return {@code Credentials} from query parameters: username & passwordHash
      */
-    private Credentials getCredentialsFromQuery(){
+    private Credentials getCredentialsFromQuery() {
         Credentials result = new Credentials();
         result.setUsername(getQuery().getValues(USERNAME_PARAM));
         result.setPasswordHash(getQuery().getValues(HASH_PASS_PARAM));

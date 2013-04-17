@@ -24,7 +24,7 @@ import org.restlet.resource.Post;
 
 /**
  * Login RESTful service resource interface.
- * 
+ *
  * @author Guram Savinov
  */
 public interface LoginResource {
@@ -32,11 +32,11 @@ public interface LoginResource {
     /**
      * Authenticates user by username and password hash specified in request
      * arguments wrapped to {@code Authentication} representation.
-     * 
+     *
      * @param rep the {@code Authentication} representation, that wraps
-     *             service request arguments
+     *            service request arguments
      * @return operation status and {@code Profile} wrapped to {@code Authentication}
-     *          representation. If user not found, returns meets both HTTP status
+     *         representation. If user not found, returns meets both HTTP status
      * @throws IOException when user or password not match
      */
     @Post
@@ -47,7 +47,7 @@ public interface LoginResource {
      * arguments (for requests GET).
      *
      * @return operation status and {@code Profile} wrapped to {@code Authentication}
-     *          representation If user not found, returns meets both HTTP status
+     *         representation If user not found, returns meets both HTTP status
      * @throws IOException when user password not match
      */
     @Get

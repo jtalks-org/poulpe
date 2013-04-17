@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jtalks.poulpe.web.controller.rest;
+package org.jtalks.poulpe.web.controller.rest.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,9 +22,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for profile complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="profile">
  *   &lt;complexContent>
@@ -37,13 +37,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
+ *
  * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "profile", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
-    "firstName",
-    "lastName"
+        "firstName",
+        "lastName"
 })
 public class Profile {
 
@@ -60,9 +60,9 @@ public class Profile {
 
     /**
      * Creates an {@code Profile} instance with specified firstname and lastname.
-     * 
+     *
      * @param firstName the firstname
-     * @param lastName the lastname
+     * @param lastName  the lastname
      */
     public Profile(String firstName, String lastName) {
         this.firstName = firstName;
@@ -71,11 +71,9 @@ public class Profile {
 
     /**
      * Gets the value of the firstName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getFirstName() {
         return firstName;
@@ -83,11 +81,9 @@ public class Profile {
 
     /**
      * Sets the value of the firstName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setFirstName(String value) {
         this.firstName = value;
@@ -95,11 +91,9 @@ public class Profile {
 
     /**
      * Gets the value of the lastName property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getLastName() {
         return lastName;
@@ -107,11 +101,9 @@ public class Profile {
 
     /**
      * Sets the value of the lastName property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setLastName(String value) {
         this.lastName = value;

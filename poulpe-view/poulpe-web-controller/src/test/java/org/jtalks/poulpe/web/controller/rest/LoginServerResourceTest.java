@@ -19,6 +19,7 @@ import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
+import org.jtalks.poulpe.web.controller.rest.pojo.Authentication;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.ext.jaxb.JaxbRepresentation;

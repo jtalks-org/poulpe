@@ -13,7 +13,7 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
-package org.jtalks.poulpe.web.controller.rest;
+package org.jtalks.poulpe.web.controller.rest.pojo;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -22,9 +22,9 @@ import javax.xml.bind.annotation.XmlType;
 
 /**
  * <p>Java class for credentials complex type.
- * 
+ * <p/>
  * <p>The following schema fragment specifies the expected content contained within this class.
- * 
+ * <p/>
  * <pre>
  * &lt;complexType name="credentials">
  *   &lt;complexContent>
@@ -37,13 +37,13 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;/complexContent>
  * &lt;/complexType>
  * </pre>
- * 
+ *
  * @author Guram Savinov
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "credentials", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
-    "username",
-    "passwordHash"
+        "username",
+        "passwordHash"
 })
 public class Credentials {
 
@@ -60,7 +60,7 @@ public class Credentials {
 
     /**
      * Creates an {@code Credentials} instance with specified username.
-     * 
+     *
      * @param username the username
      */
     public Credentials(String username) {
@@ -69,11 +69,9 @@ public class Credentials {
 
     /**
      * Gets the value of the username property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getUsername() {
         return username;
@@ -81,11 +79,9 @@ public class Credentials {
 
     /**
      * Sets the value of the username property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setUsername(String value) {
         this.username = value;
@@ -93,11 +89,9 @@ public class Credentials {
 
     /**
      * Gets the value of the passwordHash property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
+     *
+     * @return possible object is
+     *         {@link String }
      */
     public String getPasswordHash() {
         return passwordHash;
@@ -105,11 +99,9 @@ public class Credentials {
 
     /**
      * Sets the value of the passwordHash property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
+     *
+     * @param value allowed object is
+     *              {@link String }
      */
     public void setPasswordHash(String value) {
         this.passwordHash = value;
