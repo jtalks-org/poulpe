@@ -81,10 +81,10 @@ public class UserRegistrationResource extends ServerResource implements Registra
     }
 
     /**
-     * Creates {@code Error} object if thrown the {@code ValidationException}
+     * Creates {@code Errors} object if thrown the {@code ValidationException}
      *
      * @param ex the {@code ValidationException}
-     * @return the object {@code Error}
+     * @return the object {@code Errors}
      */
     private Errors ifValidationException(ValidationException ex) {
         Errors result = new Errors();
@@ -93,41 +93,42 @@ public class UserRegistrationResource extends ServerResource implements Registra
     }
 
     /**
-     * Creates {@code Error} object if thrown the {@code IOException}
+     * Creates {@code Errors} object if thrown the {@code IOException}
      *
-     * @return the object {@code Error}
+     * @return the object {@code Errors}
      */
     private Errors ifIOException() {
         Errors result = new Errors();
         List<Error> errList = new ArrayList<Error>();
         Error err = new Error();
-        err.setError(" Impossible to unmarshal request");
+        err.setMessage("Impossible to unmarshal request");
         errList.add(err);
         result.setErrorList(errList);
         return result;
     }
 
     /**
-     * Creates {@code Error} object if thrown the {@code Exception}
+     * Creates {@code Errors} object if thrown the {@code Exception}
      *
      * @param ex the {@code Exception}
-     * @return the object {@code Error}
+     * @return the object {@code Errors}
      */
     private Errors ifOtherException(Exception ex) {
         Errors result = new Errors();
         List<Error> errList = new ArrayList<Error>();
         Error err = new Error();
-        err.setError(ex.getMessage());
+        err.setMessage(ex.getMessage());
         errList.add(err);
         result.setErrorList(errList);
         return result;
     }
 
     /**
+     * Creates a list errors from code messages.
      * Removes '{' and '}' from code messages
      *
      * @param strings code messages
-     * @return code messages without '{' and '}'
+     * @return a list errors
      */
     private List<Error> createErrorList(List<String> strings) {
         List<Error> result = new ArrayList<Error>();
