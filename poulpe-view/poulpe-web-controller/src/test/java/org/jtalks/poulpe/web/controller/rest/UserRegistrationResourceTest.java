@@ -2,6 +2,7 @@ package org.jtalks.poulpe.web.controller.rest;
 
 
 import org.apache.http.HttpStatus;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.jtalks.poulpe.web.controller.rest.pojo.*;
@@ -42,11 +43,7 @@ public class UserRegistrationResourceTest {
     @Test
     public void testRegisterWhen200_OK() throws Exception {
 
-        doNothing().when(userService).registration(any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class));
+        doNothing().when(userService).registration(any(PoulpeUser.class));
 
         Representation repres = createUserRepresentation();
 
@@ -72,11 +69,7 @@ public class UserRegistrationResourceTest {
     @Test
     public void testRegisterWhenImpossibleUnmarshal() throws Exception {
 
-        doNothing().when(userService).registration(any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class));
+        doNothing().when(userService).registration(any(PoulpeUser.class));
 
         Representation repres = userRegistrationResource.register(new StringRepresentation(""));
         Errors errors = ((JaxbRepresentation<Errors>)repres).getObject();
@@ -88,11 +81,7 @@ public class UserRegistrationResourceTest {
     @Test
     public void testRegisterWhenValidationException() throws Exception {
 
-        doThrow(createValidationException()).when(userService).registration(any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class),
-                any(String.class));
+        doThrow(createValidationException()).when(userService).registration(any(PoulpeUser.class));
 
         Representation repres = createUserRepresentation();
 

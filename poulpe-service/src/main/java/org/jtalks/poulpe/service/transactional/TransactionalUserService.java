@@ -263,22 +263,15 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void registration(String username, String password, String firstName, String lastName, String email)
-            throws ValidationException{
-        if (userDao.getByUsername(username) != null) {
+    public void registration(PoulpeUser user) throws ValidationException {
+        if (userDao.getByUsername(user.getUsername()) != null) {
             throw new ValidationException(Arrays.asList(new String[]{"user.username.already_exists"}));
         }
-        if (userDao.getByEmail(email) != null) {
+        if (userDao.getByEmail(user.getEmail()) != null) {
             throw  new ValidationException(Arrays.asList(new String[]{"user.email.already_exists"}));
         }
-        PoulpeUser user = new PoulpeUser();
-        user.setUsername(username);
-        user.setPassword(password);
-        user.setEmail(email);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setSalt("");
         try {
+            user.setSalt(""); //because cannot be null
             userDao.save(user);
         } catch (ConstraintViolationException e){
             List<String> messages = getConstraintViolationsMessages(e.getConstraintViolations());
@@ -298,7 +291,6 @@ public class TransactionalUserService implements UserService {
             res.add(violation.getMessageTemplate());
         }
         return res;
-
     }
 
 }

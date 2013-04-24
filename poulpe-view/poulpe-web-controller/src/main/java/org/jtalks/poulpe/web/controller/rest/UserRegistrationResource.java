@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.web.controller.rest;
 
 import org.apache.http.HttpStatus;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.jtalks.poulpe.web.controller.rest.pojo.*;
@@ -59,7 +60,7 @@ public class UserRegistrationResource extends ServerResource implements Registra
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             User user = userRep.getObject();
-            userService.registration(user.getUsername(), user.getPasswordHash(), user.getFirstName(), user.getLastName(), user.getEmail());
+            userService.registration(createPoulpeUser(user));
         } catch (ValidationException e) {
             errors = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
@@ -138,6 +139,22 @@ public class UserRegistrationResource extends ServerResource implements Registra
             err.setCode(s.replaceAll("[{}]", ""));
             result.add(err);
         }
+        return result;
+    }
+
+    /**
+     * Creates {@code PoulpeUser} from the POJO {@code User}
+     *
+     * @param user the POJO {@code User}
+     * @return {@code PoulpeUser}
+     */
+    private PoulpeUser createPoulpeUser(User user){
+        PoulpeUser result = new PoulpeUser();
+        result.setUsername(user.getUsername());
+        result.setEmail(user.getEmail());
+        result.setPassword(user.getPasswordHash());
+        result.setFirstName(user.getFirstName());
+        result.setLastName(user.getLastName());
         return result;
     }
 }

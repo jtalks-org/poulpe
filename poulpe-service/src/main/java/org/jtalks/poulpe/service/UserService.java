@@ -197,17 +197,11 @@ public interface UserService {
      */
     PoulpeUser authenticate(String username, String password) throws NotFoundException;
 
-
     /**
      * Registers a new user
      *
-     * @param username the username
-     * @param password the hashed password
-     * @param firstName the first name
-     * @param lastName  the last name
-     * @param email the email
-     * @throws {@link UserExistException} if user with given username or email already exist in DB
+     * @param user the user
+     * @throws ValidationException {@link ValidationException} if there are validation errors
      */
-    void registration(String username, String password, String firstName, String lastName, String email)
-            throws ValidationException;
+    void registration(PoulpeUser user) throws ValidationException;
 }
