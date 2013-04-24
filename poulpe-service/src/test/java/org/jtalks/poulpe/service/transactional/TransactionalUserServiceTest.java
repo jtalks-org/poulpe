@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
@@ -29,13 +30,15 @@ import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import static org.jtalks.poulpe.model.sorting.UserSearchRequest.*;
+
+import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
@@ -274,6 +277,44 @@ public class TransactionalUserServiceTest {
         userService.authenticate(USERNAME, "notMatchPassword");
     }
 
+    @Test
+    public void testRegistration() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+
+        userService.registration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testRegistrationUsernameAlreadyExist() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(user());
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+
+        userService.registration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testRegistrationEmailAlreadyExist() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(user());
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+
+        userService.registration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testRegistrationAnyValidationErrors() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+
+        ConstraintViolationException ex = new ConstraintViolationException(constraintViolations());
+        doThrow(ex).when(userDao).save(any(PoulpeUser.class));
+
+        userService.registration(user());
+    }
+
     private Group createGroupWithId(long groupId) {
         Group group = new Group();
         group.setId(groupId);
@@ -290,6 +331,14 @@ public class TransactionalUserServiceTest {
 
     private static PoulpeUser user() {
         return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "USERNAME@mail.com", "PASSWORD", "salt");
+    }
+
+    private static Set<ConstraintViolation<?>> constraintViolations(){
+        Set<ConstraintViolation<?>> result = new HashSet<ConstraintViolation<?>>();
+        for(int i=1; i<=5; i++){
+            result.add(new ConstraintViolationImpl("message"+i,"message"+i,PoulpeUser.class,null,null,null,null,null,null));
+        }
+        return result;
     }
 
 }
