@@ -55,26 +55,26 @@ public class UserRegistrationResource extends ServerResource implements Registra
      */
     @Override
     public Representation register(Representation represent) {
-        Error error = null;
+        Errors errors = null;
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             User user = userRep.getObject();
             userService.registration(user.getUsername(), user.getPasswordHash(), user.getFirstName(), user.getLastName(), user.getEmail());
         } catch (ValidationException e) {
-            error = ifValidationException(e);
+            errors = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
         } catch (IOException e) {
-            error = ifIOException();
+            errors = ifIOException();
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
         } catch (Exception e) {
-            error = ifOtherException(e);
+            errors = ifOtherException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
         }
         Representation resultRep = null;
-        if (error == null) {
+        if (errors == null) {
             resultRep = new StringRepresentation(" ");  //because must be an empty response
         } else {
-            resultRep = new JaxbRepresentation<Error>(error);
+            resultRep = new JaxbRepresentation<Errors>(errors);
             ((JaxbRepresentation) resultRep).setFormattedOutput(true);
         }
         return resultRep;
@@ -86,12 +86,9 @@ public class UserRegistrationResource extends ServerResource implements Registra
      * @param ex the {@code ValidationException}
      * @return the object {@code Error}
      */
-    private Error ifValidationException(ValidationException ex) {
-        org.jtalks.poulpe.web.controller.rest.pojo.Error result = new Error();
-        result.setErrorMessage("There are validation errors");
-        CodeErrorMessages templateErrorMessages = new CodeErrorMessages();
-        templateErrorMessages.setCodeErrorMessage(formatsCodeErrors(ex.getTemplateMessages()));
-        result.setCodeErrorMessages(templateErrorMessages);
+    private Errors ifValidationException(ValidationException ex) {
+        Errors result = new Errors();
+        result.setErrorList(createErrorList(ex.getTemplateMessages()));
         return result;
     }
 
@@ -100,9 +97,13 @@ public class UserRegistrationResource extends ServerResource implements Registra
      *
      * @return the object {@code Error}
      */
-    private Error ifIOException() {
-        Error result = new Error();
-        result.setErrorMessage(" Impossible to unmarshal request");
+    private Errors ifIOException() {
+        Errors result = new Errors();
+        List<Error> errList = new ArrayList<Error>();
+        Error err = new Error();
+        err.setError(" Impossible to unmarshal request");
+        errList.add(err);
+        result.setErrorList(errList);
         return result;
     }
 
@@ -112,9 +113,13 @@ public class UserRegistrationResource extends ServerResource implements Registra
      * @param ex the {@code Exception}
      * @return the object {@code Error}
      */
-    private Error ifOtherException(Exception ex) {
-        Error result = new Error();
-        result.setErrorMessage(ex.getMessage());
+    private Errors ifOtherException(Exception ex) {
+        Errors result = new Errors();
+        List<Error> errList = new ArrayList<Error>();
+        Error err = new Error();
+        err.setError(ex.getMessage());
+        errList.add(err);
+        result.setErrorList(errList);
         return result;
     }
 
@@ -124,10 +129,13 @@ public class UserRegistrationResource extends ServerResource implements Registra
      * @param strings code messages
      * @return code messages without '{' and '}'
      */
-    private List<String> formatsCodeErrors(List<String> strings) {
-        List<String> result = new ArrayList<String>();
+    private List<Error> createErrorList(List<String> strings) {
+        List<Error> result = new ArrayList<Error>();
+        Error err = null;
         for (String s : strings) {
-            result.add(s.replaceAll("[{}]", ""));
+            err = new Error();
+            err.setCode(s.replaceAll("[{}]", ""));
+            result.add(err);
         }
         return result;
     }

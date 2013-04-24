@@ -23,8 +23,6 @@ import org.jtalks.common.model.entity.Group;
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
 
-    public static final int PASSWORD_MAX_LENGTH = 255;
-
     /**
      * Creates an empty and <i>not valid</i> instance without required fields, use {@link #PoulpeUser(String, String,
      * String, String)} instead. This constructor is usually used by Hibernate.
@@ -86,7 +84,6 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
      * {@inheritDoc}
      */
     @Override
-    @Length(min = PASSWORD_MIN_LENGTH, max = PASSWORD_MAX_LENGTH, message = "{user.password.length_constraint_violation}")
     public String getPassword() {
         return super.getPassword();
     }
