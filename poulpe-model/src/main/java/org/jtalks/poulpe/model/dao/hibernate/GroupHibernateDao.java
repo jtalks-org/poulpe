@@ -17,12 +17,12 @@ package org.jtalks.poulpe.model.dao.hibernate;
 import org.apache.commons.lang.Validate;
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Query;
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.hibernate.SessionFactory;
+import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.GroupDao;
 import org.jtalks.poulpe.model.dao.utils.SqlLikeEscaper;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
-import ru.javatalks.utils.general.Assert;
 
 import java.util.List;
 
@@ -33,10 +33,18 @@ import java.util.List;
  * @author Pavel Vervenko
  * @author Leonid Kazancev
  */
-public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> implements GroupDao {
+public class GroupHibernateDao extends GenericDao<Group> implements GroupDao {
     private static final String FIND_BRANCHES_MODERATED_BY_GROUP = "findBranchesModeratedByGroup";
     private static final String FIND_GROUP_BY_NAME = "findGroupByName", FIND_ALL_GROUPS = "findAllGroups";
     private static final String FIND_EXACTLY_BY_NAME = "findGroupExactlyByName";
+
+    /**
+     * @param sessionFactory The SessionFactory.
+     * @param type           An entity type.
+     */
+    public GroupHibernateDao(SessionFactory sessionFactory, Class<Group> type) {
+        super(sessionFactory, type);
+    }
 
     /**
      * {@inheritDoc}
@@ -44,7 +52,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @Override
     @SuppressWarnings("unchecked")
     public List<Group> getAll() {
-        return getSession().getNamedQuery(FIND_ALL_GROUPS).list();
+        return session().getNamedQuery(FIND_ALL_GROUPS).list();
     }
 
     /**
@@ -57,7 +65,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
         if (StringUtils.isBlank(name)) {
             return this.getAll();
         }
-        Query query = getSession().getNamedQuery(FIND_GROUP_BY_NAME);
+        Query query = session().getNamedQuery(FIND_GROUP_BY_NAME);
         query.setString("name", SqlLikeEscaper.escapeControlCharacters(name));
         return query.list();
     }
@@ -68,7 +76,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @Override
     public List<Group> getByName(String name) {
         Validate.notNull(name, "User Group name can't be null");
-        Query query = getSession().getNamedQuery(FIND_EXACTLY_BY_NAME);
+        Query query = session().getNamedQuery(FIND_EXACTLY_BY_NAME);
         // we should use lower case to search ignoring case
         query.setString("name", name);
         return query.list();
@@ -79,7 +87,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
      */
     @Override
     public void delete(Group group) {
-        getSession().update(group);
+        session().update(group);
 
         group.getUsers().clear();
         saveOrUpdate(group);
@@ -92,7 +100,7 @@ public class GroupHibernateDao extends AbstractHibernateParentRepository<Group> 
     @SuppressWarnings("unchecked")
     @Override
     public List<PoulpeBranch> getModeratingBranches(Group group) {
-        Query query = getSession().getNamedQuery(FIND_BRANCHES_MODERATED_BY_GROUP);
+        Query query = session().getNamedQuery(FIND_BRANCHES_MODERATED_BY_GROUP);
         query.setLong(0, group.getId());
         return query.list();
     }

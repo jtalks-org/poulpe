@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
@@ -32,7 +32,7 @@ import java.util.List;
  * @author maxim reshetov
  * @author Mikhail Zaitsev
  */
-public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, ParentRepository<PoulpeUser> {
+public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>, Crud<PoulpeUser> {
 
     /**
      * Looks for users whose nicknames matches the given string

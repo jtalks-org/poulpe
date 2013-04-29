@@ -14,24 +14,34 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import java.util.List;
-
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.hibernate.SessionFactory;
+import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.poulpe.model.dao.TopicTypeDao;
 import org.jtalks.poulpe.model.entity.TopicType;
+
+import java.util.List;
 
 /**
  * @author Vladimir Bukhtoyarov
  */
-public class TopicTypeHibernateDao extends AbstractHibernateParentRepository<TopicType> implements TopicTypeDao {
-    
+public class TopicTypeHibernateDao extends GenericDao<TopicType> implements TopicTypeDao {
+
+    /**
+     * @param sessionFactory The SessionFactory.
+     * @param type           An entity type.
+     */
+    public TopicTypeHibernateDao(SessionFactory sessionFactory,
+            Class<TopicType> type) {
+        super(sessionFactory, type);
+    }
+
     /**
      * {@inheritDoc}
      */
     @SuppressWarnings("unchecked")
     @Override
     public List<TopicType> getAll() {
-        return getSession().createQuery("from TopicType").list();
+        return session().createQuery("from TopicType").list();
     }
 
 }

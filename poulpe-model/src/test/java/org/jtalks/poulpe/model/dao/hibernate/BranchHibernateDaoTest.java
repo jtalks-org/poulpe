@@ -14,13 +14,6 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.List;
-
-import javax.validation.ConstraintViolationException;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Group;
@@ -30,11 +23,18 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.testng
+        .AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.validation.ConstraintViolationException;
+import java.util.List;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * @author Kirill Afonin
@@ -134,6 +134,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         branch.setName(newName);
 
         dao.saveOrUpdate(branch);
+        session.flush();
 
         assertBranchNameChanged(newName);
         assertGroupNameChanged(newGroupName);
@@ -155,6 +156,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         givenBranch();
         branch.setName(null);
         dao.saveOrUpdate(branch);
+        session.flush();
     }
 
     @Test

@@ -14,12 +14,10 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
-import java.util.List;
-
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.SectionDao;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.Jcommune;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
@@ -28,6 +26,8 @@ import org.jtalks.poulpe.service.JCommuneNotifier;
 import org.jtalks.poulpe.service.exceptions.JcommuneRespondedWithErrorException;
 import org.jtalks.poulpe.service.exceptions.JcommuneUrlNotConfiguredException;
 import org.jtalks.poulpe.service.exceptions.NoConnectionToJcommuneException;
+
+import java.util.List;
 
 /**
  * @author stanislav bashkirtsev
@@ -135,8 +135,8 @@ public class TransactionalForumStructureService implements ForumStructureService
         int index = branchesOfTargetSection.indexOf(target);
         PoulpeSection sectionBranchWasRemovedFrom = branch.removeFromSection();
         targetSection.addBranchIfAbsentTo(index, branch);
-        sectionDao.update(targetSection);
-        sectionDao.update(sectionBranchWasRemovedFrom);
+        sectionDao.saveOrUpdate(targetSection);
+        sectionDao.saveOrUpdate(sectionBranchWasRemovedFrom);
     }
 
     /**

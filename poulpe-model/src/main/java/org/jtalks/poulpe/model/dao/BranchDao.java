@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
  * 
  * @author Pavel Vervenko
  */
-public interface BranchDao extends ParentRepository<PoulpeBranch> {
+public interface BranchDao extends Crud<PoulpeBranch> {
 
     /**
      * Get the list of all branches.

@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
  * @author tanya birina
  * @author Vahluev Vyacheslav
  */
-public interface SectionDao extends ParentRepository<PoulpeSection> {
+public interface SectionDao extends Crud<PoulpeSection> {
 
     /**
      * Get the list of all sections.

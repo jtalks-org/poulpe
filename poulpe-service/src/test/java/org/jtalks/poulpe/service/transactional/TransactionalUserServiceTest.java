@@ -16,6 +16,8 @@ package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
 import org.hibernate.validator.engine.ConstraintViolationImpl;
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
@@ -23,14 +25,10 @@ import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
-import static org.jtalks.poulpe.model.sorting.UserSearchRequest.*;
-
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
 import org.testng.annotations.BeforeMethod;
@@ -42,6 +40,7 @@ import java.util.*;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static org.jtalks.poulpe.model.sorting.UserSearchRequest.BY_USERNAME;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.*;
@@ -116,7 +115,7 @@ public class TransactionalUserServiceTest {
     public void testUpdateUser() {
         PoulpeUser user = user();
         userService.updateUser(user);
-        verify(userDao).update(user);
+        verify(userDao).saveOrUpdate(user);
     }
 
     @Test
@@ -235,7 +234,7 @@ public class TransactionalUserServiceTest {
 
     @Test
     public void testUpdateUsers(){
-        doNothing().when(userDao).update((PoulpeUser)any());
+        doNothing().when(userDao).saveOrUpdate((PoulpeUser)any());
         Group group = createGroupWithId(1);
         List<User> users = new ArrayList<User>();
         for(int i=0; i<5; i++){

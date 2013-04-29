@@ -14,7 +14,8 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.hibernate.SessionFactory;
+import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
@@ -26,7 +27,16 @@ import java.util.List;
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
-public class BranchHibernateDao extends AbstractHibernateParentRepository<PoulpeBranch> implements BranchDao {
+public class BranchHibernateDao extends GenericDao<PoulpeBranch> implements BranchDao {
+
+    /**
+     * @param sessionFactory The SessionFactory.
+     * @param type           An entity type.
+     */
+    public BranchHibernateDao(SessionFactory sessionFactory,
+            Class<PoulpeBranch> type) {
+        super(sessionFactory, type);
+    }
 
     /**
      * {@inheritDoc}
@@ -34,7 +44,7 @@ public class BranchHibernateDao extends AbstractHibernateParentRepository<Poulpe
     @Override
     @SuppressWarnings("unchecked")
     public List<PoulpeBranch> getAll() {
-        return getSession().createQuery("from PoulpeBranch").list();
+        return session().createQuery("from PoulpeBranch").list();
     }
 
 }

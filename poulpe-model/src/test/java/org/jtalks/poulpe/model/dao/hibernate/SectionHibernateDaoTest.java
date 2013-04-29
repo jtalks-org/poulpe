@@ -14,14 +14,6 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.Collections;
-import java.util.List;
-
-import javax.validation.ConstraintViolationException;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.poulpe.model.dao.SectionDao;
@@ -35,6 +27,13 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Collections;
+import java.util.List;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for {@link SectionHibernateDao}.
@@ -66,6 +65,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @Test
     public void saveSectionTest() {
         dao.saveOrUpdate(section);
+        session.flush();
         assertSectionSaved();
     }
 
@@ -110,6 +110,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         section.setName(newName);
 
         dao.saveOrUpdate(section);
+        session.flush();
 
         assertNameChanged(newName);
     }
@@ -124,6 +125,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         givenSection();
         section.setName(null);
         dao.saveOrUpdate(section);
+        session.flush();
     }
 
     @Test
@@ -162,6 +164,7 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
             Collections.shuffle(expected);
 
             dao.saveOrUpdate(section);
+            session.flush();
 
             section = ObjectRetriever.retrieveUpdated(section, session);
             List<PoulpeBranch> actual = section.getPoulpeBranches();

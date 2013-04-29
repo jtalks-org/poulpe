@@ -16,11 +16,11 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
-import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.StandardBasicTypes;
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.poulpe.model.dao.UserDao;
@@ -41,9 +41,18 @@ import java.util.List;
  * @author Alexey Grigorev
  * @author Mikhail Zaitsev
  */
-public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUser> implements UserDao {
+public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao {
 
     private static final String FORMAT = "%{0}%";
+
+    /**
+     * @param sessionFactory The SessionFactory.
+     * @param type           An entity type.
+     */
+    public UserHibernateDao(SessionFactory sessionFactory, Class<PoulpeUser>
+            type) {
+        super(sessionFactory, type);
+    }
 
     /**
      * {@inheritDoc}
@@ -51,7 +60,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public List<PoulpeUser> findPoulpeUsersPaginated(String searchString, Pagination paginate) {
         searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
-        Query query = getSession().getNamedQuery("findUsersByLikeUsername");
+        Query query = session().getNamedQuery("findUsersByLikeUsername");
         query.setString("username", MessageFormat.format(FORMAT, searchString));
         paginate.addPagination(query);
 
@@ -64,7 +73,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public List<PoulpeUser> findPoulpeUsersBySearchRequest(UserSearchRequest searchRequest) {
         String searchString = SqlLikeEscaper.escapeControlCharacters(searchRequest.getSearchString());
-        Criteria criteria = getSession().createCriteria(PoulpeUser.class)
+        Criteria criteria = session().createCriteria(PoulpeUser.class)
                 .add(Restrictions.like("username", MessageFormat.format(FORMAT, searchString)))
                 .addOrder(getOrder(searchRequest));
         searchRequest.getPagination().addPagination(criteria);
@@ -77,7 +86,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     @Override
     public int countUsernameMatches(String searchString) {
         searchString = SqlLikeEscaper.escapeControlCharacters(searchString);
-        Query query = getSession().getNamedQuery("countUsersByLikeUsername");
+        Query query = session().getNamedQuery("countUsersByLikeUsername");
         query.setString("username", MessageFormat.format(FORMAT, searchString));
 
         Number result = (Number) query.uniqueResult();
@@ -89,7 +98,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public PoulpeUser getByUsername(String username) {
-        Query query = getSession().getNamedQuery("findUsersByUsername");
+        Query query = session().getNamedQuery("findUsersByUsername");
         query.setString("username", username);
 
         return (PoulpeUser) query.uniqueResult();
@@ -100,7 +109,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public PoulpeUser getByEmail(String email) {
-        Query query = getSession().getNamedQuery("findUsersByEmail");
+        Query query = session().getNamedQuery("findUsersByEmail");
         query.setString("email", email);
 
         return (PoulpeUser) query.uniqueResult();
@@ -111,7 +120,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public List<PoulpeUser> getUsersInGroups(List<Group> groups) {
-        Query query = getSession().getNamedQuery("findBannedUsers");
+        Query query = session().getNamedQuery("findBannedUsers");
 
         ArrayList groupsIds = new ArrayList();
         for (Group group : groups) {
@@ -129,7 +138,7 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
     public List<PoulpeUser> findUsersNotInGroups(String availableFilterText,
                                                  List<Group> groups, Pagination paginate) {
         availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
-        Query query = getSession().getNamedQuery("findUnbannedUsersByLikeUsername");
+        Query query = session().getNamedQuery("findUnbannedUsersByLikeUsername");
         query.setString("username", MessageFormat.format(FORMAT, availableFilterText));
 
         ArrayList groupsIds = new ArrayList();
@@ -156,9 +165,9 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
         }
         Query query=null;
         if(ids.size()==0){
-            query = getSession().getNamedQuery("findEnabledUsersByLikeUsername");
+            query = session().getNamedQuery("findEnabledUsersByLikeUsername");
         }else{
-            query = getSession().getNamedQuery("findEnabledUsersByLikeUsernameNotInList");
+            query = session().getNamedQuery("findEnabledUsersByLikeUsernameNotInList");
             query.setParameterList("listUsers", ids);
         }
 
@@ -173,9 +182,8 @@ public class UserHibernateDao extends AbstractHibernateParentRepository<PoulpeUs
      */
     @Override
     public void save(User user) {
-        Session session = getSession();
-        session.save(user);
-        session.flush();
+        session().save(user);
+        session().flush();
     }
 
     /**

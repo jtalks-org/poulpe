@@ -14,7 +14,7 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 
@@ -25,7 +25,7 @@ import java.util.List;
  *
  * @author Konstantin Akimov
  */
-public interface GroupDao extends ParentRepository<Group> {
+public interface GroupDao extends Crud<Group> {
 
     /**
      * Get the list of all groups.

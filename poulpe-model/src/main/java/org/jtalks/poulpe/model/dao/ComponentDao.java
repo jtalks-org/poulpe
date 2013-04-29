@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.common.model.entity.Component;
-import org.jtalks.poulpe.model.entity.ComponentBase;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.poulpe.model.entity.ComponentBase;
 
 import java.util.List;
 import java.util.Set;
@@ -27,7 +27,7 @@ import java.util.Set;
  * 
  * @author Pavel Vervenko
  */
-public interface ComponentDao extends ParentRepository<Component> {
+public interface ComponentDao extends Crud<Component> {
 
     /**
      * Get the list of all components.

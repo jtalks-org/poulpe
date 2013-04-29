@@ -103,7 +103,7 @@ public class TransactionalGroupService extends AbstractTransactionalEntityServic
         
         for (User user : group.getUsers()) {
             user.getGroups().remove(group);
-            userDao.update((PoulpeUser) user);
+            userDao.saveOrUpdate((PoulpeUser) user);
         }
         dao.delete(group);
 

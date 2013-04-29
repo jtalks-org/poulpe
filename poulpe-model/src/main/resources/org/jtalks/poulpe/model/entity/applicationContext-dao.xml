@@ -28,24 +28,45 @@
   <!-- Declaration of AOP Config -->
   <aop:config>
     <aop:advisor advice-ref="exceptionTranslationInterceptor"
-                 pointcut="execution(* org.jtalks.common.model.dao.ParentRepository+.* (*))"/>
+                 pointcut="execution(* org.jtalks.common.model.dao.Crud+.* (*))"/>
   </aop:config>
 
   <!-- Declaration of DAO beans -->
-  <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao" parent="abstractHibernateDao"/>
-  <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao"
-        parent="abstractHibernateDao"/>
-  <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao"
-        parent="abstractHibernateDao"/>
-  <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao"
-        parent="abstractHibernateDao"/>
-  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao" parent="abstractHibernateDao"/>
-  <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="abstractHibernateDao"/>
-
-  <!--Injecting sessionFactory bean to class AbstractHibernateDao, this way resolves a problem of multiple DAO beans definition -->
-  <bean id="abstractHibernateDao" abstract="true">
-    <property name="sessionFactory" ref="sessionFactory"/>
+  <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
   </bean>
+
+  <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.common.model.entity.Component"/>
+  </bean>
+
+  <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.poulpe.model.entity.TopicType"/>
+  </bean>
+
+  <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.poulpe.model.entity.PoulpeSection"/>
+  </bean>
+
+  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.poulpe.model.entity.PoulpeUser"/>
+  </bean>
+  <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao">
+    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
+    <constructor-arg name="type"
+                     value="org.jtalks.common.model.entity.Group"/>
+  </bean>
+
 
   <!--We're wrapping our underlying data source with lazy one so that connection is not retrieved from the pool unless-->
   <!--it's really necessary. E.g. if Hibernate hits only cache, there is no need to fetch connection, but without lazy-->

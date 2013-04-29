@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.common.model.entity.User;
 import org.jtalks.common.security.acl.AclManager;
@@ -21,8 +23,6 @@ import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.dao.UserDao;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.model.logic.UserBanner;
 import org.jtalks.poulpe.model.logic.UserList;
@@ -30,7 +30,6 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
-import org.jtalks.poulpe.service.exceptions.UserExistException;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 
 import javax.validation.ConstraintViolation;
@@ -150,7 +149,7 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public void updateUser(PoulpeUser user) {
-        userDao.update(user);
+        userDao.saveOrUpdate(user);
     }
 
     /**

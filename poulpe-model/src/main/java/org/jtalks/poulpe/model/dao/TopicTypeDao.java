@@ -14,10 +14,10 @@
  */
 package org.jtalks.poulpe.model.dao;
 
-import java.util.List;
-
-import org.jtalks.common.model.dao.ParentRepository;
+import org.jtalks.common.model.dao.Crud;
 import org.jtalks.poulpe.model.entity.TopicType;
+
+import java.util.List;
 
 /**
  * DAO for persistent operations with {@link TopicType}
@@ -25,7 +25,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
  * @author Vladimir Bukhtoyarov
  * @author Vyacheslav Zhivaev
  */
-public interface TopicTypeDao extends ParentRepository<TopicType> {
+public interface TopicTypeDao extends Crud<TopicType> {
 
     /**
      * Get all topic types.

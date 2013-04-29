@@ -14,19 +14,13 @@
  */
 package org.jtalks.poulpe.model.dao.hibernate;
 
-import static org.testng.Assert.*;
-import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
-import org.jtalks.poulpe.model.entity.*;
+import org.jtalks.poulpe.model.entity.ComponentBase;
+import org.jtalks.poulpe.model.entity.Jcommune;
+import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,6 +29,14 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
+import static org.testng.Assert.*;
+import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
@@ -58,9 +60,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @BeforeMethod
     public void setUp() throws Exception {
-        dao = new ComponentHibernateDao();
-        dao.setSessionFactory(sessionFactory);
-
+        dao = new ComponentHibernateDao(sessionFactory, Component.class);
         session = sessionFactory.getCurrentSession();
         forum = createForum();
     }
@@ -72,6 +72,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testSave() {
         dao.saveOrUpdate(forum);
+        session.flush();
         Component actual = ObjectRetriever.retrieveUpdated(forum, session);
         assertReflectionEquals(forum, actual);
     }
@@ -90,6 +91,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         session.save(forum);
         forum.setName(newName);
         dao.saveOrUpdate(forum);
+        session.flush();
 
         String actual = ObjectRetriever.retrieveUpdated(forum, session).getName();
         assertEquals(actual, newName);
@@ -152,6 +154,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         Collections.shuffle(expected);
 
         dao.saveOrUpdate(forum);
+        session.flush();
 
         forum = ObjectRetriever.retrieveUpdated(forum, session);
         List<PoulpeSection> actual = forum.getSections();

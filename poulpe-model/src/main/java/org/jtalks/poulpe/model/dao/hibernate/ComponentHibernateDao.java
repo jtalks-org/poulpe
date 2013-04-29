@@ -15,11 +15,12 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.hibernate.Query;
-import org.jtalks.common.model.dao.hibernate.AbstractHibernateParentRepository;
+import org.hibernate.SessionFactory;
+import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.common.model.entity.Component;
+import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.poulpe.model.dao.ComponentDao;
 import org.jtalks.poulpe.model.entity.ComponentBase;
-import org.jtalks.common.model.entity.ComponentType;
 
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -33,12 +34,21 @@ import java.util.Set;
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  */
-public class ComponentHibernateDao extends AbstractHibernateParentRepository<Component> implements ComponentDao {
+public class ComponentHibernateDao extends GenericDao<Component> implements ComponentDao {
+
+    /**
+     * @param sessionFactory The SessionFactory.
+     * @param type           An entity type.
+     */
+    public ComponentHibernateDao(SessionFactory sessionFactory,
+            Class<Component> type) {
+        super(sessionFactory, type);
+    }
 
     /** {@inheritDoc} */
     @Override
     public List<Component> getAll() {
-        Query query = getSession().getNamedQuery("allComponents");
+        Query query = session().getNamedQuery("allComponents");
         
         @SuppressWarnings("unchecked")
         List<Component> result = query.list();
@@ -61,7 +71,7 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
     /** {@inheritDoc} */
     @Override
     public Component getByType(ComponentType componentType) {
-        Query query = getSession().getNamedQuery("findComponentByComponentType");
+        Query query = session().getNamedQuery("findComponentByComponentType");
         query.setParameter("componentType", componentType);
         return (Component) query.uniqueResult();
     }
@@ -69,7 +79,7 @@ public class ComponentHibernateDao extends AbstractHibernateParentRepository<Com
     /** {@inheritDoc} */
     @Override
     public ComponentBase getBaseComponent(ComponentType componentType) {
-        Query query = getSession().getNamedQuery("findBaseComponentByComponentType");
+        Query query = session().getNamedQuery("findBaseComponentByComponentType");
         query.setParameter("componentType", componentType);
         return (ComponentBase) query.uniqueResult();
     }
