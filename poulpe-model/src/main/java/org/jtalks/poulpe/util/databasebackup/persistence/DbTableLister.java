@@ -17,13 +17,13 @@ package org.jtalks.poulpe.util.databasebackup.persistence;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 import org.springframework.jdbc.support.JdbcUtils;
 import org.springframework.jdbc.support.MetaDataAccessException;
@@ -62,7 +62,7 @@ public class DbTableLister {
             tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
                 @Override
                 public Object processMetaData(DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-                    List<String> tableList = Lists.newArrayList();
+                    List<String> tableList = new ArrayList<String>();
                     ResultSet rs = null;
                     try {
                         rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
@@ -93,7 +93,7 @@ public class DbTableLister {
      * @throws SQLException
      */
     public List<DbTable> getTables() throws SQLException {
-        List<DbTable> dbTableList = Lists.newArrayList();
+        List<DbTable> dbTableList = new ArrayList<DbTable>();
         for (String tableName : getTableNames()) {
             dbTableList.add(new DbTable(dataSource, tableName));
         }

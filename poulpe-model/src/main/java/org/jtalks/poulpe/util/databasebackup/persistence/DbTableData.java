@@ -20,15 +20,15 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.springframework.dao.DataAccessException;
@@ -101,7 +101,7 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<ColumnMetaData> getStructure() throws SQLException {
-        final List<ColumnMetaData> tableColumnList = Lists.newArrayList();
+        final List<ColumnMetaData> tableColumnList = new ArrayList<ColumnMetaData>();
         Statement stmt = null;
         ResultSet rs = null;
         ResultSetMetaData rsmd = null;
@@ -178,7 +178,7 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     private Map<String, String> getColumnDefaults(final DatabaseMetaData dbMetaData) throws SQLException {
-        Map<String, String> columnDefaultValues = Maps.newHashMap();
+        Map<String, String> columnDefaultValues = new HashMap<String, String>();
         ResultSet tableMetaData = null;
         try {
             tableMetaData = dbMetaData.getColumns(null, null, tableName, "%");

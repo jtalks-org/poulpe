@@ -18,8 +18,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
-
 /**
  * The enumeration represents table column's type in database. The enumeration is used to map the JDBC's column type
  * which is a part of {@link java.sql.Types} to a string representation of column type's name.
@@ -95,7 +93,7 @@ public enum SqlTypes {
     DATE(java.sql.Types.DATE, false, true) {
         @Override
         public List<String> getKeyWordList() {
-            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+            return Collections.singletonList("CURRENT_TIMESTAMP");
         }
     },
 
@@ -105,7 +103,7 @@ public enum SqlTypes {
     TIME(java.sql.Types.TIME, false, true) {
         @Override
         public List<String> getKeyWordList() {
-            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+            return Collections.singletonList("CURRENT_TIMESTAMP");
         }
     },
 
@@ -115,7 +113,7 @@ public enum SqlTypes {
     TIMESTAMP(java.sql.Types.TIMESTAMP, false, true) {
         @Override
         public List<String> getKeyWordList() {
-            return Collections.unmodifiableList(Lists.newArrayList("CURRENT_TIMESTAMP"));
+            return Collections.singletonList("CURRENT_TIMESTAMP");
         }
     },
 
