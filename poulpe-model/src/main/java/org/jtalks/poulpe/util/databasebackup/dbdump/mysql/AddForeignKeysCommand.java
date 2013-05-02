@@ -40,12 +40,9 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
         this.dbTable = dbTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putHeader(Writer writer) throws IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Foreign keys definition for table ");
@@ -55,12 +52,9 @@ public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
         writer.write(header.toString());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putData(Writer writer) throws SQLException, IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         writer.write(getKeys());
     }
 

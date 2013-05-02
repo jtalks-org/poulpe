@@ -50,12 +50,9 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         this.dbTable = dbTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putHeader(Writer writer) throws IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         StringBuilder header = new StringBuilder();
         header.append("--");
         header.append(LINEFEED);
@@ -68,14 +65,9 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
         writer.write(header.toString());
     }
 
-    /**
-     * {@inheritDoc}
-     * 
-     * @throws IOException
-     */
     @Override
     protected void putData(Writer writer) throws SQLException, IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         StringBuilder data = new StringBuilder();
 
         data.append("CREATE TABLE ");
@@ -138,14 +130,12 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * @return SQL representation of the column.
      */
     private String getColumnDescription(final ColumnMetaData column) {
-
-        assert column != null : "column must not be null";
+        assert column != null;
         StringBuilder columnDescription = new StringBuilder("    ");
-        columnDescription.append(TableDataUtil.getSqlColumnQuotedString(column
-                .getName()) + " " + column.getType());
+        columnDescription.append(TableDataUtil.getSqlColumnQuotedString(column.getName()) + " " + column.getType());
 
         if (column.isHasSize()) {
-            columnDescription.append("(" + column.getSize() + ")");
+            columnDescription.append("(").append(column.getSize()).append(")");
         }
 
         if (column.isNullable()) {
@@ -192,8 +182,7 @@ public class CreateTableCommand extends HeaderAndDataAwareCommand {
      * @throws SQLException
      *             if any error with database occurs
      */
-    private StringBuilder getKeys(final Set<UniqueKey> keySet, final String template)
-            throws SQLException {
+    private StringBuilder getKeys(final Set<UniqueKey> keySet, final String template) throws SQLException {
         StringBuilder result = new StringBuilder();
 
         if (keySet.size() > 0) {

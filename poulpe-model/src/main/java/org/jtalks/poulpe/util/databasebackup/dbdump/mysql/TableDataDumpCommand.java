@@ -50,12 +50,9 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
         this.dbTable = dbTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putHeader(Writer writer) throws IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Dumping data for table ");
@@ -66,12 +63,9 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
         writer.write(header.toString());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putData(Writer writer) throws SQLException, IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         for (Row dataDump : dbTable.getData()) {
             writer.write(getRowDataText(dataDump));
         }
@@ -85,7 +79,7 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      * @return A SQL valid INSERT statement.
      */
     private String getRowDataText(final Row row) {
-        assert row != null : "row must not be null";
+        assert row != null;
         List<String> nameColumns = Lists.newLinkedList();
         List<String> valueColumns = Lists.newLinkedList();
 
