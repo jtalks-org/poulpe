@@ -21,8 +21,7 @@ import org.jtalks.poulpe.model.entity.TopicType;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng
-        .AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
@@ -35,9 +34,7 @@ import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
 
 /**
- * 
  * @author Vladimir Bukhtoyarov
- *
  */
 @ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -102,7 +99,6 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
         String newTitle = "new title";
         topicType.setTitle(newTitle);
         dao.saveOrUpdate(topicType);
-        session.flush();
         session.evict(topicType);
         TopicType result = (TopicType) session.get(TopicType.class, topicType.getId());
 
@@ -110,10 +106,10 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
     }
 
     @Test
-    public void testTopicTypeConstructor(){
+    public void testTopicTypeConstructor() {
         String title = "Title";
         String description = "Description";
-        TopicType topicType = new TopicType(title,description);
+        TopicType topicType = new TopicType(title, description);
         assertEquals(title, topicType.getTitle());
         assertEquals(description, topicType.getDescription());
     }
@@ -168,7 +164,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
     public void testIsNotExist() {
         assertFalse(dao.isExist(99999L));
     }
-    
+
     private int getCount() {
         return ((Number) session.createQuery("select count(*) from TopicType").uniqueResult()).intValue();
     }

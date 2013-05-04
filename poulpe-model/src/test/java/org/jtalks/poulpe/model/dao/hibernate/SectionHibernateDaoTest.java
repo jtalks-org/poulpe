@@ -65,7 +65,6 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
     @Test
     public void saveSectionTest() {
         dao.saveOrUpdate(section);
-        session.flush();
         assertSectionSaved();
     }
 
@@ -110,8 +109,6 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         section.setName(newName);
 
         dao.saveOrUpdate(section);
-        session.flush();
-
         assertNameChanged(newName);
     }
 
@@ -125,7 +122,6 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
         givenSection();
         section.setName(null);
         dao.saveOrUpdate(section);
-        session.flush();
     }
 
     @Test
@@ -164,7 +160,6 @@ public class SectionHibernateDaoTest extends AbstractTransactionalTestNGSpringCo
             Collections.shuffle(expected);
 
             dao.saveOrUpdate(section);
-            session.flush();
 
             section = ObjectRetriever.retrieveUpdated(section, session);
             List<PoulpeBranch> actual = section.getPoulpeBranches();

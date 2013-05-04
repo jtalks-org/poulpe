@@ -23,8 +23,7 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng
-        .AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
@@ -40,7 +39,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
  * @author Kirill Afonin
  * @author Alexey Grigorev
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -82,7 +81,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         actual.setSection(branch.getSection());
         assertReflectionEquals(branch, actual);
     }
-    
+
     private void assertGroupSaved() {
         assertNotSame(group.getId(), 0, "Id not created");
         Group actual = retrieveActualGroup();
@@ -134,7 +133,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         branch.setName(newName);
 
         dao.saveOrUpdate(branch);
-        session.flush();
 
         assertBranchNameChanged(newName);
         assertGroupNameChanged(newGroupName);
@@ -156,7 +154,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         givenBranch();
         branch.setName(null);
         dao.saveOrUpdate(branch);
-        session.flush();
     }
 
     @Test

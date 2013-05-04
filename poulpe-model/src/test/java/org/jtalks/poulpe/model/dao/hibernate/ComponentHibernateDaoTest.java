@@ -40,12 +40,12 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 
 /**
  * The test for the {@code ComponentHibernateDao} implementation.
- * 
+ *
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  * @author Guram Savinov
  */
-@ContextConfiguration(locations = { "classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml" })
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
@@ -72,7 +72,6 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testSave() {
         dao.saveOrUpdate(forum);
-        session.flush();
         Component actual = ObjectRetriever.retrieveUpdated(forum, session);
         assertReflectionEquals(forum, actual);
     }
@@ -91,7 +90,6 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         session.save(forum);
         forum.setName(newName);
         dao.saveOrUpdate(forum);
-        session.flush();
 
         String actual = ObjectRetriever.retrieveUpdated(forum, session).getName();
         assertEquals(actual, newName);
@@ -143,7 +141,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         Set<ComponentType> availableTypes = dao.getAvailableTypes();
         assertForumUnavailable(availableTypes);
     }
-    
+
     private void assertForumUnavailable(Set<ComponentType> availableTypes) {
         assertFalse(availableTypes.contains(forum.getComponentType()));
     }
@@ -154,7 +152,6 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         Collections.shuffle(expected);
 
         dao.saveOrUpdate(forum);
-        session.flush();
 
         forum = ObjectRetriever.retrieveUpdated(forum, session);
         List<PoulpeSection> actual = forum.getSections();
@@ -179,7 +176,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     private void assertForumDeleted(Set<ComponentType> availableTypes) {
         assertTrue(availableTypes.contains(forum.getComponentType()));
     }
-    
+
     @Test
     public void getBaseComponent() {
         ComponentBase expected = givenBaseComponent();
