@@ -1,4 +1,7 @@
-package org.jtalks.poulpe.util.databasebackup.dbdump;
+package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
+
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -10,15 +13,13 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Queue;
 
-import junit.framework.Assert;
-
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.AddForeignKeysCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CommonHeaderCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CreateTableCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlDataBaseFullDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.TableDataDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
-import org.mockito.Mockito;
 import org.testng.annotations.Test;
 import org.testng.annotations.BeforeMethod;
 
@@ -28,8 +29,8 @@ import com.google.common.collect.Lists;
 public class MySqlDataBaseFullDumpCommandTest {
     @BeforeMethod
     public void beforeMethod() {
-        DbTable dbTable1 = Mockito.mock(DbTable.class);
-        DbTable dbTable2 = Mockito.mock(DbTable.class);
+        DbTable dbTable1 = mock(DbTable.class);
+        DbTable dbTable2 = mock(DbTable.class);
         List<DbTable> dbTables = ImmutableList.of(dbTable1, dbTable2);
         sut = new MySqlDataBaseFullDumpCommand(dbTables);
     }
@@ -40,14 +41,14 @@ public class MySqlDataBaseFullDumpCommandTest {
         @SuppressWarnings("unchecked")
         Queue<DbDumpCommand> dumpCommandQueue = (Queue<DbDumpCommand>) getAccessibleDumpCommandQueueField().get(sut);
 
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof CommonHeaderCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof CreateTableCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof CreateTableCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof TableDataDumpCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof TableDataDumpCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof AddForeignKeysCommand);
-        Assert.assertTrue(dumpCommandQueue.poll() instanceof AddForeignKeysCommand);
-        Assert.assertTrue(dumpCommandQueue.isEmpty());
+        assertTrue(dumpCommandQueue.poll() instanceof CommonHeaderCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof CreateTableCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof CreateTableCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof TableDataDumpCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof TableDataDumpCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof AddForeignKeysCommand);
+        assertTrue(dumpCommandQueue.poll() instanceof AddForeignKeysCommand);
+        assertTrue(dumpCommandQueue.isEmpty());
     }
 
     @Test
@@ -57,8 +58,7 @@ public class MySqlDataBaseFullDumpCommandTest {
         OutputStream output = new ByteArrayOutputStream();
 
         sut.execute(output);
-
-        Assert.assertEquals("123", output.toString());
+        assertEquals("123", output.toString());
     }
 
     /**

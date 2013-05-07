@@ -27,7 +27,7 @@ import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 /**
  * Command analyzing table foreign keys and push this info into {@link java.io.OutputStream OutputStream}
  */
-public class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
+class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
 
     /**
      * Constructor for initialization variables

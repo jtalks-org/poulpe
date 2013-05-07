@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
  * @author Evgeny Surovtsev
  * 
  */
-public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
+class TableDataDumpCommand extends HeaderAndDataAwareCommand {
     /**
      * Initializes a TableDataDump command with given DbTable as a data provider.
      * 

@@ -1,4 +1,4 @@
-package org.jtalks.poulpe.util.databasebackup.dbdump.mysqlsyntax;
+package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

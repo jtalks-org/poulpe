@@ -38,7 +38,7 @@ import com.google.common.collect.Lists;
  * @author Evgeny Surovtsev
  * 
  */
-public class CreateTableCommand extends HeaderAndDataAwareCommand {
+class CreateTableCommand extends HeaderAndDataAwareCommand {
     /**
      * Initializes a CreateTable command with given DbTable as a data provider.
      * 
