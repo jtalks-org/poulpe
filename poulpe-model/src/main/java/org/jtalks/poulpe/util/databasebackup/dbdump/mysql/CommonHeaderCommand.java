@@ -29,7 +29,7 @@ import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
  * @author Evgeny Surovtsev
  * 
  */
-public class CommonHeaderCommand implements DbDumpCommand {
+class CommonHeaderCommand implements DbDumpCommand {
 
     @Override
     public void execute(OutputStream output) throws IOException {

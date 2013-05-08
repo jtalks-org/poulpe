@@ -28,7 +28,7 @@ import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 /**
  * Full backup command which can pick MySQL data from selected tables and push it to {@link OutputStream}.
  */
-public class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
+class MySqlDataBaseFullDumpCommand implements DbDumpCommand {
 
     /**
      * Construct required ordered list of commands.
