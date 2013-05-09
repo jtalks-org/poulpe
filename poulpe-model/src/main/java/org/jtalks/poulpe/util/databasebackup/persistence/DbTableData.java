@@ -86,6 +86,7 @@ class DbTableData {
                     return row;
                 }
             });
+
         } catch (DataAccessException e) {
             throw new SQLException(e);
         }
@@ -101,7 +102,7 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<ColumnMetaData> getStructure() throws SQLException {
-        final List<ColumnMetaData> tableColumnList = new ArrayList<ColumnMetaData>();
+        List<ColumnMetaData> tableColumnList = new ArrayList<ColumnMetaData>();
         Statement stmt = null;
         ResultSet rs = null;
         ResultSetMetaData rsmd = null;
@@ -125,9 +126,6 @@ class DbTableData {
             }
 
         } finally {
-            if (rs != null) {
-                rs.close();
-            }
             if (stmt != null) {
                 stmt.close();
             }

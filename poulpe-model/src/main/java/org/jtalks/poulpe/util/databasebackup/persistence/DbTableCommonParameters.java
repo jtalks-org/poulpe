@@ -57,7 +57,7 @@ class DbTableCommonParameters {
      *             Is thrown in case any errors during work with database occur.
      */
     public Map<String, String> getParameters() throws SQLException {
-        final Map<String, String> parameters = new HashMap<String, String>();
+        Map<String, String> parameters = new HashMap<String, String>();
         Connection connection = null;
         ResultSet rs = null;
         Statement stmt = null;

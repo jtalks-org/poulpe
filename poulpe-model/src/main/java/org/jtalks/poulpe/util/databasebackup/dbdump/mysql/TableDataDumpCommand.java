@@ -45,7 +45,7 @@ class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      * @param dbTable
      *            a data provider for generating command's results.
      */
-    public TableDataDumpCommand(final DbTable dbTable) {
+    public TableDataDumpCommand(DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
@@ -78,7 +78,7 @@ class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      *            A Row based on which a new INSERT statement will be constructed.
      * @return A SQL valid INSERT statement.
      */
-    private String getRowDataText(final Row row) {
+    private String getRowDataText(Row row) {
         assert row != null;
         List<String> nameColumns = Lists.newLinkedList();
         List<String> valueColumns = Lists.newLinkedList();
