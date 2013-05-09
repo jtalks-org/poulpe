@@ -68,7 +68,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void getPrimaryKeySetTest() throws SQLException {
         DbTable testObject = new DbTable(dataSource, "POULPE_SCHEMA_VERSION");
 
@@ -123,7 +123,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void getForeignKeySetTest() throws SQLException {
         Set<ForeignKey> expectedForeignKeySet = Sets.newHashSet(
                 new ForeignKey("FK_ACL_OBJ_CLASS", "OBJECT_ID_CLASS", "ACL_CLASS", "ID"),
@@ -141,7 +141,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(enabled = false, groups = { "databasebackup" })
+    @Test(enabled = false)
     public void getDataTest() throws SQLException {
         // Define expected table structure.
         Map<String, ColumnMetaData> metaColumnInfoMap = Maps.newHashMap();
@@ -192,26 +192,26 @@ public class DbTableTest {
                         .addCell(metaColumnInfoMap.get("TYPE"), "SQL")
                         .addCell(metaColumnInfoMap.get("INSTALLED_BY"), "root"));
 
-        List<Row> actualResult = new DbTable(dataSource, "common_schema_version").getData();
-        assertEquals(actualResult.size(), expectedResult.size());
-
-        // Each row must have the same count of cells
-        int expectedColumnCount = actualResult.get(0).getCellCount();
-        for (Row actualResultRow : actualResult) {
-            assertEquals(actualResultRow.getCellCount(), expectedColumnCount);
-        }
-
-        // check each row in the list
-        for (int i = 0; i < actualResult.size(); i++) {
-            Row expectedRow = expectedResult.get(i);
-            Row actualRow = actualResult.get(i);
-            assertEquals(actualRow.getCellCount(), expectedRow.getCellCount());
-            // check each cell in the row
-            // for (Cell expectedCell : expectedRow.getCellList()) {
-            // assertTrue(actualRow.getCellList().contains(expectedCell), "Expected " + expectedCell
-            // + " is not found in actual " + actualRow.getCellList());
-            // }
-        }
+        // List<Row> actualResult = new DbTable(dataSource, "common_schema_version").getData();
+        // assertEquals(actualResult.size(), expectedResult.size());
+        //
+        // // Each row must have the same count of cells
+        // int expectedColumnCount = actualResult.get(0).getCellCount();
+        // for (Row actualResultRow : actualResult) {
+        // assertEquals(actualResultRow.getCellCount(), expectedColumnCount);
+        // }
+        //
+        // // check each row in the list
+        // for (int i = 0; i < actualResult.size(); i++) {
+        // Row expectedRow = expectedResult.get(i);
+        // Row actualRow = actualResult.get(i);
+        // assertEquals(actualRow.getCellCount(), expectedRow.getCellCount());
+        // // check each cell in the row
+        // // for (Cell expectedCell : expectedRow.getCellList()) {
+        // // assertTrue(actualRow.getCellList().contains(expectedCell), "Expected " + expectedCell
+        // // + " is not found in actual " + actualRow.getCellList());
+        // // }
+        // }
     }
 
     /**
@@ -221,7 +221,7 @@ public class DbTableTest {
      *             Usually is thrown if there is an error during collaborating with the database. For the test should
      *             never happen.
      */
-    @Test(groups = { "databasebackup" })
+    @Test
     public void getStructureTest() throws SQLException {
         List<ColumnMetaData> expectedResult = Lists.newArrayList(
                 ColumnMetaData.getInstance("EXECUTION_TIME", SqlTypes.INT).setNullable(true).setSize(11),
@@ -248,7 +248,7 @@ public class DbTableTest {
     /**
      * Closes previously opened resources such as database connection.
      */
-    @AfterClass(groups = { "databasebackup" })
+    @AfterClass
     public void tearDown() {
         dataSource.shutdown();
     }

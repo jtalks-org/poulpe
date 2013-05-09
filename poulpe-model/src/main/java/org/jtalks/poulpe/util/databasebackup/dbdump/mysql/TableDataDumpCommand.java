@@ -26,7 +26,9 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.exceptions.RowProcessingException;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.RowProcessor;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 import com.google.common.collect.Lists;
@@ -64,11 +66,18 @@ class TableDataDumpCommand extends HeaderAndDataAwareCommand {
     }
 
     @Override
-    protected void putData(Writer writer) throws SQLException, IOException {
+    protected void putData(final Writer writer) throws SQLException, IOException {
         assert writer != null;
-        for (Row dataDump : dbTable.getData()) {
-            writer.write(getRowDataText(dataDump));
-        }
+        dbTable.getData(new RowProcessor() {
+            @Override
+            public void process(Row rowToProcess) throws RowProcessingException {
+                try {
+                    writer.write(getRowDataText(rowToProcess));
+                } catch (IOException e) {
+                    throw new RowProcessingException(e);
+                }
+            }
+        });
     }
 
     /**

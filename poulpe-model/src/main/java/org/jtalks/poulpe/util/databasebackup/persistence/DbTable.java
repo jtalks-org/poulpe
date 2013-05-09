@@ -24,7 +24,6 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 
 /**
@@ -41,8 +40,6 @@ public class DbTable {
      *            A dataSource to access to the database.
      * @param tableName
      *            A table name information about will be returned by the instance.
-     * @throws NullPointerException
-     *             if any of dataSource or tableName is null.
      */
     public DbTable(DataSource dataSource, String tableName) {
         Validate.notNull(dataSource, "dataSource must not be null");
@@ -66,12 +63,13 @@ public class DbTable {
     /**
      * The method obtains and returns table rows data for the given table.
      * 
-     * @return A list of obtained rows ({@link Row}).
+     * @param processor
+     *            a processor to perform some logic under every Row in the database.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    public List<Row> getData() throws SQLException {
-        return dbTableData.getData();
+    public void getData(RowProcessor processor) throws SQLException {
+        dbTableData.getData(processor);
     }
 
     /**
