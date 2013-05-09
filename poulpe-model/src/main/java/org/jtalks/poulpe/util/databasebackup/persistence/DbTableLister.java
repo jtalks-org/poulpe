@@ -54,34 +54,22 @@ public class DbTableLister {
      *             is thrown if there is an error during collaborating with the database.
      */
     @SuppressWarnings("unchecked")
-    private List<String> getTableNames() throws SQLException {// TODO: think about exceptions here, we might want to
-                                                              // create our own exceptions
+    private List<String> getTableNames() throws MetaDataAccessException {
         Validate.notNull(dataSource, "dataSource must not be null");
-        List<String> tableNames = null;
-        try {
-            tableNames = (List<String>) JdbcUtils.extractDatabaseMetaData(dataSource, new DatabaseMetaDataCallback() {
-                @Override
-                public Object processMetaData(DatabaseMetaData dmd) throws SQLException, MetaDataAccessException {
-                    List<String> tableList = new ArrayList<String>();
-                    ResultSet rs = null;
-                    try {
-                        rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
+        return Collections.unmodifiableList((List<String>) JdbcUtils.extractDatabaseMetaData(dataSource,
+                new DatabaseMetaDataCallback() {
+                    @Override
+                    public Object processMetaData(DatabaseMetaData dmd) throws SQLException,
+                            MetaDataAccessException {
+                        List<String> tableList = new ArrayList<String>();
+                        ResultSet rs = dmd.getTables(null, null, null, new String[] { "TABLE" });
                         while (rs.next()) {
                             tableList.add(rs.getString("TABLE_NAME"));
                         }
-                    } finally {
-                        if (rs != null) {// TODO: statement should close all realated ResultSets
-                            rs.close();
-                        }
-                    }
-                    return tableList;
-                }
-            });
-        } catch (MetaDataAccessException e) {
-            throw new SQLException(e);
-        }
 
-        return Collections.unmodifiableList(tableNames);
+                        return tableList;
+                    }
+                }));
     }
 
     /**
@@ -92,7 +80,7 @@ public class DbTableLister {
      * @return a list of DbTable objects.
      * @throws SQLException
      */
-    public List<DbTable> getTables() throws SQLException {
+    public List<DbTable> getTables() throws MetaDataAccessException {
         List<DbTable> dbTableList = new ArrayList<DbTable>();
         for (String tableName : getTableNames()) {
             dbTableList.add(new DbTable(dataSource, tableName));
