@@ -17,6 +17,7 @@ package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 import java.io.IOException;
 import java.io.Writer;
 import java.sql.SQLException;
+import java.util.Set;
 
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
@@ -69,8 +70,9 @@ class AddForeignKeysCommand extends HeaderAndDataAwareCommand {
     public String getKeys() throws SQLException {
         StringBuilder result = new StringBuilder();
 
-        if (dbTable.getForeignKeySet().size() > 0) {
-            for (ForeignKey key : dbTable.getForeignKeySet()) {
+        Set<ForeignKey> foreignKeys = dbTable.getForeignKeySet();
+        if (foreignKeys.size() > 0) {
+            for (ForeignKey key : foreignKeys) {
                 result.append(String.format(FOREIGN_KEY_TEMPLATE,
                         TableDataUtil.getSqlColumnQuotedString(dbTable.getTableName()),
                         TableDataUtil.getSqlColumnQuotedString(key.getFkColumnName()),

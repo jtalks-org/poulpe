@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -72,10 +71,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<Row> getData() throws SQLException {
-        if (tableData == null) {
-            tableData = dbTableData.getData();
-        }
-        return Collections.unmodifiableList(tableData);
+        return dbTableData.getData();
     }
 
     /**
@@ -87,10 +83,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<ColumnMetaData> getStructure() throws SQLException {
-        if (tableStructure == null) {
-            tableStructure = dbTableData.getStructure();
-        }
-        return Collections.unmodifiableList(tableStructure);
+        return dbTableData.getStructure();
     }
 
     /**
@@ -102,10 +95,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Map<String, String> getCommonParameters() throws SQLException {
-        if (commonParameters == null) {
-            commonParameters = dbTableCommonParameters.getParameters();
-        }
-        return Collections.unmodifiableMap(commonParameters);
+        return dbTableCommonParameters.getParameters();
     }
 
     /**
@@ -116,10 +106,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<UniqueKey> getPrimaryKeySet() throws SQLException {
-        if (primaryKeys == null) {
-            primaryKeys = dbTableKeys.getPrimaryKeys();
-        }
-        return Collections.unmodifiableSet(primaryKeys);
+        return dbTableKeys.getPrimaryKeys();
     }
 
     /**
@@ -130,10 +117,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<UniqueKey> getUniqueKeySet() throws SQLException {
-        if (uniqueKeys == null) {
-            uniqueKeys = dbTableKeys.getUniqueKeys();
-        }
-        return Collections.unmodifiableSet(uniqueKeys);
+        return dbTableKeys.getUniqueKeys();
     }
 
     /**
@@ -144,22 +128,12 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<ForeignKey> getForeignKeySet() throws SQLException {
-        if (foreignKeys == null) {
-            foreignKeys = dbTableKeys.getForeignKeys();
-        }
-        return Collections.unmodifiableSet(foreignKeys);
+        return dbTableKeys.getForeignKeys();
     }
 
-    private final String tableName;
+    private String tableName;
 
-    private Map<String, String> commonParameters;
-    private Set<UniqueKey> primaryKeys;
-    private Set<UniqueKey> uniqueKeys;
-    private Set<ForeignKey> foreignKeys;
-    private List<ColumnMetaData> tableStructure;
-    private List<Row> tableData;
-
-    private final DbTableKeys dbTableKeys;
-    private final DbTableCommonParameters dbTableCommonParameters;
-    private final DbTableData dbTableData;
+    private DbTableKeys dbTableKeys;
+    private DbTableCommonParameters dbTableCommonParameters;
+    private DbTableData dbTableData;
 }
