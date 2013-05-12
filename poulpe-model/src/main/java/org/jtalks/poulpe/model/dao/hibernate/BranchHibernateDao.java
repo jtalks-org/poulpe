@@ -23,7 +23,7 @@ import java.util.List;
 
 /**
  * Hibernate implementation of {@link BranchDao}
- * 
+ *
  * @author Vitaliy Kravchenko
  * @author Pavel Vervenko
  */
@@ -31,11 +31,9 @@ public class BranchHibernateDao extends GenericDao<PoulpeBranch> implements Bran
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public BranchHibernateDao(SessionFactory sessionFactory,
-            Class<PoulpeBranch> type) {
-        super(sessionFactory, type);
+    public BranchHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, PoulpeBranch.class);
     }
 
     /**

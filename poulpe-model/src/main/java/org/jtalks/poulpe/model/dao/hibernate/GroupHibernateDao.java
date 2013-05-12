@@ -40,10 +40,9 @@ public class GroupHibernateDao extends GenericDao<Group> implements GroupDao {
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public GroupHibernateDao(SessionFactory sessionFactory, Class<Group> type) {
-        super(sessionFactory, type);
+    public GroupHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, Group.class);
     }
 
     /**

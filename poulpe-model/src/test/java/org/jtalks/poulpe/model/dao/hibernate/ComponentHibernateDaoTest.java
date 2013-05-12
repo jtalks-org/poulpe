@@ -60,7 +60,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
 
     @BeforeMethod
     public void setUp() throws Exception {
-        dao = new ComponentHibernateDao(sessionFactory, Component.class);
+        dao = new ComponentHibernateDao(sessionFactory);
         session = sessionFactory.getCurrentSession();
         forum = createForum();
     }

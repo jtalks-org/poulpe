@@ -47,11 +47,9 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public UserHibernateDao(SessionFactory sessionFactory, Class<PoulpeUser>
-            type) {
-        super(sessionFactory, type);
+    public UserHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, PoulpeUser.class);
     }
 
     /**
@@ -157,16 +155,16 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
      */
     @Override
     public List<PoulpeUser> findUsersNotInList(String availableFilterText,
-                                               List<PoulpeUser> listUsers, Pagination paginate){
+                                               List<PoulpeUser> listUsers, Pagination paginate) {
         availableFilterText = SqlLikeEscaper.escapeControlCharacters(availableFilterText);
         ArrayList<Long> ids = new ArrayList<Long>();
-        for(PoulpeUser b: listUsers){
+        for (PoulpeUser b : listUsers) {
             ids.add(b.getId());
         }
-        Query query=null;
-        if(ids.size()==0){
+        Query query = null;
+        if (ids.size() == 0) {
             query = session().getNamedQuery("findEnabledUsersByLikeUsername");
-        }else{
+        } else {
             query = session().getNamedQuery("findEnabledUsersByLikeUsernameNotInList");
             query.setParameterList("listUsers", ids);
         }
@@ -188,13 +186,14 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
 
     /**
      * Returns order of sorting by sorting request
+     *
      * @param request sorting request
      * @return order
      */
-    private Order getOrder(UserSearchRequest request){
-        if(request.isAscending()){
+    private Order getOrder(UserSearchRequest request) {
+        if (request.isAscending()) {
             return Order.asc(request.getColumn()).ignoreCase();
-        }else{
+        } else {
             return Order.desc(request.getColumn()).ignoreCase();
         }
     }

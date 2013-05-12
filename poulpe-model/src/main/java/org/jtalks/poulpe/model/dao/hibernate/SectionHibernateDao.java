@@ -30,11 +30,9 @@ public class SectionHibernateDao extends GenericDao<PoulpeSection> implements Se
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public SectionHibernateDao(SessionFactory sessionFactory,
-            Class<PoulpeSection> type) {
-        super(sessionFactory, type);
+    public SectionHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, PoulpeSection.class);
     }
 
     /**
@@ -46,7 +44,9 @@ public class SectionHibernateDao extends GenericDao<PoulpeSection> implements Se
         return session().createQuery("from PoulpeSection").list();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deleteRecursively(PoulpeSection section) {
         PoulpeSection victim = (PoulpeSection) session().load(PoulpeSection.class, section.getId());
@@ -54,7 +54,9 @@ public class SectionHibernateDao extends GenericDao<PoulpeSection> implements Se
         return true;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean deleteAndMoveBranchesTo(PoulpeSection victimSection, PoulpeSection recipientSection) {
         PoulpeSection victim = (PoulpeSection) session().load(PoulpeSection.class, victimSection.getId());

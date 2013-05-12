@@ -32,39 +32,25 @@
   </aop:config>
 
   <!-- Declaration of DAO beans -->
-  <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao">
+  <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao" parent="genericDao"/>
+
+  <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao" parent="genericDao"/>
+
+  <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao" parent="genericDao"/>
+
+  <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao" parent="genericDao"/>
+
+  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao" parent="genericDao"/>
+
+  <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="genericDao"/>
+
+  <bean id="branchGenericDao" class="org.jtalks.common.model.dao.hibernate.GenericDao">
     <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
+    <constructor-arg name="type" value="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
   </bean>
 
-  <bean id="componentDao" class="org.jtalks.poulpe.model.dao.hibernate.ComponentHibernateDao">
+  <bean id="genericDao" abstract="true" class="org.jtalks.common.model.dao.hibernate.GenericDao">
     <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.common.model.entity.Component"/>
-  </bean>
-
-  <bean id="topicTypeDao" class="org.jtalks.poulpe.model.dao.hibernate.TopicTypeHibernateDao">
-    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.poulpe.model.entity.TopicType"/>
-  </bean>
-
-  <bean id="sectionDao" class="org.jtalks.poulpe.model.dao.hibernate.SectionHibernateDao">
-    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.poulpe.model.entity.PoulpeSection"/>
-  </bean>
-
-  <bean id="userDao" class="org.jtalks.poulpe.model.dao.hibernate.UserHibernateDao">
-    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.poulpe.model.entity.PoulpeUser"/>
-  </bean>
-  <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao">
-    <constructor-arg name="sessionFactory" ref="sessionFactory"/>
-    <constructor-arg name="type"
-                     value="org.jtalks.common.model.entity.Group"/>
   </bean>
 
 
@@ -116,7 +102,9 @@
           ${POULPE_CACHE_FACTORY:net.sf.ehcache.hibernate.SingletonEhCacheRegionFactory}
         </prop>
         <prop key="hibernate.generate_statistics">${hibernate.generate_statistics}</prop>
-        <prop key="net.sf.ehcache.configurationResourceName">${EH_CACHE_CONFIG:/org/jtalks/poulpe/model/entity/ehcache.xml}</prop>
+        <prop key="net.sf.ehcache.configurationResourceName">
+          ${EH_CACHE_CONFIG:/org/jtalks/poulpe/model/entity/ehcache.xml}
+        </prop>
       </props>
     </property>
   </bean>

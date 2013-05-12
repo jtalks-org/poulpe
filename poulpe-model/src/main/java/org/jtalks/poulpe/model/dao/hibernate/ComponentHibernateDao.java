@@ -30,7 +30,7 @@ import java.util.Set;
 
 /**
  * Implementation of dao for {@link Component}.
- * 
+ *
  * @author Pavel Vervenko
  * @author Alexey Grigorev
  */
@@ -38,24 +38,26 @@ public class ComponentHibernateDao extends GenericDao<Component> implements Comp
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public ComponentHibernateDao(SessionFactory sessionFactory,
-            Class<Component> type) {
-        super(sessionFactory, type);
+    public ComponentHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, Component.class);
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public List<Component> getAll() {
         Query query = session().getNamedQuery("allComponents");
-        
+
         @SuppressWarnings("unchecked")
         List<Component> result = query.list();
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Set<ComponentType> getAvailableTypes() {
         Set<ComponentType> result = new LinkedHashSet<ComponentType>();
@@ -68,7 +70,9 @@ public class ComponentHibernateDao extends GenericDao<Component> implements Comp
         return result;
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Component getByType(ComponentType componentType) {
         Query query = session().getNamedQuery("findComponentByComponentType");
@@ -76,7 +80,9 @@ public class ComponentHibernateDao extends GenericDao<Component> implements Comp
         return (Component) query.uniqueResult();
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public ComponentBase getBaseComponent(ComponentType componentType) {
         Query query = session().getNamedQuery("findBaseComponentByComponentType");

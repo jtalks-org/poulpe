@@ -28,11 +28,9 @@ public class TopicTypeHibernateDao extends GenericDao<TopicType> implements Topi
 
     /**
      * @param sessionFactory The SessionFactory.
-     * @param type           An entity type.
      */
-    public TopicTypeHibernateDao(SessionFactory sessionFactory,
-            Class<TopicType> type) {
-        super(sessionFactory, type);
+    public TopicTypeHibernateDao(SessionFactory sessionFactory) {
+        super(sessionFactory, TopicType.class);
     }
 
     /**
