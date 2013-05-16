@@ -23,8 +23,10 @@ import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.testng
+        .AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
@@ -51,7 +53,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     private BranchDao dao;
 
     @Autowired
-    //@Qualifier//(value = "branchGenericDao")
+    @Qualifier(value = "branchGenericDao")
     private GenericDao branchGenericDao;
 
     private Session session;

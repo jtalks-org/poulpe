@@ -45,6 +45,7 @@
   <bean id="groupDao" class="org.jtalks.poulpe.model.dao.hibernate.GroupHibernateDao" parent="genericDao"/>
 
   <bean id="branchGenericDao" class="org.jtalks.common.model.dao.hibernate.GenericDao">
+    <qualifier value="branchGenericDao"/>
     <constructor-arg name="sessionFactory" ref="sessionFactory"/>
     <constructor-arg name="type" value="org.jtalks.poulpe.model.entity.PoulpeBranch"/>
   </bean>
