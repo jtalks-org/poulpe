@@ -16,17 +16,14 @@ package org.jtalks.poulpe.model.dao.hibernate;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.common.model.entity.Group;
 import org.jtalks.poulpe.model.dao.BranchDao;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.testng
-        .AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import org.testng.annotations.BeforeMethod;
@@ -52,10 +49,6 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Autowired
     private BranchDao dao;
 
-    @Autowired
-    @Qualifier(value = "branchGenericDao")
-    private GenericDao branchGenericDao;
-
     private Session session;
     private PoulpeBranch branch;
     private Group group;
@@ -68,10 +61,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     @Test
     public void testSave() {
         givenParentSection();
-
-        //dao.saveOrUpdate(branch);
-        branchGenericDao.saveOrUpdate(branch);
-
+        dao.saveOrUpdate(branch);
         assertBranchSaved();
         assertGroupSaved();
     }
