@@ -533,7 +533,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <commonVersion>0.49</commonVersion>
+    <commonVersion>0.51</commonVersion>
   </properties>
 
   <distributionManagement>
