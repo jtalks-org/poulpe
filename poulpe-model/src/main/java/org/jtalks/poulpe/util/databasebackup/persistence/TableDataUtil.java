@@ -69,8 +69,8 @@ public final class TableDataUtil {
      * @return Already quoted value.
      */
     private static String getSqlQuotedString(String value, String quote) {
-        assert value != null : "value must not be null.";
-        assert quote != null : "quote must not be null.";
+        assert value != null;
+        assert quote != null;
         return quote + StringEscapeUtils.escapeSql(value).replace("\\", "\\\\") + quote;
     }
 

@@ -27,7 +27,7 @@
 
     <property column="UUID" name="uuid" not-null="true" unique="true" />
     <property column="NAME" name="name" not-null="true" unique="false" />
-    <property column="VALUE" name="value" not-null="false" unique="false" />
+    <property column="VALUE" name="value" type="text" not-null="false" unique="false" />
     <property column="VALIDATION_RULE" name="validationRule" not-null="false" unique="false" />
 
   </class>

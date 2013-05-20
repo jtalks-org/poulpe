@@ -1,6 +1,5 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import java.sql.SQLException;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -10,6 +9,7 @@ import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.exceptions.CreateDbDumpCommandException;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTableLister;
+import org.springframework.jdbc.support.MetaDataAccessException;
 
 public class MySqlFullDumpFactory implements DatabaseDumpFactory {
     public MySqlFullDumpFactory(DataSource dataSource) {
@@ -22,7 +22,7 @@ public class MySqlFullDumpFactory implements DatabaseDumpFactory {
             List<DbTable> tables = new DbTableLister(dataSource).getTables();
             return new MySqlDataBaseFullDumpCommand(tables);
 
-        } catch (SQLException e) {
+        } catch (MetaDataAccessException e) {
             throw new CreateDbDumpCommandException(e);
         }
     }

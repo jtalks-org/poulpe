@@ -26,7 +26,9 @@ import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.exceptions.RowProcessingException;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.jtalks.poulpe.util.databasebackup.persistence.RowProcessor;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
 import com.google.common.collect.Lists;
@@ -38,24 +40,21 @@ import com.google.common.collect.Lists;
  * @author Evgeny Surovtsev
  * 
  */
-public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
+class TableDataDumpCommand extends HeaderAndDataAwareCommand {
     /**
      * Initializes a TableDataDump command with given DbTable as a data provider.
      * 
      * @param dbTable
      *            a data provider for generating command's results.
      */
-    public TableDataDumpCommand(final DbTable dbTable) {
+    public TableDataDumpCommand(DbTable dbTable) {
         Validate.notNull(dbTable, "dbTable must not be null");
         this.dbTable = dbTable;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     protected void putHeader(Writer writer) throws IOException {
-        assert writer != null : "writer must not be null";
+        assert writer != null;
         StringBuilder header = new StringBuilder();
         header.append("--").append(LINEFEED);
         header.append("-- Dumping data for table ");
@@ -66,15 +65,19 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
         writer.write(header.toString());
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
-    protected void putData(Writer writer) throws SQLException, IOException {
-        assert writer != null : "writer must not be null";
-        for (Row dataDump : dbTable.getData()) {
-            writer.write(getRowDataText(dataDump));
-        }
+    protected void putData(final Writer writer) throws SQLException, IOException {
+        assert writer != null;
+        dbTable.getData(new RowProcessor() {
+            @Override
+            public void process(Row rowToProcess) throws RowProcessingException {
+                try {
+                    writer.write(getRowDataText(rowToProcess));
+                } catch (IOException e) {
+                    throw new RowProcessingException(e);
+                }
+            }
+        });
     }
 
     /**
@@ -84,8 +87,8 @@ public class TableDataDumpCommand extends HeaderAndDataAwareCommand {
      *            A Row based on which a new INSERT statement will be constructed.
      * @return A SQL valid INSERT statement.
      */
-    private String getRowDataText(final Row row) {
-        assert row != null : "row must not be null";
+    private String getRowDataText(Row row) {
+        assert row != null;
         List<String> nameColumns = Lists.newLinkedList();
         List<String> valueColumns = Lists.newLinkedList();
 

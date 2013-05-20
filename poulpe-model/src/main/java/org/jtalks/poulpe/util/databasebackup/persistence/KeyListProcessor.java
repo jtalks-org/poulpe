@@ -18,10 +18,10 @@ package org.jtalks.poulpe.util.databasebackup.persistence;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashSet;
 import java.util.Set;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Sets;
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 
@@ -50,7 +50,7 @@ final class KeyListProcessor implements DatabaseMetaDataCallback {
 
     @Override
     public Object processMetaData(DatabaseMetaData dmd) throws SQLException {
-        Set<TableKey> tableKeySet = Sets.newHashSet();
+        Set<TableKey> tableKeySet = new HashSet<TableKey>();
         ResultSet rs = null;
         try {
             rs = tableKeyPerformer.getResultSet(dmd, tableName);

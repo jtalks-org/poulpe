@@ -10,4 +10,5 @@
   <constraint-validator-factory>
     org.hibernate.validator.engine.ConstraintValidatorFactoryImpl
   </constraint-validator-factory>
+  <constraint-mapping>/META-INF/validation/users-mapping.xml</constraint-mapping>
 </validation-config>

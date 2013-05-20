@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -25,7 +24,6 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.domain.Row;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 
 /**
@@ -42,8 +40,6 @@ public class DbTable {
      *            A dataSource to access to the database.
      * @param tableName
      *            A table name information about will be returned by the instance.
-     * @throws NullPointerException
-     *             if any of dataSource or tableName is null.
      */
     public DbTable(DataSource dataSource, String tableName) {
         Validate.notNull(dataSource, "dataSource must not be null");
@@ -67,15 +63,13 @@ public class DbTable {
     /**
      * The method obtains and returns table rows data for the given table.
      * 
-     * @return A list of obtained rows ({@link Row}).
+     * @param processor
+     *            a processor to perform some logic under every Row in the database.
      * @throws SQLException
      *             Is thrown in case any errors during work with database occur.
      */
-    public List<Row> getData() throws SQLException {
-        if (tableData == null) {
-            tableData = dbTableData.getData();
-        }
-        return Collections.unmodifiableList(tableData);
+    public void getData(RowProcessor processor) throws SQLException {
+        dbTableData.getData(processor);
     }
 
     /**
@@ -87,10 +81,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<ColumnMetaData> getStructure() throws SQLException {
-        if (tableStructure == null) {
-            tableStructure = dbTableData.getStructure();
-        }
-        return Collections.unmodifiableList(tableStructure);
+        return dbTableData.getStructure();
     }
 
     /**
@@ -102,10 +93,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Map<String, String> getCommonParameters() throws SQLException {
-        if (commonParameters == null) {
-            commonParameters = dbTableCommonParameters.getParameters();
-        }
-        return Collections.unmodifiableMap(commonParameters);
+        return dbTableCommonParameters.getParameters();
     }
 
     /**
@@ -116,10 +104,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<UniqueKey> getPrimaryKeySet() throws SQLException {
-        if (primaryKeys == null) {
-            primaryKeys = dbTableKeys.getPrimaryKeys();
-        }
-        return Collections.unmodifiableSet(primaryKeys);
+        return dbTableKeys.getPrimaryKeys();
     }
 
     /**
@@ -130,10 +115,7 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<UniqueKey> getUniqueKeySet() throws SQLException {
-        if (uniqueKeys == null) {
-            uniqueKeys = dbTableKeys.getUniqueKeys();
-        }
-        return Collections.unmodifiableSet(uniqueKeys);
+        return dbTableKeys.getUniqueKeys();
     }
 
     /**
@@ -144,22 +126,12 @@ public class DbTable {
      *             Is thrown in case any errors during work with database occur.
      */
     public Set<ForeignKey> getForeignKeySet() throws SQLException {
-        if (foreignKeys == null) {
-            foreignKeys = dbTableKeys.getForeignKeys();
-        }
-        return Collections.unmodifiableSet(foreignKeys);
+        return dbTableKeys.getForeignKeys();
     }
 
-    private final String tableName;
+    private String tableName;
 
-    private Map<String, String> commonParameters;
-    private Set<UniqueKey> primaryKeys;
-    private Set<UniqueKey> uniqueKeys;
-    private Set<ForeignKey> foreignKeys;
-    private List<ColumnMetaData> tableStructure;
-    private List<Row> tableData;
-
-    private final DbTableKeys dbTableKeys;
-    private final DbTableCommonParameters dbTableCommonParameters;
-    private final DbTableData dbTableData;
+    private DbTableKeys dbTableKeys;
+    private DbTableCommonParameters dbTableCommonParameters;
+    private DbTableData dbTableData;
 }

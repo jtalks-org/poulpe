@@ -17,14 +17,14 @@ package org.jtalks.poulpe.util.databasebackup.persistence;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Sets;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
@@ -86,10 +86,10 @@ public class DbTableKeys {
                         }
                     }));
 
-            Map<String, UniqueKey> resultMap = Maps.newHashMap();
+            Map<String, UniqueKey> resultMap = new HashMap<String, UniqueKey>();
             for (UniqueKey uniqueKey : tableUniqueKeySet) {
                 if (resultMap.containsKey(uniqueKey.getIndexName())) {
-                    Set<String> existingColumns = Sets.newHashSet(resultMap.get(uniqueKey.getIndexName())
+                    Set<String> existingColumns = new HashSet<String>(resultMap.get(uniqueKey.getIndexName())
                             .getColumnNameSet());
                     existingColumns.addAll(uniqueKey.getColumnNameSet());
                     resultMap.put(uniqueKey.getIndexName(), new UniqueKey(uniqueKey.getIndexName(), existingColumns));

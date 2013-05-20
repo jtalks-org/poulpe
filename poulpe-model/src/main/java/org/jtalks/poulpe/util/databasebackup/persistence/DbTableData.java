@@ -20,20 +20,20 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Lists;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.Row;
+import org.jtalks.poulpe.util.databasebackup.exceptions.RowProcessingException;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.RowCallbackHandler;
 
 /**
  * The class is responsible for providing table structure and table data.
@@ -61,18 +61,18 @@ class DbTableData {
     }
 
     /**
-     * The method returns table's data in the shape of list of TableRow.
+     * The method prepares table's data in the shape and passes every {@link Row} into given RowProcessor.
      * 
-     * @return List of table rows.
+     * @param processor
+     *            injected logic to perform some actions under passing rows. see details for {@link RowProcessor}.
      * @throws SQLException
-     *             Is thrown in case any errors during work with database occur.
+     *             if any errors during work with database occur.
      */
-    public List<Row> getData() throws SQLException {
-        List<Row> dataDumpList = Collections.emptyList();
+    public void getData(final RowProcessor processor) throws SQLException {
         try {
-            dataDumpList = jdbcTemplate.query(SELECT_FROM + tableName, new RowMapper<Row>() {
+            jdbcTemplate.query(SELECT_FROM + tableName, new RowCallbackHandler() {
                 @Override
-                public Row mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+                public void processRow(ResultSet rs) throws SQLException {
                     ResultSetMetaData metaData = rs.getMetaData();
                     int columnCount = metaData.getColumnCount();
 
@@ -83,14 +83,17 @@ class DbTableData {
                                 SqlTypes.getSqlTypeByJdbcSqlType(metaData.getColumnType(i)));
                         row.addCell(columnMetaData, rs.getObject(i));
                     }
-                    return row;
+                    try {
+                        processor.process(row);
+                    } catch (RowProcessingException e) {
+                        throw new SQLException(e);
+                    }
                 }
             });
+
         } catch (DataAccessException e) {
             throw new SQLException(e);
         }
-
-        return dataDumpList;
     }
 
     /**
@@ -101,7 +104,7 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     public List<ColumnMetaData> getStructure() throws SQLException {
-        final List<ColumnMetaData> tableColumnList = Lists.newArrayList();
+        List<ColumnMetaData> tableColumnList = new ArrayList<ColumnMetaData>();
         Statement stmt = null;
         ResultSet rs = null;
         ResultSetMetaData rsmd = null;
@@ -125,9 +128,6 @@ class DbTableData {
             }
 
         } finally {
-            if (rs != null) {
-                rs.close();
-            }
             if (stmt != null) {
                 stmt.close();
             }
@@ -178,7 +178,7 @@ class DbTableData {
      *             Is thrown in case any errors during work with database occur.
      */
     private Map<String, String> getColumnDefaults(final DatabaseMetaData dbMetaData) throws SQLException {
-        Map<String, String> columnDefaultValues = Maps.newHashMap();
+        Map<String, String> columnDefaultValues = new HashMap<String, String>();
         ResultSet tableMetaData = null;
         try {
             tableMetaData = dbMetaData.getColumns(null, null, tableName, "%");

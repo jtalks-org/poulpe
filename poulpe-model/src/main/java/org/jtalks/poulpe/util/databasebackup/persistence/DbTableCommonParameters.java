@@ -18,12 +18,12 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
 import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.common.collection.Maps;
 
 /**
  * The class is responsible for providing table's common parameters such as database engine, collation etc.
@@ -57,7 +57,7 @@ class DbTableCommonParameters {
      *             Is thrown in case any errors during work with database occur.
      */
     public Map<String, String> getParameters() throws SQLException {
-        final Map<String, String> parameters = Maps.newHashMap();
+        Map<String, String> parameters = new HashMap<String, String>();
         Connection connection = null;
         ResultSet rs = null;
         Statement stmt = null;
@@ -88,7 +88,7 @@ class DbTableCommonParameters {
         return parameters;
     }
 
-    private static final Map<String, String> OTHER_PARAMETER_MAP = Maps.newHashMap();
+    private static final Map<String, String> OTHER_PARAMETER_MAP = new HashMap<String, String>();
     static {
         OTHER_PARAMETER_MAP.put("Engine", "ENGINE");
         OTHER_PARAMETER_MAP.put("Collation", "COLLATE");

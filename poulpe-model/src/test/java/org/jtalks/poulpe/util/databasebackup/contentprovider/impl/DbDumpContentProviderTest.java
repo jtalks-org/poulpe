@@ -14,31 +14,23 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.testng.Assert.assertEquals;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.sql.DataSource;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlDataBaseFullDumpCommand;
 import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
-import org.jtalks.poulpe.util.databasebackup.exceptions.FileDownloadException;
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTableLister;
-
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
-import com.google.common.collect.ImmutableList;
 
 public class DbDumpContentProviderTest {
     private DbDumpContentProvider sut;
