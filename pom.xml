@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>org.jtalks.poulpe</groupId>
@@ -97,7 +98,7 @@
       <dependency>
         <groupId>org.terracotta</groupId>
         <artifactId>ehcache-probe</artifactId>
-         <version>1.0.2</version>
+        <version>1.0.2</version>
       </dependency>
       <!-- JDBC -->
       <dependency>
@@ -469,13 +470,13 @@
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-surefire-plugin</artifactId>
           <version>2.12.3</version>
-	      <configuration>
-	        <systemPropertyVariables>
-	            <!-- Log file path used for tests, for more info please look at 
-	                 org.jtalks.poulpe.web.controller.LoggerInitializationListener -->
-	            <LOG_FILE_POULPE>../logs/poulpe.log</LOG_FILE_POULPE>
-	        </systemPropertyVariables>
-	      </configuration>
+          <configuration>
+            <systemPropertyVariables>
+              <!-- Log file path used for tests, for more info please look at
+                   org.jtalks.poulpe.web.controller.LoggerInitializationListener -->
+              <LOG_FILE_POULPE>../logs/poulpe.log</LOG_FILE_POULPE>
+            </systemPropertyVariables>
+          </configuration>
         </plugin>
 
         <plugin>
@@ -533,7 +534,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <commonVersion>0.52-SNAPSHOT</commonVersion>
+    <commonVersion>0.52</commonVersion>
   </properties>
 
   <distributionManagement>
