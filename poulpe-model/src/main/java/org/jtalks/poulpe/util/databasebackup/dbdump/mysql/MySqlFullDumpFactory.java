@@ -1,15 +1,15 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
 import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.exceptions.CreateDbDumpCommandException;
+import org.jtalks.poulpe.util.databasebackup.exceptions
+        .CreateDbDumpCommandException;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTableLister;
 import org.springframework.jdbc.support.MetaDataAccessException;
+
+import javax.sql.DataSource;
+import java.util.List;
 
 public class MySqlFullDumpFactory implements DatabaseDumpFactory {
     public MySqlFullDumpFactory(DataSource dataSource) {

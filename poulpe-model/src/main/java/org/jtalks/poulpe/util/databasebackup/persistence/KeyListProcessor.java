@@ -15,15 +15,15 @@
 
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
+import org.apache.commons.lang.Validate;
+import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
+import org.springframework.jdbc.support.DatabaseMetaDataCallback;
+
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
-import org.springframework.jdbc.support.DatabaseMetaDataCallback;
 
 /**
  * Class reads information about table keys for given table Set and creates a list of TableKeys. Class is used to get

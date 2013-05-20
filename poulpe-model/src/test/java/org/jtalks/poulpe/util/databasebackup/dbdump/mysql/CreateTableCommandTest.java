@@ -1,15 +1,9 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
 import org.jtalks.poulpe.util.databasebackup.TestUtil;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CreateTableCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
@@ -19,9 +13,13 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class CreateTableCommandTest {
     @BeforeMethod

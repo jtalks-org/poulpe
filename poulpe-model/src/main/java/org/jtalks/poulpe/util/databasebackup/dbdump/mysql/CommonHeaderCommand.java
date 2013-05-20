@@ -14,14 +14,14 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
 
 /**
  * The class prints a header for the whole exported data file.

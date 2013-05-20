@@ -1,30 +1,21 @@
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.io.Writer;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Queue;
 
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.AddForeignKeysCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CommonHeaderCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.CreateTableCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlDataBaseFullDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.dbdump.mysql.TableDataDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
-import org.testng.annotations.Test;
-import org.testng.annotations.BeforeMethod;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import static org.mockito.Mockito.mock;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class MySqlDataBaseFullDumpCommandTest {
     @BeforeMethod

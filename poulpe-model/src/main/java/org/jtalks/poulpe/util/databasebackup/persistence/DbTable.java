@@ -14,17 +14,16 @@
  */
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import javax.sql.DataSource;
-
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.domain.ColumnMetaData;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * The class represents a database table and provides specific table's information like table's structure and data.

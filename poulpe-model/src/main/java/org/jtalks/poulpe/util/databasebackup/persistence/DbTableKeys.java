@@ -14,6 +14,14 @@
  */
 package org.jtalks.poulpe.util.databasebackup.persistence;
 
+import org.apache.commons.lang.Validate;
+import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
+import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
+import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
+import org.springframework.jdbc.support.JdbcUtils;
+import org.springframework.jdbc.support.MetaDataAccessException;
+
+import javax.sql.DataSource;
 import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,15 +29,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-
-import javax.sql.DataSource;
-
-import org.apache.commons.lang.Validate;
-import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
-import org.jtalks.poulpe.util.databasebackup.domain.TableKey;
-import org.jtalks.poulpe.util.databasebackup.domain.UniqueKey;
-import org.springframework.jdbc.support.JdbcUtils;
-import org.springframework.jdbc.support.MetaDataAccessException;
 
 /**
  * The class is responsible for providing table's keys information.

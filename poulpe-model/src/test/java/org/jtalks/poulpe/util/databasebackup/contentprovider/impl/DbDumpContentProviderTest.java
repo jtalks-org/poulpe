@@ -14,23 +14,21 @@
  */
 package org.jtalks.poulpe.util.databasebackup.contentprovider.impl;
 
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.testng.Assert.assertEquals;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.exceptions
+        .DatabaseExportingException;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.jtalks.poulpe.util.databasebackup.dbdump.DatabaseDumpFactory;
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.exceptions.DatabaseExportingException;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import static org.mockito.Mockito.*;
+import static org.testng.Assert.assertEquals;
 
 public class DbDumpContentProviderTest {
     private DbDumpContentProvider sut;

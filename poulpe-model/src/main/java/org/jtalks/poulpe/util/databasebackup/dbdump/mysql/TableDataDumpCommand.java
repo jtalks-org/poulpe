@@ -14,12 +14,7 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Map.Entry;
-
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Validate;
@@ -31,7 +26,11 @@ import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.RowProcessor;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
 
-import com.google.common.collect.Lists;
+import java.io.IOException;
+import java.io.Writer;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.Map.Entry;
 
 /**
  * Class is a command (see {@link org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand} for details) which

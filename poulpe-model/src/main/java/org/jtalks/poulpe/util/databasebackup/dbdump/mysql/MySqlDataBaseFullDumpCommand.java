@@ -14,16 +14,16 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
+import org.apache.commons.lang3.Validate;
+import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
+import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-
-import org.apache.commons.lang3.Validate;
-import org.jtalks.poulpe.util.databasebackup.dbdump.DbDumpCommand;
-import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 
 /**
  * Full backup command which can pick MySQL data from selected tables and push it to {@link OutputStream}.

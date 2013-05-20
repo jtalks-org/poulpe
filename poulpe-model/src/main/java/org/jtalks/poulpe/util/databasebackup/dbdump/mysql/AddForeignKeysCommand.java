@@ -14,16 +14,16 @@
  */
 package org.jtalks.poulpe.util.databasebackup.dbdump.mysql;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.sql.SQLException;
-import java.util.Set;
-
 import org.apache.commons.lang3.Validate;
 import org.jtalks.poulpe.util.databasebackup.dbdump.HeaderAndDataAwareCommand;
 import org.jtalks.poulpe.util.databasebackup.domain.ForeignKey;
 import org.jtalks.poulpe.util.databasebackup.persistence.DbTable;
 import org.jtalks.poulpe.util.databasebackup.persistence.TableDataUtil;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.sql.SQLException;
+import java.util.Set;
 
 /**
  * Command analyzing table foreign keys and push this info into {@link java.io.OutputStream OutputStream}
