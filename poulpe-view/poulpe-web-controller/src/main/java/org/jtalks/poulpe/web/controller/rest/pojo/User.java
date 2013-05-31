@@ -15,6 +15,8 @@
 package org.jtalks.poulpe.web.controller.rest.pojo;
 
 import javax.xml.bind.annotation.*;
+import javax.xml.bind.annotation.adapters.CollapsedStringAdapter;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 
 /**
  * <p>Java class for user complex type.
@@ -52,6 +54,7 @@ import javax.xml.bind.annotation.*;
 public class User {
 
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
+    @XmlJavaTypeAdapter(CollapsedStringAdapter.class)
     private String username;
 
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
