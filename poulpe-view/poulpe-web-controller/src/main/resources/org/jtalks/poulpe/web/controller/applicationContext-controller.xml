@@ -16,9 +16,9 @@
 
 -->
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:zksp="http://www.zkoss.org/2008/zkspring/core"
+       xmlns:zksp="http://www.zkoss.org/2008/zkspring/core" xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
-  http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd">
+  http://www.zkoss.org/2008/zkspring/core http://www.zkoss.org/2008/zkspring/core/zkspring-core.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.0.xsd">
 
   <zksp:zk-config/>
 
@@ -201,7 +201,13 @@
   </bean>
 
   <!--  Define the router -->
-  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" />
+  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
+      <property name="attachments">
+          <util:map>
+              <entry key="/test" value="challengeAuthenticator" />
+          </util:map>
+      </property>
+  </bean>
 
   <!-- Define all the routes -->
   <bean id="loginServerResource" name="/authenticate" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
@@ -211,5 +217,32 @@
   <bean id="userRegistrationResource" name="/user" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
+
+    <bean id="testResource" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype">
+    </bean>
+
+
+    <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
+        <constructor-arg><null /></constructor-arg>
+        <!-- Sets the Challenge scheme parameter to the static class member -->
+        <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
+        <constructor-arg value="Poulpe REST Service" />
+        <property name="verifier" ref="verifier" />
+        <property name="next" ref="finder"/>
+
+    </bean>
+
+    <bean id="verifier" class="org.restlet.security.MapVerifier" >
+        <constructor-arg index="0">
+            <util:map map-class="java.util.concurrent.ConcurrentHashMap" >
+                <entry key="user" value="1234" />
+            </util:map>
+        </constructor-arg>
+    </bean>
+
+    <bean id="finder" class="org.restlet.resource.Finder">
+        <constructor-arg><null /></constructor-arg>
+        <constructor-arg name="targetClass" value="org.jtalks.poulpe.web.controller.rest.TestResource"/>
+    </bean>
 
 </beans>
