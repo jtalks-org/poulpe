@@ -197,17 +197,11 @@
   </bean>
 
   <bean id="restApplication" class="org.restlet.Application">
-    <property name="inboundRoot" ref="restRouter" />
+    <property name="inboundRoot" ref="challengeAuthenticator" />
   </bean>
 
   <!--  Define the router -->
-  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
-      <property name="attachments">
-          <util:map>
-              <entry key="/test" value="challengeAuthenticator" />
-          </util:map>
-      </property>
-  </bean>
+  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" />
 
   <!-- Define all the routes -->
   <bean id="loginServerResource" name="/authenticate" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
@@ -218,19 +212,16 @@
     <constructor-arg ref="userService"/>
   </bean>
 
-    <bean id="testResource" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype">
-    </bean>
+   <bean id="testResource" name="/test" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype" />
 
-
-    <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
+   <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
         <constructor-arg><null /></constructor-arg>
         <!-- Sets the Challenge scheme parameter to the static class member -->
         <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
         <constructor-arg value="Poulpe REST Service" />
         <property name="verifier" ref="verifier" />
-        <property name="next" ref="finder"/>
-
-    </bean>
+        <property name="next" ref="restRouter" />
+   </bean>
 
     <bean id="verifier" class="org.restlet.security.MapVerifier" >
         <constructor-arg index="0">
@@ -238,11 +229,6 @@
                 <entry key="user" value="1234" />
             </util:map>
         </constructor-arg>
-    </bean>
-
-    <bean id="finder" class="org.restlet.resource.Finder">
-        <constructor-arg><null /></constructor-arg>
-        <constructor-arg name="targetClass" value="org.jtalks.poulpe.web.controller.rest.TestResource"/>
     </bean>
 
 </beans>
