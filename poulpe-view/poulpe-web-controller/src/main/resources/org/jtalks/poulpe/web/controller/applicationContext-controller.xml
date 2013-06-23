@@ -196,39 +196,46 @@
     <constructor-arg ref="sessionFactory"/>
   </bean>
 
+  <!-- The Restlet application, secured by challenge authenticator -->
   <bean id="restApplication" class="org.restlet.Application">
     <property name="inboundRoot" ref="challengeAuthenticator" />
   </bean>
 
-  <!--  Define the router -->
+  <!--  The Spring bean router -->
   <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" />
 
-  <!-- Define all the routes -->
+  <!-- All server resources -->
   <bean id="loginServerResource" name="/authenticate" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
-
   <bean id="userRegistrationResource" name="/user" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
+  <bean id="testResource" name="/test" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype" />
 
-   <bean id="testResource" name="/test" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype" />
+  <!-- The challenge authenticator -->
+  <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
+    <constructor-arg><null /></constructor-arg>
+    <!-- Sets the Challenge scheme parameter to the static class member -->
+    <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
+    <constructor-arg value="Poulpe REST Service" />
+    <property name="verifier" ref="verifier" />
+    <property name="next" ref="restRouter" />
+  </bean>
 
-   <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
-        <constructor-arg><null /></constructor-arg>
-        <!-- Sets the Challenge scheme parameter to the static class member -->
-        <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
-        <constructor-arg value="Poulpe REST Service" />
-        <property name="verifier" ref="verifier" />
-        <property name="next" ref="restRouter" />
-   </bean>
+  <!-- Simple map verifier for the challenge authenticator -->
+  <bean id="verifier" class="org.restlet.security.MapVerifier" >
+    <constructor-arg index="0">
+      <util:map map-class="java.util.concurrent.ConcurrentHashMap" >
+        <entry key="user" value-ref="secretCharArray" />
+      </util:map>
+    </constructor-arg>
+  </bean>
 
-    <bean id="verifier" class="org.restlet.security.MapVerifier" >
-        <constructor-arg index="0">
-            <util:map map-class="java.util.concurrent.ConcurrentHashMap" >
-                <entry key="user" value="1234" />
-            </util:map>
-        </constructor-arg>
-    </bean>
+  <!-- Create the secret to return it to map verifier as a char[] -->
+  <bean id="secretCharArray" factory-bean="secretString"  factory-method="toCharArray"/>
+  <bean id="secretString" class="java.lang.String">
+    <constructor-arg index="0" type="java.lang.String" value="1234"/>
+  </bean>
 
 </beans>
