@@ -227,7 +227,7 @@
   <bean id="verifier" class="org.restlet.security.MapVerifier" >
     <constructor-arg index="0">
       <util:map map-class="java.util.concurrent.ConcurrentHashMap" >
-        <entry key="user" value-ref="secretCharArray" />
+        <entry key="${rest.login}" value-ref="secretCharArray" />
       </util:map>
     </constructor-arg>
   </bean>
@@ -235,7 +235,7 @@
   <!-- Create the secret to return it to map verifier as a char[] -->
   <bean id="secretCharArray" factory-bean="secretString"  factory-method="toCharArray"/>
   <bean id="secretString" class="java.lang.String">
-    <constructor-arg index="0" type="java.lang.String" value="1234"/>
+    <constructor-arg index="0" type="java.lang.String" value="${rest.password}"/>
   </bean>
 
 </beans>
