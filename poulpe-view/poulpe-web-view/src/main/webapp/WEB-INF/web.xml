@@ -32,12 +32,6 @@
     </param-value>
   </context-param>
 
-  <!-- Restlet application bean name -->
-  <context-param>
-    <param-name>org.restlet.application</param-name>
-    <param-value>restApplication</param-value>
-  </context-param>
-
     <!-- Filter -->
   <filter>
       <filter-name>CharacterEncoding</filter-name>
@@ -90,10 +84,25 @@
 
   <servlet>
     <description>RESTful services</description>
-    <servlet-name>restServices</servlet-name>
+    <servlet-name>publicRestServices</servlet-name>
     <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
+      <init-param>
+          <param-name>org.restlet.application</param-name>
+          <param-value>publicRestApplication</param-value>
+      </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
+
+    <servlet>
+        <description>RESTful services</description>
+        <servlet-name>privateRestServices</servlet-name>
+        <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
+        <init-param>
+            <param-name>org.restlet.application</param-name>
+            <param-value>privateRestApplication</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
 
   <servlet-mapping>
     <servlet-name>zkLoader</servlet-name>
@@ -104,9 +113,13 @@
     <url-pattern>*.zhtml</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
-    <servlet-name>restServices</servlet-name>
+    <servlet-name>publicRestServices</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>privateRestServices</servlet-name>
+        <url-pattern>/rest/private/*</url-pattern>
+    </servlet-mapping>
 
   <filter>
     <filter-name>localeProvidingFilter</filter-name>

@@ -196,22 +196,40 @@
     <constructor-arg ref="sessionFactory"/>
   </bean>
 
+    <!-- The public Restlet application -->
+    <bean id="publicRestApplication" class="org.restlet.Application">
+        <property name="inboundRoot" ref="publicRestRouter" />
+    </bean>
+
   <!-- The Restlet application, secured by challenge authenticator -->
-  <bean id="restApplication" class="org.restlet.Application">
+  <bean id="privateRestApplication" class="org.restlet.Application">
     <property name="inboundRoot" ref="challengeAuthenticator" />
   </bean>
 
-  <!--  The Spring bean router -->
-  <bean name="restRouter" class="org.restlet.ext.spring.SpringBeanRouter" />
+  <!--  The Spring bean routers -->
+  <bean name="publicRestRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
+      <property name="attachments">
+          <util:map>
+              <entry key="/authenticate" value="loginServerResource" />
+          </util:map>
+      </property>
+  </bean>
+
+  <bean name="privateRestRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
+      <property name="attachments">
+          <util:map>
+              <entry key="/user" value="userRegistrationResource" />
+          </util:map>
+      </property>
+  </bean>
 
   <!-- All server resources -->
-  <bean id="loginServerResource" name="/authenticate" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
+  <bean id="loginServerResource" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
-  <bean id="userRegistrationResource" name="/user" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
+  <bean id="userRegistrationResource" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
-  <bean id="testResource" name="/test" class="org.jtalks.poulpe.web.controller.rest.TestResource" scope="prototype" />
 
   <!-- The challenge authenticator -->
   <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
@@ -220,7 +238,7 @@
     <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
     <constructor-arg value="Poulpe REST Service" />
     <property name="verifier" ref="verifier" />
-    <property name="next" ref="restRouter" />
+    <property name="next" ref="privateRestRouter" />
   </bean>
 
   <!-- Simple map verifier for the challenge authenticator -->
