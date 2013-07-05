@@ -147,34 +147,34 @@
     <property name="fileDownloadService">
       <bean id="fileDownloadService" class="org.jtalks.poulpe.util.databasebackup.contentprovider.FileDownloadService">
         <constructor-arg index="0">
-        	<bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.TempFileContentKeeper">
-        		<constructor-arg>
-					<bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.GzipContentProvider">
-						<constructor-arg>
-							<bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider">
-                    			<constructor-arg>
-                    				<bean class="org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlFullDumpFactory">
-                    					<constructor-arg ref="dataSource" />
-                    				</bean>
-                    			</constructor-arg>
-                			</bean>
-            			</constructor-arg>
-          			</bean>
-          		</constructor-arg>
-        	</bean>
+          <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.TempFileContentKeeper">
+            <constructor-arg>
+              <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.GzipContentProvider">
+                <constructor-arg>
+                  <bean class="org.jtalks.poulpe.util.databasebackup.contentprovider.impl.DbDumpContentProvider">
+                    <constructor-arg>
+                      <bean class="org.jtalks.poulpe.util.databasebackup.dbdump.mysql.MySqlFullDumpFactory">
+                        <constructor-arg ref="dataSource"/>
+                      </bean>
+                    </constructor-arg>
+                  </bean>
+                </constructor-arg>
+              </bean>
+            </constructor-arg>
+          </bean>
         </constructor-arg>
         <constructor-arg index="1">
-          <bean class="org.jtalks.poulpe.web.controller.component.ZulFileDownloader" />
+          <bean class="org.jtalks.poulpe.web.controller.component.ZulFileDownloader"/>
         </constructor-arg>
-        <constructor-arg index="2" value="jtalks" />
+        <constructor-arg index="2" value="jtalks"/>
       </bean>
     </property>
   </bean>
 
   <bean id="editGroupsVm" class="org.jtalks.poulpe.web.controller.users.EditGroupsVm" scope="desktop">
-      <constructor-arg index="0" ref="usersVm"/>
-      <constructor-arg index="1" ref="userService"/>
-      <constructor-arg index="2" ref="groupService"/>
+    <constructor-arg index="0" ref="usersVm"/>
+    <constructor-arg index="1" ref="userService"/>
+    <constructor-arg index="2" ref="groupService"/>
   </bean>
 
   <bean id="editComponentVm" scope="prototype"
@@ -196,64 +196,60 @@
     <constructor-arg ref="sessionFactory"/>
   </bean>
 
-    <!-- The public Restlet application -->
-    <bean id="publicRestApplication" class="org.restlet.Application">
-        <property name="inboundRoot" ref="publicRestRouter" />
-    </bean>
+  <!-- The public Restlet application -->
+  <bean id="publicRestApplication" class="org.restlet.Application">
+    <property name="inboundRoot" ref="publicRestRouter"/>
+  </bean>
 
   <!-- The Restlet application, secured by challenge authenticator -->
   <bean id="privateRestApplication" class="org.restlet.Application">
-    <property name="inboundRoot" ref="challengeAuthenticator" />
+    <property name="inboundRoot" ref="challengeAuthenticator"/>
   </bean>
 
   <!--  The Spring bean routers -->
-  <bean name="publicRestRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
-      <property name="attachments">
-          <util:map>
-              <entry key="/authenticate" value="loginServerResource" />
-          </util:map>
-      </property>
+  <bean name="publicRestRouter" class="org.restlet.ext.spring.SpringBeanRouter">
+    <property name="attachments">
+      <util:map>
+        <entry key="/authenticate" value="loginServerResource"/>
+      </util:map>
+    </property>
   </bean>
 
-  <bean name="privateRestRouter" class="org.restlet.ext.spring.SpringBeanRouter" >
-      <property name="attachments">
-          <util:map>
-              <entry key="/user" value="userRegistrationResource" />
-          </util:map>
-      </property>
+  <bean name="privateRestRouter" class="org.restlet.ext.spring.SpringBeanRouter">
+    <property name="attachments">
+      <util:map>
+        <entry key="/user" value="userRegistrationResource"/>
+      </util:map>
+    </property>
   </bean>
 
   <!-- All server resources -->
   <bean id="loginServerResource" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
-  <bean id="userRegistrationResource" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource" scope="prototype">
-    <constructor-arg ref="userService"/>
+  <bean id="userRegistrationResource" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource"
+        scope="prototype">
+  <constructor-arg ref="userService"/>
   </bean>
 
   <!-- The challenge authenticator -->
   <bean id="challengeAuthenticator" class="org.restlet.security.ChallengeAuthenticator" scope="prototype">
-    <constructor-arg><null /></constructor-arg>
+    <constructor-arg>
+      <null/>
+    </constructor-arg>
     <!-- Sets the Challenge scheme parameter to the static class member -->
-    <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }" />
-    <constructor-arg value="Poulpe REST Service" />
-    <property name="verifier" ref="verifier" />
-    <property name="next" ref="privateRestRouter" />
+    <constructor-arg value="#{ T(org.restlet.data.ChallengeScheme).HTTP_BASIC }"/>
+    <constructor-arg value="Poulpe REST Service"/>
+    <property name="verifier" ref="verifier"/>
+    <property name="next" ref="privateRestRouter"/>
   </bean>
 
   <!-- Simple map verifier for the challenge authenticator -->
-  <bean id="verifier" class="org.restlet.security.MapVerifier" >
+  <bean id="verifier" class="org.restlet.security.MapVerifier">
     <constructor-arg index="0">
-      <util:map map-class="java.util.concurrent.ConcurrentHashMap" >
-        <entry key="${rest.login}" value-ref="secretCharArray" />
+      <util:map map-class="java.util.concurrent.ConcurrentHashMap">
+        <entry key="${rest_login}" value="#{'${rest_password}'.toCharArray()}"/>
       </util:map>
     </constructor-arg>
   </bean>
-
-  <!-- Create the secret to return it to map verifier as a char[] -->
-  <bean id="secretCharArray" factory-bean="secretString"  factory-method="toCharArray"/>
-  <bean id="secretString" class="java.lang.String">
-    <constructor-arg index="0" type="java.lang.String" value="${rest.password}"/>
-  </bean>
-
 </beans>

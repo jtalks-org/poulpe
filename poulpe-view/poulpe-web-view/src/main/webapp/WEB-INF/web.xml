@@ -32,22 +32,22 @@
     </param-value>
   </context-param>
 
-    <!-- Filter -->
+  <!-- Filter -->
   <filter>
-      <filter-name>CharacterEncoding</filter-name>
-      <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
-      <init-param>
-          <param-name>encoding</param-name>
-          <param-value>UTF-8</param-value>
-      </init-param>
-      <init-param>
-          <param-name>forceEncoding</param-name>
-          <param-value>true</param-value>
-      </init-param>
+    <filter-name>CharacterEncoding</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
   </filter>
   <filter-mapping>
-      <filter-name>CharacterEncoding</filter-name>
-      <url-pattern>/*</url-pattern>
+    <filter-name>CharacterEncoding</filter-name>
+    <url-pattern>/*</url-pattern>
   </filter-mapping>
 
   <!-- Servlets -->
@@ -86,23 +86,23 @@
     <description>RESTful services</description>
     <servlet-name>publicRestServices</servlet-name>
     <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
-      <init-param>
-          <param-name>org.restlet.application</param-name>
-          <param-value>publicRestApplication</param-value>
-      </init-param>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>publicRestApplication</param-value>
+    </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
 
-    <servlet>
-        <description>RESTful services</description>
-        <servlet-name>privateRestServices</servlet-name>
-        <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
-        <init-param>
-            <param-name>org.restlet.application</param-name>
-            <param-value>privateRestApplication</param-value>
-        </init-param>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
+  <servlet>
+    <description>RESTful services</description>
+    <servlet-name>privateRestServices</servlet-name>
+    <servlet-class>org.restlet.ext.spring.SpringServerServlet</servlet-class>
+    <init-param>
+      <param-name>org.restlet.application</param-name>
+      <param-value>privateRestApplication</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
 
   <servlet-mapping>
     <servlet-name>zkLoader</servlet-name>
@@ -116,10 +116,10 @@
     <servlet-name>publicRestServices</servlet-name>
     <url-pattern>/rest/*</url-pattern>
   </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>privateRestServices</servlet-name>
-        <url-pattern>/rest/private/*</url-pattern>
-    </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>privateRestServices</servlet-name>
+    <url-pattern>/rest/private/*</url-pattern>
+  </servlet-mapping>
 
   <filter>
     <filter-name>localeProvidingFilter</filter-name>
