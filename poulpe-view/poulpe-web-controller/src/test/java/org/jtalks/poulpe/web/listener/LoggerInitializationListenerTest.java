@@ -29,7 +29,6 @@ import org.testng.annotations.Test;
  */
 public class LoggerInitializationListenerTest {
     private String LOGGING_CONFIG_FILE = "POULPE_LOGGING_CONFIG_FILE";
-    private String LOG4J_INIT_OVERRIDE_PROPERTY = "log4j.defaultInitOverride";
     private LoggerInitializationListener sut;
     private ServletContextEvent servletContextEvent;
     private String testFile;
@@ -107,12 +106,13 @@ public class LoggerInitializationListenerTest {
     }
     
     @Test
-    public void shouldLeftUnchangedLog4jOverrideProperty() throws Exception {              
-        System.setProperty(LOG4J_INIT_OVERRIDE_PROPERTY, "salt");
+    public void shouldLeftUnchangedLog4jOverrideProperty() throws Exception {
+        String log4jInitOverrideProperty = "log4j.defaultInitOverride";
+        System.setProperty(log4jInitOverrideProperty, "salt");
         
         sut.contextInitialized(servletContextEvent);
         
-        assertEquals("salt", System.getProperty(LOG4J_INIT_OVERRIDE_PROPERTY));       
-        System.clearProperty(LOG4J_INIT_OVERRIDE_PROPERTY);
+        assertEquals("salt", System.getProperty(log4jInitOverrideProperty));
+        System.clearProperty(log4jInitOverrideProperty);
     }
 }
