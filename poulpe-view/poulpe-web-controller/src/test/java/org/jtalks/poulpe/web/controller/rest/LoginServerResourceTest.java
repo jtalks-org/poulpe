@@ -23,7 +23,6 @@ import org.jtalks.poulpe.web.controller.rest.pojo.Authentication;
 import org.restlet.Request;
 import org.restlet.Response;
 import org.restlet.ext.jaxb.JaxbRepresentation;
-import org.restlet.representation.Representation;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,31 +57,6 @@ public class LoginServerResourceTest {
 
     @Test
     public void authenticate() throws Exception {
-        Authentication auth = new Authentication(USERNAME);
-        auth.getCredintals().setPasswordHash(PASSWORD);
-        Representation rep = new JaxbRepresentation<Authentication>(auth);
-        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
-                sut.authenticate(rep), Authentication.class);
-        Authentication result = resultRep.getObject();
-        assertEquals(result.getStatus(), "success");
-        assertEquals(result.getProfile().getFirstName(), FIRSTNAME);
-        assertEquals(result.getProfile().getLastName(), LASTNAME);
-    }
-
-    @Test
-    public void authenticate_whenUserNotFound() throws Exception {
-        Authentication auth = new Authentication("notMatchUsername");
-        auth.getCredintals().setPasswordHash(PASSWORD);
-        Representation rep = new JaxbRepresentation<Authentication>(auth);
-        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(
-                sut.authenticate(rep), Authentication.class);
-        Authentication result = resultRep.getObject();
-        assertEquals(result.getStatus(), "fail");
-        assertEquals(result.getStatusInfo(), "Incorrect username or password");
-    }
-
-    @Test
-    public void testAuthenticateImplementationForGetMethod() throws Exception {
         Request req = new Request();
         req.setResourceRef("");
         sut.setRequest(req);
@@ -99,7 +73,7 @@ public class LoginServerResourceTest {
     }
 
     @Test
-    public void testAuthenticateImplementationForGetMethod_whenUserNotFound() throws IOException {
+    public void authenticateWhenUserNotFound() throws IOException {
         Request req = new Request();
         req.setResourceRef("");
         sut.setRequest(req);
@@ -111,7 +85,5 @@ public class LoginServerResourceTest {
         assertEquals(result.getStatus(), "fail");
         assertEquals(result.getStatusInfo(), "Incorrect username or password");
         assertEquals(sut.getResponse().getStatus().getCode(), HttpStatus.SC_NOT_FOUND);
-
     }
-
 }
