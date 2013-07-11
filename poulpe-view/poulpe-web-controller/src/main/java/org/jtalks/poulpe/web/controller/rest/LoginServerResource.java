@@ -28,7 +28,6 @@ import org.restlet.representation.Representation;
 import org.restlet.resource.ServerResource;
 
 import javax.annotation.Nonnull;
-import java.io.IOException;
 
 /**
  * RESTful server resource for the {@code LoginResource} interface.
@@ -57,22 +56,6 @@ public class LoginServerResource extends ServerResource implements LoginResource
      * {@inheritDoc}
      */
     @Override
-    public Representation authenticate(Representation rep) throws IOException {
-        JaxbRepresentation<Authentication> authRep = new JaxbRepresentation<Authentication>(rep, Authentication.class);
-        Authentication auth = authRep.getObject();
-        Credentials cred = auth.getCredintals();
-
-        Authentication result = getAuthentication(cred);
-
-        JaxbRepresentation<Authentication> resultRep = new JaxbRepresentation<Authentication>(result);
-        resultRep.setFormattedOutput(true);
-        return resultRep;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
     public Representation authenticate() {
         Credentials cred = getCredentialsFromQuery();
         Authentication result = getAuthentication(cred);
@@ -81,7 +64,6 @@ public class LoginServerResource extends ServerResource implements LoginResource
         resultRep.setFormattedOutput(true);
         return resultRep;
     }
-
 
     /**
      * Returns {@code Authentication} by {@code Credentials}
@@ -113,6 +95,4 @@ public class LoginServerResource extends ServerResource implements LoginResource
         return result;
 
     }
-
-
 }

@@ -15,36 +15,20 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
+import org.restlet.representation.Representation;
+import org.restlet.resource.Get;
+
 import java.io.IOException;
 
-import org.restlet.representation.Representation;
-import org.restlet.data.Form;
-import org.restlet.resource.Get;
-import org.restlet.resource.Post;
-
 /**
- * Login RESTful service resource interface.
+ * Login RESTful service resource interface
  *
  * @author Guram Savinov
  */
 public interface LoginResource {
 
     /**
-     * Authenticates user by username and password hash specified in request
-     * arguments wrapped to {@code Authentication} representation.
-     *
-     * @param rep the {@code Authentication} representation, that wraps
-     *            service request arguments
-     * @return operation status and {@code Profile} wrapped to {@code Authentication}
-     *         representation. If user not found, returns meets both HTTP status
-     * @throws IOException when user or password not match
-     */
-    @Post
-    Representation authenticate(Representation rep) throws IOException;
-
-    /**
-     * Authenticates user by username and password hash specified in request
-     * arguments (for requests GET).
+     * Authenticates user by username and password hash specified in request arguments
      *
      * @return operation status and {@code Profile} wrapped to {@code Authentication}
      *         representation If user not found, returns meets both HTTP status
