@@ -15,6 +15,8 @@
 
 package org.jtalks.poulpe.web.controller.rest.pojo;
 
+import org.jtalks.poulpe.model.entity.PoulpeUser;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -32,6 +34,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="firstName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="lastName" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="enabled" type="{http://www.w3.org/2001/XMLSchema}boolean"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -43,7 +46,8 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "profile", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
         "firstName",
-        "lastName"
+        "lastName",
+        "enabled"
 })
 public class Profile {
 
@@ -51,62 +55,44 @@ public class Profile {
     protected String firstName;
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
     protected String lastName;
+    @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
+    protected boolean enabled;
 
-    /**
-     * Creates an {@code Profile} instance.
-     */
     public Profile() {
     }
 
     /**
-     * Creates an {@code Profile} instance with specified firstname and lastname.
+     * Creates an {@code Profile} from the {@code PoulpeUser} instance
      *
-     * @param firstName the firstname
-     * @param lastName  the lastname
+     * @param user the {@code PoulpeUser} instance
      */
-    public Profile(String firstName, String lastName) {
-        this.firstName = firstName;
-        this.lastName = lastName;
+    public Profile(PoulpeUser user) {
+        this.firstName = user.getFirstName();
+        this.lastName = user.getLastName();
+        this.enabled = user.isEnabled();
     }
 
-    /**
-     * Gets the value of the firstName property.
-     *
-     * @return possible object is
-     *         {@link String }
-     */
     public String getFirstName() {
         return firstName;
     }
 
-    /**
-     * Sets the value of the firstName property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
     public void setFirstName(String value) {
         this.firstName = value;
     }
 
-    /**
-     * Gets the value of the lastName property.
-     *
-     * @return possible object is
-     *         {@link String }
-     */
     public String getLastName() {
         return lastName;
     }
 
-    /**
-     * Sets the value of the lastName property.
-     *
-     * @param value allowed object is
-     *              {@link String }
-     */
     public void setLastName(String value) {
         this.lastName = value;
     }
 
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
 }

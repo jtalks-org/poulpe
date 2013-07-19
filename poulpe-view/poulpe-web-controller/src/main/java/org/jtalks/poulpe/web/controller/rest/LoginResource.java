@@ -18,8 +18,6 @@ package org.jtalks.poulpe.web.controller.rest;
 import org.restlet.representation.Representation;
 import org.restlet.resource.Get;
 
-import java.io.IOException;
-
 /**
  * Login RESTful service resource interface
  *
@@ -30,11 +28,9 @@ public interface LoginResource {
     /**
      * Authenticates user by username and password hash specified in request arguments
      *
-     * @return operation status and {@code Profile} wrapped to {@code Authentication}
-     *         representation If user not found, returns meets both HTTP status
-     * @throws IOException when user password not match
+     * @return operation status and {@code Profile} wrapped to the {@code Authentication} representation
      */
     @Get
-    Representation authenticate() throws IOException;
+    Representation authenticate();
 
 }
