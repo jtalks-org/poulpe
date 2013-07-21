@@ -210,7 +210,7 @@
   <bean name="publicRestRouter" class="org.restlet.ext.spring.SpringBeanRouter">
     <property name="attachments">
       <util:map>
-        <entry key="/authenticate" value="loginServerResource"/>
+
       </util:map>
     </property>
   </bean>
@@ -219,6 +219,7 @@
     <property name="attachments">
       <util:map>
         <entry key="/user" value="userRegistrationResource"/>
+        <entry key="/authenticate" value="loginServerResource"/>
       </util:map>
     </property>
   </bean>
@@ -244,12 +245,8 @@
     <property name="next" ref="privateRestRouter"/>
   </bean>
 
-  <!-- Simple map verifier for the challenge authenticator -->
-  <bean id="verifier" class="org.restlet.security.MapVerifier">
-    <constructor-arg index="0">
-      <util:map map-class="java.util.concurrent.ConcurrentHashMap">
-        <entry key="${rest_login}" value="#{'${rest_password}'.toCharArray()}"/>
-      </util:map>
-    </constructor-arg>
+  <!-- Verifier for the challenge authenticator -->
+  <bean id="verifier" class="org.jtalks.poulpe.web.controller.rest.authenticator.PropertyVerifier">
+    <constructor-arg index="0" ref="componentService" />
   </bean>
 </beans>
