@@ -264,10 +264,10 @@ public class TransactionalUserService implements UserService {
     @Override
     public void registration(PoulpeUser user) throws ValidationException {
         if (userDao.getByUsername(user.getUsername()) != null) {
-            throw new ValidationException(Arrays.asList(new String[]{"user.username.already_exists"}));
+            throw new ValidationException(Arrays.asList(new String[]{User.USER_ALREADY_EXISTS}));
         }
         if (userDao.getByEmail(user.getEmail()) != null) {
-            throw  new ValidationException(Arrays.asList(new String[]{"user.email.already_exists"}));
+            throw  new ValidationException(Arrays.asList(new String[]{User.EMAIL_ALREADY_EXISTS}));
         }
         try {
             user.setSalt(""); //because cannot be null
