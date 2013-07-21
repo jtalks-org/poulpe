@@ -36,6 +36,9 @@ public class PropertyVerifier extends MapVerifier{
 
     private static final Logger LOGGER = Logger.getLogger(PropertyVerifier.class);
 
+    public static final String USERNAME_PROP= "poulpe.rest_login";
+    public static final String PASSWORD_PROP= "poulpe.rest_password";
+
     private ComponentService componentService;
 
     public PropertyVerifier(ComponentService componentService) {
@@ -51,18 +54,18 @@ public class PropertyVerifier extends MapVerifier{
     public String loadCredentialsFromProperties(){
         Component component = componentService.getByType(ComponentType.ADMIN_PANEL);
         if(component == null){
-            LOGGER.error("The component with of type ADMIN_PANEL was not found.");
+            LOGGER.error("The component of type ADMIN_PANEL was not found.");
             return null;
         }
-        String username = component.getProperty("poulpe.rest_login");
-        String password = component.getProperty("poulpe.rest_password");
+        String username = component.getProperty(USERNAME_PROP);
+        String password = component.getProperty(PASSWORD_PROP);
 
         if(username==null){
-            LOGGER.error("The poulpe.rest_login property is NULL.");
+            LOGGER.error("The "+USERNAME_PROP+" property is NULL.");
             return null;
         }
         if(password==null){
-            LOGGER.error("The poulpe.rest_password property is NULL.");
+            LOGGER.error("The "+PASSWORD_PROP+" property is NULL.");
             return null;
         }
         ConcurrentHashMap<String, char[]> localSecrets = new ConcurrentHashMap<String, char[]>();
@@ -91,6 +94,6 @@ public class PropertyVerifier extends MapVerifier{
      */
     @Override
     public void setLocalSecrets(Map<String, char[]> localSecrets) {
-        throw new UnsupportedClassVersionError("Username and password are loading from properties of component.");
+        throw new UnsupportedOperationException("Username and password are loading from properties of component.");
     }
 }
