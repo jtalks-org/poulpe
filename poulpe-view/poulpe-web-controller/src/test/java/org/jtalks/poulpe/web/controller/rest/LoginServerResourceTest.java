@@ -40,6 +40,7 @@ public class LoginServerResourceTest {
     private static final String PASSWORD = "password";
     private static final String FIRSTNAME = "firstname";
     private static final String LASTNAME = "lastname";
+    private static final boolean ENABLED = true;
 
     private LoginServerResource sut;
 
@@ -49,6 +50,7 @@ public class LoginServerResourceTest {
         PoulpeUser user = new PoulpeUser(USERNAME, "email", PASSWORD, "salt");
         user.setFirstName(FIRSTNAME);
         user.setLastName(LASTNAME);
+        user.setEnabled(ENABLED);
         when(userService.authenticate(eq(USERNAME), eq(PASSWORD))).thenReturn(user);
         when(userService.authenticate(not((eq(USERNAME))), eq(PASSWORD))).thenThrow(new NotFoundException());
         sut = new LoginServerResource(userService);
@@ -68,6 +70,7 @@ public class LoginServerResourceTest {
         assertEquals(result.getStatus(), "success");
         assertEquals(result.getProfile().getFirstName(), FIRSTNAME);
         assertEquals(result.getProfile().getLastName(), LASTNAME);
+        assertEquals(result.getProfile().isEnabled(), ENABLED);
         assertEquals(sut.getResponse().getStatus().getCode(), HttpStatus.SC_OK);
 
     }

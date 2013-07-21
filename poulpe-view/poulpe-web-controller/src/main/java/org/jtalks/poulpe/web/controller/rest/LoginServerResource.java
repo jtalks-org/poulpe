@@ -30,7 +30,7 @@ import org.restlet.resource.ServerResource;
 import javax.annotation.Nonnull;
 
 /**
- * RESTful server resource for the {@code LoginResource} interface.
+ * RESTful server resource for the {@code LoginResource} interface
  *
  * @author Guram Savinov
  */
@@ -69,14 +69,14 @@ public class LoginServerResource extends ServerResource implements LoginResource
      * Returns {@code Authentication} by {@code Credentials}
      *
      * @param credentials {@code Credentials}
-     * @return {@code Authentication}, If user not found, returns meets both HTTP status 404
+     * @return {@code Authentication}, if user not found - set HTTP status 404 (NOT FOUND)
      */
     private Authentication getAuthentication(Credentials credentials) {
         Authentication result = new Authentication(credentials.getUsername());
         try {
             PoulpeUser user = userService.authenticate(credentials.getUsername(), credentials.getPasswordHash());
             result.setStatus(STATUS_SUCCESS);
-            result.setProfile(new Profile(user.getFirstName(), user.getLastName()));
+            result.setProfile(new Profile(user));
         } catch (NotFoundException e) {
             getResponse().setStatus(new Status(HttpStatus.SC_NOT_FOUND));
             result.setStatus(STATUS_FAIL);
@@ -93,6 +93,5 @@ public class LoginServerResource extends ServerResource implements LoginResource
         result.setUsername(getQuery().getValues(USERNAME_PARAM));
         result.setPasswordHash(getQuery().getValues(HASH_PASS_PARAM));
         return result;
-
     }
 }
