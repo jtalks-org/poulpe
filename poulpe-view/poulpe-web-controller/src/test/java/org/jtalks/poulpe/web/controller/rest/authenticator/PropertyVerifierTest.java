@@ -24,7 +24,7 @@ public class PropertyVerifierTest {
         propertyVerifier = new PropertyVerifier(componentService);
     }
 
-    @Test(enabled = false)
+    @Test
     public void emptyUsernameAndPasswordMeanNoAuthentication() throws Exception {
         Component component = new Component();
         component.addProperty(PropertyVerifier.USERNAME_PROP, "");
@@ -43,10 +43,10 @@ public class PropertyVerifierTest {
 
         when(componentService.getByType(ComponentType.ADMIN_PANEL)).thenReturn(component);
 
-        assertEquals(propertyVerifier.verify(new Request(), new Response(null)), Verifier.RESULT_VALID);
+        assertEquals(propertyVerifier.verify(new Request(), new Response(null)), Verifier.RESULT_MISSING);
     }
 
-    @Test(enabled = false)
+    @Test
     public void emptyPasswordMeansNoAuthentication() throws Exception {
         Component component = new Component();
         component.addProperty(PropertyVerifier.USERNAME_PROP, "1234");
@@ -54,7 +54,7 @@ public class PropertyVerifierTest {
 
         when(componentService.getByType(ComponentType.ADMIN_PANEL)).thenReturn(component);
 
-        assertEquals(propertyVerifier.verify(new Request(),new Response(null)), Verifier.RESULT_VALID);
+        assertEquals(propertyVerifier.verify(new Request(),new Response(null)), Verifier.RESULT_MISSING);
     }
 
     @Test(expectedExceptions = UnsupportedOperationException.class)

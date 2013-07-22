@@ -84,7 +84,10 @@ public class PropertyVerifier extends MapVerifier{
     public int verify(Request request, Response response) {
         String username =loadCredentialsFromProperties();
         if(username!=null && username.isEmpty()){
-            return Verifier.RESULT_VALID;
+            char[] password = getLocalSecret(username);
+            if(password.length==0){
+                return Verifier.RESULT_VALID;
+            }
         }
         return super.verify(request, response);
     }
