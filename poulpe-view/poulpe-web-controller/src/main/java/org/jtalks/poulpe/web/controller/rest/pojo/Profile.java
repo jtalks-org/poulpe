@@ -45,6 +45,7 @@ import javax.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "profile", namespace = "http://www.jtalks.org/namespaces/1.0", propOrder = {
+        "email",
         "firstName",
         "lastName",
         "enabled"
@@ -57,6 +58,8 @@ public class Profile {
     protected String lastName;
     @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
     protected boolean enabled;
+    @XmlElement(namespace = "http://www.jtalks.org/namespaces/1.0", required = true)
+    protected String email;
 
     public Profile() {
     }
@@ -70,6 +73,7 @@ public class Profile {
         this.firstName = user.getFirstName();
         this.lastName = user.getLastName();
         this.enabled = user.isEnabled();
+        this.email = user.getEmail();
     }
 
     public String getFirstName() {
@@ -94,5 +98,13 @@ public class Profile {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

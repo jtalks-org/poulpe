@@ -210,7 +210,7 @@
   <bean name="publicRestRouter" class="org.restlet.ext.spring.SpringBeanRouter">
     <property name="attachments">
       <util:map>
-
+        <entry key="/authenticate" value="loginServerResource"/>
       </util:map>
     </property>
   </bean>
@@ -219,7 +219,6 @@
     <property name="attachments">
       <util:map>
         <entry key="/user" value="userRegistrationResource"/>
-        <entry key="/authenticate" value="loginServerResource"/>
       </util:map>
     </property>
   </bean>
