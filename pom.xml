@@ -5,7 +5,7 @@
   <groupId>org.jtalks.poulpe</groupId>
   <artifactId>poulpe</artifactId>
   <packaging>pom</packaging>
-  <version>1.9-SNAPSHOT</version>
+  <version>1.9</version>
 
   <name>${project.artifactId}</name>
 
