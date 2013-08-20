@@ -20,11 +20,13 @@ import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.jtalks.poulpe.web.controller.rest.pojo.*;
 import org.jtalks.poulpe.web.controller.rest.pojo.Error;
+import org.restlet.data.Form;
 import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.resource.ServerResource;
+import org.restlet.util.Series;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,8 +61,12 @@ public class UserRegistrationResource extends ServerResource implements Registra
         Errors errors = null;
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
-            User user = userRep.getObject();
-            userService.registration(createPoulpeUser(user));
+            PoulpeUser poulpeUser = createPoulpeUser(userRep.getObject());
+            if(!getDryRunFromHeader()){
+                userService.registration(poulpeUser);
+            }else{
+                userService.dryRunRegistration(poulpeUser);
+            }
         } catch (ValidationException e) {
             errors = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
@@ -156,5 +162,21 @@ public class UserRegistrationResource extends ServerResource implements Registra
         result.setFirstName(user.getFirstName());
         result.setLastName(user.getLastName());
         return result;
+    }
+
+    protected boolean getDryRunFromHeader(){
+        Series headers = (Series) getRequest().getAttributes().get("org.restlet.http.headers");
+        if(headers==null){
+            return false;
+        }
+        String value = headers.getValues("dryRun");
+        if(value==null){
+            return false;
+        }
+        value = value.toLowerCase();
+        if(value.equals("true")){
+            return true;
+        }
+        return false;
     }
 }

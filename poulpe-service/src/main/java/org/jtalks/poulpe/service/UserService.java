@@ -204,4 +204,12 @@ public interface UserService {
      * @throws ValidationException {@link ValidationException} if there are validation errors
      */
     void registration(PoulpeUser user) throws ValidationException;
+
+    /**
+     * Makes dry registration (without saving user data), but returns validation errors, if any.
+     *
+     * @param user the user
+     * @throws ValidationException {@link ValidationException} if there are validation errors
+     */
+    void dryRunRegistration(PoulpeUser user) throws ValidationException;
 }

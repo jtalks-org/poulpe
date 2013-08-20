@@ -31,9 +31,11 @@ import org.jtalks.poulpe.model.pages.Pagination;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
+import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionSynchronizationUtils;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import javax.validation.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -276,6 +278,15 @@ public class TransactionalUserService implements UserService {
             List<String> messages = getConstraintViolationsMessages(e.getConstraintViolations());
             throw new ValidationException(messages);
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void dryRunRegistration(PoulpeUser user) throws ValidationException {
+        registration(user);
+        TransactionInterceptor.currentTransactionStatus().setRollbackOnly();
     }
 
     /**

@@ -37,7 +37,9 @@ public class UserRegistrationResourceTest {
     public void beforeMethod(){
         userService = mock(UserService.class);
         userRegistrationResource = new UserRegistrationResource(userService);
-        userRegistrationResource.setResponse(new Response(new Request()));
+        Request request = new Request();
+        userRegistrationResource.setResponse(new Response(request));
+        userRegistrationResource.setRequest(request);
     }
 
     @Test
