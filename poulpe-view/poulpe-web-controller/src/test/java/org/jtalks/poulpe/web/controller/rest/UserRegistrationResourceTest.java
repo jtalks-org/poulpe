@@ -8,9 +8,11 @@ import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.jtalks.poulpe.web.controller.rest.pojo.*;
 import org.restlet.Request;
 import org.restlet.Response;
+import org.restlet.engine.header.Header;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
+import org.restlet.util.Series;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -40,11 +42,17 @@ public class UserRegistrationResourceTest {
         Request request = new Request();
         userRegistrationResource.setResponse(new Response(request));
         userRegistrationResource.setRequest(request);
+        Series headers = new Series(Header.class);
+        headers.add(UserRegistrationResource.DRY_RUN_PARAM,UserRegistrationResource.TRUE);
+        userRegistrationResource.getRequest().getAttributes().put(UserRegistrationResource.HEADERS_KEY,headers);
     }
 
     @Test
     public void testRegisterWhen200_OK() throws Exception {
 
+        Series headers = new Series(Header.class);
+        headers.add(UserRegistrationResource.DRY_RUN_PARAM,"false");
+        userRegistrationResource.getRequest().getAttributes().put(UserRegistrationResource.HEADERS_KEY,headers);
         doNothing().when(userService).registration(any(PoulpeUser.class));
 
         Representation repres = createUserRepresentation();
@@ -55,6 +63,18 @@ public class UserRegistrationResourceTest {
         assertEquals(userRegistrationResource.getResponse().getStatus().getCode(), HttpStatus.SC_OK);
     }
 
+    @Test
+    public void testDryRunRegisterWhen200_OK() throws Exception {
+
+        doNothing().when(userService).dryRunRegistration(any(PoulpeUser.class));
+
+        Representation repres = createUserRepresentation();
+
+        repres = userRegistrationResource.register(repres);
+
+        assertEquals(((StringRepresentation)repres).getText(), " ");
+        assertEquals(userRegistrationResource.getResponse().getStatus().getCode(), HttpStatus.SC_OK);
+    }
 
     @Test
     public void testRegisterWhenOtherException() throws Exception {
@@ -81,9 +101,40 @@ public class UserRegistrationResourceTest {
     }
 
     @Test
+    public void testDryRunRegisterWhenImpossibleUnmarshal() throws Exception {
+
+        doNothing().when(userService).dryRunRegistration(any(PoulpeUser.class));
+
+        Representation repres = userRegistrationResource.register(new StringRepresentation(""));
+        Errors errors = ((JaxbRepresentation<Errors>)repres).getObject();
+
+        assertNotNull(errors.getErrorList().get(0).getMessage());
+        assertEquals(userRegistrationResource.getResponse().getStatus().getCode(), HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
     public void testRegisterWhenValidationException() throws Exception {
 
+        userRegistrationResource.getRequest().getAttributes().clear();
         doThrow(createValidationException()).when(userService).registration(any(PoulpeUser.class));
+
+        Representation repres = createUserRepresentation();
+
+
+        repres = userRegistrationResource.register(repres);
+        Errors errors = ((JaxbRepresentation<Errors>)repres).getObject();
+
+        assertTrue(errors.getErrorList().size()>0);
+        for(org.jtalks.poulpe.web.controller.rest.pojo.Error e: errors.getErrorList()){
+            assertNotNull(e.getCode());
+        }
+        assertEquals(userRegistrationResource.getResponse().getStatus().getCode(), HttpStatus.SC_BAD_REQUEST);
+    }
+
+    @Test
+    public void testDryRunRegisterWhenValidationException() throws Exception {
+
+        doThrow(createValidationException()).when(userService).dryRunRegistration(any(PoulpeUser.class));
 
         Representation repres = createUserRepresentation();
 

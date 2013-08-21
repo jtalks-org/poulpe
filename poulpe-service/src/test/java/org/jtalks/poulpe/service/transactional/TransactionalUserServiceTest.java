@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
+import org.hibernate.Transaction;
 import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
@@ -31,6 +32,11 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionSynchronizationUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -281,8 +287,15 @@ public class TransactionalUserServiceTest {
         when(userDao.getByUsername(any(String.class))).thenReturn(null);
         when(userDao.getByEmail(any(String.class))).thenReturn(null);
         doNothing().when(userDao).save(any(PoulpeUser.class));
-
         userService.registration(user());
+    }
+
+    @Test(expectedExceptions = org.springframework.transaction.NoTransactionException.class)
+    public void testDryRunRegistration() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+        userService.dryRunRegistration(user());
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -295,12 +308,30 @@ public class TransactionalUserServiceTest {
     }
 
     @Test(expectedExceptions = ValidationException.class)
+    public void testDryRunRegistrationUsernameAlreadyExist() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(user());
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+
+        userService.dryRunRegistration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
     public void testRegistrationEmailAlreadyExist() throws Exception {
         when(userDao.getByUsername(any(String.class))).thenReturn(null);
         when(userDao.getByEmail(any(String.class))).thenReturn(user());
         doNothing().when(userDao).save(any(PoulpeUser.class));
 
         userService.registration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testDryRunRegistrationEmailAlreadyExist() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(user());
+        doNothing().when(userDao).save(any(PoulpeUser.class));
+
+        userService.dryRunRegistration(user());
     }
 
     @Test(expectedExceptions = ValidationException.class)
@@ -312,6 +343,17 @@ public class TransactionalUserServiceTest {
         doThrow(ex).when(userDao).save(any(PoulpeUser.class));
 
         userService.registration(user());
+    }
+
+    @Test(expectedExceptions = ValidationException.class)
+    public void testDryRunRegistrationAnyValidationErrors() throws Exception {
+        when(userDao.getByUsername(any(String.class))).thenReturn(null);
+        when(userDao.getByEmail(any(String.class))).thenReturn(null);
+
+        ConstraintViolationException ex = new ConstraintViolationException(constraintViolations());
+        doThrow(ex).when(userDao).save(any(PoulpeUser.class));
+
+        userService.dryRunRegistration(user());
     }
 
     private Group createGroupWithId(long groupId) {

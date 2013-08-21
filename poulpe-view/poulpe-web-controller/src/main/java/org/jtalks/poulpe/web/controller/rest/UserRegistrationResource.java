@@ -40,6 +40,10 @@ import java.util.List;
  */
 public class UserRegistrationResource extends ServerResource implements RegistrationResource {
 
+    public static final String HEADERS_KEY = "org.restlet.http.headers";
+    public static final String DRY_RUN_PARAM = "dryRun";
+    public static final String TRUE = "true";
+
     private UserService userService;
 
     public UserRegistrationResource(UserService userService) {
@@ -62,9 +66,9 @@ public class UserRegistrationResource extends ServerResource implements Registra
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             PoulpeUser poulpeUser = createPoulpeUser(userRep.getObject());
-            if(!getDryRunFromHeader()){
+            if (!getDryRunFromHeader()) {
                 userService.registration(poulpeUser);
-            }else{
+            } else {
                 userService.dryRunRegistration(poulpeUser);
             }
         } catch (ValidationException e) {
@@ -154,7 +158,7 @@ public class UserRegistrationResource extends ServerResource implements Registra
      * @param user the POJO {@code User}
      * @return {@code PoulpeUser}
      */
-    private PoulpeUser createPoulpeUser(User user){
+    private PoulpeUser createPoulpeUser(User user) {
         PoulpeUser result = new PoulpeUser();
         result.setUsername(user.getUsername());
         result.setEmail(user.getEmail());
@@ -164,17 +168,22 @@ public class UserRegistrationResource extends ServerResource implements Registra
         return result;
     }
 
-    protected boolean getDryRunFromHeader(){
-        Series headers = (Series) getRequest().getAttributes().get("org.restlet.http.headers");
-        if(headers==null){
+    /**
+     * Gets DRY_RUN_PARAM from HTTP header.
+     *
+     * @return value of parameter, or false if not exist.
+     */
+    protected boolean getDryRunFromHeader() {
+        Series headers = (Series) getRequest().getAttributes().get(HEADERS_KEY);
+        if (headers == null) {
             return false;
         }
-        String value = headers.getValues("dryRun");
-        if(value==null){
+        String value = headers.getValues(DRY_RUN_PARAM);
+        if (value == null) {
             return false;
         }
         value = value.toLowerCase();
-        if(value.equals("true")){
+        if (value.equals(TRUE)) {
             return true;
         }
         return false;
