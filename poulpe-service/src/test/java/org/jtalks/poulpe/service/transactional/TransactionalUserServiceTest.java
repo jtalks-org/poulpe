@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.hibernate.Transaction;
 import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
@@ -32,11 +31,10 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.transaction.support.TransactionSynchronizationUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,7 +56,9 @@ import static org.testng.Assert.*;
  * @author Vyacheslav Zhivaev
  * @author maxim reshetov
  */
-public class TransactionalUserServiceTest {
+@ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
+@TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
+public class TransactionalUserServiceTest extends AbstractTransactionalTestNGSpringContextTests {
     private static final String USERNAME = "username";
     private static final String HASED_PASSWORD = "password";
     private static final PoulpeUser POULPE_USER = new PoulpeUser(
@@ -290,7 +290,8 @@ public class TransactionalUserServiceTest {
         userService.registration(user());
     }
 
-    @Test(expectedExceptions = org.springframework.transaction.NoTransactionException.class)
+    //@Test(expectedExceptions = org.springframework.transaction.NoTransactionException.class)
+    @Transactional
     public void testDryRunRegistration() throws Exception {
         when(userDao.getByUsername(any(String.class))).thenReturn(null);
         when(userDao.getByEmail(any(String.class))).thenReturn(null);
