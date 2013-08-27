@@ -52,7 +52,8 @@ import static org.testng.Assert.*;
  * @author Vyacheslav Zhivaev
  * @author maxim reshetov
  */
-public class TransactionalUserServiceTest {
+
+public class TransactionalUserServiceTest{
     private static final String USERNAME = "username";
     private static final String HASED_PASSWORD = "password";
     private static final PoulpeUser POULPE_USER = new PoulpeUser(
