@@ -15,7 +15,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.apache.commons.lang.RandomStringUtils;
-import org.hibernate.Transaction;
 import org.hibernate.validator.engine.ConstraintViolationImpl;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
@@ -32,11 +31,6 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.transaction.support.TransactionSynchronizationUtils;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -370,7 +364,7 @@ public class TransactionalUserServiceTest {
     }
 
 
-    private static PoulpeUser user() {
+    public static PoulpeUser user() {
         return new PoulpeUser(RandomStringUtils.randomAlphanumeric(10), "USERNAME@mail.com", "PASSWORD", "salt");
     }
 
@@ -381,5 +375,4 @@ public class TransactionalUserServiceTest {
         }
         return result;
     }
-
 }
