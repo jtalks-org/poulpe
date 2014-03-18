@@ -35,8 +35,8 @@ INSERT INTO GROUPS (UUID, `NAME`, DESCRIPTION)
 
 -- IGNORE can be used here because USERNAME is unique column, so if table contain user with username='Admin', record
 --  will not be added.
-INSERT IGNORE INTO USERS (UUID, FIRST_NAME, LAST_NAME, USERNAME, ENCODED_USERNAME, EMAIL, PASSWORD, ROLE, SALT, REGISTRATION_DATE)
-  VALUES('7241p12-2720-99h0-r210-ed26491k86j7', @adminUserName, @adminUserName, @adminUserName, @adminUserName, 'admin@jtalks.org', @passwordHash, 'ADMIN_ROLE', '', NOW());
+INSERT IGNORE INTO USERS (UUID, FIRST_NAME, LAST_NAME, USERNAME, ENCODED_USERNAME, EMAIL, PASSWORD, ROLE, SALT)
+  VALUES('7241p12-2720-99h0-r210-ed26491k86j7', @adminUserName, @adminUserName, @adminUserName, @adminUserName, 'admin@jtalks.org', @passwordHash, 'ADMIN_ROLE', '');
 
 -- Adding created Admin to Administrators group(created at this migration or common migration) ).
 INSERT IGNORE INTO GROUP_USER_REF(USER_ID, GROUP_ID)
