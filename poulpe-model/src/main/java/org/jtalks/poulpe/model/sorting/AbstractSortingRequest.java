@@ -28,6 +28,11 @@ public abstract class AbstractSortingRequest {
     private String searchString;
 
     /**
+     * Search is case sensitive
+     */
+    private boolean caseSensitise = true;
+
+    /**
      * @return sorting by ascending or not
      */
     public boolean isAscending() {
@@ -81,5 +86,19 @@ public abstract class AbstractSortingRequest {
      */
     public void setSearchString(String searchString) {
         this.searchString = searchString;
+    }
+
+    /**
+     * @param caseSensitise search is case sensitive or not
+     */
+    public void setCaseSensitise(boolean caseSensitise) {
+        this.caseSensitise = caseSensitise;
+    }
+
+    /**
+     * @return search is case sensitive or not
+     */
+    public boolean isCaseSensitise() {
+        return caseSensitise;
     }
 }

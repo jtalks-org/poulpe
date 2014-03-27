@@ -249,7 +249,13 @@ public class TransactionalUserService implements UserService {
     @Override
     public PoulpeUser authenticate(String username, String password)
             throws NotFoundException {
-        PoulpeUser user = userDao.getByUsername(username);
+        UserSearchRequest searchRequest = new UserSearchRequest(true, 0, 2, "username", username);
+        searchRequest.setCaseSensitise(true);
+        List<PoulpeUser> users = userDao.findPoulpeUsersBySearchRequest(searchRequest);
+        if (users.isEmpty()) {
+            throw new NotFoundException();
+        }
+        PoulpeUser user = (users.size() == 1) ? users.get(0) : userDao.getByUsername(username);
         if (user == null) {
             throw new NotFoundException();
         }

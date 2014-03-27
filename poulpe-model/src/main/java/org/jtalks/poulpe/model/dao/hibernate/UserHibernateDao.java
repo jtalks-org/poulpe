@@ -19,6 +19,7 @@ import org.hibernate.Query;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.hibernate.type.StandardBasicTypes;
 import org.jtalks.common.model.dao.hibernate.GenericDao;
 import org.jtalks.common.model.entity.Group;
@@ -71,8 +72,9 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
     @Override
     public List<PoulpeUser> findPoulpeUsersBySearchRequest(UserSearchRequest searchRequest) {
         String searchString = SqlLikeEscaper.escapeControlCharacters(searchRequest.getSearchString());
+        SimpleExpression expression = Restrictions.like("username", MessageFormat.format(FORMAT, searchString)).ignoreCase();
         Criteria criteria = session().createCriteria(PoulpeUser.class)
-                .add(Restrictions.like("username", MessageFormat.format(FORMAT, searchString)))
+                .add((searchRequest.isCaseSensitise()) ? expression : expression.ignoreCase())
                 .addOrder(getOrder(searchRequest));
         searchRequest.getPagination().addPagination(criteria);
         return criteria.list();
