@@ -277,12 +277,10 @@ public class TransactionalUserServiceTest{
     public void authenticateCaseSensitise() throws NotFoundException {
         when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
                 .thenReturn(Arrays.asList(POULPE_USER, ANOTHER_USER));
-        when(userDao.getByUsername(eq(USERNAME))).thenReturn(POULPE_USER);
 
         assertEquals(userService.authenticate(USERNAME, HASED_PASSWORD), POULPE_USER);
 
         verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
-        verify(userDao).getByUsername(eq(USERNAME));
     }
 
     @Test
@@ -290,7 +288,6 @@ public class TransactionalUserServiceTest{
         String searchUsername = StringUtils.capitalize(USERNAME);
         when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
                 .thenReturn(Arrays.asList(POULPE_USER, ANOTHER_USER));
-        when(userDao.getByUsername(eq(USERNAME))).thenReturn(POULPE_USER);
 
         try {
             userService.authenticate(searchUsername, HASED_PASSWORD);
@@ -298,7 +295,6 @@ public class TransactionalUserServiceTest{
         } catch (NotFoundException e) {
         }
         verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
-        verify(userDao).getByUsername(eq(searchUsername));
     }
 
     @Test
@@ -313,7 +309,6 @@ public class TransactionalUserServiceTest{
         }
 
         verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
-        verify(userDao, never()).getByUsername(eq(USERNAME));
     }
 
     @Test
@@ -327,7 +322,6 @@ public class TransactionalUserServiceTest{
         } catch (NotFoundException e) {
         }
         verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
-        verify(userDao, never()).getByUsername(eq(USERNAME));
     }
 
     @Test

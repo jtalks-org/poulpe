@@ -32,8 +32,6 @@ import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
-import org.springframework.transaction.support.TransactionSynchronizationManager;
-import org.springframework.transaction.support.TransactionSynchronizationUtils;
 
 import javax.validation.*;
 import java.util.ArrayList;
@@ -249,21 +247,28 @@ public class TransactionalUserService implements UserService {
     @Override
     public PoulpeUser authenticate(String username, String password)
             throws NotFoundException {
-        UserSearchRequest searchRequest = new UserSearchRequest(true, 0, 2, "username", username);
-        searchRequest.setCaseSensitise(true);
-        List<PoulpeUser> users = userDao.findPoulpeUsersBySearchRequest(searchRequest);
-        if (users.isEmpty()) {
-            throw new NotFoundException();
-        }
-        PoulpeUser user = (users.size() == 1) ? users.get(0) : userDao.getByUsername(username);
-        if (user == null) {
-            throw new NotFoundException();
-        }
+        PoulpeUser user = getPoulpeUser(username);
         if (user.getPassword().equals(password)) {
             return user;
         } else {
             throw new NotFoundException();
         }
+    }
+
+    private PoulpeUser getPoulpeUser(String username) throws NotFoundException {
+        UserSearchRequest searchRequest = new UserSearchRequest(true, Pages.NONE, "username", username);
+        searchRequest.setCaseSensitise(true);
+        List<PoulpeUser> users = userDao.findPoulpeUsersBySearchRequest(searchRequest);
+        if (users.size() == 1) {
+            return users.get(0);
+        } else {
+            for (PoulpeUser user : users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        throw new NotFoundException();
     }
 
     /**

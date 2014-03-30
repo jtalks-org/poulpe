@@ -189,6 +189,17 @@ public interface UserService {
 
     /**
      * Authenticates user by username and password hash.
+     * Since version 2.1 we introduced case insensitive username verification. But to support previous installation
+     * we have to handle this in smarter way:
+     * <ul>
+     *     <li>
+     *         If there are several users exist with the same provided {@code username} differ only by letter's case
+     *         we do case sensitive username verification
+     *     </li>
+     *     <li>
+     *         If there is only one user with requested {@code username} we do case insensitive username verification
+     *     </li>
+     * <ul/>
      * 
      * @param username the username
      * @param password the hashed password
