@@ -72,17 +72,19 @@ public class LoginServerResource extends ServerResource implements LoginResource
      * @return {@code Authentication}, if user not found - set HTTP status 404 (NOT FOUND)
      */
     private Authentication getAuthentication(Credentials credentials) {
-        Authentication result = new Authentication(credentials.getUsername());
         try {
             PoulpeUser user = userService.authenticate(credentials.getUsername(), credentials.getPasswordHash());
+            Authentication result = new Authentication(user.getUsername());
             result.setStatus(STATUS_SUCCESS);
             result.setProfile(new Profile(user));
+            return result;
         } catch (NotFoundException e) {
             getResponse().setStatus(new Status(HttpStatus.SC_NOT_FOUND));
+            Authentication result = new Authentication(credentials.getUsername());
             result.setStatus(STATUS_FAIL);
             result.setStatusInfo(STATUS_FAIL_INFO);
+            return result;
         }
-        return result;
     }
 
     /**
