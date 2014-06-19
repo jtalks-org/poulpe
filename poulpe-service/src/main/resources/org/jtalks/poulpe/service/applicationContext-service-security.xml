@@ -20,7 +20,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
   <!-- Retrieves, modifies and strores access control lists -->
-  <bean id="aclService" class="org.springframework.security.acls.jdbc.JdbcMutableAclService">
+  <bean id="aclService" class="org.jtalks.common.security.acl.JtalksMutableAcService">
     <constructor-arg ref="dataSource"/>
     <constructor-arg ref="lookupStrategy"/>
     <constructor-arg ref="aclCache"/>
@@ -30,7 +30,7 @@
   </bean>
   <bean id="dtoMapper" class="org.jtalks.common.service.security.DtoMapper"/>
 
-  <bean id="baseLookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+  <bean id="baseLookupStrategy" class="org.jtalks.common.security.acl.JtalksLookupStrategy">
     <constructor-arg ref="dataSource"/>
     <constructor-arg ref="aclCache"/>
     <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
@@ -45,7 +45,7 @@
   <bean id="permissionFactory" class="org.springframework.security.acls.domain.DefaultPermissionFactory"/>
   <!-- Responsible for efficient retrieval of ACLs from database -->
   <!-- Responsible for efficient retrieval of ACLs from database -->
-  <bean id="lookupStrategy" class="org.springframework.security.acls.jdbc.BasicLookupStrategy">
+  <bean id="lookupStrategy" class="org.jtalks.common.security.acl.JtalksLookupStrategy">
     <constructor-arg ref="dataSource"/>
     <constructor-arg ref="aclCache"/>
     <constructor-arg ref="jtalksAclAuthorizationStrategy"/>
