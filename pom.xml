@@ -199,7 +199,7 @@
       <dependency>
         <groupId>org.springframework.security</groupId>
         <artifactId>spring-security-acl</artifactId>
-        <version>3.1.1.CI-SNAPSHOT</version>
+        <version>3.1.1.JAVATALKS-PATCH3.RELEASE</version>
       </dependency>
 
       <!-- AOP -->
@@ -533,7 +533,7 @@
     <springVersion>3.0.5.RELEASE</springVersion>
     <zkVersion>6.0.1.FL.20120413</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <commonVersion>0.57-SNAPSHOT</commonVersion>
+    <commonVersion>0.57</commonVersion>
   </properties>
 
   <distributionManagement>
