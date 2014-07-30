@@ -18,7 +18,6 @@ import org.jtalks.common.model.entity.Branch;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
@@ -98,14 +97,6 @@ public class PermissionManager {
         for (Group group : changes.getRemovedGroupsAsArray()) {
             deleteGrantsOfGroup(group, changes.getPermission(), entity);
         }
-    }
-
-    /**
-     * @param branch object identity
-     * @return {@link org.jtalks.poulpe.model.dto.GroupsPermissions <BranchPermission>} for given branch
-     */
-    public GroupsPermissions<BranchPermission> getPermissionsMapFor(Branch branch) {
-        return getPermissionsMapFor(BranchPermission.getAllAsList(), branch);
     }
 
     /**

@@ -11,6 +11,4 @@
     disabled="true" />
   <button id="addBranchButton" label="${labels.sections.button.add.branch}" sclass="section.tree.addButton" />
   <button id="delButton" label="${labels.sections.button.remove}" sclass="section.tree.delButton" />
-  <button id="permissionsButton" label="${labels.sections.button.permissions}" onClick="openPermissionsPage"
-    disabled="true" sclass="section.tree.permissionsButton" />
 </zk>

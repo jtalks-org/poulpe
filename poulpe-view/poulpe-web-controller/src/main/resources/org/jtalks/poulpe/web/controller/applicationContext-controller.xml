@@ -82,20 +82,6 @@
     <constructor-arg index="0" ref="forumStructureVm"/>
     <constructor-arg index="1" ref="forumStructureService"/>
   </bean>
-  <bean id="branchPermissionManagementVm" scope="desktop"
-        class="org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm">
-    <constructor-arg ref="windowManager"/>
-    <constructor-arg ref="permissionsService"/>
-    <constructor-arg ref="selectedEntity"/>
-  </bean>
-
-  <bean id="editGroupsForBranchPermissionVm" scope="prototype"
-        class="org.jtalks.poulpe.web.controller.branch.EditGroupsForBranchPermissionVm">
-    <constructor-arg ref="windowManager"/>
-    <constructor-arg ref="permissionsService"/>
-    <constructor-arg ref="groupService"/>
-    <constructor-arg ref="selectedEntity"/>
-  </bean>
 
   <bean id="editGroupsForComponentPermissionVm" scope="prototype"
         class="org.jtalks.poulpe.web.controller.component.EditGroupsForComponentPermissionVm">

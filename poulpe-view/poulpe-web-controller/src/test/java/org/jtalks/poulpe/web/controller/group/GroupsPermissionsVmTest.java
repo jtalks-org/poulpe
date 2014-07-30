@@ -118,7 +118,7 @@ public class GroupsPermissionsVmTest {
 
         return new Object[][] {
                 { Lists.newArrayList(), Lists.newArrayList(), new GroupsPermissions<GeneralPermission>() },
-                { permissions, components, new GroupsPermissions<GeneralPermission>(permissions) },
-                { BranchPermission.getAllAsList(), components, new GroupsPermissions<GeneralPermission>() }, };
+                { permissions, components, new GroupsPermissions<GeneralPermission>(permissions) }
+               };
     }
 }

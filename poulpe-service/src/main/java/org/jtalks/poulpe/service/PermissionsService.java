@@ -16,7 +16,6 @@
 package org.jtalks.poulpe.service;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
@@ -30,14 +29,6 @@ import java.util.List;
  * Service for dealing with {@link PermissionChanges} objects
  */
 public interface PermissionsService {
-
-    /**
-     * Return access lists for branch.
-     *
-     * @param branch branch which will be returned access list
-     * @return access list
-     */
-    GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch);
 
     /**
      * Change grants for branch.

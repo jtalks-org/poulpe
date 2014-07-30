@@ -15,12 +15,9 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.service.exceptions.NotFoundException;
-import org.jtalks.poulpe.logic.PermissionManager;
 import org.jtalks.poulpe.model.dao.BranchDao;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.service.BranchService;
-import org.jtalks.poulpe.service.PermissionsService;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -45,10 +42,6 @@ public class TransactionalBranchServiceTest {
 
     @Mock
     BranchDao branchDao;
-    @Mock
-    PermissionManager branchPermissionManager;
-    @Mock
-    PermissionsService permissionsService;
 
     private long BRANCH_ID = 1L;
 
@@ -71,39 +64,12 @@ public class TransactionalBranchServiceTest {
         verify(branchDao).get(BRANCH_ID);
     }
 
-    @Test
-    public void testChangeGrants() {
-        PermissionChanges accessChanges = new PermissionChanges(null);
-        PoulpeBranch branch = new PoulpeBranch("name");
-
-        permissionsService.changeGrants(branch, accessChanges);
-
-        branchPermissionManager.changeGrants(branch, accessChanges);
-    }
-
     @Test(expectedExceptions = {NotFoundException.class})
     public void testGetIncorrectId() throws NotFoundException {
         when(branchDao.isExist(BRANCH_ID)).thenReturn(false);
         branchService.get(BRANCH_ID);
     }
 
-    @Test
-    public void testGetGroupAccessListFor() {
-        PoulpeBranch branch = new PoulpeBranch();
-
-        permissionsService.getPermissionsFor(branch);
-        branchPermissionManager.getPermissionsMapFor(branch);
-
-    }
-
-    @Test
-    public void testChangeRestrictions() {
-        PermissionChanges accessChanges = new PermissionChanges(null);
-        PoulpeBranch branch = new PoulpeBranch("name");
-
-        permissionsService.changeRestrictions(branch, accessChanges);
-        branchPermissionManager.changeRestrictions(branch, accessChanges);
-    }
 
     @Test
     public void testDeleteBranchMovingTopic() {

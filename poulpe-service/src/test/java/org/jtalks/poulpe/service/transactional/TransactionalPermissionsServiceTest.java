@@ -17,7 +17,6 @@ package org.jtalks.poulpe.service.transactional;
 
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.logic.PermissionManager;
@@ -46,17 +45,8 @@ public class TransactionalPermissionsServiceTest {
     }
 
     @Test
-    public void testGetPermissionsFor() {
-        PoulpeBranch branch = mock(PoulpeBranch.class);
-        when(permissionManager.getPermissionsMapFor(branch)).thenReturn(new GroupsPermissions<BranchPermission>());
-        assertNotNull(permissionsService.getPermissionsFor(branch));
-    }
-
-    @Test
     public void testChangeGrants() {
         PermissionChanges changes = mock(PermissionChanges.class);
-        PoulpeBranch branch = mock(PoulpeBranch.class);
-        permissionsService.changeGrants(branch, changes);
 
         Component component = mock(Component.class);
         permissionsService.changeGrants(component, changes);
@@ -68,8 +58,6 @@ public class TransactionalPermissionsServiceTest {
     @Test
     public void testChangeRestrictions() {
         PermissionChanges changes = mock(PermissionChanges.class);
-        PoulpeBranch branch = mock(PoulpeBranch.class);
-        permissionsService.changeRestrictions(branch, changes);
 
         Component component = mock(Component.class);
         permissionsService.changeRestrictions(component, changes);

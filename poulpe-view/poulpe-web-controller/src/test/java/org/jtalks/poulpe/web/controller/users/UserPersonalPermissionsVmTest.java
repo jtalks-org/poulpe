@@ -23,7 +23,6 @@ import org.jtalks.poulpe.service.PermissionsService;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.jtalks.poulpe.web.controller.zkmacro.PermissionManagementBlock;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -36,7 +35,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 /**
- * Tests for {@link BranchPermissionManagementVm}.
+ * Tests for {@link UserPersonalPermissionsVm}.
  *
  * @author Vyacheslav Zhivaev
  * @author Maxim Reshetov

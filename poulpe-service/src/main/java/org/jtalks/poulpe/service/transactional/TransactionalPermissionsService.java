@@ -16,7 +16,6 @@
 package org.jtalks.poulpe.service.transactional;
 
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.ProfilePermission;
 import org.jtalks.poulpe.logic.PermissionManager;
@@ -41,14 +40,6 @@ public class TransactionalPermissionsService implements PermissionsService {
      */
     public TransactionalPermissionsService(PermissionManager permissionManager) {
         this.permissionManager = permissionManager;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    @Override
-    public GroupsPermissions<BranchPermission> getPermissionsFor(PoulpeBranch branch) {
-        return permissionManager.getPermissionsMapFor(branch);
     }
 
     /**

@@ -19,7 +19,6 @@ import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.jtalks.common.model.entity.Entity;
 import org.jtalks.common.model.entity.Group;
-import org.jtalks.common.model.permissions.BranchPermission;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
@@ -29,11 +28,8 @@ import org.jtalks.common.security.acl.GroupAce;
 import org.jtalks.common.security.acl.sids.UserGroupSid;
 import org.jtalks.common.security.acl.sids.UserSid;
 import org.jtalks.poulpe.model.dao.GroupDao;
-import org.jtalks.poulpe.model.dto.AnonymousGroup;
 import org.jtalks.poulpe.model.dto.GroupsPermissions;
-import org.jtalks.poulpe.model.dto.PermissionChanges;
 import org.jtalks.common.model.entity.Component;
-import org.jtalks.poulpe.model.entity.PoulpeBranch;
 import org.jtalks.poulpe.model.fixtures.TestFixtures;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -49,8 +45,6 @@ import org.testng.annotations.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
-import static org.mockito.Matchers.anyListOf;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.any;
@@ -137,48 +131,6 @@ public class PermissionManagerTest {
         manager = new PermissionManager(aclManager, groupDao, aclUtil);
     }
 
-    @Test(dataProvider = "accessChanges")
-    public void testChangeGrants(PermissionChanges changes) throws Exception {
-        PoulpeBranch branch = TestFixtures.branch();
-
-        manager.changeGrants(branch, changes);
-
-        verify(aclManager, times(changes.getRemovedGroups().size())).
-                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
-
-        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
-                grant(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
-    }
-
-    @Test(dataProvider = "accessChanges")
-    public void testChangeRestriction(PermissionChanges changes) throws Exception {
-        PoulpeBranch branch = TestFixtures.branch();
-
-        manager.changeRestrictions(branch, changes);
-
-        verify(aclManager, times(changes.getRemovedGroups().size())).
-                delete(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
-
-        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
-                restrict(anyListOf(Sid.class), eq(listFromArray(changes.getPermission())), eq(branch));
-    }
-
-    @Test
-    public void testGetPermissionsMapForBranch() throws Exception {
-        PoulpeBranch branch = TestFixtures.branchWithId();
-        givenPermissions(branch, BranchPermission.values());
-
-        GroupsPermissions<BranchPermission> groupsPermissions = manager.getPermissionsMapFor(branch);
-        verify(aclManager).getGroupPermissionsOn(branch);
-        verify(aclUtil, times(BranchPermission.values().length)).getAclFor(branch);
-        assertTrue(groupsPermissions.getPermissions().containsAll(permissions));
-        for (GroupAce groupAce : groupAces) {
-            List<Group> groups = groupsPermissions.get((BranchPermission) groupAce.getPermission(), groupAce.isGranting());
-            assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
-            assertTrue(groups.contains(AnonymousGroup.ANONYMOUS_GROUP));
-        }
-    }
-
     @Test
     public void testGetPermissionsMapForComponent() throws Exception {
         Component component = TestFixtures.randomComponentWithId();
@@ -192,65 +144,6 @@ public class PermissionManagerTest {
                     groupAce.isGranting());
             assertNotNull(getGroupWithId(groups, groupAce.getGroupId()));
         }
-    }
-
-    @Test
-    public void testChangeGrantsOfAnonymousGroup() throws Exception {
-        PoulpeBranch branch = TestFixtures.branch();
-        PermissionChanges changes = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
-        List<Group> groupList = new ArrayList<Group>();
-        groupList.add(AnonymousGroup.ANONYMOUS_GROUP);
-        changes.addNewlyAddedGroups(groupList);
-        manager.changeGrants(branch, changes);
-        List<Sid> sids = new ArrayList<Sid>();
-        sids.add(UserSid.createAnonymous());
-
-        verify(aclManager, times(changes.getRemovedGroups().size())).
-                delete(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-
-        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
-                grant(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-    }
-
-    @Test
-    public void testRestrictGrantsOfAnonymousGroup() throws Exception {
-        PoulpeBranch branch = TestFixtures.branch();
-        PermissionChanges changes = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
-        List<Group> groupList = new ArrayList<Group>();
-        groupList.add(AnonymousGroup.ANONYMOUS_GROUP);
-        changes.addNewlyAddedGroups(groupList);
-        manager.changeRestrictions(branch, changes);
-        List<Sid> sids = new ArrayList<Sid>();
-        sids.add(UserSid.createAnonymous());
-
-        verify(aclManager, times(changes.getRemovedGroups().size())).
-                delete(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-
-        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
-                restrict(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-    }
-
-    @Test
-    public void testDeleteGrantsOfAnonymousGroup() throws Exception {
-        PoulpeBranch branch = TestFixtures.branch();
-        PermissionChanges changes = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
-        changes.addRemovedGroups(Lists.newArrayList(AnonymousGroup.ANONYMOUS_GROUP));
-        manager.changeGrants(branch, changes);
-        List<Sid> sids = Lists.<Sid>newArrayList(UserSid.createAnonymous());
-
-        verify(aclManager, times(changes.getRemovedGroups().size())).
-                delete(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-
-        verify(aclManager, times(changes.getNewlyAddedGroupsAsArray().length)).
-                grant(eq(sids), eq(listFromArray(changes.getPermission())), eq(branch));
-    }
-
-    @DataProvider
-    public Object[][] accessChanges() {
-        PermissionChanges accessChanges = new PermissionChanges(BranchPermission.CLOSE_TOPICS);
-        accessChanges.addNewlyAddedGroups(newArrayList(new Group("new1"), new Group("new2")));
-        accessChanges.addRemovedGroups(newArrayList(new Group("removed1"), new Group("removed2")));
-        return new Object[][]{{accessChanges}};
     }
 
     @DataProvider

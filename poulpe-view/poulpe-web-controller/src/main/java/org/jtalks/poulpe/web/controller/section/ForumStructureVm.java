@@ -20,7 +20,6 @@ import org.jtalks.poulpe.model.entity.PoulpeSection;
 import org.jtalks.poulpe.service.ForumStructureService;
 import org.jtalks.poulpe.web.controller.SelectedEntity;
 import org.jtalks.poulpe.web.controller.WindowManager;
-import org.jtalks.poulpe.web.controller.branch.BranchPermissionManagementVm;
 import org.zkoss.bind.annotation.*;
 import org.zkoss.zk.ui.event.DropEvent;
 import org.zkoss.zul.TreeNode;
@@ -74,16 +73,6 @@ public class ForumStructureVm {
     @GlobalCommand
     @NotifyChange({TREE_MODEL, SELECTED_ITEM_PROP})
     public void refreshTree() {
-    }
-
-    /**
-     * Opens a separate page - Branch Permissions where admin can edit what Groups have wha Permissions on the selected
-     * branch.
-     */
-    @Command
-    public void openBranchPermissions() {
-        selectedBranchForPermissions.setEntity(getSelectedItemInTree().getBranchItem());
-        BranchPermissionManagementVm.showPage(windowManager);
     }
 
     /** Removes selected {@link PoulpeBranch} from tree model.*/
