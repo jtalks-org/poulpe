@@ -23,8 +23,8 @@ SET @poulpeComponentName := 'Admin panel';
 SET @poulpeComponentType := 'ADMIN_PANEL';
 SET @aclClass :='COMPONENT';
 
-INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE, UUID, `NAME`, DESCRIPTION)
-  SELECT @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
+INSERT IGNORE INTO COMPONENTS (CMP_ID, COMPONENT_TYPE, UUID, `NAME`, DESCRIPTION)
+  SELECT 1, @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
     WHERE NOT EXISTS (SELECT * FROM COMPONENTS components WHERE components.COMPONENT_TYPE=@poulpeComponentType);
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
@@ -58,8 +58,9 @@ SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WH
 
 
 -- Adding record to acl_sid table, this record wires sid and user id.
-INSERT IGNORE INTO acl_sid (principal, sid)
-  VALUES(1, @acl_sid_user);
+INSERT INTO acl_sid (principal, sid)
+  select 1, @acl_sid_user from dual
+    where not exists (select acl_sid.sid from acl_sid where sid = @acl_sid_user);
 
 SET @acl_sid_id_user := (SELECT sid.id FROM acl_sid sid WHERE sid.sid = @acl_sid_user);
 
