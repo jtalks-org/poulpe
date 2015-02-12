@@ -22,9 +22,10 @@ SET @adminGroupName := 'Administrators';
 SET @poulpeComponentName := 'Admin panel';
 SET @poulpeComponentType := 'ADMIN_PANEL';
 SET @aclClass :='COMPONENT';
+SET @adminPanelComponentId := 1;
 
-INSERT IGNORE INTO COMPONENTS (COMPONENT_TYPE, UUID, `NAME`, DESCRIPTION)
-  SELECT @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
+INSERT IGNORE INTO COMPONENTS (CMP_ID, COMPONENT_TYPE, UUID, `NAME`, DESCRIPTION)
+  SELECT @adminPanelComponentId, @poulpeComponentType, '7241a11-5620-87a0-a810-ed26496z92m7',@poulpeComponentName,'JTalks Admin panel' FROM dual
     WHERE NOT EXISTS (SELECT * FROM COMPONENTS components WHERE components.COMPONENT_TYPE=@poulpeComponentType);
 
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
@@ -35,8 +36,9 @@ INSERT INTO GROUPS (UUID, `NAME`, DESCRIPTION)
 
 -- IGNORE can be used here because USERNAME is unique column, so if table contain user with username='Admin', record
 --  will not be added.
-INSERT IGNORE INTO USERS (UUID, FIRST_NAME, LAST_NAME, USERNAME, ENCODED_USERNAME, EMAIL, PASSWORD, ROLE, SALT)
-  VALUES('7241p12-2720-99h0-r210-ed26491k86j7', @adminUserName, @adminUserName, @adminUserName, @adminUserName, 'admin@jtalks.org', @passwordHash, 'ADMIN_ROLE', '');
+INSERT IGNORE INTO USERS (UUID, FIRST_NAME, LAST_NAME, USERNAME, ENCODED_USERNAME, EMAIL, PASSWORD, ROLE, SALT, ENABLED)
+  VALUES('7241p12-2720-99h0-r210-ed26491k86j7', @adminUserName, @adminUserName, @adminUserName,
+         @adminUserName, 'admin@jtalks.org', @passwordHash, 'ADMIN_ROLE', '', true);
 
 -- Adding created Admin to Administrators group(created at this migration or common migration) ).
 INSERT IGNORE INTO GROUP_USER_REF(USER_ID, GROUP_ID)
@@ -58,8 +60,10 @@ SET @object_id_identity := (SELECT component.CMP_ID FROM COMPONENTS component WH
 
 
 -- Adding record to acl_sid table, this record wires sid and user id.
-INSERT IGNORE INTO acl_sid (principal, sid)
-  VALUES(1, @acl_sid_user);
+INSERT INTO acl_sid (principal, sid)
+  SELECT 1, @acl_sid_user
+  FROM dual
+  WHERE NOT exists (SELECT acl_sid.sid FROM acl_sid WHERE sid = @acl_sid_user);
 
 SET @acl_sid_id_user := (SELECT sid.id FROM acl_sid sid WHERE sid.sid = @acl_sid_user);
 
@@ -86,8 +90,8 @@ SET @acl_object_identity_id := (SELECT aoi.id FROM acl_object_identity aoi
 SET @ace_order_max := (SELECT MAX(ae.ace_order) FROM acl_entry ae);
 SET @ace_order := (CASE WHEN  @ace_order_max is null THEN 0 ELSE @ace_order_max+1 END);
 
-INSERT IGNORE INTO acl_entry (id, acl_object_identity, sid, ace_order, mask, granting, audit_success, audit_failure)
-  SELECT  @acl_sid_id_group, @acl_object_identity_id, @acl_sid_id_group, @ace_order, 16, 1, 0 , 0 FROM dual
+INSERT IGNORE INTO acl_entry (acl_object_identity, sid, ace_order, mask, granting, audit_success, audit_failure)
+  SELECT  @acl_object_identity_id, @acl_sid_id_group, @ace_order, 16, 1, 0 , 0 FROM dual
     WHERE NOT EXISTS
        (SELECT ae.acl_object_identity, ae.sid FROM acl_entry ae
          WHERE ae.acl_object_identity = @acl_object_identity_id
