@@ -540,7 +540,7 @@
     <repository>
       <id>jtalks-nexus</id>
       <name>jtalks nexus</name>
-      <url>http://repo.jtalks.org/content/repositories/releases</url>
+      <url>http://repo.jtalks.org/content/repositories/builds</url>
     </repository>
     <snapshotRepository>
       <id>jtalks-nexus</id>
