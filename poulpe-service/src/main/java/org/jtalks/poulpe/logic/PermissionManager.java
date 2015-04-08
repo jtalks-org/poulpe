@@ -14,10 +14,7 @@
  */
 package org.jtalks.poulpe.logic;
 
-import org.jtalks.common.model.entity.Branch;
-import org.jtalks.common.model.entity.Component;
-import org.jtalks.common.model.entity.Entity;
-import org.jtalks.common.model.entity.Group;
+import org.jtalks.common.model.entity.*;
 import org.jtalks.common.model.permissions.GeneralPermission;
 import org.jtalks.common.model.permissions.JtalksPermission;
 import org.jtalks.common.security.acl.AclManager;
@@ -38,6 +35,9 @@ import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.List;
 import org.jtalks.common.model.permissions.ProfilePermission;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 /**
  * Responsible for allowing, restricting or deleting the permissions of the User Groups to actions.
@@ -49,6 +49,7 @@ public class PermissionManager {
     private final AclManager aclManager;
     private final AclUtil aclUtil;
     private final GroupDao groupDao;
+    private boolean isFirst = true;
 
     /**
      * Constructs {@link PermissionManager} with given {@link AclManager} and {@link GroupDao}
@@ -117,6 +118,10 @@ public class PermissionManager {
      * @return {@link PermissionsMap} for {@link Group}
      */
     public GroupsPermissions<ProfilePermission> getPermissionsMapFor(List<Group> groups) {
+        if(isFirst){
+            updatePrincipal(groups);
+            isFirst = false;
+        }
         GroupsPermissions<ProfilePermission> permissions = new GroupsPermissions<ProfilePermission>(ProfilePermission.getAllAsList());
         for (Group group: groups){
             GroupsPermissions<ProfilePermission> pmGroup = getPermissionsMapFor(ProfilePermission.getAllAsList(), group);
@@ -156,6 +161,29 @@ public class PermissionManager {
             }
         }
         return groupsPermissions;
+    }
+
+    /**
+     * Updates the principal and assign this one to the context.
+     *
+     * We need this functional because there are a rare cases when user details (like Id) of the principal
+     * are different from ones of current user in database. (It occurs when we cleared in database and
+     * then run the application with last saved session.)
+     *
+     * @param groups
+     */
+    private void updatePrincipal(List<Group> groups) {
+        User principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        for (Group group : groups) {
+            List<User> users = group.getUsers();
+            for (User user : users) {
+                if(!user.getUsername().equals(principal.getUsername()) ||
+                        user.getId() == principal.getId()) continue;
+                Authentication authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+                return;
+            }
+        }
     }
 
     /**
