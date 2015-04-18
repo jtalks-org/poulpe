@@ -16,6 +16,9 @@ package org.jtalks.poulpe.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import org.jtalks.common.model.entity.ComponentType;
+import org.jtalks.common.model.entity.User;
+import org.jtalks.common.service.exceptions.NotFoundException;
+import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.springframework.security.access.AccessDecisionVoter;
 import org.springframework.security.access.ConfigAttribute;
@@ -74,6 +77,7 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
 
     /** Authorize and save result in session attributes */
     private int authorizeAndSaveDecisionIntoSession(Authentication authentication) {
+        checkAndUpdatePrincipal(authentication);
         if (alreadyAuthorized()) {
             return ACCESS_GRANTED;
         }
@@ -127,5 +131,23 @@ public class AclAwareDecisionVoter implements AccessDecisionVoter {
     @VisibleForTesting
     RequestAttributes getRequestAttributes() {
         return RequestContextHolder.currentRequestAttributes();
+    }
+
+    /**
+     * Checks if the principal has correct user' id and update this one when required
+     *
+     * @param authentication
+     * @throws NotFoundException
+     */
+    private void checkAndUpdatePrincipal(Authentication authentication) {
+        User principal = (User) authentication.getPrincipal();
+        PoulpeUser currentUser = null;
+        try {
+            currentUser = userService.authenticate(principal.getUsername(), principal.getPassword());
+        } catch (NotFoundException e) {
+        }
+        if (principal != null && currentUser != null && principal.getId() == 0) {
+            principal.setId(currentUser.getId());
+        }
     }
 }
