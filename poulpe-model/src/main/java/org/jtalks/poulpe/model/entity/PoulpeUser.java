@@ -17,11 +17,17 @@ package org.jtalks.poulpe.model.entity;
 import org.hibernate.validator.constraints.Length;
 import org.jtalks.common.model.entity.Group;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+
 
 /**
  * Stores information about the user.
  */
 public class PoulpeUser extends org.jtalks.common.model.entity.User {
+
+    private static final long serialVersionUID = 7200307258941749787L;
 
     /**
      * Creates an empty and <i>not valid</i> instance without required fields, use {@link #PoulpeUser(String, String,
@@ -88,4 +94,44 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
         return "PoulpeUser [id=" + getId() + ", email=" + getEmail() + ", username=" + getUsername() + "]";
     }
 
+    /**
+     * Customized deserialization of the fields {@link org.jtalks.common.model.entity.Entity#id},
+     * {@link org.jtalks.common.model.entity.Entity#uuid}
+     *
+     * Note: The {@link org.jtalks.common.model.entity.User#groups} is marked as transient and will not be serialized
+     * (for more details pls. see at <a href="http://jira.jtalks.org/browse/POULPE-528">JIRA</a>).
+     *
+     * @serialData  {@link org.jtalks.common.model.entity.Entity#id}, {@link org.jtalks.common.model.entity.Entity#uuid}
+     *              and the hole entity {@link org.jtalks.common.model.entity.User},
+     *              expect for the transient field {@link org.jtalks.common.model.entity.User#groups}
+     * @param s
+     * @throws IOException
+     * @throws ClassNotFoundException
+     */
+    private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
+        s.defaultReadObject();
+        long id = s.readLong();
+        String uuid = (String)s.readObject();
+        setId(id);
+        setUuid(uuid);
+    }
+
+    /**
+     * Customized serialization of the fields {@link org.jtalks.common.model.entity.Entity#id},
+     * {@link org.jtalks.common.model.entity.Entity#uuid}
+     *
+     * Note: The {@link org.jtalks.common.model.entity.User#groups} is marked as transient and will not be serialized
+     * (for more details pls. see at <a href="http://jira.jtalks.org/browse/POULPE-528">JIRA</a>).
+     *
+     * @serialData  {@link org.jtalks.common.model.entity.Entity#id}, {@link org.jtalks.common.model.entity.Entity#uuid}
+     *              and the hole entity {@link org.jtalks.common.model.entity.User},
+     *              expect for the transient field {@link org.jtalks.common.model.entity.User#groups}
+     * @param s
+     * @throws IOException
+     */
+    private void writeObject(ObjectOutputStream s) throws IOException {
+        s.defaultWriteObject();
+        s.writeLong(getId());
+        s.writeObject(getUuid());
+    }
 }
