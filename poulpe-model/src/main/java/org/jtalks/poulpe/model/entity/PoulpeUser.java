@@ -105,7 +105,9 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
     private void readObject(ObjectInputStream s) throws IOException, ClassNotFoundException {
         s.defaultReadObject();
         long id = s.readLong();
+        String uuid = (String)s.readObject();
         setId(id);
+        setUuid(uuid);
     }
 
     /**
@@ -118,6 +120,7 @@ public class PoulpeUser extends org.jtalks.common.model.entity.User {
     private void writeObject(ObjectOutputStream s) throws IOException {
         s.defaultWriteObject();
         s.writeLong(getId());
+        s.writeObject(getUuid());
     }
 
 }
