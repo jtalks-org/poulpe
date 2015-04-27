@@ -14,6 +14,7 @@
  */
 package org.jtalks.poulpe.model.entity;
 
+import com.google.common.annotations.VisibleForTesting;
 import org.hibernate.validator.constraints.Length;
 import org.jtalks.common.model.entity.Group;
 

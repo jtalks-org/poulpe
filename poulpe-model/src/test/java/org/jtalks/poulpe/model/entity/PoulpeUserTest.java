@@ -1,11 +1,15 @@
 package org.jtalks.poulpe.model.entity;
 
 import com.google.common.collect.Lists;
+import com.mchange.util.AssertException;
 import org.jtalks.common.model.entity.Group;
+import org.mockito.Mock;
+import org.springframework.util.SerializationUtils;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.assertFalse;
-import static org.testng.Assert.assertTrue;
+import java.io.ObjectOutputStream;
+
+import static org.testng.Assert.*;
 
 /**
  * @author stanislav bashkirtsev
@@ -29,6 +33,14 @@ public class PoulpeUserTest {
         Group group = new Group();
         group.setId(id);
         return group;
+    }
+
+    @Test
+    public void theEntityFieldsShouldBeSerialized(){
+        PoulpeUser user = PoulpeUser.withId(1);
+        byte[] serialize = SerializationUtils.serialize(user);
+        PoulpeUser serializedUser = (PoulpeUser)SerializationUtils.deserialize(serialize);
+        assertEquals(user, serializedUser, "After serialization/deserialization PoulpeUser objects must be the same");
     }
 
 }
