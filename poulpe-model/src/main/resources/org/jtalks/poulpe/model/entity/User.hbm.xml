@@ -96,6 +96,10 @@
         <![CDATA[from PoulpeUser u where u.email = :email]]>
     </query>
 
+    <query name="findUsersByUUID">
+        <![CDATA[from PoulpeUser u where u.uuid = :uuid]]>
+    </query>
+
     <query name="findBannedUsers">
         <![CDATA[from PoulpeUser u where exists (from u.groups gr where gr.id in (:bannedGroups)) ]]>
     </query>

@@ -18,14 +18,13 @@ import org.apache.http.HttpStatus;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
-import org.jtalks.poulpe.web.controller.rest.pojo.*;
 import org.jtalks.poulpe.web.controller.rest.pojo.Error;
-import org.restlet.data.Form;
+import org.jtalks.poulpe.web.controller.rest.pojo.Errors;
+import org.jtalks.poulpe.web.controller.rest.pojo.User;
 import org.restlet.data.Status;
 import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
-import org.restlet.resource.ServerResource;
 import org.restlet.util.Series;
 
 import java.io.IOException;
@@ -38,7 +37,7 @@ import java.util.List;
  *
  * @author Mikhail Zaitsev
  */
-public class UserRegistrationResource extends ServerResource implements RegistrationResource {
+public class UserRegistrationResource extends CommonServerResource implements RegistrationResource {
 
     public static final String HEADERS_KEY = "org.restlet.http.headers";
     public static final String DRY_RUN_PARAM = "dryRun";
@@ -62,45 +61,26 @@ public class UserRegistrationResource extends ServerResource implements Registra
      */
     @Override
     public Representation register(Representation represent) {
-        Errors errors = null;
         try {
             JaxbRepresentation<User> userRep = new JaxbRepresentation<User>(represent, User.class);
             PoulpeUser poulpeUser = createPoulpeUser(userRep.getObject());
             if (!getDryRunFromHeader()) {
                 userService.registration(poulpeUser);
+                return new StringRepresentation(poulpeUser.getUuid());
             } else {
                 userService.dryRunRegistration(poulpeUser);
+                return new StringRepresentation(" ");
             }
         } catch (ValidationException e) {
-            errors = ifValidationException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+            return getErrorRepresentation(ifValidationException(e));
         } catch (IOException e) {
-            errors = ifIOException();
             getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+            return getErrorRepresentation(ifIOException());
         } catch (Exception e) {
-            errors = ifOtherException(e);
             getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+            return getErrorRepresentation(ifOtherException(e));
         }
-        Representation resultRep = null;
-        if (errors == null) {
-            resultRep = new StringRepresentation(" ");  //because must be an empty response
-        } else {
-            resultRep = new JaxbRepresentation<Errors>(errors);
-            ((JaxbRepresentation) resultRep).setFormattedOutput(true);
-        }
-        return resultRep;
-    }
-
-    /**
-     * Creates {@code Errors} object if thrown the {@code ValidationException}
-     *
-     * @param ex the {@code ValidationException}
-     * @return the object {@code Errors}
-     */
-    private Errors ifValidationException(ValidationException ex) {
-        Errors result = new Errors();
-        result.setErrorList(createErrorList(ex.getTemplateMessages()));
-        return result;
     }
 
     /**
@@ -115,40 +95,6 @@ public class UserRegistrationResource extends ServerResource implements Registra
         err.setMessage("Impossible to unmarshal request");
         errList.add(err);
         result.setErrorList(errList);
-        return result;
-    }
-
-    /**
-     * Creates {@code Errors} object if thrown the {@code Exception}
-     *
-     * @param ex the {@code Exception}
-     * @return the object {@code Errors}
-     */
-    private Errors ifOtherException(Exception ex) {
-        Errors result = new Errors();
-        List<Error> errList = new ArrayList<Error>();
-        Error err = new Error();
-        err.setMessage(ex.getMessage());
-        errList.add(err);
-        result.setErrorList(errList);
-        return result;
-    }
-
-    /**
-     * Creates a list errors from code messages.
-     * Removes '{' and '}' from code messages
-     *
-     * @param strings code messages
-     * @return a list errors
-     */
-    private List<Error> createErrorList(List<String> strings) {
-        List<Error> result = new ArrayList<Error>();
-        Error err = null;
-        for (String s : strings) {
-            err = new Error();
-            err.setCode(s.replaceAll("[{}]", ""));
-            result.add(err);
-        }
         return result;
     }
 
@@ -179,13 +125,6 @@ public class UserRegistrationResource extends ServerResource implements Registra
             return false;
         }
         String value = headers.getValues(DRY_RUN_PARAM);
-        if (value == null) {
-            return false;
-        }
-        value = value.toLowerCase();
-        if (value.equals(TRUE)) {
-            return true;
-        }
-        return false;
+        return value != null && value.equalsIgnoreCase(TRUE);
     }
 }

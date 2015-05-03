@@ -197,6 +197,7 @@
     <property name="attachments">
       <util:map>
         <entry key="/authenticate" value="loginServerResource"/>
+        <entry key="/activate" value="activateServerResource"/>
       </util:map>
     </property>
   </bean>
@@ -211,6 +212,9 @@
 
   <!-- All server resources -->
   <bean id="loginServerResource" class="org.jtalks.poulpe.web.controller.rest.LoginServerResource" scope="prototype">
+    <constructor-arg ref="userService"/>
+  </bean>
+  <bean id="activateServerResource" class="org.jtalks.poulpe.web.controller.rest.ActivationServerResource" scope="prototype">
     <constructor-arg ref="userService"/>
   </bean>
   <bean id="userRegistrationResource" class="org.jtalks.poulpe.web.controller.rest.UserRegistrationResource"

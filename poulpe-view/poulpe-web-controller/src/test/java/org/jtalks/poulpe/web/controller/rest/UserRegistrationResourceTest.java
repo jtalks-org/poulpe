@@ -21,9 +21,7 @@ import java.util.List;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
-import static org.testng.Assert.assertTrue;
+import static org.testng.Assert.*;
 
 public class UserRegistrationResourceTest {
 
@@ -50,16 +48,16 @@ public class UserRegistrationResourceTest {
     @Test
     public void testRegisterWhen200_OK() throws Exception {
 
-        Series headers = new Series(Header.class);
-        headers.add(UserRegistrationResource.DRY_RUN_PARAM,"false");
-        userRegistrationResource.getRequest().getAttributes().put(UserRegistrationResource.HEADERS_KEY,headers);
+        Series<Header> headers = new Series<Header>(Header.class);
+        headers.add(UserRegistrationResource.DRY_RUN_PARAM, "false");
+        userRegistrationResource.getRequest().getAttributes().put(UserRegistrationResource.HEADERS_KEY, headers);
         doNothing().when(userService).registration(any(PoulpeUser.class));
 
         Representation repres = createUserRepresentation();
 
         repres = userRegistrationResource.register(repres);
 
-        assertEquals(((StringRepresentation)repres).getText(), " ");
+        assertFalse(((StringRepresentation) repres).getText().trim().isEmpty());
         assertEquals(userRegistrationResource.getResponse().getStatus().getCode(), HttpStatus.SC_OK);
     }
 
@@ -156,10 +154,7 @@ public class UserRegistrationResourceTest {
         user.setFirstName("firstName");
         user.setLastName("lastName");
         user.setPasswordHash("password");
-
-        Representation result = new JaxbRepresentation<User>(user);
-        return result;
-
+        return new JaxbRepresentation<User>(user);
     }
 
     private ValidationException createValidationException(){

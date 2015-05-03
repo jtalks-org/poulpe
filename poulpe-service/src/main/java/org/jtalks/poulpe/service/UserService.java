@@ -204,9 +204,17 @@ public interface UserService {
      * @param username the username
      * @param password the hashed password
      * @return the {@code PoulpeUser} instance
-     * @throws {@link org.jtalks.common.service.exceptions.NotFoundException} if user not found or password not match
+     * @throws NotFoundException if user not found or password not match
      */
     PoulpeUser authenticate(String username, String password) throws NotFoundException;
+
+    /**
+     * Activate user by user's uuid
+     * @param uuid user's uuid
+     * @throws NotFoundException if user with provided uuid does not exist
+     * @throws ValidationException if not valid uuid is provided
+     */
+    void activate(String uuid) throws NotFoundException, ValidationException;
 
     /**
      * Registers a new user

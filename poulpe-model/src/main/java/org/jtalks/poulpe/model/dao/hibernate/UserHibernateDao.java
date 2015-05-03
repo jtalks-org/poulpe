@@ -119,6 +119,16 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
      * {@inheritDoc}
      */
     @Override
+    public PoulpeUser getByUUID(String uuid) {
+        Query query = session().getNamedQuery("findUsersByUUID");
+        query.setString("uuid", uuid);
+        return (PoulpeUser) query.uniqueResult();
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
     public List<PoulpeUser> getUsersInGroups(List<Group> groups) {
         Query query = session().getNamedQuery("findBannedUsers");
 

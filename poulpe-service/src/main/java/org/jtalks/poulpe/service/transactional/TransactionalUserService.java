@@ -33,9 +33,11 @@ import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
 
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -252,6 +254,22 @@ public class TransactionalUserService implements UserService {
             return user;
         } else {
             throw new NotFoundException();
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public void activate(String uuid) throws NotFoundException, ValidationException {
+        PoulpeUser user = userDao.getByUUID(uuid);
+        if (user == null) {
+            throw new NotFoundException();
+        } else if (!user.isEnabled()) {
+            user.setEnabled(true);
+            userDao.save(user);
+        } else {
+            throw new ValidationException(Collections.singletonList("user.already_active"));
         }
     }
 
