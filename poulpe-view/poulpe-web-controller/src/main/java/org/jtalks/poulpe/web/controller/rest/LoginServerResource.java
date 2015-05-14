@@ -15,7 +15,6 @@
 
 package org.jtalks.poulpe.web.controller.rest;
 
-import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
@@ -77,9 +76,10 @@ public class LoginServerResource extends ServerResource implements LoginResource
             Authentication result = new Authentication(user.getUsername());
             result.setStatus(STATUS_SUCCESS);
             result.setProfile(new Profile(user));
+            getResponse().setStatus(Status.SUCCESS_OK);
             return result;
         } catch (NotFoundException e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_NOT_FOUND));
+            getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             Authentication result = new Authentication(credentials.getUsername());
             result.setStatus(STATUS_FAIL);
             result.setStatusInfo(STATUS_FAIL_INFO);

@@ -14,7 +14,6 @@
  */
 package org.jtalks.poulpe.web.controller.rest;
 
-import org.apache.http.HttpStatus;
 import org.jtalks.poulpe.model.entity.PoulpeUser;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
@@ -72,13 +71,13 @@ public class UserRegistrationResource extends CommonServerResource implements Re
                 return new StringRepresentation(" ");
             }
         } catch (ValidationException e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return getErrorRepresentation(ifValidationException(e));
         } catch (IOException e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return getErrorRepresentation(ifIOException());
         } catch (Exception e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
             return getErrorRepresentation(ifOtherException(e));
         }
     }

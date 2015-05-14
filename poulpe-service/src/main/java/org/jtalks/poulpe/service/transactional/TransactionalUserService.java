@@ -262,6 +262,9 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public void activate(String uuid) throws NotFoundException, ValidationException {
+        if (uuid == null || uuid.isEmpty()) {
+            throw new NotFoundException();
+        }
         PoulpeUser user = userDao.getByUUID(uuid);
         if (user == null) {
             throw new NotFoundException();

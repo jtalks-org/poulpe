@@ -14,17 +14,12 @@
  */
 package org.jtalks.poulpe.web.controller.rest;
 
-import org.apache.http.HttpStatus;
 import org.jtalks.common.service.exceptions.NotFoundException;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
-import org.jtalks.poulpe.web.controller.rest.pojo.*;
-import org.jtalks.poulpe.web.controller.rest.pojo.Error;
 import org.restlet.data.Status;
+import org.restlet.representation.EmptyRepresentation;
 import org.restlet.representation.Representation;
-import org.restlet.representation.StringRepresentation;
-
-import java.util.Collections;
 
 public class ActivationServerResource extends CommonServerResource implements ActivationResource {
 
@@ -37,31 +32,19 @@ public class ActivationServerResource extends CommonServerResource implements Ac
     @Override
     public Representation activate() {
         String uuid = getQueryValue("uuid");
-        if (uuid == null || uuid.isEmpty()) {
-            getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
-            return createErrorRepresentation("TODO", "TODO");
-        }
         try {
             userService.activate(uuid);
         } catch (NotFoundException e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_NOT_FOUND));
-            return createErrorRepresentation("TODO", "TODO");
+            getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
+            return new EmptyRepresentation();
         } catch (ValidationException e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_BAD_REQUEST));
+            getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return getErrorRepresentation(ifValidationException(e));
         } catch (Exception e) {
-            getResponse().setStatus(new Status(HttpStatus.SC_INTERNAL_SERVER_ERROR));
+            getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
             return getErrorRepresentation(ifOtherException(e));
         }
-        return new StringRepresentation(" ");
-    }
-
-    private Representation createErrorRepresentation(String code, String message) {
-        Errors result = new Errors();
-        org.jtalks.poulpe.web.controller.rest.pojo.Error error = new Error();
-        error.setCode(code);
-        error.setMessage(message);
-        result.setErrorList(Collections.singletonList(error));
-        return getErrorRepresentation(result);
+        getResponse().setStatus(Status.SUCCESS_OK);
+        return new EmptyRepresentation();
     }
 }
