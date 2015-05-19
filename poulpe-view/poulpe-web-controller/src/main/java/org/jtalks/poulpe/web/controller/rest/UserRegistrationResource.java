@@ -25,6 +25,8 @@ import org.restlet.ext.jaxb.JaxbRepresentation;
 import org.restlet.representation.Representation;
 import org.restlet.representation.StringRepresentation;
 import org.restlet.util.Series;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,6 +39,8 @@ import java.util.List;
  * @author Mikhail Zaitsev
  */
 public class UserRegistrationResource extends CommonServerResource implements RegistrationResource {
+
+    private static final Logger LOG = LoggerFactory.getLogger(UserRegistrationResource.class);
 
     public static final String HEADERS_KEY = "org.restlet.http.headers";
     public static final String DRY_RUN_PARAM = "dryRun";
@@ -65,18 +69,24 @@ public class UserRegistrationResource extends CommonServerResource implements Re
             PoulpeUser poulpeUser = createPoulpeUser(userRep.getObject());
             if (!getDryRunFromHeader()) {
                 userService.registration(poulpeUser);
+                LOG.debug("User with username {} and uuid {} is successfully registered" , poulpeUser.getUsername(),
+                        poulpeUser.getUuid());
                 return new StringRepresentation(poulpeUser.getUuid());
             } else {
                 userService.dryRunRegistration(poulpeUser);
+                LOG.debug("User with username {} is successfully registered (dry)" , poulpeUser.getUsername());
                 return new StringRepresentation(" ");
             }
         } catch (ValidationException e) {
+            LOG.debug(e.getMessage(), e);
             getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return getErrorRepresentation(ifValidationException(e));
         } catch (IOException e) {
+            LOG.debug(e.getMessage(), e);
             getResponse().setStatus(Status.CLIENT_ERROR_BAD_REQUEST);
             return getErrorRepresentation(ifIOException());
         } catch (Exception e) {
+            LOG.debug(e.getMessage(), e);
             getResponse().setStatus(Status.SERVER_ERROR_INTERNAL);
             return getErrorRepresentation(ifOtherException(e));
         }
