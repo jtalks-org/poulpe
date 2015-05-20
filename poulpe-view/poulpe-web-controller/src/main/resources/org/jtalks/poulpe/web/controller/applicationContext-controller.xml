@@ -197,7 +197,6 @@
     <property name="attachments">
       <util:map>
         <entry key="/authenticate" value="loginServerResource"/>
-        <entry key="/activate" value="activateServerResource"/>
       </util:map>
     </property>
   </bean>
@@ -206,6 +205,7 @@
     <property name="attachments">
       <util:map>
         <entry key="/user" value="userRegistrationResource"/>
+        <entry key="/activate" value="activateServerResource"/>
       </util:map>
     </property>
   </bean>
