@@ -62,6 +62,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
     public void testSave() {
         givenParentSection();
         dao.saveOrUpdate(branch);
+        session.flush();
         assertBranchSaved();
         assertGroupSaved();
     }
@@ -131,6 +132,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         branch.setName(newName);
 
         dao.saveOrUpdate(branch);
+        session.flush();
 
         assertBranchNameChanged(newName);
         assertGroupNameChanged(newGroupName);
@@ -152,6 +154,7 @@ public class BranchHibernateDaoTest extends AbstractTransactionalTestNGSpringCon
         givenBranch();
         branch.setName(null);
         dao.saveOrUpdate(branch);
+        session.flush();
     }
 
     @Test
