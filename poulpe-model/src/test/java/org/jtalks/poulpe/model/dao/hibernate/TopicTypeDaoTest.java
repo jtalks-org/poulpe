@@ -99,6 +99,7 @@ public class TopicTypeDaoTest extends AbstractTransactionalTestNGSpringContextTe
         String newTitle = "new title";
         topicType.setTitle(newTitle);
         dao.saveOrUpdate(topicType);
+        session.flush();
         session.evict(topicType);
         TopicType result = (TopicType) session.get(TopicType.class, topicType.getId());
 

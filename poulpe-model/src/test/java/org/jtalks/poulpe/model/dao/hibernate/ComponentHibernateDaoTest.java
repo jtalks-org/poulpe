@@ -72,6 +72,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
     @Test
     public void testSave() {
         dao.saveOrUpdate(forum);
+        session.flush();
         Component actual = ObjectRetriever.retrieveUpdated(forum, session);
         assertReflectionEquals(forum, actual);
     }
@@ -90,6 +91,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         session.save(forum);
         forum.setName(newName);
         dao.saveOrUpdate(forum);
+        session.flush();
 
         String actual = ObjectRetriever.retrieveUpdated(forum, session).getName();
         assertEquals(actual, newName);
@@ -152,6 +154,7 @@ public class ComponentHibernateDaoTest extends AbstractTransactionalTestNGSpring
         Collections.shuffle(expected);
 
         dao.saveOrUpdate(forum);
+        session.flush();
 
         forum = ObjectRetriever.retrieveUpdated(forum, session);
         List<PoulpeSection> actual = forum.getSections();
