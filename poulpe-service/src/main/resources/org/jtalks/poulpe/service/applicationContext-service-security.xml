@@ -69,7 +69,7 @@
   </bean>
 
   <bean id="replicatingCache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
-    <property name="configLocation" value="classpath:/org/jtalks/poulpe/model/entity/ehcache.xml"/>
+    <property name="configLocation" value="${EH_CACHE_CONFIG:classpath:/org/jtalks/poulpe/model/entity/ehcache.xml}"/>
   </bean>
 
   <bean id="jtalksAclAuthorizationStrategy" class="org.jtalks.poulpe.security.AclAuthorizationStrategyImpl"/>
