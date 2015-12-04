@@ -66,6 +66,13 @@ public class EmailValidatorTest {
     }
 
     @Test
+    public void tooLongMailDomainShouldNotFailValidation(){
+        givenBindContextReturnsMailAndUserId("less.luter@email.PHOTOGRAPHY", 1 );
+        validator.validate(context);
+        verify(context,never()).setInvalid();
+    }
+
+    @Test
     public void wrongEmailPatternShouldFailValidation() {
         givenBindContextReturnsMailAndUserId("asdasd", 1);
         validator.validate(context);
