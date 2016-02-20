@@ -90,6 +90,7 @@
     <constructor-arg index="1" ref="userBanner"/>
     <constructor-arg index="2" ref="aclManager"/>
     <constructor-arg index="3" ref="componentDao"/>
+    <constructor-arg index="4" ref="validator"/>
   </bean>
   <bean id="groupService" class="org.jtalks.poulpe.service.transactional.TransactionalGroupService">
     <constructor-arg index="0" ref="groupDao"/>
