@@ -553,6 +553,7 @@
     <connection>scm:git:git@github.com:jtalks-org/poulpe.git</connection>
     <developerConnection>scm:git:git@github.com:jtalks-org/poulpe.git</developerConnection>
     <url>scm:git:git@github.com:jtalks-org/poulpe.git</url>
+    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
   </scm>
 
 </project>
