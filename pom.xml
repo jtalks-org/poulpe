@@ -82,6 +82,11 @@
         <artifactId>javassist</artifactId>
         <version>3.12.1.GA</version>
       </dependency>
+      <dependency>
+        <groupId>com.googlecode.flyway</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>2.3.1</version>
+      </dependency>
 
       <!-- Cache -->
       <dependency>
@@ -352,8 +357,18 @@
         <version>${zkVersion}</version>
       </dependency>
       <dependency>
+        <groupId>org.zkoss.common</groupId>
+        <artifactId>zcommon</artifactId>
+        <version>${zkVersion}</version>
+      </dependency>
+      <dependency>
         <groupId>org.zkoss.zk</groupId>
         <artifactId>zkplus</artifactId>
+        <version>${zkVersion}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.zkoss.common</groupId>
+        <artifactId>zweb</artifactId>
         <version>${zkVersion}</version>
       </dependency>
       <dependency>
@@ -531,7 +546,7 @@
   <properties>
     <hibernateVersion>3.6.10.Final</hibernateVersion>
     <springVersion>3.0.5.RELEASE</springVersion>
-    <zkVersion>6.0.1.FL.20120413</zkVersion>
+    <zkVersion>6.0.1</zkVersion>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <commonVersion>0.60</commonVersion>
   </properties>
@@ -553,7 +568,6 @@
     <connection>scm:git:git@github.com:jtalks-org/poulpe.git</connection>
     <developerConnection>scm:git:git@github.com:jtalks-org/poulpe.git</developerConnection>
     <url>scm:git:git@github.com:jtalks-org/poulpe.git</url>
-    <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
   </scm>
 
 </project>

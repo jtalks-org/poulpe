@@ -113,35 +113,18 @@
     <property name="location" value="classpath:/datasource.properties"/>
   </bean>
 
-  <!-- Migrations, todo: 4 beans - that's weird, Ticket has been left for common to move init to one method -->
-
   <!--description of what those migration mean and how they work are in the package with SQL files-->
-  <bean id="flyway_common_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit">
+  <bean id="flyway_common" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate">
     <property name="dataSource" ref="dataSource"/>
-    <property name="basePackage" value="org.jtalks.common.migrations"/>
-    <property name="baseDir" value="/org/jtalks/common/migrations"/>
+    <property name="locations" value="org.jtalks.common.migrations"/>
     <property name="table" value="common_schema_version"/>
     <property name="enabled" value="${migrations_enabled}"/>
   </bean>
-  <bean id="flyway_common" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate"
-        depends-on="flyway_common_init">
+  <bean id="flyway_poulpe" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate" depends-on="flyway_common">
     <property name="dataSource" ref="dataSource"/>
-    <property name="basePackage" value="org.jtalks.common.migrations"/>
-    <property name="baseDir" value="/org/jtalks/common/migrations"/>
-    <property name="table" value="common_schema_version"/>
-    <property name="enabled" value="${migrations_enabled}"/>
-  </bean>
-  <bean id="flyway_poulpe_init" class="org.jtalks.common.util.FlywayWrapper" init-method="smartInit"
-        depends-on="flyway_common">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="table" value="poulpe_schema_version"/>
-    <property name="enabled" value="${migrations_enabled}"/>
-  </bean>
-  <bean id="flyway_poulpe" class="org.jtalks.common.util.FlywayWrapper" init-method="migrate"
-        depends-on="flyway_poulpe_init">
-    <property name="dataSource" ref="dataSource"/>
-    <property name="basePackage" value="org.jtalks.poulpe.migrations"/>
-    <property name="baseDir" value="/org/jtalks/poulpe/migrations"/>
+    <property name="initOnMigrate" value="true"/>
+    <property name="initVersion" value="0"/>
+    <property name="locations" value="org.jtalks.poulpe.migrations"/>
     <property name="table" value="poulpe_schema_version"/>
     <property name="enabled" value="${migrations_enabled}"/>
   </bean>
