@@ -31,9 +31,6 @@
   <logger name="org.hibernate">
     <level value="INFO"/>
   </logger>
-  <logger name="net.sf.ehcache.distribution">
-    <level value="DEBUG"/>
-  </logger>
   <logger name="com.googlecode.flyway">
     <level value="DEBUG"/>
   </logger>
