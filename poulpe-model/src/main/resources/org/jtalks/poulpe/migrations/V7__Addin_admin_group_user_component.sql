@@ -16,6 +16,9 @@
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
 
+-- SET NAMES used to avoid Illegal mix of collations error when '=' operator is called
+SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+
 SET @adminUserName := 'admin';
 SET @passwordHash := '21232f297a57a5a743894a0e4a801fc3';
 SET @adminGroupName := 'Administrators';
