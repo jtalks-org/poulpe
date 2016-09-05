@@ -13,7 +13,7 @@
 -- Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 --
 
-# We have to change ENGINE to InnoDB since we have changed charset to UTF8MB4 in jcommune.
+-- We have to change ENGINE to InnoDB since we have changed charset to UTF8MB4 in jcommune.
 ALTER TABLE `BASE_COMPONENTS` ENGINE=InnoDB;
 ALTER TABLE `DEFAULT_PROPERTIES` ENGINE=InnoDB;
 ALTER TABLE `TOPIC_TYPES` ENGINE=InnoDB;

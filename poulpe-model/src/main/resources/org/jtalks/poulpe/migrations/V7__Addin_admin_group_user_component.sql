@@ -16,8 +16,10 @@
 -- 'FROM COMPONENTS' are not used, but query mast contain 'FROM dual' clause
 --  @see <a href="http://dev.mysql.com">http://dev.mysql.com/doc/refman/5.0/en/select.html/a>.
 
--- SET NAMES used to avoid Illegal mix of collations error when '=' operator is called
-SET NAMES 'utf8mb4' COLLATE 'utf8mb4_unicode_ci';
+-- vars that have different types of collation can not be compared by '=', that's why we need to set
+-- connection collation the same as database collation in spite of server configuration.
+SET @default_collation_connection = @@collation_connection;
+SET @@collation_connection = @@collation_database;
 
 SET @adminUserName := 'admin';
 SET @passwordHash := '21232f297a57a5a743894a0e4a801fc3';
@@ -99,4 +101,5 @@ INSERT IGNORE INTO acl_entry (acl_object_identity, sid, ace_order, mask, grantin
        (SELECT ae.acl_object_identity, ae.sid FROM acl_entry ae
          WHERE ae.acl_object_identity = @acl_object_identity_id
            AND ae.sid = @acl_sid_id_group);
-
+-- return collation_connection to a previous state.
+SET @@collation_connection = @default_collation_connection;
