@@ -249,10 +249,17 @@ public class TransactionalUserService implements UserService {
     @Override
     public PoulpeUser authenticate(String username, String password)
             throws NotFoundException {
-        PoulpeUser poulpeUser = userDao.getByUsernameAndHashedPassword(username, password);
-        if (poulpeUser == null) throw new NotFoundException();
-        return poulpeUser;
-    }
+        List<PoulpeUser> users = userDao.getByUsernameAndPassword(username, password);
+        if (users.size() == 1) {
+            return users.get(0);
+        } else {
+            for (PoulpeUser user : users) {
+                if (user.getUsername().equals(username)) {
+                    return user;
+                }
+            }
+        }
+        throw new NotFoundException();}
 
     /**
      * {@inheritDoc}

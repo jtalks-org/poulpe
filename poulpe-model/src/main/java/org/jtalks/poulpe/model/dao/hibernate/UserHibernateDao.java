@@ -141,6 +141,15 @@ public class UserHibernateDao extends GenericDao<PoulpeUser> implements UserDao 
         return query.list();
     }
 
+    @Override
+    public List<PoulpeUser> getByUsernameAndPassword(String username, String hashedPassword) {
+        Query query = session().getNamedQuery("findUsersByUsernameAndHashedPassword");
+        query.setString("username", username.toLowerCase());
+        query.setString("password", hashedPassword);
+        return query.list();
+
+    }
+
     /**
      * {@inheritDoc}
      */
