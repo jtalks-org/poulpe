@@ -264,29 +264,29 @@ public class TransactionalUserServiceTest{
     
     @Test
     public void authenticate() throws NotFoundException {
-        when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
+        when(userDao.getByUsernameAndPassword(anyString(), anyString()))
                 .thenReturn(Collections.singletonList(POULPE_USER));
 
         assertEquals(userService.authenticate(USERNAME, HASED_PASSWORD), POULPE_USER);
 
-        verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
+        verify(userDao).getByUsernameAndPassword(anyString(), anyString());
         verify(userDao, never()).getByUsername(eq(USERNAME));
     }
 
     @Test
     public void authenticateCaseSensitise() throws NotFoundException {
-        when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
+        when(userDao.getByUsernameAndPassword(anyString(), anyString()))
                 .thenReturn(Arrays.asList(POULPE_USER, ANOTHER_USER));
 
         assertEquals(userService.authenticate(USERNAME, HASED_PASSWORD), POULPE_USER);
 
-        verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
+        verify(userDao).getByUsernameAndPassword(anyString(), anyString());
     }
 
     @Test
     public void authenticateCaseSensitise_whenUsernameNotFound() throws NotFoundException {
         String searchUsername = StringUtils.capitalize(USERNAME);
-        when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
+        when(userDao.getByUsernameAndPassword(anyString(), anyString()))
                 .thenReturn(Arrays.asList(POULPE_USER, ANOTHER_USER));
 
         try {
@@ -294,12 +294,12 @@ public class TransactionalUserServiceTest{
             fail("NotFoundException should be thrown when case sensitive username is not found");
         } catch (NotFoundException e) {
         }
-        verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
+        verify(userDao).getByUsernameAndPassword(anyString(), anyString());
     }
 
     @Test
         public void authenticate_whenUsernameNotFound() throws NotFoundException {
-        when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
+        when(userDao.getByUsernameAndPassword(anyString(), anyString()))
                 .thenReturn(Collections.<PoulpeUser>emptyList());
 
         try {
@@ -308,20 +308,7 @@ public class TransactionalUserServiceTest{
         } catch (NotFoundException e) {
         }
 
-        verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
-    }
-
-    @Test
-    public void authenticate_whenPasswordNotMatch() throws NotFoundException {
-        when(userDao.findPoulpeUsersBySearchRequest(any(UserSearchRequest.class)))
-                .thenReturn(Collections.singletonList(POULPE_USER));
-
-        try {
-            userService.authenticate(USERNAME, "notMatchPassword");
-            fail("NotFoundException should be thrown when provided password doesn't match required one");
-        } catch (NotFoundException e) {
-        }
-        verify(userDao).findPoulpeUsersBySearchRequest(any(UserSearchRequest.class));
+        verify(userDao).getByUsernameAndPassword(anyString(), anyString());
     }
 
     @Test

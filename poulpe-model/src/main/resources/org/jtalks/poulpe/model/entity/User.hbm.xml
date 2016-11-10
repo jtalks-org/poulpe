@@ -92,6 +92,10 @@
         <![CDATA[from PoulpeUser u where u.username = :username]]>
     </query>
 
+    <query name="findUsersByUsernameAndHashedPassword">
+        <![CDATA[from PoulpeUser u where lower(u.username) = :username and u.password = :password]]>
+    </query>
+
     <query name="findUsersByEmail">
         <![CDATA[from PoulpeUser u where u.email = :email]]>
     </query>
