@@ -106,4 +106,11 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
      */
     void save(User user);
 
+    /**
+     * Get user by username and hashed password
+     * @param username      username for search
+     * @param passwordHash  hash string of user's password
+     * @return {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance or NULL if not found
+     */
+    PoulpeUser getByUsernameAndHashedPassword(String username, String passwordHash);
 }
