@@ -67,6 +67,14 @@ public interface UserDao extends org.jtalks.common.model.dao.UserDao<PoulpeUser>
     List<PoulpeUser> getUsersInGroups(List<Group> groups);
 
     /**
+     * Get user by username and hashed password
+     * @param username      username we're looking for
+     * @param passwordHash  hash of password
+     * @return {@Code List<PoulpeUser>}
+     */
+    List<PoulpeUser> findUsersByUsernameAndPasswordHash(String username, String passwordHash);
+
+    /**
      * Retrieves user by its email
      * @param email to look up
      * @return retrieved {@link org.jtalks.poulpe.model.entity.PoulpeUser} instance

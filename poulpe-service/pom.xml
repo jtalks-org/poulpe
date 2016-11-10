@@ -84,8 +84,12 @@
       <groupId>org.hsqldb</groupId>
       <artifactId>hsqldb</artifactId>
     </dependency>
-   
-	<!-- REST dependencies -->
+    <dependency>
+      <groupId>io.qala.datagen</groupId>
+      <artifactId>qala-datagen</artifactId>
+    </dependency>
+
+    <!-- REST dependencies -->
     <dependency>
       <groupId>org.restlet.jee</groupId>
       <artifactId>org.restlet</artifactId>

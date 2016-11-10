@@ -116,6 +116,10 @@
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-validator</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.qala.datagen</groupId>
+      <artifactId>qala-datagen</artifactId>
+    </dependency>
 
     <!-- Cache -->
     <dependency>

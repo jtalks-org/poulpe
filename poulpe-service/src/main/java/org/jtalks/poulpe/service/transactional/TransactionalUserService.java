@@ -14,6 +14,8 @@
  */
 package org.jtalks.poulpe.service.transactional;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Validate;
 import org.jtalks.common.model.entity.Component;
 import org.jtalks.common.model.entity.ComponentType;
 import org.jtalks.common.model.entity.Group;
@@ -247,14 +249,18 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public PoulpeUser authenticate(String username, String password)
-            throws NotFoundException {
-        PoulpeUser user = getPoulpeUser(username);
-        if (user.getPassword().equals(password)) {
-            return user;
-        } else {
-            throw new NotFoundException();
+    public PoulpeUser authenticate(String username, String password) throws NotFoundException {
+        if (StringUtils.isAnyBlank(username, password)) throw new NotFoundException();
+        List<PoulpeUser> users = requireNotNullNorEmpty(userDao.findUsersByUsernameAndPasswordHash(username, password));
+        if (users.size() == 1) return users.get(0);
+        else return searchForUserCaseSensitive(users, username);
+    }
+
+    private PoulpeUser searchForUserCaseSensitive(List<PoulpeUser> users, String username) throws NotFoundException {
+        for (PoulpeUser user : users) {
+            if (user.getUsername().equals(username)) return user;
         }
+        throw new NotFoundException("User wasn't found by case sensitive search during authentication, username = { "+ username +" }");
     }
 
     /**
@@ -262,34 +268,10 @@ public class TransactionalUserService implements UserService {
      */
     @Override
     public void activate(String uuid) throws NotFoundException, ValidationException {
-        if (uuid == null || uuid.isEmpty()) {
-            throw new NotFoundException();
-        }
-        PoulpeUser user = userDao.getByUUID(uuid);
-        if (user == null) {
-            throw new NotFoundException();
-        } else if (!user.isEnabled()) {
-            user.setEnabled(true);
-            userDao.save(user);
-        } else {
-            throw new ValidationException(Collections.singletonList("user.already_active"));
-        }
-    }
-
-    private PoulpeUser getPoulpeUser(String username) throws NotFoundException {
-        UserSearchRequest searchRequest = new UserSearchRequest(true, Pages.NONE, "username", username);
-        searchRequest.setCaseSensitise(true);
-        List<PoulpeUser> users = userDao.findPoulpeUsersBySearchRequest(searchRequest);
-        if (users.size() == 1) {
-            return users.get(0);
-        } else {
-            for (PoulpeUser user : users) {
-                if (user.getUsername().equals(username)) {
-                    return user;
-                }
-            }
-        }
-        throw new NotFoundException();
+        PoulpeUser user = Validate.notNull(userDao.getByUUID(requireNotNullNorEmpty(uuid)), "User wasn't found during activation, UUID = {%s}", uuid);
+        if (user.isEnabled()) throw new ValidationException(Collections.singletonList("user.already_active"));
+        user.setEnabled(true);
+        userDao.save(user);
     }
 
     /**
@@ -339,4 +321,17 @@ public class TransactionalUserService implements UserService {
         return res;
     }
 
+    /**
+     * Checks for null or emptiness of String and List
+     * @param object    Some object that needs to be checked
+     * @param <T>       The class of the object
+     * @return          The same object
+     * @throws NotFoundException If object not passed validation
+     */
+    private <T> T requireNotNullNorEmpty(T object) throws NotFoundException {
+        if (object == null) throw new NotFoundException();
+        if (object instanceof String && ((String) object).isEmpty()) throw new NotFoundException();
+        if (object instanceof List && ((List) object).isEmpty()) throw new NotFoundException();
+        return object;
+    }
 }

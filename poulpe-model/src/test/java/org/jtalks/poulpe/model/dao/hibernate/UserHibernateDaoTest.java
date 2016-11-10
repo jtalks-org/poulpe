@@ -15,6 +15,7 @@
 package org.jtalks.poulpe.model.dao.hibernate;
 
 import com.google.common.collect.Sets;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.jtalks.common.model.entity.Group;
@@ -37,6 +38,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
+import static io.qala.datagen.RandomShortApi.alphanumeric;
+import static io.qala.datagen.RandomShortApi.english;
+import static io.qala.datagen.RandomShortApi.nullOrBlank;
+import static org.jtalks.common.model.entity.User.PASSWORD_MAX_LENGTH;
+import static org.jtalks.common.model.entity.User.USERNAME_MAX_LENGTH;
 import static org.jtalks.poulpe.model.sorting.UserSearchRequest.BY_USERNAME;
 import static org.testng.Assert.*;
 import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEquals;
@@ -50,8 +56,7 @@ import static org.unitils.reflectionassert.ReflectionAssert.assertReflectionEqua
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
 @Transactional
 public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringContextTests {
-	static final String NO_FILTER = "";
-
+    private static final String NO_FILTER = "";
     // SUT
 	@Autowired
 	private UserDao dao;
@@ -95,6 +100,51 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 		User actual = dao.getByUsername(user.getUsername());
 		assertReflectionEquals(actual, user);
 	}
+
+    @Test
+    public void returnsSingleUserForUniqueUsername() throws Exception {
+        String username = alphanumeric(USERNAME_MAX_LENGTH);
+        String password = alphanumeric(PASSWORD_MAX_LENGTH);
+        PoulpeUser expected = saveAndEvictUser(username, password);
+        saveAndEvictUser(alphanumeric(USERNAME_MAX_LENGTH), password);
+        List<PoulpeUser> actualUserList = dao.findUsersByUsernameAndPasswordHash(username, password);
+        assertEquals(actualUserList.size(), 1);
+        assertEquals(actualUserList.get(0), expected);
+    }
+
+    @Test
+    public void returnsUsersFoundUsingCaseInsensitiveSearch() throws Exception {
+        String username = english(USERNAME_MAX_LENGTH);
+        String password = alphanumeric(PASSWORD_MAX_LENGTH);
+        List<PoulpeUser> expectedUserList = Arrays.asList(
+                saveAndEvictUser(username, password),
+                saveAndEvictUser(username.toLowerCase(), password),
+                saveAndEvictUser(StringUtils.capitalize(username.toLowerCase()), password),
+                saveAndEvictUser(username.toUpperCase(), password));
+        List<PoulpeUser> poulpeUsers = dao.findUsersByUsernameAndPasswordHash(username, password);
+        assertEquals(poulpeUsers.size(), expectedUserList.size());
+        assertTrue(poulpeUsers.containsAll(expectedUserList));
+    }
+
+    @Test
+    public void returnsEmptyListIfUsernameOrPasswordIsEmpty() throws Exception {
+        String username = alphanumeric(USERNAME_MAX_LENGTH);
+        String password = alphanumeric(PASSWORD_MAX_LENGTH);
+        saveAndEvictUser(username, password);
+        List<PoulpeUser> poulpeUsers = dao.findUsersByUsernameAndPasswordHash(nullOrBlank(), password);
+        assertEquals(poulpeUsers.size(), 0);
+        poulpeUsers = dao.findUsersByUsernameAndPasswordHash(username, nullOrBlank());
+        assertEquals(poulpeUsers.size(), 0);
+    }
+
+    @Test
+    public void returnsEmptyListIfUserNotFound() throws Exception {
+        String username = alphanumeric(USERNAME_MAX_LENGTH);
+        String password = alphanumeric(PASSWORD_MAX_LENGTH);
+        saveAndEvictUser(username, password);
+        List<PoulpeUser> poulpeUsers = dao.findUsersByUsernameAndPasswordHash(alphanumeric(USERNAME_MAX_LENGTH), alphanumeric(PASSWORD_MAX_LENGTH));
+        assertEquals(poulpeUsers.size(), 0);
+    }
 
     @Test
     public void testGetByEmail() {
@@ -310,6 +360,12 @@ public class UserHibernateDaoTest extends AbstractTransactionalTestNGSpringConte
 			saveAndEvict(user);
 		}
 	}
+
+    private PoulpeUser saveAndEvictUser(String username, String password) {
+        PoulpeUser user = TestFixtures.user(username, password, alphanumeric(5) + "@email.com");
+        saveAndEvict(user);
+        return user;
+    }
 
 	// TODO: move away from here
 	public static <T> void assertContainsSameElements(Iterable<T> first, Iterable<T> second) {
