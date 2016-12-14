@@ -31,9 +31,9 @@ public class ActivationServerResource extends CommonServerResource implements Ac
 
     @Override
     public Representation activate() {
-        String uuid = getQueryValue("uuid");
+        String username = getQueryValue("username");
         try {
-            userService.activate(uuid);
+            userService.activate(username);
         } catch (NotFoundException e) {
             getResponse().setStatus(Status.CLIENT_ERROR_NOT_FOUND);
             return new EmptyRepresentation();

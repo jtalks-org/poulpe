@@ -267,11 +267,11 @@ public class TransactionalUserService implements UserService {
      * {@inheritDoc}
      */
     @Override
-    public void activate(String uuid) throws NotFoundException, ValidationException {
-        PoulpeUser user = Validate.notNull(userDao.getByUUID(requireNotNullNorEmpty(uuid)), "User wasn't found during activation, UUID = {%s}", uuid);
+    public void activate(String username) throws NotFoundException, ValidationException {
+        PoulpeUser user = Validate.notNull(userDao.getByUsername(requireNotNullNorEmpty(username)), "User wasn't found during activation, username = {%s}", username);
         if (user.isEnabled()) throw new ValidationException(Collections.singletonList("user.already_active"));
         user.setEnabled(true);
-        userDao.save(user);
+        userDao.saveOrUpdate(user);
     }
 
     /**

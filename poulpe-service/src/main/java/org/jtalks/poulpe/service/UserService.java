@@ -209,12 +209,12 @@ public interface UserService {
     PoulpeUser authenticate(String username, String password) throws NotFoundException;
 
     /**
-     * Activate user by user's uuid
-     * @param uuid user's uuid
-     * @throws NotFoundException if user with provided uuid does not exist
-     * @throws ValidationException if not valid uuid is provided
+     * Activate user by username
+     * @param username username
+     * @throws NotFoundException if user with provided username does not exist
+     * @throws ValidationException if not valid username is provided
      */
-    void activate(String uuid) throws NotFoundException, ValidationException;
+    void activate(String username) throws NotFoundException, ValidationException;
 
     /**
      * Registers a new user
