@@ -34,14 +34,14 @@ import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.UserService;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.springframework.transaction.interceptor.TransactionInterceptor;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.Validator;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * User service class, contains methods needed to manipulate with {@code User} persistent entity.
@@ -58,6 +58,7 @@ public class TransactionalUserService implements UserService {
     private final UserBanner userBanner;
     private final AclManager aclManager;
     private final ComponentDao componentDao;
+    private Validator validator;
 
 
     /**
@@ -67,11 +68,12 @@ public class TransactionalUserService implements UserService {
      *                entities
      */
     public TransactionalUserService(UserDao userDao, UserBanner userBanner,
-                                    AclManager aclManager, ComponentDao componentDao) {
+                                    AclManager aclManager, ComponentDao componentDao, Validator validator) {
         this.userDao = userDao;
         this.userBanner = userBanner;
         this.aclManager = aclManager;
         this.componentDao = componentDao;
+        this.validator = validator;
     }
 
     /**
@@ -280,6 +282,17 @@ public class TransactionalUserService implements UserService {
     @Override
     public void registration(PoulpeUser user) throws ValidationException {
         List<String> errors = new ArrayList<String>();
+
+        BindingResult validateErrors = new BeanPropertyBindingResult(user, "user");
+        validator.validate(user, validateErrors);
+        for (FieldError error : validateErrors.getFieldErrors()) {
+            if (error.getCodes() != null && error.getCodes().length > 0) {
+                errors.add(error.getCodes()[0]);
+            } else {
+                errors.add(error.getDefaultMessage());
+            }
+        }
+
         if (userDao.getByUsername(user.getUsername()) != null) {
             errors.add(User.USER_ALREADY_EXISTS);
         }

@@ -25,13 +25,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.testng.AbstractTransactionalTestNGSpringContextTests;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.Validator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ContextConfiguration(locations = {"classpath:/org/jtalks/poulpe/model/entity/applicationContext-dao.xml"})
 @TransactionConfiguration(transactionManager = "transactionManager", defaultRollback = true)
@@ -44,6 +43,7 @@ public class BeginTransactionTest extends AbstractTransactionalTestNGSpringConte
     private UserDao userDao;
     private ComponentDao componentDaoMock;
     private AclManager aclManagerMock;
+    private Validator validator;
 
     @BeforeMethod
     public void setUp() {
@@ -51,7 +51,8 @@ public class BeginTransactionTest extends AbstractTransactionalTestNGSpringConte
         userDao = mock(UserDao.class);
         componentDaoMock = mock(ComponentDao.class);
         aclManagerMock = mock(AclManager.class);
-        userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock);
+        validator = mock(Validator.class);
+        userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock, validator);
     }
 
     @Test(enabled = false)

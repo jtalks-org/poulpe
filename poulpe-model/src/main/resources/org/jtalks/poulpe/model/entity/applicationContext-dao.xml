@@ -31,6 +31,8 @@
                  pointcut="execution(* org.jtalks.common.model.dao.Crud+.* (*))"/>
   </aop:config>
 
+  <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
+
   <!-- Declaration of DAO beans -->
   <bean id="branchDao" class="org.jtalks.poulpe.model.dao.hibernate.BranchHibernateDao" parent="genericDao"/>
 

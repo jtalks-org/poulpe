@@ -31,6 +31,7 @@ import org.jtalks.poulpe.model.pages.Pages;
 import org.jtalks.poulpe.model.sorting.UserSearchRequest;
 import org.jtalks.poulpe.service.exceptions.ValidationException;
 import org.mockito.MockitoAnnotations;
+import org.springframework.validation.Validator;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -58,7 +59,7 @@ import static org.testng.Assert.*;
  * @author maxim reshetov
  */
 
-public class TransactionalUserServiceTest{
+public class TransactionalUserServiceTest {
     private static final String USERNAME = "username";
     // sut
     private TransactionalUserService userService;
@@ -69,6 +70,7 @@ public class TransactionalUserServiceTest{
     private final String searchString = "searchString";
     private ComponentDao componentDaoMock;
     private AclManager aclManagerMock;
+    private Validator validator;
 
     @BeforeMethod
     public void setUp() {
@@ -76,7 +78,8 @@ public class TransactionalUserServiceTest{
         userDao = mock(UserDao.class);
         componentDaoMock = mock(ComponentDao.class);
         aclManagerMock = mock(AclManager.class);
-        userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock);
+        validator = mock(Validator.class);
+        userService = new TransactionalUserService(userDao, mock(UserBanner.class), aclManagerMock, componentDaoMock, validator);
     }
 
     @Test
@@ -124,8 +127,8 @@ public class TransactionalUserServiceTest{
     public void TestFindUsersNotInList(){
         List<PoulpeUser> users = new ArrayList<PoulpeUser>();
         users.add(user());
-        userService.findUsersNotInList(searchString,users);
-        verify(userDao).findUsersNotInList(searchString,users, Pages.NONE);
+        userService.findUsersNotInList(searchString, users);
+        verify(userDao).findUsersNotInList(searchString, users, Pages.NONE);
     }
 
     @Test
