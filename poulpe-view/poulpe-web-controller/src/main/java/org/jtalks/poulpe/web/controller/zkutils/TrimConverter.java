@@ -28,7 +28,7 @@ public class TrimConverter implements Converter {
      */
     @Override
     public Object coerceToUi(Object value, Component component, BindContext bindContext) {
-        return String.valueOf(value).trim();
+        return Objects.toString(value, "").trim();
     }
 
     /**
@@ -36,6 +36,6 @@ public class TrimConverter implements Converter {
      */
     @Override
     public Object coerceToBean(Object value, Component component, BindContext bindContext) {
-        return String.valueOf(value).trim();
+        return Objects.toString(value, "").trim();
     }
 }
